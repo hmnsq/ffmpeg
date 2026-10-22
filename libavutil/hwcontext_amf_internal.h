@@ -17,29 +17,29 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#define AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#include <AMF/core/Factory.h>
-#include <AMF/core/Context.h>
+#నిర్వచితం_కాకపోతే AVUTIL_HWCONTEXT_AMF_అంతర్గత_H
+#నిర్వచించు AVUTIL_HWCONTEXT_AMF_అంతర్గత_H
+#అన్తర్భావ <AMF/core/Factory.h>
+#అన్తర్భావ <AMF/core/Context.h>
 
 /**
 * Error handling helper
 */
-#define AMF_RETURN_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#నిర్వచించు AMF_RETURN_IF_FALSE(avctx, ఘాతాంకం, ret_విలువ, /*message,*/ ...) \
+    ఒకవేళ (!(ఘాతాంకం)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        return ret_value; \
+        తిరిగి ret_విలువ; \
     }
 
-#define AMF_GOTO_FAIL_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#నిర్వచించు AMF_GOTO_FAIL_IF_FALSE(avctx, ఘాతాంకం, ret_విలువ, /*message,*/ ...) \
+    ఒకవేళ (!(ఘాతాంకం)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        ret = ret_value; \
-        goto fail; \
+        ret = ret_విలువ; \
+        వెళ్ళు fail; \
     }
 
-#define AMF_TIME_BASE_Q          (AVRational){1, AMF_SECOND}
+#నిర్వచించు AMF_సమయం_పునాది_Q          (AVRational){1, AMF_రెండవ}
 
-#define AMF_IFACE_CALL(this, function, ...) ((this)->pVtbl->function((this), ##__VA_ARGS__))
+#నిర్వచించు AMF_IFACE_CALL(this, function, ...) ((this)->pVtbl->function((this), ##__VA_ARGS__))
 
-#endif /* AVUTIL_HWCONTEXT_AMF_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_HWCONTEXT_AMF_INTERNAL_H */

@@ -22,10 +22,10 @@
  * A generic FIFO API
  */
 
-#ifndef AVUTIL_FIFO_H
-#define AVUTIL_FIFO_H
+#నిర్వచితం_కాకపోతే AVUTIL_FIFO_H
+#నిర్వచించు AVUTIL_FIFO_H
 
-#include <stddef.h>
+#అన్తర్భావ <stddef.h>
 
 /**
  * @defgroup lavu_fifo AVFifo
@@ -35,7 +35,7 @@
  * A generic FIFO API
  */
 
-typedef struct AVFifo AVFifo;
+రకనిర్వచనం నిర్మాణం AVFifo AVFifo;
 
 /**
  * Callback for writing or reading from a FIFO, passed to (and invoked from) the
@@ -53,14 +53,14 @@ typedef struct AVFifo AVFifo;
  * @return 0 on success, a negative error code on failure (will be returned from
  *         the invoking av_fifo_*_cb() function)
  */
-typedef int AVFifoCB(void *opaque, void *buf, size_t *nb_elems);
+రకనిర్వచనం పూర్ణాంకం AVFifoCB(శూన్య *opaque, శూన్య *buf, size_t *nb_elems);
 
 /**
  * Automatically resize the FIFO on writes, so that the data fits. This
  * automatic resizing happens up to a limit that can be modified with
  * av_fifo_auto_grow_limit().
  */
-#define AV_FIFO_FLAG_AUTO_GROW      (1 << 0)
+#నిర్వచించు AV_FIFO_FLAG_AUTO_GROW      (1 << 0)
 
 /**
  * Allocate and initialize an AVFifo with a given element size.
@@ -72,25 +72,25 @@ typedef int AVFifoCB(void *opaque, void *buf, size_t *nb_elems);
  *
  * @return newly-allocated AVFifo on success, a negative error code on failure
  */
-AVFifo *av_fifo_alloc2(size_t elems, size_t elem_size,
-                       unsigned int flags);
+AVFifo *av_fifo_alloc2(size_t elems, size_t elem_కొలత,
+                       గుర్తులేని పూర్ణాంకం flags);
 
 /**
  * @return Element size for FIFO operations. This element size is set at
  *         FIFO allocation and remains constant during its lifetime
  */
-size_t av_fifo_elem_size(const AVFifo *f);
+size_t av_fifo_elem_కొలత(స్థిరరాశి AVFifo *f);
 
 /**
  * Set the maximum size (in elements) to which the FIFO can be resized
  * automatically. Has no effect unless AV_FIFO_FLAG_AUTO_GROW is used.
  */
-void av_fifo_auto_grow_limit(AVFifo *f, size_t max_elems);
+శూన్య av_fifo_auto_grow_హద్దు(AVFifo *f, size_t max_elems);
 
 /**
  * @return number of elements available for reading from the given FIFO.
  */
-size_t av_fifo_can_read(const AVFifo *f);
+size_t av_fifo_can_read(స్థిరరాశి AVFifo *f);
 
 /**
  * @return Number of elements that can be written into the given FIFO without
@@ -101,7 +101,7 @@ size_t av_fifo_can_read(const AVFifo *f);
  *         AV_FIFO_FLAG_AUTO_GROW flag was specified at FIFO creation, but this
  *         may involve memory allocation, which can fail.
  */
-size_t av_fifo_can_write(const AVFifo *f);
+size_t av_fifo_can_write(స్థిరరాశి AVFifo *f);
 
 /**
  * Enlarge an AVFifo.
@@ -115,7 +115,7 @@ size_t av_fifo_can_write(const AVFifo *f);
  *            allocated size
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_grow2(AVFifo *f, size_t inc);
+పూర్ణాంకం av_fifo_grow2(AVFifo *f, size_t inc);
 
 /**
  * Write data into a FIFO.
@@ -133,7 +133,7 @@ int av_fifo_grow2(AVFifo *f, size_t inc);
  *
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_write(AVFifo *f, const void *buf, size_t nb_elems);
+పూర్ణాంకం av_fifo_write(AVFifo *f, స్థిరరాశి శూన్య *buf, size_t nb_elems);
 
 /**
  * Write data from a user-provided callback into a FIFO.
@@ -148,8 +148,8 @@ int av_fifo_write(AVFifo *f, const void *buf, size_t nb_elems);
  *
  * @return non-negative number on success, a negative error code on failure
  */
-int av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
-                          void *opaque, size_t *nb_elems);
+పూర్ణాంకం av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
+                          శూన్య *opaque, size_t *nb_elems);
 
 /**
  * Read data from a FIFO.
@@ -164,7 +164,7 @@ int av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
  *
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_read(AVFifo *f, void *buf, size_t nb_elems);
+పూర్ణాంకం av_fifo_read(AVFifo *f, శూన్య *buf, size_t nb_elems);
 
 /**
  * Feed data from a FIFO into a user-provided callback.
@@ -179,8 +179,8 @@ int av_fifo_read(AVFifo *f, void *buf, size_t nb_elems);
  *
  * @return non-negative number on success, a negative error code on failure
  */
-int av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
-                       void *opaque, size_t *nb_elems);
+పూర్ణాంకం av_fifo_read_గమ్యం_cb(AVFifo *f, AVFifoCB write_cb,
+                       శూన్య *opaque, size_t *nb_elems);
 
 /**
  * Read data from a FIFO without modifying FIFO state.
@@ -196,7 +196,7 @@ int av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
  *
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_peek(const AVFifo *f, void *buf, size_t nb_elems, size_t offset);
+పూర్ణాంకం av_fifo_peek(స్థిరరాశి AVFifo *f, శూన్య *buf, size_t nb_elems, size_t స్థానభ్రంశం);
 
 /**
  * Feed data from a FIFO into a user-provided callback.
@@ -213,30 +213,30 @@ int av_fifo_peek(const AVFifo *f, void *buf, size_t nb_elems, size_t offset);
  *
  * @return a non-negative number on success, a negative error code on failure
  */
-int av_fifo_peek_to_cb(const AVFifo *f, AVFifoCB write_cb, void *opaque,
-                       size_t *nb_elems, size_t offset);
+పూర్ణాంకం av_fifo_peek_గమ్యం_cb(స్థిరరాశి AVFifo *f, AVFifoCB write_cb, శూన్య *opaque,
+                       size_t *nb_elems, size_t స్థానభ్రంశం);
 
 /**
  * Discard the specified amount of data from an AVFifo.
  * @param size number of elements to discard, MUST NOT be larger than
  *             av_fifo_can_read(f)
  */
-void av_fifo_drain2(AVFifo *f, size_t size);
+శూన్య av_fifo_drain2(AVFifo *f, size_t కొలత);
 
 /*
  * Empty the AVFifo.
  * @param f AVFifo to reset
  */
-void av_fifo_reset2(AVFifo *f);
+శూన్య av_fifo_reset2(AVFifo *f);
 
 /**
  * Free an AVFifo and reset pointer to NULL.
  * @param f Pointer to an AVFifo to free. *f == NULL is allowed.
  */
-void av_fifo_freep2(AVFifo **f);
+శూన్య av_fifo_freep2(AVFifo **f);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_FIFO_H */
+#అయితే_ముగింపు /* AVUTIL_FIFO_H */

@@ -16,602 +16,602 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "buffer.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_cuda_internal.h"
-#if CONFIG_VULKAN
-#include "hwcontext_vulkan.h"
-#endif
-#include "cuda_check.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "imgutils.h"
+#అన్తర్భావ "buffer.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "hwcontext.h"
+#అన్తర్భావ "hwcontext_internal.h"
+#అన్తర్భావ "hwcontext_cuda_internal.h"
+#ఒకవేళ CONFIG_VULKAN
+#అన్తర్భావ "hwcontext_vulkan.h"
+#అయితే_ముగింపు
+#అన్తర్భావ "cuda_check.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "pixdesc.h"
+#అన్తర్భావ "pixfmt.h"
+#అన్తర్భావ "imgutils.h"
 
-typedef struct CUDAFramesContext {
+రకనిర్వచనం నిర్మాణం CUDAFramesContext {
     AVCUDAFramesContext p;
 
-    int shift_width, shift_height;
-    int tex_alignment;
+    పూర్ణాంకం జరుపు_వెడల్పు, జరుపు_ఎత్తు;
+    పూర్ణాంకం tex_alignment;
 
-    int cuarray_num_surfaces_used;
+    పూర్ణాంకం cuarray_అంకె_surfaces_వాడిన;
 } CUDAFramesContext;
 
-typedef struct CUDADeviceContext {
+రకనిర్వచనం నిర్మాణం CUDADeviceContext {
     AVCUDADeviceContext p;
-    AVCUDADeviceContextInternal internal;
+    AVCUDADevice_Context_అంతర్గత అంతర్గత;
 } CUDADeviceContext;
 
 
 
-#define CHECK_CU(x) FF_CUDA_CHECK_DL(device_ctx, cu, x)
+#నిర్వచించు CHECK_CU(x) FF_CUDA_CHECK_DL(device_ctx, cu, x)
 
-static CUarray_format cuda_array_format_for_pix_fmt(enum AVPixelFormat fmt);
+స్థిర CUarray_format cuda_array_format_for_pix_fmt(గణన AVPixelFormat fmt);
 
-static int cuda_frames_get_constraints(AVHWDeviceContext *ctx,
-                                       const void *hwconfig,
+స్థిర పూర్ణాంకం cuda_చట్రాలు_get_constraints(AVHWDeviceContext *ctx,
+                                       స్థిరరాశి శూన్య *hwconfig,
                                        AVHWFramesConstraints *constraints)
 {
-    const AVCUDAHWConfig *config = hwconfig;
-    enum AVPixelFormat req_fmt = config ? config->hw_format : AV_PIX_FMT_NONE;
-    int n = 0;
+    స్థిరరాశి AVCUDAHWConfig *config = hwconfig;
+    గణన AVPixelFormat req_fmt = config ? config->hw_format : AV_PIX_FMT_NONE;
+    పూర్ణాంకం n = 0;
 
-    if (req_fmt == AV_PIX_FMT_CUDA || req_fmt == AV_PIX_FMT_CUARRAY) {
-        constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-        if (!constraints->valid_hw_formats)
-            return AVERROR(ENOMEM);
+    ఒకవేళ (req_fmt == AV_PIX_FMT_CUDA || req_fmt == AV_PIX_FMT_CUARRAY) {
+        constraints->valid_hw_formats = av_malloc_array(2, పరిమాణం(*constraints->valid_hw_formats));
+        ఒకవేళ (!constraints->valid_hw_formats)
+            తిరిగి AVERROR(ENOMEM);
 
         constraints->valid_hw_formats[0] = req_fmt;
         constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
-    } else {
-        constraints->valid_hw_formats = av_malloc_array(2 + HAVE_FFNVCODEC_CUARRAY, sizeof(*constraints->valid_hw_formats));
-        if (!constraints->valid_hw_formats)
-            return AVERROR(ENOMEM);
+    } లేకపోతే {
+        constraints->valid_hw_formats = av_malloc_array(2 + HAVE_FFNVCODEC_CUARRAY, పరిమాణం(*constraints->valid_hw_formats));
+        ఒకవేళ (!constraints->valid_hw_formats)
+            తిరిగి AVERROR(ENOMEM);
 
         constraints->valid_hw_formats[0] = AV_PIX_FMT_CUDA;
-#if HAVE_FFNVCODEC_CUARRAY
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
         constraints->valid_hw_formats[1] = AV_PIX_FMT_CUARRAY;
         constraints->valid_hw_formats[2] = AV_PIX_FMT_NONE;
-#else
+#లేకపోతే
         constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
-#endif
+#అయితే_ముగింపు
     }
 
     constraints->valid_sw_formats = av_malloc_array(AV_PIX_FMT_NB + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    పరిమాణం(*constraints->valid_sw_formats));
+    ఒకవేళ (!constraints->valid_sw_formats)
+        తిరిగి AVERROR(ENOMEM);
 
     n = 0;
-    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
-        if (req_fmt == AV_PIX_FMT_CUARRAY) {
-            if (cuda_array_format_for_pix_fmt(i))
+    కొరకు (పూర్ణాంకం i = 0; i < AV_PIX_FMT_NB; i++) {
+        ఒకవేళ (req_fmt == AV_PIX_FMT_CUARRAY) {
+            ఒకవేళ (cuda_array_format_for_pix_fmt(i))
                 constraints->valid_sw_formats[n++] = i;
-        } else {
-            const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
+        } లేకపోతే {
+            స్థిరరాశి AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
             /* Palette formats carry their palette in a separate zero-linesize
              * data[1] plane that the transfer path does not handle, so exclude
              * them along with the hwaccel formats. */
-            if (desc && !(desc->flags & (AV_PIX_FMT_FLAG_HWACCEL | AV_PIX_FMT_FLAG_PAL)))
+            ఒకవేళ (desc && !(desc->flags & (AV_PIX_FMT_FLAG_HWACCEL | AV_PIX_FMT_FLAG_PAL)))
                 constraints->valid_sw_formats[n++] = i;
         }
     }
-#if CONFIG_VULKAN
-    if (req_fmt != AV_PIX_FMT_CUARRAY)
+#ఒకవేళ CONFIG_VULKAN
+    ఒకవేళ (req_fmt != AV_PIX_FMT_CUARRAY)
         constraints->valid_sw_formats[n++] = AV_PIX_FMT_VULKAN;
-#endif
+#అయితే_ముగింపు
     constraints->valid_sw_formats[n] = AV_PIX_FMT_NONE;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static void cuda_buffer_free(void *opaque, uint8_t *data)
+స్థిర శూన్య cuda_బఫరు_free(శూన్య *opaque, uint8_t *దత్తాంశం)
 {
     AVHWFramesContext        *ctx = opaque;
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->అంతర్గత->cuda_dl;
 
     CUcontext dummy;
 
-    CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+    CHECK_CU(cu->cu_Ctx_నెట్టు_Current(hwctx->cuda_ctx));
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-        AVCUDAArrayFrameDescriptor *desc = (AVCUDAArrayFrameDescriptor*)data;
+    ఒకవేళ (ctx->format == AV_PIX_FMT_CUARRAY) {
+        AVCUDAArray_చట్రం_Descriptor *desc = (AVCUDAArray_చట్రం_Descriptor*)దత్తాంశం;
         CHECK_CU(cu->cuArrayDestroy(desc->array));
         av_free(desc);
-    } else {
-        CHECK_CU(cu->cuMemFree((CUdeviceptr)data));
+    } లేకపోతే {
+        CHECK_CU(cu->cuMemFree((CUdeviceptr)దత్తాంశం));
     }
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
 }
 
-static AVBufferRef *cuda_pool_alloc(void *opaque, size_t size)
+స్థిర AVBufferRef *cuda_pool_alloc(శూన్య *opaque, size_t కొలత)
 {
     AVHWFramesContext        *ctx = opaque;
     CUDAFramesContext       *priv = ctx->hwctx;
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->అంతర్గత->cuda_dl;
 
-    AVBufferRef *ret = NULL;
-    CUcontext dummy = NULL;
-    CUdeviceptr data;
-    int err;
+    AVBufferRef *ret = ఖాళీ;
+    CUcontext dummy = ఖాళీ;
+    CUdeviceptr దత్తాంశం;
+    పూర్ణాంకం err;
 
-    err = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-    if (err < 0)
-        return NULL;
+    err = CHECK_CU(cu->cu_Ctx_నెట్టు_Current(hwctx->cuda_ctx));
+    ఒకవేళ (err < 0)
+        తిరిగి ఖాళీ;
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-        AVCUDAArrayFrameDescriptor *desc = av_mallocz(sizeof(*desc));
-        if (!desc)
-            goto done;
+    ఒకవేళ (ctx->format == AV_PIX_FMT_CUARRAY) {
+        AVCUDAArray_చట్రం_Descriptor *desc = av_mallocz(పరిమాణం(*desc));
+        ఒకవేళ (!desc)
+            వెళ్ళు పూర్తి;
 
-        if (priv->p.cuarray_num_surfaces > 0) {
-            if (priv->cuarray_num_surfaces_used >= priv->p.cuarray_num_surfaces) {
+        ఒకవేళ (priv->p.cuarray_అంకె_surfaces > 0) {
+            ఒకవేళ (priv->cuarray_అంకె_surfaces_వాడిన >= priv->p.cuarray_అంకె_surfaces) {
                 av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
                 av_free(desc);
-                goto done;
+                వెళ్ళు పూర్తి;
             }
-            desc->index = priv->cuarray_num_surfaces_used++;
-            desc->array = priv->p.cuarray_surfaces[desc->index];
-        } else {
+            desc->సూచీ = priv->cuarray_అంకె_surfaces_వాడిన++;
+            desc->array = priv->p.cuarray_surfaces[desc->సూచీ];
+        } లేకపోతే {
             err = CHECK_CU(cu->cuArray3DCreate(&desc->array, &priv->p.cuarray_desc));
-            if (err < 0) {
+            ఒకవేళ (err < 0) {
                 av_free(desc);
-                goto done;
+                వెళ్ళు పూర్తి;
             }
         }
 
-        ret = av_buffer_create((uint8_t*)desc, sizeof(*desc), cuda_buffer_free, ctx, 0);
-        if (!ret) {
+        ret = av_బఫరు_create((uint8_t*)desc, పరిమాణం(*desc), cuda_బఫరు_free, ctx, 0);
+        ఒకవేళ (!ret) {
             // It is okay (and necessary) to free a pool array here,
             // since cuarray_num_surfaces_used is already incremented.
             CHECK_CU(cu->cuArrayDestroy(desc->array));
             av_free(desc);
-            goto done;
+            వెళ్ళు పూర్తి;
         }
 
-        goto done;
+        వెళ్ళు పూర్తి;
     }
 
-    err = CHECK_CU(cu->cuMemAlloc(&data, size));
-    if (err < 0)
-        goto done;
+    err = CHECK_CU(cu->cuMemAlloc(&దత్తాంశం, కొలత));
+    ఒకవేళ (err < 0)
+        వెళ్ళు పూర్తి;
 
-    ret = av_buffer_create((uint8_t*)data, size, cuda_buffer_free, ctx, 0);
-    if (!ret) {
-        CHECK_CU(cu->cuMemFree(data));
-        goto done;
+    ret = av_బఫరు_create((uint8_t*)దత్తాంశం, కొలత, cuda_బఫరు_free, ctx, 0);
+    ఒకవేళ (!ret) {
+        CHECK_CU(cu->cuMemFree(దత్తాంశం));
+        వెళ్ళు పూర్తి;
     }
 
     // Common exit: reached on both success (ret holds the buffer) and
     // failure (ret == NULL); restores the CUDA context and returns ret.
-done:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    return ret;
+పూర్తి:
+    CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
+    తిరిగి ret;
 }
 
-#if HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
-static void cuda_transfer_buffer_free(void *opaque, uint8_t *data)
+#ఒకవేళ HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
+స్థిర శూన్య cuda_transfer_బఫరు_free(శూన్య *opaque, uint8_t *దత్తాంశం)
 {
     AVHWDeviceContext *device_ctx = opaque;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->అంతర్గత->cuda_dl;
     CUcontext dummy;
 
-    CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-    CHECK_CU(cu->cuMemFreeHost(data));
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_నెట్టు_Current(hwctx->cuda_ctx));
+    CHECK_CU(cu->cuMemFreeHost(దత్తాంశం));
+    CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
 }
 
 /* The device transfers directly to and from page-locked memory, other memory
  * goes through a buffer of the driver. */
-static AVBufferRef *cuda_transfer_buffer_alloc(void *device_ref, size_t size)
+స్థిర AVBufferRef *cuda_transfer_బఫరు_alloc(శూన్య *device_ref, size_t కొలత)
 {
-    AVHWDeviceContext *device_ctx = (AVHWDeviceContext *)((AVBufferRef *)device_ref)->data;
+    AVHWDeviceContext *device_ctx = (AVHWDeviceContext *)((AVBufferRef *)device_ref)->దత్తాంశం;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
-    AVBufferRef *ret = NULL;
+    CudaFunctions             *cu = hwctx->అంతర్గత->cuda_dl;
+    AVBufferRef *ret = ఖాళీ;
     CUcontext dummy;
-    void *host;
+    శూన్య *host;
 
-    if (CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx)) < 0)
-        return av_buffer_alloc(size);
+    ఒకవేళ (CHECK_CU(cu->cu_Ctx_నెట్టు_Current(hwctx->cuda_ctx)) < 0)
+        తిరిగి av_బఫరు_alloc(కొలత);
 
-    if (CHECK_CU(cu->cuMemHostAlloc(&host, size, 0)) >= 0) {
-        ret = av_buffer_create(host, size, cuda_transfer_buffer_free, device_ctx, 0);
-        if (!ret)
+    ఒకవేళ (CHECK_CU(cu->cuMemHostAlloc(&host, కొలత, 0)) >= 0) {
+        ret = av_బఫరు_create(host, కొలత, cuda_transfer_బఫరు_free, device_ctx, 0);
+        ఒకవేళ (!ret)
             CHECK_CU(cu->cuMemFreeHost(host));
     }
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    return ret ? ret : av_buffer_alloc(size);
+    CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
+    తిరిగి ret ? ret : av_బఫరు_alloc(కొలత);
 }
-#endif
+#అయితే_ముగింపు
 
-static void cuda_frames_uninit(AVHWFramesContext *ctx)
+స్థిర శూన్య cuda_చట్రాలు_uninit(AVHWFramesContext *ctx)
 {
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
     CUDAFramesContext       *priv = ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->అంతర్గత->cuda_dl;
 
-    if (priv->p.cuarray_surfaces) {
+    ఒకవేళ (priv->p.cuarray_surfaces) {
         CUcontext dummy;
-        CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+        CHECK_CU(cu->cu_Ctx_నెట్టు_Current(hwctx->cuda_ctx));
 
         // Make sure we don't free surfaces that have been adopted by the pool already
-        for (int i = priv->cuarray_num_surfaces_used; i < priv->p.cuarray_num_surfaces; i++)
-            if (priv->p.cuarray_surfaces[i])
+        కొరకు (పూర్ణాంకం i = priv->cuarray_అంకె_surfaces_వాడిన; i < priv->p.cuarray_అంకె_surfaces; i++)
+            ఒకవేళ (priv->p.cuarray_surfaces[i])
                 CHECK_CU(cu->cuArrayDestroy(priv->p.cuarray_surfaces[i]));
 
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
 
         av_freep(&priv->p.cuarray_surfaces);
-        priv->p.cuarray_num_surfaces = 0;
+        priv->p.cuarray_అంకె_surfaces = 0;
     }
 }
 
-static CUarray_format cuda_array_format_for_pix_fmt(enum AVPixelFormat fmt)
+స్థిర CUarray_format cuda_array_format_for_pix_fmt(గణన AVPixelFormat fmt)
 {
-    switch (fmt) {
-#if HAVE_FFNVCODEC_CUARRAY
-    case AV_PIX_FMT_NV12:      return CU_AD_FORMAT_NV12;
-    case AV_PIX_FMT_P010:
-    case AV_PIX_FMT_P012:
-    case AV_PIX_FMT_P016:      return CU_AD_FORMAT_P016;
-    case AV_PIX_FMT_NV16:      return CU_AD_FORMAT_NV16;
-    case AV_PIX_FMT_P210:
-    case AV_PIX_FMT_P212:
-    case AV_PIX_FMT_P216:      return CU_AD_FORMAT_P216;
-    case AV_PIX_FMT_NV24:      return CU_AD_FORMAT_YUV444_8BIT_SEMIPLANAR;
-    case AV_PIX_FMT_P410:
-    case AV_PIX_FMT_P412:
-    case AV_PIX_FMT_P416:      return CU_AD_FORMAT_YUV444_16BIT_SEMIPLANAR;
-    case AV_PIX_FMT_YUV420P:   return CU_AD_FORMAT_UINT8_PLANAR_420;
-    case AV_PIX_FMT_YUV422P:   return CU_AD_FORMAT_UINT8_PLANAR_422;
-    case AV_PIX_FMT_YUV444P:   return CU_AD_FORMAT_UINT8_PLANAR_444;
-    case AV_PIX_FMT_YUV420P10: return CU_AD_FORMAT_UINT16_PLANAR_420;
-    case AV_PIX_FMT_YUV422P10: return CU_AD_FORMAT_UINT16_PLANAR_422;
-    case AV_PIX_FMT_YUV444P10:
-    case AV_PIX_FMT_YUV444P10MSB:
-    case AV_PIX_FMT_YUV444P12MSB:
-    case AV_PIX_FMT_YUV444P16: return CU_AD_FORMAT_UINT16_PLANAR_444;
-    case AV_PIX_FMT_0RGB32:
-    case AV_PIX_FMT_0BGR32:
-    case AV_PIX_FMT_RGB32:
-    case AV_PIX_FMT_BGR32:     return CU_AD_FORMAT_UNSIGNED_INT8;
-#endif
-    default:                   return 0;
+    ఎంపిక (fmt) {
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
+    స్థితి AV_PIX_FMT_NV12:      తిరిగి CU_AD_FORMAT_NV12;
+    స్థితి AV_PIX_FMT_P010:
+    స్థితి AV_PIX_FMT_P012:
+    స్థితి AV_PIX_FMT_P016:      తిరిగి CU_AD_FORMAT_P016;
+    స్థితి AV_PIX_FMT_NV16:      తిరిగి CU_AD_FORMAT_NV16;
+    స్థితి AV_PIX_FMT_P210:
+    స్థితి AV_PIX_FMT_P212:
+    స్థితి AV_PIX_FMT_P216:      తిరిగి CU_AD_FORMAT_P216;
+    స్థితి AV_PIX_FMT_NV24:      తిరిగి CU_AD_FORMAT_YUV444_8_బిట్టు_SEMIPLANAR;
+    స్థితి AV_PIX_FMT_P410:
+    స్థితి AV_PIX_FMT_P412:
+    స్థితి AV_PIX_FMT_P416:      తిరిగి CU_AD_FORMAT_YUV444_16_బిట్టు_SEMIPLANAR;
+    స్థితి AV_PIX_FMT_YUV420P:   తిరిగి CU_AD_FORMAT_UINT8_PLANAR_420;
+    స్థితి AV_PIX_FMT_YUV422P:   తిరిగి CU_AD_FORMAT_UINT8_PLANAR_422;
+    స్థితి AV_PIX_FMT_YUV444P:   తిరిగి CU_AD_FORMAT_UINT8_PLANAR_444;
+    స్థితి AV_PIX_FMT_YUV420P10: తిరిగి CU_AD_FORMAT_UINT16_PLANAR_420;
+    స్థితి AV_PIX_FMT_YUV422P10: తిరిగి CU_AD_FORMAT_UINT16_PLANAR_422;
+    స్థితి AV_PIX_FMT_YUV444P10:
+    స్థితి AV_PIX_FMT_YUV444P10MSB:
+    స్థితి AV_PIX_FMT_YUV444P12MSB:
+    స్థితి AV_PIX_FMT_YUV444P16: తిరిగి CU_AD_FORMAT_UINT16_PLANAR_444;
+    స్థితి AV_PIX_FMT_0RGB32:
+    స్థితి AV_PIX_FMT_0BGR32:
+    స్థితి AV_PIX_FMT_RGB32:
+    స్థితి AV_PIX_FMT_BGR32:     తిరిగి CU_AD_FORMAT_UNSIGNED_INT8;
+#అయితే_ముగింపు
+    అప్రమేయ:                   తిరిగి 0;
     }
 }
 
-#if HAVE_FFNVCODEC_CUARRAY
-static unsigned int cuda_array_numchannels_for_pix_fmt(enum AVPixelFormat fmt)
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
+స్థిర గుర్తులేని పూర్ణాంకం cuda_array_numchannels_for_pix_fmt(గణన AVPixelFormat fmt)
 {
-    switch (fmt) {
-    case AV_PIX_FMT_0RGB32:
-    case AV_PIX_FMT_0BGR32:
-    case AV_PIX_FMT_RGB32:
-    case AV_PIX_FMT_BGR32:     return 4;
-    default:                   return 3;
+    ఎంపిక (fmt) {
+    స్థితి AV_PIX_FMT_0RGB32:
+    స్థితి AV_PIX_FMT_0BGR32:
+    స్థితి AV_PIX_FMT_RGB32:
+    స్థితి AV_PIX_FMT_BGR32:     తిరిగి 4;
+    అప్రమేయ:                   తిరిగి 3;
     }
 }
-#endif
+#అయితే_ముగింపు
 
-static int cuda_frames_init(AVHWFramesContext *ctx)
+స్థిర పూర్ణాంకం cuda_చట్రాలు_init(AVHWFramesContext *ctx)
 {
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
     CUDAFramesContext       *priv = ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(ctx->sw_format);
-    int err;
+    CudaFunctions             *cu = hwctx->అంతర్గత->cuda_dl;
+    స్థిరరాశి AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(ctx->sw_format);
+    పూర్ణాంకం err;
 
-    if (!desc) {
+    ఒకవేళ (!desc) {
         av_log(ctx, AV_LOG_ERROR, "Invalid pixel format\n");
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
     /* Palette formats keep their palette in a separate zero-linesize plane
      * that the transfer path does not copy, so they are not supported. */
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    ఒకవేళ (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         av_log(ctx, AV_LOG_ERROR, "Palette formats are not supported\n");
-        return AVERROR(ENOSYS);
+        తిరిగి AVERROR(ENOSYS);
     }
 
-#if HAVE_FFNVCODEC_CUARRAY
-    if (ctx->format == AV_PIX_FMT_CUARRAY && !cu->cuArrayGetPlane) {
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
+    ఒకవేళ (ctx->format == AV_PIX_FMT_CUARRAY && !cu->cuArrayGetPlane) {
         av_log(ctx, AV_LOG_ERROR, "cuArrayGetPlane not available, update your driver\n");
-        return AVERROR(ENOSYS);
+        తిరిగి AVERROR(ENOSYS);
     }
-#else
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
+#లేకపోతే
+    ఒకవేళ (ctx->format == AV_PIX_FMT_CUARRAY) {
         av_log(ctx, AV_LOG_ERROR, "Missing support for cuarray frames. Rebuild with newer ffnvcodec headers.\n");
-        return AVERROR(ENOSYS);
+        తిరిగి AVERROR(ENOSYS);
     }
-#endif
+#అయితే_ముగింపు
 
     err = CHECK_CU(cu->cuDeviceGetAttribute(&priv->tex_alignment,
                                             14 /* CU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT */,
-                                            hwctx->internal->cuda_device));
-    if (err < 0)
-        return err;
+                                            hwctx->అంతర్గత->cuda_device));
+    ఒకవేళ (err < 0)
+        తిరిగి err;
 
     av_log(ctx, AV_LOG_DEBUG, "CUDA texture alignment: %d\n", priv->tex_alignment);
 
     // YUV420P is a special case.
     // Since nvenc expects the U/V planes to have half the linesize of the Y plane
     // alignment has to be doubled to ensure the U/V planes still end up aligned.
-    if (ctx->sw_format == AV_PIX_FMT_YUV420P)
+    ఒకవేళ (ctx->sw_format == AV_PIX_FMT_YUV420P)
         priv->tex_alignment *= 2;
 
-    av_pix_fmt_get_chroma_sub_sample(ctx->sw_format, &priv->shift_width, &priv->shift_height);
+    av_pix_fmt_get_chroma_sub_sample(ctx->sw_format, &priv->జరుపు_వెడల్పు, &priv->జరుపు_ఎత్తు);
 
-#if HAVE_FFNVCODEC_CUARRAY
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-        if (!priv->p.cuarray_desc.Width)
-            priv->p.cuarray_desc.Width = ctx->width;
-        if (!priv->p.cuarray_desc.Height)
-            priv->p.cuarray_desc.Height = ctx->height;
-        if (!priv->p.cuarray_desc.NumChannels)
-            priv->p.cuarray_desc.NumChannels = cuda_array_numchannels_for_pix_fmt(ctx->sw_format);
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
+    ఒకవేళ (ctx->format == AV_PIX_FMT_CUARRAY) {
+        ఒకవేళ (!priv->p.cuarray_desc.వెడల్పు_2)
+            priv->p.cuarray_desc.వెడల్పు_2 = ctx->వెడల్పు;
+        ఒకవేళ (!priv->p.cuarray_desc.ఎత్తు_2)
+            priv->p.cuarray_desc.ఎత్తు_2 = ctx->ఎత్తు;
+        ఒకవేళ (!priv->p.cuarray_desc.అంకె_Channels)
+            priv->p.cuarray_desc.అంకె_Channels = cuda_array_numchannels_for_pix_fmt(ctx->sw_format);
 
-        if (priv->p.cuarray_desc.Depth) {
+        ఒకవేళ (priv->p.cuarray_desc.లోతు_2) {
             av_log(ctx, AV_LOG_ERROR, "CUarrays with non-zero depth are not supported.\n");
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
 
-        if (!priv->p.cuarray_desc.Format)
+        ఒకవేళ (!priv->p.cuarray_desc.Format)
             priv->p.cuarray_desc.Format = cuda_array_format_for_pix_fmt(ctx->sw_format);
-        if (!priv->p.cuarray_desc.Format) {
+        ఒకవేళ (!priv->p.cuarray_desc.Format) {
             av_log(ctx, AV_LOG_ERROR, "Invalid CUarray pixel format\n");
-            return AVERROR_BUG;
+            తిరిగి AVERROR_BUG;
         }
 
         priv->p.cuarray_desc.Flags |= CUDA_ARRAY3D_SURFACE_LDST | CUDA_ARRAY3D_VIDEO_ENCODE_DECODE;
     }
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY && priv->p.cuarray_num_surfaces > 0) {
+    ఒకవేళ (ctx->format == AV_PIX_FMT_CUARRAY && priv->p.cuarray_అంకె_surfaces > 0) {
         CUcontext dummy;
 
-        priv->p.cuarray_surfaces = av_calloc(priv->p.cuarray_num_surfaces, sizeof(*priv->p.cuarray_surfaces));
-        if (!priv->p.cuarray_surfaces)
-            return AVERROR(ENOMEM);
+        priv->p.cuarray_surfaces = av_calloc(priv->p.cuarray_అంకె_surfaces, పరిమాణం(*priv->p.cuarray_surfaces));
+        ఒకవేళ (!priv->p.cuarray_surfaces)
+            తిరిగి AVERROR(ENOMEM);
 
-        err = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-        if (err < 0) {
+        err = CHECK_CU(cu->cu_Ctx_నెట్టు_Current(hwctx->cuda_ctx));
+        ఒకవేళ (err < 0) {
             av_freep(&priv->p.cuarray_surfaces);
-            return err;
+            తిరిగి err;
         }
 
-        for (int i = 0; i < priv->p.cuarray_num_surfaces; i++) {
+        కొరకు (పూర్ణాంకం i = 0; i < priv->p.cuarray_అంకె_surfaces; i++) {
             err = CHECK_CU(cu->cuArray3DCreate(&priv->p.cuarray_surfaces[i], &priv->p.cuarray_desc));
-            if (err < 0) {
-                for (i = i - 1; i >= 0; i--)
+            ఒకవేళ (err < 0) {
+                కొరకు (i = i - 1; i >= 0; i--)
                     CHECK_CU(cu->cuArrayDestroy(priv->p.cuarray_surfaces[i]));
-                CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+                CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
 
                 av_freep(&priv->p.cuarray_surfaces);
-                return err;
+                తిరిగి err;
             }
         }
 
-        err = CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        if (err < 0)
-            goto fail;
+        err = CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
+        ఒకవేళ (err < 0)
+            వెళ్ళు fail;
 
         av_log(ctx, AV_LOG_DEBUG, "allocated %d CUarray surfaces (%zux%zu)\n",
-               priv->p.cuarray_num_surfaces, priv->p.cuarray_desc.Width, priv->p.cuarray_desc.Height);
+               priv->p.cuarray_అంకె_surfaces, priv->p.cuarray_desc.వెడల్పు_2, priv->p.cuarray_desc.ఎత్తు_2);
     }
-#endif
+#అయితే_ముగింపు
 
-    if (!ctx->pool) {
-        int size = av_image_get_buffer_size(ctx->sw_format, ctx->width, ctx->height, priv->tex_alignment);
-        if (size < 0) {
-            err = size;
-            goto fail;
+    ఒకవేళ (!ctx->pool) {
+        పూర్ణాంకం కొలత = av_image_get_బఫరు_కొలత(ctx->sw_format, ctx->వెడల్పు, ctx->ఎత్తు, priv->tex_alignment);
+        ఒకవేళ (కొలత < 0) {
+            err = కొలత;
+            వెళ్ళు fail;
         }
 
-        ffhwframesctx(ctx)->pool_internal =
-            av_buffer_pool_init2(size, ctx, cuda_pool_alloc, NULL);
-        if (!ffhwframesctx(ctx)->pool_internal) {
+        ffhwframesctx(ctx)->pool_అంతర్గత =
+            av_బఫరు_pool_init2(కొలత, ctx, cuda_pool_alloc, ఖాళీ);
+        ఒకవేళ (!ffhwframesctx(ctx)->pool_అంతర్గత) {
             err = AVERROR(ENOMEM);
-            goto fail;
+            వెళ్ళు fail;
         }
     }
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    cuda_frames_uninit(ctx);
-    return err;
+    cuda_చట్రాలు_uninit(ctx);
+    తిరిగి err;
 }
 
-static int cuda_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+స్థిర పూర్ణాంకం cuda_get_బఫరు(AVHWFramesContext *ctx, AVFrame *చట్రం)
 {
     CUDAFramesContext       *priv = ctx->hwctx;
-#if HAVE_FFNVCODEC_CUARRAY
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->అంతర్గత->cuda_dl;
 
     CUcontext dummy;
-#endif
-    int res;
+#అయితే_ముగింపు
+    పూర్ణాంకం res;
 
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    చట్రం->buf[0] = av_బఫరు_pool_get(ctx->pool);
+    ఒకవేళ (!చట్రం->buf[0])
+        తిరిగి AVERROR(ENOMEM);
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-#if HAVE_FFNVCODEC_CUARRAY
-        AVCUDAArrayFrameDescriptor *desc = (AVCUDAArrayFrameDescriptor*)frame->buf[0]->data;
-        if (!desc) {
-            frame->format = ctx->format;
-            frame->width  = ctx->width;
-            frame->height = ctx->height;
-            return 0;
+    ఒకవేళ (ctx->format == AV_PIX_FMT_CUARRAY) {
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
+        AVCUDAArray_చట్రం_Descriptor *desc = (AVCUDAArray_చట్రం_Descriptor*)చట్రం->buf[0]->దత్తాంశం;
+        ఒకవేళ (!desc) {
+            చట్రం->format = ctx->format;
+            చట్రం->వెడల్పు  = ctx->వెడల్పు;
+            చట్రం->ఎత్తు = ctx->ఎత్తు;
+            తిరిగి 0;
         }
-        frame->data[0] = (uint8_t*)desc->array;
-        frame->data[1] = (uint8_t*)desc->index;
+        చట్రం->దత్తాంశం[0] = (uint8_t*)desc->array;
+        చట్రం->దత్తాంశం[1] = (uint8_t*)desc->సూచీ;
 
-        res = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-        if (res < 0)
-            return res;
+        res = CHECK_CU(cu->cu_Ctx_నెట్టు_Current(hwctx->cuda_ctx));
+        ఒకవేళ (res < 0)
+            తిరిగి res;
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(frame->linesize); i++) {
+        కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(చట్రం->linesize); i++) {
             CUDA_ARRAY3D_DESCRIPTOR plane_desc = { 0 };
             CUarray plane_array;
             CUresult arr_plane_res = cu->cuArrayGetPlane(&plane_array, desc->array, i);
 
-            if (arr_plane_res == CUDA_ERROR_INVALID_VALUE) {
-                if (i > 0)
-                    break;
+            ఒకవేళ (arr_plane_res == CUDA_ERROR_INVALID_విలువ) {
+                ఒకవేళ (i > 0)
+                    ఆపు;
                 /* Non-planar format (e.g. UNSIGNED_INT8 x4 for packed RGB):
                  * cuArrayGetPlane is unsupported, query the array directly. */
                 res = CHECK_CU(cu->cuArray3DGetDescriptor(&plane_desc, desc->array));
-                if (res < 0)
-                    goto fail;
-            } else if (arr_plane_res != CUDA_SUCCESS) {
+                ఒకవేళ (res < 0)
+                    వెళ్ళు fail;
+            } లేకపోతే ఒకవేళ (arr_plane_res != CUDA_SUCCESS) {
                 res = CHECK_CU(arr_plane_res);
-                goto fail;
-            } else {
+                వెళ్ళు fail;
+            } లేకపోతే {
                 res = CHECK_CU(cu->cuArray3DGetDescriptor(&plane_desc, plane_array));
-                if (res < 0)
-                    goto fail;
+                ఒకవేళ (res < 0)
+                    వెళ్ళు fail;
             }
 
-            int elem_size = ff_cuda_cuarray_elem_size(plane_desc.Format);
-            if (elem_size <= 0) {
+            పూర్ణాంకం elem_కొలత = ff_cuda_cuarray_elem_కొలత(plane_desc.Format);
+            ఒకవేళ (elem_కొలత <= 0) {
                 res = AVERROR_BUG;
-                goto fail;
+                వెళ్ళు fail;
             }
 
-            frame->linesize[i] = plane_desc.Width * plane_desc.NumChannels * elem_size;
+            చట్రం->linesize[i] = plane_desc.వెడల్పు_2 * plane_desc.అంకె_Channels * elem_కొలత;
 
-            if (arr_plane_res == CUDA_ERROR_INVALID_VALUE)
-                break;
+            ఒకవేళ (arr_plane_res == CUDA_ERROR_INVALID_విలువ)
+                ఆపు;
         }
 
-        res = CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        if (res < 0)
-            return res;
-#else
-        return AVERROR(ENOSYS);
-#endif
-    } else {
-        res = av_image_fill_arrays(frame->data, frame->linesize, frame->buf[0]->data,
-                                   ctx->sw_format, ctx->width, ctx->height, priv->tex_alignment);
-        if (res < 0)
-            return res;
+        res = CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
+        ఒకవేళ (res < 0)
+            తిరిగి res;
+#లేకపోతే
+        తిరిగి AVERROR(ENOSYS);
+#అయితే_ముగింపు
+    } లేకపోతే {
+        res = av_image_fill_arrays(చట్రం->దత్తాంశం, చట్రం->linesize, చట్రం->buf[0]->దత్తాంశం,
+                                   ctx->sw_format, ctx->వెడల్పు, ctx->ఎత్తు, priv->tex_alignment);
+        ఒకవేళ (res < 0)
+            తిరిగి res;
 
         // YUV420P is a special case.
         // Nvenc expects the U/V planes in swapped order from how ffmpeg expects them, also chroma is half-aligned
-        if (ctx->sw_format == AV_PIX_FMT_YUV420P) {
-            frame->linesize[1] = frame->linesize[2] = frame->linesize[0] / 2;
-            frame->data[2]     = frame->data[1];
-            frame->data[1]     = frame->data[2] + frame->linesize[2] * AV_CEIL_RSHIFT(ctx->height, 1);
+        ఒకవేళ (ctx->sw_format == AV_PIX_FMT_YUV420P) {
+            చట్రం->linesize[1] = చట్రం->linesize[2] = చట్రం->linesize[0] / 2;
+            చట్రం->దత్తాంశం[2]     = చట్రం->దత్తాంశం[1];
+            చట్రం->దత్తాంశం[1]     = చట్రం->దత్తాంశం[2] + చట్రం->linesize[2] * AV_CEIL_RSHIFT(ctx->ఎత్తు, 1);
         }
     }
 
-    frame->format = ctx->format;
-    frame->width  = ctx->width;
-    frame->height = ctx->height;
+    చట్రం->format = ctx->format;
+    చట్రం->వెడల్పు  = ctx->వెడల్పు;
+    చట్రం->ఎత్తు = ctx->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 
-#if HAVE_FFNVCODEC_CUARRAY
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
 fail:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    return res;
-#endif
+    CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
+    తిరిగి res;
+#అయితే_ముగింపు
 }
 
-static enum AVPixelFormat cuda_frame_hw_format(const AVFrame *frame)
+స్థిర గణన AVPixelFormat cuda_చట్రం_hw_format(స్థిరరాశి AVFrame *చట్రం)
 {
-    if (!frame->hw_frames_ctx)
-        return AV_PIX_FMT_NONE;
-    return ((AVHWFramesContext *)frame->hw_frames_ctx->data)->format;
+    ఒకవేళ (!చట్రం->hw_చట్రాలు_ctx)
+        తిరిగి AV_PIX_FMT_NONE;
+    తిరిగి ((AVHWFramesContext *)చట్రం->hw_చట్రాలు_ctx->దత్తాంశం)->format;
 }
 
-static int cuda_transfer_get_formats(AVHWFramesContext *ctx,
-                                     enum AVHWFrameTransferDirection dir,
-                                     enum AVPixelFormat **formats)
+స్థిర పూర్ణాంకం cuda_transfer_get_formats(AVHWFramesContext *ctx,
+                                     గణన AVHWFrameTransferDirection dir,
+                                     గణన AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    గణన AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, పరిమాణం(*fmts));
+    ఒకవేళ (!fmts)
+        తిరిగి AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+స్థిర పూర్ణాంకం cuda_transfer_దత్తాంశం(AVHWFramesContext *ctx, AVFrame *dst,
+                                 స్థిరరాశి AVFrame *src)
 {
     CUDAFramesContext       *priv = ctx->hwctx;
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->అంతర్గత->cuda_dl;
 
-    const AVFrame *sw_frame = src->hw_frames_ctx ? dst : src;
-    AVFrame *top_down = NULL, *bottom_up_dst = NULL;
+    స్థిరరాశి AVFrame *sw_చట్రం = src->hw_చట్రాలు_ctx ? dst : src;
+    AVFrame *శిఖరం_కిందికి = ఖాళీ, *bottom_పైకి_dst = ఖాళీ;
     CUcontext dummy;
-    int i, ret, copy_queued = 0, bottom_up = 0;
+    పూర్ణాంకం i, ret, copy_queued = 0, bottom_పైకి = 0;
 
     {
-        enum AVPixelFormat src_fmt = cuda_frame_hw_format(src);
-        enum AVPixelFormat dst_fmt = cuda_frame_hw_format(dst);
-        if ((src_fmt != AV_PIX_FMT_NONE &&
+        గణన AVPixelFormat src_fmt = cuda_చట్రం_hw_format(src);
+        గణన AVPixelFormat dst_fmt = cuda_చట్రం_hw_format(dst);
+        ఒకవేళ ((src_fmt != AV_PIX_FMT_NONE &&
              src_fmt != AV_PIX_FMT_CUDA && src_fmt != AV_PIX_FMT_CUARRAY) ||
             (dst_fmt != AV_PIX_FMT_NONE &&
              dst_fmt != AV_PIX_FMT_CUDA && dst_fmt != AV_PIX_FMT_CUARRAY))
-            return AVERROR(ENOSYS);
+            తిరిగి AVERROR(ENOSYS);
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(sw_frame->linesize); i++)
-        bottom_up |= sw_frame->linesize[i] < 0;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(sw_చట్రం->linesize); i++)
+        bottom_పైకి |= sw_చట్రం->linesize[i] < 0;
 
     /* The device copies rows upwards through memory, so a bottom-up frame is
      * transferred through a top-down copy of it. */
-    if (bottom_up) {
-        top_down = av_frame_alloc();
-        if (!top_down)
-            return AVERROR(ENOMEM);
-        top_down->format = ctx->sw_format;
-        top_down->width  = ctx->width;
-        top_down->height = ctx->height;
-        ret = av_hwframe_get_transfer_buffer((src->hw_frames_ctx ? src : dst)->hw_frames_ctx,
-                                             top_down);
-        if (ret < 0)
-            goto free_top_down;
-        top_down->width  = src->width;
-        top_down->height = src->height;
-        if (sw_frame == src) {
-            av_image_copy2(top_down->data, top_down->linesize, src->data, src->linesize,
-                           ctx->sw_format, src->width, src->height);
-            src = top_down;
-        } else {
-            bottom_up_dst = dst;
-            dst           = top_down;
+    ఒకవేళ (bottom_పైకి) {
+        శిఖరం_కిందికి = av_చట్రం_alloc();
+        ఒకవేళ (!శిఖరం_కిందికి)
+            తిరిగి AVERROR(ENOMEM);
+        శిఖరం_కిందికి->format = ctx->sw_format;
+        శిఖరం_కిందికి->వెడల్పు  = ctx->వెడల్పు;
+        శిఖరం_కిందికి->ఎత్తు = ctx->ఎత్తు;
+        ret = av_hwframe_get_transfer_బఫరు((src->hw_చట్రాలు_ctx ? src : dst)->hw_చట్రాలు_ctx,
+                                             శిఖరం_కిందికి);
+        ఒకవేళ (ret < 0)
+            వెళ్ళు free_శిఖరం_కిందికి;
+        శిఖరం_కిందికి->వెడల్పు  = src->వెడల్పు;
+        శిఖరం_కిందికి->ఎత్తు = src->ఎత్తు;
+        ఒకవేళ (sw_చట్రం == src) {
+            av_image_copy2(శిఖరం_కిందికి->దత్తాంశం, శిఖరం_కిందికి->linesize, src->దత్తాంశం, src->linesize,
+                           ctx->sw_format, src->వెడల్పు, src->ఎత్తు);
+            src = శిఖరం_కిందికి;
+        } లేకపోతే {
+            bottom_పైకి_dst = dst;
+            dst           = శిఖరం_కిందికి;
         }
     }
 
-    ret = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-    if (ret < 0)
-        goto free_top_down;
+    ret = CHECK_CU(cu->cu_Ctx_నెట్టు_Current(hwctx->cuda_ctx));
+    ఒకవేళ (ret < 0)
+        వెళ్ళు free_శిఖరం_కిందికి;
 
     /*
      * Copy one plane per iteration, bounded by the AVFrame linesizes. src and
@@ -631,411 +631,411 @@ static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
      *     generic cures != CUDA_SUCCESS branch) rather than silently copying a
      *     subset of the planes.
      */
-    for (i = 0; i < FF_ARRAY_ELEMS(src->data) && src->linesize[i]; i++) {
-        int src_is_nonplanar_cuarray = 0;
-        int dst_is_nonplanar_cuarray = 0;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(src->దత్తాంశం) && src->linesize[i]; i++) {
+        పూర్ణాంకం src_is_nonplanar_cuarray = 0;
+        పూర్ణాంకం dst_is_nonplanar_cuarray = 0;
 
-        int bytewidth = av_image_get_linesize(ctx->sw_format, src->width, i);
-        if (bytewidth < 0) {
+        పూర్ణాంకం bytewidth = av_image_get_linesize(ctx->sw_format, src->వెడల్పు, i);
+        ఒకవేళ (bytewidth < 0) {
             ret = bytewidth;
-            goto fail;
+            వెళ్ళు fail;
         }
 
         CUDA_MEMCPY2D cpy = {
             .srcPitch      = src->linesize[i],
             .dstPitch      = dst->linesize[i],
-            .WidthInBytes  = bytewidth,
-            .Height        = AV_CEIL_RSHIFT(src->height, ((i == 0 || i == 3) ? 0 : priv->shift_height)),
+            .వెడల్పు_లోపల_బైట్లు  = bytewidth,
+            .ఎత్తు_2        = AV_CEIL_RSHIFT(src->ఎత్తు, ((i == 0 || i == 3) ? 0 : priv->జరుపు_ఎత్తు)),
         };
 
-        if (src->format == AV_PIX_FMT_CUDA) {
-            cpy.srcMemoryType = CU_MEMORYTYPE_DEVICE;
-            cpy.srcDevice     = (CUdeviceptr)src->data[i];
-        } else if (src->format == AV_PIX_FMT_CUARRAY) {
-#if HAVE_FFNVCODEC_CUARRAY
+        ఒకవేళ (src->format == AV_PIX_FMT_CUDA) {
+            cpy.src_జ్ఞాపకం_Type = CU_MEMORYTYPE_DEVICE;
+            cpy.srcDevice     = (CUdeviceptr)src->దత్తాంశం[i];
+        } లేకపోతే ఒకవేళ (src->format == AV_PIX_FMT_CUARRAY) {
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
             CUarray array;
-            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)src->data[0], i);
-            if (cures == CUDA_ERROR_INVALID_VALUE && i == 0) {
+            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)src->దత్తాంశం[0], i);
+            ఒకవేళ (cures == CUDA_ERROR_INVALID_విలువ && i == 0) {
                 /* Not a multi-planar array (packed format): the whole array is
                  * the single plane. */
-                array = (CUarray)src->data[0];
+                array = (CUarray)src->దత్తాంశం[0];
                 src_is_nonplanar_cuarray = 1;
-            } else if (cures != CUDA_SUCCESS) {
+            } లేకపోతే ఒకవేళ (cures != CUDA_SUCCESS) {
                 ret = CHECK_CU(cures);
-                goto fail;
+                వెళ్ళు fail;
             }
 
-            cpy.srcMemoryType = CU_MEMORYTYPE_ARRAY;
+            cpy.src_జ్ఞాపకం_Type = CU_MEMORYTYPE_ARRAY;
             cpy.srcArray      = array;
-#else
+#లేకపోతే
             ret = AVERROR(ENOSYS);
-            goto exit;
-#endif
-        } else {
-            cpy.srcMemoryType = CU_MEMORYTYPE_HOST;
-            cpy.srcHost       = src->data[i];
+            వెళ్ళు నిష్క్రమించు;
+#అయితే_ముగింపు
+        } లేకపోతే {
+            cpy.src_జ్ఞాపకం_Type = CU_MEMORYTYPE_HOST;
+            cpy.srcHost       = src->దత్తాంశం[i];
         }
 
-        if (dst->format == AV_PIX_FMT_CUDA) {
-            cpy.dstMemoryType = CU_MEMORYTYPE_DEVICE;
-            cpy.dstDevice     = (CUdeviceptr)dst->data[i];
-        } else if (dst->format == AV_PIX_FMT_CUARRAY) {
-#if HAVE_FFNVCODEC_CUARRAY
+        ఒకవేళ (dst->format == AV_PIX_FMT_CUDA) {
+            cpy.dst_జ్ఞాపకం_Type = CU_MEMORYTYPE_DEVICE;
+            cpy.dstDevice     = (CUdeviceptr)dst->దత్తాంశం[i];
+        } లేకపోతే ఒకవేళ (dst->format == AV_PIX_FMT_CUARRAY) {
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
             CUarray array;
-            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)dst->data[0], i);
-            if (cures == CUDA_ERROR_INVALID_VALUE && i == 0) {
+            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)dst->దత్తాంశం[0], i);
+            ఒకవేళ (cures == CUDA_ERROR_INVALID_విలువ && i == 0) {
                 /* Not a multi-planar array (packed format): the whole array is
                  * the single plane. */
-                array = (CUarray)dst->data[0];
+                array = (CUarray)dst->దత్తాంశం[0];
                 dst_is_nonplanar_cuarray = 1;
-            } else if (cures != CUDA_SUCCESS) {
+            } లేకపోతే ఒకవేళ (cures != CUDA_SUCCESS) {
                 ret = CHECK_CU(cures);
-                goto fail;
+                వెళ్ళు fail;
             }
 
-            cpy.dstMemoryType = CU_MEMORYTYPE_ARRAY;
+            cpy.dst_జ్ఞాపకం_Type = CU_MEMORYTYPE_ARRAY;
             cpy.dstArray      = array;
-#else
+#లేకపోతే
             ret = AVERROR(ENOSYS);
-            goto exit;
-#endif
-        } else {
-            cpy.dstMemoryType = CU_MEMORYTYPE_HOST;
-            cpy.dstHost       = dst->data[i];
+            వెళ్ళు నిష్క్రమించు;
+#అయితే_ముగింపు
+        } లేకపోతే {
+            cpy.dst_జ్ఞాపకం_Type = CU_MEMORYTYPE_HOST;
+            cpy.dstHost       = dst->దత్తాంశం[i];
         }
 
-        ret = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, hwctx->stream));
-        if (ret < 0)
-            goto fail;
+        ret = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, hwctx->ప్రవాహం));
+        ఒకవేళ (ret < 0)
+            వెళ్ళు fail;
         copy_queued = 1;
 
-        if (src_is_nonplanar_cuarray || dst_is_nonplanar_cuarray)
-            break;
+        ఒకవేళ (src_is_nonplanar_cuarray || dst_is_nonplanar_cuarray)
+            ఆపు;
     }
 
     /* The caller may reuse host memory once the transfer returns. */
-    if (!src->hw_frames_ctx || !dst->hw_frames_ctx) {
-        ret = CHECK_CU(cu->cuStreamSynchronize(hwctx->stream));
-        if (ret < 0)
-            goto exit;
+    ఒకవేళ (!src->hw_చట్రాలు_ctx || !dst->hw_చట్రాలు_ctx) {
+        ret = CHECK_CU(cu->cu_ప్రవాహం_Synchronize(hwctx->ప్రవాహం));
+        ఒకవేళ (ret < 0)
+            వెళ్ళు నిష్క్రమించు;
     }
 
 fail:
-    if (ret < 0 && copy_queued)
-        CHECK_CU(cu->cuStreamSynchronize(hwctx->stream));
-exit:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    ఒకవేళ (ret < 0 && copy_queued)
+        CHECK_CU(cu->cu_ప్రవాహం_Synchronize(hwctx->ప్రవాహం));
+నిష్క్రమించు:
+    CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
 
-    if (bottom_up_dst && ret >= 0)
-        av_image_copy2(bottom_up_dst->data, bottom_up_dst->linesize,
-                       top_down->data, top_down->linesize,
-                       ctx->sw_format, src->width, src->height);
-free_top_down:
-    av_frame_free(&top_down);
+    ఒకవేళ (bottom_పైకి_dst && ret >= 0)
+        av_image_copy2(bottom_పైకి_dst->దత్తాంశం, bottom_పైకి_dst->linesize,
+                       శిఖరం_కిందికి->దత్తాంశం, శిఖరం_కిందికి->linesize,
+                       ctx->sw_format, src->వెడల్పు, src->ఎత్తు);
+free_శిఖరం_కిందికి:
+    av_చట్రం_free(&శిఖరం_కిందికి);
 
-    return ret;
+    తిరిగి ret;
 }
 
-static void cuda_device_uninit(AVHWDeviceContext *device_ctx)
+స్థిర శూన్య cuda_device_uninit(AVHWDeviceContext *device_ctx)
 {
     CUDADeviceContext *hwctx = device_ctx->hwctx;
 
-    if (hwctx->p.internal) {
-        CudaFunctions *cu = hwctx->internal.cuda_dl;
+    ఒకవేళ (hwctx->p.అంతర్గత) {
+        CudaFunctions *cu = hwctx->అంతర్గత.cuda_dl;
 
-        if (hwctx->internal.is_allocated && hwctx->p.cuda_ctx) {
-            if (hwctx->internal.flags & AV_CUDA_USE_PRIMARY_CONTEXT)
-                CHECK_CU(cu->cuDevicePrimaryCtxRelease(hwctx->internal.cuda_device));
-            else if (!(hwctx->internal.flags & AV_CUDA_USE_CURRENT_CONTEXT))
+        ఒకవేళ (hwctx->అంతర్గత.is_allocated && hwctx->p.cuda_ctx) {
+            ఒకవేళ (hwctx->అంతర్గత.flags & AV_CUDA_USE_PRIMARY_CONTEXT)
+                CHECK_CU(cu->cuDevicePrimaryCtxRelease(hwctx->అంతర్గత.cuda_device));
+            లేకపోతే ఒకవేళ (!(hwctx->అంతర్గత.flags & AV_CUDA_USE_CURRENT_CONTEXT))
                 CHECK_CU(cu->cuCtxDestroy(hwctx->p.cuda_ctx));
 
-            hwctx->p.cuda_ctx = NULL;
+            hwctx->p.cuda_ctx = ఖాళీ;
         }
 
-        cuda_free_functions(&hwctx->internal.cuda_dl);
-        memset(&hwctx->internal, 0, sizeof(hwctx->internal));
-        hwctx->p.internal = NULL;
+        cuda_free_functions(&hwctx->అంతర్గత.cuda_dl);
+        memset(&hwctx->అంతర్గత, 0, పరిమాణం(hwctx->అంతర్గత));
+        hwctx->p.అంతర్గత = ఖాళీ;
     }
 }
 
-static int cuda_device_init(AVHWDeviceContext *ctx)
+స్థిర పూర్ణాంకం cuda_device_init(AVHWDeviceContext *ctx)
 {
     CUDADeviceContext *hwctx = ctx->hwctx;
-    int ret;
+    పూర్ణాంకం ret;
 
-    hwctx->p.internal = &hwctx->internal;
+    hwctx->p.అంతర్గత = &hwctx->అంతర్గత;
 
-    if (!hwctx->internal.cuda_dl) {
-        ret = cuda_load_functions(&hwctx->internal.cuda_dl, ctx);
-        if (ret < 0) {
+    ఒకవేళ (!hwctx->అంతర్గత.cuda_dl) {
+        ret = cuda_ఎక్కించు_functions(&hwctx->అంతర్గత.cuda_dl, ctx);
+        ఒకవేళ (ret < 0) {
             av_log(ctx, AV_LOG_ERROR, "Could not dynamically load CUDA\n");
-            goto error;
+            వెళ్ళు error;
         }
     }
 
-    return 0;
+    తిరిగి 0;
 
 error:
     cuda_device_uninit(ctx);
-    return ret;
+    తిరిగి ret;
 }
 
-static int cuda_context_init(AVHWDeviceContext *device_ctx, int flags) {
+స్థిర పూర్ణాంకం cuda_context_init(AVHWDeviceContext *device_ctx, పూర్ణాంకం flags) {
     AVCUDADeviceContext *hwctx = device_ctx->hwctx;
     CudaFunctions *cu;
     CUcontext dummy;
-    int ret, dev_active = 0;
-    unsigned int dev_flags = 0;
+    పూర్ణాంకం ret, dev_చురుకైన = 0;
+    గుర్తులేని పూర్ణాంకం dev_flags = 0;
 
-    const unsigned int desired_flags = CU_CTX_SCHED_BLOCKING_SYNC;
+    స్థిరరాశి గుర్తులేని పూర్ణాంకం desired_flags = CU_CTX_SCHED_BLOCKING_SYNC;
 
-    cu = hwctx->internal->cuda_dl;
+    cu = hwctx->అంతర్గత->cuda_dl;
 
-    hwctx->internal->flags = flags;
+    hwctx->అంతర్గత->flags = flags;
 
-    if (flags & AV_CUDA_USE_PRIMARY_CONTEXT) {
-        ret = CHECK_CU(cu->cuDevicePrimaryCtxGetState(hwctx->internal->cuda_device,
-                       &dev_flags, &dev_active));
-        if (ret < 0)
-            return ret;
+    ఒకవేళ (flags & AV_CUDA_USE_PRIMARY_CONTEXT) {
+        ret = CHECK_CU(cu->cuDevicePrimaryCtxGetState(hwctx->అంతర్గత->cuda_device,
+                       &dev_flags, &dev_చురుకైన));
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
 
-        if (dev_active && dev_flags != desired_flags) {
+        ఒకవేళ (dev_చురుకైన && dev_flags != desired_flags) {
             av_log(device_ctx, AV_LOG_ERROR, "Primary context already active with incompatible flags.\n");
-            return AVERROR(ENOTSUP);
-        } else if (dev_flags != desired_flags) {
-            ret = CHECK_CU(cu->cuDevicePrimaryCtxSetFlags(hwctx->internal->cuda_device,
+            తిరిగి AVERROR(ENOTSUP);
+        } లేకపోతే ఒకవేళ (dev_flags != desired_flags) {
+            ret = CHECK_CU(cu->cu_Device_Primary_Ctx_సమితి_Flags(hwctx->అంతర్గత->cuda_device,
                            desired_flags));
-            if (ret < 0)
-                return ret;
+            ఒకవేళ (ret < 0)
+                తిరిగి ret;
         }
 
         ret = CHECK_CU(cu->cuDevicePrimaryCtxRetain(&hwctx->cuda_ctx,
-                                                    hwctx->internal->cuda_device));
-        if (ret < 0)
-            return ret;
-    } else if (flags & AV_CUDA_USE_CURRENT_CONTEXT) {
+                                                    hwctx->అంతర్గత->cuda_device));
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
+    } లేకపోతే ఒకవేళ (flags & AV_CUDA_USE_CURRENT_CONTEXT) {
         ret = CHECK_CU(cu->cuCtxGetCurrent(&hwctx->cuda_ctx));
-        if (ret < 0)
-            return ret;
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
         av_log(device_ctx, AV_LOG_INFO, "Using current CUDA context.\n");
-    } else {
+    } లేకపోతే {
         ret = CHECK_CU(cu->cuCtxCreate(&hwctx->cuda_ctx, desired_flags,
-                                       hwctx->internal->cuda_device));
-        if (ret < 0)
-            return ret;
+                                       hwctx->అంతర్గత->cuda_device));
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
 
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        CHECK_CU(cu->cu_Ctx_తీయి_Current(&dummy));
     }
 
-    hwctx->internal->is_allocated = 1;
+    hwctx->అంతర్గత->is_allocated = 1;
 
     // Setting stream to NULL will make functions automatically use the default CUstream
-    hwctx->stream = NULL;
+    hwctx->ప్రవాహం = ఖాళీ;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int cuda_flags_from_opts(AVHWDeviceContext *device_ctx,
-                                AVDictionary *opts, int *flags)
+స్థిర పూర్ణాంకం cuda_flags_from_opts(AVHWDeviceContext *device_ctx,
+                                AVDictionary *opts, పూర్ణాంకం *flags)
 {
-    AVDictionaryEntry *primary_ctx_opt = av_dict_get(opts, "primary_ctx", NULL, 0);
-    AVDictionaryEntry *current_ctx_opt = av_dict_get(opts, "current_ctx", NULL, 0);
+    AVDictionary_నమోదు *primary_ctx_opt = av_dict_get(opts, "primary_ctx", ఖాళీ, 0);
+    AVDictionary_నమోదు *current_ctx_opt = av_dict_get(opts, "current_ctx", ఖాళీ, 0);
 
-    int use_primary_ctx = 0, use_current_ctx = 0;
-    if (primary_ctx_opt)
-        use_primary_ctx = strtol(primary_ctx_opt->value, NULL, 10);
+    పూర్ణాంకం use_primary_ctx = 0, use_current_ctx = 0;
+    ఒకవేళ (primary_ctx_opt)
+        use_primary_ctx = strtol(primary_ctx_opt->విలువ, ఖాళీ, 10);
 
-    if (current_ctx_opt)
-        use_current_ctx = strtol(current_ctx_opt->value, NULL, 10);
+    ఒకవేళ (current_ctx_opt)
+        use_current_ctx = strtol(current_ctx_opt->విలువ, ఖాళీ, 10);
 
-    if (use_primary_ctx && use_current_ctx) {
+    ఒకవేళ (use_primary_ctx && use_current_ctx) {
         av_log(device_ctx, AV_LOG_ERROR, "Requested both primary and current CUDA context simultaneously.\n");
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    if (primary_ctx_opt && use_primary_ctx) {
+    ఒకవేళ (primary_ctx_opt && use_primary_ctx) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Using CUDA primary device context\n");
         *flags |= AV_CUDA_USE_PRIMARY_CONTEXT;
-    } else if (primary_ctx_opt) {
+    } లేకపోతే ఒకవేళ (primary_ctx_opt) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Disabling use of CUDA primary device context\n");
         *flags &= ~AV_CUDA_USE_PRIMARY_CONTEXT;
     }
 
-    if (current_ctx_opt && use_current_ctx) {
+    ఒకవేళ (current_ctx_opt && use_current_ctx) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Using CUDA current device context\n");
         *flags |= AV_CUDA_USE_CURRENT_CONTEXT;
-    } else if (current_ctx_opt) {
+    } లేకపోతే ఒకవేళ (current_ctx_opt) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Disabling use of CUDA current device context\n");
         *flags &= ~AV_CUDA_USE_CURRENT_CONTEXT;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int cuda_device_create(AVHWDeviceContext *device_ctx,
-                              const char *device,
-                              AVDictionary *opts, int flags)
+స్థిర పూర్ణాంకం cuda_device_create(AVHWDeviceContext *device_ctx,
+                              స్థిరరాశి అక్షరం *device,
+                              AVDictionary *opts, పూర్ణాంకం flags)
 {
     AVCUDADeviceContext *hwctx = device_ctx->hwctx;
     CudaFunctions *cu;
-    int ret, device_idx = 0;
+    పూర్ణాంకం ret, device_idx = 0;
 
     ret = cuda_flags_from_opts(device_ctx, opts, &flags);
-    if (ret < 0)
-        goto error;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
-    if (device)
-        device_idx = strtol(device, NULL, 0);
+    ఒకవేళ (device)
+        device_idx = strtol(device, ఖాళీ, 0);
 
     ret = cuda_device_init(device_ctx);
-    if (ret < 0)
-        goto error;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
-    cu = hwctx->internal->cuda_dl;
+    cu = hwctx->అంతర్గత->cuda_dl;
 
     ret = CHECK_CU(cu->cuInit(0));
-    if (ret < 0)
-        goto error;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
-    ret = CHECK_CU(cu->cuDeviceGet(&hwctx->internal->cuda_device, device_idx));
-    if (ret < 0)
-        goto error;
+    ret = CHECK_CU(cu->cuDeviceGet(&hwctx->అంతర్గత->cuda_device, device_idx));
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
     ret = cuda_context_init(device_ctx, flags);
-    if (ret < 0)
-        goto error;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
-    return 0;
+    తిరిగి 0;
 
 error:
     cuda_device_uninit(device_ctx);
-    return ret;
+    తిరిగి ret;
 }
 
-static int cuda_device_derive(AVHWDeviceContext *device_ctx,
+స్థిర పూర్ణాంకం cuda_device_derive(AVHWDeviceContext *device_ctx,
                               AVHWDeviceContext *src_ctx, AVDictionary *opts,
-                              int flags) {
+                              పూర్ణాంకం flags) {
     AVCUDADeviceContext *hwctx = device_ctx->hwctx;
     CudaFunctions *cu;
-    const char *src_uuid = NULL;
-#if CONFIG_VULKAN
+    స్థిరరాశి అక్షరం *src_uuid = ఖాళీ;
+#ఒకవేళ CONFIG_VULKAN
     VkPhysicalDeviceIDProperties vk_idp;
-#endif
-    int ret, i, device_count;
+#అయితే_ముగింపు
+    పూర్ణాంకం ret, i, device_లెక్క;
 
     ret = cuda_flags_from_opts(device_ctx, opts, &flags);
-    if (ret < 0)
-        goto error;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
-#if CONFIG_VULKAN
+#ఒకవేళ CONFIG_VULKAN
     vk_idp = (VkPhysicalDeviceIDProperties) {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES,
     };
-#endif
+#అయితే_ముగింపు
 
-    switch (src_ctx->type) {
-#if CONFIG_VULKAN
-#define TYPE PFN_vkGetPhysicalDeviceProperties2
-    case AV_HWDEVICE_TYPE_VULKAN: {
+    ఎంపిక (src_ctx->type) {
+#ఒకవేళ CONFIG_VULKAN
+#నిర్వచించు TYPE PFN_vkGetPhysicalDeviceProperties2
+    స్థితి AV_HWDEVICE_TYPE_VULKAN: {
         AVVulkanDeviceContext *vkctx = src_ctx->hwctx;
         TYPE prop_fn = (TYPE)vkctx->get_proc_addr(vkctx->inst, "vkGetPhysicalDeviceProperties2");
         VkPhysicalDeviceProperties2 vk_dev_props = {
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
-            .pNext = &vk_idp,
+            .p_తదుపరి = &vk_idp,
         };
         prop_fn(vkctx->phys_dev, &vk_dev_props);
         src_uuid = vk_idp.deviceUUID;
-        break;
+        ఆపు;
     }
-#undef TYPE
-#endif
-    default:
+#నిర్వచనం_రద్దు TYPE
+#అయితే_ముగింపు
+    అప్రమేయ:
         ret = AVERROR(ENOSYS);
-        goto error;
+        వెళ్ళు error;
     }
 
-    if (!src_uuid) {
+    ఒకవేళ (!src_uuid) {
         av_log(device_ctx, AV_LOG_ERROR,
                "Failed to get UUID of source device.\n");
         ret = AVERROR(EINVAL);
-        goto error;
+        వెళ్ళు error;
     }
 
     ret = cuda_device_init(device_ctx);
-    if (ret < 0)
-        goto error;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
-    cu = hwctx->internal->cuda_dl;
+    cu = hwctx->అంతర్గత->cuda_dl;
 
     ret = CHECK_CU(cu->cuInit(0));
-    if (ret < 0)
-        goto error;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
-    ret = CHECK_CU(cu->cuDeviceGetCount(&device_count));
-    if (ret < 0)
-        goto error;
+    ret = CHECK_CU(cu->cu_Device_Get_లెక్క(&device_లెక్క));
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
-    hwctx->internal->cuda_device = -1;
-    for (i = 0; i < device_count; i++) {
+    hwctx->అంతర్గత->cuda_device = -1;
+    కొరకు (i = 0; i < device_లెక్క; i++) {
         CUdevice dev;
         CUuuid uuid;
 
         ret = CHECK_CU(cu->cuDeviceGet(&dev, i));
-        if (ret < 0)
-            goto error;
+        ఒకవేళ (ret < 0)
+            వెళ్ళు error;
 
         ret = CHECK_CU(cu->cuDeviceGetUuid(&uuid, dev));
-        if (ret < 0)
-            goto error;
+        ఒకవేళ (ret < 0)
+            వెళ్ళు error;
 
-        if (memcmp(src_uuid, uuid.bytes, sizeof (uuid.bytes)) == 0) {
-            hwctx->internal->cuda_device = dev;
-            break;
+        ఒకవేళ (memcmp(src_uuid, uuid.బైట్లు, పరిమాణం (uuid.బైట్లు)) == 0) {
+            hwctx->అంతర్గత->cuda_device = dev;
+            ఆపు;
         }
     }
 
-    if (hwctx->internal->cuda_device == -1) {
+    ఒకవేళ (hwctx->అంతర్గత->cuda_device == -1) {
         av_log(device_ctx, AV_LOG_ERROR, "Could not derive CUDA device.\n");
         ret = AVERROR(ENODEV);
-        goto error;
+        వెళ్ళు error;
     }
 
     ret = cuda_context_init(device_ctx, flags);
-    if (ret < 0)
-        goto error;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు error;
 
-    return 0;
+    తిరిగి 0;
 
 error:
     cuda_device_uninit(device_ctx);
-    return ret;
+    తిరిగి ret;
 }
 
-const HWContextType ff_hwcontext_type_cuda = {
+స్థిరరాశి HWContextType ff_hwcontext_type_cuda = {
     .type                 = AV_HWDEVICE_TYPE_CUDA,
     .name                 = "CUDA",
 
-    .device_hwctx_size    = sizeof(CUDADeviceContext),
-    .frames_hwctx_size    = sizeof(CUDAFramesContext),
+    .device_hwctx_కొలత    = పరిమాణం(CUDADeviceContext),
+    .చట్రాలు_hwctx_కొలత    = పరిమాణం(CUDAFramesContext),
 
     .device_create        = cuda_device_create,
     .device_derive        = cuda_device_derive,
     .device_init          = cuda_device_init,
     .device_uninit        = cuda_device_uninit,
-    .frames_get_constraints = cuda_frames_get_constraints,
-    .frames_init          = cuda_frames_init,
-    .frames_uninit        = cuda_frames_uninit,
-    .frames_get_buffer    = cuda_get_buffer,
+    .చట్రాలు_get_constraints = cuda_చట్రాలు_get_constraints,
+    .చట్రాలు_init          = cuda_చట్రాలు_init,
+    .చట్రాలు_uninit        = cuda_చట్రాలు_uninit,
+    .చట్రాలు_get_బఫరు    = cuda_get_బఫరు,
     .transfer_get_formats = cuda_transfer_get_formats,
-#if HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
-    .transfer_buffer_alloc = cuda_transfer_buffer_alloc,
-#endif
-    .transfer_data_to     = cuda_transfer_data,
-    .transfer_data_from   = cuda_transfer_data,
+#ఒకవేళ HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
+    .transfer_బఫరు_alloc = cuda_transfer_బఫరు_alloc,
+#అయితే_ముగింపు
+    .transfer_దత్తాంశం_గమ్యం     = cuda_transfer_దత్తాంశం,
+    .transfer_దత్తాంశం_from   = cuda_transfer_దత్తాంశం,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_CUDA,
-#if HAVE_FFNVCODEC_CUARRAY
+    .pix_fmts             = (స్థిరరాశి గణన AVPixelFormat[]){ AV_PIX_FMT_CUDA,
+#ఒకవేళ HAVE_FFNVCODEC_CUARRAY
                                                           AV_PIX_FMT_CUARRAY,
-#endif
+#అయితే_ముగింపు
                                                           AV_PIX_FMT_NONE },
 };

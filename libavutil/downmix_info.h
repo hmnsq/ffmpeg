@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DOWNMIX_INFO_H
-#define AVUTIL_DOWNMIX_INFO_H
+#నిర్వచితం_కాకపోతే AVUTIL_DOWNMIX_INFO_H
+#నిర్వచించు AVUTIL_DOWNMIX_INFO_H
 
-#include "avassert.h"
-#include "frame.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "frame.h"
 
 /**
  * @file
@@ -42,7 +42,7 @@
 /**
  * Possible downmix types.
  */
-enum AVDownmixType {
+గణన AVDownmixType {
     AV_DOWNMIX_TYPE_UNKNOWN, /**< Not indicated. */
     AV_DOWNMIX_TYPE_LORO,    /**< Lo/Ro 2-channel downmix (Stereo). */
     AV_DOWNMIX_TYPE_LTRT,    /**< Lt/Rt 2-channel downmix, Dolby Surround compatible. */
@@ -56,41 +56,41 @@ enum AVDownmixType {
  * All fields are set by the decoder to the value indicated in the audio
  * bitstream (if present), or to a "sane" default otherwise.
  */
-typedef struct AVDownmixInfo {
+రకనిర్వచనం నిర్మాణం AVDownmixInfo {
     /**
      * Type of downmix preferred by the mastering engineer.
      */
-    enum AVDownmixType preferred_downmix_type;
+    గణన AVDownmixType preferred_downmix_type;
 
     /**
      * Absolute scale factor representing the nominal level of the center
      * channel during a regular downmix.
      */
-    double center_mix_level;
+    ద్విగుణ center_mix_level;
 
     /**
      * Absolute scale factor representing the nominal level of the center
      * channel during an Lt/Rt compatible downmix.
      */
-    double center_mix_level_ltrt;
+    ద్విగుణ center_mix_level_ltrt;
 
     /**
      * Absolute scale factor representing the nominal level of the surround
      * channels during a regular downmix.
      */
-    double surround_mix_level;
+    ద్విగుణ surround_mix_level;
 
     /**
      * Absolute scale factor representing the nominal level of the surround
      * channels during an Lt/Rt compatible downmix.
      */
-    double surround_mix_level_ltrt;
+    ద్విగుణ surround_mix_level_ltrt;
 
     /**
      * Absolute scale factor representing the level at which the LFE data is
      * mixed into L/R channels during downmixing.
      */
-    double lfe_mix_level;
+    ద్విగుణ lfe_mix_level;
 } AVDownmixInfo;
 
 /**
@@ -103,7 +103,7 @@ typedef struct AVDownmixInfo {
  * @return the AVDownmixInfo structure to be edited by the caller, or NULL if
  *         the structure cannot be allocated.
  */
-AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame);
+AVDownmixInfo *av_downmix_info_update_side_దత్తాంశం(AVFrame *చట్రం);
 
 /**
  * This structure describes optional metadata relevant to a downmix procedure
@@ -113,35 +113,35 @@ AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame);
  * sizeof(AVDownmixMatrix) is not a part of the ABI and new fields may be
  * added to it.
  */
-typedef struct AVDownmixMatrix {
+రకనిర్వచనం నిర్మాణం AVDownmix_మాతృక {
     /**
      * Type of downmix the coeffs will produce.
      * Output channel count is derived from this value.
      */
-    enum AVDownmixType downmix_type;
+    గణన AVDownmixType downmix_type;
 
     /**
      * Input channel count.
      */
-    int in_ch_count;
+    పూర్ణాంకం లోపల_ch_లెక్క;
 
     /**
      * Amount of coefficients in the matrix.
      */
-    unsigned int nb_coeffs;
+    గుర్తులేని పూర్ణాంకం nb_coeffs;
 
     /**
      * Offset in bytes from the beginning of this structure at which the array
      * of coefficients starts.
      */
-    size_t coeffs_offset;
-} AVDownmixMatrix;
+    size_t coeffs_స్థానభ్రంశం;
+} AVDownmix_మాతృక;
 
 /**
  * Data type for storing coefficients, which are allocated as a part of
  * AVDownmixMatrix and should be retrieved with @ref av_downmix_matrix_coeff.
  */
-typedef double AVDownmixCoeff;
+రకనిర్వచనం ద్విగుణ AVDownmixCoeff;
 
 /**
  * Get a pointer to the coeff that represents the weight of input channel
@@ -150,11 +150,11 @@ typedef double AVDownmixCoeff;
  * out must be between 0 and the implicit output channel count from
  * @ref AVDownmixMatrix.downmix_type "downmix_type" - 1.
  */
-static av_always_inline AVDownmixCoeff*
-av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
+స్థిర av_always_inline AVDownmixCoeff*
+av_downmix_మాతృక_coeff(AVDownmix_మాతృక *dm, గుర్తులేని పూర్ణాంకం బహిర్గతం, గుర్తులేని పూర్ణాంకం లోపల)
 {
-    AVDownmixCoeff *coeff = (AVDownmixCoeff *)((uint8_t *)dm + dm->coeffs_offset);
-    return &coeff[in + dm->in_ch_count * out];
+    AVDownmixCoeff *coeff = (AVDownmixCoeff *)((uint8_t *)dm + dm->coeffs_స్థానభ్రంశం);
+    తిరిగి &coeff[లోపల + dm->లోపల_ch_లెక్క * బహిర్గతం];
 }
 
 /**
@@ -166,8 +166,8 @@ av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size);
+AVDownmix_మాతృక *av_downmix_మాతృక_alloc(గణన AVDownmixType type,
+                                         పూర్ణాంకం లోపల_ch_లెక్క, size_t *బహిర్గతం_కొలత);
 
 /**
  * @}
@@ -177,4 +177,4 @@ AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
  * @}
  */
 
-#endif /* AVUTIL_DOWNMIX_INFO_H */
+#అయితే_ముగింపు /* AVUTIL_DOWNMIX_INFO_H */

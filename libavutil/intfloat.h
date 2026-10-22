@@ -18,60 +18,60 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_INTFLOAT_H
-#define AVUTIL_INTFLOAT_H
+#నిర్వచితం_కాకపోతే AVUTIL_INTFLOAT_H
+#నిర్వచించు AVUTIL_INTFLOAT_H
 
-#include <stdint.h>
-#include "attributes.h"
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ "attributes.h"
 
-union av_intfloat32 {
+సంఘం av_intfloat32 {
     uint32_t i;
-    float    f;
+    దశాంశం    f;
 };
 
-union av_intfloat64 {
+సంఘం av_intfloat64 {
     uint64_t i;
-    double   f;
+    ద్విగుణ   f;
 };
 
 /**
  * Reinterpret a 32-bit integer as a float.
  */
-static av_always_inline float av_int2float(uint32_t i)
+స్థిర av_always_inline దశాంశం av_int2float(uint32_t i)
 {
-    union av_intfloat32 v;
+    సంఘం av_intfloat32 v;
     v.i = i;
-    return v.f;
+    తిరిగి v.f;
 }
 
 /**
  * Reinterpret a float as a 32-bit integer.
  */
-static av_always_inline uint32_t av_float2int(float f)
+స్థిర av_always_inline uint32_t av_float2int(దశాంశం f)
 {
-    union av_intfloat32 v;
+    సంఘం av_intfloat32 v;
     v.f = f;
-    return v.i;
+    తిరిగి v.i;
 }
 
 /**
  * Reinterpret a 64-bit integer as a double.
  */
-static av_always_inline double av_int2double(uint64_t i)
+స్థిర av_always_inline ద్విగుణ av_int2double(uint64_t i)
 {
-    union av_intfloat64 v;
+    సంఘం av_intfloat64 v;
     v.i = i;
-    return v.f;
+    తిరిగి v.f;
 }
 
 /**
  * Reinterpret a double as a 64-bit integer.
  */
-static av_always_inline uint64_t av_double2int(double f)
+స్థిర av_always_inline uint64_t av_double2int(ద్విగుణ f)
 {
-    union av_intfloat64 v;
+    సంఘం av_intfloat64 v;
     v.f = f;
-    return v.i;
+    తిరిగి v.i;
 }
 
-#endif /* AVUTIL_INTFLOAT_H */
+#అయితే_ముగింపు /* AVUTIL_INTFLOAT_H */

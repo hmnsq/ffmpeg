@@ -16,23 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
-#include "libavutil/video_enc_params.h"
+#అన్తర్భావ "libavutil/frame.h"
+#అన్తర్భావ "libavutil/mem.h"
+#అన్తర్భావ "libavutil/video_enc_params.h"
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
     AVVideoEncParams *par;
-    AVVideoBlockParams *block;
-    AVFrame *frame;
-    size_t size;
+    AVVideo_ఖండం_Params *ఖండం;
+    AVFrame *చట్రం;
+    size_t కొలత;
 
-    static const struct {
-        enum AVVideoEncParamsType type;
-        const char *name;
+    స్థిర స్థిరరాశి నిర్మాణం {
+        గణన AVVideoEncParamsType type;
+        స్థిరరాశి అక్షరం *name;
     } types[] = {
         { AV_VIDEO_ENC_PARAMS_VP9,   "VP9"   },
         { AV_VIDEO_ENC_PARAMS_H264,  "H264"  },
@@ -40,91 +40,91 @@ int main(void)
     };
 
     /* av_video_enc_params_alloc - each type with blocks */
-    printf("Testing av_video_enc_params_alloc()\n");
-    for (int i = 0; i < 3; i++) {
-        par = av_video_enc_params_alloc(types[i].type, 4, &size);
-        if (par) {
-            printf("%s: OK, type=%d, nb_blocks=%u, size>0=%s\n",
-                   types[i].name, par->type, par->nb_blocks,
-                   size > 0 ? "yes" : "no");
+    రాయి("Testing av_video_enc_params_alloc()\n");
+    కొరకు (పూర్ణాంకం i = 0; i < 3; i++) {
+        par = av_video_enc_params_alloc(types[i].type, 4, &కొలత);
+        ఒకవేళ (par) {
+            రాయి("%s: OK, type=%d, nb_blocks=%u, size>0=%s\n",
+                   types[i].name, par->type, par->nb_ఖండాలు,
+                   కొలత > 0 ? "yes" : "no");
             av_free(par);
-        } else {
-            printf("%s: FAIL\n", types[i].name);
+        } లేకపోతే {
+            రాయి("%s: FAIL\n", types[i].name);
         }
     }
 
     /* zero blocks */
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_VP9, 0, &size);
-    if (par) {
-        printf("zero blocks: OK, nb_blocks=%u\n", par->nb_blocks);
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_VP9, 0, &కొలత);
+    ఒకవేళ (par) {
+        రాయి("zero blocks: OK, nb_blocks=%u\n", par->nb_ఖండాలు);
         av_free(par);
-    } else {
-        printf("zero blocks: FAIL\n");
+    } లేకపోతే {
+        రాయి("zero blocks: FAIL\n");
     }
 
     /* alloc without size */
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 1, NULL);
-    printf("alloc (no size): %s\n", par ? "OK" : "FAIL");
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 1, ఖాళీ);
+    రాయి("alloc (no size): %s\n", par ? "OK" : "FAIL");
     av_free(par);
 
     /* av_video_enc_params_block - write and read back */
-    printf("\nTesting av_video_enc_params_block()\n");
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 3, NULL);
-    if (par) {
+    రాయి("\nTesting av_video_enc_params_block()\n");
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 3, ఖాళీ);
+    ఒకవేళ (par) {
         par->qp = 26;
         par->delta_qp[0][0] = -2;
         par->delta_qp[0][1] = -1;
-        printf("frame qp=%d, delta_qp[0]={%d,%d}\n",
+        రాయి("frame qp=%d, delta_qp[0]={%d,%d}\n",
                par->qp, par->delta_qp[0][0], par->delta_qp[0][1]);
 
-        for (int i = 0; i < 3; i++) {
-            block = av_video_enc_params_block(par, i);
-            if ((uint8_t *)block != (uint8_t *)par + par->blocks_offset +
-                                    (size_t)i * par->block_size)
-                printf("block %d: pointer inconsistent with blocks_offset/block_size\n", i);
-            block->src_x = i * 16;
-            block->src_y = i * 16;
-            block->w = 16;
-            block->h = 16;
-            block->delta_qp = i - 1;
+        కొరకు (పూర్ణాంకం i = 0; i < 3; i++) {
+            ఖండం = av_video_enc_params_ఖండం(par, i);
+            ఒకవేళ ((uint8_t *)ఖండం != (uint8_t *)par + par->ఖండాలు_స్థానభ్రంశం +
+                                    (size_t)i * par->ఖండం_కొలత)
+                రాయి("block %d: pointer inconsistent with blocks_offset/block_size\n", i);
+            ఖండం->src_x = i * 16;
+            ఖండం->src_y = i * 16;
+            ఖండం->w = 16;
+            ఖండం->h = 16;
+            ఖండం->delta_qp = i - 1;
         }
-        for (int i = 0; i < 3; i++) {
-            block = av_video_enc_params_block(par, i);
-            printf("block %d: src=(%d,%d) size=%dx%d delta_qp=%d\n",
-                   i, block->src_x, block->src_y,
-                   block->w, block->h, block->delta_qp);
+        కొరకు (పూర్ణాంకం i = 0; i < 3; i++) {
+            ఖండం = av_video_enc_params_ఖండం(par, i);
+            రాయి("block %d: src=(%d,%d) size=%dx%d delta_qp=%d\n",
+                   i, ఖండం->src_x, ఖండం->src_y,
+                   ఖండం->w, ఖండం->h, ఖండం->delta_qp);
         }
         av_free(par);
     }
 
     /* av_video_enc_params_create_side_data */
-    printf("\nTesting av_video_enc_params_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        par = av_video_enc_params_create_side_data(frame,
+    రాయి("\nTesting av_video_enc_params_create_side_data()\n");
+    చట్రం = av_చట్రం_alloc();
+    ఒకవేళ (చట్రం) {
+        par = av_video_enc_params_create_side_దత్తాంశం(చట్రం,
                   AV_VIDEO_ENC_PARAMS_VP9, 2);
-        if (par) {
-            printf("side_data: OK, type=%d, nb_blocks=%u\n",
-                   par->type, par->nb_blocks);
-            block = av_video_enc_params_block(par, 0);
-            block->delta_qp = 5;
-            block = av_video_enc_params_block(par, 0);
-            printf("side_data block 0: delta_qp=%d\n", block->delta_qp);
-        } else {
-            printf("side_data: FAIL\n");
+        ఒకవేళ (par) {
+            రాయి("side_data: OK, type=%d, nb_blocks=%u\n",
+                   par->type, par->nb_ఖండాలు);
+            ఖండం = av_video_enc_params_ఖండం(par, 0);
+            ఖండం->delta_qp = 5;
+            ఖండం = av_video_enc_params_ఖండం(par, 0);
+            రాయి("side_data block 0: delta_qp=%d\n", ఖండం->delta_qp);
+        } లేకపోతే {
+            రాయి("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_చట్రం_free(&చట్రం);
     }
 
     /* NONE type */
-    printf("\nTesting NONE type\n");
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_NONE, 0, &size);
-    if (par) {
-        printf("NONE: OK, type=%d\n", par->type);
+    రాయి("\nTesting NONE type\n");
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_NONE, 0, &కొలత);
+    ఒకవేళ (par) {
+        రాయి("NONE: OK, type=%d\n", par->type);
         av_free(par);
-    } else {
-        printf("NONE: FAIL\n");
+    } లేకపోతే {
+        రాయి("NONE: FAIL\n");
     }
 
-    return 0;
+    తిరిగి 0;
 }

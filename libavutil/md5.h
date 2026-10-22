@@ -24,13 +24,13 @@
  * Public header for MD5 hash function implementation.
  */
 
-#ifndef AVUTIL_MD5_H
-#define AVUTIL_MD5_H
+#నిర్వచితం_కాకపోతే AVUTIL_MD5_H
+#నిర్వచించు AVUTIL_MD5_H
 
-#include <stddef.h>
-#include <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
 
-#include "attributes.h"
+#అన్తర్భావ "attributes.h"
 
 /**
  * @defgroup lavu_md5 MD5
@@ -40,21 +40,21 @@
  * @{
  */
 
-extern const int av_md5_size;
+బాహ్య స్థిరరాశి పూర్ణాంకం av_md5_కొలత;
 
-struct AVMD5;
+నిర్మాణం AVMD5;
 
 /**
  * Allocate an AVMD5 context.
  */
-struct AVMD5 *av_md5_alloc(void);
+నిర్మాణం AVMD5 *av_md5_alloc(శూన్య);
 
 /**
  * Initialize MD5 hashing.
  *
  * @param ctx pointer to the function context (of size av_md5_size)
  */
-void av_md5_init(struct AVMD5 *ctx);
+శూన్య av_md5_init(నిర్మాణం AVMD5 *ctx);
 
 /**
  * Update hash value.
@@ -63,7 +63,7 @@ void av_md5_init(struct AVMD5 *ctx);
  * @param src input data to update hash with
  * @param len input data length
  */
-void av_md5_update(struct AVMD5 *ctx, const uint8_t *src, size_t len);
+శూన్య av_md5_update(నిర్మాణం AVMD5 *ctx, స్థిరరాశి uint8_t *src, size_t len);
 
 /**
  * Finish hashing and output digest value.
@@ -71,7 +71,7 @@ void av_md5_update(struct AVMD5 *ctx, const uint8_t *src, size_t len);
  * @param ctx hash function context
  * @param dst buffer where output digest value is stored
  */
-void av_md5_final(struct AVMD5 *ctx, uint8_t *dst);
+శూన్య av_md5_final(నిర్మాణం AVMD5 *ctx, uint8_t *dst);
 
 /**
  * Hash an array of data.
@@ -80,10 +80,10 @@ void av_md5_final(struct AVMD5 *ctx, uint8_t *dst);
  * @param src The data to hash
  * @param len The length of the data, in bytes
  */
-void av_md5_sum(uint8_t *dst, const uint8_t *src, size_t len);
+శూన్య av_md5_కూడిక(uint8_t *dst, స్థిరరాశి uint8_t *src, size_t len);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_MD5_H */
+#అయితే_ముగింపు /* AVUTIL_MD5_H */

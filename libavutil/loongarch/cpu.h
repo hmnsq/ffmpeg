@@ -19,13 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LOONGARCH_CPU_H
-#define AVUTIL_LOONGARCH_CPU_H
+#నిర్వచితం_కాకపోతే AVUTIL_LOONGARCH_CPU_H
+#నిర్వచించు AVUTIL_LOONGARCH_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/cpu_internal.h"
 
-#define have_lsx(flags) CPUEXT(flags, LSX)
-#define have_lasx(flags) CPUEXT(flags, LASX)
+#నిర్వచించు have_lsx(flags) CPUEXT(flags, LSX)
+#నిర్వచించు have_lasx(flags) CPUEXT(flags, LASX)
 
-#endif /* AVUTIL_LOONGARCH_CPU_H */
+#అయితే_ముగింపు /* AVUTIL_LOONGARCH_CPU_H */

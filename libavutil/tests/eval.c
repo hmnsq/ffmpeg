@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#అన్తర్భావ "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#అన్తర్భావ <math.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#అన్తర్భావ "libavutil/mathematics.h"
+#అన్తర్భావ "libavutil/eval.h"
 
-static const double const_values[] = {
+స్థిర స్థిరరాశి ద్విగుణ const_విలువలు[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+స్థిర స్థిరరాశి అక్షరం *స్థిరరాశి const_పేర్లు[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+పూర్ణాంకం ప్రధాన(పూర్ణాంకం argc, అక్షరం **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    పూర్ణాంకం i;
+    ద్విగుణ d;
+    స్థిరరాశి అక్షరం *స్థిరరాశి *సమాసం;
+    స్థిర స్థిరరాశి అక్షరం *స్థిరరాశి exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        ఖాళీ
     };
-    int ret;
+    పూర్ణాంకం ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
-            printf("av_expr_parse_and_eval failed\n");
+    కొరకు (సమాసం = exprs; *సమాసం; సమాసం++) {
+        రాయి("Evaluating '%s'\n", *సమాసం);
+        ret = av_సమాసం_parse_and_eval(&d, *సమాసం,
+                               const_పేర్లు, const_విలువలు,
+                               ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, 0, ఖాళీ);
+        ఒకవేళ (isnan(d))
+            రాయి("'%s' -> nan\n\n", *సమాసం);
+        లేకపోతే
+            రాయి("'%s' -> %f\n\n", *సమాసం, d);
+        ఒకవేళ (ret < 0)
+            రాయి("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 12.7\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 0.931322575\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
+    ret = av_సమాసం_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_పేర్లు, const_విలువలు,
+                           ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, 0, ఖాళీ);
+    రాయి("%f == 12.7\n", d);
+    ఒకవేళ (ret < 0)
+        రాయి("av_expr_parse_and_eval failed\n");
+    ret = av_సమాసం_parse_and_eval(&d, "80G/80Gi",
+                           const_పేర్లు, const_విలువలు,
+                           ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, 0, ఖాళీ);
+    రాయి("%f == 0.931322575\n", d);
+    ఒకవేళ (ret < 0)
+        రాయి("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
-            START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
-                printf("av_expr_parse_and_eval failed\n");
+    ఒకవేళ (argc > 1 && !strcmp(argv[1], "-t")) {
+        కొరకు (i = 0; i < 1050; i++) {
+            ప్రారంభం_TIMER;
+            ret = av_సమాసం_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_పేర్లు, const_విలువలు,
+                                   ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, 0, ఖాళీ);
+            ఒకవేళ (ret < 0)
+                రాయి("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }

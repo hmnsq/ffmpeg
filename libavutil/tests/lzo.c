@@ -18,62 +18,62 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <lzo/lzo1x.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <stdlib.h>
+#అన్తర్భావ <string.h>
+#అన్తర్భావ <lzo/lzo1x.h>
 
-#include "libavutil/log.h"
-#include "libavutil/lzo.h"
-#include "libavutil/mem.h"
+#అన్తర్భావ "libavutil/log.h"
+#అన్తర్భావ "libavutil/lzo.h"
+#అన్తర్భావ "libavutil/mem.h"
 
-#define MAXSZ (10*1024*1024)
+#నిర్వచించు MAXSZ (10*1024*1024)
 
 /* Define one of these to 1 if you wish to benchmark liblzo
  * instead of our native implementation. */
-#define BENCHMARK_LIBLZO_SAFE   0
-#define BENCHMARK_LIBLZO_UNSAFE 0
+#నిర్వచించు BENCHMARK_LIBLZO_సురక్షిత   0
+#నిర్వచించు BENCHMARK_LIBLZO_UNSAFE 0
 
-int main(int argc, char *argv[]) {
-    FILE *in = fopen(argv[1], "rb");
-    int comp_level = argc > 2 ? atoi(argv[2]) : 0;
+పూర్ణాంకం ప్రధాన(పూర్ణాంకం argc, అక్షరం *argv[]) {
+    FILE *లోపల = fopen(argv[1], "rb");
+    పూర్ణాంకం comp_level = argc > 2 ? atoi(argv[2]) : 0;
     uint8_t *orig = av_malloc(MAXSZ + 16);
     uint8_t *comp = av_malloc(2*MAXSZ + 16);
     uint8_t *decomp = av_malloc(MAXSZ + 16);
-    size_t s = fread(orig, 1, MAXSZ, in);
+    size_t s = fread(orig, 1, MAXSZ, లోపల);
     lzo_uint clen = 0;
-    long tmp[LZO1X_MEM_COMPRESS];
-    int inlen, outlen;
-    int i;
-    av_log_set_level(AV_LOG_DEBUG);
-    if (comp_level == 0) {
+    దీర్ఘ tmp[LZO1X_MEM_COMPRESS];
+    పూర్ణాంకం inlen, outlen;
+    పూర్ణాంకం i;
+    av_log_సమితి_level(AV_LOG_DEBUG);
+    ఒకవేళ (comp_level == 0) {
         lzo1x_1_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 11) {
+    } లేకపోతే ఒకవేళ (comp_level == 11) {
         lzo1x_1_11_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 12) {
+    } లేకపోతే ఒకవేళ (comp_level == 12) {
         lzo1x_1_12_compress(orig, s, comp, &clen, tmp);
-    } else if (comp_level == 15) {
+    } లేకపోతే ఒకవేళ (comp_level == 15) {
         lzo1x_1_15_compress(orig, s, comp, &clen, tmp);
-    } else
+    } లేకపోతే
         lzo1x_999_compress(orig, s, comp, &clen, tmp);
-    for (i = 0; i < 300; i++) {
+    కొరకు (i = 0; i < 300; i++) {
         inlen = clen; outlen = MAXSZ;
-#if BENCHMARK_LIBLZO_SAFE
-        if (lzo1x_decompress_safe(comp, inlen, decomp, &outlen, NULL))
-#elif BENCHMARK_LIBLZO_UNSAFE
-        if (lzo1x_decompress(comp, inlen, decomp, &outlen, NULL))
-#else
-        if (av_lzo1x_decode(decomp, &outlen, comp, &inlen))
-#endif
-            av_log(NULL, AV_LOG_ERROR, "decompression error\n");
+#ఒకవేళ BENCHMARK_LIBLZO_సురక్షిత
+        ఒకవేళ (lzo1x_decompress_సురక్షిత(comp, inlen, decomp, &outlen, ఖాళీ))
+#లేదావేళ BENCHMARK_LIBLZO_UNSAFE
+        ఒకవేళ (lzo1x_decompress(comp, inlen, decomp, &outlen, ఖాళీ))
+#లేకపోతే
+        ఒకవేళ (av_lzo1x_decode(decomp, &outlen, comp, &inlen))
+#అయితే_ముగింపు
+            av_log(ఖాళీ, AV_LOG_ERROR, "decompression error\n");
     }
-    if (memcmp(orig, decomp, s))
-        av_log(NULL, AV_LOG_ERROR, "decompression incorrect\n");
-    else
-        av_log(NULL, AV_LOG_ERROR, "decompression OK\n");
-    fclose(in);
+    ఒకవేళ (memcmp(orig, decomp, s))
+        av_log(ఖాళీ, AV_LOG_ERROR, "decompression incorrect\n");
+    లేకపోతే
+        av_log(ఖాళీ, AV_LOG_ERROR, "decompression OK\n");
+    fclose(లోపల);
     av_free(orig);
     av_free(comp);
     av_free(decomp);
-    return 0;
+    తిరిగి 0;
 }

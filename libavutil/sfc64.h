@@ -29,21 +29,21 @@
  * And passes testu01 and practrand test suits.
  */
 
-#ifndef AVUTIL_SFC64_H
-#define AVUTIL_SFC64_H
+#నిర్వచితం_కాకపోతే AVUTIL_SFC64_H
+#నిర్వచించు AVUTIL_SFC64_H
 
-#include <inttypes.h>
+#అన్తర్భావ <inttypes.h>
 
-typedef struct FFSFC64 {
+రకనిర్వచనం నిర్మాణం FFSFC64 {
     uint64_t a,b,c,counter;
 } FFSFC64;
 
-static inline uint64_t ff_sfc64_get(FFSFC64 *s) {
+స్థిర అంతఃవరుస uint64_t ff_sfc64_get(FFSFC64 *s) {
     uint64_t tmp = s->a + s->b + s->counter++;
     s->a = s->b ^ (s->b >> 11);
     s->b = s->c + (s->c << 3); // This is a multiply by 9
     s->c = (s->c << 24 | s->c >> 40) + tmp;
-    return tmp;
+    తిరిగి tmp;
 }
 
 /**
@@ -52,7 +52,7 @@ static inline uint64_t ff_sfc64_get(FFSFC64 *s) {
  * It is safe to take values before the first, but such values can be highly
  * correlated to the seeds.
  */
-static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
+స్థిర అంతఃవరుస uint64_t ff_sfc64_తిరగేయి_get(FFSFC64 *s) {
     uint64_t prev_c = s->b * 0x8E38E38E38E38E39;
     uint64_t tmp = s->c - (prev_c << 24 | prev_c >> 40);
     s->b = s->a ^ (s->a >> 11);
@@ -62,7 +62,7 @@ static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
     s->a = tmp - s->b - --s->counter;
     s->c = prev_c;
 
-    return tmp;
+    తిరిగి tmp;
 }
 
 /**
@@ -72,13 +72,13 @@ static inline uint64_t ff_sfc64_reverse_get(FFSFC64 *s) {
  *               12 is a good choice if all 3 seeds are equal
  *
  */
-static inline void ff_sfc64_init(FFSFC64 *s, uint64_t seeda, uint64_t seedb, uint64_t seedc, int rounds) {
+స్థిర అంతఃవరుస శూన్య ff_sfc64_init(FFSFC64 *s, uint64_t seeda, uint64_t seedb, uint64_t seedc, పూర్ణాంకం విడతలు) {
     s->a       = seeda;
     s->b       = seedb;
     s->c       = seedc;
     s->counter = 1;
-    while (rounds--)
+    అయితే (విడతలు--)
         ff_sfc64_get(s);
 }
 
-#endif // AVUTIL_SFC64_H
+#అయితే_ముగింపు // AVUTIL_SFC64_H

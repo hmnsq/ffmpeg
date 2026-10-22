@@ -19,12 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <string.h>
 
-#include "libavutil/macros.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
+#అన్తర్భావ "libavutil/macros.h"
+#అన్తర్భావ "libavutil/pixdesc.h"
+#అన్తర్భావ "libavutil/pixfmt.h"
 
 /*
  * from_name() may legitimately map to a different index when two enum
@@ -32,164 +32,164 @@
  * AVCOL_PRI_RESERVED both use "reserved"). Accept that as long as
  * name(back) equals name(i).
  */
-static int check_name_equivalence(const char *name, const char *back_name)
+స్థిర పూర్ణాంకం check_name_equivalence(స్థిరరాశి అక్షరం *name, స్థిరరాశి అక్షరం *వెనుక_name)
 {
-    return back_name && !strcmp(name, back_name);
+    తిరిగి వెనుక_name && !strcmp(name, వెనుక_name);
 }
 
-static int test_pix_fmt_round_trip(void)
+స్థిర పూర్ణాంకం test_pix_fmt_విడత_trip(శూన్య)
 {
-    int fail = 0;
-    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
-        const char *name = av_get_pix_fmt_name(i);
-        if (!name)
-            continue;
-        if (av_get_pix_fmt(name) != i)
+    పూర్ణాంకం fail = 0;
+    కొరకు (పూర్ణాంకం i = 0; i < AV_PIX_FMT_NB; i++) {
+        స్థిరరాశి అక్షరం *name = av_get_pix_fmt_name(i);
+        ఒకవేళ (!name)
+            కొనసాగు;
+        ఒకవేళ (av_get_pix_fmt(name) != i)
             fail++;
     }
-    return fail;
+    తిరిగి fail;
 }
 
-static int test_color_range_round_trip(void)
+స్థిర పూర్ణాంకం test_color_range_విడత_trip(శూన్య)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_RANGE_NB; i++) {
-        const char *name = av_color_range_name(i);
-        if (!name)
-            continue;
-        int back = av_color_range_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_range_name(back)))
+    పూర్ణాంకం fail = 0;
+    కొరకు (పూర్ణాంకం i = 0; i < AVCOL_RANGE_NB; i++) {
+        స్థిరరాశి అక్షరం *name = av_color_range_name(i);
+        ఒకవేళ (!name)
+            కొనసాగు;
+        పూర్ణాంకం వెనుక = av_color_range_from_name(name);
+        ఒకవేళ (వెనుక < 0 || !check_name_equivalence(name, av_color_range_name(వెనుక)))
             fail++;
     }
-    return fail;
+    తిరిగి fail;
 }
 
-static int test_color_primaries_round_trip(void)
+స్థిర పూర్ణాంకం test_color_primaries_విడత_trip(శూన్య)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_PRI_NB; i++) {
-        const char *name = av_color_primaries_name(i);
-        if (!name)
-            continue;
-        int back = av_color_primaries_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_primaries_name(back)))
+    పూర్ణాంకం fail = 0;
+    కొరకు (పూర్ణాంకం i = 0; i < AVCOL_PRI_NB; i++) {
+        స్థిరరాశి అక్షరం *name = av_color_primaries_name(i);
+        ఒకవేళ (!name)
+            కొనసాగు;
+        పూర్ణాంకం వెనుక = av_color_primaries_from_name(name);
+        ఒకవేళ (వెనుక < 0 || !check_name_equivalence(name, av_color_primaries_name(వెనుక)))
             fail++;
     }
-    return fail;
+    తిరిగి fail;
 }
 
-static int test_color_transfer_round_trip(void)
+స్థిర పూర్ణాంకం test_color_transfer_విడత_trip(శూన్య)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_TRC_NB; i++) {
-        const char *name = av_color_transfer_name(i);
-        if (!name)
-            continue;
-        int back = av_color_transfer_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_transfer_name(back)))
+    పూర్ణాంకం fail = 0;
+    కొరకు (పూర్ణాంకం i = 0; i < AVCOL_TRC_NB; i++) {
+        స్థిరరాశి అక్షరం *name = av_color_transfer_name(i);
+        ఒకవేళ (!name)
+            కొనసాగు;
+        పూర్ణాంకం వెనుక = av_color_transfer_from_name(name);
+        ఒకవేళ (వెనుక < 0 || !check_name_equivalence(name, av_color_transfer_name(వెనుక)))
             fail++;
     }
-    return fail;
+    తిరిగి fail;
 }
 
-static int test_color_space_round_trip(void)
+స్థిర పూర్ణాంకం test_color_space_విడత_trip(శూన్య)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCOL_SPC_NB; i++) {
-        const char *name = av_color_space_name(i);
-        if (!name)
-            continue;
-        int back = av_color_space_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_color_space_name(back)))
+    పూర్ణాంకం fail = 0;
+    కొరకు (పూర్ణాంకం i = 0; i < AVCOL_SPC_NB; i++) {
+        స్థిరరాశి అక్షరం *name = av_color_space_name(i);
+        ఒకవేళ (!name)
+            కొనసాగు;
+        పూర్ణాంకం వెనుక = av_color_space_from_name(name);
+        ఒకవేళ (వెనుక < 0 || !check_name_equivalence(name, av_color_space_name(వెనుక)))
             fail++;
     }
-    return fail;
+    తిరిగి fail;
 }
 
-static int test_chroma_location_round_trip(void)
+స్థిర పూర్ణాంకం test_chroma_location_విడత_trip(శూన్య)
 {
-    int fail = 0;
-    for (int i = 0; i < AVCHROMA_LOC_NB; i++) {
-        const char *name = av_chroma_location_name(i);
-        if (!name)
-            continue;
-        int back = av_chroma_location_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_chroma_location_name(back)))
+    పూర్ణాంకం fail = 0;
+    కొరకు (పూర్ణాంకం i = 0; i < AVCHROMA_LOC_NB; i++) {
+        స్థిరరాశి అక్షరం *name = av_chroma_location_name(i);
+        ఒకవేళ (!name)
+            కొనసాగు;
+        పూర్ణాంకం వెనుక = av_chroma_location_from_name(name);
+        ఒకవేళ (వెనుక < 0 || !check_name_equivalence(name, av_chroma_location_name(వెనుక)))
             fail++;
     }
-    return fail;
+    తిరిగి fail;
 }
 
-static int test_alpha_mode_round_trip(void)
+స్థిర పూర్ణాంకం test_alpha_బహుళకం_విడత_trip(శూన్య)
 {
-    int fail = 0;
-    for (int i = 0; i < AVALPHA_MODE_NB; i++) {
-        const char *name = av_alpha_mode_name(i);
-        if (!name)
-            continue;
-        int back = av_alpha_mode_from_name(name);
-        if (back < 0 || !check_name_equivalence(name, av_alpha_mode_name(back)))
+    పూర్ణాంకం fail = 0;
+    కొరకు (పూర్ణాంకం i = 0; i < AVALPHA_బహుళకం_NB; i++) {
+        స్థిరరాశి అక్షరం *name = av_alpha_బహుళకం_name(i);
+        ఒకవేళ (!name)
+            కొనసాగు;
+        పూర్ణాంకం వెనుక = av_alpha_బహుళకం_from_name(name);
+        ఒకవేళ (వెనుక < 0 || !check_name_equivalence(name, av_alpha_బహుళకం_name(వెనుక)))
             fail++;
     }
-    return fail;
+    తిరిగి fail;
 }
 
-static int test_chroma_location_pos_round_trip(void)
+స్థిర పూర్ణాంకం test_chroma_location_pos_విడత_trip(శూన్య)
 {
-    int fail = 0;
-    for (int i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
-        int xpos, ypos;
-        if (av_chroma_location_enum_to_pos(&xpos, &ypos, i) < 0) {
+    పూర్ణాంకం fail = 0;
+    కొరకు (పూర్ణాంకం i = AVCHROMA_LOC_UNSPECIFIED + 1; i < AVCHROMA_LOC_NB; i++) {
+        పూర్ణాంకం xpos, ypos;
+        ఒకవేళ (av_chroma_location_enum_గమ్యం_pos(&xpos, &ypos, i) < 0) {
             fail++;
-            continue;
+            కొనసాగు;
         }
-        if ((int)av_chroma_location_pos_to_enum(xpos, ypos) != i)
+        ఒకవేళ ((పూర్ణాంకం)av_chroma_location_pos_గమ్యం_enum(xpos, ypos) != i)
             fail++;
     }
-    return fail;
+    తిరిగి fail;
 }
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
-    int skip = 0;
+    పూర్ణాంకం skip = 0;
 
-    printf("Testing av_get_pix_fmt() / av_get_pix_fmt_name() round-trip\n");
-    printf("  result: %s\n",
-           test_pix_fmt_round_trip() ? "FAIL" : "OK");
+    రాయి("Testing av_get_pix_fmt() / av_get_pix_fmt_name() round-trip\n");
+    రాయి("  result: %s\n",
+           test_pix_fmt_విడత_trip() ? "FAIL" : "OK");
 
-    printf("\nTesting av_color_*_name() / av_color_*_from_name() round-trips\n");
-    printf("  av_color_range:     %s\n",
-           test_color_range_round_trip()     ? "FAIL" : "OK");
-    printf("  av_color_primaries: %s\n",
-           test_color_primaries_round_trip() ? "FAIL" : "OK");
-    printf("  av_color_transfer:  %s\n",
-           test_color_transfer_round_trip()  ? "FAIL" : "OK");
-    printf("  av_color_space:     %s\n",
-           test_color_space_round_trip()     ? "FAIL" : "OK");
-    printf("  av_chroma_location: %s\n",
-           test_chroma_location_round_trip() ? "FAIL" : "OK");
-    printf("  av_alpha_mode:      %s\n",
-           test_alpha_mode_round_trip()      ? "FAIL" : "OK");
+    రాయి("\nTesting av_color_*_name() / av_color_*_from_name() round-trips\n");
+    రాయి("  av_color_range:     %s\n",
+           test_color_range_విడత_trip()     ? "FAIL" : "OK");
+    రాయి("  av_color_primaries: %s\n",
+           test_color_primaries_విడత_trip() ? "FAIL" : "OK");
+    రాయి("  av_color_transfer:  %s\n",
+           test_color_transfer_విడత_trip()  ? "FAIL" : "OK");
+    రాయి("  av_color_space:     %s\n",
+           test_color_space_విడత_trip()     ? "FAIL" : "OK");
+    రాయి("  av_chroma_location: %s\n",
+           test_chroma_location_విడత_trip() ? "FAIL" : "OK");
+    రాయి("  av_alpha_mode:      %s\n",
+           test_alpha_బహుళకం_విడత_trip()      ? "FAIL" : "OK");
 
-    printf("\nTesting av_chroma_location_enum_to_pos / pos_to_enum round-trip\n");
-    printf("  result: %s\n",
-           test_chroma_location_pos_round_trip() ? "FAIL" : "OK");
+    రాయి("\nTesting av_chroma_location_enum_to_pos / pos_to_enum round-trip\n");
+    రాయి("  result: %s\n",
+           test_chroma_location_pos_విడత_trip() ? "FAIL" : "OK");
 
-    printf("\nTesting pixel format descriptors\n");
-    for (int i = 0; i < AV_PIX_FMT_NB * 2; i++) {
-        const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
-        if (!desc || !desc->name) {
+    రాయి("\nTesting pixel format descriptors\n");
+    కొరకు (పూర్ణాంకం i = 0; i < AV_PIX_FMT_NB * 2; i++) {
+        స్థిరరాశి AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
+        ఒకవేళ (!desc || !desc->name) {
             skip++;
-            continue;
+            కొనసాగు;
         }
-        if (skip) {
-            printf("  %3d unused pixel format values\n", skip);
+        ఒకవేళ (skip) {
+            రాయి("  %3d unused pixel format values\n", skip);
             skip = 0;
         }
-        printf("  pix fmt %s avg_bpp:%d planes:%d\n", desc->name,
-               av_get_padded_bits_per_pixel(desc),
-               av_pix_fmt_count_planes(i));
+        రాయి("  pix fmt %s avg_bpp:%d planes:%d\n", desc->name,
+               av_get_padded_బిట్లు_చొప్పున_pixel(desc),
+               av_pix_fmt_లెక్క_planes(i));
     }
 
-    return 0;
+    తిరిగి 0;
 }

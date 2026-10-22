@@ -16,227 +16,227 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "channel_layout.h"
-#include "avassert.h"
-#include "buffer.h"
-#include "dict.h"
-#include "frame.h"
-#include "frame_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "refstruct.h"
-#include "samplefmt.h"
-#include "side_data.h"
-#include "hwcontext.h"
+#అన్తర్భావ "channel_layout.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "buffer.h"
+#అన్తర్భావ "dict.h"
+#అన్తర్భావ "frame.h"
+#అన్తర్భావ "frame_internal.h"
+#అన్తర్భావ "imgutils.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "refstruct.h"
+#అన్తర్భావ "samplefmt.h"
+#అన్తర్భావ "side_data.h"
+#అన్తర్భావ "hwcontext.h"
 
-static void get_frame_defaults(AVFrame *frame)
+స్థిర శూన్య get_చట్రం_defaults(AVFrame *చట్రం)
 {
-    memset(frame, 0, sizeof(*frame));
+    memset(చట్రం, 0, పరిమాణం(*చట్రం));
 
-    frame->pts                   =
-    frame->pkt_dts               = AV_NOPTS_VALUE;
-    frame->best_effort_timestamp = AV_NOPTS_VALUE;
-    frame->duration            = 0;
-    frame->time_base           = (AVRational){ 0, 1 };
-    frame->sample_aspect_ratio = (AVRational){ 0, 1 };
-    frame->format              = -1; /* unknown */
-    frame->extended_data       = frame->data;
-    frame->color_primaries     = AVCOL_PRI_UNSPECIFIED;
-    frame->color_trc           = AVCOL_TRC_UNSPECIFIED;
-    frame->colorspace          = AVCOL_SPC_UNSPECIFIED;
-    frame->color_range         = AVCOL_RANGE_UNSPECIFIED;
-    frame->chroma_location     = AVCHROMA_LOC_UNSPECIFIED;
-    frame->alpha_mode          = AVALPHA_MODE_UNSPECIFIED;
-    frame->flags               = 0;
+    చట్రం->pts                   =
+    చట్రం->pkt_dts               = AV_NOPTS_విలువ;
+    చట్రం->ఉత్తమ_effort_timestamp = AV_NOPTS_విలువ;
+    చట్రం->duration            = 0;
+    చట్రం->సమయం_పునాది           = (AVRational){ 0, 1 };
+    చట్రం->sample_aspect_నిష్పత్తి = (AVRational){ 0, 1 };
+    చట్రం->format              = -1; /* unknown */
+    చట్రం->extended_దత్తాంశం       = చట్రం->దత్తాంశం;
+    చట్రం->color_primaries     = AVCOL_PRI_UNSPECIFIED;
+    చట్రం->color_trc           = AVCOL_TRC_UNSPECIFIED;
+    చట్రం->colorspace          = AVCOL_SPC_UNSPECIFIED;
+    చట్రం->color_range         = AVCOL_RANGE_UNSPECIFIED;
+    చట్రం->chroma_location     = AVCHROMA_LOC_UNSPECIFIED;
+    చట్రం->alpha_బహుళకం          = AVALPHA_బహుళకం_UNSPECIFIED;
+    చట్రం->flags               = 0;
 }
 
-AVFrame *av_frame_alloc(void)
+AVFrame *av_చట్రం_alloc(శూన్య)
 {
-    AVFrame *frame = av_malloc(sizeof(*frame));
+    AVFrame *చట్రం = av_malloc(పరిమాణం(*చట్రం));
 
-    if (!frame)
-        return NULL;
+    ఒకవేళ (!చట్రం)
+        తిరిగి ఖాళీ;
 
-    get_frame_defaults(frame);
+    get_చట్రం_defaults(చట్రం);
 
-    return frame;
+    తిరిగి చట్రం;
 }
 
-void av_frame_free(AVFrame **frame)
+శూన్య av_చట్రం_free(AVFrame **చట్రం)
 {
-    if (!frame || !*frame)
-        return;
+    ఒకవేళ (!చట్రం || !*చట్రం)
+        తిరిగి;
 
-    av_frame_unref(*frame);
-    av_freep(frame);
+    av_చట్రం_unref(*చట్రం);
+    av_freep(చట్రం);
 }
 
-#define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
+#నిర్వచించు ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
 
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
-                              AVBufferRef *(*alloc)(void *opaque, size_t size),
-                              void *opaque)
+పూర్ణాంకం ff_చట్రం_get_video_బఫరు(AVFrame *చట్రం, పూర్ణాంకం align,
+                              AVBufferRef *(*alloc)(శూన్య *opaque, size_t కొలత),
+                              శూన్య *opaque)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int ret, padded_height;
-    int plane_padding;
+    స్థిరరాశి AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(చట్రం->format);
+    పూర్ణాంకం ret, padded_ఎత్తు;
+    పూర్ణాంకం plane_padding;
     ptrdiff_t linesizes[4];
-    size_t total_size, sizes[4];
+    size_t మొత్తం_కొలత, sizes[4];
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!desc)
+        తిరిగి AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
-        return ret;
+    ఒకవేళ ((ret = av_image_check_కొలత(చట్రం->వెడల్పు, చట్రం->ఎత్తు, 0, ఖాళీ)) < 0)
+        తిరిగి ret;
 
-    if (align <= 0)
+    ఒకవేళ (align <= 0)
         align = ALIGN;
     plane_padding = FFMAX(ALIGN, align);
 
-    if (!frame->linesize[0]) {
-        for (int i = 1; i <= align; i += i) {
-            ret = av_image_fill_linesizes(frame->linesize, frame->format,
-                                          FFALIGN(frame->width, i));
-            if (ret < 0)
-                return ret;
-            if (!(frame->linesize[0] & (align-1)))
-                break;
+    ఒకవేళ (!చట్రం->linesize[0]) {
+        కొరకు (పూర్ణాంకం i = 1; i <= align; i += i) {
+            ret = av_image_fill_linesizes(చట్రం->linesize, చట్రం->format,
+                                          FFALIGN(చట్రం->వెడల్పు, i));
+            ఒకవేళ (ret < 0)
+                తిరిగి ret;
+            ఒకవేళ (!(చట్రం->linesize[0] & (align-1)))
+                ఆపు;
         }
 
-        for (int i = 0; i < 4 && frame->linesize[i]; i++)
-            frame->linesize[i] = FFALIGN(frame->linesize[i], align);
+        కొరకు (పూర్ణాంకం i = 0; i < 4 && చట్రం->linesize[i]; i++)
+            చట్రం->linesize[i] = FFALIGN(చట్రం->linesize[i], align);
     }
 
-    for (int i = 0; i < 4; i++)
-        linesizes[i] = frame->linesize[i];
+    కొరకు (పూర్ణాంకం i = 0; i < 4; i++)
+        linesizes[i] = చట్రం->linesize[i];
 
-    padded_height = FFALIGN(frame->height, 32);
-    if ((ret = av_image_fill_plane_sizes(sizes, frame->format,
-                                         padded_height, linesizes)) < 0)
-        return ret;
+    padded_ఎత్తు = FFALIGN(చట్రం->ఎత్తు, 32);
+    ఒకవేళ ((ret = av_image_fill_plane_sizes(sizes, చట్రం->format,
+                                         padded_ఎత్తు, linesizes)) < 0)
+        తిరిగి ret;
 
-    total_size = 4 * plane_padding + 4 * align;
-    for (int i = 0; i < 4; i++) {
-        if (sizes[i] > SIZE_MAX - total_size)
-            return AVERROR(EINVAL);
-        total_size += sizes[i];
+    మొత్తం_కొలత = 4 * plane_padding + 4 * align;
+    కొరకు (పూర్ణాంకం i = 0; i < 4; i++) {
+        ఒకవేళ (sizes[i] > SIZE_MAX - మొత్తం_కొలత)
+            తిరిగి AVERROR(EINVAL);
+        మొత్తం_కొలత += sizes[i];
     }
 
-    frame->buf[0] = alloc ? alloc(opaque, total_size) : av_buffer_alloc(total_size);
-    if (!frame->buf[0]) {
+    చట్రం->buf[0] = alloc ? alloc(opaque, మొత్తం_కొలత) : av_బఫరు_alloc(మొత్తం_కొలత);
+    ఒకవేళ (!చట్రం->buf[0]) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        వెళ్ళు fail;
     }
 
-    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
-                                      frame->buf[0]->data, frame->linesize)) < 0)
-        goto fail;
+    ఒకవేళ ((ret = av_image_fill_సూచికలు(చట్రం->దత్తాంశం, చట్రం->format, padded_ఎత్తు,
+                                      చట్రం->buf[0]->దత్తాంశం, చట్రం->linesize)) < 0)
+        వెళ్ళు fail;
 
-    for (int i = 1; i < 4; i++) {
-        if (frame->data[i])
-            frame->data[i] += i * plane_padding;
-        frame->data[i] = (uint8_t *)FFALIGN((uintptr_t)frame->data[i], align);
+    కొరకు (పూర్ణాంకం i = 1; i < 4; i++) {
+        ఒకవేళ (చట్రం->దత్తాంశం[i])
+            చట్రం->దత్తాంశం[i] += i * plane_padding;
+        చట్రం->దత్తాంశం[i] = (uint8_t *)FFALIGN((uintptr_t)చట్రం->దత్తాంశం[i], align);
     }
 
-    frame->extended_data = frame->data;
+    చట్రం->extended_దత్తాంశం = చట్రం->దత్తాంశం;
 
-    return 0;
+    తిరిగి 0;
 fail:
-    av_frame_unref(frame);
-    return ret;
+    av_చట్రం_unref(చట్రం);
+    తిరిగి ret;
 }
 
-static int get_audio_buffer(AVFrame *frame, int align)
+స్థిర పూర్ణాంకం get_audio_బఫరు(AVFrame *చట్రం, పూర్ణాంకం align)
 {
-    int planar   = av_sample_fmt_is_planar(frame->format);
-    int channels, planes;
-    size_t size;
-    int ret;
+    పూర్ణాంకం planar   = av_sample_fmt_is_planar(చట్రం->format);
+    పూర్ణాంకం channels, planes;
+    size_t కొలత;
+    పూర్ణాంకం ret;
 
-    channels = frame->ch_layout.nb_channels;
+    channels = చట్రం->ch_layout.nb_channels;
     planes   = planar ? channels : 1;
-    if (!frame->linesize[0]) {
-        ret = av_samples_get_buffer_size(&frame->linesize[0], channels,
-                                         frame->nb_samples, frame->format,
+    ఒకవేళ (!చట్రం->linesize[0]) {
+        ret = av_samples_get_బఫరు_కొలత(&చట్రం->linesize[0], channels,
+                                         చట్రం->nb_samples, చట్రం->format,
                                          align);
-        if (ret < 0)
-            return ret;
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
     }
 
-    if (align <= 0)
+    ఒకవేళ (align <= 0)
         align = ALIGN;
 
-    if (planes > AV_NUM_DATA_POINTERS) {
-        frame->extended_data = av_calloc(planes,
-                                          sizeof(*frame->extended_data));
-        frame->extended_buf  = av_calloc(planes - AV_NUM_DATA_POINTERS,
-                                          sizeof(*frame->extended_buf));
-        if (!frame->extended_data || !frame->extended_buf) {
-            av_freep(&frame->extended_data);
-            av_freep(&frame->extended_buf);
-            return AVERROR(ENOMEM);
+    ఒకవేళ (planes > AV_అంకె_దత్తాంశం_సూచికలు) {
+        చట్రం->extended_దత్తాంశం = av_calloc(planes,
+                                          పరిమాణం(*చట్రం->extended_దత్తాంశం));
+        చట్రం->extended_buf  = av_calloc(planes - AV_అంకె_దత్తాంశం_సూచికలు,
+                                          పరిమాణం(*చట్రం->extended_buf));
+        ఒకవేళ (!చట్రం->extended_దత్తాంశం || !చట్రం->extended_buf) {
+            av_freep(&చట్రం->extended_దత్తాంశం);
+            av_freep(&చట్రం->extended_buf);
+            తిరిగి AVERROR(ENOMEM);
         }
-        frame->nb_extended_buf = planes - AV_NUM_DATA_POINTERS;
-    } else
-        frame->extended_data = frame->data;
+        చట్రం->nb_extended_buf = planes - AV_అంకె_దత్తాంశం_సూచికలు;
+    } లేకపోతే
+        చట్రం->extended_దత్తాంశం = చట్రం->దత్తాంశం;
 
-    if (frame->linesize[0] > SIZE_MAX - align)
-        return AVERROR(EINVAL);
-    size = frame->linesize[0] + (size_t)align;
+    ఒకవేళ (చట్రం->linesize[0] > SIZE_MAX - align)
+        తిరిగి AVERROR(EINVAL);
+    కొలత = చట్రం->linesize[0] + (size_t)align;
 
-    for (int i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
-        frame->buf[i] = av_buffer_alloc(size);
-        if (!frame->buf[i]) {
-            av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+    కొరకు (పూర్ణాంకం i = 0; i < FFMIN(planes, AV_అంకె_దత్తాంశం_సూచికలు); i++) {
+        చట్రం->buf[i] = av_బఫరు_alloc(కొలత);
+        ఒకవేళ (!చట్రం->buf[i]) {
+            av_చట్రం_unref(చట్రం);
+            తిరిగి AVERROR(ENOMEM);
         }
-        frame->extended_data[i] = frame->data[i] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->data, align);
+        చట్రం->extended_దత్తాంశం[i] = చట్రం->దత్తాంశం[i] =
+            (uint8_t *)FFALIGN((uintptr_t)చట్రం->buf[i]->దత్తాంశం, align);
     }
-    for (int i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
-        frame->extended_buf[i] = av_buffer_alloc(size);
-        if (!frame->extended_buf[i]) {
-            av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+    కొరకు (పూర్ణాంకం i = 0; i < planes - AV_అంకె_దత్తాంశం_సూచికలు; i++) {
+        చట్రం->extended_buf[i] = av_బఫరు_alloc(కొలత);
+        ఒకవేళ (!చట్రం->extended_buf[i]) {
+            av_చట్రం_unref(చట్రం);
+            తిరిగి AVERROR(ENOMEM);
         }
-        frame->extended_data[i + AV_NUM_DATA_POINTERS] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->data, align);
+        చట్రం->extended_దత్తాంశం[i + AV_అంకె_దత్తాంశం_సూచికలు] =
+            (uint8_t *)FFALIGN((uintptr_t)చట్రం->extended_buf[i]->దత్తాంశం, align);
     }
-    return 0;
+    తిరిగి 0;
 
 }
 
-int av_frame_get_buffer(AVFrame *frame, int align)
+పూర్ణాంకం av_చట్రం_get_బఫరు(AVFrame *చట్రం, పూర్ణాంకం align)
 {
-    if (frame->format < 0)
-        return AVERROR(EINVAL);
+    ఒకవేళ (చట్రం->format < 0)
+        తిరిగి AVERROR(EINVAL);
 
-    if (frame->width > 0 && frame->height > 0)
-        return ff_frame_get_video_buffer(frame, align, NULL, NULL);
-    else if (frame->nb_samples > 0 &&
-             (av_channel_layout_check(&frame->ch_layout)))
-        return get_audio_buffer(frame, align);
+    ఒకవేళ (చట్రం->వెడల్పు > 0 && చట్రం->ఎత్తు > 0)
+        తిరిగి ff_చట్రం_get_video_బఫరు(చట్రం, align, ఖాళీ, ఖాళీ);
+    లేకపోతే ఒకవేళ (చట్రం->nb_samples > 0 &&
+             (av_channel_layout_check(&చట్రం->ch_layout)))
+        తిరిగి get_audio_బఫరు(చట్రం, align);
 
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
+స్థిర పూర్ణాంకం చట్రం_copy_props(AVFrame *dst, స్థిరరాశి AVFrame *src, పూర్ణాంకం force_copy)
 {
     dst->pict_type              = src->pict_type;
-    dst->sample_aspect_ratio    = src->sample_aspect_ratio;
-    dst->crop_top               = src->crop_top;
+    dst->sample_aspect_నిష్పత్తి    = src->sample_aspect_నిష్పత్తి;
+    dst->crop_శిఖరం               = src->crop_శిఖరం;
     dst->crop_bottom            = src->crop_bottom;
-    dst->crop_left              = src->crop_left;
-    dst->crop_right             = src->crop_right;
+    dst->crop_ఎడమ              = src->crop_ఎడమ;
+    dst->crop_కుడి             = src->crop_కుడి;
     dst->pts                    = src->pts;
     dst->duration               = src->duration;
     dst->repeat_pict            = src->repeat_pict;
-    dst->sample_rate            = src->sample_rate;
+    dst->sample_రేటు            = src->sample_రేటు;
     dst->opaque                 = src->opaque;
     dst->pkt_dts                = src->pkt_dts;
-    dst->time_base              = src->time_base;
+    dst->సమయం_పునాది              = src->సమయం_పునాది;
     dst->quality                = src->quality;
-    dst->best_effort_timestamp  = src->best_effort_timestamp;
+    dst->ఉత్తమ_effort_timestamp  = src->ఉత్తమ_effort_timestamp;
     dst->flags                  = src->flags;
     dst->decode_error_flags     = src->decode_error_flags;
     dst->color_primaries        = src->color_primaries;
@@ -244,587 +244,587 @@ static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
     dst->colorspace             = src->colorspace;
     dst->color_range            = src->color_range;
     dst->chroma_location        = src->chroma_location;
-    dst->alpha_mode             = src->alpha_mode;
+    dst->alpha_బహుళకం             = src->alpha_బహుళకం;
 
     av_dict_copy(&dst->metadata, src->metadata, 0);
 
-    for (int i = 0; i < src->nb_side_data; i++) {
-        const AVFrameSideData *sd_src = src->side_data[i];
-        AVFrameSideData *sd_dst;
-        if (   sd_src->type == AV_FRAME_DATA_PANSCAN
-            && (src->width != dst->width || src->height != dst->height))
-            continue;
-        if (force_copy) {
-            sd_dst = av_frame_new_side_data(dst, sd_src->type,
-                                            sd_src->size);
-            if (!sd_dst) {
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+    కొరకు (పూర్ణాంకం i = 0; i < src->nb_side_దత్తాంశం; i++) {
+        స్థిరరాశి AVFrame_Side_దత్తాంశం *sd_src = src->side_దత్తాంశం[i];
+        AVFrame_Side_దత్తాంశం *sd_dst;
+        ఒకవేళ (   sd_src->type == AV_చట్రం_దత్తాంశం_PANSCAN
+            && (src->వెడల్పు != dst->వెడల్పు || src->ఎత్తు != dst->ఎత్తు))
+            కొనసాగు;
+        ఒకవేళ (force_copy) {
+            sd_dst = av_చట్రం_new_side_దత్తాంశం(dst, sd_src->type,
+                                            sd_src->కొలత);
+            ఒకవేళ (!sd_dst) {
+                av_చట్రం_side_దత్తాంశం_free(&dst->side_దత్తాంశం, &dst->nb_side_దత్తాంశం);
+                తిరిగి AVERROR(ENOMEM);
             }
-            memcpy(sd_dst->data, sd_src->data, sd_src->size);
-        } else {
-            AVBufferRef *ref = av_buffer_ref(sd_src->buf);
-            sd_dst = av_frame_new_side_data_from_buf(dst, sd_src->type, ref);
-            if (!sd_dst) {
-                av_buffer_unref(&ref);
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+            జ్ఞాపకం_నకలు(sd_dst->దత్తాంశం, sd_src->దత్తాంశం, sd_src->కొలత);
+        } లేకపోతే {
+            AVBufferRef *ref = av_బఫరు_ref(sd_src->buf);
+            sd_dst = av_చట్రం_new_side_దత్తాంశం_from_buf(dst, sd_src->type, ref);
+            ఒకవేళ (!sd_dst) {
+                av_బఫరు_unref(&ref);
+                av_చట్రం_side_దత్తాంశం_free(&dst->side_దత్తాంశం, &dst->nb_side_దత్తాంశం);
+                తిరిగి AVERROR(ENOMEM);
             }
         }
         av_dict_copy(&sd_dst->metadata, sd_src->metadata, 0);
     }
 
-    av_refstruct_replace(&dst->private_ref, src->private_ref);
-    return av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
+    av_refstruct_replace(&dst->వ్యక్తిగత_ref, src->వ్యక్తిగత_ref);
+    తిరిగి av_బఫరు_replace(&dst->opaque_ref, src->opaque_ref);
 }
 
-int av_frame_ref(AVFrame *dst, const AVFrame *src)
+పూర్ణాంకం av_చట్రం_ref(AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
-    int ret = 0;
+    పూర్ణాంకం ret = 0;
 
-    av_assert1(dst->width == 0 && dst->height == 0);
+    av_assert1(dst->వెడల్పు == 0 && dst->ఎత్తు == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
-               dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
+               dst->ch_layout.క్రమం == AV_CHANNEL_క్రమం_UNSPEC);
 
     dst->format         = src->format;
-    dst->width          = src->width;
-    dst->height         = src->height;
+    dst->వెడల్పు          = src->వెడల్పు;
+    dst->ఎత్తు         = src->ఎత్తు;
     dst->nb_samples     = src->nb_samples;
 
-    ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    ret = చట్రం_copy_props(dst, src, 0);
+    ఒకవేళ (ret < 0)
+        వెళ్ళు fail;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు fail;
 
     /* duplicate the frame data if it's not refcounted */
-    if (!src->buf[0]) {
-        ret = av_frame_get_buffer(dst, 0);
-        if (ret < 0)
-            goto fail;
+    ఒకవేళ (!src->buf[0]) {
+        ret = av_చట్రం_get_బఫరు(dst, 0);
+        ఒకవేళ (ret < 0)
+            వెళ్ళు fail;
 
-        ret = av_frame_copy(dst, src);
-        if (ret < 0)
-            goto fail;
+        ret = av_చట్రం_copy(dst, src);
+        ఒకవేళ (ret < 0)
+            వెళ్ళు fail;
 
-        return 0;
+        తిరిగి 0;
     }
 
     /* ref the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        if (!src->buf[i])
-            continue;
-        dst->buf[i] = av_buffer_ref(src->buf[i]);
-        if (!dst->buf[i]) {
+    కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        ఒకవేళ (!src->buf[i])
+            కొనసాగు;
+        dst->buf[i] = av_బఫరు_ref(src->buf[i]);
+        ఒకవేళ (!dst->buf[i]) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            వెళ్ళు fail;
         }
     }
 
-    if (src->extended_buf) {
+    ఒకవేళ (src->extended_buf) {
         dst->extended_buf = av_calloc(src->nb_extended_buf,
-                                      sizeof(*dst->extended_buf));
-        if (!dst->extended_buf) {
+                                      పరిమాణం(*dst->extended_buf));
+        ఒకవేళ (!dst->extended_buf) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            వెళ్ళు fail;
         }
         dst->nb_extended_buf = src->nb_extended_buf;
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            dst->extended_buf[i] = av_buffer_ref(src->extended_buf[i]);
-            if (!dst->extended_buf[i]) {
+        కొరకు (పూర్ణాంకం i = 0; i < src->nb_extended_buf; i++) {
+            dst->extended_buf[i] = av_బఫరు_ref(src->extended_buf[i]);
+            ఒకవేళ (!dst->extended_buf[i]) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                వెళ్ళు fail;
             }
         }
     }
 
-    if (src->hw_frames_ctx) {
-        dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
-        if (!dst->hw_frames_ctx) {
+    ఒకవేళ (src->hw_చట్రాలు_ctx) {
+        dst->hw_చట్రాలు_ctx = av_బఫరు_ref(src->hw_చట్రాలు_ctx);
+        ఒకవేళ (!dst->hw_చట్రాలు_ctx) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            వెళ్ళు fail;
         }
     }
 
     /* duplicate extended data */
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    ఒకవేళ (src->extended_దత్తాంశం != src->దత్తాంశం) {
+        పూర్ణాంకం ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        ఒకవేళ (ch <= 0 || ch > SIZE_MAX / పరిమాణం(*dst->extended_దత్తాంశం)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            వెళ్ళు fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_దత్తాంశం = av_memdup(src->extended_దత్తాంశం, పరిమాణం(*dst->extended_దత్తాంశం) * ch);
+        ఒకవేళ (!dst->extended_దత్తాంశం) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            వెళ్ళు fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } లేకపోతే
+        dst->extended_దత్తాంశం = dst->దత్తాంశం;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    జ్ఞాపకం_నకలు(dst->దత్తాంశం,     src->దత్తాంశం,     పరిమాణం(src->దత్తాంశం));
+    జ్ఞాపకం_నకలు(dst->linesize, src->linesize, పరిమాణం(src->linesize));
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    av_frame_unref(dst);
-    return ret;
+    av_చట్రం_unref(dst);
+    తిరిగి ret;
 }
 
-int av_frame_replace(AVFrame *dst, const AVFrame *src)
+పూర్ణాంకం av_చట్రం_replace(AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
-    int ret = 0;
+    పూర్ణాంకం ret = 0;
 
-    if (dst == src)
-        return AVERROR(EINVAL);
+    ఒకవేళ (dst == src)
+        తిరిగి AVERROR(EINVAL);
 
-    if (!src->buf[0]) {
-        av_frame_unref(dst);
+    ఒకవేళ (!src->buf[0]) {
+        av_చట్రం_unref(dst);
 
         /* duplicate the frame data if it's not refcounted */
-        if (   src->data[0] || src->data[1]
-            || src->data[2] || src->data[3])
-            return av_frame_ref(dst, src);
+        ఒకవేళ (   src->దత్తాంశం[0] || src->దత్తాంశం[1]
+            || src->దత్తాంశం[2] || src->దత్తాంశం[3])
+            తిరిగి av_చట్రం_ref(dst, src);
 
-        ret = frame_copy_props(dst, src, 0);
-        if (ret < 0)
-            goto fail;
+        ret = చట్రం_copy_props(dst, src, 0);
+        ఒకవేళ (ret < 0)
+            వెళ్ళు fail;
     }
 
     dst->format         = src->format;
-    dst->width          = src->width;
-    dst->height         = src->height;
+    dst->వెడల్పు          = src->వెడల్పు;
+    dst->ఎత్తు         = src->ఎత్తు;
     dst->nb_samples     = src->nb_samples;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు fail;
 
-    av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
+    av_చట్రం_side_దత్తాంశం_free(&dst->side_దత్తాంశం, &dst->nb_side_దత్తాంశం);
     av_dict_free(&dst->metadata);
-    ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    ret = చట్రం_copy_props(dst, src, 0);
+    ఒకవేళ (ret < 0)
+        వెళ్ళు fail;
 
     /* replace the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        ret = av_buffer_replace(&dst->buf[i], src->buf[i]);
-        if (ret < 0)
-            goto fail;
+    కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        ret = av_బఫరు_replace(&dst->buf[i], src->buf[i]);
+        ఒకవేళ (ret < 0)
+            వెళ్ళు fail;
     }
 
-    if (src->extended_buf) {
-        if (dst->nb_extended_buf != src->nb_extended_buf) {
-            int nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
-            void *tmp;
+    ఒకవేళ (src->extended_buf) {
+        ఒకవేళ (dst->nb_extended_buf != src->nb_extended_buf) {
+            పూర్ణాంకం nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
+            శూన్య *tmp;
 
-            for (int i = nb_extended_buf; i < dst->nb_extended_buf; i++)
-                av_buffer_unref(&dst->extended_buf[i]);
+            కొరకు (పూర్ణాంకం i = nb_extended_buf; i < dst->nb_extended_buf; i++)
+                av_బఫరు_unref(&dst->extended_buf[i]);
 
             tmp = av_realloc_array(dst->extended_buf, src->nb_extended_buf,
-                                   sizeof(*dst->extended_buf));
-            if (!tmp) {
+                                   పరిమాణం(*dst->extended_buf));
+            ఒకవేళ (!tmp) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                వెళ్ళు fail;
             }
             dst->extended_buf = tmp;
             dst->nb_extended_buf = src->nb_extended_buf;
 
             memset(&dst->extended_buf[nb_extended_buf], 0,
-                   (src->nb_extended_buf - nb_extended_buf) * sizeof(*dst->extended_buf));
+                   (src->nb_extended_buf - nb_extended_buf) * పరిమాణం(*dst->extended_buf));
         }
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            ret = av_buffer_replace(&dst->extended_buf[i], src->extended_buf[i]);
-            if (ret < 0)
-                goto fail;
+        కొరకు (పూర్ణాంకం i = 0; i < src->nb_extended_buf; i++) {
+            ret = av_బఫరు_replace(&dst->extended_buf[i], src->extended_buf[i]);
+            ఒకవేళ (ret < 0)
+                వెళ్ళు fail;
         }
-    } else if (dst->extended_buf) {
-        for (int i = 0; i < dst->nb_extended_buf; i++)
-            av_buffer_unref(&dst->extended_buf[i]);
+    } లేకపోతే ఒకవేళ (dst->extended_buf) {
+        కొరకు (పూర్ణాంకం i = 0; i < dst->nb_extended_buf; i++)
+            av_బఫరు_unref(&dst->extended_buf[i]);
         av_freep(&dst->extended_buf);
     }
 
-    ret = av_buffer_replace(&dst->hw_frames_ctx, src->hw_frames_ctx);
-    if (ret < 0)
-        goto fail;
+    ret = av_బఫరు_replace(&dst->hw_చట్రాలు_ctx, src->hw_చట్రాలు_ctx);
+    ఒకవేళ (ret < 0)
+        వెళ్ళు fail;
 
-    if (dst->extended_data != dst->data)
-        av_freep(&dst->extended_data);
+    ఒకవేళ (dst->extended_దత్తాంశం != dst->దత్తాంశం)
+        av_freep(&dst->extended_దత్తాంశం);
 
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    ఒకవేళ (src->extended_దత్తాంశం != src->దత్తాంశం) {
+        పూర్ణాంకం ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        ఒకవేళ (ch <= 0 || ch > SIZE_MAX / పరిమాణం(*dst->extended_దత్తాంశం)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            వెళ్ళు fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_దత్తాంశం = av_memdup(src->extended_దత్తాంశం, పరిమాణం(*dst->extended_దత్తాంశం) * ch);
+        ఒకవేళ (!dst->extended_దత్తాంశం) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            వెళ్ళు fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } లేకపోతే
+        dst->extended_దత్తాంశం = dst->దత్తాంశం;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    జ్ఞాపకం_నకలు(dst->దత్తాంశం,     src->దత్తాంశం,     పరిమాణం(src->దత్తాంశం));
+    జ్ఞాపకం_నకలు(dst->linesize, src->linesize, పరిమాణం(src->linesize));
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    av_frame_unref(dst);
-    return ret;
+    av_చట్రం_unref(dst);
+    తిరిగి ret;
 }
 
-AVFrame *av_frame_clone(const AVFrame *src)
+AVFrame *av_చట్రం_clone(స్థిరరాశి AVFrame *src)
 {
-    AVFrame *ret = av_frame_alloc();
+    AVFrame *ret = av_చట్రం_alloc();
 
-    if (!ret)
-        return NULL;
+    ఒకవేళ (!ret)
+        తిరిగి ఖాళీ;
 
-    if (av_frame_ref(ret, src) < 0)
-        av_frame_free(&ret);
+    ఒకవేళ (av_చట్రం_ref(ret, src) < 0)
+        av_చట్రం_free(&ret);
 
-    return ret;
+    తిరిగి ret;
 }
 
-void av_frame_unref(AVFrame *frame)
+శూన్య av_చట్రం_unref(AVFrame *చట్రం)
 {
-    if (!frame)
-        return;
+    ఒకవేళ (!చట్రం)
+        తిరిగి;
 
-    av_frame_side_data_free(&frame->side_data, &frame->nb_side_data);
+    av_చట్రం_side_దత్తాంశం_free(&చట్రం->side_దత్తాంశం, &చట్రం->nb_side_దత్తాంశం);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        av_buffer_unref(&frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        av_buffer_unref(&frame->extended_buf[i]);
-    av_freep(&frame->extended_buf);
-    av_dict_free(&frame->metadata);
+    కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(చట్రం->buf); i++)
+        av_బఫరు_unref(&చట్రం->buf[i]);
+    కొరకు (పూర్ణాంకం i = 0; i < చట్రం->nb_extended_buf; i++)
+        av_బఫరు_unref(&చట్రం->extended_buf[i]);
+    av_freep(&చట్రం->extended_buf);
+    av_dict_free(&చట్రం->metadata);
 
-    av_buffer_unref(&frame->hw_frames_ctx);
+    av_బఫరు_unref(&చట్రం->hw_చట్రాలు_ctx);
 
-    av_buffer_unref(&frame->opaque_ref);
-    av_refstruct_unref(&frame->private_ref);
+    av_బఫరు_unref(&చట్రం->opaque_ref);
+    av_refstruct_unref(&చట్రం->వ్యక్తిగత_ref);
 
-    if (frame->extended_data != frame->data)
-        av_freep(&frame->extended_data);
+    ఒకవేళ (చట్రం->extended_దత్తాంశం != చట్రం->దత్తాంశం)
+        av_freep(&చట్రం->extended_దత్తాంశం);
 
-    av_channel_layout_uninit(&frame->ch_layout);
+    av_channel_layout_uninit(&చట్రం->ch_layout);
 
-    get_frame_defaults(frame);
+    get_చట్రం_defaults(చట్రం);
 }
 
-void av_frame_move_ref(AVFrame *dst, AVFrame *src)
+శూన్య av_చట్రం_move_ref(AVFrame *dst, AVFrame *src)
 {
-    av_assert1(dst->width == 0 && dst->height == 0);
+    av_assert1(dst->వెడల్పు == 0 && dst->ఎత్తు == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
-               dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
+               dst->ch_layout.క్రమం == AV_CHANNEL_క్రమం_UNSPEC);
 
     *dst = *src;
-    if (src->extended_data == src->data)
-        dst->extended_data = dst->data;
-    get_frame_defaults(src);
+    ఒకవేళ (src->extended_దత్తాంశం == src->దత్తాంశం)
+        dst->extended_దత్తాంశం = dst->దత్తాంశం;
+    get_చట్రం_defaults(src);
 }
 
-int av_frame_is_writable(AVFrame *frame)
+పూర్ణాంకం av_చట్రం_is_writable(AVFrame *చట్రం)
 {
-    int ret = 1;
+    పూర్ణాంకం ret = 1;
 
     /* assume non-refcounted frames are not writable */
-    if (!frame->buf[0])
-        return 0;
+    ఒకవేళ (!చట్రం->buf[0])
+        తిరిగి 0;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        if (frame->buf[i])
-            ret &= !!av_buffer_is_writable(frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        ret &= !!av_buffer_is_writable(frame->extended_buf[i]);
+    కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(చట్రం->buf); i++)
+        ఒకవేళ (చట్రం->buf[i])
+            ret &= !!av_బఫరు_is_writable(చట్రం->buf[i]);
+    కొరకు (పూర్ణాంకం i = 0; i < చట్రం->nb_extended_buf; i++)
+        ret &= !!av_బఫరు_is_writable(చట్రం->extended_buf[i]);
 
-    return ret;
+    తిరిగి ret;
 }
 
-int av_frame_make_writable(AVFrame *frame)
+పూర్ణాంకం av_చట్రం_make_writable(AVFrame *చట్రం)
 {
     AVFrame tmp;
-    int ret;
+    పూర్ణాంకం ret;
 
-    if (av_frame_is_writable(frame))
-        return 0;
+    ఒకవేళ (av_చట్రం_is_writable(చట్రం))
+        తిరిగి 0;
 
-    memset(&tmp, 0, sizeof(tmp));
-    tmp.format         = frame->format;
-    tmp.width          = frame->width;
-    tmp.height         = frame->height;
-    tmp.nb_samples     = frame->nb_samples;
-    ret = av_channel_layout_copy(&tmp.ch_layout, &frame->ch_layout);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    memset(&tmp, 0, పరిమాణం(tmp));
+    tmp.format         = చట్రం->format;
+    tmp.వెడల్పు          = చట్రం->వెడల్పు;
+    tmp.ఎత్తు         = చట్రం->ఎత్తు;
+    tmp.nb_samples     = చట్రం->nb_samples;
+    ret = av_channel_layout_copy(&tmp.ch_layout, &చట్రం->ch_layout);
+    ఒకవేళ (ret < 0) {
+        av_చట్రం_unref(&tmp);
+        తిరిగి ret;
     }
 
-    if (frame->hw_frames_ctx)
-        ret = av_hwframe_get_buffer(frame->hw_frames_ctx, &tmp, 0);
-    else
-        ret = av_frame_get_buffer(&tmp, 0);
-    if (ret < 0)
-        return ret;
+    ఒకవేళ (చట్రం->hw_చట్రాలు_ctx)
+        ret = av_hwframe_get_బఫరు(చట్రం->hw_చట్రాలు_ctx, &tmp, 0);
+    లేకపోతే
+        ret = av_చట్రం_get_బఫరు(&tmp, 0);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
-    ret = av_frame_copy(&tmp, frame);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    ret = av_చట్రం_copy(&tmp, చట్రం);
+    ఒకవేళ (ret < 0) {
+        av_చట్రం_unref(&tmp);
+        తిరిగి ret;
     }
 
-    ret = av_frame_copy_props(&tmp, frame);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    ret = av_చట్రం_copy_props(&tmp, చట్రం);
+    ఒకవేళ (ret < 0) {
+        av_చట్రం_unref(&tmp);
+        తిరిగి ret;
     }
 
-    av_frame_unref(frame);
+    av_చట్రం_unref(చట్రం);
 
-    *frame = tmp;
-    if (tmp.data == tmp.extended_data)
-        frame->extended_data = frame->data;
+    *చట్రం = tmp;
+    ఒకవేళ (tmp.దత్తాంశం == tmp.extended_దత్తాంశం)
+        చట్రం->extended_దత్తాంశం = చట్రం->దత్తాంశం;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src)
+పూర్ణాంకం av_చట్రం_copy_props(AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
-    return frame_copy_props(dst, src, 1);
+    తిరిగి చట్రం_copy_props(dst, src, 1);
 }
 
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane)
+AVBufferRef *av_చట్రం_get_plane_బఫరు(స్థిరరాశి AVFrame *చట్రం, పూర్ణాంకం plane)
 {
-    uintptr_t data;
-    int planes;
+    uintptr_t దత్తాంశం;
+    పూర్ణాంకం planes;
 
-    if (frame->nb_samples) {
-        int channels = frame->ch_layout.nb_channels;
-        if (!channels)
-            return NULL;
-        planes = av_sample_fmt_is_planar(frame->format) ? channels : 1;
-    } else
+    ఒకవేళ (చట్రం->nb_samples) {
+        పూర్ణాంకం channels = చట్రం->ch_layout.nb_channels;
+        ఒకవేళ (!channels)
+            తిరిగి ఖాళీ;
+        planes = av_sample_fmt_is_planar(చట్రం->format) ? channels : 1;
+    } లేకపోతే
         planes = 4;
 
-    if (plane < 0 || plane >= planes || !frame->extended_data[plane])
-        return NULL;
-    data = (uintptr_t)frame->extended_data[plane];
+    ఒకవేళ (plane < 0 || plane >= planes || !చట్రం->extended_దత్తాంశం[plane])
+        తిరిగి ఖాళీ;
+    దత్తాంశం = (uintptr_t)చట్రం->extended_దత్తాంశం[plane];
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
-        AVBufferRef *buf = frame->buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+    కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(చట్రం->buf) && చట్రం->buf[i]; i++) {
+        AVBufferRef *buf = చట్రం->buf[i];
+        uintptr_t buf_begin = (uintptr_t)buf->దత్తాంశం;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        ఒకవేళ (దత్తాంశం >= buf_begin && దత్తాంశం < buf_begin + buf->కొలత)
+            తిరిగి buf;
     }
-    for (int i = 0; i < frame->nb_extended_buf; i++) {
-        AVBufferRef *buf = frame->extended_buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+    కొరకు (పూర్ణాంకం i = 0; i < చట్రం->nb_extended_buf; i++) {
+        AVBufferRef *buf = చట్రం->extended_buf[i];
+        uintptr_t buf_begin = (uintptr_t)buf->దత్తాంశం;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        ఒకవేళ (దత్తాంశం >= buf_begin && దత్తాంశం < buf_begin + buf->కొలత)
+            తిరిగి buf;
     }
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
-AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_దత్తాంశం *av_చట్రం_new_side_దత్తాంశం_from_buf(AVFrame *చట్రం,
+                                                 గణన AVFrame_Side_దత్తాంశం_Type type,
                                                  AVBufferRef *buf)
 {
-    return
-        ff_frame_side_data_add_from_buf(
-            &frame->side_data, &frame->nb_side_data, type, buf);
+    తిరిగి
+        ff_చట్రం_side_దత్తాంశం_కూడు_from_buf(
+            &చట్రం->side_దత్తాంశం, &చట్రం->nb_side_దత్తాంశం, type, buf);
 }
 
-AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
-                                        size_t size)
+AVFrame_Side_దత్తాంశం *av_చట్రం_new_side_దత్తాంశం(AVFrame *చట్రం,
+                                        గణన AVFrame_Side_దత్తాంశం_Type type,
+                                        size_t కొలత)
 {
-    AVFrameSideData *ret;
-    AVBufferRef *buf = av_buffer_alloc(size);
-    ret = av_frame_new_side_data_from_buf(frame, type, buf);
-    if (!ret)
-        av_buffer_unref(&buf);
-    return ret;
+    AVFrame_Side_దత్తాంశం *ret;
+    AVBufferRef *buf = av_బఫరు_alloc(కొలత);
+    ret = av_చట్రం_new_side_దత్తాంశం_from_buf(చట్రం, type, buf);
+    ఒకవేళ (!ret)
+        av_బఫరు_unref(&buf);
+    తిరిగి ret;
 }
 
-AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type)
+AVFrame_Side_దత్తాంశం *av_చట్రం_get_side_దత్తాంశం(స్థిరరాశి AVFrame *చట్రం,
+                                        గణన AVFrame_Side_దత్తాంశం_Type type)
 {
-    return (AVFrameSideData *)av_frame_side_data_get(
-        frame->side_data, frame->nb_side_data,
+    తిరిగి (AVFrame_Side_దత్తాంశం *)av_చట్రం_side_దత్తాంశం_get(
+        చట్రం->side_దత్తాంశం, చట్రం->nb_side_దత్తాంశం,
         type
     );
 }
 
-static int frame_copy_video(AVFrame *dst, const AVFrame *src)
+స్థిర పూర్ణాంకం చట్రం_copy_video(AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
-    int planes;
+    పూర్ణాంకం planes;
 
-    if (dst->width  < src->width ||
-        dst->height < src->height)
-        return AVERROR(EINVAL);
+    ఒకవేళ (dst->వెడల్పు  < src->వెడల్పు ||
+        dst->ఎత్తు < src->ఎత్తు)
+        తిరిగి AVERROR(EINVAL);
 
-    if (src->hw_frames_ctx || dst->hw_frames_ctx)
-        return av_hwframe_transfer_data(dst, src, 0);
+    ఒకవేళ (src->hw_చట్రాలు_ctx || dst->hw_చట్రాలు_ctx)
+        తిరిగి av_hwframe_transfer_దత్తాంశం(dst, src, 0);
 
-    planes = av_pix_fmt_count_planes(dst->format);
-    for (int i = 0; i < planes; i++)
-        if (!dst->data[i] || !src->data[i])
-            return AVERROR(EINVAL);
+    planes = av_pix_fmt_లెక్క_planes(dst->format);
+    కొరకు (పూర్ణాంకం i = 0; i < planes; i++)
+        ఒకవేళ (!dst->దత్తాంశం[i] || !src->దత్తాంశం[i])
+            తిరిగి AVERROR(EINVAL);
 
-    av_image_copy2(dst->data, dst->linesize,
-                   src->data, src->linesize,
-                   dst->format, src->width, src->height);
+    av_image_copy2(dst->దత్తాంశం, dst->linesize,
+                   src->దత్తాంశం, src->linesize,
+                   dst->format, src->వెడల్పు, src->ఎత్తు);
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int frame_copy_audio(AVFrame *dst, const AVFrame *src)
+స్థిర పూర్ణాంకం చట్రం_copy_audio(AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
-    int planar   = av_sample_fmt_is_planar(dst->format);
-    int channels = dst->ch_layout.nb_channels;
-    int planes   = planar ? channels : 1;
+    పూర్ణాంకం planar   = av_sample_fmt_is_planar(dst->format);
+    పూర్ణాంకం channels = dst->ch_layout.nb_channels;
+    పూర్ణాంకం planes   = planar ? channels : 1;
 
-    if (dst->nb_samples != src->nb_samples ||
+    ఒకవేళ (dst->nb_samples != src->nb_samples ||
         av_channel_layout_compare(&dst->ch_layout, &src->ch_layout))
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
 
-    for (int i = 0; i < planes; i++)
-        if (!dst->extended_data[i] || !src->extended_data[i])
-            return AVERROR(EINVAL);
+    కొరకు (పూర్ణాంకం i = 0; i < planes; i++)
+        ఒకవేళ (!dst->extended_దత్తాంశం[i] || !src->extended_దత్తాంశం[i])
+            తిరిగి AVERROR(EINVAL);
 
-    av_samples_copy(dst->extended_data, src->extended_data, 0, 0,
+    av_samples_copy(dst->extended_దత్తాంశం, src->extended_దత్తాంశం, 0, 0,
                     dst->nb_samples, channels, dst->format);
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_frame_copy(AVFrame *dst, const AVFrame *src)
+పూర్ణాంకం av_చట్రం_copy(AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
-    if (dst->format != src->format || dst->format < 0)
-        return AVERROR(EINVAL);
+    ఒకవేళ (dst->format != src->format || dst->format < 0)
+        తిరిగి AVERROR(EINVAL);
 
-    if (dst->width > 0 && dst->height > 0)
-        return frame_copy_video(dst, src);
-    else if (dst->nb_samples > 0 &&
+    ఒకవేళ (dst->వెడల్పు > 0 && dst->ఎత్తు > 0)
+        తిరిగి చట్రం_copy_video(dst, src);
+    లేకపోతే ఒకవేళ (dst->nb_samples > 0 &&
              (av_channel_layout_check(&dst->ch_layout)))
-        return frame_copy_audio(dst, src);
+        తిరిగి చట్రం_copy_audio(dst, src);
 
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type)
+శూన్య av_చట్రం_remove_side_దత్తాంశం(AVFrame *చట్రం, గణన AVFrame_Side_దత్తాంశం_Type type)
 {
-    av_frame_side_data_remove(&frame->side_data, &frame->nb_side_data, type);
+    av_చట్రం_side_దత్తాంశం_remove(&చట్రం->side_దత్తాంశం, &చట్రం->nb_side_దత్తాంశం, type);
 }
 
-static int calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
-                                 const AVPixFmtDescriptor *desc)
+స్థిర పూర్ణాంకం calc_cropping_offsets(size_t offsets[4], స్థిరరాశి AVFrame *చట్రం,
+                                 స్థిరరాశి AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; frame->data[i]; i++) {
-        const AVComponentDescriptor *comp = NULL;
-        int shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
-        int shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    కొరకు (పూర్ణాంకం i = 0; చట్రం->దత్తాంశం[i]; i++) {
+        స్థిరరాశి AVComponentDescriptor *comp = ఖాళీ;
+        పూర్ణాంకం జరుపు_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
+        పూర్ణాంకం జరుపు_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
+        ఒకవేళ (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
             offsets[i] = 0;
-            break;
+            ఆపు;
         }
 
         /* find any component descriptor for this plane */
-        for (int j = 0; j < desc->nb_components; j++) {
-            if (desc->comp[j].plane == i) {
+        కొరకు (పూర్ణాంకం j = 0; j < desc->nb_components; j++) {
+            ఒకవేళ (desc->comp[j].plane == i) {
                 comp = &desc->comp[j];
-                break;
+                ఆపు;
             }
         }
-        if (!comp)
-            return AVERROR_BUG;
+        ఒకవేళ (!comp)
+            తిరిగి AVERROR_BUG;
 
-        offsets[i] = (frame->crop_top  >> shift_y) * frame->linesize[i] +
-                     (frame->crop_left >> shift_x) * comp->step;
+        offsets[i] = (చట్రం->crop_శిఖరం  >> జరుపు_y) * చట్రం->linesize[i] +
+                     (చట్రం->crop_ఎడమ >> జరుపు_x) * comp->అడుగు;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_frame_apply_cropping(AVFrame *frame, int flags)
+పూర్ణాంకం av_చట్రం_apply_cropping(AVFrame *చట్రం, పూర్ణాంకం flags)
 {
-    const AVPixFmtDescriptor *desc;
+    స్థిరరాశి AVPixFmtDescriptor *desc;
     size_t offsets[4];
-    int ret;
+    పూర్ణాంకం ret;
 
-    if (!(frame->width > 0 && frame->height > 0))
-        return AVERROR(EINVAL);
+    ఒకవేళ (!(చట్రం->వెడల్పు > 0 && చట్రం->ఎత్తు > 0))
+        తిరిగి AVERROR(EINVAL);
 
-    if (frame->crop_left >= INT_MAX - frame->crop_right        ||
-        frame->crop_top  >= INT_MAX - frame->crop_bottom       ||
-        (frame->crop_left + frame->crop_right) >= frame->width ||
-        (frame->crop_top + frame->crop_bottom) >= frame->height)
-        return AVERROR(ERANGE);
+    ఒకవేళ (చట్రం->crop_ఎడమ >= గరిష్ఠ_పూర్ణాంకం - చట్రం->crop_కుడి        ||
+        చట్రం->crop_శిఖరం  >= గరిష్ఠ_పూర్ణాంకం - చట్రం->crop_bottom       ||
+        (చట్రం->crop_ఎడమ + చట్రం->crop_కుడి) >= చట్రం->వెడల్పు ||
+        (చట్రం->crop_శిఖరం + చట్రం->crop_bottom) >= చట్రం->ఎత్తు)
+        తిరిగి AVERROR(ERANGE);
 
-    desc = av_pix_fmt_desc_get(frame->format);
-    if (!desc)
-        return AVERROR_BUG;
+    desc = av_pix_fmt_desc_get(చట్రం->format);
+    ఒకవేళ (!desc)
+        తిరిగి AVERROR_BUG;
 
     /* Apply just the right/bottom cropping for hwaccel formats. Bitstream
      * formats cannot be easily handled here either (and corresponding decoders
      * should not export any cropping anyway), so do the same for those as well.
      * */
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
-        frame->width      -= frame->crop_right;
-        frame->height     -= frame->crop_bottom;
-        frame->crop_right  = 0;
-        frame->crop_bottom = 0;
-        return 0;
+    ఒకవేళ (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
+        చట్రం->వెడల్పు      -= చట్రం->crop_కుడి;
+        చట్రం->ఎత్తు     -= చట్రం->crop_bottom;
+        చట్రం->crop_కుడి  = 0;
+        చట్రం->crop_bottom = 0;
+        తిరిగి 0;
     }
 
     /* calculate the offsets for each plane */
-    ret = calc_cropping_offsets(offsets, frame, desc);
-    if (ret < 0)
-        return ret;
+    ret = calc_cropping_offsets(offsets, చట్రం, desc);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
     /* adjust the offsets to avoid breaking alignment */
-    if (!(flags & AV_FRAME_CROP_UNALIGNED)) {
-        int log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
-        int min_log2_align = INT_MAX;
+    ఒకవేళ (!(flags & AV_చట్రం_CROP_UNALIGNED)) {
+        పూర్ణాంకం log2_crop_align = చట్రం->crop_ఎడమ ? ff_ctz(చట్రం->crop_ఎడమ) : గరిష్ఠ_పూర్ణాంకం;
+        పూర్ణాంకం min_log2_align = గరిష్ఠ_పూర్ణాంకం;
 
-        for (int i = 0; frame->data[i]; i++) {
-            int log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
+        కొరకు (పూర్ణాంకం i = 0; చట్రం->దత్తాంశం[i]; i++) {
+            పూర్ణాంకం log2_align = offsets[i] ? ff_ctz(offsets[i]) : గరిష్ఠ_పూర్ణాంకం;
             min_log2_align = FFMIN(log2_align, min_log2_align);
         }
 
         /* The data alignment is the cropping alignment scaled by a power of 2,
          * up for multi-byte pixels and down for subsampled planes */
-        if (min_log2_align < 5 && log2_crop_align != INT_MAX) {
-            frame->crop_left &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
-            ret = calc_cropping_offsets(offsets, frame, desc);
-            if (ret < 0)
-                return ret;
+        ఒకవేళ (min_log2_align < 5 && log2_crop_align != గరిష్ఠ_పూర్ణాంకం) {
+            చట్రం->crop_ఎడమ &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
+            ret = calc_cropping_offsets(offsets, చట్రం, desc);
+            ఒకవేళ (ret < 0)
+                తిరిగి ret;
         }
     }
 
-    for (int i = 0; frame->data[i]; i++)
-        frame->data[i] += offsets[i];
+    కొరకు (పూర్ణాంకం i = 0; చట్రం->దత్తాంశం[i]; i++)
+        చట్రం->దత్తాంశం[i] += offsets[i];
 
-    frame->width      -= (frame->crop_left + frame->crop_right);
-    frame->height     -= (frame->crop_top  + frame->crop_bottom);
-    frame->crop_left   = 0;
-    frame->crop_right  = 0;
-    frame->crop_top    = 0;
-    frame->crop_bottom = 0;
+    చట్రం->వెడల్పు      -= (చట్రం->crop_ఎడమ + చట్రం->crop_కుడి);
+    చట్రం->ఎత్తు     -= (చట్రం->crop_శిఖరం  + చట్రం->crop_bottom);
+    చట్రం->crop_ఎడమ   = 0;
+    చట్రం->crop_కుడి  = 0;
+    చట్రం->crop_శిఖరం    = 0;
+    చట్రం->crop_bottom = 0;
 
-    return 0;
+    తిరిగి 0;
 }

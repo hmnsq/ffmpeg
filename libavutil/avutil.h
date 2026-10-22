@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AVUTIL_H
-#define AVUTIL_AVUTIL_H
+#నిర్వచితం_కాకపోతే AVUTIL_AVUTIL_H
+#నిర్వచించు AVUTIL_AVUTIL_H
 
 /**
  * @file
@@ -167,24 +167,24 @@
 /**
  * Return the LIBAVUTIL_VERSION_INT constant.
  */
-unsigned avutil_version(void);
+గుర్తులేని avutil_సంస్కరణ(శూన్య);
 
 /**
  * Return an informative version string. This usually is the actual release
  * version number or a git commit description. This string has no fixed format
  * and can change any time. It should never be parsed by code.
  */
-const char *av_version_info(void);
+స్థిరరాశి అక్షరం *av_సంస్కరణ_info(శూన్య);
 
 /**
  * Return the libavutil build-time configuration.
  */
-const char *avutil_configuration(void);
+స్థిరరాశి అక్షరం *avutil_configuration(శూన్య);
 
 /**
  * Return the libavutil license.
  */
-const char *avutil_license(void);
+స్థిరరాశి అక్షరం *avutil_license(శూన్య);
 
 /**
  * @}
@@ -195,11 +195,11 @@ const char *avutil_license(void);
  * @brief Media Type
  */
 
-enum AVMediaType {
+గణన AVMediaType {
     AVMEDIA_TYPE_UNKNOWN = -1,  ///< Usually treated as AVMEDIA_TYPE_DATA
     AVMEDIA_TYPE_VIDEO,
     AVMEDIA_TYPE_AUDIO,
-    AVMEDIA_TYPE_DATA,          ///< Opaque data information usually continuous
+    AVMEDIA_TYPE_దత్తాంశం,          ///< Opaque data information usually continuous
     AVMEDIA_TYPE_SUBTITLE,
     AVMEDIA_TYPE_ATTACHMENT,    ///< Opaque data information usually sparse
     AVMEDIA_TYPE_NB
@@ -209,7 +209,7 @@ enum AVMediaType {
  * Return a string describing the media_type enum, NULL if media_type
  * is unknown.
  */
-const char *av_get_media_type_string(enum AVMediaType media_type);
+స్థిరరాశి అక్షరం *av_get_media_type_string(గణన AVMediaType media_type);
 
 /**
  * @defgroup lavu_const Constants
@@ -221,12 +221,12 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * @{
  */
 
-#define FF_LAMBDA_SHIFT 7
-#define FF_LAMBDA_SCALE (1<<FF_LAMBDA_SHIFT)
-#define FF_QP2LAMBDA 118 ///< factor to convert from H.263 QP to lambda
-#define FF_LAMBDA_MAX (256*128-1)
+#నిర్వచించు FF_LAMBDA_జరుపు 7
+#నిర్వచించు FF_LAMBDA_SCALE (1<<FF_LAMBDA_జరుపు)
+#నిర్వచించు FF_QP2LAMBDA 118 ///< factor to convert from H.263 QP to lambda
+#నిర్వచించు FF_LAMBDA_MAX (256*128-1)
 
-#define FF_QUALITY_SCALE FF_LAMBDA_SCALE //FIXME maybe remove
+#నిర్వచించు FF_QUALITY_SCALE FF_LAMBDA_SCALE //FIXME maybe remove
 
 /**
  * @}
@@ -244,24 +244,24 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * either pts or dts.
  */
 
-#define AV_NOPTS_VALUE          ((int64_t)UINT64_C(0x8000000000000000))
+#నిర్వచించు AV_NOPTS_విలువ          ((int64_t)UINT64_C(0x8000000000000000))
 
 /**
  * Internal time base represented as integer
  */
 
-#define AV_TIME_BASE            1000000
+#నిర్వచించు AV_సమయం_పునాది            1000000
 
 /**
  * Internal time base represented as fractional value
  */
 
-#ifdef __cplusplus
+#నిర్వచితమైతే __cplusplus
 /* ISO C++ forbids compound-literals. */
-#define AV_TIME_BASE_Q          av_make_q(1, AV_TIME_BASE)
-#else
-#define AV_TIME_BASE_Q          (AVRational){1, AV_TIME_BASE}
-#endif
+#నిర్వచించు AV_సమయం_పునాది_Q          av_make_q(1, AV_సమయం_పునాది)
+#లేకపోతే
+#నిర్వచించు AV_సమయం_పునాది_Q          (AVRational){1, AV_సమయం_పునాది}
+#అయితే_ముగింపు
 
 /**
  * @}
@@ -273,7 +273,7 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
  * @{
  */
 
-enum AVPictureType {
+గణన AVPictureType {
     AV_PICTURE_TYPE_NONE = 0, ///< Undefined
     AV_PICTURE_TYPE_I,     ///< Intra
     AV_PICTURE_TYPE_P,     ///< Predicted
@@ -291,36 +291,36 @@ enum AVPictureType {
  * @param[in] pict_type the picture type @return a single character
  * representing the picture type, '?' if pict_type is unknown
  */
-char av_get_picture_type_char(enum AVPictureType pict_type);
+అక్షరం av_get_picture_type_char(గణన AVPictureType pict_type);
 
 /**
  * @}
  */
 
-#include "common.h"
-#include "rational.h"
-#include "version.h"
-#include "macros.h"
-#include "mathematics.h"
-#include "log.h"
-#include "pixfmt.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "rational.h"
+#అన్తర్భావ "version.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mathematics.h"
+#అన్తర్భావ "log.h"
+#అన్తర్భావ "pixfmt.h"
 
 /**
  * Return x default pointer in case p is NULL.
  */
-static inline void *av_x_if_null(const void *p, const void *x)
+స్థిర అంతఃవరుస శూన్య *av_x_if_null(స్థిరరాశి శూన్య *p, స్థిరరాశి శూన్య *x)
 {
-    return (void *)(intptr_t)(p ? p : x);
+    తిరిగి (శూన్య *)(intptr_t)(p ? p : x);
 }
 
 /**
  * Return the fractional representation of the internal time base.
  */
-AVRational av_get_time_base_q(void);
+AVRational av_get_సమయం_పునాది_q(శూన్య);
 
-#define AV_FOURCC_MAX_STRING_SIZE 32
+#నిర్వచించు AV_FOURCC_MAX_STRING_కొలత 32
 
-#define av_fourcc2str(fourcc) av_fourcc_make_string((char[AV_FOURCC_MAX_STRING_SIZE]){0}, fourcc)
+#నిర్వచించు av_fourcc2str(fourcc) av_fourcc_make_string((అక్షరం[AV_FOURCC_MAX_STRING_కొలత]){0}, fourcc)
 
 /**
  * Fill the provided buffer with a string containing a FourCC (four-character
@@ -330,11 +330,11 @@ AVRational av_get_time_base_q(void);
  * @param fourcc the fourcc to represent
  * @return the buffer in input
  */
-char *av_fourcc_make_string(char *buf, uint32_t fourcc);
+అక్షరం *av_fourcc_make_string(అక్షరం *buf, uint32_t fourcc);
 
 /**
  * @}
  * @}
  */
 
-#endif /* AVUTIL_AVUTIL_H */
+#అయితే_ముగింపు /* AVUTIL_AVUTIL_H */

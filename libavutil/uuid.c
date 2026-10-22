@@ -60,83 +60,83 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#అన్తర్భావ "attributes_internal.h"
+#అన్తర్భావ "uuid.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+పూర్ణాంకం av_uuid_parse(స్థిరరాశి అక్షరం *లోపల, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    ఒకవేళ (అక్షరశ్రేణి_పొడవు(లోపల) != 36)
+        తిరిగి AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    తిరిగి av_uuid_parse_range(లోపల, లోపల + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+స్థిర పూర్ణాంకం xdigit_గమ్యం_int(అక్షరం c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    ఒకవేళ (c >= 'a' && c <= 'f')
+        తిరిగి c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    ఒకవేళ (c >= '0' && c <= '9')
+        తిరిగి c - '0';
 
-    return -1;
+    తిరిగి -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+పూర్ణాంకం av_uuid_parse_range(స్థిరరాశి అక్షరం *లోపల_ప్రారంభం, స్థిరరాశి అక్షరం *లోపల_చివర, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    పూర్ణాంకం i;
+    స్థిరరాశి అక్షరం *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    ఒకవేళ ((లోపల_చివర - లోపల_ప్రారంభం) != 36)
+        తిరిగి AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    కొరకు (i = 0, cp = లోపల_ప్రారంభం; i < 16; i++) {
+        పూర్ణాంకం hi;
+        పూర్ణాంకం lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        ఒకవేళ (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
-        hi = xdigit_to_int(*cp++);
-        lo = xdigit_to_int(*cp++);
+        hi = xdigit_గమ్యం_int(*cp++);
+        lo = xdigit_గమ్యం_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        ఒకవేళ (hi == -1 || lo == -1)
+            తిరిగి AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+స్థిర attribute_nonstring స్థిరరాశి అక్షరం hexdigits_క్రింది[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+శూన్య av_uuid_unparse(స్థిరరాశి AVUUID uuid, అక్షరం *బహిర్గతం)
 {
-    char *p = out;
+    అక్షరం *p = బహిర్గతం;
 
-    for (int i = 0; i < 16; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        ఒకవేళ (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
-        *p++ = hexdigits_lower[tmp >> 4];
-        *p++ = hexdigits_lower[tmp & 15];
+        *p++ = hexdigits_క్రింది[tmp >> 4];
+        *p++ = hexdigits_క్రింది[tmp & 15];
     }
 
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+పూర్ణాంకం av_uuid_urn_parse(స్థిరరాశి అక్షరం *లోపల, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    ఒకవేళ (av_stristr(లోపల, "urn:uuid:") != లోపల)
+        తిరిగి AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    తిరిగి av_uuid_parse(లోపల + 9, uu);
 }

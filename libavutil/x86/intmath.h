@@ -18,102 +18,102 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_INTMATH_H
-#define AVUTIL_X86_INTMATH_H
+#నిర్వచితం_కాకపోతే AVUTIL_X86_INTMATH_H
+#నిర్వచించు AVUTIL_X86_INTMATH_H
 
-#include <stdint.h>
-#include <stdlib.h>
-#if HAVE_FAST_CLZ
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__INTEL_COMPILER)
-#include <immintrin.h>
-#endif
-#endif
-#include "config.h"
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stdlib.h>
+#ఒకవేళ HAVE_FAST_CLZ
+#ఒకవేళ defined(_MSC_VER)
+#అన్తర్భావ <intrin.h>
+#లేదావేళ defined(__INTEL_COMPILER)
+#అన్తర్భావ <immintrin.h>
+#అయితే_ముగింపు
+#అయితే_ముగింపు
+#అన్తర్భావ "config.h"
 
-#if HAVE_FAST_CLZ
-#if (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
-#   if defined(__INTEL_COMPILER)
-#       define ff_log2(x) (_bit_scan_reverse((x)|1))
-#   else
+#ఒకవేళ HAVE_FAST_CLZ
+#ఒకవేళ (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
+#   ఒకవేళ defined(__INTEL_COMPILER)
+#       define ff_log2(x) (బిట్టు_పరిశీలన_తిరగేయి((x)|1))
+#   లేకపోతే
 #       define ff_log2 ff_log2_x86
-static av_always_inline av_const int ff_log2_x86(unsigned int v)
+స్థిర av_always_inline av_const పూర్ణాంకం ff_log2_x86(గుర్తులేని పూర్ణాంకం v)
 {
-    unsigned long n;
-    _BitScanReverse(&n, v|1);
-    return n;
+    గుర్తులేని దీర్ఘ n;
+    బిట్టు_పరిశీలన_తిరగేయి_2(&n, v|1);
+    తిరిగి n;
 }
 #   endif
 #   define ff_log2_16bit av_log2
 
-#if defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
+#ఒకవేళ defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
                                   (defined(__BMI__) || !defined(__clang__)))
 #   define ff_ctz(v) _tzcnt_u32(v)
 
-#   if ARCH_X86_64
+#   ఒకవేళ ARCH_X86_64
 #       define ff_ctzll(v) _tzcnt_u64(v)
-#   else
+#   లేకపోతే
 #       define ff_ctzll ff_ctzll_x86
-static av_always_inline av_const int ff_ctzll_x86(long long v)
+స్థిర av_always_inline av_const పూర్ణాంకం ff_ctzll_x86(దీర్ఘ దీర్ఘ v)
 {
-    return ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
+    తిరిగి ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
 }
 #   endif
-#endif /* _MSC_VER */
+#అయితే_ముగింపు /* _MSC_VER */
 
-#endif /* __INTEL_COMPILER */
+#అయితే_ముగింపు /* __INTEL_COMPILER */
 
-#endif /* HAVE_FAST_CLZ */
+#అయితే_ముగింపు /* HAVE_FAST_CLZ */
 
-#if defined(__GNUC__) || defined(__clang__)
+#ఒకవేళ defined(__GNUC__) || defined(__clang__)
 
 /* Our generic version of av_popcount is faster than GCC's built-in on
  * CPUs that don't support the popcnt instruction.
  */
-#if defined(__POPCNT__)
-    #define av_popcount   __builtin_popcount
-#if ARCH_X86_64
-    #define av_popcount64 __builtin_popcountll
-#endif
+#ఒకవేళ defined(__POPCNT__)
+    #నిర్వచించు av_popcount   __builtin_popcount
+#ఒకవేళ ARCH_X86_64
+    #నిర్వచించు av_popcount64 __builtin_popcountll
+#అయితే_ముగింపు
 
-#endif /* __POPCNT__ */
+#అయితే_ముగింపు /* __POPCNT__ */
 
-#if defined(__BMI2__)
+#ఒకవేళ defined(__BMI2__)
 
-#if AV_GCC_VERSION_AT_LEAST(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-#define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+#ఒకవేళ AV_GCC_సంస్కరణ_AT_కనిష్ఠ(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
+#ఒకవేళ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+#నిర్వచించు av_zero_extend av_zero_extend_bmi2
+స్థిర av_always_inline av_const గుర్తులేని av_zero_extend_bmi2(గుర్తులేని a, గుర్తులేని p)
 {
-    if (p > 31) abort();
-    return __builtin_ia32_bzhi_si(a, p);
+    ఒకవేళ (p > 31) abort();
+    తిరిగి __builtin_ia32_bzhi_si(a, p);
 }
-#else
-#define av_zero_extend __builtin_ia32_bzhi_si
-#endif
-#elif HAVE_INLINE_ASM
+#లేకపోతే
+#నిర్వచించు av_zero_extend __builtin_ia32_bzhi_si
+#అయితే_ముగింపు
+#లేదావేళ HAVE_INLINE_ASM
 /* GCC releases before 5.1.0 have a broken bzhi builtin, so for those we
  * implement it using inline assembly
  */
-#define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+#నిర్వచించు av_zero_extend av_zero_extend_bmi2
+స్థిర av_always_inline av_const గుర్తులేని av_zero_extend_bmi2(గుర్తులేని a, గుర్తులేని p)
 {
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (p > 31) abort();
-#endif
-    if (av_builtin_constant_p(p))
-        return a & ((1U << p) - 1);
-    else {
-        unsigned x;
+#ఒకవేళ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    ఒకవేళ (p > 31) abort();
+#అయితే_ముగింపు
+    ఒకవేళ (av_builtin_constant_p(p))
+        తిరిగి a & ((1U << p) - 1);
+    లేకపోతే {
+        గుర్తులేని x;
         __asm__ ("bzhi %2, %1, %0 \n\t" : "=r"(x) : "rm"(a), "r"(p));
-        return x;
+        తిరిగి x;
     }
 }
-#endif /* AV_GCC_VERSION_AT_LEAST */
+#అయితే_ముగింపు /* AV_GCC_VERSION_AT_LEAST */
 
-#endif /* __BMI2__ */
+#అయితే_ముగింపు /* __BMI2__ */
 
-#endif /* __GNUC__ */
+#అయితే_ముగింపు /* __GNUC__ */
 
-#endif /* AVUTIL_X86_INTMATH_H */
+#అయితే_ముగింపు /* AVUTIL_X86_INTMATH_H */

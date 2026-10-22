@@ -18,22 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#అన్తర్భావ "config.h"
 
-#include "thread.h"
-#include "avassert.h"
-#include "bswap.h"
-#include "crc.h"
-#include "error.h"
-#if ARCH_AARCH64
-#include "libavutil/aarch64/crc.h"
-#elif ARCH_X86
-#include "libavutil/x86/crc.h"
-#endif
+#అన్తర్భావ "thread.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "bswap.h"
+#అన్తర్భావ "crc.h"
+#అన్తర్భావ "error.h"
+#ఒకవేళ ARCH_AARCH64
+#అన్తర్భావ "libavutil/aarch64/crc.h"
+#లేదావేళ ARCH_X86
+#అన్తర్భావ "libavutil/x86/crc.h"
+#అయితే_ముగింపు
 
-#if CONFIG_HARDCODED_TABLES
-static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
-    [AV_CRC_8_ATM] = {
+#ఒకవేళ CONFIG_HARDCODED_TABLES
+స్థిర స్థిరరాశి AVCRC av_చక్రీయ_తనిఖీ_పట్టిక[AV_చక్రీయ_తనిఖీ_MAX][257] = {
+    [AV_చక్రీయ_తనిఖీ_8_ATM] = {
         0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15, 0x38, 0x3F, 0x36, 0x31,
         0x24, 0x23, 0x2A, 0x2D, 0x70, 0x77, 0x7E, 0x79, 0x6C, 0x6B, 0x62, 0x65,
         0x48, 0x4F, 0x46, 0x41, 0x54, 0x53, 0x5A, 0x5D, 0xE0, 0xE7, 0xEE, 0xE9,
@@ -57,7 +57,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0xDE, 0xD9, 0xD0, 0xD7, 0xC2, 0xC5, 0xCC, 0xCB, 0xE6, 0xE1, 0xE8, 0xEF,
         0xFA, 0xFD, 0xF4, 0xF3, 0x01
     },
-    [AV_CRC_8_EBU] = {
+    [AV_చక్రీయ_తనిఖీ_8_EBU] = {
         0x00, 0x1D, 0x3A, 0x27, 0x74, 0x69, 0x4E, 0x53, 0xE8, 0xF5, 0xD2, 0xCF,
         0x9C, 0x81, 0xA6, 0xBB, 0xCD, 0xD0, 0xF7, 0xEA, 0xB9, 0xA4, 0x83, 0x9E,
         0x25, 0x38, 0x1F, 0x02, 0x51, 0x4C, 0x6B, 0x76, 0x87, 0x9A, 0xBD, 0xA0,
@@ -81,7 +81,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x7F, 0x62, 0x45, 0x58, 0x0B, 0x16, 0x31, 0x2C, 0x97, 0x8A, 0xAD, 0xB0,
         0xE3, 0xFE, 0xD9, 0xC4, 0x01
     },
-    [AV_CRC_16_ANSI] = {
+    [AV_చక్రీయ_తనిఖీ_16_ANSI] = {
         0x0000, 0x0580, 0x0F80, 0x0A00, 0x1B80, 0x1E00, 0x1400, 0x1180,
         0x3380, 0x3600, 0x3C00, 0x3980, 0x2800, 0x2D80, 0x2780, 0x2200,
         0x6380, 0x6600, 0x6C00, 0x6980, 0x7800, 0x7D80, 0x7780, 0x7200,
@@ -116,7 +116,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x1382, 0x1602, 0x1C02, 0x1982, 0x0802, 0x0D82, 0x0782, 0x0202,
         0x0001
     },
-    [AV_CRC_16_CCITT] = {
+    [AV_చక్రీయ_తనిఖీ_16_CCITT] = {
         0x0000, 0x2110, 0x4220, 0x6330, 0x8440, 0xA550, 0xC660, 0xE770,
         0x0881, 0x2991, 0x4AA1, 0x6BB1, 0x8CC1, 0xADD1, 0xCEE1, 0xEFF1,
         0x3112, 0x1002, 0x7332, 0x5222, 0xB552, 0x9442, 0xF772, 0xD662,
@@ -151,7 +151,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x176E, 0x367E, 0x554E, 0x745E, 0x932E, 0xB23E, 0xD10E, 0xF01E,
         0x0001
     },
-    [AV_CRC_24_IEEE] = {
+    [AV_చక్రీయ_తనిఖీ_24_IEEE] = {
         0x000000, 0xFB4C86, 0x0DD58A, 0xF6990C, 0xE1E693, 0x1AAA15, 0xEC3319,
         0x177F9F, 0x3981A1, 0xC2CD27, 0x34542B, 0xCF18AD, 0xD86732, 0x232BB4,
         0xD5B2B8, 0x2EFE3E, 0x894EC5, 0x720243, 0x849B4F, 0x7FD7C9, 0x68A856,
@@ -190,7 +190,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x0CD1F6, 0xFA48FA, 0x01047C, 0x2FFA42, 0xD4B6C4, 0x222FC8, 0xD9634E,
         0xCE1CD1, 0x355057, 0xC3C95B, 0x3885DD, 0x000001,
     },
-    [AV_CRC_32_IEEE] = {
+    [AV_చక్రీయ_తనిఖీ_32_IEEE] = {
         0x00000000, 0xB71DC104, 0x6E3B8209, 0xD926430D, 0xDC760413, 0x6B6BC517,
         0xB24D861A, 0x0550471E, 0xB8ED0826, 0x0FF0C922, 0xD6D68A2F, 0x61CB4B2B,
         0x649B0C35, 0xD386CD31, 0x0AA08E3C, 0xBDBD4F38, 0x70DB114C, 0xC7C6D048,
@@ -235,7 +235,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0xBBB03E93, 0x0CADFF97, 0xB110B0AF, 0x060D71AB, 0xDF2B32A6, 0x6836F3A2,
         0x6D66B4BC, 0xDA7B75B8, 0x035D36B5, 0xB440F7B1, 0x00000001
     },
-    [AV_CRC_32_IEEE_LE] = {
+    [AV_చక్రీయ_తనిఖీ_32_IEEE_LE] = {
         0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F,
         0xE963A535, 0x9E6495A3, 0x0EDB8832, 0x79DCB8A4, 0xE0D5E91E, 0x97D2D988,
         0x09B64C2B, 0x7EB17CBD, 0xE7B82D07, 0x90BF1D91, 0x1DB71064, 0x6AB020F2,
@@ -280,7 +280,7 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x54DE5729, 0x23D967BF, 0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94,
         0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D, 0x00000001
     },
-    [AV_CRC_16_ANSI_LE] = {
+    [AV_చక్రీయ_తనిఖీ_16_ANSI_LE] = {
         0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
         0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
         0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
@@ -316,138 +316,138 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x0001
     },
 };
-#else
-#if CONFIG_SMALL
-#define CRC_TABLE_SIZE 257
-#else
-#define CRC_TABLE_SIZE 1024
-#endif
-static AVCRC av_crc_table[AV_CRC_MAX][CRC_TABLE_SIZE];
+#లేకపోతే
+#ఒకవేళ CONFIG_SMALL
+#నిర్వచించు చక్రీయ_తనిఖీ_పట్టిక_కొలత 257
+#లేకపోతే
+#నిర్వచించు చక్రీయ_తనిఖీ_పట్టిక_కొలత 1024
+#అయితే_ముగింపు
+స్థిర AVCRC av_చక్రీయ_తనిఖీ_పట్టిక[AV_చక్రీయ_తనిఖీ_MAX][చక్రీయ_తనిఖీ_పట్టిక_కొలత];
 
-#define DECLARE_CRC_INIT_TABLE_ONCE(id, le, bits, poly)                                       \
-static AVOnce id ## _once_control = AV_ONCE_INIT;                                             \
-static void id ## _init_table_once(void)                                                      \
+#నిర్వచించు DECLARE_చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(id, le, బిట్లు, poly)                                       \
+స్థిర AVOnce id ## _once_control = AV_ONCE_INIT;                                             \
+స్థిర శూన్య id ## init_పట్టిక_once(శూన్య)                                                      \
 {                                                                                             \
-    av_assert0(av_crc_init(av_crc_table[id], le, bits, poly, sizeof(av_crc_table[id])) >= 0); \
+    av_assert0(av_చక్రీయ_తనిఖీ_init(av_చక్రీయ_తనిఖీ_పట్టిక[id], le, బిట్లు, poly, పరిమాణం(av_చక్రీయ_తనిఖీ_పట్టిక[id])) >= 0); \
 }
 
-#define CRC_INIT_TABLE_ONCE(id) ff_thread_once(&id ## _once_control, id ## _init_table_once)
+#నిర్వచించు చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(id) ff_thread_once(&id ## _once_control, id ## init_పట్టిక_once)
 
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_8_ATM,      0,  8,       0x07)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_8_EBU,      0,  8,       0x1D)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI,    0, 16,     0x8005)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_16_CCITT,   0, 16,     0x1021)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_24_IEEE,    0, 24,   0x864CFB)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE,    0, 32, 0x04C11DB7)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE_LE, 1, 32, 0xEDB88320)
-DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI_LE, 1, 16,     0xA001)
-#endif
+DECLARE_చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_8_ATM,      0,  8,       0x07)
+DECLARE_చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_8_EBU,      0,  8,       0x1D)
+DECLARE_చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_16_ANSI,    0, 16,     0x8005)
+DECLARE_చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_16_CCITT,   0, 16,     0x1021)
+DECLARE_చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_24_IEEE,    0, 24,   0x864CFB)
+DECLARE_చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_32_IEEE,    0, 32, 0x04C11DB7)
+DECLARE_చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_32_IEEE_LE, 1, 32, 0xEDB88320)
+DECLARE_చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_16_ANSI_LE, 1, 16,     0xA001)
+#అయితే_ముగింపు
 
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+పూర్ణాంకం av_చక్రీయ_తనిఖీ_init(AVCRC *ctx, పూర్ణాంకం le, పూర్ణాంకం బిట్లు, uint32_t poly, పూర్ణాంకం ctx_కొలత)
 {
-    unsigned i, j;
+    గుర్తులేని i, j;
     uint32_t c;
 
-    if (bits < 8 || bits > 32 || poly >= (1LL << bits))
-        return AVERROR(EINVAL);
-    if (ctx_size != sizeof(AVCRC) * 257 && ctx_size != sizeof(AVCRC) * 1024)
-        return AVERROR(EINVAL);
+    ఒకవేళ (బిట్లు < 8 || బిట్లు > 32 || poly >= (1LL << బిట్లు))
+        తిరిగి AVERROR(EINVAL);
+    ఒకవేళ (ctx_కొలత != పరిమాణం(AVCRC) * 257 && ctx_కొలత != పరిమాణం(AVCRC) * 1024)
+        తిరిగి AVERROR(EINVAL);
 
-#if ARCH_X86
-    int done = ff_crc_init_x86(ctx, le, bits, poly, ctx_size);
-    if (done)
-        return 0;
-#elif ARCH_AARCH64
-    int done = ff_crc_init_aarch64(ctx, le, bits, poly, ctx_size);
-    if (done)
-        return 0;
-#endif
+#ఒకవేళ ARCH_X86
+    పూర్ణాంకం పూర్తి = ff_చక్రీయ_తనిఖీ_init_x86(ctx, le, బిట్లు, poly, ctx_కొలత);
+    ఒకవేళ (పూర్తి)
+        తిరిగి 0;
+#లేదావేళ ARCH_AARCH64
+    పూర్ణాంకం పూర్తి = ff_చక్రీయ_తనిఖీ_init_aarch64(ctx, le, బిట్లు, poly, ctx_కొలత);
+    ఒకవేళ (పూర్తి)
+        తిరిగి 0;
+#అయితే_ముగింపు
 
-    for (i = 0; i < 256; i++) {
-        if (le) {
-            for (c = i, j = 0; j < 8; j++)
+    కొరకు (i = 0; i < 256; i++) {
+        ఒకవేళ (le) {
+            కొరకు (c = i, j = 0; j < 8; j++)
                 c = (c >> 1) ^ (poly & (-(c & 1)));
             ctx[i] = c;
-        } else {
-            for (c = i << 24, j = 0; j < 8; j++)
-                c = (c << 1) ^ ((poly << (32 - bits)) & (((int32_t) c) >> 31));
+        } లేకపోతే {
+            కొరకు (c = i << 24, j = 0; j < 8; j++)
+                c = (c << 1) ^ ((poly << (32 - బిట్లు)) & (((int32_t) c) >> 31));
             ctx[i] = av_bswap32(c);
         }
     }
     ctx[256] = 1;
-#if !CONFIG_SMALL
-    if (ctx_size >= sizeof(AVCRC) * 1024)
-        for (i = 0; i < 256; i++)
-            for (j = 0; j < 3; j++)
+#ఒకవేళ !CONFIG_SMALL
+    ఒకవేళ (ctx_కొలత >= పరిమాణం(AVCRC) * 1024)
+        కొరకు (i = 0; i < 256; i++)
+            కొరకు (j = 0; j < 3; j++)
                 ctx[256 * (j + 1) + i] =
                     (ctx[256 * j + i] >> 8) ^ ctx[ctx[256 * j + i] & 0xFF];
-#endif
+#అయితే_ముగింపు
 
-    return 0;
+    తిరిగి 0;
 }
 
-const AVCRC *av_crc_get_table(AVCRCId crc_id)
+స్థిరరాశి AVCRC *av_చక్రీయ_తనిఖీ_get_పట్టిక(AVCRCId చక్రీయ_తనిఖీ_id)
 {
-    if ((unsigned)crc_id >= AV_CRC_MAX)
-        return NULL;
+    ఒకవేళ ((గుర్తులేని)చక్రీయ_తనిఖీ_id >= AV_చక్రీయ_తనిఖీ_MAX)
+        తిరిగి ఖాళీ;
 // Check for arch-specific extensions first to avoid initializing
 // ordinary CRC tables unnecessarily.
-#if ARCH_AARCH64
-    const AVCRC *table = ff_crc_get_table_aarch64(crc_id);
-    if (table)
-        return table;
-#elif ARCH_X86
-    const AVCRC *table = ff_crc_get_table_x86(crc_id);
-    if (table)
-        return table;
-#endif
+#ఒకవేళ ARCH_AARCH64
+    స్థిరరాశి AVCRC *పట్టిక = ff_చక్రీయ_తనిఖీ_get_పట్టిక_aarch64(చక్రీయ_తనిఖీ_id);
+    ఒకవేళ (పట్టిక)
+        తిరిగి పట్టిక;
+#లేదావేళ ARCH_X86
+    స్థిరరాశి AVCRC *పట్టిక = ff_చక్రీయ_తనిఖీ_get_పట్టిక_x86(చక్రీయ_తనిఖీ_id);
+    ఒకవేళ (పట్టిక)
+        తిరిగి పట్టిక;
+#అయితే_ముగింపు
 
-#if !CONFIG_HARDCODED_TABLES
-    switch (crc_id) {
-    case AV_CRC_8_ATM:      CRC_INIT_TABLE_ONCE(AV_CRC_8_ATM); break;
-    case AV_CRC_8_EBU:      CRC_INIT_TABLE_ONCE(AV_CRC_8_EBU); break;
-    case AV_CRC_16_ANSI:    CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI); break;
-    case AV_CRC_16_CCITT:   CRC_INIT_TABLE_ONCE(AV_CRC_16_CCITT); break;
-    case AV_CRC_24_IEEE:    CRC_INIT_TABLE_ONCE(AV_CRC_24_IEEE); break;
-    case AV_CRC_32_IEEE:    CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE); break;
-    case AV_CRC_32_IEEE_LE: CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE_LE); break;
-    case AV_CRC_16_ANSI_LE: CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI_LE); break;
-    default: av_unreachable("already checked");
+#ఒకవేళ !CONFIG_HARDCODED_TABLES
+    ఎంపిక (చక్రీయ_తనిఖీ_id) {
+    స్థితి AV_చక్రీయ_తనిఖీ_8_ATM:      చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_8_ATM); ఆపు;
+    స్థితి AV_చక్రీయ_తనిఖీ_8_EBU:      చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_8_EBU); ఆపు;
+    స్థితి AV_చక్రీయ_తనిఖీ_16_ANSI:    చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_16_ANSI); ఆపు;
+    స్థితి AV_చక్రీయ_తనిఖీ_16_CCITT:   చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_16_CCITT); ఆపు;
+    స్థితి AV_చక్రీయ_తనిఖీ_24_IEEE:    చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_24_IEEE); ఆపు;
+    స్థితి AV_చక్రీయ_తనిఖీ_32_IEEE:    చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_32_IEEE); ఆపు;
+    స్థితి AV_చక్రీయ_తనిఖీ_32_IEEE_LE: చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_32_IEEE_LE); ఆపు;
+    స్థితి AV_చక్రీయ_తనిఖీ_16_ANSI_LE: చక్రీయ_తనిఖీ_INIT_పట్టిక_ONCE(AV_చక్రీయ_తనిఖీ_16_ANSI_LE); ఆపు;
+    అప్రమేయ: av_unreachable("already checked");
     }
-#endif
-    return av_crc_table[crc_id];
+#అయితే_ముగింపు
+    తిరిగి av_చక్రీయ_తనిఖీ_పట్టిక[చక్రీయ_తనిఖీ_id];
 }
 
-uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
-                const uint8_t *buffer, size_t length)
+uint32_t av_చక్రీయ_తనిఖీ(స్థిరరాశి AVCRC *ctx, uint32_t చక్రీయ_తనిఖీ,
+                స్థిరరాశి uint8_t *బఫరు, size_t నిడివి)
 {
-    if (ctx[0]) {
-#if ARCH_AARCH64
-        return ff_crc_aarch64(ctx, crc, buffer, length);
-#elif ARCH_X86
-        return ff_crc_x86(ctx, crc, buffer, length);
-#endif
+    ఒకవేళ (ctx[0]) {
+#ఒకవేళ ARCH_AARCH64
+        తిరిగి ff_చక్రీయ_తనిఖీ_aarch64(ctx, చక్రీయ_తనిఖీ, బఫరు, నిడివి);
+#లేదావేళ ARCH_X86
+        తిరిగి ff_చక్రీయ_తనిఖీ_x86(ctx, చక్రీయ_తనిఖీ, బఫరు, నిడివి);
+#అయితే_ముగింపు
     }
     av_assert2(ctx[0] == 0);
 
-    const uint8_t *end = buffer + length;
+    స్థిరరాశి uint8_t *చివర = బఫరు + నిడివి;
 
-#if !CONFIG_SMALL
-    if (!ctx[256]) {
-        while (((intptr_t) buffer & 3) && buffer < end)
-            crc = ctx[((uint8_t) crc) ^ *buffer++] ^ (crc >> 8);
+#ఒకవేళ !CONFIG_SMALL
+    ఒకవేళ (!ctx[256]) {
+        అయితే (((intptr_t) బఫరు & 3) && బఫరు < చివర)
+            చక్రీయ_తనిఖీ = ctx[((uint8_t) చక్రీయ_తనిఖీ) ^ *బఫరు++] ^ (చక్రీయ_తనిఖీ >> 8);
 
-        while (buffer < end - 3) {
-            crc ^= av_le2ne32(*(const uint32_t *) buffer); buffer += 4;
-            crc = ctx[3 * 256 + ( crc        & 0xFF)] ^
-                  ctx[2 * 256 + ((crc >> 8 ) & 0xFF)] ^
-                  ctx[1 * 256 + ((crc >> 16) & 0xFF)] ^
-                  ctx[0 * 256 + ((crc >> 24)       )];
+        అయితే (బఫరు < చివర - 3) {
+            చక్రీయ_తనిఖీ ^= av_le2ne32(*(స్థిరరాశి uint32_t *) బఫరు); బఫరు += 4;
+            చక్రీయ_తనిఖీ = ctx[3 * 256 + ( చక్రీయ_తనిఖీ        & 0xFF)] ^
+                  ctx[2 * 256 + ((చక్రీయ_తనిఖీ >> 8 ) & 0xFF)] ^
+                  ctx[1 * 256 + ((చక్రీయ_తనిఖీ >> 16) & 0xFF)] ^
+                  ctx[0 * 256 + ((చక్రీయ_తనిఖీ >> 24)       )];
         }
     }
-#endif
-    while (buffer < end)
-        crc = ctx[((uint8_t) crc) ^ *buffer++] ^ (crc >> 8);
+#అయితే_ముగింపు
+    అయితే (బఫరు < చివర)
+        చక్రీయ_తనిఖీ = ctx[((uint8_t) చక్రీయ_తనిఖీ) ^ *బఫరు++] ^ (చక్రీయ_తనిఖీ >> 8);
 
-    return crc;
+    తిరిగి చక్రీయ_తనిఖీ;
 }

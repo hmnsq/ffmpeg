@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#అన్తర్భావ <stdio.h>
 
-#include "libavutil/iamf.h"
-#include "libavutil/log.h"
-#include "libavutil/opt.h"
+#అన్తర్భావ "libavutil/iamf.h"
+#అన్తర్భావ "libavutil/log.h"
+#అన్తర్భావ "libavutil/opt.h"
 
-static void print_class_tree(const AVClass *class, int depth)
+స్థిర శూన్య print_class_వృక్షం(స్థిరరాశి AVClass *class, పూర్ణాంకం లోతు)
 {
-    const AVClass *child;
-    void *iter = NULL;
+    స్థిరరాశి AVClass *బిడ్డ;
+    శూన్య *iter = ఖాళీ;
 
-    printf("%*s%s\n", depth * 2, "", class->class_name);
-    if (depth >= 8)
-        return;
-    while ((child = av_opt_child_class_iterate(class, &iter)))
-        print_class_tree(child, depth + 1);
+    రాయి("%*s%s\n", లోతు * 2, "", class->class_name);
+    ఒకవేళ (లోతు >= 8)
+        తిరిగి;
+    అయితే ((బిడ్డ = av_opt_బిడ్డ_class_iterate(class, &iter)))
+        print_class_వృక్షం(బిడ్డ, లోతు + 1);
 }
 
-static void find_option(const AVClass *class, const char *name)
+స్థిర శూన్య కనుగొను_option(స్థిరరాశి AVClass *class, స్థిరరాశి అక్షరం *name)
 {
-    const AVOption *o = av_opt_find2(&class, name, NULL, 0,
-                                     AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ,
-                                     NULL);
-    printf("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
+    స్థిరరాశి AVOption *o = av_opt_find2(&class, name, ఖాళీ, 0,
+                                     AV_OPT_శోధన_CHILDREN | AV_OPT_శోధన_FAKE_OBJ,
+                                     ఖాళీ);
+    రాయి("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
 }
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
-    const AVClass *audio_element = av_iamf_audio_element_get_class();
-    const AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
-    const AVClass *param_definition = av_iamf_param_definition_get_class();
+    స్థిరరాశి AVClass *audio_element = av_iamf_audio_element_get_class();
+    స్థిరరాశి AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
+    స్థిరరాశి AVClass *param_definition = av_iamf_param_definition_get_class();
 
-    printf("Testing av_opt_child_class_iterate()\n");
-    print_class_tree(audio_element, 0);
-    print_class_tree(mix_presentation, 0);
-    print_class_tree(param_definition, 0);
+    రాయి("Testing av_opt_child_class_iterate()\n");
+    print_class_వృక్షం(audio_element, 0);
+    print_class_వృక్షం(mix_presentation, 0);
+    print_class_వృక్షం(param_definition, 0);
 
-    printf("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
-    find_option(audio_element, "default_w");
-    find_option(audio_element, "ch_layout");
-    find_option(mix_presentation, "annotations");
-    find_option(mix_presentation, "default_mix_gain");
-    find_option(mix_presentation, "headphones_rendering_mode");
-    find_option(mix_presentation, "sound_system");
-    find_option(mix_presentation, "parameter_rate");
-    find_option(param_definition, "parameter_rate");
-    find_option(param_definition, "subblock_duration");
+    రాయి("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
+    కనుగొను_option(audio_element, "default_w");
+    కనుగొను_option(audio_element, "ch_layout");
+    కనుగొను_option(mix_presentation, "annotations");
+    కనుగొను_option(mix_presentation, "default_mix_gain");
+    కనుగొను_option(mix_presentation, "headphones_rendering_mode");
+    కనుగొను_option(mix_presentation, "sound_system");
+    కనుగొను_option(mix_presentation, "parameter_rate");
+    కనుగొను_option(param_definition, "parameter_rate");
+    కనుగొను_option(param_definition, "subblock_duration");
 
-    return 0;
+    తిరిగి 0;
 }

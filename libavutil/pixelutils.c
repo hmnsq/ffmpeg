@@ -16,98 +16,98 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
+#అన్తర్భావ <stddef.h>
 
-#include "config.h"
-#include "pixelutils.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "pixelutils.h"
 
-#if CONFIG_PIXELUTILS
-#include <stdlib.h>
-#include <string.h>
+#ఒకవేళ CONFIG_PIXELUTILS
+#అన్తర్భావ <stdlib.h>
+#అన్తర్భావ <string.h>
 
-#include "attributes.h"
-#include "macros.h"
+#అన్తర్భావ "attributes.h"
+#అన్తర్భావ "macros.h"
 
-#if ARCH_AARCH64 && HAVE_NEON
-#include "aarch64/pixelutils.h"
-#elif ARCH_ARM && HAVE_ARMV6
-#include "arm/pixelutils.h"
-#elif ARCH_MIPS && HAVE_MSA
-#include "mips/pixelutils.h"
-#elif ARCH_RISCV
-#include "riscv/pixelutils.h"
-#elif ARCH_X86 && HAVE_X86ASM
-#include "x86/pixelutils.h"
-#endif
+#ఒకవేళ ARCH_AARCH64 && HAVE_NEON
+#అన్తర్భావ "aarch64/pixelutils.h"
+#లేదావేళ ARCH_ARM && HAVE_ARMV6
+#అన్తర్భావ "arm/pixelutils.h"
+#లేదావేళ ARCH_MIPS && HAVE_MSA
+#అన్తర్భావ "mips/pixelutils.h"
+#లేదావేళ ARCH_RISCV
+#అన్తర్భావ "riscv/pixelutils.h"
+#లేదావేళ ARCH_X86 && HAVE_X86ASM
+#అన్తర్భావ "x86/pixelutils.h"
+#అయితే_ముగింపు
 
-static av_always_inline int sad_wxh(const uint8_t *src1, ptrdiff_t stride1,
-                                    const uint8_t *src2, ptrdiff_t stride2,
-                                    int w, int h)
+స్థిర av_always_inline పూర్ణాంకం sad_wxh(స్థిరరాశి uint8_t *src1, ptrdiff_t stride1,
+                                    స్థిరరాశి uint8_t *src2, ptrdiff_t stride2,
+                                    పూర్ణాంకం w, పూర్ణాంకం h)
 {
-    int x, y, sum = 0;
+    పూర్ణాంకం x, y, కూడిక = 0;
 
-    for (y = 0; y < h; y++) {
-        for (x = 0; x < w; x++)
-            sum += abs(src1[x] - src2[x]);
+    కొరకు (y = 0; y < h; y++) {
+        కొరకు (x = 0; x < w; x++)
+            కూడిక += నిరపేక్ష(src1[x] - src2[x]);
         src1 += stride1;
         src2 += stride2;
     }
-    return sum;
+    తిరిగి కూడిక;
 }
 
-#define DECLARE_BLOCK_FUNCTIONS(size)                                               \
-static int block_sad_##size##x##size##_c(const uint8_t *src1, ptrdiff_t stride1,    \
-                                         const uint8_t *src2, ptrdiff_t stride2)    \
+#నిర్వచించు DECLARE_ఖండం_FUNCTIONS(కొలత)                                               \
+స్థిర పూర్ణాంకం ఖండం_sad##size##x##size##_c(స్థిరరాశి uint8_t *src1, ptrdiff_t stride1,    \
+                                         స్థిరరాశి uint8_t *src2, ptrdiff_t stride2)    \
 {                                                                                   \
-    return sad_wxh(src1, stride1, src2, stride2, size, size);                       \
+    తిరిగి sad_wxh(src1, stride1, src2, stride2, కొలత, కొలత);                       \
 }
 
-DECLARE_BLOCK_FUNCTIONS(2)
-DECLARE_BLOCK_FUNCTIONS(4)
-DECLARE_BLOCK_FUNCTIONS(8)
-DECLARE_BLOCK_FUNCTIONS(16)
-DECLARE_BLOCK_FUNCTIONS(32)
+DECLARE_ఖండం_FUNCTIONS(2)
+DECLARE_ఖండం_FUNCTIONS(4)
+DECLARE_ఖండం_FUNCTIONS(8)
+DECLARE_ఖండం_FUNCTIONS(16)
+DECLARE_ఖండం_FUNCTIONS(32)
 
-static const av_pixelutils_sad_fn sad_c[] = {
-    block_sad_2x2_c,
-    block_sad_4x4_c,
-    block_sad_8x8_c,
-    block_sad_16x16_c,
-    block_sad_32x32_c,
+స్థిర స్థిరరాశి av_pixelutils_sad_fn sad_c[] = {
+    ఖండం_sad_2x2_c,
+    ఖండం_sad_4x4_c,
+    ఖండం_sad_8x8_c,
+    ఖండం_sad_16x16_c,
+    ఖండం_sad_32x32_c,
 };
-#else
-#include "log.h"
-#endif /* CONFIG_PIXELUTILS */
+#లేకపోతే
+#అన్తర్భావ "log.h"
+#అయితే_ముగింపు /* CONFIG_PIXELUTILS */
 
-av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits, int aligned, void *log_ctx)
+av_pixelutils_sad_fn av_pixelutils_get_sad_fn(పూర్ణాంకం w_బిట్లు, పూర్ణాంకం h_బిట్లు, పూర్ణాంకం aligned, శూన్య *log_ctx)
 {
-#if !CONFIG_PIXELUTILS
+#ఒకవేళ !CONFIG_PIXELUTILS
     av_log(log_ctx, AV_LOG_ERROR, "pixelutils support is required "
            "but libavutil is not compiled with it\n");
-    return NULL;
-#else
+    తిరిగి ఖాళీ;
+#లేకపోతే
     av_pixelutils_sad_fn sad[FF_ARRAY_ELEMS(sad_c)];
 
-    memcpy(sad, sad_c, sizeof(sad));
+    జ్ఞాపకం_నకలు(sad, sad_c, పరిమాణం(sad));
 
-    if (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
-        h_bits < 1 || h_bits > FF_ARRAY_ELEMS(sad))
-        return NULL;
-    if (w_bits != h_bits) // only squared sad for now
-        return NULL;
+    ఒకవేళ (w_బిట్లు < 1 || w_బిట్లు > FF_ARRAY_ELEMS(sad) ||
+        h_బిట్లు < 1 || h_బిట్లు > FF_ARRAY_ELEMS(sad))
+        తిరిగి ఖాళీ;
+    ఒకవేళ (w_బిట్లు != h_బిట్లు) // only squared sad for now
+        తిరిగి ఖాళీ;
 
-#if ARCH_AARCH64 && HAVE_NEON
+#ఒకవేళ ARCH_AARCH64 && HAVE_NEON
     ff_pixelutils_sad_init_aarch64(sad, aligned);
-#elif ARCH_ARM
+#లేదావేళ ARCH_ARM
     ff_pixelutils_sad_init_arm(sad, aligned);
-#elif ARCH_MIPS && HAVE_MSA
+#లేదావేళ ARCH_MIPS && HAVE_MSA
     ff_pixelutils_sad_init_mips(sad, aligned);
-#elif ARCH_RISCV
+#లేదావేళ ARCH_RISCV
     ff_pixelutils_init_riscv(sad, aligned);
-#elif ARCH_X86 && HAVE_X86ASM
+#లేదావేళ ARCH_X86 && HAVE_X86ASM
     ff_pixelutils_sad_init_x86(sad, aligned);
-#endif
+#అయితే_ముగింపు
 
-    return sad[w_bits - 1];
-#endif
+    తిరిగి sad[w_బిట్లు - 1];
+#అయితే_ముగింపు
 }

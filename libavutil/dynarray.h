@@ -16,11 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DYNARRAY_H
-#define AVUTIL_DYNARRAY_H
+#నిర్వచితం_కాకపోతే AVUTIL_DYNARRAY_H
+#నిర్వచించు AVUTIL_DYNARRAY_H
 
-#include "log.h"
-#include "mem.h"
+#అన్తర్భావ "log.h"
+#అన్తర్భావ "mem.h"
 
 /**
  * Add an element to a dynamic array.
@@ -42,29 +42,29 @@
  *                     array and size are not changed; the statement can end
  *                     with a return or a goto
  */
-#define FF_DYNARRAY_ADD(av_size_max, av_elt_size, av_array, av_size, \
+#నిర్వచించు FF_DYNARRAY_కూడు(av_కొలత_max, av_elt_కొలత, av_array, av_కొలత, \
                         av_success, av_failure) \
-    do { \
-        size_t av_size_new = (av_size); \
-        if (!((av_size) & ((av_size) - 1))) { \
-            av_size_new = (av_size) ? (av_size) << 1 : 1; \
-            if (av_size_new > (av_size_max) / (av_elt_size)) { \
-                av_size_new = 0; \
-            } else { \
-                void *av_array_new = \
-                    av_realloc((av_array), av_size_new * (av_elt_size)); \
-                if (!av_array_new) \
-                    av_size_new = 0; \
-                else \
+    చేయి { \
+        size_t av_కొలత_new = (av_కొలత); \
+        ఒకవేళ (!((av_కొలత) & ((av_కొలత) - 1))) { \
+            av_కొలత_new = (av_కొలత) ? (av_కొలత) << 1 : 1; \
+            ఒకవేళ (av_కొలత_new > (av_కొలత_max) / (av_elt_కొలత)) { \
+                av_కొలత_new = 0; \
+            } లేకపోతే { \
+                శూన్య *av_array_new = \
+                    av_realloc((av_array), av_కొలత_new * (av_elt_కొలత)); \
+                ఒకవేళ (!av_array_new) \
+                    av_కొలత_new = 0; \
+                లేకపోతే \
                     (av_array) = av_array_new; \
             } \
         } \
-        if (av_size_new) { \
+        ఒకవేళ (av_కొలత_new) { \
             { av_success } \
-            (av_size)++; \
-        } else { \
+            (av_కొలత)++; \
+        } లేకపోతే { \
             av_failure \
         } \
-    } while (0)
+    } అయితే (0)
 
-#endif /* AVUTIL_DYNARRAY_H */
+#అయితే_ముగింపు /* AVUTIL_DYNARRAY_H */

@@ -16,11 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AARCH64_BASE64_H
-#define AVUTIL_AARCH64_BASE64_H
+#నిర్వచితం_కాకపోతే AVUTIL_AARCH64_BASE64_H
+#నిర్వచించు AVUTIL_AARCH64_BASE64_H
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
-char *ff_base64_encode_neon(char *out, const uint8_t *in, int in_size, const char *tbl);
+అక్షరం *ff_base64_encode_neon(అక్షరం *బహిర్గతం, స్థిరరాశి uint8_t *లోపల, పూర్ణాంకం లోపల_కొలత, స్థిరరాశి అక్షరం *tbl);
 
-#endif /* AVUTIL_AARCH64_BASE64_H */
+#అయితే_ముగింపు /* AVUTIL_AARCH64_BASE64_H */

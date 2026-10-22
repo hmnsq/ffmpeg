@@ -172,7 +172,7 @@
     %if %0 == 2
         %define r%1m  %2d
         %define r%1mp %2
-    %elif ARCH_X86_64 ; memory
+    %elif ARCH_X86_64 ;జ్ఞాపకం
         %define r%1m [rstk + stack_offset + %3]
         %define r%1mp qword r %+ %1 %+ m
     %else
@@ -240,7 +240,7 @@ DECLARE_REG_TMP_SIZE 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
 %if ARCH_X86_64
     lea %1, [%2]
 %elif PIC
-    call $+5 ; special-cased to not affect the RSB on most CPU:s
+    పిలువు $+5 ; special-cased to not affect the RSB on most CPU:s
     pop %1
     add %1, (%2)-$+1
 %else
@@ -797,7 +797,7 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 
 %macro TAIL_CALL 1-2 1 ; callee, is_nonadjacent
     %if has_epilogue
-        call %1
+        పిలువు %1
         RET
     %elif %2
         jmp %1
@@ -838,14 +838,14 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
     %xdefine current_function_section __SECT__
     %if FORMAT_ELF
         %if %1
-            global %2:function hidden
+            వైశ్విక %2:function hidden
         %else
-            global %2:function
+            వైశ్విక %2:function
         %endif
     %elif FORMAT_MACHO && HAVE_PRIVATE_EXTERN && %1
-        global %2:private_extern
+        వైశ్విక %2:private_extern
     %else
-        global %2
+        వైశ్విక %2
     %endif
     align function_align
     %2:
@@ -863,11 +863,11 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 ; Create a global symbol from a local label with the correct name mangling and type
 %macro cglobal_label 1
     %if FORMAT_ELF
-        global current_function %+ %1:function hidden
+        వైశ్విక current_function %+ %1:function hidden
     %elif FORMAT_MACHO && HAVE_PRIVATE_EXTERN
-        global current_function %+ %1:private_extern
+        వైశ్విక current_function %+ %1:private_extern
     %else
-        global current_function %+ %1
+        వైశ్విక current_function %+ %1
     %endif
     %1:
 %endmacro
@@ -890,11 +890,11 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
 %macro const 1-2+
     %xdefine %1 mangle(private_prefix %+ _ %+ %1)
     %if FORMAT_ELF
-        global %1:data hidden
+        వైశ్విక %1:data hidden
     %elif FORMAT_MACHO && HAVE_PRIVATE_EXTERN
-        global %1:private_extern
+        వైశ్విక %1:private_extern
     %else
-        global %1
+        వైశ్విక %1
     %endif
     %1: %2
 %endmacro
@@ -1269,11 +1269,11 @@ INIT_XMM
 %endmacro
 
 ; Append cpuflags to the callee's name iff the appended name is known and the plain name isn't
-%macro call 1
+%macro పిలువు 1
     %ifid %1
         call_internal %1 %+ SUFFIX, %1
     %else
-        call %1
+        పిలువు %1
     %endif
 %endmacro
 %macro call_internal 2
@@ -1283,7 +1283,7 @@ INIT_XMM
             %xdefine %%i %1
         %endif
     %endif
-    call %%i
+    పిలువు %%i
     LOAD_MM_PERMUTATION %%i
 %endmacro
 

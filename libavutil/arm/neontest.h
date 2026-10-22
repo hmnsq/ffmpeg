@@ -20,34 +20,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ARM_NEONTEST_H
-#define AVUTIL_ARM_NEONTEST_H
+#నిర్వచితం_కాకపోతే AVUTIL_ARM_NEONTEST_H
+#నిర్వచించు AVUTIL_ARM_NEONTEST_H
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#అన్తర్భావ <inttypes.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stdlib.h>
+#అన్తర్భావ <stdarg.h>
+#అన్తర్భావ <string.h>
 
-#include "libavutil/bswap.h"
+#అన్తర్భావ "libavutil/bswap.h"
 
-#define storeneonregs(mem)                \
-    __asm__ volatile(                     \
+#నిర్వచించు storeneonregs(mem)                \
+    __asm__ అస్థిర(                     \
         "vstm %0, {d8-d15}\n\t"           \
         :: "r"(mem) : "memory")
 
-#define testneonclobbers(func, ctx, ...)                        \
+#నిర్వచించు testneonclobbers(func, ctx, ...)                        \
     uint64_t neon[2][8];                                        \
-    int ret;                                                    \
+    పూర్ణాంకం ret;                                                    \
     storeneonregs(neon[0]);                                     \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storeneonregs(neon[1]);                                     \
-    if (memcmp(neon[0], neon[1], sizeof(neon[0]))) {            \
-        int i;                                                  \
+    ఒకవేళ (memcmp(neon[0], neon[1], పరిమాణం(neon[0]))) {            \
+        పూర్ణాంకం i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "NEON REGS CLOBBERED IN %s!\n", #func);          \
-        for (i = 0; i < 8; i ++)                                \
-            if (neon[0][i] != neon[1][i]) {                     \
+        కొరకు (i = 0; i < 8; i ++)                                \
+            ఒకవేళ (neon[0][i] != neon[1][i]) {                     \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "d%-2d = %016"PRIx64"\n",                \
                        8 + i, av_bswap64(neon[0][i]));          \
@@ -57,11 +57,11 @@
             }                                                   \
         abort();                                                \
     }                                                           \
-    return ret
+    తిరిగి ret
 
-#define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+#నిర్వచించు wrap(func)      \
+పూర్ణాంకం __real_ ## func;    \
+పూర్ణాంకం __wrap_ ## func;    \
+పూర్ణాంకం __wrap_ ## func
 
-#endif /* AVUTIL_ARM_NEONTEST_H */
+#అయితే_ముగింపు /* AVUTIL_ARM_NEONTEST_H */

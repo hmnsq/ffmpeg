@@ -18,249 +18,249 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_INTMATH_H
-#define AVUTIL_RISCV_INTMATH_H
+#నిర్వచితం_కాకపోతే AVUTIL_RISCV_INTMATH_H
+#నిర్వచించు AVUTIL_RISCV_INTMATH_H
 
-#include <stdint.h>
-#include <math.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <math.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/riscv/cpu.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/riscv/cpu.h"
 
 /*
  * The compiler is forced to sign-extend the result anyhow, so it is faster to
  * compute it explicitly and use it.
  */
-#define av_clip_int8 av_clip_int8_rvi
-static av_always_inline av_const int8_t av_clip_int8_rvi(int a)
+#నిర్వచించు av_clip_int8 av_clip_int8_rvi
+స్థిర av_always_inline av_const int8_t av_clip_int8_rvi(పూర్ణాంకం a)
 {
-    union { uint8_t u; int8_t s; } u = { .u = a };
+    సంఘం { uint8_t u; int8_t s; } u = { .u = a };
 
-    if (a != u.s)
+    ఒకవేళ (a != u.s)
         a = ((a >> 31) ^ 0x7F);
-    return a;
+    తిరిగి a;
 }
 
-#define av_clip_int16 av_clip_int16_rvi
-static av_always_inline av_const int16_t av_clip_int16_rvi(int a)
+#నిర్వచించు av_clip_int16 av_clip_int16_rvi
+స్థిర av_always_inline av_const int16_t av_clip_int16_rvi(పూర్ణాంకం a)
 {
-    union { uint16_t u; int16_t s; } u = { .u = a };
+    సంఘం { uint16_t u; int16_t s; } u = { .u = a };
 
-    if (a != u.s)
+    ఒకవేళ (a != u.s)
         a = ((a >> 31) ^ 0x7FFF);
-    return a;
+    తిరిగి a;
 }
 
-#define av_clipl_int32 av_clipl_int32_rvi
-static av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
+#నిర్వచించు av_clipl_int32 av_clipl_int32_rvi
+స్థిర av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
 {
-    union { uint32_t u; int32_t s; } u = { .u = a };
+    సంఘం { uint32_t u; int32_t s; } u = { .u = a };
 
-    if (a != u.s)
+    ఒకవేళ (a != u.s)
         a = ((a >> 63) ^ 0x7FFFFFFF);
-    return a;
+    తిరిగి a;
 }
 
-#define av_clip_intp2 av_clip_intp2_rvi
-static av_always_inline av_const int av_clip_intp2_rvi(int a, int p)
+#నిర్వచించు av_clip_intp2 av_clip_intp2_rvi
+స్థిర av_always_inline av_const పూర్ణాంకం av_clip_intp2_rvi(పూర్ణాంకం a, పూర్ణాంకం p)
 {
-    const int shift = 31 - p;
-    int b = ((int)(((unsigned)a) << shift)) >> shift;
+    స్థిరరాశి పూర్ణాంకం జరుపు = 31 - p;
+    పూర్ణాంకం b = ((పూర్ణాంకం)(((గుర్తులేని)a) << జరుపు)) >> జరుపు;
 
-    if (a != b)
+    ఒకవేళ (a != b)
         b = (a >> 31) ^ ((1 << p) - 1);
-    return b;
+    తిరిగి b;
 }
 
-#if defined (__riscv_f) || defined (__riscv_zfinx)
-#define av_clipf av_clipf_rvf
-static av_always_inline av_const float av_clipf_rvf(float a, float min,
-                                                    float max)
+#ఒకవేళ defined (__riscv_f) || defined (__riscv_zfinx)
+#నిర్వచించు av_clipf av_clipf_rvf
+స్థిర av_always_inline av_const దశాంశం av_clipf_rvf(దశాంశం a, దశాంశం min,
+                                                    దశాంశం max)
 {
-    return fminf(fmaxf(a, min), max);
+    తిరిగి fminf(fmaxf(a, min), max);
 }
-#endif
+#అయితే_ముగింపు
 
-#if defined (__riscv_d) || defined (__riscv_zdinx)
-#define av_clipd av_clipd_rvd
-static av_always_inline av_const double av_clipd_rvd(double a, double min,
-                                                     double max)
+#ఒకవేళ defined (__riscv_d) || defined (__riscv_zdinx)
+#నిర్వచించు av_clipd av_clipd_rvd
+స్థిర av_always_inline av_const ద్విగుణ av_clipd_rvd(ద్విగుణ a, ద్విగుణ min,
+                                                     ద్విగుణ max)
 {
-    return fmin(fmax(a, min), max);
+    తిరిగి fmin(fmax(a, min), max);
 }
-#endif
+#అయితే_ముగింపు
 
-#if defined (__GNUC__) || defined (__clang__)
-static inline av_const int ff_ctz_rv(int x)
+#ఒకవేళ defined (__GNUC__) || defined (__clang__)
+స్థిర అంతఃవరుస av_const పూర్ణాంకం ff_ctz_rv(పూర్ణాంకం x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ఒకవేళ HAVE_RV && !defined(__riscv_zbb)
+    ఒకవేళ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        పూర్ణాంకం y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ఒకవేళ __riscv_xlen >= 64
             "ctzw    %0, %1\n"
-#else
+#లేకపోతే
             "ctz     %0, %1\n"
-#endif
+#అయితే_ముగింపు
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        ఒకవేళ (y > 32)
             __builtin_unreachable();
-        return y;
+        తిరిగి y;
     }
-#endif
-    return __builtin_ctz(x);
+#అయితే_ముగింపు
+    తిరిగి __builtin_ctz(x);
 }
-#define ff_ctz ff_ctz_rv
+#నిర్వచించు ff_ctz ff_ctz_rv
 
-static inline av_const int ff_ctzll_rv(long long x)
+స్థిర అంతఃవరుస av_const పూర్ణాంకం ff_ctzll_rv(దీర్ఘ దీర్ఘ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
-    if (!__builtin_constant_p(x) &&
+#ఒకవేళ HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
+    ఒకవేళ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        పూర్ణాంకం y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "ctz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        ఒకవేళ (y > 64)
             __builtin_unreachable();
-        return y;
+        తిరిగి y;
     }
-#endif
-    return __builtin_ctzll(x);
+#అయితే_ముగింపు
+    తిరిగి __builtin_ctzll(x);
 }
-#define ff_ctzll ff_ctzll_rv
+#నిర్వచించు ff_ctzll ff_ctzll_rv
 
-static inline av_const int ff_clz_rv(int x)
+స్థిర అంతఃవరుస av_const పూర్ణాంకం ff_clz_rv(పూర్ణాంకం x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ఒకవేళ HAVE_RV && !defined(__riscv_zbb)
+    ఒకవేళ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        పూర్ణాంకం y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ఒకవేళ __riscv_xlen >= 64
             "clzw    %0, %1\n"
-#else
+#లేకపోతే
             "clz     %0, %1\n"
-#endif
+#అయితే_ముగింపు
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        ఒకవేళ (y > 32)
             __builtin_unreachable();
-        return y;
+        తిరిగి y;
     }
-#endif
-    return __builtin_clz(x);
+#అయితే_ముగింపు
+    తిరిగి __builtin_clz(x);
 }
-#define ff_clz ff_clz_rv
+#నిర్వచించు ff_clz ff_clz_rv
 
-#if __riscv_xlen == 64
-static inline av_const int ff_clzll_rv(long long x)
+#ఒకవేళ __riscv_xlen == 64
+స్థిర అంతఃవరుస av_const పూర్ణాంకం ff_clzll_rv(దీర్ఘ దీర్ఘ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ఒకవేళ HAVE_RV && !defined(__riscv_zbb)
+    ఒకవేళ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        పూర్ణాంకం y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "clz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        ఒకవేళ (y > 64)
             __builtin_unreachable();
-        return y;
+        తిరిగి y;
     }
-#endif
-    return __builtin_clzll(x);
+#అయితే_ముగింపు
+    తిరిగి __builtin_clzll(x);
 }
-#define ff_clz ff_clz_rv
-#endif
+#నిర్వచించు ff_clz ff_clz_rv
+#అయితే_ముగింపు
 
-static inline av_const int ff_log2_rv(unsigned int x)
+స్థిర అంతఃవరుస av_const పూర్ణాంకం ff_log2_rv(గుర్తులేని పూర్ణాంకం x)
 {
-    return 31 - ff_clz_rv(x | 1);
+    తిరిగి 31 - ff_clz_rv(x | 1);
 }
-#define ff_log2 ff_log2_rv
-#define ff_log2_16bit ff_log2_rv
+#నిర్వచించు ff_log2 ff_log2_rv
+#నిర్వచించు ff_log2_16bit ff_log2_rv
 
-static inline av_const int av_popcount_rv(unsigned int x)
+స్థిర అంతఃవరుస av_const పూర్ణాంకం av_popcount_rv(గుర్తులేని పూర్ణాంకం x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ఒకవేళ HAVE_RV && !defined(__riscv_zbb)
+    ఒకవేళ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        పూర్ణాంకం y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ఒకవేళ __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#లేకపోతే
             "cpop    %0, %1\n"
-#endif
+#అయితే_ముగింపు
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        ఒకవేళ (y > 32)
             __builtin_unreachable();
-        return y;
+        తిరిగి y;
     }
-#endif
-    return __builtin_popcount(x);
+#అయితే_ముగింపు
+    తిరిగి __builtin_popcount(x);
 }
-#define av_popcount av_popcount_rv
+#నిర్వచించు av_popcount av_popcount_rv
 
-static inline av_const int av_popcount64_rv(uint64_t x)
+స్థిర అంతఃవరుస av_const పూర్ణాంకం av_popcount64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
-    if (!__builtin_constant_p(x) &&
+#ఒకవేళ HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
+    ఒకవేళ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        పూర్ణాంకం y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "cpop    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        ఒకవేళ (y > 64)
             __builtin_unreachable();
-        return y;
+        తిరిగి y;
     }
-#endif
-    return __builtin_popcountl(x);
+#అయితే_ముగింపు
+    తిరిగి __builtin_popcountl(x);
 }
-#define av_popcount64 av_popcount64_rv
+#నిర్వచించు av_popcount64 av_popcount64_rv
 
-static inline av_const int av_parity_rv(unsigned int x)
+స్థిర అంతఃవరుస av_const పూర్ణాంకం av_parity_rv(గుర్తులేని పూర్ణాంకం x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ఒకవేళ HAVE_RV && !defined(__riscv_zbb)
+    ఒకవేళ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        పూర్ణాంకం y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ఒకవేళ __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#లేకపోతే
             "cpop    %0, %1\n"
-#endif
+#అయితే_ముగింపు
             ".option pop" : "=r" (y) : "r" (x));
-        return y & 1;
+        తిరిగి y & 1;
     }
-#endif
-    return __builtin_parity(x);
+#అయితే_ముగింపు
+    తిరిగి __builtin_parity(x);
 }
-#define av_parity av_parity_rv
-#endif
+#నిర్వచించు av_parity av_parity_rv
+#అయితే_ముగింపు
 
-#endif /* AVUTIL_RISCV_INTMATH_H */
+#అయితే_ముగింపు /* AVUTIL_RISCV_INTMATH_H */

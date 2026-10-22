@@ -16,311 +16,311 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#అన్తర్భావ "config.h"
 
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#అన్తర్భావ <fcntl.h>
+#అన్తర్భావ <sys/mman.h>
+#అన్తర్భావ <unistd.h>
 
 /* This was introduced in version 4.6. And may not exist all without an
  * optional package. So to prevent a hard dependency on needing the Linux
  * kernel headers to compile, make this optional. */
-#if HAVE_LINUX_DMA_BUF_H
-#include <linux/dma-buf.h>
-#include <sys/ioctl.h>
-#endif
+#ఒకవేళ HAVE_LINUX_DMA_BUF_H
+#అన్తర్భావ <linux/dma-buf.h>
+#అన్తర్భావ <sys/ioctl.h>
+#అయితే_ముగింపు
 
-#include <drm.h>
-#include <xf86drm.h>
+#అన్తర్భావ <drm.h>
+#అన్తర్భావ <xf86drm.h>
 
-#include "avassert.h"
-#include "hwcontext.h"
-#include "hwcontext_drm.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "hwcontext.h"
+#అన్తర్భావ "hwcontext_drm.h"
+#అన్తర్భావ "hwcontext_internal.h"
+#అన్తర్భావ "imgutils.h"
+#అన్తర్భావ "mem.h"
 
 
-static void drm_device_free(AVHWDeviceContext *hwdev)
+స్థిర శూన్య drm_device_free(AVHWDeviceContext *hwdev)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
 
     close(hwctx->fd);
 }
 
-static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
-                             AVDictionary *opts, int flags)
+స్థిర పూర్ణాంకం drm_device_create(AVHWDeviceContext *hwdev, స్థిరరాశి అక్షరం *device,
+                             AVDictionary *opts, పూర్ణాంకం flags)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
-    drmVersionPtr version;
+    drm_సంస్కరణ_Ptr సంస్కరణ;
 
     hwctx->fd = open(device, O_RDWR);
-    if (hwctx->fd < 0)
-        return AVERROR(errno);
+    ఒకవేళ (hwctx->fd < 0)
+        తిరిగి AVERROR(errno);
 
-    version = drmGetVersion(hwctx->fd);
-    if (!version) {
+    సంస్కరణ = drm_Get_సంస్కరణ(hwctx->fd);
+    ఒకవేళ (!సంస్కరణ) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get version information "
                "from %s: probably not a DRM device?\n", device);
         close(hwctx->fd);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
     av_log(hwdev, AV_LOG_VERBOSE, "Opened DRM device %s: driver %s "
-           "version %d.%d.%d.\n", device, version->name,
-           version->version_major, version->version_minor,
-           version->version_patchlevel);
+           "version %d.%d.%d.\n", device, సంస్కరణ->name,
+           సంస్కరణ->సంస్కరణ_major, సంస్కరణ->సంస్కరణ_minor,
+           సంస్కరణ->సంస్కరణ_patchlevel);
 
-    drmFreeVersion(version);
+    drm_Free_సంస్కరణ(సంస్కరణ);
 
-    hwdev->free = &drm_device_free;
+    hwdev->విడుదల = &drm_device_free;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+స్థిర పూర్ణాంకం drm_get_బఫరు(AVHWFramesContext *hwfc, AVFrame *చట్రం)
 {
-    frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    చట్రం->buf[0] = av_బఫరు_pool_get(hwfc->pool);
+    ఒకవేళ (!చట్రం->buf[0])
+        తిరిగి AVERROR(ENOMEM);
 
-    frame->data[0] = (uint8_t*)frame->buf[0]->data;
+    చట్రం->దత్తాంశం[0] = (uint8_t*)చట్రం->buf[0]->దత్తాంశం;
 
-    frame->format = AV_PIX_FMT_DRM_PRIME;
-    frame->width  = hwfc->width;
-    frame->height = hwfc->height;
+    చట్రం->format = AV_PIX_FMT_DRM_ప్రధానసంఖ్య;
+    చట్రం->వెడల్పు  = hwfc->వెడల్పు;
+    చట్రం->ఎత్తు = hwfc->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 }
 
-typedef struct DRMMapping {
+రకనిర్వచనం నిర్మాణం DRMMapping {
     // Address and length of each mmap()ed region.
-    int nb_regions;
-    int sync_flags;
-    int object[AV_DRM_MAX_PLANES];
-    void *address[AV_DRM_MAX_PLANES];
-    size_t length[AV_DRM_MAX_PLANES];
+    పూర్ణాంకం nb_regions;
+    పూర్ణాంకం sync_flags;
+    పూర్ణాంకం object[AV_DRM_MAX_PLANES];
+    శూన్య *చిరునామా[AV_DRM_MAX_PLANES];
+    size_t నిడివి[AV_DRM_MAX_PLANES];
 } DRMMapping;
 
-static void drm_unmap_frame(AVHWFramesContext *hwfc,
+స్థిర శూన్య drm_unmap_చట్రం(AVHWFramesContext *hwfc,
                             HWMapDescriptor *hwmap)
 {
     DRMMapping *map = hwmap->priv;
 
-    for (int i = 0; i < map->nb_regions; i++) {
-#if HAVE_LINUX_DMA_BUF_H
-        struct dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
+    కొరకు (పూర్ణాంకం i = 0; i < map->nb_regions; i++) {
+#ఒకవేళ HAVE_LINUX_DMA_BUF_H
+        నిర్మాణం dma_buf_sync sync = { .flags = DMA_BUF_SYNC_చివర | map->sync_flags };
         ioctl(map->object[i], DMA_BUF_IOCTL_SYNC, &sync);
-#endif
-        munmap(map->address[i], map->length[i]);
+#అయితే_ముగింపు
+        munmap(map->చిరునామా[i], map->నిడివి[i]);
     }
 
     av_free(map);
 }
 
-static int drm_map_frame(AVHWFramesContext *hwfc,
-                         AVFrame *dst, const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం drm_map_చట్రం(AVHWFramesContext *hwfc,
+                         AVFrame *dst, స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
-    const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->data[0];
-#if HAVE_LINUX_DMA_BUF_H
-    struct dma_buf_sync sync_start = { 0 };
-#endif
+    స్థిరరాశి AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->దత్తాంశం[0];
+#ఒకవేళ HAVE_LINUX_DMA_BUF_H
+    నిర్మాణం dma_buf_sync sync_ప్రారంభం = { 0 };
+#అయితే_ముగింపు
     DRMMapping *map;
-    int err, i, p, plane;
-    int mmap_prot;
-    void *addr;
+    పూర్ణాంకం err, i, p, plane;
+    పూర్ణాంకం mmap_prot;
+    శూన్య *addr;
 
-    map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_mallocz(పరిమాణం(*map));
+    ఒకవేళ (!map)
+        తిరిగి AVERROR(ENOMEM);
 
     mmap_prot = 0;
-    if (flags & AV_HWFRAME_MAP_READ)
+    ఒకవేళ (flags & AV_HWFRAME_MAP_READ)
         mmap_prot |= PROT_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    ఒకవేళ (flags & AV_HWFRAME_MAP_WRITE)
         mmap_prot |= PROT_WRITE;
 
-#if HAVE_LINUX_DMA_BUF_H
-    if (flags & AV_HWFRAME_MAP_READ)
+#ఒకవేళ HAVE_LINUX_DMA_BUF_H
+    ఒకవేళ (flags & AV_HWFRAME_MAP_READ)
         map->sync_flags |= DMA_BUF_SYNC_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    ఒకవేళ (flags & AV_HWFRAME_MAP_WRITE)
         map->sync_flags |= DMA_BUF_SYNC_WRITE;
-    sync_start.flags = DMA_BUF_SYNC_START | map->sync_flags;
-#endif
+    sync_ప్రారంభం.flags = DMA_BUF_SYNC_ప్రారంభం | map->sync_flags;
+#అయితే_ముగింపు
 
     av_assert0(desc->nb_objects <= AV_DRM_MAX_PLANES);
-    for (i = 0; i < desc->nb_objects; i++) {
-        addr = mmap(NULL, desc->objects[i].size, mmap_prot, MAP_SHARED,
+    కొరకు (i = 0; i < desc->nb_objects; i++) {
+        addr = mmap(ఖాళీ, desc->objects[i].కొలత, mmap_prot, MAP_SHARED,
                     desc->objects[i].fd, 0);
-        if (addr == MAP_FAILED) {
+        ఒకవేళ (addr == MAP_FAILED) {
             err = AVERROR(errno);
             av_log(hwfc, AV_LOG_ERROR, "Failed to map DRM object %d to "
                    "memory: %d.\n", desc->objects[i].fd, errno);
-            goto fail;
+            వెళ్ళు fail;
         }
 
-        map->address[i] = addr;
-        map->length[i]  = desc->objects[i].size;
+        map->చిరునామా[i] = addr;
+        map->నిడివి[i]  = desc->objects[i].కొలత;
         map->object[i] = desc->objects[i].fd;
 
-#if HAVE_LINUX_DMA_BUF_H
+#ఒకవేళ HAVE_LINUX_DMA_BUF_H
         /* We're not checking for errors here because the kernel may not
          * support the ioctl, in which case its okay to carry on */
-        ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_start);
-#endif
+        ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_ప్రారంభం);
+#అయితే_ముగింపు
     }
     map->nb_regions = i;
 
     plane = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        const AVDRMLayerDescriptor *layer = &desc->layers[i];
-        for (p = 0; p < layer->nb_planes; p++) {
-            dst->data[plane] =
-                (uint8_t*)map->address[layer->planes[p].object_index] +
-                                       layer->planes[p].offset;
+    కొరకు (i = 0; i < desc->nb_layers; i++) {
+        స్థిరరాశి AVDRMLayerDescriptor *layer = &desc->layers[i];
+        కొరకు (p = 0; p < layer->nb_planes; p++) {
+            dst->దత్తాంశం[plane] =
+                (uint8_t*)map->చిరునామా[layer->planes[p].object_సూచీ] +
+                                       layer->planes[p].స్థానభ్రంశం;
             dst->linesize[plane] =     layer->planes[p].pitch;
             ++plane;
         }
     }
     av_assert0(plane <= AV_DRM_MAX_PLANES);
 
-    dst->width  = src->width;
-    dst->height = src->height;
+    dst->వెడల్పు  = src->వెడల్పు;
+    dst->ఎత్తు = src->ఎత్తు;
 
-    err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
-                                &drm_unmap_frame, map);
-    if (err < 0)
-        goto fail;
+    err = ff_hwframe_map_create(src->hw_చట్రాలు_ctx, dst, src,
+                                &drm_unmap_చట్రం, map);
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    for (i = 0; i < desc->nb_objects; i++) {
-        if (map->address[i])
-            munmap(map->address[i], map->length[i]);
+    కొరకు (i = 0; i < desc->nb_objects; i++) {
+        ఒకవేళ (map->చిరునామా[i])
+            munmap(map->చిరునామా[i], map->నిడివి[i]);
     }
     av_free(map);
-    return err;
+    తిరిగి err;
 }
 
-static int drm_transfer_get_formats(AVHWFramesContext *ctx,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats)
+స్థిర పూర్ణాంకం drm_transfer_get_formats(AVHWFramesContext *ctx,
+                                    గణన AVHWFrameTransferDirection dir,
+                                    గణన AVPixelFormat **formats)
 {
-    enum AVPixelFormat *pix_fmts;
+    గణన AVPixelFormat *pix_fmts;
 
-    pix_fmts = av_malloc_array(2, sizeof(*pix_fmts));
-    if (!pix_fmts)
-        return AVERROR(ENOMEM);
+    pix_fmts = av_malloc_array(2, పరిమాణం(*pix_fmts));
+    ఒకవేళ (!pix_fmts)
+        తిరిగి AVERROR(ENOMEM);
 
     pix_fmts[0] = ctx->sw_format;
     pix_fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = pix_fmts;
-    return 0;
+    తిరిగి 0;
 }
 
-static int drm_transfer_data_from(AVHWFramesContext *hwfc,
-                                  AVFrame *dst, const AVFrame *src)
+స్థిర పూర్ణాంకం drm_transfer_దత్తాంశం_from(AVHWFramesContext *hwfc,
+                                  AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    పూర్ణాంకం err;
 
-    if (dst->width > hwfc->width || dst->height > hwfc->height)
-        return AVERROR(EINVAL);
+    ఒకవేళ (dst->వెడల్పు > hwfc->వెడల్పు || dst->ఎత్తు > hwfc->ఎత్తు)
+        తిరిగి AVERROR(EINVAL);
 
-    map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_చట్రం_alloc();
+    ఒకవేళ (!map)
+        తిరిగి AVERROR(ENOMEM);
     map->format = dst->format;
 
-    err = drm_map_frame(hwfc, map, src, AV_HWFRAME_MAP_READ);
-    if (err)
-        goto fail;
+    err = drm_map_చట్రం(hwfc, map, src, AV_HWFRAME_MAP_READ);
+    ఒకవేళ (err)
+        వెళ్ళు fail;
 
-    map->width  = dst->width;
-    map->height = dst->height;
+    map->వెడల్పు  = dst->వెడల్పు;
+    map->ఎత్తు = dst->ఎత్తు;
 
-    err = av_frame_copy(dst, map);
-    if (err)
-        goto fail;
+    err = av_చట్రం_copy(dst, map);
+    ఒకవేళ (err)
+        వెళ్ళు fail;
 
     err = 0;
 fail:
-    av_frame_free(&map);
-    return err;
+    av_చట్రం_free(&map);
+    తిరిగి err;
 }
 
-static int drm_transfer_data_to(AVHWFramesContext *hwfc,
-                                AVFrame *dst, const AVFrame *src)
+స్థిర పూర్ణాంకం drm_transfer_దత్తాంశం_గమ్యం(AVHWFramesContext *hwfc,
+                                AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    పూర్ణాంకం err;
 
-    if (src->width > hwfc->width || src->height > hwfc->height)
-        return AVERROR(EINVAL);
+    ఒకవేళ (src->వెడల్పు > hwfc->వెడల్పు || src->ఎత్తు > hwfc->ఎత్తు)
+        తిరిగి AVERROR(EINVAL);
 
-    map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_చట్రం_alloc();
+    ఒకవేళ (!map)
+        తిరిగి AVERROR(ENOMEM);
     map->format = src->format;
 
-    err = drm_map_frame(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
+    err = drm_map_చట్రం(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
                                         AV_HWFRAME_MAP_OVERWRITE);
-    if (err)
-        goto fail;
+    ఒకవేళ (err)
+        వెళ్ళు fail;
 
-    map->width  = src->width;
-    map->height = src->height;
+    map->వెడల్పు  = src->వెడల్పు;
+    map->ఎత్తు = src->ఎత్తు;
 
-    err = av_frame_copy(map, src);
-    if (err)
-        goto fail;
+    err = av_చట్రం_copy(map, src);
+    ఒకవేళ (err)
+        వెళ్ళు fail;
 
     err = 0;
 fail:
-    av_frame_free(&map);
-    return err;
+    av_చట్రం_free(&map);
+    తిరిగి err;
 }
 
-static int drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                        const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                        స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
-    int err;
+    పూర్ణాంకం err;
 
-    if (dst->format == AV_PIX_FMT_NONE)
+    ఒకవేళ (dst->format == AV_PIX_FMT_NONE)
         dst->format = hwfc->sw_format;
-    else if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
+    లేకపోతే ఒకవేళ (hwfc->sw_format != dst->format)
+        తిరిగి AVERROR(ENOSYS);
 
-    err = drm_map_frame(hwfc, dst, src, flags);
-    if (err)
-        return err;
+    err = drm_map_చట్రం(hwfc, dst, src, flags);
+    ఒకవేళ (err)
+        తిరిగి err;
 
-    err = av_frame_copy_props(dst, src);
-    if (err)
-        return err;
+    err = av_చట్రం_copy_props(dst, src);
+    ఒకవేళ (err)
+        తిరిగి err;
 
-    return 0;
+    తిరిగి 0;
 }
 
-const HWContextType ff_hwcontext_type_drm = {
+స్థిరరాశి HWContextType ff_hwcontext_type_drm = {
     .type                   = AV_HWDEVICE_TYPE_DRM,
     .name                   = "DRM",
 
-    .device_hwctx_size      = sizeof(AVDRMDeviceContext),
+    .device_hwctx_కొలత      = పరిమాణం(AVDRMDeviceContext),
 
     .device_create          = &drm_device_create,
 
-    .frames_get_buffer      = &drm_get_buffer,
+    .చట్రాలు_get_బఫరు      = &drm_get_బఫరు,
 
     .transfer_get_formats   = &drm_transfer_get_formats,
-    .transfer_data_to       = &drm_transfer_data_to,
-    .transfer_data_from     = &drm_transfer_data_from,
+    .transfer_దత్తాంశం_గమ్యం       = &drm_transfer_దత్తాంశం_గమ్యం,
+    .transfer_దత్తాంశం_from     = &drm_transfer_దత్తాంశం_from,
     .map_from               = &drm_map_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]) {
-        AV_PIX_FMT_DRM_PRIME,
+    .pix_fmts = (స్థిరరాశి గణన AVPixelFormat[]) {
+        AV_PIX_FMT_DRM_ప్రధానసంఖ్య,
         AV_PIX_FMT_NONE
     },
 };

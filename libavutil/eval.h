@@ -23,10 +23,10 @@
  * simple arithmetic expression evaluator
  */
 
-#ifndef AVUTIL_EVAL_H
-#define AVUTIL_EVAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_EVAL_H
+#నిర్వచించు AVUTIL_EVAL_H
 
-typedef struct AVExpr AVExpr;
+రకనిర్వచనం నిర్మాణం AVExpr AVExpr;
 
 /**
  * Parse and evaluate an expression.
@@ -47,11 +47,11 @@ typedef struct AVExpr AVExpr;
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse_and_eval(double *res, const char *s,
-                           const char * const *const_names, const double *const_values,
-                           const char * const *func1_names, double (* const *funcs1)(void *, double),
-                           const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                           void *opaque, int log_offset, void *log_ctx);
+పూర్ణాంకం av_సమాసం_parse_and_eval(ద్విగుణ *res, స్థిరరాశి అక్షరం *s,
+                           స్థిరరాశి అక్షరం * స్థిరరాశి *const_పేర్లు, స్థిరరాశి ద్విగుణ *const_విలువలు,
+                           స్థిరరాశి అక్షరం * స్థిరరాశి *func1_పేర్లు, ద్విగుణ (* స్థిరరాశి *funcs1)(శూన్య *, ద్విగుణ),
+                           స్థిరరాశి అక్షరం * స్థిరరాశి *func2_పేర్లు, ద్విగుణ (* స్థిరరాశి *funcs2)(శూన్య *, ద్విగుణ, ద్విగుణ),
+                           శూన్య *opaque, పూర్ణాంకం log_స్థానభ్రంశం, శూన్య *log_ctx);
 
 /**
  * Parse an expression.
@@ -71,11 +71,11 @@ int av_expr_parse_and_eval(double *res, const char *s,
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse(AVExpr **expr, const char *s,
-                  const char * const *const_names,
-                  const char * const *func1_names, double (* const *funcs1)(void *, double),
-                  const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                  int log_offset, void *log_ctx);
+పూర్ణాంకం av_సమాసం_parse(AVExpr **సమాసం, స్థిరరాశి అక్షరం *s,
+                  స్థిరరాశి అక్షరం * స్థిరరాశి *const_పేర్లు,
+                  స్థిరరాశి అక్షరం * స్థిరరాశి *func1_పేర్లు, ద్విగుణ (* స్థిరరాశి *funcs1)(శూన్య *, ద్విగుణ),
+                  స్థిరరాశి అక్షరం * స్థిరరాశి *func2_పేర్లు, ద్విగుణ (* స్థిరరాశి *funcs2)(శూన్య *, ద్విగుణ, ద్విగుణ),
+                  పూర్ణాంకం log_స్థానభ్రంశం, శూన్య *log_ctx);
 
 /**
  * Evaluate a previously parsed expression.
@@ -85,7 +85,7 @@ int av_expr_parse(AVExpr **expr, const char *s,
  * @param opaque a pointer which will be passed to all functions from funcs1 and funcs2
  * @return the value of the expression
  */
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
+ద్విగుణ av_సమాసం_eval(AVExpr *e, స్థిరరాశి ద్విగుణ *const_విలువలు, శూన్య *opaque);
 
 /**
  * Track the presence of variables and their number of occurrences in a parsed expression
@@ -96,7 +96,7 @@ double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
+పూర్ణాంకం av_సమాసం_లెక్క_vars(AVExpr *e, గుర్తులేని *counter, పూర్ణాంకం కొలత);
 
 /**
  * Track the presence of user provided functions and their number of occurrences
@@ -111,12 +111,12 @@ int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg);
+పూర్ణాంకం av_సమాసం_లెక్క_func(AVExpr *e, గుర్తులేని *counter, పూర్ణాంకం కొలత, పూర్ణాంకం arg);
 
 /**
  * Free a parsed expression previously created with av_expr_parse().
  */
-void av_expr_free(AVExpr *e);
+శూన్య av_సమాసం_free(AVExpr *e);
 
 /**
  * Parse the string in numstr and return its value as a double. If
@@ -135,6 +135,6 @@ void av_expr_free(AVExpr *e);
  * @param tail if non-NULL puts here the pointer to the char next
  * after the last parsed character
  */
-double av_strtod(const char *numstr, char **tail);
+ద్విగుణ av_strtod(స్థిరరాశి అక్షరం *numstr, అక్షరం **తోక);
 
-#endif /* AVUTIL_EVAL_H */
+#అయితే_ముగింపు /* AVUTIL_EVAL_H */

@@ -25,19 +25,19 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_INTEGER_H
-#define AVUTIL_INTEGER_H
+#నిర్వచితం_కాకపోతే AVUTIL_INTEGER_H
+#నిర్వచించు AVUTIL_INTEGER_H
 
-#include <stdint.h>
-#include "attributes.h"
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ "attributes.h"
 
-#define AV_INTEGER_SIZE 8
+#నిర్వచించు AV_INTEGER_కొలత 8
 
-typedef struct AVInteger{
-    uint16_t v[AV_INTEGER_SIZE];
+రకనిర్వచనం నిర్మాణం AVInteger{
+    uint16_t v[AV_INTEGER_కొలత];
 } AVInteger;
 
-AVInteger av_add_i(AVInteger a, AVInteger b) av_const;
+AVInteger av_కూడు_i(AVInteger a, AVInteger b) av_const;
 AVInteger av_sub_i(AVInteger a, AVInteger b) av_const;
 
 /**
@@ -45,20 +45,20 @@ AVInteger av_sub_i(AVInteger a, AVInteger b) av_const;
  * AVInteger. This is simply the index of the most significant bit
  * which is 1, or 0 if all bits are 0.
  */
-int av_log2_i(AVInteger a) av_const;
+పూర్ణాంకం av_log2_i(AVInteger a) av_const;
 AVInteger av_mul_i(AVInteger a, AVInteger b) av_const;
 
 /**
  * Return 0 if a==b, 1 if a>b and -1 if a<b.
  */
-int av_cmp_i(AVInteger a, AVInteger b) av_const;
+పూర్ణాంకం av_cmp_i(AVInteger a, AVInteger b) av_const;
 
 /**
  * bitwise shift
  * @param s the number of bits by which the value should be shifted right,
             may be negative for shifting left
  */
-AVInteger av_shr_i(AVInteger a, int s) av_const;
+AVInteger av_shr_i(AVInteger a, పూర్ణాంకం s) av_const;
 
 /**
  * Return a % b.
@@ -83,4 +83,4 @@ AVInteger av_int2i(int64_t a) av_const;
  */
 int64_t av_i2int(AVInteger a) av_const;
 
-#endif /* AVUTIL_INTEGER_H */
+#అయితే_ముగింపు /* AVUTIL_INTEGER_H */

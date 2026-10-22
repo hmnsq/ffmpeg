@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define TEST 1
-#include "libavutil/random_seed.c"
+#నిర్వచించు TEST 1
+#అన్తర్భావ "libavutil/random_seed.c"
 
-#define N 256
-#define F 2
-#include <stdio.h>
+#నిర్వచించు N 256
+#నిర్వచించు F 2
+#అన్తర్భావ <stdio.h>
 
-typedef uint32_t (*random_seed_ptr_t)(void);
+రకనిర్వచనం uint32_t (*random_విత్తనం_ptr_t)(శూన్య);
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
-    int i, j, rsf, retry;
+    పూర్ణాంకం i, j, rsf, retry;
     uint32_t seeds[N];
-    random_seed_ptr_t random_seed[F] = {av_get_random_seed, get_generic_seed};
+    random_విత్తనం_ptr_t random_విత్తనం[F] = {av_get_random_విత్తనం, get_generic_విత్తనం};
 
-    for (rsf=0; rsf<F; ++rsf){
-        for (retry=0; retry<3; retry++){
-            for (i=0; i<N; i++){
-                seeds[i] = random_seed[rsf]();
-                for (j=0; j<i; j++)
-                    if (seeds[j] == seeds[i])
-                        goto retry;
+    కొరకు (rsf=0; rsf<F; ++rsf){
+        కొరకు (retry=0; retry<3; retry++){
+            కొరకు (i=0; i<N; i++){
+                seeds[i] = random_విత్తనం[rsf]();
+                కొరకు (j=0; j<i; j++)
+                    ఒకవేళ (seeds[j] == seeds[i])
+                        వెళ్ళు retry;
             }
-            printf("seeds OK\n");
-            break;
+            రాయి("seeds OK\n");
+            ఆపు;
             retry:;
         }
-        if (retry >= 3) {
-            printf("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
-            return 1;
+        ఒకవేళ (retry >= 3) {
+            రాయి("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
+            తిరిగి 1;
         }
     }
-    return 0;
+    తిరిగి 0;
 }

@@ -16,123 +16,123 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "libavutil/common.h"
-#include "libavutil/fifo.h"
-#include "libavutil/lfg.h"
-#include "libavutil/random_seed.h"
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <stdlib.h>
+#అన్తర్భావ "libavutil/common.h"
+#అన్తర్భావ "libavutil/fifo.h"
+#అన్తర్భావ "libavutil/lfg.h"
+#అన్తర్భావ "libavutil/random_seed.h"
 
-typedef struct CBState {
-    unsigned int read_idx;
-    unsigned int write_idx;
-    unsigned int to_process;
-    unsigned int offset;
+రకనిర్వచనం నిర్మాణం CBState {
+    గుర్తులేని పూర్ణాంకం read_idx;
+    గుర్తులేని పూర్ణాంకం write_idx;
+    గుర్తులేని పూర్ణాంకం గమ్యం_process;
+    గుర్తులేని పూర్ణాంకం స్థానభ్రంశం;
 } CBState;
 
-static int read_cb(void *opaque, void *buf, size_t *nb_elems)
+స్థిర పూర్ణాంకం read_cb(శూన్య *opaque, శూన్య *buf, size_t *nb_elems)
 {
     CBState  *s = opaque;
-    unsigned *b = buf;
+    గుర్తులేని *b = buf;
 
-    *nb_elems = FFMIN(*nb_elems, s->to_process);
+    *nb_elems = FFMIN(*nb_elems, s->గమ్యం_process);
 
-    for (unsigned i = 0; i < *nb_elems; i++)
-        if (b[i] != s->read_idx + s->offset + i) {
-            printf("Mismatch at idx %u offset %u i %u\n",
-                   s->read_idx, s->offset, i);
-            return AVERROR_BUG;
+    కొరకు (గుర్తులేని i = 0; i < *nb_elems; i++)
+        ఒకవేళ (b[i] != s->read_idx + s->స్థానభ్రంశం + i) {
+            రాయి("Mismatch at idx %u offset %u i %u\n",
+                   s->read_idx, s->స్థానభ్రంశం, i);
+            తిరిగి AVERROR_BUG;
         }
 
-    s->offset     += *nb_elems;
-    s->to_process -= *nb_elems;
+    s->స్థానభ్రంశం     += *nb_elems;
+    s->గమ్యం_process -= *nb_elems;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int write_cb(void *opaque, void *buf, size_t *nb_elems)
+స్థిర పూర్ణాంకం write_cb(శూన్య *opaque, శూన్య *buf, size_t *nb_elems)
 {
     CBState  *s = opaque;
-    unsigned *b = buf;
+    గుర్తులేని *b = buf;
 
-    *nb_elems = FFMIN(*nb_elems, s->to_process);
+    *nb_elems = FFMIN(*nb_elems, s->గమ్యం_process);
 
-    for (unsigned i = 0; i < *nb_elems; i++)
+    కొరకు (గుర్తులేని i = 0; i < *nb_elems; i++)
         b[i] = s->write_idx + i;
 
     s->write_idx  += *nb_elems;
-    s->to_process -= *nb_elems;
+    s->గమ్యం_process -= *nb_elems;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
     /* create a FIFO buffer */
-    AVFifo *fifo = av_fifo_alloc2(13, sizeof(int), 0);
-    int i, j, n, *p;
+    AVFifo *fifo = av_fifo_alloc2(13, పరిమాణం(పూర్ణాంకం), 0);
+    పూర్ణాంకం i, j, n, *p;
 
     /* fill data */
-    for (i = 0; av_fifo_can_write(fifo); i++)
+    కొరకు (i = 0; av_fifo_can_write(fifo); i++)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    కొరకు (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        రాయి("%d: %d\n", i, j);
     }
-    printf("\n");
+    రాయి("\n");
 
     /* generic peek at FIFO */
 
     n = av_fifo_can_read(fifo);
-    p = malloc(n * av_fifo_elem_size(fifo));
-    if (p == NULL) {
+    p = జ్ఞాపకం_ఇవ్వు(n * av_fifo_elem_కొలత(fifo));
+    ఒకవేళ (p == ఖాళీ) {
         fprintf(stderr, "failed to allocate memory.\n");
-        exit(1);
+        నిష్క్రమించు(1);
     }
 
-    (void) av_fifo_peek(fifo, p, n, 0);
+    (శూన్య) av_fifo_peek(fifo, p, n, 0);
 
     /* read data at p */
-    for(i = 0; i < n; ++i)
-        printf("%d: %d\n", i, p[i]);
+    కొరకు(i = 0; i < n; ++i)
+        రాయి("%d: %d\n", i, p[i]);
 
-    putchar('\n');
+    అక్షరం_రాయి('\n');
 
     /* read data */
-    for (i = 0; av_fifo_can_read(fifo); i++) {
+    కొరకు (i = 0; av_fifo_can_read(fifo); i++) {
         av_fifo_read(fifo, &j, 1);
-        printf(i == 0 ? "%d" : " %d", j);
+        రాయి(i == 0 ? "%d" : " %d", j);
     }
-    printf("\n");
+    రాయి("\n");
 
     /* fill data */
-    for (i = 0; av_fifo_can_write(fifo); i++)
+    కొరకు (i = 0; av_fifo_can_write(fifo); i++)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    కొరకు (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        రాయి("%d: %d\n", i, j);
     }
-    putchar('\n');
+    అక్షరం_రాయి('\n');
 
     /* test fifo_grow */
-    (void) av_fifo_grow2(fifo, 15);
+    (శూన్య) av_fifo_grow2(fifo, 15);
 
     /* fill data */
     n = av_fifo_can_read(fifo);
-    for (i = n; av_fifo_can_write(fifo); ++i)
+    కొరకు (i = n; av_fifo_can_write(fifo); ++i)
         av_fifo_write(fifo, &i, 1);
 
     /* peek_at at FIFO */
     n = av_fifo_can_read(fifo);
-    for (i = 0; i < n; i++) {
+    కొరకు (i = 0; i < n; i++) {
         av_fifo_peek(fifo, &j, 1, i);
-        printf("%d: %d\n", i, j);
+        రాయి("%d: %d\n", i, j);
     }
 
     av_fifo_freep2(&fifo);
@@ -140,58 +140,58 @@ int main(void)
     /* test randomly-sized write/read/peek with a callback */
     {
         CBState        s = { 0 };
-        uint32_t    seed = av_get_random_seed();
+        uint32_t    విత్తనం = av_get_random_విత్తనం();
 
         AVLFG lfg;
-        int ret;
+        పూర్ణాంకం ret;
 
-        av_lfg_init(&lfg, seed);
+        av_lfg_init(&lfg, విత్తనం);
 
-        fifo = av_fifo_alloc2(1, sizeof(unsigned), AV_FIFO_FLAG_AUTO_GROW);
+        fifo = av_fifo_alloc2(1, పరిమాణం(గుర్తులేని), AV_FIFO_FLAG_AUTO_GROW);
 
-        for (i = 0; i < 32; i++) {
+        కొరకు (i = 0; i < 32; i++) {
             size_t       nb_elems = 16;
-            unsigned   to_process = av_lfg_get(&lfg) % nb_elems;
+            గుర్తులేని   గమ్యం_process = av_lfg_get(&lfg) % nb_elems;
 
-            s.to_process = to_process;
+            s.గమ్యం_process = గమ్యం_process;
 
             ret = av_fifo_write_from_cb(fifo, write_cb, &s, &nb_elems);
-            if (ret < 0 || s.to_process || nb_elems != to_process) {
-                printf("FIFO write fail; seed %"PRIu32"\n", seed);
-                return 1;
+            ఒకవేళ (ret < 0 || s.గమ్యం_process || nb_elems != గమ్యం_process) {
+                రాయి("FIFO write fail; seed %"PRIu32"\n", విత్తనం);
+                తిరిగి 1;
             }
 
             nb_elems = av_fifo_can_read(fifo);
-            if (nb_elems > 1) {
-                s.offset     = av_lfg_get(&lfg) % (nb_elems - 1);
-                nb_elems    -= s.offset;
+            ఒకవేళ (nb_elems > 1) {
+                s.స్థానభ్రంశం     = av_lfg_get(&lfg) % (nb_elems - 1);
+                nb_elems    -= s.స్థానభ్రంశం;
 
-                s.to_process = av_lfg_get(&lfg) % nb_elems;
-                to_process   = s.to_process;
+                s.గమ్యం_process = av_lfg_get(&lfg) % nb_elems;
+                గమ్యం_process   = s.గమ్యం_process;
 
-                ret = av_fifo_peek_to_cb(fifo, read_cb, &s, &nb_elems, s.offset);
-                if (ret < 0 || s.to_process || nb_elems != to_process) {
-                    printf("FIFO peek fail; seed %"PRIu32"\n", seed);
-                    return 1;
+                ret = av_fifo_peek_గమ్యం_cb(fifo, read_cb, &s, &nb_elems, s.స్థానభ్రంశం);
+                ఒకవేళ (ret < 0 || s.గమ్యం_process || nb_elems != గమ్యం_process) {
+                    రాయి("FIFO peek fail; seed %"PRIu32"\n", విత్తనం);
+                    తిరిగి 1;
                 }
             }
 
             nb_elems     = av_fifo_can_read(fifo);
-            to_process   = nb_elems ? av_lfg_get(&lfg) % nb_elems : 0;
-            s.to_process = to_process;
-            s.offset     = 0;
+            గమ్యం_process   = nb_elems ? av_lfg_get(&lfg) % nb_elems : 0;
+            s.గమ్యం_process = గమ్యం_process;
+            s.స్థానభ్రంశం     = 0;
 
-            ret = av_fifo_read_to_cb(fifo, read_cb, &s, &nb_elems);
-            if (ret < 0 || s.to_process || to_process != nb_elems) {
-                printf("FIFO read fail; seed %"PRIu32"\n", seed);
-                return 1;
+            ret = av_fifo_read_గమ్యం_cb(fifo, read_cb, &s, &nb_elems);
+            ఒకవేళ (ret < 0 || s.గమ్యం_process || గమ్యం_process != nb_elems) {
+                రాయి("FIFO read fail; seed %"PRIu32"\n", విత్తనం);
+                తిరిగి 1;
             }
-            s.read_idx += s.offset;
+            s.read_idx += s.స్థానభ్రంశం;
         }
     }
 
     av_fifo_freep2(&fifo);
-    free(p);
+    విడుదల(p);
 
-    return 0;
+    తిరిగి 0;
 }

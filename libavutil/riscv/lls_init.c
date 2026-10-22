@@ -18,39 +18,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stdint.h>
+#అన్తర్భావ <assert.h>
+#అన్తర్భావ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/lls.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/riscv/cpu.h"
+#అన్తర్భావ "libavutil/lls.h"
 
-void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
-double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
+శూన్య ff_lls_update_covariance_rvv(ద్విగుణ covar[][36], స్థిరరాశి ద్విగుణ *var,
+                                  పూర్ణాంకం లెక్క);
+ద్విగుణ ff_scalarproduct_double_rvv(స్థిరరాశి ద్విగుణ *, స్థిరరాశి ద్విగుణ *, size_t);
 
-static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
+స్థిర శూన్య ff_lls_update_rvv(నిర్మాణం LLSModel *m, స్థిరరాశి ద్విగుణ *var)
 {
-    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
+    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_లెక్క + 1);
 }
 
-static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
-                                  int order)
+స్థిర ద్విగుణ ff_lls_evaluate_rvv(నిర్మాణం LLSModel *m, స్థిరరాశి ద్విగుణ *var,
+                                  పూర్ణాంకం క్రమం)
 {
-    return ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
+    తిరిగి ff_scalarproduct_double_rvv(m->coeff[క్రమం], var, క్రమం + 1);
 }
 
-av_cold void ff_init_lls_riscv(LLSModel *m)
+av_cold శూన్య ff_init_lls_riscv(LLSModel *m)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ఒకవేళ HAVE_RVV
+    పూర్ణాంకం flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+    ఒకవేళ ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
+        ఒకవేళ (ff_get_rv_vlenb() > m->indep_లెక్క)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }
-#endif
+#అయితే_ముగింపు
 }

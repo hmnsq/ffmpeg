@@ -18,134 +18,134 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "stereo3d.h"
+#అన్తర్భావ "frame.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "stereo3d.h"
 
-static void get_defaults(AVStereo3D *stereo)
+స్థిర శూన్య get_defaults(AVStereo3D *stereo)
 {
     stereo->horizontal_disparity_adjustment = (AVRational) { 0, 1 };
-    stereo->horizontal_field_of_view = (AVRational) { 0, 1 };
+    stereo->horizontal_క్షేత్రం_యొక్క_view = (AVRational) { 0, 1 };
 }
 
-AVStereo3D *av_stereo3d_alloc(void)
+AVStereo3D *av_stereo3d_alloc(శూన్య)
 {
-    return av_stereo3d_alloc_size(NULL);
+    తిరిగి av_stereo3d_alloc_కొలత(ఖాళీ);
 }
 
-AVStereo3D *av_stereo3d_alloc_size(size_t *size)
+AVStereo3D *av_stereo3d_alloc_కొలత(size_t *కొలత)
 {
-    AVStereo3D *stereo = av_mallocz(sizeof(AVStereo3D));
+    AVStereo3D *stereo = av_mallocz(పరిమాణం(AVStereo3D));
 
-    if (size)
-        *size = stereo ? sizeof(*stereo) : 0;
+    ఒకవేళ (కొలత)
+        *కొలత = stereo ? పరిమాణం(*stereo) : 0;
 
-    if (!stereo)
-        return NULL;
+    ఒకవేళ (!stereo)
+        తిరిగి ఖాళీ;
 
     get_defaults(stereo);
 
-    return stereo;
+    తిరిగి stereo;
 }
 
-AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
+AVStereo3D *av_stereo3d_create_side_దత్తాంశం(AVFrame *చట్రం)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_STEREO3D,
-                                                        sizeof(AVStereo3D));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_దత్తాంశం *side_దత్తాంశం = av_చట్రం_new_side_దత్తాంశం(చట్రం,
+                                                        AV_చట్రం_దత్తాంశం_STEREO3_D,
+                                                        పరిమాణం(AVStereo3D));
+    ఒకవేళ (!side_దత్తాంశం)
+        తిరిగి ఖాళీ;
 
-    memset(side_data->data, 0, sizeof(AVStereo3D));
-    get_defaults((AVStereo3D *)side_data->data);
+    memset(side_దత్తాంశం->దత్తాంశం, 0, పరిమాణం(AVStereo3D));
+    get_defaults((AVStereo3D *)side_దత్తాంశం->దత్తాంశం);
 
-    return (AVStereo3D *)side_data->data;
+    తిరిగి (AVStereo3D *)side_దత్తాంశం->దత్తాంశం;
 }
 
-static const char * const stereo3d_type_names[] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి stereo3d_type_పేర్లు[] = {
     [AV_STEREO3D_2D]                  = "2D",
     [AV_STEREO3D_SIDEBYSIDE]          = "side by side",
     [AV_STEREO3D_TOPBOTTOM]           = "top and bottom",
     [AV_STEREO3D_FRAMESEQUENCE]       = "frame alternate",
     [AV_STEREO3D_CHECKERBOARD]        = "checkerboard",
     [AV_STEREO3D_SIDEBYSIDE_QUINCUNX] = "side by side (quincunx subsampling)",
-    [AV_STEREO3D_LINES]               = "interleaved lines",
+    [AV_STEREO3_D_పంక్తులు]               = "interleaved lines",
     [AV_STEREO3D_COLUMNS]             = "interleaved columns",
     [AV_STEREO3D_UNSPEC]              = "unspecified",
 };
 
-static const char * const stereo3d_view_names[] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి stereo3d_view_పేర్లు[] = {
     [AV_STEREO3D_VIEW_PACKED] = "packed",
-    [AV_STEREO3D_VIEW_LEFT]   = "left",
-    [AV_STEREO3D_VIEW_RIGHT]  = "right",
+    [AV_STEREO3_D_VIEW_ఎడమ]   = "left",
+    [AV_STEREO3_D_VIEW_కుడి]  = "right",
     [AV_STEREO3D_VIEW_UNSPEC] = "unspecified",
 };
 
-static const char * const stereo3d_primary_eye_names[] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి stereo3d_primary_eye_పేర్లు[] = {
     [AV_PRIMARY_EYE_NONE]  = "none",
-    [AV_PRIMARY_EYE_LEFT]  = "left",
-    [AV_PRIMARY_EYE_RIGHT] = "right",
+    [AV_PRIMARY_EYE_ఎడమ]  = "left",
+    [AV_PRIMARY_EYE_కుడి] = "right",
 };
 
-const char *av_stereo3d_type_name(unsigned int type)
+స్థిరరాశి అక్షరం *av_stereo3d_type_name(గుర్తులేని పూర్ణాంకం type)
 {
-    if (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
-        return "unknown";
+    ఒకవేళ (type >= FF_ARRAY_ELEMS(stereo3d_type_పేర్లు))
+        తిరిగి "unknown";
 
-    return stereo3d_type_names[type];
+    తిరిగి stereo3d_type_పేర్లు[type];
 }
 
-int av_stereo3d_from_name(const char *name)
+పూర్ణాంకం av_stereo3d_from_name(స్థిరరాశి అక్షరం *name)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
-        if (!strcmp(name, stereo3d_type_names[i]))
-            return i;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_పేర్లు); i++) {
+        ఒకవేళ (!strcmp(name, stereo3d_type_పేర్లు[i]))
+            తిరిగి i;
     }
 
-    return -1;
+    తిరిగి -1;
 }
 
-const char *av_stereo3d_view_name(unsigned int view)
+స్థిరరాశి అక్షరం *av_stereo3d_view_name(గుర్తులేని పూర్ణాంకం view)
 {
-    if (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
-        return "unknown";
+    ఒకవేళ (view >= FF_ARRAY_ELEMS(stereo3d_view_పేర్లు))
+        తిరిగి "unknown";
 
-    return stereo3d_view_names[view];
+    తిరిగి stereo3d_view_పేర్లు[view];
 }
 
-int av_stereo3d_view_from_name(const char *name)
+పూర్ణాంకం av_stereo3d_view_from_name(స్థిరరాశి అక్షరం *name)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
-        if (!strcmp(name, stereo3d_view_names[i]))
-            return i;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_పేర్లు); i++) {
+        ఒకవేళ (!strcmp(name, stereo3d_view_పేర్లు[i]))
+            తిరిగి i;
     }
 
-    return -1;
+    తిరిగి -1;
 }
 
-const char *av_stereo3d_primary_eye_name(unsigned int eye)
+స్థిరరాశి అక్షరం *av_stereo3d_primary_eye_name(గుర్తులేని పూర్ణాంకం eye)
 {
-    if (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
-        return "unknown";
+    ఒకవేళ (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_పేర్లు))
+        తిరిగి "unknown";
 
-    return stereo3d_primary_eye_names[eye];
+    తిరిగి stereo3d_primary_eye_పేర్లు[eye];
 }
 
-int av_stereo3d_primary_eye_from_name(const char *name)
+పూర్ణాంకం av_stereo3d_primary_eye_from_name(స్థిరరాశి అక్షరం *name)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
-        if (!strcmp(name, stereo3d_primary_eye_names[i]))
-            return i;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_పేర్లు); i++) {
+        ఒకవేళ (!strcmp(name, stereo3d_primary_eye_పేర్లు[i]))
+            తిరిగి i;
     }
 
-    return -1;
+    తిరిగి -1;
 }

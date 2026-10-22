@@ -18,64 +18,64 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#అన్తర్భావ "avstring.h"
+#అన్తర్భావ "frame.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
-                                 size_t *out_size)
+                                 size_t *బహిర్గతం_కొలత)
 {
-    struct TestStruct {
+    నిర్మాణం TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
-    size_t size = rect_offset;
+    స్థిరరాశి size_t rect_స్థానభ్రంశం = offsetof(నిర్మాణం TestStruct, rect);
+    size_t కొలత = rect_స్థానభ్రంశం;
     AVVideoHint *hint;
 
-    *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    *బహిర్గతం_కొలత = 0;
+    ఒకవేళ (nb_rects > (SIZE_MAX - కొలత) / పరిమాణం(AVVideoRect))
+        తిరిగి ఖాళీ;
+    కొలత += పరిమాణం(AVVideoRect) * nb_rects;
 
-    hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    hint = av_mallocz(కొలత);
+    ఒకవేళ (!hint)
+        తిరిగి ఖాళీ;
 
     hint->nb_rects    = nb_rects;
-    hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_స్థానభ్రంశం = rect_స్థానభ్రంశం;
+    hint->rect_కొలత   = పరిమాణం(AVVideoRect);
 
-    *out_size = size;
+    *బహిర్గతం_కొలత = కొలత;
 
-    return hint;
+    తిరిగి hint;
 }
 
-AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
+AVVideoHint *av_video_hint_create_side_దత్తాంశం(AVFrame *చట్రం,
                                             size_t nb_rects)
 {
     AVVideoHint *hint;
     AVBufferRef *buf;
-    size_t size = 0;
+    size_t కొలత = 0;
 
-    hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    hint = av_video_hint_alloc(nb_rects, &కొలత);
+    ఒకవేళ (!hint)
+        తిరిగి ఖాళీ;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_బఫరు_create((uint8_t *)hint, కొలత, ఖాళీ, ఖాళీ, 0);
+    ఒకవేళ (!buf) {
         av_freep(&hint);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    ఒకవేళ (!av_చట్రం_new_side_దత్తాంశం_from_buf(చట్రం, AV_చట్రం_దత్తాంశం_VIDEO_HINT, buf)) {
+        av_బఫరు_unref(&buf);
+        తిరిగి ఖాళీ;
     }
 
-    return hint;
+    తిరిగి hint;
 }

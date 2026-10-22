@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FILE_H
-#define AVUTIL_FILE_H
+#నిర్వచితం_కాకపోతే AVUTIL_FILE_H
+#నిర్వచించు AVUTIL_FILE_H
 
-#include <stddef.h>
-#include <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
 
-#include "attributes.h"
+#అన్తర్భావ "attributes.h"
 
 /**
  * @file
@@ -46,9 +46,9 @@
  * @return a non negative number in case of success, a negative value
  * corresponding to an AVERROR error code in case of failure
  */
-av_warn_unused_result
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx);
+av_warn_వాడని_ఫలితం
+పూర్ణాంకం av_file_map(స్థిరరాశి అక్షరం *filename, uint8_t **bufptr, size_t *కొలత,
+                పూర్ణాంకం log_స్థానభ్రంశం, శూన్య *log_ctx);
 
 /**
  * Unmap or free the buffer bufptr created by av_file_map().
@@ -57,7 +57,7 @@ int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
  * @param size size in bytes of bufptr, must be the same as returned
  * by av_file_map()
  */
-void av_file_unmap(uint8_t *bufptr, size_t size);
+శూన్య av_file_unmap(uint8_t *bufptr, size_t కొలత);
 
 /**
  * Map the beginning of an open file into memory for shared read and write
@@ -76,8 +76,8 @@ void av_file_unmap(uint8_t *bufptr, size_t size);
  * AVERROR error code in case of failure, AVERROR(ENOSYS) when the platform
  * has no shared file mappings
  */
-av_warn_unused_result
-int av_file_map_shared(int fd, size_t size, void **bufptr);
+av_warn_వాడని_ఫలితం
+పూర్ణాంకం av_file_map_shared(పూర్ణాంకం fd, size_t కొలత, శూన్య **bufptr);
 
 /**
  * Unmap the memory mapped by av_file_map_shared().
@@ -86,6 +86,6 @@ int av_file_map_shared(int fd, size_t size, void **bufptr);
  * @param size size in bytes of the mapping, must be the same as passed
  * to av_file_map_shared()
  */
-void av_file_unmap_shared(void *bufptr, size_t size);
+శూన్య av_file_unmap_shared(శూన్య *bufptr, size_t కొలత);
 
-#endif /* AVUTIL_FILE_H */
+#అయితే_ముగింపు /* AVUTIL_FILE_H */

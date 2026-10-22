@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <stdio.h>
 
-#include "libavutil/ambient_viewing_environment.h"
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
+#అన్తర్భావ "libavutil/ambient_viewing_environment.h"
+#అన్తర్భావ "libavutil/frame.h"
+#అన్తర్భావ "libavutil/mem.h"
 
-static void print_env(const AVAmbientViewingEnvironment *env)
+స్థిర శూన్య print_env(స్థిరరాశి AVAmbientViewingEnvironment *env)
 {
-    printf("illuminance=%d/%d, light_x=%d/%d, light_y=%d/%d\n",
-           env->ambient_illuminance.num, env->ambient_illuminance.den,
-           env->ambient_light_x.num,     env->ambient_light_x.den,
-           env->ambient_light_y.num,     env->ambient_light_y.den);
+    రాయి("illuminance=%d/%d, light_x=%d/%d, light_y=%d/%d\n",
+           env->ambient_illuminance.అంకె, env->ambient_illuminance.den,
+           env->ambient_light_x.అంకె,     env->ambient_light_x.den,
+           env->ambient_light_y.అంకె,     env->ambient_light_y.den);
 }
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
     AVAmbientViewingEnvironment *env;
-    AVFrame *frame;
-    size_t size = 0;
+    AVFrame *చట్రం;
+    size_t కొలత = 0;
 
     /* av_ambient_viewing_environment_alloc with size out-param */
-    printf("Testing av_ambient_viewing_environment_alloc(&size)\n");
-    env = av_ambient_viewing_environment_alloc(&size);
-    if (env) {
-        printf("alloc: OK, size_set=%s\n", size == sizeof(*env) ? "yes" : "no");
+    రాయి("Testing av_ambient_viewing_environment_alloc(&size)\n");
+    env = av_ambient_viewing_environment_alloc(&కొలత);
+    ఒకవేళ (env) {
+        రాయి("alloc: OK, size_set=%s\n", కొలత == పరిమాణం(*env) ? "yes" : "no");
         print_env(env);
         av_free(env);
-    } else {
-        printf("alloc: FAIL\n");
+    } లేకపోతే {
+        రాయి("alloc: FAIL\n");
     }
 
     /* av_ambient_viewing_environment_alloc with NULL size */
-    printf("\nTesting av_ambient_viewing_environment_alloc(NULL)\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
-        printf("alloc(NULL): OK\n");
+    రాయి("\nTesting av_ambient_viewing_environment_alloc(NULL)\n");
+    env = av_ambient_viewing_environment_alloc(ఖాళీ);
+    ఒకవేళ (env) {
+        రాయి("alloc(NULL): OK\n");
         print_env(env);
         av_free(env);
-    } else {
-        printf("alloc(NULL): FAIL\n");
+    } లేకపోతే {
+        రాయి("alloc(NULL): FAIL\n");
     }
 
     /* write and read back */
-    printf("\nTesting write/read back\n");
-    env = av_ambient_viewing_environment_alloc(NULL);
-    if (env) {
+    రాయి("\nTesting write/read back\n");
+    env = av_ambient_viewing_environment_alloc(ఖాళీ);
+    ఒకవేళ (env) {
         env->ambient_illuminance = (AVRational){ 314, 10 };
         env->ambient_light_x     = (AVRational){ 15635, 50000 };
         env->ambient_light_y     = (AVRational){ 16450, 50000 };
@@ -71,38 +71,38 @@ int main(void)
     }
 
     /* av_ambient_viewing_environment_create_side_data */
-    printf("\nTesting av_ambient_viewing_environment_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        env = av_ambient_viewing_environment_create_side_data(frame);
-        if (env) {
-            printf("side_data: OK\n");
+    రాయి("\nTesting av_ambient_viewing_environment_create_side_data()\n");
+    చట్రం = av_చట్రం_alloc();
+    ఒకవేళ (చట్రం) {
+        env = av_ambient_viewing_environment_create_side_దత్తాంశం(చట్రం);
+        ఒకవేళ (env) {
+            రాయి("side_data: OK\n");
             print_env(env);
-        } else {
-            printf("side_data: FAIL\n");
+        } లేకపోతే {
+            రాయి("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_చట్రం_free(&చట్రం);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    రాయి("\nTesting OOM paths\n");
     av_max_alloc(1);
-    env = av_ambient_viewing_environment_alloc(&size);
-    printf("alloc OOM: %s\n", env ? "FAIL" : "OK");
+    env = av_ambient_viewing_environment_alloc(&కొలత);
+    రాయి("alloc OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
-    env = av_ambient_viewing_environment_alloc(NULL);
-    printf("alloc(NULL) OOM: %s\n", env ? "FAIL" : "OK");
+    env = av_ambient_viewing_environment_alloc(ఖాళీ);
+    రాయి("alloc(NULL) OOM: %s\n", env ? "FAIL" : "OK");
     av_free(env);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(గరిష్ఠ_పూర్ణాంకం);
 
-    frame = av_frame_alloc();
-    if (frame) {
+    చట్రం = av_చట్రం_alloc();
+    ఒకవేళ (చట్రం) {
         av_max_alloc(1);
-        env = av_ambient_viewing_environment_create_side_data(frame);
-        printf("side_data OOM: %s\n", env ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
-        av_frame_free(&frame);
+        env = av_ambient_viewing_environment_create_side_దత్తాంశం(చట్రం);
+        రాయి("side_data OOM: %s\n", env ? "FAIL" : "OK");
+        av_max_alloc(గరిష్ఠ_పూర్ణాంకం);
+        av_చట్రం_free(&చట్రం);
     }
 
-    return 0;
+    తిరిగి 0;
 }

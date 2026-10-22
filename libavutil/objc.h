@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_OBJC_H
-#define AVUTIL_OBJC_H
+#నిర్వచితం_కాకపోతే AVUTIL_OBJC_H
+#నిర్వచించు AVUTIL_OBJC_H
 
-#include <Foundation/Foundation.h>
+#అన్తర్భావ <Foundation/Foundation.h>
 
-static inline void ff_objc_release(NSObject **obj)
+స్థిర అంతఃవరుస శూన్య ff_objc_release(NSObject **obj)
 {
-    if (*obj) {
+    ఒకవేళ (*obj) {
         [*obj release];
         *obj = nil;
     }
 }
 
-#endif /* AVUTIL_OBJC_H */
+#అయితే_ముగింపు /* AVUTIL_OBJC_H */

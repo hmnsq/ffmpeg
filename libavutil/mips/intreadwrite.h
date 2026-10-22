@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MIPS_INTREADWRITE_H
-#define AVUTIL_MIPS_INTREADWRITE_H
+#నిర్వచితం_కాకపోతే AVUTIL_MIPS_INTREADWRITE_H
+#నిర్వచించు AVUTIL_MIPS_INTREADWRITE_H
 
-#include <stdint.h>
-#include "config.h"
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ "config.h"
 
-#if ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
+#ఒకవేళ ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
 
-#define AV_RN32 AV_RN32
-static av_always_inline uint32_t AV_RN32(const void *p)
+#నిర్వచించు AV_RN32 AV_RN32
+స్థిర av_always_inline uint32_t AV_RN32(స్థిరరాశి శూన్య *p)
 {
-    struct __attribute__((packed)) u32 { uint32_t v; };
-    const uint8_t *q = p;
-    const struct u32 *pl = (const struct u32 *)(q + 3 * !HAVE_BIGENDIAN);
-    const struct u32 *pr = (const struct u32 *)(q + 3 *  HAVE_BIGENDIAN);
+    నిర్మాణం __attribute__((packed)) u32 { uint32_t v; };
+    స్థిరరాశి uint8_t *q = p;
+    స్థిరరాశి నిర్మాణం u32 *pl = (స్థిరరాశి నిర్మాణం u32 *)(q + 3 * !HAVE_BIGENDIAN);
+    స్థిరరాశి నిర్మాణం u32 *pr = (స్థిరరాశి నిర్మాణం u32 *)(q + 3 *  HAVE_BIGENDIAN);
     uint32_t v;
     __asm__ ("lwl %0, %1  \n\t"
              "lwr %0, %2  \n\t"
              : "=&r"(v)
              : "m"(*pl), "m"(*pr));
-    return v;
+    తిరిగి v;
 }
 
-#endif /* ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6 */
+#అయితే_ముగింపు /* ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6 */
 
-#endif /* AVUTIL_MIPS_INTREADWRITE_H */
+#అయితే_ముగింపు /* AVUTIL_MIPS_INTREADWRITE_H */

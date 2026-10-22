@@ -18,136 +18,136 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef _GNU_SOURCE
-# define _GNU_SOURCE
-#endif
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "libavutil/macros.h"
-#include "libavutil/log.h"
-#include "config.h"
+#నిర్వచితం_కాకపోతే GNU_ఆధారం
+# define GNU_ఆధారం
+#అయితే_ముగింపు
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/riscv/cpu.h"
+#అన్తర్భావ "libavutil/cpu_internal.h"
+#అన్తర్భావ "libavutil/macros.h"
+#అన్తర్భావ "libavutil/log.h"
+#అన్తర్భావ "config.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#include <sys/auxv.h>
-#define HWCAP_RV(letter) (1ul << ((letter) - 'A'))
-#endif
-#if HAVE_SYS_HWPROBE_H
-#include <sys/hwprobe.h>
-#elif HAVE_ASM_HWPROBE_H
-#include <asm/hwprobe.h>
-#include <asm/unistd.h>
-#include <sys/syscall.h>
-#include <unistd.h>
+#ఒకవేళ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#అన్తర్భావ <sys/auxv.h>
+#నిర్వచించు HWCAP_RV(letter) (1ul << ((letter) - 'A'))
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_SYS_HWPROBE_H
+#అన్తర్భావ <sys/hwprobe.h>
+#లేదావేళ HAVE_ASM_HWPROBE_H
+#అన్తర్భావ <asm/hwprobe.h>
+#అన్తర్భావ <asm/unistd.h>
+#అన్తర్భావ <sys/syscall.h>
+#అన్తర్భావ <unistd.h>
 
-static int __riscv_hwprobe(struct riscv_hwprobe *pairs, size_t pair_count,
-                           size_t cpu_count, unsigned long *cpus,
-                           unsigned int flags)
+స్థిర పూర్ణాంకం __riscv_hwprobe(నిర్మాణం riscv_hwprobe *జతలు, size_t pair_లెక్క,
+                           size_t cpu_లెక్క, గుర్తులేని దీర్ఘ *cpus,
+                           గుర్తులేని పూర్ణాంకం flags)
 {
-        return syscall(__NR_riscv_hwprobe, pairs, pair_count, cpu_count, cpus,
+        తిరిగి syscall(__NR_riscv_hwprobe, జతలు, pair_లెక్క, cpu_లెక్క, cpus,
                        flags);
 }
-#endif
+#అయితే_ముగింపు
 
-int ff_get_cpu_flags_riscv(void)
+పూర్ణాంకం ff_get_cpu_flags_riscv(శూన్య)
 {
-    int ret = 0;
-#if HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
-    struct riscv_hwprobe pairs[] = {
-        { RISCV_HWPROBE_KEY_BASE_BEHAVIOR, 0 },
-        { RISCV_HWPROBE_KEY_IMA_EXT_0, 0 },
-        { RISCV_HWPROBE_KEY_CPUPERF_0, 0 },
+    పూర్ణాంకం ret = 0;
+#ఒకవేళ HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
+    నిర్మాణం riscv_hwprobe జతలు[] = {
+        { RISCV_HWPROBE_కీలకం_పునాది_BEHAVIOR, 0 },
+        { RISCV_HWPROBE_కీలకం_IMA_EXT_0, 0 },
+        { RISCV_HWPROBE_కీలకం_CPUPERF_0, 0 },
     };
 
-    if (__riscv_hwprobe(pairs, FF_ARRAY_ELEMS(pairs), 0, NULL, 0) == 0) {
-        if (pairs[0].value & RISCV_HWPROBE_BASE_BEHAVIOR_IMA)
+    ఒకవేళ (__riscv_hwprobe(జతలు, FF_ARRAY_ELEMS(జతలు), 0, ఖాళీ, 0) == 0) {
+        ఒకవేళ (జతలు[0].విలువ & RISCV_HWPROBE_పునాది_BEHAVIOR_IMA)
             ret |= AV_CPU_FLAG_RVI;
-#ifdef RISCV_HWPROBE_IMA_V
-        if (pairs[1].value & RISCV_HWPROBE_IMA_V)
+#నిర్వచితమైతే RISCV_HWPROBE_IMA_V
+        ఒకవేళ (జతలు[1].విలువ & RISCV_HWPROBE_IMA_V)
             ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                  | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
-#ifdef RISCV_HWPROBE_EXT_ZVE32X
-        else if ((pairs[1].value & RISCV_HWPROBE_EXT_ZVE32X) &&
+#నిర్వచితమైతే RISCV_HWPROBE_EXT_ZVE32X
+        లేకపోతే ఒకవేళ ((జతలు[1].విలువ & RISCV_HWPROBE_EXT_ZVE32X) &&
                  ff_get_rv_vlenb() >= 16) { // runtime detect assumes 128+ bits
             ret |= AV_CPU_FLAG_RVV_I32;
 
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE32F)
+            ఒకవేళ (జతలు[1].విలువ & RISCV_HWPROBE_EXT_ZVE32F)
                 ret |= AV_CPU_FLAG_RVV_F32;
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64X) {
+            ఒకవేళ (జతలు[1].విలువ & RISCV_HWPROBE_EXT_ZVE64X) {
                 ret |= AV_CPU_FLAG_RVV_I64;
 
-                if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64D)
+                ఒకవేళ (జతలు[1].విలువ & RISCV_HWPROBE_EXT_ZVE64D)
                     ret |= AV_CPU_FLAG_RVV_F64;
             }
         }
-#endif
-#endif
-#ifdef RISCV_HWPROBE_EXT_ZBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZBB)
+#అయితే_ముగింపు
+#అయితే_ముగింపు
+#నిర్వచితమైతే RISCV_HWPROBE_EXT_ZBB
+        ఒకవేళ (జతలు[1].విలువ & RISCV_HWPROBE_EXT_ZBB)
             ret |= AV_CPU_FLAG_RVB_BASIC;
-#if defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
-        if ((pairs[1].value & RISCV_HWPROBE_EXT_ZBA) &&
-            (pairs[1].value & RISCV_HWPROBE_EXT_ZBB) &&
-            (pairs[1].value & RISCV_HWPROBE_EXT_ZBS))
+#ఒకవేళ defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
+        ఒకవేళ ((జతలు[1].విలువ & RISCV_HWPROBE_EXT_ZBA) &&
+            (జతలు[1].విలువ & RISCV_HWPROBE_EXT_ZBB) &&
+            (జతలు[1].విలువ & RISCV_HWPROBE_EXT_ZBS))
             ret |= AV_CPU_FLAG_RVB;
-#endif
-#endif
-#ifdef RISCV_HWPROBE_EXT_ZVBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZVBB)
+#అయితే_ముగింపు
+#అయితే_ముగింపు
+#నిర్వచితమైతే RISCV_HWPROBE_EXT_ZVBB
+        ఒకవేళ (జతలు[1].విలువ & RISCV_HWPROBE_EXT_ZVBB)
             ret |= AV_CPU_FLAG_RV_ZVBB;
-#endif
-        switch (pairs[2].value & RISCV_HWPROBE_MISALIGNED_MASK) {
-            case RISCV_HWPROBE_MISALIGNED_FAST:
+#అయితే_ముగింపు
+        ఎంపిక (జతలు[2].విలువ & RISCV_HWPROBE_MISALIGNED_ముసుగు) {
+            స్థితి RISCV_HWPROBE_MISALIGNED_FAST:
                 ret |= AV_CPU_FLAG_RV_MISALIGNED;
-                break;
-            default:
+                ఆపు;
+            అప్రమేయ:
                 ; /* do nothing */
         }
     }
-#elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#లేదావేళ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
     {
-        const unsigned long hwcap = ff_getauxval(AT_HWCAP);
+        స్థిరరాశి గుర్తులేని దీర్ఘ hwcap = ff_getauxval(AT_HWCAP);
 
-        if (hwcap & HWCAP_RV('I'))
+        ఒకవేళ (hwcap & HWCAP_RV('I'))
             ret |= AV_CPU_FLAG_RVI;
-        if (hwcap & HWCAP_RV('B'))
+        ఒకవేళ (hwcap & HWCAP_RV('B'))
             ret |= AV_CPU_FLAG_RVB_BASIC | AV_CPU_FLAG_RVB;
 
         /* The V extension implies all Zve* functional subsets */
-        if (hwcap & HWCAP_RV('V'))
+        ఒకవేళ (hwcap & HWCAP_RV('V'))
              ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                   | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
     }
-#endif
+#అయితే_ముగింపు
 
-#ifdef __riscv_i
+#నిర్వచితమైతే __riscv_i
     ret |= AV_CPU_FLAG_RVI;
-#endif
+#అయితే_ముగింపు
 
-#ifdef __riscv_zbb
+#నిర్వచితమైతే __riscv_zbb
     ret |= AV_CPU_FLAG_RVB_BASIC;
-#endif
-#if defined (__riscv_b) || \
+#అయితే_ముగింపు
+#ఒకవేళ defined (__riscv_b) || \
     (defined (__riscv_zba) && defined (__riscv_zbb) && defined (__riscv_zbs))
     ret |= AV_CPU_FLAG_RVB;
-#endif
+#అయితే_ముగింపు
 
     /* If RV-V is enabled statically at compile-time, check the details. */
-#ifdef __riscv_vector
+#నిర్వచితమైతే __riscv_vector
     ret |= AV_CPU_FLAG_RVV_I32;
-#if __riscv_v_elen >= 64
+#ఒకవేళ __riscv_v_elen >= 64
     ret |= AV_CPU_FLAG_RVV_I64;
-#endif
-#if __riscv_v_elen_fp >= 32
+#అయితే_ముగింపు
+#ఒకవేళ __riscv_v_elen_fp >= 32
     ret |= AV_CPU_FLAG_RVV_F32;
-#if __riscv_v_elen_fp >= 64
+#ఒకవేళ __riscv_v_elen_fp >= 64
     ret |= AV_CPU_FLAG_RVV_F64;
-#endif
-#endif
-#endif
-#ifdef __riscv_zvbb
+#అయితే_ముగింపు
+#అయితే_ముగింపు
+#అయితే_ముగింపు
+#నిర్వచితమైతే __riscv_zvbb
     ret |= AV_CPU_FLAG_RV_ZVBB;
-#endif
+#అయితే_ముగింపు
 
-    return ret;
+    తిరిగి ret;
 }

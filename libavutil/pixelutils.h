@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PIXELUTILS_H
-#define AVUTIL_PIXELUTILS_H
+#నిర్వచితం_కాకపోతే AVUTIL_PIXELUTILS_H
+#నిర్వచించు AVUTIL_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
 
 /**
  * Sum of abs(src1[x] - src2[x])
  */
-typedef int (*av_pixelutils_sad_fn)(const uint8_t *src1, ptrdiff_t stride1,
-                                    const uint8_t *src2, ptrdiff_t stride2);
+రకనిర్వచనం పూర్ణాంకం (*av_pixelutils_sad_fn)(స్థిరరాశి uint8_t *src1, ptrdiff_t stride1,
+                                    స్థిరరాశి uint8_t *src2, ptrdiff_t stride2);
 
 /**
  * Get a potentially optimized pointer to a Sum-of-absolute-differences
@@ -45,7 +45,7 @@ typedef int (*av_pixelutils_sad_fn)(const uint8_t *src1, ptrdiff_t stride1,
  * @return a pointer to the SAD function or NULL in case of error (because of
  *         invalid parameters)
  */
-av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits,
-                                              int aligned, void *log_ctx);
+av_pixelutils_sad_fn av_pixelutils_get_sad_fn(పూర్ణాంకం w_బిట్లు, పూర్ణాంకం h_బిట్లు,
+                                              పూర్ణాంకం aligned, శూన్య *log_ctx);
 
-#endif /* AVUTIL_PIXELUTILS_H */
+#అయితే_ముగింపు /* AVUTIL_PIXELUTILS_H */

@@ -16,94 +16,94 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/tree.c"
+#అన్తర్భావ "libavutil/tree.c"
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
-#include "libavutil/common.h"
-#include "libavutil/lfg.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
+#అన్తర్భావ "libavutil/common.h"
+#అన్తర్భావ "libavutil/lfg.h"
+#అన్తర్భావ "libavutil/log.h"
+#అన్తర్భావ "libavutil/mem.h"
 
-static int check(AVTreeNode *t)
+స్థిర పూర్ణాంకం check(AVTree_కణుపు *t)
 {
-    if (t) {
-        int left  = check(t->child[0]);
-        int right = check(t->child[1]);
+    ఒకవేళ (t) {
+        పూర్ణాంకం ఎడమ  = check(t->బిడ్డ[0]);
+        పూర్ణాంకం కుడి = check(t->బిడ్డ[1]);
 
-        if (left > 999 || right > 999)
-            return 1000;
-        if (right - left != t->state)
-            return 1000;
-        if (t->state > 1 || t->state < -1)
-            return 1000;
-        return FFMAX(left, right) + 1;
+        ఒకవేళ (ఎడమ > 999 || కుడి > 999)
+            తిరిగి 1000;
+        ఒకవేళ (కుడి - ఎడమ != t->state)
+            తిరిగి 1000;
+        ఒకవేళ (t->state > 1 || t->state < -1)
+            తిరిగి 1000;
+        తిరిగి FFMAX(ఎడమ, కుడి) + 1;
     }
-    return 0;
+    తిరిగి 0;
 }
 
-static void print(AVTreeNode *t, int depth)
+స్థిర శూన్య print(AVTree_కణుపు *t, పూర్ణాంకం లోతు)
 {
-    int i;
-    for (i = 0; i < depth * 4; i++)
-        av_log(NULL, AV_LOG_ERROR, " ");
-    if (t) {
-        av_log(NULL, AV_LOG_ERROR, "Node %p %2d %p\n", t, t->state, t->elem);
-        print(t->child[0], depth + 1);
-        print(t->child[1], depth + 1);
-    } else
-        av_log(NULL, AV_LOG_ERROR, "NULL\n");
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < లోతు * 4; i++)
+        av_log(ఖాళీ, AV_LOG_ERROR, " ");
+    ఒకవేళ (t) {
+        av_log(ఖాళీ, AV_LOG_ERROR, "Node %p %2d %p\n", t, t->state, t->elem);
+        print(t->బిడ్డ[0], లోతు + 1);
+        print(t->బిడ్డ[1], లోతు + 1);
+    } లేకపోతే
+        av_log(ఖాళీ, AV_LOG_ERROR, "NULL\n");
 }
 
-static int cmp(const void *a, const void *b)
+స్థిర పూర్ణాంకం cmp(స్థిరరాశి శూన్య *a, స్థిరరాశి శూన్య *b)
 {
-    return (const uint8_t *) a - (const uint8_t *) b;
+    తిరిగి (స్థిరరాశి uint8_t *) a - (స్థిరరాశి uint8_t *) b;
 }
 
-int main(int argc, char **argv)
+పూర్ణాంకం ప్రధాన(పూర్ణాంకం argc, అక్షరం **argv)
 {
-    int i;
-    void *k;
-    AVTreeNode *root = NULL, *node = NULL;
+    పూర్ణాంకం i;
+    శూన్య *k;
+    AVTree_కణుపు *మూలం = ఖాళీ, *కణుపు = ఖాళీ;
     AVLFG prng;
-    int log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
+    పూర్ణాంకం log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
 
-    av_log_set_level(log_level);
+    av_log_సమితి_level(log_level);
 
     av_lfg_init(&prng, 1);
 
-    for (i = 0; i < 10000; i++) {
+    కొరకు (i = 0; i < 10000; i++) {
         intptr_t j = av_lfg_get(&prng) % 86294;
 
-        if (check(root) > 999) {
-            av_log(NULL, AV_LOG_ERROR, "FATAL error %d\n", i);
-            print(root, 0);
-            return 1;
+        ఒకవేళ (check(మూలం) > 999) {
+            av_log(ఖాళీ, AV_LOG_ERROR, "FATAL error %d\n", i);
+            print(మూలం, 0);
+            తిరిగి 1;
         }
-        av_log(NULL, AV_LOG_DEBUG, "inserting %4d\n", (int)j);
+        av_log(ఖాళీ, AV_LOG_DEBUG, "inserting %4d\n", (పూర్ణాంకం)j);
 
-        if (!node)
-            node = av_tree_node_alloc();
-        if (!node) {
-            av_log(NULL, AV_LOG_ERROR, "Memory allocation failure.\n");
-            return 1;
+        ఒకవేళ (!కణుపు)
+            కణుపు = av_వృక్షం_కణుపు_alloc();
+        ఒకవేళ (!కణుపు) {
+            av_log(ఖాళీ, AV_LOG_ERROR, "Memory allocation failure.\n");
+            తిరిగి 1;
         }
-        av_tree_insert(&root, (void *)(j + 1), cmp, &node);
+        av_వృక్షం_చొప్పించు(&మూలం, (శూన్య *)(j + 1), cmp, &కణుపు);
 
         j = av_lfg_get(&prng) % 86294;
         {
-            AVTreeNode *node2 = NULL;
-            av_log(NULL, AV_LOG_DEBUG, "removing %4d\n", (int)j);
-            av_tree_insert(&root, (void *)(j + 1), cmp, &node2);
-            k = av_tree_find(root, (void *)(j + 1), cmp, NULL);
-            if (k)
-                av_log(NULL, AV_LOG_ERROR, "removal failure %d\n", i);
+            AVTree_కణుపు *node2 = ఖాళీ;
+            av_log(ఖాళీ, AV_LOG_DEBUG, "removing %4d\n", (పూర్ణాంకం)j);
+            av_వృక్షం_చొప్పించు(&మూలం, (శూన్య *)(j + 1), cmp, &node2);
+            k = av_వృక్షం_కనుగొను(మూలం, (శూన్య *)(j + 1), cmp, ఖాళీ);
+            ఒకవేళ (k)
+                av_log(ఖాళీ, AV_LOG_ERROR, "removal failure %d\n", i);
             av_free(node2);
         }
     }
-    av_free(node);
+    av_free(కణుపు);
 
-    av_tree_destroy(root);
+    av_వృక్షం_destroy(మూలం);
 
-    return 0;
+    తిరిగి 0;
 }

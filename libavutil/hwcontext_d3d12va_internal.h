@@ -20,40 +20,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H
-#define AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_HWCONTEXT_D3_D12_VA_అంతర్గత_H
+#నిర్వచించు AVUTIL_HWCONTEXT_D3_D12_VA_అంతర్గత_H
 
 /**
  * @def COBJMACROS
  *
  * @brief Enable C style interface for D3D12
  */
-#ifndef COBJMACROS
-#define COBJMACROS
-#endif
+#నిర్వచితం_కాకపోతే COBJMACROS
+#నిర్వచించు COBJMACROS
+#అయితే_ముగింపు
 
 /**
  * @def DX_CHECK
  *
  * @brief A check macro used by D3D12 functions highly frequently
  */
-#define DX_CHECK(hr)                              \
-    do {                                          \
-        if (FAILED(hr))                           \
-            goto fail;                            \
-    } while (0)
+#నిర్వచించు DX_CHECK(hr)                              \
+    చేయి {                                          \
+        ఒకవేళ (FAILED(hr))                           \
+            వెళ్ళు fail;                            \
+    } అయితే (0)
 
 /**
  * @def D3D12_OBJECT_RELEASE
  *
  * @brief A release macro used by D3D12 objects highly frequently
  */
-#define D3D12_OBJECT_RELEASE(pInterface)              \
-    do {                                              \
-        if (pInterface) {                             \
+#నిర్వచించు D3D12_OBJECT_RELEASE(pInterface)              \
+    చేయి {                                              \
+        ఒకవేళ (pInterface) {                             \
             IUnknown_Release((IUnknown *)pInterface); \
-            pInterface = NULL;                        \
+            pInterface = ఖాళీ;                        \
         }                                             \
-    } while (0)
+    } అయితే (0)
 
-#endif /* AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H */

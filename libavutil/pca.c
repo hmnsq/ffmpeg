@@ -24,139 +24,139 @@
  * principal component analysis (PCA)
  */
 
-#include "common.h"
-#include "mem.h"
-#include "pca.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "pca.h"
 
-typedef struct PCA{
-    int count;
-    int n;
-    double *covariance;
-    double *mean;
-    double *z;
+రకనిర్వచనం నిర్మాణం PCA{
+    పూర్ణాంకం లెక్క;
+    పూర్ణాంకం n;
+    ద్విగుణ *covariance;
+    ద్విగుణ *సగటు;
+    ద్విగుణ *z;
 }PCA;
 
-PCA *ff_pca_init(int n){
+PCA *ff_pca_init(పూర్ణాంకం n){
     PCA *pca;
-    if(n<=0)
-        return NULL;
+    ఒకవేళ(n<=0)
+        తిరిగి ఖాళీ;
 
-    pca= av_mallocz(sizeof(*pca));
-    if (!pca)
-        return NULL;
+    pca= av_mallocz(పరిమాణం(*pca));
+    ఒకవేళ (!pca)
+        తిరిగి ఖాళీ;
 
     pca->n= n;
-    pca->z = av_malloc_array(n, sizeof(*pca->z));
-    pca->count=0;
-    pca->covariance= av_calloc(n*n, sizeof(double));
-    pca->mean= av_calloc(n, sizeof(double));
+    pca->z = av_malloc_array(n, పరిమాణం(*pca->z));
+    pca->లెక్క=0;
+    pca->covariance= av_calloc(n*n, పరిమాణం(ద్విగుణ));
+    pca->సగటు= av_calloc(n, పరిమాణం(ద్విగుణ));
 
-    if (!pca->z || !pca->covariance || !pca->mean) {
+    ఒకవేళ (!pca->z || !pca->covariance || !pca->సగటు) {
         ff_pca_free(pca);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    return pca;
+    తిరిగి pca;
 }
 
-void ff_pca_free(PCA *pca){
+శూన్య ff_pca_free(PCA *pca){
     av_freep(&pca->covariance);
-    av_freep(&pca->mean);
+    av_freep(&pca->సగటు);
     av_freep(&pca->z);
     av_free(pca);
 }
 
-void ff_pca_add(PCA *pca, const double *v){
-    int i, j;
-    const int n= pca->n;
+శూన్య ff_pca_కూడు(PCA *pca, స్థిరరాశి ద్విగుణ *v){
+    పూర్ణాంకం i, j;
+    స్థిరరాశి పూర్ణాంకం n= pca->n;
 
-    for(i=0; i<n; i++){
-        pca->mean[i] += v[i];
-        for(j=i; j<n; j++)
+    కొరకు(i=0; i<n; i++){
+        pca->సగటు[i] += v[i];
+        కొరకు(j=i; j<n; j++)
             pca->covariance[j + i*n] += v[i]*v[j];
     }
-    pca->count++;
+    pca->లెక్క++;
 }
 
-int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
-    int i, j, pass;
-    int k=0;
-    const int n= pca->n;
-    double *z = pca->z;
+పూర్ణాంకం ff_pca(PCA *pca, ద్విగుణ *eigenvector, ద్విగుణ *eigenvalue){
+    పూర్ణాంకం i, j, pass;
+    పూర్ణాంకం k=0;
+    స్థిరరాశి పూర్ణాంకం n= pca->n;
+    ద్విగుణ *z = pca->z;
 
-    memset(eigenvector, 0, sizeof(double)*n*n);
+    memset(eigenvector, 0, పరిమాణం(ద్విగుణ)*n*n);
 
-    for(j=0; j<n; j++){
-        pca->mean[j] /= pca->count;
+    కొరకు(j=0; j<n; j++){
+        pca->సగటు[j] /= pca->లెక్క;
         eigenvector[j + j*n] = 1.0;
-        for(i=0; i<=j; i++){
-            pca->covariance[j + i*n] /= pca->count;
-            pca->covariance[j + i*n] -= pca->mean[i] * pca->mean[j];
+        కొరకు(i=0; i<=j; i++){
+            pca->covariance[j + i*n] /= pca->లెక్క;
+            pca->covariance[j + i*n] -= pca->సగటు[i] * pca->సగటు[j];
             pca->covariance[i + j*n] = pca->covariance[j + i*n];
         }
         eigenvalue[j]= pca->covariance[j + j*n];
         z[j]= 0;
     }
 
-    for(pass=0; pass < 50; pass++){
-        double sum=0;
+    కొరకు(pass=0; pass < 50; pass++){
+        ద్విగుణ కూడిక=0;
 
-        for(i=0; i<n; i++)
-            for(j=i+1; j<n; j++)
-                sum += fabs(pca->covariance[j + i*n]);
+        కొరకు(i=0; i<n; i++)
+            కొరకు(j=i+1; j<n; j++)
+                కూడిక += fabs(pca->covariance[j + i*n]);
 
-        if(sum == 0){
-            for(i=0; i<n; i++){
-                double maxvalue= -1;
-                for(j=i; j<n; j++){
-                    if(eigenvalue[j] > maxvalue){
+        ఒకవేళ(కూడిక == 0){
+            కొరకు(i=0; i<n; i++){
+                ద్విగుణ maxvalue= -1;
+                కొరకు(j=i; j<n; j++){
+                    ఒకవేళ(eigenvalue[j] > maxvalue){
                         maxvalue= eigenvalue[j];
                         k= j;
                     }
                 }
                 eigenvalue[k]= eigenvalue[i];
                 eigenvalue[i]= maxvalue;
-                for(j=0; j<n; j++){
-                    double tmp= eigenvector[k + j*n];
+                కొరకు(j=0; j<n; j++){
+                    ద్విగుణ tmp= eigenvector[k + j*n];
                     eigenvector[k + j*n]= eigenvector[i + j*n];
                     eigenvector[i + j*n]= tmp;
                 }
             }
-            return pass;
+            తిరిగి pass;
         }
 
-        for(i=0; i<n; i++){
-            for(j=i+1; j<n; j++){
-                double covar= pca->covariance[j + i*n];
-                double t,c,s,tau,theta, h;
+        కొరకు(i=0; i<n; i++){
+            కొరకు(j=i+1; j<n; j++){
+                ద్విగుణ covar= pca->covariance[j + i*n];
+                ద్విగుణ t,c,s,tau,theta, h;
 
-                if(pass < 3 && fabs(covar) < sum / (5*n*n)) //FIXME why pass < 3
-                    continue;
-                if(fabs(covar) == 0.0) //FIXME should not be needed
-                    continue;
-                if(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
+                ఒకవేళ(pass < 3 && fabs(covar) < కూడిక / (5*n*n)) //FIXME why pass < 3
+                    కొనసాగు;
+                ఒకవేళ(fabs(covar) == 0.0) //FIXME should not be needed
+                    కొనసాగు;
+                ఒకవేళ(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
                     pca->covariance[j + i*n]=0.0;
-                    continue;
+                    కొనసాగు;
                 }
 
                 h= (eigenvalue[j]+z[j]) - (eigenvalue[i]+z[i]);
                 theta=0.5*h/covar;
-                t=1.0/(fabs(theta)+sqrt(1.0+theta*theta));
-                if(theta < 0.0) t = -t;
+                t=1.0/(fabs(theta)+వర్గమూలం(1.0+theta*theta));
+                ఒకవేళ(theta < 0.0) t = -t;
 
-                c=1.0/sqrt(1+t*t);
+                c=1.0/వర్గమూలం(1+t*t);
                 s=t*c;
                 tau=s/(1.0+c);
                 z[i] -= t*covar;
                 z[j] += t*covar;
 
-#define ROTATE(a,i,j,k,l) {\
-    double g=a[j + i*n];\
-    double h=a[l + k*n];\
+#నిర్వచించు ROTATE(a,i,j,k,l) {\
+    ద్విగుణ g=a[j + i*n];\
+    ద్విగుణ h=a[l + k*n];\
     a[j + i*n]=g-s*(h+g*tau);\
     a[l + k*n]=h+s*(g-h*tau); }
-                for(k=0; k<n; k++) {
-                    if(k!=i && k!=j){
+                కొరకు(k=0; k<n; k++) {
+                    ఒకవేళ(k!=i && k!=j){
                         ROTATE(pca->covariance,FFMIN(k,i),FFMAX(k,i),FFMIN(k,j),FFMAX(k,j))
                     }
                     ROTATE(eigenvector,k,i,k,j)
@@ -164,11 +164,11 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 pca->covariance[j + i*n]=0.0;
             }
         }
-        for (i=0; i<n; i++) {
+        కొరకు (i=0; i<n; i++) {
             eigenvalue[i] += z[i];
             z[i]=0.0;
         }
     }
 
-    return -1;
+    తిరిగి -1;
 }

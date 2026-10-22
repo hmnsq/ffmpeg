@@ -45,56 +45,56 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "common.h"
-#include "fixed_dsp.h"
-#include "mem.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "fixed_dsp.h"
+#అన్తర్భావ "mem.h"
 
-static void vector_fmul_add_c(int *dst, const int *src0, const int *src1, const int *src2, int len){
-    int i;
+స్థిర శూన్య సదిశ_fmul_కూడు_c(పూర్ణాంకం *dst, స్థిరరాశి పూర్ణాంకం *src0, స్థిరరాశి పూర్ణాంకం *src1, స్థిరరాశి పూర్ణాంకం *src2, పూర్ణాంకం len){
+    పూర్ణాంకం i;
     int64_t accu;
 
-    for (i=0; i<len; i++) {
+    కొరకు (i=0; i<len; i++) {
         accu = (int64_t)src0[i] * src1[i];
-        dst[i] = src2[i] + (int)((accu + 0x40000000) >> 31);
+        dst[i] = src2[i] + (పూర్ణాంకం)((accu + 0x40000000) >> 31);
     }
 }
 
-static void vector_fmul_reverse_c(int *dst, const int *src0, const int *src1, int len)
+స్థిర శూన్య సదిశ_fmul_తిరగేయి_c(పూర్ణాంకం *dst, స్థిరరాశి పూర్ణాంకం *src0, స్థిరరాశి పూర్ణాంకం *src1, పూర్ణాంకం len)
 {
-    int i;
+    పూర్ణాంకం i;
     int64_t accu;
 
     src1 += len-1;
-    for (i=0; i<len; i++) {
+    కొరకు (i=0; i<len; i++) {
         accu = (int64_t)src0[i] * src1[-i];
-        dst[i] = (int)((accu+0x40000000) >> 31);
+        dst[i] = (పూర్ణాంకం)((accu+0x40000000) >> 31);
     }
 }
 
-static void vector_fmul_window_scaled_c(int16_t *dst, const int32_t *src0,
-                                       const int32_t *src1, const int32_t *win,
-                                       int len, uint8_t bits)
+స్థిర శూన్య సదిశ_fmul_కిటికీ_scaled_c(int16_t *dst, స్థిరరాశి int32_t *src0,
+                                       స్థిరరాశి int32_t *src1, స్థిరరాశి int32_t *win,
+                                       పూర్ణాంకం len, uint8_t బిట్లు)
 {
     int32_t s0, s1, wi, wj, i,j, round;
 
     dst += len;
     win += len;
     src0+= len;
-    round = bits? 1 << (bits-1) : 0;
+    round = బిట్లు? 1 << (బిట్లు-1) : 0;
 
-    for (i=-len, j=len-1; i<0; i++, j--) {
+    కొరకు (i=-len, j=len-1; i<0; i++, j--) {
         s0 = src0[i];
         s1 = src1[j];
         wi = win[i];
         wj = win[j];
-        dst[i] = av_clip_int16(((((int64_t)s0*wj - (int64_t)s1*wi + 0x40000000) >> 31) + round) >> bits);
-        dst[j] = av_clip_int16(((((int64_t)s0*wi + (int64_t)s1*wj + 0x40000000) >> 31) + round) >> bits);
+        dst[i] = av_clip_int16(((((int64_t)s0*wj - (int64_t)s1*wi + 0x40000000) >> 31) + round) >> బిట్లు);
+        dst[j] = av_clip_int16(((((int64_t)s0*wi + (int64_t)s1*wj + 0x40000000) >> 31) + round) >> బిట్లు);
     }
 }
 
-static void vector_fmul_window_c(int32_t *dst, const int32_t *src0,
-                                       const int32_t *src1, const int32_t *win,
-                                       int len)
+స్థిర శూన్య సదిశ_fmul_కిటికీ_c(int32_t *dst, స్థిరరాశి int32_t *src0,
+                                       స్థిరరాశి int32_t *src1, స్థిరరాశి int32_t *win,
+                                       పూర్ణాంకం len)
 {
     int32_t s0, s1, wi, wj, i, j;
 
@@ -102,7 +102,7 @@ static void vector_fmul_window_c(int32_t *dst, const int32_t *src0,
     win += len;
     src0+= len;
 
-    for (i=-len, j=len-1; i<0; i++, j--) {
+    కొరకు (i=-len, j=len-1; i<0; i++, j--) {
         s0 = src0[i];
         s1 = src1[j];
         wi = win[i];
@@ -112,62 +112,62 @@ static void vector_fmul_window_c(int32_t *dst, const int32_t *src0,
     }
 }
 
-static void vector_fmul_c(int *dst, const int *src0, const int *src1, int len)
+స్థిర శూన్య సదిశ_fmul_c(పూర్ణాంకం *dst, స్థిరరాశి పూర్ణాంకం *src0, స్థిరరాశి పూర్ణాంకం *src1, పూర్ణాంకం len)
 {
-    int i;
+    పూర్ణాంకం i;
     int64_t accu;
 
-    for (i = 0; i < len; i++){
+    కొరకు (i = 0; i < len; i++){
         accu = (int64_t)src0[i] * src1[i];
-        dst[i] = (int)((accu+0x40000000) >> 31);
+        dst[i] = (పూర్ణాంకం)((accu+0x40000000) >> 31);
     }
 }
 
-static int scalarproduct_fixed_c(const int *v1, const int *v2, int len)
+స్థిర పూర్ణాంకం scalarproduct_fixed_c(స్థిరరాశి పూర్ణాంకం *v1, స్థిరరాశి పూర్ణాంకం *v2, పూర్ణాంకం len)
 {
     /** p is initialized with 0x40000000 so that the proper rounding will occur
       * at the end */
     int64_t p = 0x40000000;
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < len; i++)
+    కొరకు (i = 0; i < len; i++)
         p += (int64_t)v1[i] * v2[i];
 
-    return (int)(p >> 31);
+    తిరిగి (పూర్ణాంకం)(p >> 31);
 }
 
-static void butterflies_fixed_c(int *restrict v1s, int *restrict v2, int len)
+స్థిర శూన్య butterflies_fixed_c(పూర్ణాంకం *పరిమిత v1s, పూర్ణాంకం *పరిమిత v2, పూర్ణాంకం len)
 {
-    int i;
-    unsigned int *v1 = v1s;
+    పూర్ణాంకం i;
+    గుర్తులేని పూర్ణాంకం *v1 = v1s;
 
-    for (i = 0; i < len; i++){
-        int t = v1[i] - v2[i];
+    కొరకు (i = 0; i < len; i++){
+        పూర్ణాంకం t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-AVFixedDSPContext * avpriv_alloc_fixed_dsp(int bit_exact)
+AVFixedDSPContext * avpriv_alloc_fixed_dsp(పూర్ణాంకం బిట్టు_exact)
 {
-    AVFixedDSPContext * fdsp = av_malloc(sizeof(AVFixedDSPContext));
+    AVFixedDSPContext * fdsp = av_malloc(పరిమాణం(AVFixedDSPContext));
 
-    if (!fdsp)
-        return NULL;
+    ఒకవేళ (!fdsp)
+        తిరిగి ఖాళీ;
 
-    fdsp->vector_fmul_window_scaled = vector_fmul_window_scaled_c;
-    fdsp->vector_fmul_window = vector_fmul_window_c;
-    fdsp->vector_fmul = vector_fmul_c;
-    fdsp->vector_fmul_add = vector_fmul_add_c;
-    fdsp->vector_fmul_reverse = vector_fmul_reverse_c;
+    fdsp->సదిశ_fmul_కిటికీ_scaled = సదిశ_fmul_కిటికీ_scaled_c;
+    fdsp->సదిశ_fmul_కిటికీ = సదిశ_fmul_కిటికీ_c;
+    fdsp->సదిశ_fmul = సదిశ_fmul_c;
+    fdsp->సదిశ_fmul_కూడు = సదిశ_fmul_కూడు_c;
+    fdsp->సదిశ_fmul_తిరగేయి = సదిశ_fmul_తిరగేయి_c;
     fdsp->butterflies_fixed = butterflies_fixed_c;
     fdsp->scalarproduct_fixed = scalarproduct_fixed_c;
 
-#if ARCH_RISCV
+#ఒకవేళ ARCH_RISCV
     ff_fixed_dsp_init_riscv(fdsp);
-#elif ARCH_X86 && HAVE_X86ASM
+#లేదావేళ ARCH_X86 && HAVE_X86ASM
     ff_fixed_dsp_init_x86(fdsp);
-#endif
+#అయితే_ముగింపు
 
-    return fdsp;
+    తిరిగి fdsp;
 }

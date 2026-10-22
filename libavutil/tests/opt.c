@@ -16,270 +16,270 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/channel_layout.h"
-#include "libavutil/error.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/rational.h"
-#include "libavutil/opt.h"
-#include "libavutil/pixdesc.h"
+#అన్తర్భావ "libavutil/common.h"
+#అన్తర్భావ "libavutil/channel_layout.h"
+#అన్తర్భావ "libavutil/error.h"
+#అన్తర్భావ "libavutil/log.h"
+#అన్తర్భావ "libavutil/mem.h"
+#అన్తర్భావ "libavutil/rational.h"
+#అన్తర్భావ "libavutil/opt.h"
+#అన్తర్భావ "libavutil/pixdesc.h"
 
-typedef struct TestContext {
-    const AVClass *class;
-    struct ChildContext *child;
-    int num;
-    int unum;
-    int toggle;
-    char *string;
-    int flags;
+రకనిర్వచనం నిర్మాణం TestContext {
+    స్థిరరాశి AVClass *class;
+    నిర్మాణం బిడ్డ_Context *బిడ్డ;
+    పూర్ణాంకం అంకె;
+    పూర్ణాంకం unum;
+    పూర్ణాంకం toggle;
+    అక్షరం *string;
+    పూర్ణాంకం flags;
     AVRational rational;
-    AVRational video_rate;
-    int w, h;
-    enum AVPixelFormat pix_fmt;
-    enum AVSampleFormat sample_fmt;
+    AVRational video_రేటు;
+    పూర్ణాంకం w, h;
+    గణన AVPixelFormat pix_fmt;
+    గణన AVSampleFormat sample_fmt;
     int64_t duration;
     uint8_t color[4];
     AVChannelLayout channel_layout;
-    void *binary;
-    int binary_size;
-    void *binary1;
-    int binary_size1;
-    void *binary2;
-    int binary_size2;
+    శూన్య *ద్విమాన;
+    పూర్ణాంకం ద్విమాన_కొలత;
+    శూన్య *binary1;
+    పూర్ణాంకం ద్విమాన_size1;
+    శూన్య *binary2;
+    పూర్ణాంకం ద్విమాన_size2;
     int64_t num64;
-    float flt;
-    double dbl;
-    char *escape;
-    int bool1;
-    int bool2;
-    int bool3;
+    దశాంశం flt;
+    ద్విగుణ dbl;
+    అక్షరం *escape;
+    పూర్ణాంకం bool1;
+    పూర్ణాంకం bool2;
+    పూర్ణాంకం bool3;
     AVDictionary *dict1;
     AVDictionary *dict2;
 
-    int           **array_int;
-    unsigned     nb_array_int;
+    పూర్ణాంకం           **array_int;
+    గుర్తులేని     nb_array_int;
 
-    char          **array_str;
-    unsigned     nb_array_str;
+    అక్షరం          **array_str;
+    గుర్తులేని     nb_array_str;
 
     AVDictionary  **array_dict;
-    unsigned     nb_array_dict;
+    గుర్తులేని     nb_array_dict;
 } TestContext;
 
-#define OFFSET(x) offsetof(TestContext, x)
+#నిర్వచించు స్థానభ్రంశం_2(x) offsetof(TestContext, x)
 
-#define TEST_FLAG_COOL 01
-#define TEST_FLAG_LAME 02
-#define TEST_FLAG_MU   04
+#నిర్వచించు TEST_FLAG_COOL 01
+#నిర్వచించు TEST_FLAG_LAME 02
+#నిర్వచించు TEST_FLAG_MU   04
 
-static const AVOptionArrayDef array_str = {
+స్థిర స్థిరరాశి AVOptionArrayDef array_str = {
     .sep         = '|',
     .def         = "str0|str\\|1|str\\\\2",
 };
 
-static const AVOptionArrayDef array_dict = {
+స్థిర స్థిరరాశి AVOptionArrayDef array_dict = {
     // there are three levels of escaping - C string, array option, dict - so 8 backslashes are needed to get a literal one inside a dict key/val
     .def         = "k00=v\\\\\\\\00:k01=v\\,01,k10=v\\\\=1\\\\:0",
 };
 
-static const AVOption test_options[]= {
-    {"num",        "set num",            OFFSET(num),            AV_OPT_TYPE_INT,            { .i64 = 0 },                     -1,       100, 1 },
-    {"unum",       "set unum",           OFFSET(unum),           AV_OPT_TYPE_UINT,           { .i64 = 1U << 31 },               0,  1U << 31, 1 },
-    {"toggle",     "set toggle",         OFFSET(toggle),         AV_OPT_TYPE_INT,            { .i64 = 1 },                      0,         1, 1 },
-    {"rational",   "set rational",       OFFSET(rational),       AV_OPT_TYPE_RATIONAL,       { .dbl = 1 },                      0,        10, 1 },
-    {"string",     "set string",         OFFSET(string),         AV_OPT_TYPE_STRING,         { .str = "default" },       CHAR_MIN,  CHAR_MAX, 1 },
-    {"escape",     "set escape str",     OFFSET(escape),         AV_OPT_TYPE_STRING,         { .str = "\\=," },          CHAR_MIN,  CHAR_MAX, 1 },
-    {"flags",      "set flags",          OFFSET(flags),          AV_OPT_TYPE_FLAGS,          { .i64 = 1 },                      0,   INT_MAX, 1, .unit = "flags" },
-    {"cool",       "set cool flag",      0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_COOL },   INT_MIN,   INT_MAX, 1, .unit = "flags" },
-    {"lame",       "set lame flag",      0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_LAME },   INT_MIN,   INT_MAX, 1, .unit = "flags" },
-    {"mu",         "set mu flag",        0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_MU },     INT_MIN,   INT_MAX, 1, .unit = "flags" },
-    {"size",       "set size",           OFFSET(w),              AV_OPT_TYPE_IMAGE_SIZE,     { .str="200x300" },                0,         0, 1 },
-    {"pix_fmt",    "set pixfmt",         OFFSET(pix_fmt),        AV_OPT_TYPE_PIXEL_FMT,      { .i64 = AV_PIX_FMT_0BGR },       -1,   INT_MAX, 1 },
-    {"sample_fmt", "set samplefmt",      OFFSET(sample_fmt),     AV_OPT_TYPE_SAMPLE_FMT,     { .i64 = AV_SAMPLE_FMT_S16 },     -1,   INT_MAX, 1 },
-    {"video_rate", "set videorate",      OFFSET(video_rate),     AV_OPT_TYPE_VIDEO_RATE,     { .str = "25" },                   0,         INT_MAX, 1 },
-    {"duration",   "set duration",       OFFSET(duration),       AV_OPT_TYPE_DURATION,       { .i64 = 1000 },                   0, INT64_MAX, 1 },
-    {"color",      "set color",          OFFSET(color),          AV_OPT_TYPE_COLOR,          { .str = "pink" },                 0,         0, 1 },
-    {"cl",         "set channel layout", OFFSET(channel_layout), AV_OPT_TYPE_CHLAYOUT,       { .str = "hexagonal" },            0,         0, 1 },
-    {"bin",        "set binary value",   OFFSET(binary),         AV_OPT_TYPE_BINARY,         { .str="62696e00" },               0,         0, 1 },
-    {"bin1",       "set binary value",   OFFSET(binary1),        AV_OPT_TYPE_BINARY,         { .str=NULL },                     0,         0, 1 },
-    {"bin2",       "set binary value",   OFFSET(binary2),        AV_OPT_TYPE_BINARY,         { .str="" },                       0,         0, 1 },
-    {"num64",      "set num 64bit",      OFFSET(num64),          AV_OPT_TYPE_INT64,          { .i64 = 1LL << 32 },             -1, 1LL << 32, 1 },
-    {"flt",        "set float",          OFFSET(flt),            AV_OPT_TYPE_FLOAT,          { .dbl = 1.0 / 3 },                0,       100, 1 },
-    {"dbl",        "set double",         OFFSET(dbl),            AV_OPT_TYPE_DOUBLE,         { .dbl = 1.0 / 3 },                0,       100, 1 },
-    {"bool1",      "set boolean value",  OFFSET(bool1),          AV_OPT_TYPE_BOOL,           { .i64 = -1 },                    -1,         1, 1 },
-    {"bool2",      "set boolean value",  OFFSET(bool2),          AV_OPT_TYPE_BOOL,           { .i64 = 1 },                     -1,         1, 1 },
-    {"bool3",      "set boolean value",  OFFSET(bool3),          AV_OPT_TYPE_BOOL,           { .i64 = 0 },                      0,         1, 1 },
-    {"dict1",      "set dictionary value", OFFSET(dict1),        AV_OPT_TYPE_DICT,           { .str = NULL},                    0,         0, 1 },
-    {"dict2",      "set dictionary value", OFFSET(dict2),        AV_OPT_TYPE_DICT,           { .str = "happy=':-)'"},           0,         0, 1 },
-    {"array_int",  "array of ints",        OFFSET(array_int),    AV_OPT_TYPE_INT | AV_OPT_TYPE_FLAG_ARRAY, .max = INT_MAX,           .flags = AV_OPT_FLAG_RUNTIME_PARAM },
-    {"array_str",  "array of strings",     OFFSET(array_str),    AV_OPT_TYPE_STRING | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_str }, .flags = AV_OPT_FLAG_RUNTIME_PARAM },
-    {"array_dict", "array of dicts",       OFFSET(array_dict),   AV_OPT_TYPE_DICT | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_dict },  .flags = AV_OPT_FLAG_RUNTIME_PARAM },
-    { NULL },
+స్థిర స్థిరరాశి AVOption test_options[]= {
+    {"num",        "set num",            స్థానభ్రంశం_2(అంకె),            AV_OPT_TYPE_INT,            { .i64 = 0 },                     -1,       100, 1 },
+    {"unum",       "set unum",           స్థానభ్రంశం_2(unum),           AV_OPT_TYPE_UINT,           { .i64 = 1U << 31 },               0,  1U << 31, 1 },
+    {"toggle",     "set toggle",         స్థానభ్రంశం_2(toggle),         AV_OPT_TYPE_INT,            { .i64 = 1 },                      0,         1, 1 },
+    {"rational",   "set rational",       స్థానభ్రంశం_2(rational),       AV_OPT_TYPE_RATIONAL,       { .dbl = 1 },                      0,        10, 1 },
+    {"string",     "set string",         స్థానభ్రంశం_2(string),         AV_OPT_TYPE_STRING,         { .str = "default" },       CHAR_MIN,  CHAR_MAX, 1 },
+    {"escape",     "set escape str",     స్థానభ్రంశం_2(escape),         AV_OPT_TYPE_STRING,         { .str = "\\=," },          CHAR_MIN,  CHAR_MAX, 1 },
+    {"flags",      "set flags",          స్థానభ్రంశం_2(flags),          AV_OPT_TYPE_FLAGS,          { .i64 = 1 },                      0,   గరిష్ఠ_పూర్ణాంకం, 1, .unit = "flags" },
+    {"cool",       "set cool flag",      0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_COOL },   INT_MIN,   గరిష్ఠ_పూర్ణాంకం, 1, .unit = "flags" },
+    {"lame",       "set lame flag",      0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_LAME },   INT_MIN,   గరిష్ఠ_పూర్ణాంకం, 1, .unit = "flags" },
+    {"mu",         "set mu flag",        0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_MU },     INT_MIN,   గరిష్ఠ_పూర్ణాంకం, 1, .unit = "flags" },
+    {"size",       "set size",           స్థానభ్రంశం_2(w),              AV_OPT_TYPE_IMAGE_కొలత,     { .str="200x300" },                0,         0, 1 },
+    {"pix_fmt",    "set pixfmt",         స్థానభ్రంశం_2(pix_fmt),        AV_OPT_TYPE_PIXEL_FMT,      { .i64 = AV_PIX_FMT_0BGR },       -1,   గరిష్ఠ_పూర్ణాంకం, 1 },
+    {"sample_fmt", "set samplefmt",      స్థానభ్రంశం_2(sample_fmt),     AV_OPT_TYPE_SAMPLE_FMT,     { .i64 = AV_SAMPLE_FMT_S16 },     -1,   గరిష్ఠ_పూర్ణాంకం, 1 },
+    {"video_rate", "set videorate",      స్థానభ్రంశం_2(video_రేటు),     AV_OPT_TYPE_VIDEO_రేటు,     { .str = "25" },                   0,         గరిష్ఠ_పూర్ణాంకం, 1 },
+    {"duration",   "set duration",       స్థానభ్రంశం_2(duration),       AV_OPT_TYPE_DURATION,       { .i64 = 1000 },                   0, INT64_MAX, 1 },
+    {"color",      "set color",          స్థానభ్రంశం_2(color),          AV_OPT_TYPE_COLOR,          { .str = "pink" },                 0,         0, 1 },
+    {"cl",         "set channel layout", స్థానభ్రంశం_2(channel_layout), AV_OPT_TYPE_CHLAYOUT,       { .str = "hexagonal" },            0,         0, 1 },
+    {"bin",        "set binary value",   స్థానభ్రంశం_2(ద్విమాన),         AV_OPT_TYPE_ద్విమాన,         { .str="62696e00" },               0,         0, 1 },
+    {"bin1",       "set binary value",   స్థానభ్రంశం_2(binary1),        AV_OPT_TYPE_ద్విమాన,         { .str=ఖాళీ },                     0,         0, 1 },
+    {"bin2",       "set binary value",   స్థానభ్రంశం_2(binary2),        AV_OPT_TYPE_ద్విమాన,         { .str="" },                       0,         0, 1 },
+    {"num64",      "set num 64bit",      స్థానభ్రంశం_2(num64),          AV_OPT_TYPE_INT64,          { .i64 = 1LL << 32 },             -1, 1LL << 32, 1 },
+    {"flt",        "set float",          స్థానభ్రంశం_2(flt),            AV_OPT_TYPE_FLOAT,          { .dbl = 1.0 / 3 },                0,       100, 1 },
+    {"dbl",        "set double",         స్థానభ్రంశం_2(dbl),            AV_OPT_TYPE_DOUBLE,         { .dbl = 1.0 / 3 },                0,       100, 1 },
+    {"bool1",      "set boolean value",  స్థానభ్రంశం_2(bool1),          AV_OPT_TYPE_BOOL,           { .i64 = -1 },                    -1,         1, 1 },
+    {"bool2",      "set boolean value",  స్థానభ్రంశం_2(bool2),          AV_OPT_TYPE_BOOL,           { .i64 = 1 },                     -1,         1, 1 },
+    {"bool3",      "set boolean value",  స్థానభ్రంశం_2(bool3),          AV_OPT_TYPE_BOOL,           { .i64 = 0 },                      0,         1, 1 },
+    {"dict1",      "set dictionary value", స్థానభ్రంశం_2(dict1),        AV_OPT_TYPE_DICT,           { .str = ఖాళీ},                    0,         0, 1 },
+    {"dict2",      "set dictionary value", స్థానభ్రంశం_2(dict2),        AV_OPT_TYPE_DICT,           { .str = "happy=':-)'"},           0,         0, 1 },
+    {"array_int",  "array of ints",        స్థానభ్రంశం_2(array_int),    AV_OPT_TYPE_INT | AV_OPT_TYPE_FLAG_ARRAY, .max = గరిష్ఠ_పూర్ణాంకం,           .flags = AV_OPT_FLAG_RUNTIME_PARAM },
+    {"array_str",  "array of strings",     స్థానభ్రంశం_2(array_str),    AV_OPT_TYPE_STRING | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_str }, .flags = AV_OPT_FLAG_RUNTIME_PARAM },
+    {"array_dict", "array of dicts",       స్థానభ్రంశం_2(array_dict),   AV_OPT_TYPE_DICT | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_dict },  .flags = AV_OPT_FLAG_RUNTIME_PARAM },
+    { ఖాళీ },
 };
 
-static const char *test_get_name(void *ctx)
+స్థిర స్థిరరాశి అక్షరం *test_get_name(శూన్య *ctx)
 {
-    return "test";
+    తిరిగి "test";
 }
 
-typedef struct ChildContext {
-    const AVClass *class;
-    int64_t child_num64;
-    int child_num;
-    unsigned int child_unum;
-} ChildContext;
+రకనిర్వచనం నిర్మాణం బిడ్డ_Context {
+    స్థిరరాశి AVClass *class;
+    int64_t బిడ్డ_num64;
+    పూర్ణాంకం బిడ్డ_అంకె;
+    గుర్తులేని పూర్ణాంకం బిడ్డ_unum;
+} బిడ్డ_Context;
 
-#undef OFFSET
-#define OFFSET(x) offsetof(ChildContext, x)
+#నిర్వచనం_రద్దు స్థానభ్రంశం_2
+#నిర్వచించు స్థానభ్రంశం_2(x) offsetof(బిడ్డ_Context, x)
 
-static const AVOption child_options[]= {
-    {"child_num64", "set num 64bit", OFFSET(child_num64), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, 100, 1 | AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
-    {"child_num",   "set child_num", OFFSET(child_num),   AV_OPT_TYPE_INT,   { .i64 = 1 }, 0, 100, 1 },
-    {"child_unum",  "set child_unum", OFFSET(child_unum),  AV_OPT_TYPE_UINT,  { .i64 = 0 }, 0, 100, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
-    { NULL },
+స్థిర స్థిరరాశి AVOption బిడ్డ_options[]= {
+    {"child_num64", "set num 64bit", స్థానభ్రంశం_2(బిడ్డ_num64), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, 100, 1 | AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
+    {"child_num",   "set child_num", స్థానభ్రంశం_2(బిడ్డ_అంకె),   AV_OPT_TYPE_INT,   { .i64 = 1 }, 0, 100, 1 },
+    {"child_unum",  "set child_unum", స్థానభ్రంశం_2(బిడ్డ_unum),  AV_OPT_TYPE_UINT,  { .i64 = 0 }, 0, 100, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
+    { ఖాళీ },
 };
 
-static const char *child_get_name(void *ctx)
+స్థిర స్థిరరాశి అక్షరం *బిడ్డ_get_name(శూన్య *ctx)
 {
-    return "child";
+    తిరిగి "child";
 }
 
-static const AVClass child_class = {
+స్థిర స్థిరరాశి AVClass బిడ్డ_class = {
     .class_name = "ChildContext",
-    .item_name  = child_get_name,
-    .option     = child_options,
-    .version    = LIBAVUTIL_VERSION_INT,
+    .అంశం_name  = బిడ్డ_get_name,
+    .option     = బిడ్డ_options,
+    .సంస్కరణ    = LIBAVUTIL_సంస్కరణ_INT,
 };
 
-static void *test_child_next(void *obj, void *prev)
+స్థిర శూన్య *test_బిడ్డ_తదుపరి(శూన్య *obj, శూన్య *prev)
 {
     TestContext *test_ctx = obj;
-    if (!prev)
-        return test_ctx->child;
-    return NULL;
+    ఒకవేళ (!prev)
+        తిరిగి test_ctx->బిడ్డ;
+    తిరిగి ఖాళీ;
 }
 
-static const AVClass test_class = {
+స్థిర స్థిరరాశి AVClass test_class = {
     .class_name = "TestContext",
-    .item_name  = test_get_name,
+    .అంశం_name  = test_get_name,
     .option     = test_options,
-    .child_next = test_child_next,
-    .version    = LIBAVUTIL_VERSION_INT,
+    .బిడ్డ_తదుపరి = test_బిడ్డ_తదుపరి,
+    .సంస్కరణ    = LIBAVUTIL_సంస్కరణ_INT,
 };
 
-static void log_callback_help(void *ptr, int level, const char *fmt, va_list vl)
+స్థిర శూన్య log_callback_help(శూన్య *ptr, పూర్ణాంకం level, స్థిరరాశి అక్షరం *fmt, va_list vl)
 {
     vfprintf(stdout, fmt, vl);
 }
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    av_log_set_level(AV_LOG_DEBUG);
-    av_log_set_callback(log_callback_help);
+    av_log_సమితి_level(AV_LOG_DEBUG);
+    av_log_సమితి_callback(log_callback_help);
 
-    printf("Testing default values\n");
+    రాయి("Testing default values\n");
     {
         TestContext test_ctx = { 0 };
         test_ctx.class = &test_class;
-        av_opt_set_defaults(&test_ctx);
+        av_opt_సమితి_defaults(&test_ctx);
 
-        printf("num=%d\n", test_ctx.num);
-        printf("unum=%u\n", test_ctx.unum);
-        printf("toggle=%d\n", test_ctx.toggle);
-        printf("string=%s\n", test_ctx.string);
-        printf("escape=%s\n", test_ctx.escape);
-        printf("flags=%d\n", test_ctx.flags);
-        printf("rational=%d/%d\n", test_ctx.rational.num, test_ctx.rational.den);
-        printf("video_rate=%d/%d\n", test_ctx.video_rate.num, test_ctx.video_rate.den);
-        printf("width=%d height=%d\n", test_ctx.w, test_ctx.h);
-        printf("pix_fmt=%s\n", av_get_pix_fmt_name(test_ctx.pix_fmt));
-        printf("sample_fmt=%s\n", av_get_sample_fmt_name(test_ctx.sample_fmt));
-        printf("duration=%"PRId64"\n", test_ctx.duration);
-        printf("color=%d %d %d %d\n", test_ctx.color[0], test_ctx.color[1], test_ctx.color[2], test_ctx.color[3]);
-        printf("channel_layout=%"PRId64"=%"PRId64"\n", test_ctx.channel_layout.u.mask, (int64_t)AV_CH_LAYOUT_HEXAGONAL);
-        if (test_ctx.binary)
-            printf("binary=%x %x %x %x\n", ((uint8_t*)test_ctx.binary)[0], ((uint8_t*)test_ctx.binary)[1], ((uint8_t*)test_ctx.binary)[2], ((uint8_t*)test_ctx.binary)[3]);
-        printf("binary_size=%d\n", test_ctx.binary_size);
-        printf("num64=%"PRId64"\n", test_ctx.num64);
-        printf("flt=%.6f\n", test_ctx.flt);
-        printf("dbl=%.6f\n", test_ctx.dbl);
+        రాయి("num=%d\n", test_ctx.అంకె);
+        రాయి("unum=%u\n", test_ctx.unum);
+        రాయి("toggle=%d\n", test_ctx.toggle);
+        రాయి("string=%s\n", test_ctx.string);
+        రాయి("escape=%s\n", test_ctx.escape);
+        రాయి("flags=%d\n", test_ctx.flags);
+        రాయి("rational=%d/%d\n", test_ctx.rational.అంకె, test_ctx.rational.den);
+        రాయి("video_rate=%d/%d\n", test_ctx.video_రేటు.అంకె, test_ctx.video_రేటు.den);
+        రాయి("width=%d height=%d\n", test_ctx.w, test_ctx.h);
+        రాయి("pix_fmt=%s\n", av_get_pix_fmt_name(test_ctx.pix_fmt));
+        రాయి("sample_fmt=%s\n", av_get_sample_fmt_name(test_ctx.sample_fmt));
+        రాయి("duration=%"PRId64"\n", test_ctx.duration);
+        రాయి("color=%d %d %d %d\n", test_ctx.color[0], test_ctx.color[1], test_ctx.color[2], test_ctx.color[3]);
+        రాయి("channel_layout=%"PRId64"=%"PRId64"\n", test_ctx.channel_layout.u.ముసుగు_2, (int64_t)AV_CH_LAYOUT_HEXAGONAL);
+        ఒకవేళ (test_ctx.ద్విమాన)
+            రాయి("binary=%x %x %x %x\n", ((uint8_t*)test_ctx.ద్విమాన)[0], ((uint8_t*)test_ctx.ద్విమాన)[1], ((uint8_t*)test_ctx.ద్విమాన)[2], ((uint8_t*)test_ctx.ద్విమాన)[3]);
+        రాయి("binary_size=%d\n", test_ctx.ద్విమాన_కొలత);
+        రాయి("num64=%"PRId64"\n", test_ctx.num64);
+        రాయి("flt=%.6f\n", test_ctx.flt);
+        రాయి("dbl=%.6f\n", test_ctx.dbl);
 
-        for (unsigned i = 0; i < test_ctx.nb_array_str; i++)
-            printf("array_str[%u]=%s\n", i, test_ctx.array_str[i]);
+        కొరకు (గుర్తులేని i = 0; i < test_ctx.nb_array_str; i++)
+            రాయి("array_str[%u]=%s\n", i, test_ctx.array_str[i]);
 
-        for (unsigned i = 0; i < test_ctx.nb_array_dict; i++) {
+        కొరకు (గుర్తులేని i = 0; i < test_ctx.nb_array_dict; i++) {
             AVDictionary            *d = test_ctx.array_dict[i];
-            const AVDictionaryEntry *e = NULL;
+            స్థిరరాశి AVDictionary_నమోదు *e = ఖాళీ;
 
-            while ((e = av_dict_iterate(d, e)))
-                printf("array_dict[%u]: %s\t%s\n", i, e->key, e->value);
+            అయితే ((e = av_dict_iterate(d, e)))
+                రాయి("array_dict[%u]: %s\t%s\n", i, e->కీలకం, e->విలువ);
         }
 
-        av_opt_show2(&test_ctx, NULL, -1, 0);
+        av_opt_show2(&test_ctx, ఖాళీ, -1, 0);
 
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_opt_is_set_to_default()\n");
+    రాయి("\nTesting av_opt_is_set_to_default()\n");
     {
-        int ret;
+        పూర్ణాంకం ret;
         TestContext test_ctx = { 0 };
-        const AVOption *o = NULL;
+        స్థిరరాశి AVOption *o = ఖాళీ;
         test_ctx.class = &test_class;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_సమితి_level(AV_LOG_QUIET);
 
-        while (o = av_opt_next(&test_ctx, o)) {
-            ret = av_opt_is_set_to_default_by_name(&test_ctx, o->name, 0);
-            printf("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
+        అయితే (o = av_opt_తదుపరి(&test_ctx, o)) {
+            ret = av_opt_is_సమితి_గమ్యం_default_by_name(&test_ctx, o->name, 0);
+            రాయి("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
         }
-        av_opt_set_defaults(&test_ctx);
-        while (o = av_opt_next(&test_ctx, o)) {
-            ret = av_opt_is_set_to_default_by_name(&test_ctx, o->name, 0);
-            printf("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
+        av_opt_సమితి_defaults(&test_ctx);
+        అయితే (o = av_opt_తదుపరి(&test_ctx, o)) {
+            ret = av_opt_is_సమితి_గమ్యం_default_by_name(&test_ctx, o->name, 0);
+            రాయి("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
         }
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_opt_get/av_opt_set()\n");
+    రాయి("\nTesting av_opt_get/av_opt_set()\n");
     {
         TestContext test_ctx = { 0 };
         TestContext test2_ctx = { 0 };
-        const AVOption *o = NULL;
-        char *val = NULL;
-        int ret;
+        స్థిరరాశి AVOption *o = ఖాళీ;
+        అక్షరం *val = ఖాళీ;
+        పూర్ణాంకం ret;
 
         test_ctx.class = &test_class;
         test2_ctx.class = &test_class;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_సమితి_level(AV_LOG_QUIET);
 
-        av_opt_set_defaults(&test_ctx);
+        av_opt_సమితి_defaults(&test_ctx);
 
-        while (o = av_opt_next(&test_ctx, o)) {
-            char *value1 = NULL;
-            char *value2 = NULL;
-            int ret1 = AVERROR_BUG;
-            int ret2 = AVERROR_BUG;
-            int ret3 = AVERROR_BUG;
+        అయితే (o = av_opt_తదుపరి(&test_ctx, o)) {
+            అక్షరం *value1 = ఖాళీ;
+            అక్షరం *value2 = ఖాళీ;
+            పూర్ణాంకం ret1 = AVERROR_BUG;
+            పూర్ణాంకం ret2 = AVERROR_BUG;
+            పూర్ణాంకం ret3 = AVERROR_BUG;
 
-            if (o->type == AV_OPT_TYPE_CONST)
-                continue;
+            ఒకవేళ (o->type == AV_OPT_TYPE_CONST)
+                కొనసాగు;
 
             ret1 = av_opt_get(&test_ctx, o->name, 0, (uint8_t **)&value1);
-            if (ret1 >= 0) {
-                ret2 = av_opt_set(&test2_ctx, o->name, value1, 0);
-                if (ret2 >= 0)
+            ఒకవేళ (ret1 >= 0) {
+                ret2 = av_opt_సమితి(&test2_ctx, o->name, value1, 0);
+                ఒకవేళ (ret2 >= 0)
                     ret3 = av_opt_get(&test2_ctx, o->name, 0, (uint8_t **)&value2);
             }
 
-            printf("name: %-11s get: %-16s set: %-16s get: %-16s %s\n", o->name,
+            రాయి("name: %-11s get: %-16s set: %-16s get: %-16s %s\n", o->name,
                     ret1 >= 0 ? value1 : av_err2str(ret1),
                     ret2 >= 0 ? "OK" : av_err2str(ret2),
                     ret3 >= 0 ? value2 : av_err2str(ret3),
@@ -289,180 +289,180 @@ int main(void)
         }
 
         // av_opt_set(NULL) with an array option resets it
-        ret = av_opt_set(&test_ctx, "array_dict", NULL, 0);
-        printf("av_opt_set(\"array_dict\", NULL) -> %d\n", ret);
-        printf("array_dict=%sNULL; nb_array_dict=%u\n",
+        ret = av_opt_సమితి(&test_ctx, "array_dict", ఖాళీ, 0);
+        రాయి("av_opt_set(\"array_dict\", NULL) -> %d\n", ret);
+        రాయి("array_dict=%sNULL; nb_array_dict=%u\n",
                test_ctx.array_dict ? "non-" : "", test_ctx.nb_array_dict);
 
         // av_opt_get() on an empty array should return a NULL string
         ret = av_opt_get(&test_ctx, "array_dict", AV_OPT_ALLOW_NULL, (uint8_t**)&val);
-        printf("av_opt_get(\"array_dict\") -> %s\n", val ? val : "NULL");
+        రాయి("av_opt_get(\"array_dict\") -> %s\n", val ? val : "NULL");
 
         av_opt_free(&test_ctx);
         av_opt_free(&test2_ctx);
     }
 
-    printf("\nTesting av_opt_get_array()\n");
+    రాయి("\nTesting av_opt_get_array()\n");
     {
-        static const int int_array[] = { 5, 0, 42, 137, INT_MAX };
+        స్థిర స్థిరరాశి పూర్ణాంకం int_array[] = { 5, 0, 42, 137, గరిష్ఠ_పూర్ణాంకం };
 
         TestContext test_ctx = { 0 };
 
-        int     out_int   [FF_ARRAY_ELEMS(int_array)] = { 0 };
-        double  out_double[FF_ARRAY_ELEMS(int_array)] = { 0. };
-        char   *out_str   [FF_ARRAY_ELEMS(int_array)] = { NULL };
-        AVDictionary *out_dict[2] = { NULL };
+        పూర్ణాంకం     బహిర్గతం_int   [FF_ARRAY_ELEMS(int_array)] = { 0 };
+        ద్విగుణ  బహిర్గతం_double[FF_ARRAY_ELEMS(int_array)] = { 0. };
+        అక్షరం   *బహిర్గతం_str   [FF_ARRAY_ELEMS(int_array)] = { ఖాళీ };
+        AVDictionary *బహిర్గతం_dict[2] = { ఖాళీ };
 
-        int ret;
+        పూర్ణాంకం ret;
 
         test_ctx.class = &test_class;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_సమితి_level(AV_LOG_QUIET);
 
-        av_opt_set_defaults(&test_ctx);
+        av_opt_సమితి_defaults(&test_ctx);
 
-        test_ctx.array_int    = av_memdup(int_array, sizeof(int_array));
+        test_ctx.array_int    = av_memdup(int_array, పరిమాణం(int_array));
         test_ctx.nb_array_int = FF_ARRAY_ELEMS(int_array);
 
         // retrieve as int
         ret = av_opt_get_array(&test_ctx, "array_int", 0,
-                               1, 3, AV_OPT_TYPE_INT, out_int);
-        printf("av_opt_get_array(\"array_int\", 1, 3, INT)=%d -> [ %d, %d, %d ]\n",
-               ret, out_int[0], out_int[1], out_int[2]);
+                               1, 3, AV_OPT_TYPE_INT, బహిర్గతం_int);
+        రాయి("av_opt_get_array(\"array_int\", 1, 3, INT)=%d -> [ %d, %d, %d ]\n",
+               ret, బహిర్గతం_int[0], బహిర్గతం_int[1], బహిర్గతం_int[2]);
 
         // retrieve as double
         ret = av_opt_get_array(&test_ctx, "array_int", 0,
-                               3, 2, AV_OPT_TYPE_DOUBLE, out_double);
-        printf("av_opt_get_array(\"array_int\", 3, 2, DOUBLE)=%d -> [ %.2f, %.2f ]\n",
-               ret, out_double[0], out_double[1]);
+                               3, 2, AV_OPT_TYPE_DOUBLE, బహిర్గతం_double);
+        రాయి("av_opt_get_array(\"array_int\", 3, 2, DOUBLE)=%d -> [ %.2f, %.2f ]\n",
+               ret, బహిర్గతం_double[0], బహిర్గతం_double[1]);
 
         // retrieve as str
         ret = av_opt_get_array(&test_ctx, "array_int", 0,
-                               0, 5, AV_OPT_TYPE_STRING, out_str);
-        printf("av_opt_get_array(\"array_int\", 0, 5, STRING)=%d -> "
+                               0, 5, AV_OPT_TYPE_STRING, బహిర్గతం_str);
+        రాయి("av_opt_get_array(\"array_int\", 0, 5, STRING)=%d -> "
                "[ %s, %s, %s, %s, %s ]\n", ret,
-               out_str[0], out_str[1], out_str[2], out_str[3], out_str[4]);
+               బహిర్గతం_str[0], బహిర్గతం_str[1], బహిర్గతం_str[2], బహిర్గతం_str[3], బహిర్గతం_str[4]);
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(out_str); i++)
-            av_freep(&out_str[i]);
+        కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(బహిర్గతం_str); i++)
+            av_freep(&బహిర్గతం_str[i]);
 
         ret = av_opt_get_array(&test_ctx, "array_dict", 0, 0, 2,
-                               AV_OPT_TYPE_DICT, out_dict);
-        printf("av_opt_get_array(\"array_dict\", 0, 2, DICT)=%d\n", ret);
+                               AV_OPT_TYPE_DICT, బహిర్గతం_dict);
+        రాయి("av_opt_get_array(\"array_dict\", 0, 2, DICT)=%d\n", ret);
 
-        for (int i = 0; i < test_ctx.nb_array_dict; i++) {
-            const AVDictionaryEntry *e = NULL;
-            while ((e = av_dict_iterate(test_ctx.array_dict[i], e))) {
-                const AVDictionaryEntry *e1 = av_dict_get(out_dict[i], e->key, NULL, 0);
-                if (!e1 || strcmp(e->value, e1->value)) {
-                    printf("mismatching dict entry %s: %s/%s\n",
-                           e->key, e->value, e1 ? e1->value : "<missing>");
+        కొరకు (పూర్ణాంకం i = 0; i < test_ctx.nb_array_dict; i++) {
+            స్థిరరాశి AVDictionary_నమోదు *e = ఖాళీ;
+            అయితే ((e = av_dict_iterate(test_ctx.array_dict[i], e))) {
+                స్థిరరాశి AVDictionary_నమోదు *e1 = av_dict_get(బహిర్గతం_dict[i], e->కీలకం, ఖాళీ, 0);
+                ఒకవేళ (!e1 || strcmp(e->విలువ, e1->విలువ)) {
+                    రాయి("mismatching dict entry %s: %s/%s\n",
+                           e->కీలకం, e->విలువ, e1 ? e1->విలువ : "<missing>");
                 }
             }
-            av_dict_free(&out_dict[i]);
+            av_dict_free(&బహిర్గతం_dict[i]);
         }
 
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTest av_opt_serialize()\n");
+    రాయి("\nTest av_opt_serialize()\n");
     {
         TestContext test_ctx = { 0 };
-        char *buf;
-        int ret;
+        అక్షరం *buf;
+        పూర్ణాంకం ret;
         test_ctx.class = &test_class;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_సమితి_level(AV_LOG_QUIET);
 
-        av_opt_set_defaults(&test_ctx);
-        if (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
-            printf("%s\n", buf);
+        av_opt_సమితి_defaults(&test_ctx);
+        ఒకవేళ (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
+            రాయి("%s\n", buf);
             av_opt_free(&test_ctx);
-            memset(&test_ctx, 0, sizeof(test_ctx));
+            memset(&test_ctx, 0, పరిమాణం(test_ctx));
             test_ctx.class = &test_class;
-            ret = av_set_options_string(&test_ctx, buf, "=", ",");
+            ret = av_సమితి_options_string(&test_ctx, buf, "=", ",");
             av_free(buf);
-            if (ret < 0)
-                printf("Error ret '%d'\n", ret);
-            if (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
-                ChildContext child_ctx = { .child_num64 = 1, .child_unum = 1 };
-                printf("%s\n", buf);
+            ఒకవేళ (ret < 0)
+                రాయి("Error ret '%d'\n", ret);
+            ఒకవేళ (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
+                బిడ్డ_Context బిడ్డ_ctx = { .బిడ్డ_num64 = 1, .బిడ్డ_unum = 1 };
+                రాయి("%s\n", buf);
                 av_free(buf);
-                child_ctx.class = &child_class;
-                test_ctx.child = &child_ctx;
-                printf("Exclude flag EXPORT:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                బిడ్డ_ctx.class = &బిడ్డ_class;
+                test_ctx.బిడ్డ = &బిడ్డ_ctx;
+                రాయి("Exclude flag EXPORT:\n");
+                ఒకవేళ (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_శోధన_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    రాయి("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Include flag EXPORT:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN,
+                రాయి("Include flag EXPORT:\n");
+                ఒకవేళ (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_శోధన_CHILDREN,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    రాయి("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Exclude flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                రాయి("Exclude flag 1:\n");
+                ఒకవేళ (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_శోధన_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    రాయి("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Include flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN,
+                రాయి("Include flag 1:\n");
+                ఒకవేళ (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_శోధన_CHILDREN,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    రాయి("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Exclude exact match flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                రాయి("Exclude exact match flag 1:\n");
+                ఒకవేళ (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_శోధన_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT|AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    రాయి("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Include exact match flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                రాయి("Include exact match flag 1:\n");
+                ఒకవేళ (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_శోధన_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    రాయి("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Exclude exact match flag EXPORT|READONLY:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                రాయి("Exclude exact match flag EXPORT|READONLY:\n");
+                ఒకవేళ (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_శోధన_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT|AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    రాయి("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Include exact match flag EXPORT|READONLY:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                రాయి("Include exact match flag EXPORT|READONLY:\n");
+                ఒకవేళ (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_శోధన_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    రాయి("%s\n", buf);
                     av_free(buf);
                 }
-                av_opt_free(&child_ctx);
-                test_ctx.child = NULL;
+                av_opt_free(&బిడ్డ_ctx);
+                test_ctx.బిడ్డ = ఖాళీ;
             }
         }
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_set_options_string()\n");
+    రాయి("\nTesting av_set_options_string()\n");
     {
         TestContext test_ctx = { 0 };
-        static const char * const options[] = {
+        స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి options[] = {
             "",
             ":",
             "=",
@@ -544,28 +544,28 @@ int main(void)
         };
 
         test_ctx.class = &test_class;
-        av_opt_set_defaults(&test_ctx);
+        av_opt_సమితి_defaults(&test_ctx);
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_సమితి_level(AV_LOG_QUIET);
 
-        for (i=0; i < FF_ARRAY_ELEMS(options); i++) {
-            int silence_log = !strcmp(options[i], "rational=-1/0"); // inf formatting differs between platforms
+        కొరకు (i=0; i < FF_ARRAY_ELEMS(options); i++) {
+            పూర్ణాంకం silence_log = !strcmp(options[i], "rational=-1/0"); // inf formatting differs between platforms
             av_log(&test_ctx, AV_LOG_DEBUG, "Setting options string '%s'\n", options[i]);
-            if (silence_log)
-                av_log_set_callback(NULL);
-            if (av_set_options_string(&test_ctx, options[i], "=", ":") < 0)
-                printf("Error '%s'\n", options[i]);
-            else
-                printf("OK    '%s'\n", options[i]);
-            av_log_set_callback(log_callback_help);
+            ఒకవేళ (silence_log)
+                av_log_సమితి_callback(ఖాళీ);
+            ఒకవేళ (av_సమితి_options_string(&test_ctx, options[i], "=", ":") < 0)
+                రాయి("Error '%s'\n", options[i]);
+            లేకపోతే
+                రాయి("OK    '%s'\n", options[i]);
+            av_log_సమితి_callback(log_callback_help);
         }
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_opt_set_from_string()\n");
+    రాయి("\nTesting av_opt_set_from_string()\n");
     {
         TestContext test_ctx = { 0 };
-        static const char * const options[] = {
+        స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి options[] = {
             "",
             "5",
             "5:hello",
@@ -576,114 +576,114 @@ int main(void)
             " 5 : hello : size = pal ",
             "a_very_long_option_name_that_will_need_to_be_ellipsized_around_here=42"
         };
-        static const char * const shorthand[] = { "num", "string", NULL };
+        స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి shorthand[] = { "num", "string", ఖాళీ };
 
         test_ctx.class = &test_class;
-        av_opt_set_defaults(&test_ctx);
+        av_opt_సమితి_defaults(&test_ctx);
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_సమితి_level(AV_LOG_QUIET);
 
-        for (i=0; i < FF_ARRAY_ELEMS(options); i++) {
+        కొరకు (i=0; i < FF_ARRAY_ELEMS(options); i++) {
             av_log(&test_ctx, AV_LOG_DEBUG, "Setting options string '%s'\n", options[i]);
-            if (av_opt_set_from_string(&test_ctx, options[i], shorthand, "=", ":") < 0)
-                printf("Error '%s'\n", options[i]);
-            else
-                printf("OK    '%s'\n", options[i]);
+            ఒకవేళ (av_opt_సమితి_from_string(&test_ctx, options[i], shorthand, "=", ":") < 0)
+                రాయి("Error '%s'\n", options[i]);
+            లేకపోతే
+                రాయి("OK    '%s'\n", options[i]);
         }
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_opt_find2()\n");
+    రాయి("\nTesting av_opt_find2()\n");
     {
         TestContext test_ctx = { 0 };
-        ChildContext child_ctx = { 0 };
-        void *target;
-        const AVOption *opt;
+        బిడ్డ_Context బిడ్డ_ctx = { 0 };
+        శూన్య *లక్ష్యం;
+        స్థిరరాశి AVOption *opt;
 
         test_ctx.class = &test_class;
-        child_ctx.class = &child_class;
-        test_ctx.child = &child_ctx;
+        బిడ్డ_ctx.class = &బిడ్డ_class;
+        test_ctx.బిడ్డ = &బిడ్డ_ctx;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_సమితి_level(AV_LOG_QUIET);
 
         // Should succeed. num exists and has opt_flags 1
-        opt = av_opt_find2(&test_ctx, "num", NULL, 1, 0, &target);
-        if (opt && target == &test_ctx)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'num'\n");
+        opt = av_opt_find2(&test_ctx, "num", ఖాళీ, 1, 0, &లక్ష్యం);
+        ఒకవేళ (opt && లక్ష్యం == &test_ctx)
+            రాయి("OK    '%s'\n", opt->name);
+        లేకపోతే
+            రాయి("Error 'num'\n");
 
         // Should fail. num64 exists but has opt_flags 1, not 2
-        opt = av_opt_find(&test_ctx, "num64", NULL, 2, 0);
-        if (opt)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'num64'\n");
+        opt = av_opt_కనుగొను(&test_ctx, "num64", ఖాళీ, 2, 0);
+        ఒకవేళ (opt)
+            రాయి("OK    '%s'\n", opt->name);
+        లేకపోతే
+            రాయి("Error 'num64'\n");
 
         // Should fail. child_num exists but in a child object we're not searching
-        opt = av_opt_find(&test_ctx, "child_num", NULL, 0, 0);
-        if (opt)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'child_num'\n");
+        opt = av_opt_కనుగొను(&test_ctx, "child_num", ఖాళీ, 0, 0);
+        ఒకవేళ (opt)
+            రాయి("OK    '%s'\n", opt->name);
+        లేకపోతే
+            రాయి("Error 'child_num'\n");
 
         // Should succeed. child_num exists in a child object we're searching
-        opt = av_opt_find2(&test_ctx, "child_num", NULL, 0, AV_OPT_SEARCH_CHILDREN, &target);
-        if (opt && target == &child_ctx)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'child_num'\n");
+        opt = av_opt_find2(&test_ctx, "child_num", ఖాళీ, 0, AV_OPT_శోధన_CHILDREN, &లక్ష్యం);
+        ఒకవేళ (opt && లక్ష్యం == &బిడ్డ_ctx)
+            రాయి("OK    '%s'\n", opt->name);
+        లేకపోతే
+            రాయి("Error 'child_num'\n");
 
         // Should fail. foo doesn't exist
-        opt = av_opt_find(&test_ctx, "foo", NULL, 0, 0);
-        if (opt)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'foo'\n");
+        opt = av_opt_కనుగొను(&test_ctx, "foo", ఖాళీ, 0, 0);
+        ఒకవేళ (opt)
+            రాయి("OK    '%s'\n", opt->name);
+        లేకపోతే
+            రాయి("Error 'foo'\n");
     }
 
-    printf("\nTesting av_opt_copy() into a memdup'ed object\n");
+    రాయి("\nTesting av_opt_copy() into a memdup'ed object\n");
     {
         TestContext test_ctx = { 0 };
         TestContext *copy;
-        uint8_t *layout_name = NULL;
+        uint8_t *layout_name = ఖాళీ;
 
         test_ctx.class = &test_class;
-        av_opt_set_defaults(&test_ctx);
-        av_opt_set(&test_ctx, "cl", "FL@Left+FR@Right", 0);
+        av_opt_సమితి_defaults(&test_ctx);
+        av_opt_సమితి(&test_ctx, "cl", "FL@Left+FR@Right", 0);
 
-        copy = av_memdup(&test_ctx, sizeof(test_ctx));
-        if (!copy)
-            return 1;
+        copy = av_memdup(&test_ctx, పరిమాణం(test_ctx));
+        ఒకవేళ (!copy)
+            తిరిగి 1;
         av_opt_copy(copy, &test_ctx);
         av_opt_free(&test_ctx);
 
         av_opt_get(copy, "cl", 0, &layout_name);
-        printf("cl=%s\n", layout_name);
+        రాయి("cl=%s\n", layout_name);
         av_free(layout_name);
         av_opt_free(copy);
         av_free(copy);
     }
 
-    printf("\nTesting av_opt_copy() of a native layout into a custom layout\n");
+    రాయి("\nTesting av_opt_copy() of a native layout into a custom layout\n");
     {
         TestContext src = { 0 }, dst = { 0 };
-        AVChannelLayout native = { AV_CHANNEL_ORDER_NATIVE };
+        AVChannelLayout native = { AV_CHANNEL_క్రమం_NATIVE };
 
         src.class = dst.class = &test_class;
-        av_opt_set_defaults(&src);
-        av_opt_set_defaults(&dst);
-        av_opt_set(&dst, "cl", "FL@Left+FR@Right", 0);
+        av_opt_సమితి_defaults(&src);
+        av_opt_సమితి_defaults(&dst);
+        av_opt_సమితి(&dst, "cl", "FL@Left+FR@Right", 0);
 
-        native.u.mask      = (uintptr_t)dst.channel_layout.u.map;
-        native.nb_channels = av_popcount64(native.u.mask);
-        av_opt_set_chlayout(&src, "cl", &native, 0);
+        native.u.ముసుగు_2      = (uintptr_t)dst.channel_layout.u.map;
+        native.nb_channels = av_popcount64(native.u.ముసుగు_2);
+        av_opt_సమితి_chlayout(&src, "cl", &native, 0);
 
-        printf("copy: %d\n", av_opt_copy(&dst, &src));
-        printf("same layout: %d\n", !av_channel_layout_compare(&src.channel_layout, &dst.channel_layout));
+        రాయి("copy: %d\n", av_opt_copy(&dst, &src));
+        రాయి("same layout: %d\n", !av_channel_layout_compare(&src.channel_layout, &dst.channel_layout));
         av_opt_free(&src);
         av_opt_free(&dst);
     }
 
-    return 0;
+    తిరిగి 0;
 }

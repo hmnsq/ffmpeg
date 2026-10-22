@@ -24,11 +24,11 @@
  * Public header for MurmurHash3 hash function implementation.
  */
 
-#ifndef AVUTIL_MURMUR3_H
-#define AVUTIL_MURMUR3_H
+#నిర్వచితం_కాకపోతే AVUTIL_MURMUR3_H
+#నిర్వచించు AVUTIL_MURMUR3_H
 
-#include <stddef.h>
-#include <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
 
 /**
  * @defgroup lavu_murmur3 Murmur3
@@ -64,7 +64,7 @@
  *
  * @return Uninitialized hash context or `NULL` in case of error
  */
-struct AVMurMur3 *av_murmur3_alloc(void);
+నిర్మాణం AVMurMur3 *av_murmur3_alloc(శూన్య);
 
 /**
  * Initialize or reinitialize an AVMurMur3 hash context with a seed.
@@ -76,7 +76,7 @@ struct AVMurMur3 *av_murmur3_alloc(void);
  * @see @ref lavu_murmur3_seedinfo "Detailed description" on a discussion of
  * seeds for MurmurHash3.
  */
-void av_murmur3_init_seeded(struct AVMurMur3 *c, uint64_t seed);
+శూన్య av_murmur3_init_seeded(నిర్మాణం AVMurMur3 *c, uint64_t విత్తనం);
 
 /**
  * Initialize or reinitialize an AVMurMur3 hash context.
@@ -89,7 +89,7 @@ void av_murmur3_init_seeded(struct AVMurMur3 *c, uint64_t seed);
  * @see @ref lavu_murmur3_seedinfo "Detailed description" on a discussion of
  * seeds for MurmurHash3.
  */
-void av_murmur3_init(struct AVMurMur3 *c);
+శూన్య av_murmur3_init(నిర్మాణం AVMurMur3 *c);
 
 /**
  * Update hash context with new data.
@@ -98,7 +98,7 @@ void av_murmur3_init(struct AVMurMur3 *c);
  * @param[in]  src  Input data to update hash with
  * @param[in]  len  Number of bytes to read from `src`
  */
-void av_murmur3_update(struct AVMurMur3 *c, const uint8_t *src, size_t len);
+శూన్య av_murmur3_update(నిర్మాణం AVMurMur3 *c, స్థిరరాశి uint8_t *src, size_t len);
 
 /**
  * Finish hashing and output digest value.
@@ -106,10 +106,10 @@ void av_murmur3_update(struct AVMurMur3 *c, const uint8_t *src, size_t len);
  * @param[in,out] c    Hash context
  * @param[out]    dst  Buffer where output digest value is stored
  */
-void av_murmur3_final(struct AVMurMur3 *c, uint8_t dst[16]);
+శూన్య av_murmur3_final(నిర్మాణం AVMurMur3 *c, uint8_t dst[16]);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_MURMUR3_H */
+#అయితే_ముగింపు /* AVUTIL_MURMUR3_H */

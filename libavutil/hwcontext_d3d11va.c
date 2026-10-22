@@ -16,44 +16,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#అన్తర్భావ "config.h"
 
-#include <windows.h>
+#అన్తర్భావ <windows.h>
 
-#define COBJMACROS
+#నిర్వచించు COBJMACROS
 
-#include <initguid.h>
-#include <d3d11.h>
-#include <dxgi1_2.h>
+#అన్తర్భావ <initguid.h>
+#అన్తర్భావ <d3d11.h>
+#అన్తర్భావ <dxgi1_2.h>
 
-#if HAVE_DXGIDEBUG_H
-#include <dxgidebug.h>
-#endif
+#ఒకవేళ HAVE_DXGIDEBUG_H
+#అన్తర్భావ <dxgidebug.h>
+#అయితే_ముగింపు
 
-#include "avassert.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_d3d11va.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "thread.h"
-#include "compat/w32dlfcn.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "hwcontext.h"
+#అన్తర్భావ "hwcontext_d3d11va.h"
+#అన్తర్భావ "hwcontext_internal.h"
+#అన్తర్భావ "imgutils.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "pixdesc.h"
+#అన్తర్భావ "pixfmt.h"
+#అన్తర్భావ "thread.h"
+#అన్తర్భావ "compat/w32dlfcn.h"
 
-#define MAX_ARRAY_SIZE 64 // Driver specification limits ArraySize to 64 for decoder-bound resources
+#నిర్వచించు MAX_ARRAY_కొలత 64 // Driver specification limits ArraySize to 64 for decoder-bound resources
 
-typedef HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, void **ppFactory);
+రకనిర్వచనం HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, శూన్య **ppFactory);
 
-static AVOnce functions_loaded = AV_ONCE_INIT;
+స్థిర AVOnce functions_loaded = AV_ONCE_INIT;
 
-static PFN_CREATE_DXGI_FACTORY mCreateDXGIFactory;
-static PFN_D3D11_CREATE_DEVICE mD3D11CreateDevice;
+స్థిర PFN_CREATE_DXGI_FACTORY mCreateDXGIFactory;
+స్థిర PFN_D3D11_CREATE_DEVICE mD3D11CreateDevice;
 
-static av_cold void load_functions(void)
+స్థిర av_cold శూన్య ఎక్కించు_functions(శూన్య)
 {
-#if !HAVE_UWP
+#ఒకవేళ !HAVE_UWP
     // We let these "leak" - this is fine, as unloading has no great benefit, and
     // Windows will mark a DLL as loaded forever if its internal refcount overflows
     // from too many LoadLibrary calls.
@@ -61,38 +61,38 @@ static av_cold void load_functions(void)
 
     d3dlib  = dlopen("d3d11.dll", 0);
     dxgilib = dlopen("dxgi.dll", 0);
-    if (!d3dlib || !dxgilib)
-        return;
+    ఒకవేళ (!d3dlib || !dxgilib)
+        తిరిగి;
 
-    mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) GetProcAddress(d3dlib, "D3D11CreateDevice");
-    mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) GetProcAddress(dxgilib, "CreateDXGIFactory1");
-    if (!mCreateDXGIFactory)
-        mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) GetProcAddress(dxgilib, "CreateDXGIFactory");
-#else
+    mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) Get_Proc_చిరునామా(d3dlib, "D3D11CreateDevice");
+    mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) Get_Proc_చిరునామా(dxgilib, "CreateDXGIFactory1");
+    ఒకవేళ (!mCreateDXGIFactory)
+        mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) Get_Proc_చిరునామా(dxgilib, "CreateDXGIFactory");
+#లేకపోతే
     // In UWP (which lacks LoadLibrary), CreateDXGIFactory isn't available,
     // only CreateDXGIFactory1
     mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) D3D11CreateDevice;
     mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) CreateDXGIFactory1;
-#endif
+#అయితే_ముగింపు
 }
 
-typedef struct D3D11VAFramesContext {
+రకనిర్వచనం నిర్మాణం D3D11VAFramesContext {
     /**
      * The public AVD3D11VAFramesContext. See hwcontext_d3d11va.h for it.
      */
     AVD3D11VAFramesContext p;
 
-    int nb_surfaces;
-    int nb_surfaces_used;
+    పూర్ణాంకం nb_surfaces;
+    పూర్ణాంకం nb_surfaces_వాడిన;
 
     DXGI_FORMAT format;
 
     ID3D11Texture2D *staging_texture;
 } D3D11VAFramesContext;
 
-static const struct {
+స్థిర స్థిరరాశి నిర్మాణం {
     DXGI_FORMAT d3d_format;
-    enum AVPixelFormat pix_fmt;
+    గణన AVPixelFormat pix_fmt;
 } supported_formats[] = {
     { DXGI_FORMAT_NV12,         AV_PIX_FMT_NV12 },
     { DXGI_FORMAT_P010,         AV_PIX_FMT_P010 },
@@ -116,111 +116,111 @@ static const struct {
     { DXGI_FORMAT_420_OPAQUE,   AV_PIX_FMT_YUV420P },
 };
 
-static void d3d11va_default_lock(void *ctx)
+స్థిర శూన్య d3d11va_default_తాళం(శూన్య *ctx)
 {
     WaitForSingleObjectEx(ctx, INFINITE, FALSE);
 }
 
-static void d3d11va_default_unlock(void *ctx)
+స్థిర శూన్య d3d11va_default_unlock(శూన్య *ctx)
 {
     ReleaseMutex(ctx);
 }
 
-static void d3d11va_frames_uninit(AVHWFramesContext *ctx)
+స్థిర శూన్య d3d11va_చట్రాలు_uninit(AVHWFramesContext *ctx)
 {
     D3D11VAFramesContext *s = ctx->hwctx;
-    AVD3D11VAFramesContext *frames_hwctx = &s->p;
+    AVD3D11VAFramesContext *చట్రాలు_hwctx = &s->p;
 
-    if (frames_hwctx->texture)
-        ID3D11Texture2D_Release(frames_hwctx->texture);
-    frames_hwctx->texture = NULL;
+    ఒకవేళ (చట్రాలు_hwctx->texture)
+        ID3D11Texture2D_Release(చట్రాలు_hwctx->texture);
+    చట్రాలు_hwctx->texture = ఖాళీ;
 
-    if (s->staging_texture)
+    ఒకవేళ (s->staging_texture)
         ID3D11Texture2D_Release(s->staging_texture);
-    s->staging_texture = NULL;
+    s->staging_texture = ఖాళీ;
 
-    av_freep(&frames_hwctx->texture_infos);
+    av_freep(&చట్రాలు_hwctx->texture_infos);
 }
 
-static int d3d11va_frames_get_constraints(AVHWDeviceContext *ctx,
-                                          const void *hwconfig,
+స్థిర పూర్ణాంకం d3d11va_చట్రాలు_get_constraints(AVHWDeviceContext *ctx,
+                                          స్థిరరాశి శూన్య *hwconfig,
                                           AVHWFramesConstraints *constraints)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->hwctx;
-    int nb_sw_formats = 0;
+    పూర్ణాంకం nb_sw_formats = 0;
     HRESULT hr;
-    int i;
+    పూర్ణాంకం i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    పరిమాణం(*constraints->valid_sw_formats));
+    ఒకవేళ (!constraints->valid_sw_formats)
+        తిరిగి AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
         UINT format_support = 0;
         hr = ID3D11Device_CheckFormatSupport(device_hwctx->device, supported_formats[i].d3d_format, &format_support);
-        if (SUCCEEDED(hr) && (format_support & D3D11_FORMAT_SUPPORT_TEXTURE2D))
+        ఒకవేళ (SUCCEEDED(hr) && (format_support & D3D11_FORMAT_SUPPORT_TEXTURE2D))
             constraints->valid_sw_formats[nb_sw_formats++] = supported_formats[i].pix_fmt;
     }
     constraints->valid_sw_formats[nb_sw_formats] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, పరిమాణం(*constraints->valid_hw_formats));
+    ఒకవేళ (!constraints->valid_hw_formats)
+        తిరిగి AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_D3D11;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static void free_texture(void *opaque, uint8_t *data)
+స్థిర శూన్య free_texture(శూన్య *opaque, uint8_t *దత్తాంశం)
 {
     ID3D11Texture2D_Release((ID3D11Texture2D *)opaque);
-    av_free(data);
+    av_free(దత్తాంశం);
 }
 
-static AVBufferRef *wrap_texture_buf(AVHWFramesContext *ctx, ID3D11Texture2D *tex, int index)
+స్థిర AVBufferRef *wrap_texture_buf(AVHWFramesContext *ctx, ID3D11Texture2D *tex, పూర్ణాంకం సూచీ)
 {
     AVBufferRef *buf;
-    AVD3D11FrameDescriptor         *desc = av_mallocz(sizeof(*desc));
+    AVD3_D11_చట్రం_Descriptor         *desc = av_mallocz(పరిమాణం(*desc));
     D3D11VAFramesContext              *s = ctx->hwctx;
-    AVD3D11VAFramesContext *frames_hwctx = &s->p;
-    if (!desc) {
+    AVD3D11VAFramesContext *చట్రాలు_hwctx = &s->p;
+    ఒకవేళ (!desc) {
         ID3D11Texture2D_Release(tex);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    if (s->nb_surfaces <= s->nb_surfaces_used) {
-        frames_hwctx->texture_infos = av_realloc_f(frames_hwctx->texture_infos,
-                                                   s->nb_surfaces_used + 1,
-                                                   sizeof(*frames_hwctx->texture_infos));
-        if (!frames_hwctx->texture_infos) {
+    ఒకవేళ (s->nb_surfaces <= s->nb_surfaces_వాడిన) {
+        చట్రాలు_hwctx->texture_infos = av_realloc_f(చట్రాలు_hwctx->texture_infos,
+                                                   s->nb_surfaces_వాడిన + 1,
+                                                   పరిమాణం(*చట్రాలు_hwctx->texture_infos));
+        ఒకవేళ (!చట్రాలు_hwctx->texture_infos) {
             ID3D11Texture2D_Release(tex);
             av_free(desc);
-            return NULL;
+            తిరిగి ఖాళీ;
         }
-        s->nb_surfaces = s->nb_surfaces_used + 1;
+        s->nb_surfaces = s->nb_surfaces_వాడిన + 1;
     }
 
-    frames_hwctx->texture_infos[s->nb_surfaces_used].texture = tex;
-    frames_hwctx->texture_infos[s->nb_surfaces_used].index = index;
-    s->nb_surfaces_used++;
+    చట్రాలు_hwctx->texture_infos[s->nb_surfaces_వాడిన].texture = tex;
+    చట్రాలు_hwctx->texture_infos[s->nb_surfaces_వాడిన].సూచీ = సూచీ;
+    s->nb_surfaces_వాడిన++;
 
     desc->texture = tex;
-    desc->index   = index;
+    desc->సూచీ   = సూచీ;
 
-    buf = av_buffer_create((uint8_t *)desc, sizeof(*desc), free_texture, tex, 0);
-    if (!buf) {
+    buf = av_బఫరు_create((uint8_t *)desc, పరిమాణం(*desc), free_texture, tex, 0);
+    ఒకవేళ (!buf) {
         ID3D11Texture2D_Release(tex);
         av_free(desc);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    return buf;
+    తిరిగి buf;
 }
 
-static AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
+స్థిర AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
 {
     D3D11VAFramesContext       *s = ctx->hwctx;
     AVD3D11VAFramesContext *hwctx = &s->p;
@@ -228,527 +228,527 @@ static AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
     HRESULT hr;
     ID3D11Texture2D *tex;
     D3D11_TEXTURE2D_DESC texDesc = {
-        .Width      = ctx->width,
-        .Height     = ctx->height,
-        .MipLevels  = 1,
+        .వెడల్పు_2      = ctx->వెడల్పు,
+        .ఎత్తు_2     = ctx->ఎత్తు,
+        .Mip_స్థాయిలు  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
-        .ArraySize  = 1,
+        .SampleDesc = { .లెక్క_2 = 1 },
+        .Array_కొలత  = 1,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
         .MiscFlags  = hwctx->MiscFlags,
     };
 
-    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &tex);
-    if (FAILED(hr)) {
-        av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (long)hr);
-        return NULL;
+    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, ఖాళీ, &tex);
+    ఒకవేళ (FAILED(hr)) {
+        av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (దీర్ఘ)hr);
+        తిరిగి ఖాళీ;
     }
 
-    return wrap_texture_buf(ctx, tex, 0);
+    తిరిగి wrap_texture_buf(ctx, tex, 0);
 }
 
-static AVBufferRef *d3d11va_pool_alloc(void *opaque, size_t size)
+స్థిర AVBufferRef *d3d11va_pool_alloc(శూన్య *opaque, size_t కొలత)
 {
     AVHWFramesContext        *ctx = (AVHWFramesContext*)opaque;
     D3D11VAFramesContext       *s = ctx->hwctx;
     AVD3D11VAFramesContext *hwctx = &s->p;
     D3D11_TEXTURE2D_DESC  texDesc;
 
-    if (!hwctx->texture)
-        return d3d11va_alloc_single(ctx);
+    ఒకవేళ (!hwctx->texture)
+        తిరిగి d3d11va_alloc_single(ctx);
 
     ID3D11Texture2D_GetDesc(hwctx->texture, &texDesc);
 
-    if (s->nb_surfaces_used >= texDesc.ArraySize) {
+    ఒకవేళ (s->nb_surfaces_వాడిన >= texDesc.Array_కొలత) {
         av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    ID3D11Texture2D_AddRef(hwctx->texture);
-    return wrap_texture_buf(ctx, hwctx->texture, s->nb_surfaces_used);
+    ID3_D11_Texture2_D_కూడు_Ref(hwctx->texture);
+    తిరిగి wrap_texture_buf(ctx, hwctx->texture, s->nb_surfaces_వాడిన);
 }
 
-static int d3d11va_frames_init(AVHWFramesContext *ctx)
+స్థిర పూర్ణాంకం d3d11va_చట్రాలు_init(AVHWFramesContext *ctx)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
     AVD3D11VAFramesContext        *hwctx = &s->p;
 
-    int i;
+    పూర్ణాంకం i;
     HRESULT hr;
     D3D11_TEXTURE2D_DESC texDesc;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i].pix_fmt) {
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        ఒకవేళ (ctx->sw_format == supported_formats[i].pix_fmt) {
             s->format = supported_formats[i].d3d_format;
-            break;
+            ఆపు;
         }
     }
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    ఒకవేళ (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
     hwctx->BindFlags |= device_hwctx->BindFlags;
     hwctx->MiscFlags |= device_hwctx->MiscFlags;
 
-    if (s->format == DXGI_FORMAT_420_OPAQUE)
+    ఒకవేళ (s->format == DXGI_FORMAT_420_OPAQUE)
         hwctx->BindFlags &= ~D3D11_BIND_SHADER_RESOURCE;
 
-    ctx->initial_pool_size = FFMIN(ctx->initial_pool_size, MAX_ARRAY_SIZE);
+    ctx->initial_pool_కొలత = FFMIN(ctx->initial_pool_కొలత, MAX_ARRAY_కొలత);
 
     texDesc = (D3D11_TEXTURE2D_DESC){
-        .Width      = ctx->width,
-        .Height     = ctx->height,
-        .MipLevels  = 1,
+        .వెడల్పు_2      = ctx->వెడల్పు,
+        .ఎత్తు_2     = ctx->ఎత్తు,
+        .Mip_స్థాయిలు  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
-        .ArraySize  = ctx->initial_pool_size,
+        .SampleDesc = { .లెక్క_2 = 1 },
+        .Array_కొలత  = ctx->initial_pool_కొలత,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
         .MiscFlags  = hwctx->MiscFlags,
     };
 
-    if (hwctx->texture) {
+    ఒకవేళ (hwctx->texture) {
         D3D11_TEXTURE2D_DESC texDesc2;
         ID3D11Texture2D_GetDesc(hwctx->texture, &texDesc2);
 
-        if (texDesc.Width != texDesc2.Width ||
-            texDesc.Height != texDesc2.Height ||
+        ఒకవేళ (texDesc.వెడల్పు_2 != texDesc2.వెడల్పు_2 ||
+            texDesc.ఎత్తు_2 != texDesc2.ఎత్తు_2 ||
             texDesc.Format != texDesc2.Format) {
             av_log(ctx, AV_LOG_ERROR, "User-provided texture has mismatching parameters\n");
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
 
-        ctx->initial_pool_size = texDesc2.ArraySize;
+        ctx->initial_pool_కొలత = texDesc2.Array_కొలత;
         hwctx->BindFlags = texDesc2.BindFlags;
         hwctx->MiscFlags = texDesc2.MiscFlags;
-    } else if (texDesc.ArraySize > 0) {
-        hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &hwctx->texture);
-        if (FAILED(hr)) {
-            av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (long)hr);
-            return AVERROR_UNKNOWN;
+    } లేకపోతే ఒకవేళ (texDesc.Array_కొలత > 0) {
+        hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, ఖాళీ, &hwctx->texture);
+        ఒకవేళ (FAILED(hr)) {
+            av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (దీర్ఘ)hr);
+            తిరిగి AVERROR_UNKNOWN;
         }
     }
 
-    hwctx->texture_infos = av_realloc_f(NULL, ctx->initial_pool_size, sizeof(*hwctx->texture_infos));
-    if (!hwctx->texture_infos)
-        return AVERROR(ENOMEM);
-    s->nb_surfaces = ctx->initial_pool_size;
+    hwctx->texture_infos = av_realloc_f(ఖాళీ, ctx->initial_pool_కొలత, పరిమాణం(*hwctx->texture_infos));
+    ఒకవేళ (!hwctx->texture_infos)
+        తిరిగి AVERROR(ENOMEM);
+    s->nb_surfaces = ctx->initial_pool_కొలత;
 
-    ffhwframesctx(ctx)->pool_internal =
-        av_buffer_pool_init2(sizeof(AVD3D11FrameDescriptor),
-                             ctx, d3d11va_pool_alloc, NULL);
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+    ffhwframesctx(ctx)->pool_అంతర్గత =
+        av_బఫరు_pool_init2(పరిమాణం(AVD3_D11_చట్రం_Descriptor),
+                             ctx, d3d11va_pool_alloc, ఖాళీ);
+    ఒకవేళ (!ffhwframesctx(ctx)->pool_అంతర్గత)
+        తిరిగి AVERROR(ENOMEM);
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int d3d11va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+స్థిర పూర్ణాంకం d3d11va_get_బఫరు(AVHWFramesContext *ctx, AVFrame *చట్రం)
 {
-    AVD3D11FrameDescriptor *desc;
+    AVD3_D11_చట్రం_Descriptor *desc;
 
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    చట్రం->buf[0] = av_బఫరు_pool_get(ctx->pool);
+    ఒకవేళ (!చట్రం->buf[0])
+        తిరిగి AVERROR(ENOMEM);
 
-    desc = (AVD3D11FrameDescriptor *)frame->buf[0]->data;
+    desc = (AVD3_D11_చట్రం_Descriptor *)చట్రం->buf[0]->దత్తాంశం;
 
-    frame->data[0] = (uint8_t *)desc->texture;
-    frame->data[1] = (uint8_t *)desc->index;
-    frame->format  = AV_PIX_FMT_D3D11;
-    frame->width   = ctx->width;
-    frame->height  = ctx->height;
+    చట్రం->దత్తాంశం[0] = (uint8_t *)desc->texture;
+    చట్రం->దత్తాంశం[1] = (uint8_t *)desc->సూచీ;
+    చట్రం->format  = AV_PIX_FMT_D3D11;
+    చట్రం->వెడల్పు   = ctx->వెడల్పు;
+    చట్రం->ఎత్తు  = ctx->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int d3d11va_transfer_get_formats(AVHWFramesContext *ctx,
-                                        enum AVHWFrameTransferDirection dir,
-                                        enum AVPixelFormat **formats)
+స్థిర పూర్ణాంకం d3d11va_transfer_get_formats(AVHWFramesContext *ctx,
+                                        గణన AVHWFrameTransferDirection dir,
+                                        గణన AVPixelFormat **formats)
 {
     D3D11VAFramesContext *s = ctx->hwctx;
-    enum AVPixelFormat *fmts;
+    గణన AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, పరిమాణం(*fmts));
+    ఒకవేళ (!fmts)
+        తిరిగి AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     // Don't signal support for opaque formats. Actual access would fail.
-    if (s->format == DXGI_FORMAT_420_OPAQUE)
+    ఒకవేళ (s->format == DXGI_FORMAT_420_OPAQUE)
         fmts[0] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT format)
+స్థిర పూర్ణాంకం d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT format)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
     HRESULT hr;
     D3D11_TEXTURE2D_DESC texDesc = {
-        .Width          = ctx->width,
-        .Height         = ctx->height,
-        .MipLevels      = 1,
+        .వెడల్పు_2          = ctx->వెడల్పు,
+        .ఎత్తు_2         = ctx->ఎత్తు,
+        .Mip_స్థాయిలు      = 1,
         .Format         = format,
-        .SampleDesc     = { .Count = 1 },
-        .ArraySize      = 1,
+        .SampleDesc     = { .లెక్క_2 = 1 },
+        .Array_కొలత      = 1,
         .Usage          = D3D11_USAGE_STAGING,
         .CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE,
     };
 
-    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &s->staging_texture);
-    if (FAILED(hr)) {
-        av_log(ctx, AV_LOG_ERROR, "Could not create the staging texture (%lx)\n", (long)hr);
-        return AVERROR_UNKNOWN;
+    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, ఖాళీ, &s->staging_texture);
+    ఒకవేళ (FAILED(hr)) {
+        av_log(ctx, AV_LOG_ERROR, "Could not create the staging texture (%lx)\n", (దీర్ఘ)hr);
+        తిరిగి AVERROR_UNKNOWN;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static void fill_texture_ptrs(uint8_t *data[4], int linesize[4],
+స్థిర శూన్య fill_texture_ptrs(uint8_t *దత్తాంశం[4], పూర్ణాంకం linesize[4],
                               AVHWFramesContext *ctx,
                               D3D11_TEXTURE2D_DESC *desc,
                               D3D11_MAPPED_SUBRESOURCE *map)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < 4; i++)
-        linesize[i] = map->RowPitch;
+    కొరకు (i = 0; i < 4; i++)
+        linesize[i] = map->అడ్డువరుస_Pitch;
 
-    av_image_fill_pointers(data, ctx->sw_format, desc->Height,
-                           (uint8_t*)map->pData, linesize);
+    av_image_fill_సూచికలు(దత్తాంశం, ctx->sw_format, desc->ఎత్తు_2,
+                           (uint8_t*)map->p_దత్తాంశం, linesize);
 }
 
-static int d3d11va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+స్థిర పూర్ణాంకం d3d11va_transfer_దత్తాంశం(AVHWFramesContext *ctx, AVFrame *dst,
+                                 స్థిరరాశి AVFrame *src)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
-    int download = src->format == AV_PIX_FMT_D3D11;
-    const AVFrame *frame = download ? src : dst;
-    const AVFrame *other = download ? dst : src;
+    పూర్ణాంకం download = src->format == AV_PIX_FMT_D3D11;
+    స్థిరరాశి AVFrame *చట్రం = download ? src : dst;
+    స్థిరరాశి AVFrame *other = download ? dst : src;
     // (The interface types are compatible.)
-    ID3D11Resource *texture = (ID3D11Resource *)(ID3D11Texture2D *)frame->data[0];
-    int index = (intptr_t)frame->data[1];
+    ID3D11Resource *texture = (ID3D11Resource *)(ID3D11Texture2D *)చట్రం->దత్తాంశం[0];
+    పూర్ణాంకం సూచీ = (intptr_t)చట్రం->దత్తాంశం[1];
     ID3D11Resource *staging;
-    int w = FFMIN(dst->width,  src->width);
-    int h = FFMIN(dst->height, src->height);
-    uint8_t *map_data[4];
-    int map_linesize[4];
+    పూర్ణాంకం w = FFMIN(dst->వెడల్పు,  src->వెడల్పు);
+    పూర్ణాంకం h = FFMIN(dst->ఎత్తు, src->ఎత్తు);
+    uint8_t *map_దత్తాంశం[4];
+    పూర్ణాంకం map_linesize[4];
     D3D11_TEXTURE2D_DESC desc;
     D3D11_MAPPED_SUBRESOURCE map;
     HRESULT hr;
-    int res;
+    పూర్ణాంకం res;
 
-    if (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    ఒకవేళ (చట్రం->hw_చట్రాలు_ctx->దత్తాంశం != (uint8_t *)ctx || other->format != ctx->sw_format)
+        తిరిగి AVERROR(EINVAL);
 
-    device_hwctx->lock(device_hwctx->lock_ctx);
+    device_hwctx->తాళం_2(device_hwctx->తాళం_ctx);
 
-    if (!s->staging_texture) {
+    ఒకవేళ (!s->staging_texture) {
         ID3D11Texture2D_GetDesc((ID3D11Texture2D *)texture, &desc);
         res = d3d11va_create_staging_texture(ctx, desc.Format);
-        if (res < 0)
-            return res;
+        ఒకవేళ (res < 0)
+            తిరిగి res;
     }
 
     staging = (ID3D11Resource *)s->staging_texture;
 
     ID3D11Texture2D_GetDesc(s->staging_texture, &desc);
 
-    if (download) {
+    ఒకవేళ (download) {
         ID3D11DeviceContext_CopySubresourceRegion(device_hwctx->device_context,
                                                   staging, 0, 0, 0, 0,
-                                                  texture, index, NULL);
+                                                  texture, సూచీ, ఖాళీ);
 
         hr = ID3D11DeviceContext_Map(device_hwctx->device_context,
                                      staging, 0, D3D11_MAP_READ, 0, &map);
-        if (FAILED(hr))
-            goto map_failed;
+        ఒకవేళ (FAILED(hr))
+            వెళ్ళు map_failed;
 
-        fill_texture_ptrs(map_data, map_linesize, ctx, &desc, &map);
+        fill_texture_ptrs(map_దత్తాంశం, map_linesize, ctx, &desc, &map);
 
-        av_image_copy2(dst->data, dst->linesize, map_data, map_linesize,
+        av_image_copy2(dst->దత్తాంశం, dst->linesize, map_దత్తాంశం, map_linesize,
                        ctx->sw_format, w, h);
 
         ID3D11DeviceContext_Unmap(device_hwctx->device_context, staging, 0);
-    } else {
+    } లేకపోతే {
         hr = ID3D11DeviceContext_Map(device_hwctx->device_context,
                                      staging, 0, D3D11_MAP_WRITE, 0, &map);
-        if (FAILED(hr))
-            goto map_failed;
+        ఒకవేళ (FAILED(hr))
+            వెళ్ళు map_failed;
 
-        fill_texture_ptrs(map_data, map_linesize, ctx, &desc, &map);
+        fill_texture_ptrs(map_దత్తాంశం, map_linesize, ctx, &desc, &map);
 
-        av_image_copy2(map_data, map_linesize, src->data, src->linesize,
+        av_image_copy2(map_దత్తాంశం, map_linesize, src->దత్తాంశం, src->linesize,
                        ctx->sw_format, w, h);
 
         ID3D11DeviceContext_Unmap(device_hwctx->device_context, staging, 0);
 
         ID3D11DeviceContext_CopySubresourceRegion(device_hwctx->device_context,
-                                                  texture, index, 0, 0, 0,
-                                                  staging, 0, NULL);
+                                                  texture, సూచీ, 0, 0, 0,
+                                                  staging, 0, ఖాళీ);
     }
 
-    device_hwctx->unlock(device_hwctx->lock_ctx);
-    return 0;
+    device_hwctx->unlock(device_hwctx->తాళం_ctx);
+    తిరిగి 0;
 
 map_failed:
-    av_log(ctx, AV_LOG_ERROR, "Unable to lock D3D11VA surface (%lx)\n", (long)hr);
-    device_hwctx->unlock(device_hwctx->lock_ctx);
-    return AVERROR_UNKNOWN;
+    av_log(ctx, AV_LOG_ERROR, "Unable to lock D3D11VA surface (%lx)\n", (దీర్ఘ)hr);
+    device_hwctx->unlock(device_hwctx->తాళం_ctx);
+    తిరిగి AVERROR_UNKNOWN;
 }
 
-static int d3d11va_device_init(AVHWDeviceContext *hwdev)
+స్థిర పూర్ణాంకం d3d11va_device_init(AVHWDeviceContext *hwdev)
 {
     AVD3D11VADeviceContext *device_hwctx = hwdev->hwctx;
     HRESULT hr;
 
-    if (!device_hwctx->lock) {
-        device_hwctx->lock_ctx = CreateMutex(NULL, 0, NULL);
-        if (device_hwctx->lock_ctx == INVALID_HANDLE_VALUE) {
-            av_log(NULL, AV_LOG_ERROR, "Failed to create a mutex\n");
-            return AVERROR(EINVAL);
+    ఒకవేళ (!device_hwctx->తాళం_2) {
+        device_hwctx->తాళం_ctx = CreateMutex(ఖాళీ, 0, ఖాళీ);
+        ఒకవేళ (device_hwctx->తాళం_ctx == INVALID_HANDLE_విలువ) {
+            av_log(ఖాళీ, AV_LOG_ERROR, "Failed to create a mutex\n");
+            తిరిగి AVERROR(EINVAL);
         }
-        device_hwctx->lock   = d3d11va_default_lock;
+        device_hwctx->తాళం_2   = d3d11va_default_తాళం;
         device_hwctx->unlock = d3d11va_default_unlock;
     }
 
-    if (!device_hwctx->device_context) {
-        ID3D11Device_GetImmediateContext(device_hwctx->device, &device_hwctx->device_context);
-        if (!device_hwctx->device_context)
-            return AVERROR_UNKNOWN;
+    ఒకవేళ (!device_hwctx->device_context) {
+        ID3_D11_Device_Get_తక్షణ_Context(device_hwctx->device, &device_hwctx->device_context);
+        ఒకవేళ (!device_hwctx->device_context)
+            తిరిగి AVERROR_UNKNOWN;
     }
 
-    if (!device_hwctx->video_device) {
+    ఒకవేళ (!device_hwctx->video_device) {
         hr = ID3D11DeviceContext_QueryInterface(device_hwctx->device, &IID_ID3D11VideoDevice,
-                                                (void **)&device_hwctx->video_device);
-        if (FAILED(hr))
-            return AVERROR_UNKNOWN;
+                                                (శూన్య **)&device_hwctx->video_device);
+        ఒకవేళ (FAILED(hr))
+            తిరిగి AVERROR_UNKNOWN;
     }
 
-    if (!device_hwctx->video_context) {
+    ఒకవేళ (!device_hwctx->video_context) {
         hr = ID3D11DeviceContext_QueryInterface(device_hwctx->device_context, &IID_ID3D11VideoContext,
-                                                (void **)&device_hwctx->video_context);
-        if (FAILED(hr))
-            return AVERROR_UNKNOWN;
+                                                (శూన్య **)&device_hwctx->video_context);
+        ఒకవేళ (FAILED(hr))
+            తిరిగి AVERROR_UNKNOWN;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static void d3d11va_device_uninit(AVHWDeviceContext *hwdev)
+స్థిర శూన్య d3d11va_device_uninit(AVHWDeviceContext *hwdev)
 {
     AVD3D11VADeviceContext *device_hwctx = hwdev->hwctx;
 
-    if (device_hwctx->device) {
+    ఒకవేళ (device_hwctx->device) {
         ID3D11Device_Release(device_hwctx->device);
-        device_hwctx->device = NULL;
+        device_hwctx->device = ఖాళీ;
     }
 
-    if (device_hwctx->device_context) {
+    ఒకవేళ (device_hwctx->device_context) {
         ID3D11DeviceContext_Release(device_hwctx->device_context);
-        device_hwctx->device_context = NULL;
+        device_hwctx->device_context = ఖాళీ;
     }
 
-    if (device_hwctx->video_device) {
+    ఒకవేళ (device_hwctx->video_device) {
         ID3D11VideoDevice_Release(device_hwctx->video_device);
-        device_hwctx->video_device = NULL;
+        device_hwctx->video_device = ఖాళీ;
     }
 
-    if (device_hwctx->video_context) {
+    ఒకవేళ (device_hwctx->video_context) {
         ID3D11VideoContext_Release(device_hwctx->video_context);
-        device_hwctx->video_context = NULL;
+        device_hwctx->video_context = ఖాళీ;
     }
 
-    if (device_hwctx->lock == d3d11va_default_lock) {
-        CloseHandle(device_hwctx->lock_ctx);
-        device_hwctx->lock_ctx = INVALID_HANDLE_VALUE;
-        device_hwctx->lock = NULL;
+    ఒకవేళ (device_hwctx->తాళం_2 == d3d11va_default_తాళం) {
+        CloseHandle(device_hwctx->తాళం_ctx);
+        device_hwctx->తాళం_ctx = INVALID_HANDLE_విలువ;
+        device_hwctx->తాళం_2 = ఖాళీ;
     }
 }
 
-static int d3d11va_device_find_adapter_by_vendor_id(AVHWDeviceContext *ctx, uint32_t flags, const char *vendor_id)
+స్థిర పూర్ణాంకం d3d11va_device_కనుగొను_adapter_by_vendor_id(AVHWDeviceContext *ctx, uint32_t flags, స్థిరరాశి అక్షరం *vendor_id)
 {
     HRESULT hr;
-    IDXGIAdapter *adapter = NULL;
+    IDXGIAdapter *adapter = ఖాళీ;
     IDXGIFactory2 *factory;
-    int adapter_id = 0;
-    long int id = strtol(vendor_id, NULL, 0);
+    పూర్ణాంకం adapter_id = 0;
+    దీర్ఘ పూర్ణాంకం id = strtol(vendor_id, ఖాళీ, 0);
 
-    hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (void **)&factory);
-    if (FAILED(hr)) {
+    hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (శూన్య **)&factory);
+    ఒకవేళ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "CreateDXGIFactory returned error\n");
-        return -1;
+        తిరిగి -1;
     }
 
-    while (IDXGIFactory2_EnumAdapters(factory, adapter_id++, &adapter) != DXGI_ERROR_NOT_FOUND) {
-        ID3D11Device* device = NULL;
+    అయితే (IDXGIFactory2_EnumAdapters(factory, adapter_id++, &adapter) != DXGI_ERROR_NOT_దొరికింది) {
+        ID3D11Device* device = ఖాళీ;
         DXGI_ADAPTER_DESC adapter_desc;
 
-        hr = mD3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, NULL, 0, D3D11_SDK_VERSION, &device, NULL, NULL);
-        if (FAILED(hr)) {
+        hr = mD3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, ఖాళీ, flags, ఖాళీ, 0, D3_D11_SDK_సంస్కరణ, &device, ఖాళీ, ఖాళీ);
+        ఒకవేళ (FAILED(hr)) {
             av_log(ctx, AV_LOG_DEBUG, "D3D11CreateDevice returned error, try next adapter\n");
             IDXGIAdapter_Release(adapter);
-            continue;
+            కొనసాగు;
         }
 
         hr = IDXGIAdapter2_GetDesc(adapter, &adapter_desc);
         ID3D11Device_Release(device);
         IDXGIAdapter_Release(adapter);
-        if (FAILED(hr)) {
+        ఒకవేళ (FAILED(hr)) {
             av_log(ctx, AV_LOG_DEBUG, "IDXGIAdapter2_GetDesc returned error, try next adapter\n");
-            continue;
-        } else if (adapter_desc.VendorId == id) {
+            కొనసాగు;
+        } లేకపోతే ఒకవేళ (adapter_desc.VendorId == id) {
             IDXGIFactory2_Release(factory);
-            return adapter_id - 1;
+            తిరిగి adapter_id - 1;
         }
     }
 
     IDXGIFactory2_Release(factory);
-    return -1;
+    తిరిగి -1;
 }
 
-static int d3d11va_device_create(AVHWDeviceContext *ctx, const char *device,
-                                 AVDictionary *opts, int flags)
+స్థిర పూర్ణాంకం d3d11va_device_create(AVHWDeviceContext *ctx, స్థిరరాశి అక్షరం *device,
+                                 AVDictionary *opts, పూర్ణాంకం flags)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->hwctx;
 
     HRESULT hr;
-    IDXGIAdapter           *pAdapter = NULL;
+    IDXGIAdapter           *pAdapter = ఖాళీ;
     ID3D10Multithread      *pMultithread;
     UINT creationFlags = D3D11_CREATE_DEVICE_VIDEO_SUPPORT;
-    int is_debug       = !!av_dict_get(opts, "debug", NULL, 0);
-    int ret;
-    int adapter = -1;
+    పూర్ణాంకం is_debug       = !!av_dict_get(opts, "debug", ఖాళీ, 0);
+    పూర్ణాంకం ret;
+    పూర్ణాంకం adapter = -1;
 
-    if (is_debug) {
+    ఒకవేళ (is_debug) {
         creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
         av_log(ctx, AV_LOG_INFO, "Enabling d3d11 debugging.\n");
     }
 
-    if ((ret = ff_thread_once(&functions_loaded, load_functions)) != 0)
-        return AVERROR_UNKNOWN;
-    if (!mD3D11CreateDevice || !mCreateDXGIFactory) {
+    ఒకవేళ ((ret = ff_thread_once(&functions_loaded, ఎక్కించు_functions)) != 0)
+        తిరిగి AVERROR_UNKNOWN;
+    ఒకవేళ (!mD3D11CreateDevice || !mCreateDXGIFactory) {
         av_log(ctx, AV_LOG_ERROR, "Failed to load D3D11 library or its functions\n");
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
-    if (device) {
+    ఒకవేళ (device) {
         adapter = atoi(device);
-    } else {
-        AVDictionaryEntry *e = av_dict_get(opts, "vendor_id", NULL, 0);
-        if (e && e->value) {
-            adapter = d3d11va_device_find_adapter_by_vendor_id(ctx, creationFlags, e->value);
-            if (adapter < 0) {
+    } లేకపోతే {
+        AVDictionary_నమోదు *e = av_dict_get(opts, "vendor_id", ఖాళీ, 0);
+        ఒకవేళ (e && e->విలువ) {
+            adapter = d3d11va_device_కనుగొను_adapter_by_vendor_id(ctx, creationFlags, e->విలువ);
+            ఒకవేళ (adapter < 0) {
                 av_log(ctx, AV_LOG_ERROR, "Failed to find d3d11va adapter by "
-                       "vendor id %s\n", e->value);
-                return AVERROR_UNKNOWN;
+                       "vendor id %s\n", e->విలువ);
+                తిరిగి AVERROR_UNKNOWN;
             }
         }
     }
 
-    if (adapter >= 0) {
+    ఒకవేళ (adapter >= 0) {
         IDXGIFactory2 *pDXGIFactory;
 
         av_log(ctx, AV_LOG_VERBOSE, "Selecting d3d11va adapter %d\n", adapter);
-        hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (void **)&pDXGIFactory);
-        if (SUCCEEDED(hr)) {
-            if (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
-                pAdapter = NULL;
+        hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (శూన్య **)&pDXGIFactory);
+        ఒకవేళ (SUCCEEDED(hr)) {
+            ఒకవేళ (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
+                pAdapter = ఖాళీ;
             IDXGIFactory2_Release(pDXGIFactory);
         }
     }
 
-    if (pAdapter) {
+    ఒకవేళ (pAdapter) {
         DXGI_ADAPTER_DESC desc;
         hr = IDXGIAdapter2_GetDesc(pAdapter, &desc);
-        if (!FAILED(hr)) {
+        ఒకవేళ (!FAILED(hr)) {
             av_log(ctx, AV_LOG_INFO, "Using device %04x:%04x (%ls).\n",
                    desc.VendorId, desc.DeviceId, desc.Description);
         }
     }
 
-    hr = mD3D11CreateDevice(pAdapter, pAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE, NULL, creationFlags, NULL, 0,
-                   D3D11_SDK_VERSION, &device_hwctx->device, NULL, NULL);
-    if (pAdapter)
+    hr = mD3D11CreateDevice(pAdapter, pAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE, ఖాళీ, creationFlags, ఖాళీ, 0,
+                   D3_D11_SDK_సంస్కరణ, &device_hwctx->device, ఖాళీ, ఖాళీ);
+    ఒకవేళ (pAdapter)
         IDXGIAdapter_Release(pAdapter);
-    if (FAILED(hr)) {
-        av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device (%lx)\n", (long)hr);
-        return AVERROR_UNKNOWN;
+    ఒకవేళ (FAILED(hr)) {
+        av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device (%lx)\n", (దీర్ఘ)hr);
+        తిరిగి AVERROR_UNKNOWN;
     }
 
-    hr = ID3D11Device_QueryInterface(device_hwctx->device, &IID_ID3D10Multithread, (void **)&pMultithread);
-    if (SUCCEEDED(hr)) {
-        ID3D10Multithread_SetMultithreadProtected(pMultithread, TRUE);
+    hr = ID3D11Device_QueryInterface(device_hwctx->device, &IID_ID3D10Multithread, (శూన్య **)&pMultithread);
+    ఒకవేళ (SUCCEEDED(hr)) {
+        ID3_D10_Multithread_సమితి_Multithread_Protected(pMultithread, TRUE);
         ID3D10Multithread_Release(pMultithread);
     }
 
-#if !HAVE_UWP && HAVE_DXGIDEBUG_H
-    if (is_debug) {
-        HANDLE dxgidebug_dll = LoadLibrary("dxgidebug.dll");
-        if (dxgidebug_dll) {
-            HRESULT (WINAPI  * pf_DXGIGetDebugInterface)(const GUID *riid, void **ppDebug)
-                = (void *)GetProcAddress(dxgidebug_dll, "DXGIGetDebugInterface");
-            if (pf_DXGIGetDebugInterface) {
-                IDXGIDebug *dxgi_debug = NULL;
-                hr = pf_DXGIGetDebugInterface(&IID_IDXGIDebug, (void**)&dxgi_debug);
-                if (SUCCEEDED(hr) && dxgi_debug) {
-                    IDXGIDebug_ReportLiveObjects(dxgi_debug, DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+#ఒకవేళ !HAVE_UWP && HAVE_DXGIDEBUG_H
+    ఒకవేళ (is_debug) {
+        HANDLE dxgidebug_dll = ఎక్కించు_Library("dxgidebug.dll");
+        ఒకవేళ (dxgidebug_dll) {
+            HRESULT (WINAPI  * pf_DXGIGetDebugInterface)(స్థిరరాశి GUID *riid, శూన్య **ppDebug)
+                = (శూన్య *)Get_Proc_చిరునామా(dxgidebug_dll, "DXGIGetDebugInterface");
+            ఒకవేళ (pf_DXGIGetDebugInterface) {
+                IDXGIDebug *dxgi_debug = ఖాళీ;
+                hr = pf_DXGIGetDebugInterface(&IID_IDXGIDebug, (శూన్య**)&dxgi_debug);
+                ఒకవేళ (SUCCEEDED(hr) && dxgi_debug) {
+                    IDXGIDebug_Report_సజీవ_Objects(dxgi_debug, DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
                     av_log(ctx, AV_LOG_INFO, "Enabled dxgi debugging.\n");
-                } else {
+                } లేకపోతే {
                     av_log(ctx, AV_LOG_WARNING, "Failed enabling dxgi debugging.\n");
                 }
-            } else {
+            } లేకపోతే {
                 av_log(ctx, AV_LOG_WARNING, "Failed getting dxgi debug interface.\n");
             }
-        } else {
+        } లేకపోతే {
             av_log(ctx, AV_LOG_WARNING, "Failed loading dxgi debug library.\n");
         }
     }
-#endif
+#అయితే_ముగింపు
 
-    if (av_dict_get(opts, "SHADER", NULL, 0))
+    ఒకవేళ (av_dict_get(opts, "SHADER", ఖాళీ, 0))
         device_hwctx->BindFlags |= D3D11_BIND_SHADER_RESOURCE;
 
-    if (av_dict_get(opts, "UAV", NULL, 0))
+    ఒకవేళ (av_dict_get(opts, "UAV", ఖాళీ, 0))
         device_hwctx->BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
 
-    if (av_dict_get(opts, "RTV", NULL, 0))
-        device_hwctx->BindFlags |= D3D11_BIND_RENDER_TARGET;
+    ఒకవేళ (av_dict_get(opts, "RTV", ఖాళీ, 0))
+        device_hwctx->BindFlags |= D3_D11_BIND_RENDER_లక్ష్యం;
 
-    if (av_dict_get(opts, "SHARED", NULL, 0))
+    ఒకవేళ (av_dict_get(opts, "SHARED", ఖాళీ, 0))
         device_hwctx->MiscFlags |= D3D11_RESOURCE_MISC_SHARED;
 
-    return 0;
+    తిరిగి 0;
 }
 
-const HWContextType ff_hwcontext_type_d3d11va = {
+స్థిరరాశి HWContextType ff_hwcontext_type_d3d11va = {
     .type                 = AV_HWDEVICE_TYPE_D3D11VA,
     .name                 = "D3D11VA",
 
-    .device_hwctx_size    = sizeof(AVD3D11VADeviceContext),
-    .frames_hwctx_size    = sizeof(D3D11VAFramesContext),
+    .device_hwctx_కొలత    = పరిమాణం(AVD3D11VADeviceContext),
+    .చట్రాలు_hwctx_కొలత    = పరిమాణం(D3D11VAFramesContext),
 
     .device_create        = d3d11va_device_create,
     .device_init          = d3d11va_device_init,
     .device_uninit        = d3d11va_device_uninit,
-    .frames_get_constraints = d3d11va_frames_get_constraints,
-    .frames_init          = d3d11va_frames_init,
-    .frames_uninit        = d3d11va_frames_uninit,
-    .frames_get_buffer    = d3d11va_get_buffer,
+    .చట్రాలు_get_constraints = d3d11va_చట్రాలు_get_constraints,
+    .చట్రాలు_init          = d3d11va_చట్రాలు_init,
+    .చట్రాలు_uninit        = d3d11va_చట్రాలు_uninit,
+    .చట్రాలు_get_బఫరు    = d3d11va_get_బఫరు,
     .transfer_get_formats = d3d11va_transfer_get_formats,
-    .transfer_data_to     = d3d11va_transfer_data,
-    .transfer_data_from   = d3d11va_transfer_data,
+    .transfer_దత్తాంశం_గమ్యం     = d3d11va_transfer_దత్తాంశం,
+    .transfer_దత్తాంశం_from   = d3d11va_transfer_దత్తాంశం,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_D3D11, AV_PIX_FMT_NONE },
+    .pix_fmts             = (స్థిరరాశి గణన AVPixelFormat[]){ AV_PIX_FMT_D3D11, AV_PIX_FMT_NONE },
 };

@@ -18,56 +18,56 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
-#include <math.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <string.h>
+#అన్తర్భావ <math.h>
 
-#include "display.h"
-#include "mathematics.h"
+#అన్తర్భావ "display.h"
+#అన్తర్భావ "mathematics.h"
 
 // fixed point to double
-#define CONV_FP(x) ((double) (x)) / (1 << 16)
+#నిర్వచించు CONV_FP(x) ((ద్విగుణ) (x)) / (1 << 16)
 
 // double to fixed point
-#define CONV_DB(x) (int32_t) ((x) * (1 << 16))
+#నిర్వచించు CONV_DB(x) (int32_t) ((x) * (1 << 16))
 
-double av_display_rotation_get(const int32_t matrix[9])
+ద్విగుణ av_display_rotation_get(స్థిరరాశి int32_t మాతృక[9])
 {
-    double rotation, scale[2];
+    ద్విగుణ rotation, scale[2];
 
-    scale[0] = hypot(CONV_FP(matrix[0]), CONV_FP(matrix[3]));
-    scale[1] = hypot(CONV_FP(matrix[1]), CONV_FP(matrix[4]));
+    scale[0] = hypot(CONV_FP(మాతృక[0]), CONV_FP(మాతృక[3]));
+    scale[1] = hypot(CONV_FP(మాతృక[1]), CONV_FP(మాతృక[4]));
 
-    if (scale[0] == 0.0 || scale[1] == 0.0)
-        return NAN;
+    ఒకవేళ (scale[0] == 0.0 || scale[1] == 0.0)
+        తిరిగి NAN;
 
-    rotation = atan2(CONV_FP(matrix[1]) / scale[1],
-                     CONV_FP(matrix[0]) / scale[0]) * 180 / M_PI;
+    rotation = atan2(CONV_FP(మాతృక[1]) / scale[1],
+                     CONV_FP(మాతృక[0]) / scale[0]) * 180 / M_PI;
 
-    return -rotation;
+    తిరిగి -rotation;
 }
 
-void av_display_rotation_set(int32_t matrix[9], double angle)
+శూన్య av_display_rotation_సమితి(int32_t మాతృక[9], ద్విగుణ angle)
 {
-    double radians = -angle * M_PI / 180.0f;
-    double c = cos(radians);
-    double s = sin(radians);
+    ద్విగుణ radians = -angle * M_PI / 180.0f;
+    ద్విగుణ c = కోజ్యా(radians);
+    ద్విగుణ s = జ్యా(radians);
 
-    memset(matrix, 0, 9 * sizeof(int32_t));
+    memset(మాతృక, 0, 9 * పరిమాణం(int32_t));
 
-    matrix[0] = CONV_DB(c);
-    matrix[1] = CONV_DB(-s);
-    matrix[3] = CONV_DB(s);
-    matrix[4] = CONV_DB(c);
-    matrix[8] = 1 << 30;
+    మాతృక[0] = CONV_DB(c);
+    మాతృక[1] = CONV_DB(-s);
+    మాతృక[3] = CONV_DB(s);
+    మాతృక[4] = CONV_DB(c);
+    మాతృక[8] = 1 << 30;
 }
 
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip)
+శూన్య av_display_మాతృక_flip(int32_t మాతృక[9], పూర్ణాంకం hflip, పూర్ణాంకం vflip)
 {
-    int i;
-    const int flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
+    పూర్ణాంకం i;
+    స్థిరరాశి పూర్ణాంకం flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
 
-    if (hflip || vflip)
-        for (i = 0; i < 9; i++)
-            matrix[i] *= flip[i % 3];
+    ఒకవేళ (hflip || vflip)
+        కొరకు (i = 0; i < 9; i++)
+            మాతృక[i] *= flip[i % 3];
 }

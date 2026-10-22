@@ -16,43 +16,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include <stdint.h>
-#include <string.h>
+#అన్తర్భావ <stdatomic.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <string.h>
 
-#include "refstruct.h"
-#include "sanitizer.h"
+#అన్తర్భావ "refstruct.h"
+#అన్తర్భావ "sanitizer.h"
 
-#include "avassert.h"
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "mem_internal.h"
-#include "thread.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "mem_internal.h"
+#అన్తర్భావ "thread.h"
 
-#ifndef REFSTRUCT_CHECKED
-#ifndef ASSERT_LEVEL
-#define ASSERT_LEVEL 0
-#endif
-#define REFSTRUCT_CHECKED (ASSERT_LEVEL >= 1)
-#endif
+#నిర్వచితం_కాకపోతే REFSTRUCT_CHECKED
+#నిర్వచితం_కాకపోతే ASSERT_LEVEL
+#నిర్వచించు ASSERT_LEVEL 0
+#అయితే_ముగింపు
+#నిర్వచించు REFSTRUCT_CHECKED (ASSERT_LEVEL >= 1)
+#అయితే_ముగింపు
 
-#if REFSTRUCT_CHECKED
-#define ff_assert(cond) av_assert0(cond)
-#else
-#define ff_assert(cond) ((void)0)
-#endif
+#ఒకవేళ REFSTRUCT_CHECKED
+#నిర్వచించు ff_assert(cond) av_assert0(cond)
+#లేకపోతే
+#నిర్వచించు ff_assert(cond) ((శూన్య)0)
+#అయితే_ముగింపు
 
-#define REFSTRUCT_COOKIE AV_NE((uint64_t)MKBETAG('R', 'e', 'f', 'S') << 32 | MKBETAG('t', 'r', 'u', 'c'), \
+#నిర్వచించు REFSTRUCT_COOKIE AV_NE((uint64_t)MKBETAG('R', 'e', 'f', 'S') << 32 | MKBETAG('t', 'r', 'u', 'c'), \
                                MKTAG('R', 'e', 'f', 'S') | (uint64_t)MKTAG('t', 'r', 'u', 'c') << 32)
 
-#ifndef _MSC_VER
-#define REFCOUNT_OFFSET FFALIGN(sizeof(RefCount), FFMAX(ALIGN_64, _Alignof(max_align_t)))
-#else
-#define REFCOUNT_OFFSET FFALIGN(sizeof(RefCount), ALIGN_64)
-#endif
+#నిర్వచితం_కాకపోతే _MSC_VER
+#నిర్వచించు REFCOUNT_స్థానభ్రంశం FFALIGN(పరిమాణం(Ref_లెక్క), FFMAX(ALIGN_64, _Alignof(max_align_t)))
+#లేకపోతే
+#నిర్వచించు REFCOUNT_స్థానభ్రంశం FFALIGN(పరిమాణం(Ref_లెక్క), ALIGN_64)
+#అయితే_ముగింపు
 
-typedef struct RefCount {
+రకనిర్వచనం నిర్మాణం Ref_లెక్క {
     /**
      * An uintptr_t is big enough to hold the address of every reference,
      * so no overflow can happen when incrementing the refcount as long as
@@ -60,138 +60,138 @@ typedef struct RefCount {
      */
     atomic_uintptr_t  refcount;
     AVRefStructOpaque opaque;
-    void (*free_cb)(AVRefStructOpaque opaque, void *obj);
-    void (*free)(void *ref);
+    శూన్య (*free_cb)(AVRefStructOpaque opaque, శూన్య *obj);
+    శూన్య (*విడుదల)(శూన్య *ref);
 
-#if REFSTRUCT_CHECKED
+#ఒకవేళ REFSTRUCT_CHECKED
     uint64_t cookie;
-#endif
-} RefCount;
+#అయితే_ముగింపు
+} Ref_లెక్క;
 
-static RefCount *get_refcount(void *obj)
+స్థిర Ref_లెక్క *get_refcount(శూన్య *obj)
 {
-    RefCount *ref = (RefCount*)((char*)obj - REFCOUNT_OFFSET);
+    Ref_లెక్క *ref = (Ref_లెక్క*)((అక్షరం*)obj - REFCOUNT_స్థానభ్రంశం);
     ff_assert(ref->cookie == REFSTRUCT_COOKIE);
-    return ref;
+    తిరిగి ref;
 }
 
-static const RefCount *cget_refcount(const void *obj)
+స్థిర స్థిరరాశి Ref_లెక్క *cget_refcount(స్థిరరాశి శూన్య *obj)
 {
-    const RefCount *ref = (const RefCount*)((const char*)obj - REFCOUNT_OFFSET);
+    స్థిరరాశి Ref_లెక్క *ref = (స్థిరరాశి Ref_లెక్క*)((స్థిరరాశి అక్షరం*)obj - REFCOUNT_స్థానభ్రంశం);
     ff_assert(ref->cookie == REFSTRUCT_COOKIE);
-    return ref;
+    తిరిగి ref;
 }
 
-static void *get_userdata(void *buf)
+స్థిర శూన్య *get_userdata(శూన్య *buf)
 {
-    return (char*)buf + REFCOUNT_OFFSET;
+    తిరిగి (అక్షరం*)buf + REFCOUNT_స్థానభ్రంశం;
 }
 
-static void refcount_init(RefCount *ref, AVRefStructOpaque opaque,
-                          void (*free_cb)(AVRefStructOpaque opaque, void *obj))
+స్థిర శూన్య refcount_init(Ref_లెక్క *ref, AVRefStructOpaque opaque,
+                          శూన్య (*free_cb)(AVRefStructOpaque opaque, శూన్య *obj))
 {
     atomic_init(&ref->refcount, 1);
     ref->opaque  = opaque;
     ref->free_cb = free_cb;
-    ref->free    = av_free;
+    ref->విడుదల    = av_free;
 
-#if REFSTRUCT_CHECKED
+#ఒకవేళ REFSTRUCT_CHECKED
     ref->cookie  = REFSTRUCT_COOKIE;
-#endif
+#అయితే_ముగింపు
 }
 
-void *av_refstruct_alloc_ext_c(size_t size, unsigned flags, AVRefStructOpaque opaque,
-                               void (*free_cb)(AVRefStructOpaque opaque, void *obj))
+శూన్య *av_refstruct_alloc_ext_c(size_t కొలత, గుర్తులేని flags, AVRefStructOpaque opaque,
+                               శూన్య (*free_cb)(AVRefStructOpaque opaque, శూన్య *obj))
 {
-    void *buf, *obj;
+    శూన్య *buf, *obj;
 
-    if (size > SIZE_MAX - REFCOUNT_OFFSET)
-        return NULL;
-    buf = av_malloc(size + REFCOUNT_OFFSET);
-    if (!buf)
-        return NULL;
+    ఒకవేళ (కొలత > SIZE_MAX - REFCOUNT_స్థానభ్రంశం)
+        తిరిగి ఖాళీ;
+    buf = av_malloc(కొలత + REFCOUNT_స్థానభ్రంశం);
+    ఒకవేళ (!buf)
+        తిరిగి ఖాళీ;
     refcount_init(buf, opaque, free_cb);
     obj = get_userdata(buf);
-    if (!(flags & AV_REFSTRUCT_FLAG_NO_ZEROING))
-        memset(obj, 0, size);
+    ఒకవేళ (!(flags & AV_REFSTRUCT_FLAG_NO_ZEROING))
+        memset(obj, 0, కొలత);
 
-    return obj;
+    తిరిగి obj;
 }
 
-void av_refstruct_unref(void *objp)
+శూన్య av_refstruct_unref(శూన్య *objp)
 {
-    void *obj;
-    RefCount *ref;
+    శూన్య *obj;
+    Ref_లెక్క *ref;
 
-    memcpy(&obj, objp, sizeof(obj));
-    if (!obj)
-        return;
-    memcpy(objp, &(void *){ NULL }, sizeof(obj));
+    జ్ఞాపకం_నకలు(&obj, objp, పరిమాణం(obj));
+    ఒకవేళ (!obj)
+        తిరిగి;
+    జ్ఞాపకం_నకలు(objp, &(శూన్య *){ ఖాళీ }, పరిమాణం(obj));
 
     ref = get_refcount(obj);
-    if (atomic_fetch_sub_explicit(&ref->refcount, 1, memory_order_acq_rel) == 1) {
-        if (ref->free_cb)
+    ఒకవేళ (atomic_fetch_sub_explicit(&ref->refcount, 1, memory_order_acq_rel) == 1) {
+        ఒకవేళ (ref->free_cb)
             ref->free_cb(ref->opaque, obj);
-        ref->free(ref);
+        ref->విడుదల(ref);
     }
 
-    return;
+    తిరిగి;
 }
 
-void *av_refstruct_ref(void *obj)
+శూన్య *av_refstruct_ref(శూన్య *obj)
 {
-    RefCount *ref = get_refcount(obj);
+    Ref_లెక్క *ref = get_refcount(obj);
 
     atomic_fetch_add_explicit(&ref->refcount, 1, memory_order_relaxed);
 
-    return obj;
+    తిరిగి obj;
 }
 
-const void *av_refstruct_ref_c(const void *obj)
+స్థిరరాశి శూన్య *av_refstruct_ref_c(స్థిరరాశి శూన్య *obj)
 {
     /* Casting const away here is fine, as it is only supposed
      * to apply to the user's data and not our bookkeeping data. */
-    RefCount *ref = get_refcount((void*)obj);
+    Ref_లెక్క *ref = get_refcount((శూన్య*)obj);
 
     atomic_fetch_add_explicit(&ref->refcount, 1, memory_order_relaxed);
 
-    return obj;
+    తిరిగి obj;
 }
 
-void av_refstruct_replace(void *dstp, const void *src)
+శూన్య av_refstruct_replace(శూన్య *dstp, స్థిరరాశి శూన్య *src)
 {
-    const void *dst;
-    memcpy(&dst, dstp, sizeof(dst));
+    స్థిరరాశి శూన్య *dst;
+    జ్ఞాపకం_నకలు(&dst, dstp, పరిమాణం(dst));
 
-    if (src == dst)
-        return;
+    ఒకవేళ (src == dst)
+        తిరిగి;
     av_refstruct_unref(dstp);
-    if (src) {
+    ఒకవేళ (src) {
         dst = av_refstruct_ref_c(src);
-        memcpy(dstp, &dst, sizeof(dst));
+        జ్ఞాపకం_నకలు(dstp, &dst, పరిమాణం(dst));
     }
 }
 
-int av_refstruct_exclusive(const void *obj)
+పూర్ణాంకం av_refstruct_exclusive(స్థిరరాశి శూన్య *obj)
 {
-    const RefCount *ref = cget_refcount(obj);
+    స్థిరరాశి Ref_లెక్క *ref = cget_refcount(obj);
     /* Casting const away here is safe, because it is a load.
      * It is necessary because atomic_load_explicit() does not
      * accept const atomics in C11 (see also N1807). */
-    return atomic_load_explicit((atomic_uintptr_t*)&ref->refcount, memory_order_acquire) == 1;
+    తిరిగి atomic_load_explicit((atomic_uintptr_t*)&ref->refcount, memory_order_acquire) == 1;
 }
 
-struct AVRefStructPool {
-    size_t size;
+నిర్మాణం AVRefStructPool {
+    size_t కొలత;
     AVRefStructOpaque opaque;
-    int  (*init_cb)(AVRefStructOpaque opaque, void *obj);
-    void (*reset_cb)(AVRefStructOpaque opaque, void *obj);
-    void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj);
-    void (*free_cb)(AVRefStructOpaque opaque);
+    పూర్ణాంకం  (*init_cb)(AVRefStructOpaque opaque, శూన్య *obj);
+    శూన్య (*reset_cb)(AVRefStructOpaque opaque, శూన్య *obj);
+    శూన్య (*free_నమోదు_cb)(AVRefStructOpaque opaque, శూన్య *obj);
+    శూన్య (*free_cb)(AVRefStructOpaque opaque);
 
-    int uninited;
-    unsigned entry_flags;
-    unsigned pool_flags;
+    పూర్ణాంకం uninited;
+    గుర్తులేని నమోదు_flags;
+    గుర్తులేని pool_flags;
 
     /** The number of outstanding entries not in available_entries. */
     atomic_uintptr_t refcount;
@@ -202,121 +202,121 @@ struct AVRefStructPool {
      * While the entries are in use, the opaque is a pointer
      * to the corresponding AVRefStructPool.
      */
-    RefCount *available_entries;
+    Ref_లెక్క *అందుబాటు_entries;
     AVMutex mutex;
 };
 
-static void pool_free(AVRefStructPool *pool)
+స్థిర శూన్య pool_free(AVRefStructPool *pool)
 {
     ff_mutex_destroy(&pool->mutex);
-    if (pool->free_cb)
+    ఒకవేళ (pool->free_cb)
         pool->free_cb(pool->opaque);
     av_free(get_refcount(pool));
 }
 
-static void pool_free_entry(AVRefStructPool *pool, RefCount *ref)
+స్థిర శూన్య pool_free_నమోదు(AVRefStructPool *pool, Ref_లెక్క *ref)
 {
-    if (!pool->free_entry_cb)
-        FF_ASAN_UNPOISON(get_userdata(ref), pool->size);
-    if (pool->free_entry_cb)
-        pool->free_entry_cb(pool->opaque, get_userdata(ref));
+    ఒకవేళ (!pool->free_నమోదు_cb)
+        FF_ASAN_UNPOISON(get_userdata(ref), pool->కొలత);
+    ఒకవేళ (pool->free_నమోదు_cb)
+        pool->free_నమోదు_cb(pool->opaque, get_userdata(ref));
     av_free(ref);
 }
 
-static void pool_return_entry(void *ref_)
+స్థిర శూన్య pool_return_నమోదు(శూన్య *ref_)
 {
-    RefCount *ref = ref_;
+    Ref_లెక్క *ref = ref_;
     AVRefStructPool *pool = ref->opaque.nc;
 
-    ff_mutex_lock(&pool->mutex);
-    if (!pool->uninited) {
+    ff_mutex_తాళం(&pool->mutex);
+    ఒకవేళ (!pool->uninited) {
         /* An entry with an entry free callback owns allocations while it
          * rests in the pool. LeakSanitizer does not follow pointers stored
          * in poisoned memory, so such entries stay addressable. */
-        if (!pool->free_entry_cb)
-            FF_ASAN_POISON(get_userdata(ref), pool->size);
-        ref->opaque.nc = pool->available_entries;
-        pool->available_entries = ref;
-        ref = NULL;
+        ఒకవేళ (!pool->free_నమోదు_cb)
+            FF_ASAN_POISON(get_userdata(ref), pool->కొలత);
+        ref->opaque.nc = pool->అందుబాటు_entries;
+        pool->అందుబాటు_entries = ref;
+        ref = ఖాళీ;
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (ref)
-        pool_free_entry(pool, ref);
+    ఒకవేళ (ref)
+        pool_free_నమోదు(pool, ref);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+    ఒకవేళ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
         pool_free(pool);
 }
 
-static void pool_reset_entry(AVRefStructOpaque opaque, void *entry)
+స్థిర శూన్య pool_reset_నమోదు(AVRefStructOpaque opaque, శూన్య *నమోదు_2)
 {
     AVRefStructPool *pool = opaque.nc;
 
-    pool->reset_cb(pool->opaque, entry);
+    pool->reset_cb(pool->opaque, నమోదు_2);
 }
 
-static int refstruct_pool_get_ext(void *datap, AVRefStructPool *pool)
+స్థిర పూర్ణాంకం refstruct_pool_get_ext(శూన్య *datap, AVRefStructPool *pool)
 {
-    void *ret = NULL;
+    శూన్య *ret = ఖాళీ;
 
-    memcpy(datap, &(void *){ NULL }, sizeof(void*));
+    జ్ఞాపకం_నకలు(datap, &(శూన్య *){ ఖాళీ }, పరిమాణం(శూన్య*));
 
-    ff_mutex_lock(&pool->mutex);
+    ff_mutex_తాళం(&pool->mutex);
     ff_assert(!pool->uninited);
-    if (pool->available_entries) {
-        RefCount *ref = pool->available_entries;
+    ఒకవేళ (pool->అందుబాటు_entries) {
+        Ref_లెక్క *ref = pool->అందుబాటు_entries;
         ret = get_userdata(ref);
-        if (!pool->free_entry_cb)
-            FF_ASAN_UNPOISON(ret, pool->size);
+        ఒకవేళ (!pool->free_నమోదు_cb)
+            FF_ASAN_UNPOISON(ret, pool->కొలత);
         /* Entries are zeroed once at allocation and a user may rely on never
          * written parts staying zero, so only a pool that never zeroes and
          * keeps no state through callbacks gets its reused entries marked
          * undefined. */
-        if ((pool->entry_flags & AV_REFSTRUCT_FLAG_NO_ZEROING) &&
-            !(pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME) &&
-            !pool->init_cb && !pool->reset_cb && !pool->free_entry_cb)
-            FF_MEM_UNDEFINED(ret, pool->size);
-        pool->available_entries = ref->opaque.nc;
+        ఒకవేళ ((pool->నమోదు_flags & AV_REFSTRUCT_FLAG_NO_ZEROING) &&
+            !(pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_సమయం) &&
+            !pool->init_cb && !pool->reset_cb && !pool->free_నమోదు_cb)
+            FF_MEM_UNDEFINED(ret, pool->కొలత);
+        pool->అందుబాటు_entries = ref->opaque.nc;
         ref->opaque.nc = pool;
         atomic_init(&ref->refcount, 1);
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (!ret) {
-        RefCount *ref;
-        ret = av_refstruct_alloc_ext(pool->size, pool->entry_flags, pool,
-                                     pool->reset_cb ? pool_reset_entry : NULL);
-        if (!ret)
-            return AVERROR(ENOMEM);
+    ఒకవేళ (!ret) {
+        Ref_లెక్క *ref;
+        ret = av_refstruct_alloc_ext(pool->కొలత, pool->నమోదు_flags, pool,
+                                     pool->reset_cb ? pool_reset_నమోదు : ఖాళీ);
+        ఒకవేళ (!ret)
+            తిరిగి AVERROR(ENOMEM);
         ref = get_refcount(ret);
-        ref->free = pool_return_entry;
-        if (pool->init_cb) {
-            int err = pool->init_cb(pool->opaque, ret);
-            if (err < 0) {
-                if (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_RESET_ON_INIT_ERROR)
+        ref->విడుదల = pool_return_నమోదు;
+        ఒకవేళ (pool->init_cb) {
+            పూర్ణాంకం err = pool->init_cb(pool->opaque, ret);
+            ఒకవేళ (err < 0) {
+                ఒకవేళ (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_RESET_ON_INIT_ERROR)
                     pool->reset_cb(pool->opaque, ret);
-                if (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_FREE_ON_INIT_ERROR)
-                    pool->free_entry_cb(pool->opaque, ret);
+                ఒకవేళ (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_FREE_ON_INIT_ERROR)
+                    pool->free_నమోదు_cb(pool->opaque, ret);
                 av_free(ref);
-                return err;
+                తిరిగి err;
             }
         }
     }
     atomic_fetch_add_explicit(&pool->refcount, 1, memory_order_relaxed);
 
-    if (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME)
-        memset(ret, 0, pool->size);
+    ఒకవేళ (pool->pool_flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_సమయం)
+        memset(ret, 0, pool->కొలత);
 
-    memcpy(datap, &ret, sizeof(ret));
+    జ్ఞాపకం_నకలు(datap, &ret, పరిమాణం(ret));
 
-    return 0;
+    తిరిగి 0;
 }
 
-void *av_refstruct_pool_get(AVRefStructPool *pool)
+శూన్య *av_refstruct_pool_get(AVRefStructPool *pool)
 {
-    void *ret;
+    శూన్య *ret;
     refstruct_pool_get_ext(&ret, pool);
-    return ret;
+    తిరిగి ret;
 }
 
 /**
@@ -324,81 +324,81 @@ void *av_refstruct_pool_get(AVRefStructPool *pool)
  * could currently be merged; they are only separate functions
  * in case we would ever introduce weak references.
  */
-static void pool_unref(void *ref)
+స్థిర శూన్య pool_unref(శూన్య *ref)
 {
     AVRefStructPool *pool = get_userdata(ref);
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+    ఒకవేళ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
         pool_free(pool);
 }
 
-static void refstruct_pool_uninit(AVRefStructOpaque unused, void *obj)
+స్థిర శూన్య refstruct_pool_uninit(AVRefStructOpaque వాడని, శూన్య *obj)
 {
     AVRefStructPool *pool = obj;
-    RefCount *entry;
+    Ref_లెక్క *నమోదు_2;
 
-    ff_mutex_lock(&pool->mutex);
+    ff_mutex_తాళం(&pool->mutex);
     ff_assert(!pool->uninited);
     pool->uninited = 1;
-    entry = pool->available_entries;
-    pool->available_entries = NULL;
+    నమోదు_2 = pool->అందుబాటు_entries;
+    pool->అందుబాటు_entries = ఖాళీ;
     ff_mutex_unlock(&pool->mutex);
 
-    while (entry) {
-        void *next = entry->opaque.nc;
-        pool_free_entry(pool, entry);
-        entry = next;
+    అయితే (నమోదు_2) {
+        శూన్య *తదుపరి = నమోదు_2->opaque.nc;
+        pool_free_నమోదు(pool, నమోదు_2);
+        నమోదు_2 = తదుపరి;
     }
 }
 
-AVRefStructPool *av_refstruct_pool_alloc(size_t size, unsigned flags)
+AVRefStructPool *av_refstruct_pool_alloc(size_t కొలత, గుర్తులేని flags)
 {
-    return av_refstruct_pool_alloc_ext(size, flags, NULL, NULL, NULL, NULL, NULL);
+    తిరిగి av_refstruct_pool_alloc_ext(కొలత, flags, ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ);
 }
 
-AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
+AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t కొలత, గుర్తులేని flags,
                                                AVRefStructOpaque opaque,
-                                               int  (*init_cb)(AVRefStructOpaque opaque, void *obj),
-                                               void (*reset_cb)(AVRefStructOpaque opaque, void *obj),
-                                               void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj),
-                                               void (*free_cb)(AVRefStructOpaque opaque))
+                                               పూర్ణాంకం  (*init_cb)(AVRefStructOpaque opaque, శూన్య *obj),
+                                               శూన్య (*reset_cb)(AVRefStructOpaque opaque, శూన్య *obj),
+                                               శూన్య (*free_నమోదు_cb)(AVRefStructOpaque opaque, శూన్య *obj),
+                                               శూన్య (*free_cb)(AVRefStructOpaque opaque))
 {
-    AVRefStructPool *pool = av_refstruct_alloc_ext(sizeof(*pool), 0, NULL,
+    AVRefStructPool *pool = av_refstruct_alloc_ext(పరిమాణం(*pool), 0, ఖాళీ,
                                                    refstruct_pool_uninit);
-    int err;
+    పూర్ణాంకం err;
 
-    if (!pool)
-        return NULL;
-    get_refcount(pool)->free = pool_unref;
+    ఒకవేళ (!pool)
+        తిరిగి ఖాళీ;
+    get_refcount(pool)->విడుదల = pool_unref;
 
-    pool->size          = size;
+    pool->కొలత          = కొలత;
     pool->opaque        = opaque;
     pool->init_cb       = init_cb;
     pool->reset_cb      = reset_cb;
-    pool->free_entry_cb = free_entry_cb;
+    pool->free_నమోదు_cb = free_నమోదు_cb;
     pool->free_cb       = free_cb;
-#define COMMON_FLAGS AV_REFSTRUCT_POOL_FLAG_NO_ZEROING
-    pool->entry_flags   = flags & COMMON_FLAGS;
+#నిర్వచించు COMMON_FLAGS AV_REFSTRUCT_POOL_FLAG_NO_ZEROING
+    pool->నమోదు_flags   = flags & COMMON_FLAGS;
     // Filter out nonsense combinations to avoid checks later.
-    if (!pool->reset_cb)
+    ఒకవేళ (!pool->reset_cb)
         flags &= ~AV_REFSTRUCT_POOL_FLAG_RESET_ON_INIT_ERROR;
-    if (!pool->free_entry_cb)
+    ఒకవేళ (!pool->free_నమోదు_cb)
         flags &= ~AV_REFSTRUCT_POOL_FLAG_FREE_ON_INIT_ERROR;
     pool->pool_flags    = flags;
 
-    if (flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_TIME) {
+    ఒకవేళ (flags & AV_REFSTRUCT_POOL_FLAG_ZERO_EVERY_సమయం) {
         // We will zero the buffer before every use, so zeroing
         // upon allocating the buffer is unnecessary.
-        pool->entry_flags |= AV_REFSTRUCT_FLAG_NO_ZEROING;
+        pool->నమోదు_flags |= AV_REFSTRUCT_FLAG_NO_ZEROING;
     }
 
     atomic_init(&pool->refcount, 1);
 
-    err = ff_mutex_init(&pool->mutex, NULL);
-    if (err) {
+    err = ff_mutex_init(&pool->mutex, ఖాళీ);
+    ఒకవేళ (err) {
         // Don't call av_refstruct_uninit() on pool, as it hasn't been properly
         // set up and is just a POD right now.
         av_free(get_refcount(pool));
-        return NULL;
+        తిరిగి ఖాళీ;
     }
-    return pool;
+    తిరిగి pool;
 }

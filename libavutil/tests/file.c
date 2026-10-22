@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#అన్తర్భావ <stdarg.h>
+#అన్తర్భావ <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#అన్తర్భావ "libavutil/file.c"
+#అన్తర్భావ "libavutil/log.h"
 
-static int last_log_level = -1;
+స్థిర పూర్ణాంకం చివరి_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+స్థిర శూన్య log_callback(శూన్య *ctx, పూర్ణాంకం level, స్థిరరాశి అక్షరం *fmt, va_list వాదనలు)
 {
-    (void)ctx; (void)fmt; (void)args;
-    last_log_level = level;
+    (శూన్య)ctx; (శూన్య)fmt; (శూన్య)వాదనలు;
+    చివరి_log_level = level;
 }
 
-int main(int argc, char **argv)
+పూర్ణాంకం ప్రధాన(పూర్ణాంకం argc, అక్షరం **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    స్థిరరాశి అక్షరం *మార్గం = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
-    size_t size;
+    size_t కొలత;
 
-    av_log_set_callback(log_callback);
+    av_log_సమితి_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
-    av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    ఒకవేళ (av_file_map(మార్గం, &buf, &కొలత, 0, ఖాళీ) < 0)
+        తిరిగి 1;
+    av_file_unmap(buf, కొలత);
+    ఒకవేళ (కొలత == 0)
+        తిరిగి 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
-        last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
-            av_file_unmap(buf, size);
-            return 2;
+    కొరకు (పూర్ణాంకం i = 0; i < 2; i++) {
+        చివరి_log_level = -1;
+        ఒకవేళ (av_file_map("no_such_file_xyz", &buf, &కొలత, i, ఖాళీ) >= 0) {
+            av_file_unmap(buf, కొలత);
+            తిరిగి 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        ఒకవేళ (చివరి_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
-                    AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+                    AV_LOG_ERROR + i, i, చివరి_log_level);
+            తిరిగి 3;
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }

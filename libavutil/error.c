@@ -16,49 +16,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#undef _GNU_SOURCE
-#define _XOPEN_SOURCE 600 /* XSI-compliant version of strerror_r */
-#include <stdio.h>
-#include <string.h>
-#include "config.h"
-#include "avstring.h"
-#include "error.h"
-#include "macros.h"
+#నిర్వచనం_రద్దు GNU_ఆధారం
+#నిర్వచించు XOPEN_ఆధారం 600 /* XSI-compliant version of strerror_r */
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <string.h>
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "avstring.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "macros.h"
 
-#define AVERROR_INPUT_AND_OUTPUT_CHANGED (AVERROR_INPUT_CHANGED | AVERROR_OUTPUT_CHANGED)
+#నిర్వచించు AVERROR_ఆదానం_AND_OUTPUT_మారింది (AVERROR_ఆదానం_మారింది | AVERROR_OUTPUT_మారింది)
 
-#define AVERROR_LIST(E, E2)                                                                     \
-    E(BSF_NOT_FOUND,            "Bitstream filter not found")                                   \
+#నిర్వచించు AVERROR_LIST(E, E2)                                                                     \
+    E(BSF_NOT_దొరికింది,            "Bitstream filter not found")                                   \
     E(BUG,                      "Internal bug, should not have happened")                       \
     E2(BUG2, BUG,               "Internal bug, should not have happened")                       \
-    E(BUFFER_TOO_SMALL,         "Buffer too small")                                             \
-    E(DECODER_NOT_FOUND,        "Decoder not found")                                            \
-    E(DEMUXER_NOT_FOUND,        "Demuxer not found")                                            \
-    E(ENCODER_NOT_FOUND,        "Encoder not found")                                            \
+    E(బఫరు_TOO_SMALL,         "Buffer too small")                                             \
+    E(DECODER_NOT_దొరికింది,        "Decoder not found")                                            \
+    E(DEMUXER_NOT_దొరికింది,        "Demuxer not found")                                            \
+    E(ENCODER_NOT_దొరికింది,        "Encoder not found")                                            \
     E(EOF,                      "End of file")                                                  \
     E(EXIT,                     "Immediate exit requested")                                     \
     E(EXTERNAL,                 "Generic error in an external library")                         \
-    E(FILTER_NOT_FOUND,         "Filter not found")                                             \
-    E(INPUT_CHANGED,            "Input changed")                                                \
+    E(FILTER_NOT_దొరికింది,         "Filter not found")                                             \
+    E(ఆదానం_మారింది,            "Input changed")                                                \
     E(INVALIDDATA,              "Invalid data found when processing input")                     \
-    E(MUXER_NOT_FOUND,          "Muxer not found")                                              \
-    E(OPTION_NOT_FOUND,         "Option not found")                                             \
-    E(OUTPUT_CHANGED,           "Output changed")                                               \
+    E(MUXER_NOT_దొరికింది,          "Muxer not found")                                              \
+    E(OPTION_NOT_దొరికింది,         "Option not found")                                             \
+    E(OUTPUT_మారింది,           "Output changed")                                               \
     E(PATCHWELCOME,             "Not yet implemented in FFmpeg, patches welcome")               \
-    E(PROTOCOL_NOT_FOUND,       "Protocol not found")                                           \
-    E(STREAM_NOT_FOUND,         "Stream not found")                                             \
+    E(PROTOCOL_NOT_దొరికింది,       "Protocol not found")                                           \
+    E(ప్రవాహం_NOT_దొరికింది,         "Stream not found")                                             \
     E(UNKNOWN,                  "Unknown error occurred")                                       \
     E(EXPERIMENTAL,             "Experimental feature")                                         \
-    E(INPUT_AND_OUTPUT_CHANGED, "Input and output changed")                                     \
+    E(ఆదానం_AND_OUTPUT_మారింది, "Input and output changed")                                     \
     E(HTTP_BAD_REQUEST,         "Server returned 400 Bad Request")                              \
     E(HTTP_UNAUTHORIZED,        "Server returned 401 Unauthorized (authorization failed)")      \
     E(HTTP_FORBIDDEN,           "Server returned 403 Forbidden (access denied)")                \
-    E(HTTP_NOT_FOUND,           "Server returned 404 Not Found")                                \
-    E(HTTP_TOO_MANY_REQUESTS,   "Server returned 429 Too Many Requests")                        \
+    E(HTTP_NOT_దొరికింది,           "Server returned 404 Not Found")                                \
+    E(HTTP_TOO_MANY_అభ్యర్థనలు,   "Server returned 429 Too Many Requests")                        \
     E(HTTP_OTHER_4XX,           "Server returned 4XX Client Error, but not one of 40{0,1,3,4}") \
     E(HTTP_SERVER_ERROR,        "Server returned 5XX Server Error reply")                       \
 
-#define STRERROR_LIST(E)                                                     \
+#నిర్వచించు STRERROR_LIST(E)                                                     \
     E(E2BIG,             "Argument list too long")                           \
     E(EACCES,            "Permission denied")                                \
     E(EAGAIN,            "Resource temporarily unavailable")                 \
@@ -98,54 +98,54 @@
     E(ESRCH,             "No such process")                                  \
     E(EXDEV,             "Cross-device link")                                \
 
-enum {
-#define OFFSET(CODE, DESC)     \
-    ERROR_ ## CODE ## _OFFSET, \
-    ERROR_ ## CODE ## _END_OFFSET = ERROR_ ## CODE ## _OFFSET + sizeof(DESC) - 1,
-#define NOTHING(CODE, CODE2, DESC)
-    AVERROR_LIST(OFFSET, NOTHING)
-#if !HAVE_STRERROR_R
-    STRERROR_LIST(OFFSET)
-#endif
+గణన {
+#నిర్వచించు స్థానభ్రంశం_2(సంకేతం_3, DESC)     \
+    ERROR_ ## సంకేతం_3 ## స్థానభ్రంశం_3, \
+    ERROR_ ## సంకేతం_3 ## చివర_స్థానభ్రంశం = ERROR_ ## సంకేతం_3 ## స్థానభ్రంశం_3 + పరిమాణం(DESC) - 1,
+#నిర్వచించు NOTHING(సంకేతం_3, CODE2, DESC)
+    AVERROR_LIST(స్థానభ్రంశం_2, NOTHING)
+#ఒకవేళ !HAVE_STRERROR_R
+    STRERROR_LIST(స్థానభ్రంశం_2)
+#అయితే_ముగింపు
 };
 
-#define STRING(CODE, DESC) DESC "\0"
-static const char error_stringtable[] =
+#నిర్వచించు STRING(సంకేతం_3, DESC) DESC "\0"
+స్థిర స్థిరరాశి అక్షరం error_stringtable[] =
     AVERROR_LIST(STRING, NOTHING)
-#if !HAVE_STRERROR_R
+#ఒకవేళ !HAVE_STRERROR_R
     STRERROR_LIST(STRING)
-#endif
+#అయితే_ముగింపు
 ;
 
-static const struct ErrorEntry {
-    int num;
-    unsigned offset;
+స్థిర స్థిరరాశి నిర్మాణం Error_నమోదు {
+    పూర్ణాంకం అంకె;
+    గుర్తులేని స్థానభ్రంశం;
 } error_entries[] = {
-#define ENTRY(CODE, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE ## _OFFSET },
-#define ENTRY2(CODE, CODE2, DESC) { .num = AVERROR_ ## CODE, .offset = ERROR_ ## CODE2 ## _OFFSET },
-    AVERROR_LIST(ENTRY, ENTRY2)
-#if !HAVE_STRERROR_R
-#undef ENTRY
-#define ENTRY(CODE, DESC) { .num = AVERROR(CODE), .offset = ERROR_ ## CODE ## _OFFSET },
-    STRERROR_LIST(ENTRY)
-#endif
+#నిర్వచించు నమోదు_3(సంకేతం_3, DESC) { .అంకె = AVERROR_ ## సంకేతం_3, .స్థానభ్రంశం = ERROR_ ## సంకేతం_3 ## స్థానభ్రంశం_3 },
+#నిర్వచించు ENTRY2(సంకేతం_3, CODE2, DESC) { .అంకె = AVERROR_ ## సంకేతం_3, .స్థానభ్రంశం = ERROR_ ## CODE2 ## స్థానభ్రంశం_3 },
+    AVERROR_LIST(నమోదు_3, ENTRY2)
+#ఒకవేళ !HAVE_STRERROR_R
+#నిర్వచనం_రద్దు నమోదు_3
+#నిర్వచించు నమోదు_3(సంకేతం_3, DESC) { .అంకె = AVERROR(సంకేతం_3), .స్థానభ్రంశం = ERROR_ ## సంకేతం_3 ## స్థానభ్రంశం_3 },
+    STRERROR_LIST(నమోదు_3)
+#అయితే_ముగింపు
 };
 
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
+పూర్ణాంకం av_strerror(పూర్ణాంకం errnum, అక్షరం *errbuf, size_t errbuf_కొలత)
 {
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
-        if (errnum == error_entries[i].num) {
-            av_strlcpy(errbuf, error_stringtable + error_entries[i].offset, errbuf_size);
-            return 0;
+    కొరకు (size_t i = 0; i < FF_ARRAY_ELEMS(error_entries); ++i) {
+        ఒకవేళ (errnum == error_entries[i].అంకె) {
+            av_strlcpy(errbuf, error_stringtable + error_entries[i].స్థానభ్రంశం, errbuf_కొలత);
+            తిరిగి 0;
         }
     }
-#if HAVE_STRERROR_R
-    int ret = AVERROR(strerror_r(AVUNERROR((unsigned)errnum), errbuf, errbuf_size));
-#else
-    int ret = -1;
-#endif
-    if (ret < 0)
-        snprintf(errbuf, errbuf_size, "Error number %d occurred", errnum);
+#ఒకవేళ HAVE_STRERROR_R
+    పూర్ణాంకం ret = AVERROR(strerror_r(AVUNERROR((గుర్తులేని)errnum), errbuf, errbuf_కొలత));
+#లేకపోతే
+    పూర్ణాంకం ret = -1;
+#అయితే_ముగింపు
+    ఒకవేళ (ret < 0)
+        snprintf(errbuf, errbuf_కొలత, "Error number %d occurred", errnum);
 
-    return ret;
+    తిరిగి ret;
 }

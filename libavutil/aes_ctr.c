@@ -19,117 +19,117 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "aes_ctr.h"
-#include "aes.h"
-#include "aes_internal.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "random_seed.h"
+#అన్తర్భావ "aes_ctr.h"
+#అన్తర్భావ "aes.h"
+#అన్తర్భావ "aes_internal.h"
+#అన్తర్భావ "intreadwrite.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "random_seed.h"
 
-#define AES_BLOCK_SIZE (16)
+#నిర్వచించు AES_ఖండం_కొలత (16)
 
-typedef struct AVAESCTR {
-    DECLARE_ALIGNED(8, uint8_t, counter)[AES_BLOCK_SIZE];
-    DECLARE_ALIGNED(8, uint8_t, encrypted_counter)[AES_BLOCK_SIZE];
-    int block_offset;
+రకనిర్వచనం నిర్మాణం AVAESCTR {
+    DECLARE_ALIGNED(8, uint8_t, counter)[AES_ఖండం_కొలత];
+    DECLARE_ALIGNED(8, uint8_t, encrypted_counter)[AES_ఖండం_కొలత];
+    పూర్ణాంకం ఖండం_స్థానభ్రంశం;
     AVAES aes;
 } AVAESCTR;
 
-struct AVAESCTR *av_aes_ctr_alloc(void)
+నిర్మాణం AVAESCTR *av_aes_ctr_alloc(శూన్య)
 {
-    return av_mallocz(sizeof(struct AVAESCTR));
+    తిరిగి av_mallocz(పరిమాణం(నిర్మాణం AVAESCTR));
 }
 
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv)
+శూన్య av_aes_ctr_సమితి_iv(నిర్మాణం AVAESCTR *a, స్థిరరాశి uint8_t* iv)
 {
-    memcpy(a->counter, iv, AES_CTR_IV_SIZE);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
-    a->block_offset = 0;
+    జ్ఞాపకం_నకలు(a->counter, iv, AES_CTR_IV_కొలత);
+    memset(a->counter + AES_CTR_IV_కొలత, 0, పరిమాణం(a->counter) - AES_CTR_IV_కొలత);
+    a->ఖండం_స్థానభ్రంశం = 0;
 }
 
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv)
+శూన్య av_aes_ctr_సమితి_నిండిన_iv(నిర్మాణం AVAESCTR *a, స్థిరరాశి uint8_t* iv)
 {
-    memcpy(a->counter, iv, sizeof(a->counter));
-    a->block_offset = 0;
+    జ్ఞాపకం_నకలు(a->counter, iv, పరిమాణం(a->counter));
+    a->ఖండం_స్థానభ్రంశం = 0;
 }
 
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a)
+స్థిరరాశి uint8_t* av_aes_ctr_get_iv(నిర్మాణం AVAESCTR *a)
 {
-    return a->counter;
+    తిరిగి a->counter;
 }
 
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
+శూన్య av_aes_ctr_సమితి_random_iv(నిర్మాణం AVAESCTR *a)
 {
     uint32_t iv[2];
 
-    iv[0] = av_get_random_seed();
-    iv[1] = av_get_random_seed();
+    iv[0] = av_get_random_విత్తనం();
+    iv[1] = av_get_random_విత్తనం();
 
-    av_aes_ctr_set_iv(a, (uint8_t*)iv);
+    av_aes_ctr_సమితి_iv(a, (uint8_t*)iv);
 }
 
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key)
+పూర్ణాంకం av_aes_ctr_init(నిర్మాణం AVAESCTR *a, స్థిరరాశి uint8_t *కీలకం)
 {
-    av_aes_init(&a->aes, key, 128, 0);
+    av_aes_init(&a->aes, కీలకం, 128, 0);
 
-    memset(a->counter, 0, sizeof(a->counter));
-    a->block_offset = 0;
+    memset(a->counter, 0, పరిమాణం(a->counter));
+    a->ఖండం_స్థానభ్రంశం = 0;
 
-    return 0;
+    తిరిగి 0;
 }
 
-void av_aes_ctr_free(struct AVAESCTR *a)
+శూన్య av_aes_ctr_free(నిర్మాణం AVAESCTR *a)
 {
     av_free(a);
 }
 
-static inline void av_aes_ctr_increment_be64(uint8_t* counter)
+స్థిర అంతఃవరుస శూన్య av_aes_ctr_increment_be64(uint8_t* counter)
 {
     uint64_t c = AV_RB64A(counter) + 1;
     AV_WB64A(counter, c);
 }
 
-void av_aes_ctr_increment_iv(struct AVAESCTR *a)
+శూన్య av_aes_ctr_increment_iv(నిర్మాణం AVAESCTR *a)
 {
     av_aes_ctr_increment_be64(a->counter);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
-    a->block_offset = 0;
+    memset(a->counter + AES_CTR_IV_కొలత, 0, పరిమాణం(a->counter) - AES_CTR_IV_కొలత);
+    a->ఖండం_స్థానభ్రంశం = 0;
 }
 
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int count)
+శూన్య av_aes_ctr_crypt(నిర్మాణం AVAESCTR *a, uint8_t *dst, స్థిరరాశి uint8_t *src, పూర్ణాంకం లెక్క)
 {
-    if (a->block_offset && count > 0) {
-        int left = FFMIN(count, AES_BLOCK_SIZE - a->block_offset);
-        for (int len = 0; len < left; len++)
-            dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
-        a->block_offset &= AES_BLOCK_SIZE - 1;
-        dst += left;
-        src += left;
-        count -= left;
+    ఒకవేళ (a->ఖండం_స్థానభ్రంశం && లెక్క > 0) {
+        పూర్ణాంకం ఎడమ = FFMIN(లెక్క, AES_ఖండం_కొలత - a->ఖండం_స్థానభ్రంశం);
+        కొరకు (పూర్ణాంకం len = 0; len < ఎడమ; len++)
+            dst[len] = src[len] ^ a->encrypted_counter[a->ఖండం_స్థానభ్రంశం++];
+        a->ఖండం_స్థానభ్రంశం &= AES_ఖండం_కొలత - 1;
+        dst += ఎడమ;
+        src += ఎడమ;
+        లెక్క -= ఎడమ;
     }
 
-    while (count >= AES_BLOCK_SIZE) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
+    అయితే (లెక్క >= AES_ఖండం_కొలత) {
+        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, ఖాళీ, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
-#if HAVE_FAST_64BIT
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 8)
+#ఒకవేళ HAVE_FAST_64_బిట్టు
+        కొరకు (పూర్ణాంకం len = 0; len < AES_ఖండం_కొలత; len += 8)
             AV_WN64(&dst[len], AV_RN64(&src[len]) ^ AV_RN64A(&a->encrypted_counter[len]));
-#else
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 4)
+#లేకపోతే
+        కొరకు (పూర్ణాంకం len = 0; len < AES_ఖండం_కొలత; len += 4)
             AV_WN32(&dst[len], AV_RN32(&src[len]) ^ AV_RN32A(&a->encrypted_counter[len]));
-#endif
-        dst += AES_BLOCK_SIZE;
-        src += AES_BLOCK_SIZE;
-        count -= AES_BLOCK_SIZE;
+#అయితే_ముగింపు
+        dst += AES_ఖండం_కొలత;
+        src += AES_ఖండం_కొలత;
+        లెక్క -= AES_ఖండం_కొలత;
     }
 
-    if (count > 0) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
+    ఒకవేళ (లెక్క > 0) {
+        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, ఖాళీ, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
-        for (int len = 0; len < count; len++)
-            dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
+        కొరకు (పూర్ణాంకం len = 0; len < లెక్క; len++)
+            dst[len] = src[len] ^ a->encrypted_counter[a->ఖండం_స్థానభ్రంశం++];
     }
 }

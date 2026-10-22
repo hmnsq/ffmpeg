@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_VIDEO_HINT_H
-#define AVUTIL_VIDEO_HINT_H
+#నిర్వచితం_కాకపోతే AVUTIL_VIDEO_HINT_H
+#నిర్వచించు AVUTIL_VIDEO_HINT_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "libavutil/avassert.h"
-#include "libavutil/frame.h"
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ "libavutil/avassert.h"
+#అన్తర్భావ "libavutil/frame.h"
 
-typedef struct AVVideoRect {
+రకనిర్వచనం నిర్మాణం AVVideoRect {
     uint32_t x, y;
-    uint32_t width, height;
+    uint32_t వెడల్పు, ఎత్తు;
 } AVVideoRect;
 
-typedef enum AVVideoHintType {
+రకనిర్వచనం గణన AVVideoHintType {
     /* rectangled delimit the constant areas (unchanged), default is changed */
     AV_VIDEO_HINT_TYPE_CONSTANT,
 
     /* rectangled delimit the constant areas (changed), default is not changed */
-    AV_VIDEO_HINT_TYPE_CHANGED,
+    AV_VIDEO_HINT_TYPE_మారింది,
 } AVVideoHintType;
 
-typedef struct AVVideoHint {
+రకనిర్వచనం నిర్మాణం AVVideoHint {
     /**
      * Number of AVVideoRect present.
      *
@@ -53,24 +53,24 @@ typedef struct AVVideoHint {
      * Offset in bytes from the beginning of this structure at which the array
      * of AVVideoRect starts.
      */
-    size_t rect_offset;
+    size_t rect_స్థానభ్రంశం;
 
     /**
      * Size in bytes of AVVideoRect.
      */
-    size_t rect_size;
+    size_t rect_కొలత;
 
     AVVideoHintType type;
 } AVVideoHint;
 
-static av_always_inline AVVideoRect *
-av_video_hint_rects(const AVVideoHint *hints) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
+స్థిర av_always_inline AVVideoRect *
+av_video_hint_rects(స్థిరరాశి AVVideoHint *hints) {
+    తిరిగి (AVVideoRect *)((uint8_t *)hints + hints->rect_స్థానభ్రంశం);
 }
 
-static av_always_inline AVVideoRect *
-av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
+స్థిర av_always_inline AVVideoRect *
+av_video_hint_get_rect(స్థిరరాశి AVVideoHint *hints, size_t idx) {
+    తిరిగి (AVVideoRect *)((uint8_t *)hints + hints->rect_స్థానభ్రంశం + idx * hints->rect_కొలత);
 }
 
 /**
@@ -94,14 +94,14 @@ av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
  *         av_free()) on success, NULL on memory allocation failure
  */
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
-                                 size_t *out_size);
+                                 size_t *బహిర్గతం_కొలత);
 
 /**
  * Same as av_video_hint_alloc(), except newly-allocated AVVideoHint is attached
  * as side data of type AV_FRAME_DATA_VIDEO_HINT_INFO to frame.
  */
-AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
+AVVideoHint *av_video_hint_create_side_దత్తాంశం(AVFrame *చట్రం,
                                             size_t nb_rects);
 
 
-#endif /* AVUTIL_VIDEO_HINT_H */
+#అయితే_ముగింపు /* AVUTIL_VIDEO_HINT_H */

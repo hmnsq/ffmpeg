@@ -19,14 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "float_dsp.h"
+#అన్తర్భావ "float_dsp.h"
 
-float ff_scalarproduct_float_c(const float *v1, const float *v2, int len)
+దశాంశం ff_scalarproduct_float_c(స్థిరరాశి దశాంశం *v1, స్థిరరాశి దశాంశం *v2, పూర్ణాంకం len)
 {
-    float p = 0.0;
+    దశాంశం p = 0.0;
 
-    for (int i = 0; i < len; i++)
+    కొరకు (పూర్ణాంకం i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    తిరిగి p;
 }

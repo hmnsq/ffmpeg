@@ -18,30 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "raw_color_params.h"
-#include "mem.h"
+#అన్తర్భావ "raw_color_params.h"
+#అన్తర్భావ "mem.h"
 
-AVRawColorParams *av_raw_color_params_alloc(size_t *size)
+AVRawColorParams *av_raw_color_params_alloc(size_t *కొలత)
 {
-    AVRawColorParams *p = av_mallocz(sizeof(AVRawColorParams));
-    if (!p)
-        return NULL;
+    AVRawColorParams *p = av_mallocz(పరిమాణం(AVRawColorParams));
+    ఒకవేళ (!p)
+        తిరిగి ఖాళీ;
 
-    if (size)
-        *size = sizeof(*p);
+    ఒకవేళ (కొలత)
+        *కొలత = పరిమాణం(*p);
 
-    return p;
+    తిరిగి p;
 }
 
-AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
+AVRawColorParams *av_raw_color_params_create_side_దత్తాంశం(AVFrame *చట్రం)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame, AV_FRAME_DATA_RAW_COLOR_PARAMS,
-                               sizeof(AVRawColorParams));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_దత్తాంశం *side_దత్తాంశం =
+        av_చట్రం_new_side_దత్తాంశం(చట్రం, AV_చట్రం_దత్తాంశం_RAW_COLOR_PARAMS,
+                               పరిమాణం(AVRawColorParams));
+    ఒకవేళ (!side_దత్తాంశం)
+        తిరిగి ఖాళీ;
 
-    memset(side_data->data, 0, side_data->size);
+    memset(side_దత్తాంశం->దత్తాంశం, 0, side_దత్తాంశం->కొలత);
 
-    return (AVRawColorParams *)side_data->data;
+    తిరిగి (AVRawColorParams *)side_దత్తాంశం->దత్తాంశం;
 }

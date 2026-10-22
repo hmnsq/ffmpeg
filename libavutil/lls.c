@@ -25,96 +25,96 @@
  * linear least squares model
  */
 
-#include <math.h>
-#include <string.h>
+#అన్తర్భావ <math.h>
+#అన్తర్భావ <string.h>
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "lls.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "attributes.h"
+#అన్తర్భావ "float_dsp.h"
+#అన్తర్భావ "lls.h"
 
-static void update_lls(LLSModel *m, const double *var)
+స్థిర శూన్య update_lls(LLSModel *m, స్థిరరాశి ద్విగుణ *var)
 {
-    int i, j;
+    పూర్ణాంకం i, j;
 
-    for (i = 0; i <= m->indep_count; i++) {
-        for (j = i; j <= m->indep_count; j++) {
+    కొరకు (i = 0; i <= m->indep_లెక్క; i++) {
+        కొరకు (j = i; j <= m->indep_లెక్క; j++) {
             m->covariance[i][j] += var[i] * var[j];
         }
     }
 }
 
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order)
+శూన్య avpriv_solve_lls(LLSModel *m, ద్విగుణ పరిమితి, గుర్తులేని పొట్టి min_క్రమం)
 {
-    int i, j, k;
-    double (*factor)[MAX_VARS_ALIGN] = (void *) &m->covariance[1][0];
-    double (*covar) [MAX_VARS_ALIGN] = (void *) &m->covariance[1][1];
-    double *covar_y                = m->covariance[0];
-    int count                      = m->indep_count;
+    పూర్ణాంకం i, j, k;
+    ద్విగుణ (*గుణకం)[MAX_VARS_ALIGN] = (శూన్య *) &m->covariance[1][0];
+    ద్విగుణ (*covar) [MAX_VARS_ALIGN] = (శూన్య *) &m->covariance[1][1];
+    ద్విగుణ *covar_y                = m->covariance[0];
+    పూర్ణాంకం లెక్క                      = m->indep_లెక్క;
 
-    for (i = 0; i < count; i++) {
-        for (j = i; j < count; j++) {
-            double sum = covar[i][j];
+    కొరకు (i = 0; i < లెక్క; i++) {
+        కొరకు (j = i; j < లెక్క; j++) {
+            ద్విగుణ కూడిక = covar[i][j];
 
-            for (k = 0; k <= i-1; k++)
-                sum -= factor[i][k] * factor[j][k];
+            కొరకు (k = 0; k <= i-1; k++)
+                కూడిక -= గుణకం[i][k] * గుణకం[j][k];
 
-            if (i == j) {
-                if (sum < threshold)
-                    sum = 1.0;
-                factor[i][i] = sqrt(sum);
-            } else {
-                factor[j][i] = sum / factor[i][i];
+            ఒకవేళ (i == j) {
+                ఒకవేళ (కూడిక < పరిమితి)
+                    కూడిక = 1.0;
+                గుణకం[i][i] = వర్గమూలం(కూడిక);
+            } లేకపోతే {
+                గుణకం[j][i] = కూడిక / గుణకం[i][i];
             }
         }
     }
 
-    for (i = 0; i < count; i++) {
-        double sum = covar_y[i + 1];
+    కొరకు (i = 0; i < లెక్క; i++) {
+        ద్విగుణ కూడిక = covar_y[i + 1];
 
-        for (k = 0; k <= i-1; k++)
-            sum -= factor[i][k] * m->coeff[0][k];
+        కొరకు (k = 0; k <= i-1; k++)
+            కూడిక -= గుణకం[i][k] * m->coeff[0][k];
 
-        m->coeff[0][i] = sum / factor[i][i];
+        m->coeff[0][i] = కూడిక / గుణకం[i][i];
     }
 
-    for (j = count - 1; j >= min_order; j--) {
-        for (i = j; i >= 0; i--) {
-            double sum = m->coeff[0][i];
+    కొరకు (j = లెక్క - 1; j >= min_క్రమం; j--) {
+        కొరకు (i = j; i >= 0; i--) {
+            ద్విగుణ కూడిక = m->coeff[0][i];
 
-            for (k = i + 1; k <= j; k++)
-                sum -= factor[k][i] * m->coeff[j][k];
+            కొరకు (k = i + 1; k <= j; k++)
+                కూడిక -= గుణకం[k][i] * m->coeff[j][k];
 
-            m->coeff[j][i] = sum / factor[i][i];
+            m->coeff[j][i] = కూడిక / గుణకం[i][i];
         }
 
         m->variance[j] = covar_y[0];
 
-        for (i = 0; i <= j; i++) {
-            double sum = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
+        కొరకు (i = 0; i <= j; i++) {
+            ద్విగుణ కూడిక = m->coeff[j][i] * covar[i][i] - 2 * covar_y[i + 1];
 
-            for (k = 0; k < i; k++)
-                sum += 2 * m->coeff[j][k] * covar[k][i];
+            కొరకు (k = 0; k < i; k++)
+                కూడిక += 2 * m->coeff[j][k] * covar[k][i];
 
-            m->variance[j] += m->coeff[j][i] * sum;
+            m->variance[j] += m->coeff[j][i] * కూడిక;
         }
     }
 }
 
-static double evaluate_lls(LLSModel *m, const double *param, int order)
+స్థిర ద్విగుణ evaluate_lls(LLSModel *m, స్థిరరాశి ద్విగుణ *param, పూర్ణాంకం క్రమం)
 {
-    return ff_scalarproduct_double_c(m->coeff[order], param, order + 1);
+    తిరిగి ff_scalarproduct_double_c(m->coeff[క్రమం], param, క్రమం + 1);
 }
 
-av_cold void avpriv_init_lls(LLSModel *m, int indep_count)
+av_cold శూన్య avpriv_init_lls(LLSModel *m, పూర్ణాంకం indep_లెక్క)
 {
-    memset(m, 0, sizeof(LLSModel));
-    m->indep_count = indep_count;
+    memset(m, 0, పరిమాణం(LLSModel));
+    m->indep_లెక్క = indep_లెక్క;
     m->update_lls = update_lls;
     m->evaluate_lls = evaluate_lls;
-#if ARCH_RISCV
+#ఒకవేళ ARCH_RISCV
     ff_init_lls_riscv(m);
-#elif ARCH_X86 && HAVE_X86ASM
+#లేదావేళ ARCH_X86 && HAVE_X86ASM
     ff_init_lls_x86(m);
-#endif
+#అయితే_ముగింపు
 }

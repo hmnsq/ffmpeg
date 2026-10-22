@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LFG_H
-#define AVUTIL_LFG_H
+#నిర్వచితం_కాకపోతే AVUTIL_LFG_H
+#నిర్వచించు AVUTIL_LFG_H
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
 /**
  * Context structure for the Lagged Fibonacci PRNG.
@@ -30,19 +30,19 @@
  * not be accessed directly. Only its `sizeof()` is guaranteed to stay the same
  * to allow easy instantiation.
  */
-typedef struct AVLFG {
-    unsigned int state[64];
-    int index;
+రకనిర్వచనం నిర్మాణం AVLFG {
+    గుర్తులేని పూర్ణాంకం state[64];
+    పూర్ణాంకం సూచీ;
 } AVLFG;
 
-void av_lfg_init(AVLFG *c, unsigned int seed);
+శూన్య av_lfg_init(AVLFG *c, గుర్తులేని పూర్ణాంకం విత్తనం);
 
 /**
  * Seed the state of the ALFG using binary data.
  *
  * @return 0 on success, negative value (AVERROR) on failure.
  */
-int av_lfg_init_from_data(AVLFG *c, const uint8_t *data, unsigned int length);
+పూర్ణాంకం av_lfg_init_from_దత్తాంశం(AVLFG *c, స్థిరరాశి uint8_t *దత్తాంశం, గుర్తులేని పూర్ణాంకం నిడివి);
 
 /**
  * Get the next random unsigned 32-bit number using an ALFG.
@@ -50,10 +50,10 @@ int av_lfg_init_from_data(AVLFG *c, const uint8_t *data, unsigned int length);
  * Please also consider a simple LCG like state= state*1664525+1013904223,
  * it may be good enough and faster for your specific use case.
  */
-static inline unsigned int av_lfg_get(AVLFG *c){
-    unsigned a = c->state[c->index & 63] = c->state[(c->index-24) & 63] + c->state[(c->index-55) & 63];
-    c->index += 1U;
-    return a;
+స్థిర అంతఃవరుస గుర్తులేని పూర్ణాంకం av_lfg_get(AVLFG *c){
+    గుర్తులేని a = c->state[c->సూచీ & 63] = c->state[(c->సూచీ-24) & 63] + c->state[(c->సూచీ-55) & 63];
+    c->సూచీ += 1U;
+    తిరిగి a;
 }
 
 /**
@@ -61,12 +61,12 @@ static inline unsigned int av_lfg_get(AVLFG *c){
  *
  * Please also consider av_lfg_get() above, it is faster.
  */
-static inline unsigned int av_mlfg_get(AVLFG *c){
-    unsigned int a= c->state[(c->index-55) & 63];
-    unsigned int b= c->state[(c->index-24) & 63];
-    a = c->state[c->index & 63] = 2*a*b+a+b;
-    c->index += 1U;
-    return a;
+స్థిర అంతఃవరుస గుర్తులేని పూర్ణాంకం av_mlfg_get(AVLFG *c){
+    గుర్తులేని పూర్ణాంకం a= c->state[(c->సూచీ-55) & 63];
+    గుర్తులేని పూర్ణాంకం b= c->state[(c->సూచీ-24) & 63];
+    a = c->state[c->సూచీ & 63] = 2*a*b+a+b;
+    c->సూచీ += 1U;
+    తిరిగి a;
 }
 
 /**
@@ -76,6 +76,6 @@ static inline unsigned int av_mlfg_get(AVLFG *c){
  * @param lfg pointer to the context structure
  * @param out array where the two generated numbers are placed
  */
-void av_bmg_get(AVLFG *lfg, double out[2]);
+శూన్య av_bmg_get(AVLFG *lfg, ద్విగుణ బహిర్గతం[2]);
 
-#endif /* AVUTIL_LFG_H */
+#అయితే_ముగింపు /* AVUTIL_LFG_H */

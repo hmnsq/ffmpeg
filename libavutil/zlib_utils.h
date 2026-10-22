@@ -16,73 +16,73 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ZLIB_UTILS_H
-#define AVUTIL_ZLIB_UTILS_H
+#నిర్వచితం_కాకపోతే AVUTIL_ZLIB_UTILS_H
+#నిర్వచించు AVUTIL_ZLIB_UTILS_H
 
-#include <stdint.h>
-#include "log.h"
-#include "error.h"
-#include "mem.h"
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ "log.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "mem.h"
 
-#include <zlib.h>
-#define CHUNK_SIZE 1024 * 64
+#అన్తర్భావ <zlib.h>
+#నిర్వచించు CHUNK_కొలత 1024 * 64
 
-static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
-                                 const uint8_t *src, int src_len)
+స్థిర అంతఃవరుస పూర్ణాంకం ff_zlib_expand(శూన్య *ctx, uint8_t **బహిర్గతం, size_t *బహిర్గతం_len,
+                                 స్థిరరాశి uint8_t *src, పూర్ణాంకం src_len)
 {
-    int ret;
+    పూర్ణాంకం ret;
 
-    z_stream stream = { 0 };
-    if (inflateInit2(&stream, 32 + 15) != Z_OK) {
+    z_ప్రవాహం ప్రవాహం = { 0 };
+    ఒకవేళ (inflateInit2(&ప్రవాహం, 32 + 15) != Z_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error during zlib initialisation: %s\n",
-               stream.msg);
-        return AVERROR(ENOSYS);
+               ప్రవాహం.సందేశం);
+        తిరిగి AVERROR(ENOSYS);
     }
 
-    uint64_t buf_size = CHUNK_SIZE * 4;
-    uint8_t *buf = av_realloc(NULL, buf_size);
-    if (!buf) {
-        inflateEnd(&stream);
-        return AVERROR(ENOMEM);
+    uint64_t buf_కొలత = CHUNK_కొలత * 4;
+    uint8_t *buf = av_realloc(ఖాళీ, buf_కొలత);
+    ఒకవేళ (!buf) {
+        inflate_చివర(&ప్రవాహం);
+        తిరిగి AVERROR(ENOMEM);
     }
 
-    stream.next_in = src;
-    stream.avail_in = src_len;
+    ప్రవాహం.తదుపరి_లోపల = src;
+    ప్రవాహం.avail_లోపల = src_len;
 
-    do {
-        stream.avail_out = buf_size - stream.total_out;
-        stream.next_out = buf + stream.total_out;
+    చేయి {
+        ప్రవాహం.avail_బహిర్గతం = buf_కొలత - ప్రవాహం.మొత్తం_బహిర్గతం;
+        ప్రవాహం.తదుపరి_బహిర్గతం = buf + ప్రవాహం.మొత్తం_బహిర్గతం;
 
-        ret = inflate(&stream, Z_FINISH);
-        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
+        ret = inflate(&ప్రవాహం, Z_ముగింపు);
+        ఒకవేళ (ret != Z_OK && ret != Z_ప్రవాహం_చివర && ret != Z_BUF_ERROR) {
             av_log(ctx, AV_LOG_ERROR, "zlib inflate error(%d): %s\n",
-                   ret, stream.msg);
-            inflateEnd(&stream);
+                   ret, ప్రవాహం.సందేశం);
+            inflate_చివర(&ప్రవాహం);
             av_free(buf);
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
 
-        if (stream.avail_out == 0) {
-            buf_size += CHUNK_SIZE;
-            uint8_t *tmp = av_realloc(buf, buf_size);
-            if (!tmp) {
-                inflateEnd(&stream);
+        ఒకవేళ (ప్రవాహం.avail_బహిర్గతం == 0) {
+            buf_కొలత += CHUNK_కొలత;
+            uint8_t *tmp = av_realloc(buf, buf_కొలత);
+            ఒకవేళ (!tmp) {
+                inflate_చివర(&ప్రవాహం);
                 av_free(buf);
-                return AVERROR(ENOMEM);
+                తిరిగి AVERROR(ENOMEM);
             }
             buf = tmp;
         }
-    } while (ret != Z_STREAM_END);
+    } అయితే (ret != Z_ప్రవాహం_చివర);
 
     // NULL-terminate string
     // there is guaranteed to be space for this, due to condition in loop
-    buf[stream.total_out] = 0;
+    buf[ప్రవాహం.మొత్తం_బహిర్గతం] = 0;
 
-    inflateEnd(&stream);
+    inflate_చివర(&ప్రవాహం);
 
-    *out = buf;
-    *out_len = stream.total_out;
+    *బహిర్గతం = buf;
+    *బహిర్గతం_len = ప్రవాహం.మొత్తం_బహిర్గతం;
 
-    return 0;
+    తిరిగి 0;
 }
-#endif /* AVUTIL_ZLIB_UTILS_H */
+#అయితే_ముగింపు /* AVUTIL_ZLIB_UTILS_H */

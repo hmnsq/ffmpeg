@@ -20,25 +20,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LLS_H
-#define AVUTIL_LLS_H
+#నిర్వచితం_కాకపోతే AVUTIL_LLS_H
+#నిర్వచించు AVUTIL_LLS_H
 
-#include "macros.h"
-#include "mem_internal.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mem_internal.h"
 
-#define MAX_VARS 32
-#define MAX_VARS_ALIGN FFALIGN(MAX_VARS+1,4)
+#నిర్వచించు MAX_VARS 32
+#నిర్వచించు MAX_VARS_ALIGN FFALIGN(MAX_VARS+1,4)
 
 //FIXME avoid direct access to LLSModel from outside
 
 /**
  * Linear least squares model.
  */
-typedef struct LLSModel {
-    DECLARE_ALIGNED(32, double, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
-    DECLARE_ALIGNED(32, double, coeff[MAX_VARS][MAX_VARS]);
-    double variance[MAX_VARS];
-    int indep_count;
+రకనిర్వచనం నిర్మాణం LLSModel {
+    DECLARE_ALIGNED(32, ద్విగుణ, covariance[MAX_VARS_ALIGN][MAX_VARS_ALIGN]);
+    DECLARE_ALIGNED(32, ద్విగుణ, coeff[MAX_VARS][MAX_VARS]);
+    ద్విగుణ variance[MAX_VARS];
+    పూర్ణాంకం indep_లెక్క;
     /**
      * Take the outer-product of var[] with itself, and add to the covariance matrix.
      * @param m this context
@@ -46,19 +46,19 @@ typedef struct LLSModel {
      *            32-byte aligned, and any padding elements must be initialized
      *            (i.e not denormal/nan).
      */
-    void (*update_lls)(struct LLSModel *m, const double *var);
+    శూన్య (*update_lls)(నిర్మాణం LLSModel *m, స్థిరరాశి ద్విగుణ *var);
     /**
      * Inner product of var[] and the LPC coefs.
      * @param m this context
      * @param var training samples, excluding the value to be predicted. unaligned.
      * @param order lpc order
      */
-    double (*evaluate_lls)(struct LLSModel *m, const double *var, int order);
+    ద్విగుణ (*evaluate_lls)(నిర్మాణం LLSModel *m, స్థిరరాశి ద్విగుణ *var, పూర్ణాంకం క్రమం);
 } LLSModel;
 
-void avpriv_init_lls(LLSModel *m, int indep_count);
-void ff_init_lls_riscv(LLSModel *m);
-void ff_init_lls_x86(LLSModel *m);
-void avpriv_solve_lls(LLSModel *m, double threshold, unsigned short min_order);
+శూన్య avpriv_init_lls(LLSModel *m, పూర్ణాంకం indep_లెక్క);
+శూన్య ff_init_lls_riscv(LLSModel *m);
+శూన్య ff_init_lls_x86(LLSModel *m);
+శూన్య avpriv_solve_lls(LLSModel *m, ద్విగుణ పరిమితి, గుర్తులేని పొట్టి min_క్రమం);
 
-#endif /* AVUTIL_LLS_H */
+#అయితే_ముగింపు /* AVUTIL_LLS_H */

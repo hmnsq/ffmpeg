@@ -21,16 +21,16 @@
  * timestamp utils, mostly useful for debugging/logging purposes
  */
 
-#ifndef AVUTIL_TIMESTAMP_H
-#define AVUTIL_TIMESTAMP_H
+#నిర్వచితం_కాకపోతే AVUTIL_TIMESTAMP_H
+#నిర్వచించు AVUTIL_TIMESTAMP_H
 
-#include "avutil.h"
+#అన్తర్భావ "avutil.h"
 
-#if defined(__cplusplus) && !defined(__STDC_FORMAT_MACROS) && !defined(PRId64)
-#error missing -D__STDC_FORMAT_MACROS / #define __STDC_FORMAT_MACROS
-#endif
+#ఒకవేళ defined(__cplusplus) && !defined(__STDC_FORMAT_MACROS) && !defined(PRId64)
+#దోషం missing -D__STDC_FORMAT_MACROS / #నిర్వచించు __STDC_FORMAT_MACROS
+#అయితే_ముగింపు
 
-#define AV_TS_MAX_STRING_SIZE 32
+#నిర్వచించు AV_TS_MAX_STRING_కొలత 32
 
 /**
  * Fill the provided buffer with a string containing a timestamp
@@ -40,18 +40,18 @@
  * @param ts the timestamp to represent
  * @return the buffer in input
  */
-static inline char *av_ts_make_string(char *buf, int64_t ts)
+స్థిర అంతఃవరుస అక్షరం *av_ts_make_string(అక్షరం *buf, int64_t ts)
 {
-    if (ts == AV_NOPTS_VALUE) snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    else                      snprintf(buf, AV_TS_MAX_STRING_SIZE, "%" PRId64, ts);
-    return buf;
+    ఒకవేళ (ts == AV_NOPTS_విలువ) snprintf(buf, AV_TS_MAX_STRING_కొలత, "NOPTS");
+    లేకపోతే                      snprintf(buf, AV_TS_MAX_STRING_కొలత, "%" PRId64, ts);
+    తిరిగి buf;
 }
 
 /**
  * Convenience macro, the return value should be used only directly in
  * function arguments but never stand-alone.
  */
-#define av_ts2str(ts) av_ts_make_string((char[AV_TS_MAX_STRING_SIZE]){0}, ts)
+#నిర్వచించు av_ts2str(ts) av_ts_make_string((అక్షరం[AV_TS_MAX_STRING_కొలత]){0}, ts)
 
 /**
  * Fill the provided buffer with a string containing a timestamp time
@@ -62,7 +62,7 @@ static inline char *av_ts_make_string(char *buf, int64_t ts)
  * @param tb the timebase of the timestamp
  * @return the buffer in input
  */
-char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb);
+అక్షరం *av_ts_make_సమయం_string2(అక్షరం *buf, int64_t ts, AVRational tb);
 
 /**
  * Fill the provided buffer with a string containing a timestamp
@@ -70,16 +70,16 @@ char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb);
  *
  * @see av_ts_make_time_string2
  */
-static inline char *av_ts_make_time_string(char *buf, int64_t ts,
-                                           const AVRational *tb)
+స్థిర అంతఃవరుస అక్షరం *av_ts_make_సమయం_string(అక్షరం *buf, int64_t ts,
+                                           స్థిరరాశి AVRational *tb)
 {
-    return av_ts_make_time_string2(buf, ts, *tb);
+    తిరిగి av_ts_make_సమయం_string2(buf, ts, *tb);
 }
 
 /**
  * Convenience macro, the return value should be used only directly in
  * function arguments but never stand-alone.
  */
-#define av_ts2timestr(ts, tb) av_ts_make_time_string((char[AV_TS_MAX_STRING_SIZE]){0}, ts, tb)
+#నిర్వచించు av_ts2timestr(ts, tb) av_ts_make_సమయం_string((అక్షరం[AV_TS_MAX_STRING_కొలత]){0}, ts, tb)
 
-#endif /* AVUTIL_TIMESTAMP_H */
+#అయితే_ముగింపు /* AVUTIL_TIMESTAMP_H */

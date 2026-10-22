@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FLOAT_DSP_H
-#define AVUTIL_FLOAT_DSP_H
+#నిర్వచితం_కాకపోతే AVUTIL_FLOAT_DSP_H
+#నిర్వచించు AVUTIL_FLOAT_DSP_H
 
-#include <stddef.h>
+#అన్తర్భావ <stddef.h>
 
-typedef struct AVFloatDSPContext {
+రకనిర్వచనం నిర్మాణం AVFloatDSPContext {
     /**
      * Calculate the entry wise product of two vectors of floats and store the result in
      * a vector of floats.
@@ -35,8 +35,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul)(float *dst, const float *src0, const float *src1,
-                        int len);
+    శూన్య (*సదిశ_fmul)(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1,
+                        పూర్ణాంకం len);
 
     /**
      * Multiply a vector of floats by a scalar float and add to
@@ -51,8 +51,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 16
      */
-    void (*vector_fmac_scalar)(float *dst, const float *src, float mul,
-                               int len);
+    శూన్య (*సదిశ_fmac_scalar)(దశాంశం *dst, స్థిరరాశి దశాంశం *src, దశాంశం mul,
+                               పూర్ణాంకం len);
 
     /**
      * Multiply a vector of doubles by a scalar double and add to
@@ -67,8 +67,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 16
      */
-    void (*vector_dmac_scalar)(double *dst, const double *src, double mul,
-                               int len);
+    శూన్య (*సదిశ_dmac_scalar)(ద్విగుణ *dst, స్థిరరాశి ద్విగుణ *src, ద్విగుణ mul,
+                               పూర్ణాంకం len);
 
     /**
      * Multiply a vector of floats by a scalar float.  Source and
@@ -82,8 +82,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 4
      */
-    void (*vector_fmul_scalar)(float *dst, const float *src, float mul,
-                               int len);
+    శూన్య (*సదిశ_fmul_scalar)(దశాంశం *dst, స్థిరరాశి దశాంశం *src, దశాంశం mul,
+                               పూర్ణాంకం len);
 
     /**
      * Multiply a vector of double by a scalar double.  Source and
@@ -97,8 +97,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 8
      */
-    void (*vector_dmul_scalar)(double *dst, const double *src, double mul,
-                               int len);
+    శూన్య (*సదిశ_dmul_scalar)(ద్విగుణ *dst, స్థిరరాశి ద్విగుణ *src, ద్విగుణ mul,
+                               పూర్ణాంకం len);
 
     /**
      * Overlap/add with window function.
@@ -116,8 +116,8 @@ typedef struct AVFloatDSPContext {
      * @param len  length of vector
      *             constraints: multiple of 4
      */
-    void (*vector_fmul_window)(float *dst, const float *src0,
-                               const float *src1, const float *win, int len);
+    శూన్య (*సదిశ_fmul_కిటికీ)(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                               స్థిరరాశి దశాంశం *src1, స్థిరరాశి దశాంశం *win, పూర్ణాంకం len);
 
     /**
      * Calculate the entry wise product of two vectors of floats, add a third vector of
@@ -134,8 +134,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul_add)(float *dst, const float *src0, const float *src1,
-                            const float *src2, int len);
+    శూన్య (*సదిశ_fmul_కూడు)(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1,
+                            స్థిరరాశి దశాంశం *src2, పూర్ణాంకం len);
 
     /**
      * Calculate the entry wise product of two vectors of floats, and store the result
@@ -151,8 +151,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul_reverse)(float *dst, const float *src0,
-                                const float *src1, int len);
+    శూన్య (*సదిశ_fmul_తిరగేయి)(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                స్థిరరాశి దశాంశం *src1, పూర్ణాంకం len);
 
     /**
      * Calculate the sum and difference of two vectors of floats.
@@ -161,7 +161,7 @@ typedef struct AVFloatDSPContext {
      * @param v2  second input vector, difference output, 16-byte aligned
      * @param len length of vectors, multiple of 4
      */
-    void (*butterflies_float)(float *restrict v1, float *restrict v2, int len);
+    శూన్య (*butterflies_float)(దశాంశం *పరిమిత v1, దశాంశం *పరిమిత v2, పూర్ణాంకం len);
 
     /**
      * Calculate the scalar product of two vectors of floats.
@@ -172,7 +172,7 @@ typedef struct AVFloatDSPContext {
      *
      * @return sum of elementwise products
      */
-    float (*scalarproduct_float)(const float *v1, const float *v2, int len);
+    దశాంశం (*scalarproduct_float)(స్థిరరాశి దశాంశం *v1, స్థిరరాశి దశాంశం *v2, పూర్ణాంకం len);
 
     /**
      * Calculate the entry wise product of two vectors of doubles and store the result in
@@ -187,8 +187,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_dmul)(double *dst, const double *src0, const double *src1,
-                        int len);
+    శూన్య (*సదిశ_dmul)(ద్విగుణ *dst, స్థిరరాశి ద్విగుణ *src0, స్థిరరాశి ద్విగుణ *src1,
+                        పూర్ణాంకం len);
 
     /**
      * Calculate the scalar product of two vectors of doubles.
@@ -202,7 +202,7 @@ typedef struct AVFloatDSPContext {
      *
      * @return inner product of the vectors
      */
-    double (*scalarproduct_double)(const double *v1, const double *v2,
+    ద్విగుణ (*scalarproduct_double)(స్థిరరాశి ద్విగుణ *v1, స్థిరరాశి ద్విగుణ *v2,
                                    size_t len);
 } AVFloatDSPContext;
 
@@ -215,7 +215,7 @@ typedef struct AVFloatDSPContext {
  *
  * @return sum of elementwise products
  */
-float ff_scalarproduct_float_c(const float *v1, const float *v2, int len);
+దశాంశం ff_scalarproduct_float_c(స్థిరరాశి దశాంశం *v1, స్థిరరాశి దశాంశం *v2, పూర్ణాంకం len);
 
 /**
  * Return the scalar product of two vectors of doubles.
@@ -226,21 +226,21 @@ float ff_scalarproduct_float_c(const float *v1, const float *v2, int len);
  *
  * @return inner product of the vectors
  */
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+ద్విగుణ ff_scalarproduct_double_c(స్థిరరాశి ద్విగుణ *v1, స్థిరరాశి ద్విగుణ *v2,
                                  size_t len);
 
-void ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_arm(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, int strict);
-void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_x86(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp);
+శూన్య ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp);
+శూన్య ff_float_dsp_init_arm(AVFloatDSPContext *fdsp);
+శూన్య ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, పూర్ణాంకం strict);
+శూన్య ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp);
+శూన్య ff_float_dsp_init_x86(AVFloatDSPContext *fdsp);
+శూన్య ff_float_dsp_init_mips(AVFloatDSPContext *fdsp);
 
 /**
  * Allocate a float DSP context.
  *
  * @param strict  setting to non-zero avoids using functions which may not be IEEE-754 compliant
  */
-AVFloatDSPContext *avpriv_float_dsp_alloc(int strict);
+AVFloatDSPContext *avpriv_float_dsp_alloc(పూర్ణాంకం strict);
 
-#endif /* AVUTIL_FLOAT_DSP_H */
+#అయితే_ముగింపు /* AVUTIL_FLOAT_DSP_H */

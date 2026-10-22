@@ -16,30 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ATTRIBUTES_INTERNAL_H
-#define AVUTIL_ATTRIBUTES_INTERNAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_లక్షణాలు_అంతర్గత_H
+#నిర్వచించు AVUTIL_లక్షణాలు_అంతర్గత_H
 
-#include "attributes.h"
+#అన్తర్భావ "attributes.h"
 
-#if (defined(__GNUC__) || defined(__clang__)) && (defined(__ELF__) || defined(__MACH__))
+#ఒకవేళ (defined(__GNUC__) || defined(__clang__)) && (defined(__ELF__) || defined(__MACH__))
 #    define attribute_visibility_hidden __attribute__((visibility("hidden")))
-#    define FF_VISIBILITY_PUSH_HIDDEN   _Pragma("GCC visibility push(hidden)")
-#    define FF_VISIBILITY_POP_HIDDEN    _Pragma("GCC visibility pop")
-#else
+#    define FF_VISIBILITY_నెట్టు_HIDDEN   _Pragma("GCC visibility push(hidden)")
+#    define FF_VISIBILITY_తీయి_HIDDEN    _Pragma("GCC visibility pop")
+#లేకపోతే
 #    define attribute_visibility_hidden
-#    define FF_VISIBILITY_PUSH_HIDDEN
-#    define FF_VISIBILITY_POP_HIDDEN
-#endif
+#    define FF_VISIBILITY_నెట్టు_HIDDEN
+#    define FF_VISIBILITY_తీయి_HIDDEN
+#అయితే_ముగింపు
 
-#define EXTERN extern attribute_visibility_hidden
+#నిర్వచించు EXTERN బాహ్య attribute_visibility_hidden
 
-#if (AV_HAS_ATTRIBUTE(nonstring) && (AV_GCC_VERSION_AT_LEAST(15,1) || defined(__clang__)))
+#ఒకవేళ (AV_HAS_ATTRIBUTE(nonstring) && (AV_GCC_సంస్కరణ_AT_కనిష్ఠ(15,1) || defined(__clang__)))
 // Attribute to mark a variable initialized via a string literal as not
 // containing string data to suppress warnings about unterminated strings
 // in situations like char fourcc[4] = "TALB".
-#define attribute_nonstring __attribute__((nonstring))
-#else
-#define attribute_nonstring
-#endif
+#నిర్వచించు attribute_nonstring __attribute__((nonstring))
+#లేకపోతే
+#నిర్వచించు attribute_nonstring
+#అయితే_ముగింపు
 
-#endif /* AVUTIL_ATTRIBUTES_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_ATTRIBUTES_INTERNAL_H */

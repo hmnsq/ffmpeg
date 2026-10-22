@@ -23,13 +23,13 @@
  * internal math functions header
  */
 
-#ifndef AVUTIL_FFMATH_H
-#define AVUTIL_FFMATH_H
+#నిర్వచితం_కాకపోతే AVUTIL_FFMATH_H
+#నిర్వచించు AVUTIL_FFMATH_H
 
-#include <math.h>
+#అన్తర్భావ <math.h>
 
-#include "attributes.h"
-#include "mathematics.h"
+#అన్తర్భావ "attributes.h"
+#అన్తర్భావ "mathematics.h"
 
 /**
  * Compute 10^x for floating point values. Note: this function is by no means
@@ -41,14 +41,14 @@
  * @param x exponent
  * @return 10^x
  */
-static av_always_inline double ff_exp10(double x)
+స్థిర av_always_inline ద్విగుణ ff_exp10(ద్విగుణ x)
 {
-    return exp2(M_LOG2_10 * x);
+    తిరిగి exp2(M_LOG2_10 * x);
 }
 
-static av_always_inline float ff_exp10f(float x)
+స్థిర av_always_inline దశాంశం ff_exp10f(దశాంశం x)
 {
-    return exp2f(M_LOG2_10 * x);
+    తిరిగి exp2f(M_LOG2_10 * x);
 }
 
 /**
@@ -61,9 +61,9 @@ static av_always_inline float ff_exp10f(float x)
  * @param y exponent
  * @return x^y
  */
-static av_always_inline float ff_fast_powf(float x, float y)
+స్థిర av_always_inline దశాంశం ff_fast_powf(దశాంశం x, దశాంశం y)
 {
-    return expf(logf(x) * y);
+    తిరిగి expf(logf(x) * y);
 }
 
-#endif /* AVUTIL_FFMATH_H */
+#అయితే_ముగింపు /* AVUTIL_FFMATH_H */

@@ -26,54 +26,54 @@
  * see http://joe.hotchkiss.com/programming/eval/eval.html
  */
 
-#include <float.h>
-#include "attributes.h"
-#include "avassert.h"
-#include "avutil.h"
-#include "common.h"
-#include "eval.h"
-#include "ffmath.h"
-#include "log.h"
-#include "mathematics.h"
-#include "mem.h"
-#include "sfc64.h"
-#include "time.h"
-#include "avstring.h"
-#include "reverse.h"
+#అన్తర్భావ <float.h>
+#అన్తర్భావ "attributes.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "avutil.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "eval.h"
+#అన్తర్భావ "ffmath.h"
+#అన్తర్భావ "log.h"
+#అన్తర్భావ "mathematics.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "sfc64.h"
+#అన్తర్భావ "time.h"
+#అన్తర్భావ "avstring.h"
+#అన్తర్భావ "reverse.h"
 
-#define MAX_DEPTH 100
+#నిర్వచించు MAX_లోతు 100
 
-typedef struct Parser {
-    const AVClass *class;
-    int stack_index;
-    char *s;
-    const double *const_values;
-    const char * const *const_names;          // NULL terminated
-    double (* const *funcs1)(void *, double a);           // NULL terminated
-    const char * const *func1_names;          // NULL terminated
-    double (* const *funcs2)(void *, double a, double b); // NULL terminated
-    const char * const *func2_names;          // NULL terminated
-    void *opaque;
-    int log_offset;
-    void *log_ctx;
-#define VARS 10
-    double *var;
+రకనిర్వచనం నిర్మాణం Parser {
+    స్థిరరాశి AVClass *class;
+    పూర్ణాంకం దొంతర_సూచీ;
+    అక్షరం *s;
+    స్థిరరాశి ద్విగుణ *const_విలువలు;
+    స్థిరరాశి అక్షరం * స్థిరరాశి *const_పేర్లు;          // NULL terminated
+    ద్విగుణ (* స్థిరరాశి *funcs1)(శూన్య *, ద్విగుణ a);           // NULL terminated
+    స్థిరరాశి అక్షరం * స్థిరరాశి *func1_పేర్లు;          // NULL terminated
+    ద్విగుణ (* స్థిరరాశి *funcs2)(శూన్య *, ద్విగుణ a, ద్విగుణ b); // NULL terminated
+    స్థిరరాశి అక్షరం * స్థిరరాశి *func2_పేర్లు;          // NULL terminated
+    శూన్య *opaque;
+    పూర్ణాంకం log_స్థానభ్రంశం;
+    శూన్య *log_ctx;
+#నిర్వచించు VARS 10
+    ద్విగుణ *var;
     FFSFC64 *prng_state;
 } Parser;
 
-static const AVClass eval_class = {
+స్థిర స్థిరరాశి AVClass eval_class = {
     .class_name                = "Eval",
-    .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(Parser, log_offset),
-    .parent_log_context_offset = offsetof(Parser, log_ctx),
+    .అంశం_name                 = av_default_అంశం_name,
+    .option                    = ఖాళీ,
+    .సంస్కరణ                   = LIBAVUTIL_సంస్కరణ_INT,
+    .log_level_స్థానభ్రంశం_స్థానభ్రంశం   = offsetof(Parser, log_స్థానభ్రంశం),
+    .మాతృ_log_context_స్థానభ్రంశం = offsetof(Parser, log_ctx),
 };
 
-static const struct {
-    double bin_val;
-    double dec_val;
-    int8_t exp;
+స్థిర స్థిరరాశి నిర్మాణం {
+    ద్విగుణ bin_val;
+    ద్విగుణ dec_val;
+    int8_t ఘాతాంకం;
 } si_prefixes['z' - 'E' + 1] = {
     ['y'-'E']= { 8.271806125530276749e-25, 1e-24, -24 },
     ['z'-'E']= { 8.4703294725430034e-22, 1e-21, -21 },
@@ -97,9 +97,9 @@ static const struct {
     ['Y'-'E']= { 1.2089258196146292e24, 1e24, 24 },
 };
 
-static const struct {
-    const char *name;
-    double value;
+స్థిర స్థిరరాశి నిర్మాణం {
+    స్థిరరాశి అక్షరం *name;
+    ద్విగుణ విలువ;
 } constants[] = {
     { "E",   M_E   },
     { "PI",  M_PI  },
@@ -107,749 +107,749 @@ static const struct {
     { "QP2LAMBDA", FF_QP2LAMBDA },
 };
 
-double av_strtod(const char *numstr, char **tail)
+ద్విగుణ av_strtod(స్థిరరాశి అక్షరం *numstr, అక్షరం **తోక)
 {
-    double d;
-    char *next;
-    if(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
-        d = strtoul(numstr, &next, 16);
-    } else
-        d = strtod(numstr, &next);
+    ద్విగుణ d;
+    అక్షరం *తదుపరి;
+    ఒకవేళ(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
+        d = strtoul(numstr, &తదుపరి, 16);
+    } లేకపోతే
+        d = strtod(numstr, &తదుపరి);
     /* if parsing succeeded, check for and interpret postfixes */
-    if (next!=numstr) {
-        if (next[0] == 'd' && next[1] == 'B') {
+    ఒకవేళ (తదుపరి!=numstr) {
+        ఒకవేళ (తదుపరి[0] == 'd' && తదుపరి[1] == 'B') {
             /* treat dB as decibels instead of decibytes */
             d = ff_exp10(d / 20);
-            next += 2;
-        } else if (*next >= 'E' && *next <= 'z') {
-            int e= si_prefixes[*next - 'E'].exp;
-            if (e) {
-                if (next[1] == 'i') {
-                    d*= si_prefixes[*next - 'E'].bin_val;
-                    next+=2;
-                } else {
-                    d*= si_prefixes[*next - 'E'].dec_val;
-                    next++;
+            తదుపరి += 2;
+        } లేకపోతే ఒకవేళ (*తదుపరి >= 'E' && *తదుపరి <= 'z') {
+            పూర్ణాంకం e= si_prefixes[*తదుపరి - 'E'].ఘాతాంకం;
+            ఒకవేళ (e) {
+                ఒకవేళ (తదుపరి[1] == 'i') {
+                    d*= si_prefixes[*తదుపరి - 'E'].bin_val;
+                    తదుపరి+=2;
+                } లేకపోతే {
+                    d*= si_prefixes[*తదుపరి - 'E'].dec_val;
+                    తదుపరి++;
                 }
             }
         }
 
-        if (*next=='B') {
+        ఒకవేళ (*తదుపరి=='B') {
             d*=8;
-            next++;
+            తదుపరి++;
         }
     }
     /* if requested, fill in tail with the position after the last parsed
        character */
-    if (tail)
-        *tail = next;
-    return d;
+    ఒకవేళ (తోక)
+        *తోక = తదుపరి;
+    తిరిగి d;
 }
 
-#define IS_IDENTIFIER_CHAR(c) ((c) - '0' <= 9U || (c) - 'a' <= 25U || (c) - 'A' <= 25U || (c) == '_')
+#నిర్వచించు IS_IDENTIFIER_CHAR(c) ((c) - '0' <= 9U || (c) - 'a' <= 25U || (c) - 'A' <= 25U || (c) == '_')
 
-static int strmatch(const char *s, const char *prefix)
+స్థిర పూర్ణాంకం strmatch(స్థిరరాశి అక్షరం *s, స్థిరరాశి అక్షరం *ఉపసర్గ)
 {
-    int i;
-    for (i=0; prefix[i]; i++) {
-        if (prefix[i] != s[i]) return 0;
+    పూర్ణాంకం i;
+    కొరకు (i=0; ఉపసర్గ[i]; i++) {
+        ఒకవేళ (ఉపసర్గ[i] != s[i]) తిరిగి 0;
     }
     /* return 1 only if the s identifier is terminated */
-    return !IS_IDENTIFIER_CHAR(s[i]);
+    తిరిగి !IS_IDENTIFIER_CHAR(s[i]);
 }
 
-enum {
-    e_value, e_const, e_func0, e_func1, e_func2,
+గణన {
+    e_విలువ, e_const, e_func0, e_func1, e_func2,
     e_squish, e_gauss, e_ld, e_isnan, e_isinf,
     e_mod, e_max, e_min, e_eq, e_gt, e_gte, e_lte, e_lt,
-    e_pow, e_mul, e_div, e_add,
-    e_last, e_st, e_while, e_taylor, e_root, e_floor, e_ceil, e_trunc, e_round,
-    e_sqrt, e_not, e_random, e_hypot, e_gcd,
+    e_pow, e_mul, e_div, e_కూడు,
+    e_చివరి, e_st, e_while, e_taylor, e_మూలం, e_floor, e_ceil, e_trunc, e_విడత,
+    e_sqrt, e_not, e_random, e_hypot, e_గరిష్ఠ_సామాన్య_భాజకం,
     e_if, e_ifnot, e_print, e_bitand, e_bitor, e_between, e_clip, e_atan2, e_lerp,
     e_sgn, e_randomi
 };
-struct AVExpr {
-    unsigned char type;
-    unsigned char root;
-    short depth;
-    int const_index;
-    double value; // is sign in other types
-    union {
-        double (*func0)(double);
-        double (*func1)(void *, double);
-        double (*func2)(void *, double, double);
+నిర్మాణం AVExpr {
+    గుర్తులేని అక్షరం type;
+    గుర్తులేని అక్షరం మూలం;
+    పొట్టి లోతు;
+    పూర్ణాంకం const_సూచీ;
+    ద్విగుణ విలువ; // is sign in other types
+    సంఘం {
+        ద్విగుణ (*func0)(ద్విగుణ);
+        ద్విగుణ (*func1)(శూన్య *, ద్విగుణ);
+        ద్విగుణ (*func2)(శూన్య *, ద్విగుణ, ద్విగుణ);
     } ;
-    struct AVExpr *param[3];
+    నిర్మాణం AVExpr *param[3];
 };
 
-typedef struct {
+రకనిర్వచనం నిర్మాణం {
     AVExpr avexpr;
-    double *var;
+    ద్విగుణ *var;
     FFSFC64 *prng_state;
-} AVExprRoot;
+} AVExpr_మూలం;
 
-static double etime(double v)
+స్థిర ద్విగుణ etime(ద్విగుణ v)
 {
-    return av_gettime() * 0.000001;
+    తిరిగి av_gettime() * 0.000001;
 }
 
-static double eval_expr(Parser *p, AVExpr *e)
+స్థిర ద్విగుణ eval_సమాసం(Parser *p, AVExpr *e)
 {
-    switch (e->type) {
-        case e_value:  return e->value;
-        case e_const:  return e->value * p->const_values[e->const_index];
-        case e_func0:  return e->value * e->func0(eval_expr(p, e->param[0]));
-        case e_func1:  return e->value * e->func1(p->opaque, eval_expr(p, e->param[0]));
-        case e_func2:  return e->value * e->func2(p->opaque, eval_expr(p, e->param[0]), eval_expr(p, e->param[1]));
-        case e_squish: return e->value/(1+exp(4*eval_expr(p, e->param[0])));
-        case e_gauss: { double d = eval_expr(p, e->param[0]); return e->value * exp(-d*d/2)/sqrt(2*M_PI); }
-        case e_ld:     return e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
-        case e_isnan:  return e->value * !!isnan(eval_expr(p, e->param[0]));
-        case e_isinf:  return e->value * !!isinf(eval_expr(p, e->param[0]));
-        case e_floor:  return e->value * floor(eval_expr(p, e->param[0]));
-        case e_ceil :  return e->value * ceil (eval_expr(p, e->param[0]));
-        case e_trunc:  return e->value * trunc(eval_expr(p, e->param[0]));
-        case e_round:  return e->value * round(eval_expr(p, e->param[0]));
-        case e_sgn:    return e->value * FFDIFFSIGN(eval_expr(p, e->param[0]), 0);
-        case e_sqrt:   return e->value * sqrt (eval_expr(p, e->param[0]));
-        case e_not:    return e->value * (eval_expr(p, e->param[0]) == 0);
-        case e_if:     return e->value * (eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
-                                          e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_ifnot:  return e->value * (!eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
-                                          e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_clip: {
-            double x = eval_expr(p, e->param[0]);
-            double min = eval_expr(p, e->param[1]), max = eval_expr(p, e->param[2]);
-            if (isnan(min) || isnan(max) || isnan(x) || min > max)
-                return NAN;
-            return e->value * av_clipd(x, min, max);
+    ఎంపిక (e->type) {
+        స్థితి e_విలువ:  తిరిగి e->విలువ;
+        స్థితి e_const:  తిరిగి e->విలువ * p->const_విలువలు[e->const_సూచీ];
+        స్థితి e_func0:  తిరిగి e->విలువ * e->func0(eval_సమాసం(p, e->param[0]));
+        స్థితి e_func1:  తిరిగి e->విలువ * e->func1(p->opaque, eval_సమాసం(p, e->param[0]));
+        స్థితి e_func2:  తిరిగి e->విలువ * e->func2(p->opaque, eval_సమాసం(p, e->param[0]), eval_సమాసం(p, e->param[1]));
+        స్థితి e_squish: తిరిగి e->విలువ/(1+ఘాతాంకం(4*eval_సమాసం(p, e->param[0])));
+        స్థితి e_gauss: { ద్విగుణ d = eval_సమాసం(p, e->param[0]); తిరిగి e->విలువ * ఘాతాంకం(-d*d/2)/వర్గమూలం(2*M_PI); }
+        స్థితి e_ld:     తిరిగి e->విలువ * p->var[av_clip(eval_సమాసం(p, e->param[0]), 0, VARS-1)];
+        స్థితి e_isnan:  తిరిగి e->విలువ * !!isnan(eval_సమాసం(p, e->param[0]));
+        స్థితి e_isinf:  తిరిగి e->విలువ * !!isinf(eval_సమాసం(p, e->param[0]));
+        స్థితి e_floor:  తిరిగి e->విలువ * floor(eval_సమాసం(p, e->param[0]));
+        స్థితి e_ceil :  తిరిగి e->విలువ * ceil (eval_సమాసం(p, e->param[0]));
+        స్థితి e_trunc:  తిరిగి e->విలువ * trunc(eval_సమాసం(p, e->param[0]));
+        స్థితి e_విడత:  తిరిగి e->విలువ * round(eval_సమాసం(p, e->param[0]));
+        స్థితి e_sgn:    తిరిగి e->విలువ * FFDIFFSIGN(eval_సమాసం(p, e->param[0]), 0);
+        స్థితి e_sqrt:   తిరిగి e->విలువ * వర్గమూలం (eval_సమాసం(p, e->param[0]));
+        స్థితి e_not:    తిరిగి e->విలువ * (eval_సమాసం(p, e->param[0]) == 0);
+        స్థితి e_if:     తిరిగి e->విలువ * (eval_సమాసం(p, e->param[0]) ? eval_సమాసం(p, e->param[1]) :
+                                          e->param[2] ? eval_సమాసం(p, e->param[2]) : 0);
+        స్థితి e_ifnot:  తిరిగి e->విలువ * (!eval_సమాసం(p, e->param[0]) ? eval_సమాసం(p, e->param[1]) :
+                                          e->param[2] ? eval_సమాసం(p, e->param[2]) : 0);
+        స్థితి e_clip: {
+            ద్విగుణ x = eval_సమాసం(p, e->param[0]);
+            ద్విగుణ min = eval_సమాసం(p, e->param[1]), max = eval_సమాసం(p, e->param[2]);
+            ఒకవేళ (isnan(min) || isnan(max) || isnan(x) || min > max)
+                తిరిగి NAN;
+            తిరిగి e->విలువ * av_clipd(x, min, max);
         }
-        case e_between: {
-            double d = eval_expr(p, e->param[0]);
-            return e->value * (d >= eval_expr(p, e->param[1]) &&
-                               d <= eval_expr(p, e->param[2]));
+        స్థితి e_between: {
+            ద్విగుణ d = eval_సమాసం(p, e->param[0]);
+            తిరిగి e->విలువ * (d >= eval_సమాసం(p, e->param[1]) &&
+                               d <= eval_సమాసం(p, e->param[2]));
         }
-        case e_lerp: {
-            double v0 = eval_expr(p, e->param[0]);
-            double v1 = eval_expr(p, e->param[1]);
-            double f  = eval_expr(p, e->param[2]);
-            return e->value * (v0 + (v1 - v0) * f);
+        స్థితి e_lerp: {
+            ద్విగుణ v0 = eval_సమాసం(p, e->param[0]);
+            ద్విగుణ v1 = eval_సమాసం(p, e->param[1]);
+            ద్విగుణ f  = eval_సమాసం(p, e->param[2]);
+            తిరిగి e->విలువ * (v0 + (v1 - v0) * f);
         }
-        case e_print: {
-            double x = eval_expr(p, e->param[0]);
-            int level = e->param[1] ? av_clip(eval_expr(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
+        స్థితి e_print: {
+            ద్విగుణ x = eval_సమాసం(p, e->param[0]);
+            పూర్ణాంకం level = e->param[1] ? av_clip(eval_సమాసం(p, e->param[1]), INT_MIN, గరిష్ఠ_పూర్ణాంకం) : AV_LOG_INFO;
             av_log(p, level, "%f\n", x);
-            return e->value * x;
+            తిరిగి e->విలువ * x;
         }
 
-#define COMPUTE_NEXT_RANDOM()                                        \
-            int idx = av_clip(eval_expr(p, e->param[0]), 0, VARS-1); \
+#నిర్వచించు COMPUTE_తదుపరి_RANDOM()                                        \
+            పూర్ణాంకం idx = av_clip(eval_సమాసం(p, e->param[0]), 0, VARS-1); \
             FFSFC64 *s = p->prng_state + idx;                        \
             uint64_t r;                                              \
                                                                      \
-            if (!s->counter) {                                       \
+            ఒకవేళ (!s->counter) {                                       \
                 r = isnan(p->var[idx]) ? 0 : p->var[idx];            \
                 ff_sfc64_init(s, r, r, r, 12);                       \
             }                                                        \
             r = ff_sfc64_get(s);                                     \
             p->var[idx] = r;                                         \
 
-        case e_random: {
-            COMPUTE_NEXT_RANDOM();
-            return r * (1.0/UINT64_MAX);
+        స్థితి e_random: {
+            COMPUTE_తదుపరి_RANDOM();
+            తిరిగి r * (1.0/UINT64_MAX);
         }
-        case e_randomi: {
-            double min = eval_expr(p, e->param[1]);
-            double max = eval_expr(p, e->param[2]);
-            COMPUTE_NEXT_RANDOM();
-            return min + (max - min) * r / UINT64_MAX;
+        స్థితి e_randomi: {
+            ద్విగుణ min = eval_సమాసం(p, e->param[1]);
+            ద్విగుణ max = eval_సమాసం(p, e->param[2]);
+            COMPUTE_తదుపరి_RANDOM();
+            తిరిగి min + (max - min) * r / UINT64_MAX;
         }
-        case e_while: {
-            double d = NAN;
-            while (eval_expr(p, e->param[0]))
-                d=eval_expr(p, e->param[1]);
-            return d;
+        స్థితి e_while: {
+            ద్విగుణ d = NAN;
+            అయితే (eval_సమాసం(p, e->param[0]))
+                d=eval_సమాసం(p, e->param[1]);
+            తిరిగి d;
         }
-        case e_taylor: {
-            double t = 1, d = 0, v;
-            double x = eval_expr(p, e->param[1]);
-            int id = e->param[2] ? av_clip(eval_expr(p, e->param[2]), 0, VARS-1) : 0;
-            int i;
-            double var0 = p->var[id];
-            for(i=0; i<1000; i++) {
-                double ld = d;
+        స్థితి e_taylor: {
+            ద్విగుణ t = 1, d = 0, v;
+            ద్విగుణ x = eval_సమాసం(p, e->param[1]);
+            పూర్ణాంకం id = e->param[2] ? av_clip(eval_సమాసం(p, e->param[2]), 0, VARS-1) : 0;
+            పూర్ణాంకం i;
+            ద్విగుణ var0 = p->var[id];
+            కొరకు(i=0; i<1000; i++) {
+                ద్విగుణ ld = d;
                 p->var[id] = i;
-                v = eval_expr(p, e->param[0]);
+                v = eval_సమాసం(p, e->param[0]);
                 d += t*v;
-                if(ld==d && v)
-                    break;
+                ఒకవేళ(ld==d && v)
+                    ఆపు;
                 t *= x / (i+1);
             }
             p->var[id] = var0;
-            return d;
+            తిరిగి d;
         }
-        case e_root: {
-            int i, j;
-            double low = -1, high = -1, v, low_v = -DBL_MAX, high_v = DBL_MAX;
-            double var0 = p->var[0];
-            double x_max = eval_expr(p, e->param[1]);
-            for(i=-1; i<1024; i++) {
-                if(i<255) {
-                    p->var[0] = ff_reverse[i&255]*x_max/255;
-                } else {
-                    p->var[0] = x_max*pow(0.9, i-255);
-                    if (i&1) p->var[0] *= -1;
-                    if (i&2) p->var[0] += low;
-                    else     p->var[0] += high;
+        స్థితి e_మూలం: {
+            పూర్ణాంకం i, j;
+            ద్విగుణ దిగువ = -1, ఎగువ = -1, v, దిగువ_v = -DBL_MAX, ఎగువ_v = DBL_MAX;
+            ద్విగుణ var0 = p->var[0];
+            ద్విగుణ x_max = eval_సమాసం(p, e->param[1]);
+            కొరకు(i=-1; i<1024; i++) {
+                ఒకవేళ(i<255) {
+                    p->var[0] = ff_తిరగేయి[i&255]*x_max/255;
+                } లేకపోతే {
+                    p->var[0] = x_max*ఘాతం(0.9, i-255);
+                    ఒకవేళ (i&1) p->var[0] *= -1;
+                    ఒకవేళ (i&2) p->var[0] += దిగువ;
+                    లేకపోతే     p->var[0] += ఎగువ;
                 }
-                v = eval_expr(p, e->param[0]);
-                if (v<=0 && v>low_v) {
-                    low    = p->var[0];
-                    low_v  = v;
+                v = eval_సమాసం(p, e->param[0]);
+                ఒకవేళ (v<=0 && v>దిగువ_v) {
+                    దిగువ    = p->var[0];
+                    దిగువ_v  = v;
                 }
-                if (v>=0 && v<high_v) {
-                    high   = p->var[0];
-                    high_v = v;
+                ఒకవేళ (v>=0 && v<ఎగువ_v) {
+                    ఎగువ   = p->var[0];
+                    ఎగువ_v = v;
                 }
-                if (low>=0 && high>=0){
-                    for (j=0; j<1000; j++) {
-                        p->var[0] = (low+high)*0.5;
-                        if (low == p->var[0] || high == p->var[0])
-                            break;
-                        v = eval_expr(p, e->param[0]);
-                        if (v<=0) low = p->var[0];
-                        if (v>=0) high= p->var[0];
-                        if (isnan(v)) {
-                            low = high = v;
-                            break;
+                ఒకవేళ (దిగువ>=0 && ఎగువ>=0){
+                    కొరకు (j=0; j<1000; j++) {
+                        p->var[0] = (దిగువ+ఎగువ)*0.5;
+                        ఒకవేళ (దిగువ == p->var[0] || ఎగువ == p->var[0])
+                            ఆపు;
+                        v = eval_సమాసం(p, e->param[0]);
+                        ఒకవేళ (v<=0) దిగువ = p->var[0];
+                        ఒకవేళ (v>=0) ఎగువ= p->var[0];
+                        ఒకవేళ (isnan(v)) {
+                            దిగువ = ఎగువ = v;
+                            ఆపు;
                         }
                     }
-                    break;
+                    ఆపు;
                 }
             }
             p->var[0] = var0;
-            return -low_v<high_v ? low : high;
+            తిరిగి -దిగువ_v<ఎగువ_v ? దిగువ : ఎగువ;
         }
-        default: {
-            double d = eval_expr(p, e->param[0]);
-            double d2 = eval_expr(p, e->param[1]);
-            switch (e->type) {
-                case e_mod: return e->value * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
-                case e_gcd: return e->value * av_gcd(d,d2);
-                case e_max: return e->value * (d >  d2 ?   d : d2);
-                case e_min: return e->value * (d <  d2 ?   d : d2);
-                case e_eq:  return e->value * (d == d2 ? 1.0 : 0.0);
-                case e_gt:  return e->value * (d >  d2 ? 1.0 : 0.0);
-                case e_gte: return e->value * (d >= d2 ? 1.0 : 0.0);
-                case e_lt:  return e->value * (d <  d2 ? 1.0 : 0.0);
-                case e_lte: return e->value * (d <= d2 ? 1.0 : 0.0);
-                case e_pow: return e->value * pow(d, d2);
-                case e_mul: return e->value * (d * d2);
-                case e_div: return e->value * (d2 ? (d / d2) : d * INFINITY);
-                case e_add: return e->value * (d + d2);
-                case e_last:return e->value * d2;
-                case e_st :  {
-                    int index = av_clip(d, 0, VARS-1);
-                    p->prng_state[index].counter = 0;
-                    return e->value * (p->var[index]= d2);
+        అప్రమేయ: {
+            ద్విగుణ d = eval_సమాసం(p, e->param[0]);
+            ద్విగుణ d2 = eval_సమాసం(p, e->param[1]);
+            ఎంపిక (e->type) {
+                స్థితి e_mod: తిరిగి e->విలువ * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
+                స్థితి e_గరిష్ఠ_సామాన్య_భాజకం: తిరిగి e->విలువ * av_గరిష్ఠ_సామాన్య_భాజకం(d,d2);
+                స్థితి e_max: తిరిగి e->విలువ * (d >  d2 ?   d : d2);
+                స్థితి e_min: తిరిగి e->విలువ * (d <  d2 ?   d : d2);
+                స్థితి e_eq:  తిరిగి e->విలువ * (d == d2 ? 1.0 : 0.0);
+                స్థితి e_gt:  తిరిగి e->విలువ * (d >  d2 ? 1.0 : 0.0);
+                స్థితి e_gte: తిరిగి e->విలువ * (d >= d2 ? 1.0 : 0.0);
+                స్థితి e_lt:  తిరిగి e->విలువ * (d <  d2 ? 1.0 : 0.0);
+                స్థితి e_lte: తిరిగి e->విలువ * (d <= d2 ? 1.0 : 0.0);
+                స్థితి e_pow: తిరిగి e->విలువ * ఘాతం(d, d2);
+                స్థితి e_mul: తిరిగి e->విలువ * (d * d2);
+                స్థితి e_div: తిరిగి e->విలువ * (d2 ? (d / d2) : d * INFINITY);
+                స్థితి e_కూడు: తిరిగి e->విలువ * (d + d2);
+                స్థితి e_చివరి:తిరిగి e->విలువ * d2;
+                స్థితి e_st :  {
+                    పూర్ణాంకం సూచీ = av_clip(d, 0, VARS-1);
+                    p->prng_state[సూచీ].counter = 0;
+                    తిరిగి e->విలువ * (p->var[సూచీ]= d2);
                 }
-                case e_hypot:return e->value * hypot(d, d2);
-                case e_atan2:return e->value * atan2(d, d2);
-                case e_bitand: return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d & (long int)d2);
-                case e_bitor:  return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d | (long int)d2);
+                స్థితి e_hypot:తిరిగి e->విలువ * hypot(d, d2);
+                స్థితి e_atan2:తిరిగి e->విలువ * atan2(d, d2);
+                స్థితి e_bitand: తిరిగి isnan(d) || isnan(d2) ? NAN : e->విలువ * ((దీర్ఘ పూర్ణాంకం)d & (దీర్ఘ పూర్ణాంకం)d2);
+                స్థితి e_bitor:  తిరిగి isnan(d) || isnan(d2) ? NAN : e->విలువ * ((దీర్ఘ పూర్ణాంకం)d | (దీర్ఘ పూర్ణాంకం)d2);
             }
         }
     }
-    return NAN;
+    తిరిగి NAN;
 }
 
-static int parse_expr(AVExpr **e, Parser *p);
+స్థిర పూర్ణాంకం parse_సమాసం(AVExpr **e, Parser *p);
 
-void av_expr_free(AVExpr *e)
+శూన్య av_సమాసం_free(AVExpr *e)
 {
-    if (!e) return;
-    av_expr_free(e->param[0]);
-    av_expr_free(e->param[1]);
-    av_expr_free(e->param[2]);
-    if (e->root) {
-        AVExprRoot *r = (AVExprRoot*)e;
+    ఒకవేళ (!e) తిరిగి;
+    av_సమాసం_free(e->param[0]);
+    av_సమాసం_free(e->param[1]);
+    av_సమాసం_free(e->param[2]);
+    ఒకవేళ (e->మూలం) {
+        AVExpr_మూలం *r = (AVExpr_మూలం*)e;
         av_freep(&r->var);
         av_freep(&r->prng_state);
     }
     av_freep(&e);
 }
 
-static int parse_primary(AVExpr **e, Parser *p)
+స్థిర పూర్ణాంకం parse_primary(AVExpr **e, Parser *p)
 {
-    AVExpr *d = av_mallocz(sizeof(AVExpr));
-    char *next = p->s, *s0 = p->s;
-    int ret, i;
+    AVExpr *d = av_mallocz(పరిమాణం(AVExpr));
+    అక్షరం *తదుపరి = p->s, *s0 = p->s;
+    పూర్ణాంకం ret, i;
 
-    if (!d)
-        return AVERROR(ENOMEM);
+    ఒకవేళ (!d)
+        తిరిగి AVERROR(ENOMEM);
 
-    /* number */
-    d->value = av_strtod(p->s, &next);
-    if (next != p->s) {
-        d->type = e_value;
-        p->s= next;
+    /*సంఖ్య*/
+    d->విలువ = av_strtod(p->s, &తదుపరి);
+    ఒకవేళ (తదుపరి != p->s) {
+        d->type = e_విలువ;
+        p->s= తదుపరి;
         *e = d;
-        return 0;
+        తిరిగి 0;
     }
-    d->value = 1;
+    d->విలువ = 1;
 
     /* named constants */
-    for (i=0; p->const_names && p->const_names[i]; i++) {
-        if (strmatch(p->s, p->const_names[i])) {
-            p->s+= strlen(p->const_names[i]);
+    కొరకు (i=0; p->const_పేర్లు && p->const_పేర్లు[i]; i++) {
+        ఒకవేళ (strmatch(p->s, p->const_పేర్లు[i])) {
+            p->s+= అక్షరశ్రేణి_పొడవు(p->const_పేర్లు[i]);
             d->type = e_const;
-            d->const_index = i;
+            d->const_సూచీ = i;
             *e = d;
-            return 0;
+            తిరిగి 0;
         }
     }
-    for (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
-        if (strmatch(p->s, constants[i].name)) {
-            p->s += strlen(constants[i].name);
-            d->type = e_value;
-            d->value = constants[i].value;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
+        ఒకవేళ (strmatch(p->s, constants[i].name)) {
+            p->s += అక్షరశ్రేణి_పొడవు(constants[i].name);
+            d->type = e_విలువ;
+            d->విలువ = constants[i].విలువ;
             *e = d;
-            return 0;
+            తిరిగి 0;
         }
     }
 
     p->s= strchr(p->s, '(');
-    if (!p->s) {
+    ఒకవేళ (!p->s) {
         av_log(p, AV_LOG_ERROR, "Undefined constant or missing '(' in '%s'\n", s0);
-        p->s= next;
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+        p->s= తదుపరి;
+        av_సమాసం_free(d);
+        తిరిగి AVERROR(EINVAL);
     }
     p->s++; // "("
-    if (*next == '(') { // special case do-nothing
+    ఒకవేళ (*తదుపరి == '(') { // special case do-nothing
         av_freep(&d);
-        if ((ret = parse_expr(&d, p)) < 0)
-            return ret;
-        if (p->s[0] != ')') {
+        ఒకవేళ ((ret = parse_సమాసం(&d, p)) < 0)
+            తిరిగి ret;
+        ఒకవేళ (p->s[0] != ')') {
             av_log(p, AV_LOG_ERROR, "Missing ')' in '%s'\n", s0);
-            av_expr_free(d);
-            return AVERROR(EINVAL);
+            av_సమాసం_free(d);
+            తిరిగి AVERROR(EINVAL);
         }
         p->s++; // ")"
         *e = d;
-        return 0;
+        తిరిగి 0;
     }
-    if ((ret = parse_expr(&(d->param[0]), p)) < 0) {
-        av_expr_free(d);
-        return ret;
+    ఒకవేళ ((ret = parse_సమాసం(&(d->param[0]), p)) < 0) {
+        av_సమాసం_free(d);
+        తిరిగి ret;
     }
-    if (p->s[0]== ',') {
+    ఒకవేళ (p->s[0]== ',') {
         p->s++; // ","
-        parse_expr(&d->param[1], p);
+        parse_సమాసం(&d->param[1], p);
     }
-    if (p->s[0]== ',') {
+    ఒకవేళ (p->s[0]== ',') {
         p->s++; // ","
-        parse_expr(&d->param[2], p);
+        parse_సమాసం(&d->param[2], p);
     }
-    if (p->s[0] != ')') {
+    ఒకవేళ (p->s[0] != ')') {
         av_log(p, AV_LOG_ERROR, "Missing ')' or too many args in '%s'\n", s0);
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+        av_సమాసం_free(d);
+        తిరిగి AVERROR(EINVAL);
     }
     p->s++; // ")"
 
-    for (int i = 0; i<3; i++)
-        if (d->param[i])
-            d->depth = FFMAX(d->depth, d->param[i]->depth+1);
-    if (d->depth > MAX_DEPTH) {
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+    కొరకు (పూర్ణాంకం i = 0; i<3; i++)
+        ఒకవేళ (d->param[i])
+            d->లోతు = FFMAX(d->లోతు, d->param[i]->లోతు+1);
+    ఒకవేళ (d->లోతు > MAX_లోతు) {
+        av_సమాసం_free(d);
+        తిరిగి AVERROR(EINVAL);
     }
 
     d->type = e_func0;
-         if (strmatch(next, "sinh"  )) d->func0 = sinh;
-    else if (strmatch(next, "cosh"  )) d->func0 = cosh;
-    else if (strmatch(next, "tanh"  )) d->func0 = tanh;
-    else if (strmatch(next, "sin"   )) d->func0 = sin;
-    else if (strmatch(next, "cos"   )) d->func0 = cos;
-    else if (strmatch(next, "tan"   )) d->func0 = tan;
-    else if (strmatch(next, "atan"  )) d->func0 = atan;
-    else if (strmatch(next, "asin"  )) d->func0 = asin;
-    else if (strmatch(next, "acos"  )) d->func0 = acos;
-    else if (strmatch(next, "exp"   )) d->func0 = exp;
-    else if (strmatch(next, "log"   )) d->func0 = log;
-    else if (strmatch(next, "abs"   )) d->func0 = fabs;
-    else if (strmatch(next, "time"  )) d->func0 = etime;
-    else if (strmatch(next, "squish")) d->type = e_squish;
-    else if (strmatch(next, "gauss" )) d->type = e_gauss;
-    else if (strmatch(next, "mod"   )) d->type = e_mod;
-    else if (strmatch(next, "max"   )) d->type = e_max;
-    else if (strmatch(next, "min"   )) d->type = e_min;
-    else if (strmatch(next, "eq"    )) d->type = e_eq;
-    else if (strmatch(next, "gte"   )) d->type = e_gte;
-    else if (strmatch(next, "gt"    )) d->type = e_gt;
-    else if (strmatch(next, "lte"   )) d->type = e_lte;
-    else if (strmatch(next, "lt"    )) d->type = e_lt;
-    else if (strmatch(next, "ld"    )) d->type = e_ld;
-    else if (strmatch(next, "isnan" )) d->type = e_isnan;
-    else if (strmatch(next, "isinf" )) d->type = e_isinf;
-    else if (strmatch(next, "st"    )) d->type = e_st;
-    else if (strmatch(next, "while" )) d->type = e_while;
-    else if (strmatch(next, "taylor")) d->type = e_taylor;
-    else if (strmatch(next, "root"  )) d->type = e_root;
-    else if (strmatch(next, "floor" )) d->type = e_floor;
-    else if (strmatch(next, "ceil"  )) d->type = e_ceil;
-    else if (strmatch(next, "trunc" )) d->type = e_trunc;
-    else if (strmatch(next, "round" )) d->type = e_round;
-    else if (strmatch(next, "sqrt"  )) d->type = e_sqrt;
-    else if (strmatch(next, "not"   )) d->type = e_not;
-    else if (strmatch(next, "pow"   )) d->type = e_pow;
-    else if (strmatch(next, "print" )) d->type = e_print;
-    else if (strmatch(next, "random")) d->type = e_random;
-    else if (strmatch(next, "randomi")) d->type = e_randomi;
-    else if (strmatch(next, "hypot" )) d->type = e_hypot;
-    else if (strmatch(next, "gcd"   )) d->type = e_gcd;
-    else if (strmatch(next, "if"    )) d->type = e_if;
-    else if (strmatch(next, "ifnot" )) d->type = e_ifnot;
-    else if (strmatch(next, "bitand")) d->type = e_bitand;
-    else if (strmatch(next, "bitor" )) d->type = e_bitor;
-    else if (strmatch(next, "between"))d->type = e_between;
-    else if (strmatch(next, "clip"  )) d->type = e_clip;
-    else if (strmatch(next, "atan2" )) d->type = e_atan2;
-    else if (strmatch(next, "lerp"  )) d->type = e_lerp;
-    else if (strmatch(next, "sgn"   )) d->type = e_sgn;
-    else {
-        for (i=0; p->func1_names && p->func1_names[i]; i++) {
-            if (strmatch(next, p->func1_names[i])) {
+         ఒకవేళ (strmatch(తదుపరి, "sinh"  )) d->func0 = sinh;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "cosh"  )) d->func0 = cosh;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "tanh"  )) d->func0 = tanh;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "sin"   )) d->func0 = జ్యా;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "cos"   )) d->func0 = కోజ్యా;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "tan"   )) d->func0 = tan;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "atan"  )) d->func0 = atan;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "asin"  )) d->func0 = asin;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "acos"  )) d->func0 = acos;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "exp"   )) d->func0 = ఘాతాంకం;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "log"   )) d->func0 = సంవర్గమానం;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "abs"   )) d->func0 = fabs;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "time"  )) d->func0 = etime;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "squish")) d->type = e_squish;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "gauss" )) d->type = e_gauss;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "mod"   )) d->type = e_mod;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "max"   )) d->type = e_max;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "min"   )) d->type = e_min;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "eq"    )) d->type = e_eq;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "gte"   )) d->type = e_gte;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "gt"    )) d->type = e_gt;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "lte"   )) d->type = e_lte;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "lt"    )) d->type = e_lt;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "ld"    )) d->type = e_ld;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "isnan" )) d->type = e_isnan;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "isinf" )) d->type = e_isinf;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "st"    )) d->type = e_st;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "while" )) d->type = e_while;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "taylor")) d->type = e_taylor;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "root"  )) d->type = e_మూలం;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "floor" )) d->type = e_floor;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "ceil"  )) d->type = e_ceil;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "trunc" )) d->type = e_trunc;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "round" )) d->type = e_విడత;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "sqrt"  )) d->type = e_sqrt;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "not"   )) d->type = e_not;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "pow"   )) d->type = e_pow;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "print" )) d->type = e_print;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "random")) d->type = e_random;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "randomi")) d->type = e_randomi;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "hypot" )) d->type = e_hypot;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "gcd"   )) d->type = e_గరిష్ఠ_సామాన్య_భాజకం;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "if"    )) d->type = e_if;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "ifnot" )) d->type = e_ifnot;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "bitand")) d->type = e_bitand;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "bitor" )) d->type = e_bitor;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "between"))d->type = e_between;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "clip"  )) d->type = e_clip;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "atan2" )) d->type = e_atan2;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "lerp"  )) d->type = e_lerp;
+    లేకపోతే ఒకవేళ (strmatch(తదుపరి, "sgn"   )) d->type = e_sgn;
+    లేకపోతే {
+        కొరకు (i=0; p->func1_పేర్లు && p->func1_పేర్లు[i]; i++) {
+            ఒకవేళ (strmatch(తదుపరి, p->func1_పేర్లు[i])) {
                 d->func1 = p->funcs1[i];
                 d->type = e_func1;
-                d->const_index = i;
+                d->const_సూచీ = i;
                 *e = d;
-                return 0;
+                తిరిగి 0;
             }
         }
 
-        for (i=0; p->func2_names && p->func2_names[i]; i++) {
-            if (strmatch(next, p->func2_names[i])) {
+        కొరకు (i=0; p->func2_పేర్లు && p->func2_పేర్లు[i]; i++) {
+            ఒకవేళ (strmatch(తదుపరి, p->func2_పేర్లు[i])) {
                 d->func2 = p->funcs2[i];
                 d->type = e_func2;
-                d->const_index = i;
+                d->const_సూచీ = i;
                 *e = d;
-                return 0;
+                తిరిగి 0;
             }
         }
 
         av_log(p, AV_LOG_ERROR, "Unknown function in '%s'\n", s0);
-        av_expr_free(d);
-        return AVERROR(EINVAL);
+        av_సమాసం_free(d);
+        తిరిగి AVERROR(EINVAL);
     }
 
     *e = d;
-    return 0;
+    తిరిగి 0;
 }
 
-static AVExpr *make_eval_expr(int type, int value, AVExpr *p0, AVExpr *p1)
+స్థిర AVExpr *make_eval_సమాసం(పూర్ణాంకం type, పూర్ణాంకం విలువ, AVExpr *p0, AVExpr *p1)
 {
-    int depth = FFMAX(p0->depth, p1->depth) + 1;
-    if (depth > MAX_DEPTH)
-        return NULL;
-    AVExpr *e = av_mallocz(sizeof(AVExpr));
-    if (!e)
-        return NULL;
+    పూర్ణాంకం లోతు = FFMAX(p0->లోతు, p1->లోతు) + 1;
+    ఒకవేళ (లోతు > MAX_లోతు)
+        తిరిగి ఖాళీ;
+    AVExpr *e = av_mallocz(పరిమాణం(AVExpr));
+    ఒకవేళ (!e)
+        తిరిగి ఖాళీ;
     e->type     =type   ;
-    e->value    =value  ;
+    e->విలువ    =విలువ  ;
     e->param[0] =p0     ;
     e->param[1] =p1     ;
-    e->depth    = depth;
-    return e;
+    e->లోతు    = లోతు;
+    తిరిగి e;
 }
 
-static int parse_pow(AVExpr **e, Parser *p, int *sign)
+స్థిర పూర్ణాంకం parse_pow(AVExpr **e, Parser *p, పూర్ణాంకం *sign)
 {
     *sign= (*p->s == '+') - (*p->s == '-');
     p->s += *sign&1;
-    return parse_primary(e, p);
+    తిరిగి parse_primary(e, p);
 }
 
-static int parse_dB(AVExpr **e, Parser *p, int *sign)
+స్థిర పూర్ణాంకం parse_dB(AVExpr **e, Parser *p, పూర్ణాంకం *sign)
 {
     /* do not filter out the negative sign when parsing a dB value.
        for example, -3dB is not the same as -(3dB) */
-    if (*p->s == '-') {
-        char *next;
-        av_unused double ignored = strtod(p->s, &next);
-        if (next != p->s && next[0] == 'd' && next[1] == 'B') {
+    ఒకవేళ (*p->s == '-') {
+        అక్షరం *తదుపరి;
+        av_వాడని ద్విగుణ ignored = strtod(p->s, &తదుపరి);
+        ఒకవేళ (తదుపరి != p->s && తదుపరి[0] == 'd' && తదుపరి[1] == 'B') {
             *sign = 0;
-            return parse_primary(e, p);
+            తిరిగి parse_primary(e, p);
         }
     }
-    return parse_pow(e, p, sign);
+    తిరిగి parse_pow(e, p, sign);
 }
 
-static int parse_factor(AVExpr **e, Parser *p)
+స్థిర పూర్ణాంకం parse_గుణకం(AVExpr **e, Parser *p)
 {
-    int sign, sign2, ret;
+    పూర్ణాంకం sign, sign2, ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_dB(&e0, p, &sign)) < 0)
-        return ret;
-    while(p->s[0]=='^'){
+    ఒకవేళ ((ret = parse_dB(&e0, p, &sign)) < 0)
+        తిరిగి ret;
+    అయితే(p->s[0]=='^'){
         e1 = e0;
         p->s++;
-        if ((ret = parse_dB(&e2, p, &sign2)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        ఒకవేళ ((ret = parse_dB(&e2, p, &sign2)) < 0) {
+            av_సమాసం_free(e1);
+            తిరిగి ret;
         }
-        e0 = make_eval_expr(e_pow, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_సమాసం(e_pow, 1, e1, e2);
+        ఒకవేళ (!e0) {
+            av_సమాసం_free(e1);
+            av_సమాసం_free(e2);
+            తిరిగి AVERROR(ENOMEM);
         }
-        if (e0->param[1]) e0->param[1]->value *= (sign2|1);
+        ఒకవేళ (e0->param[1]) e0->param[1]->విలువ *= (sign2|1);
     }
-    if (e0) e0->value *= (sign|1);
+    ఒకవేళ (e0) e0->విలువ *= (sign|1);
 
     *e = e0;
-    return 0;
+    తిరిగి 0;
 }
 
-static int parse_term(AVExpr **e, Parser *p)
+స్థిర పూర్ణాంకం parse_పదం(AVExpr **e, Parser *p)
 {
-    int ret;
+    పూర్ణాంకం ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_factor(&e0, p)) < 0)
-        return ret;
-    while (p->s[0]=='*' || p->s[0]=='/') {
-        int c= *p->s++;
+    ఒకవేళ ((ret = parse_గుణకం(&e0, p)) < 0)
+        తిరిగి ret;
+    అయితే (p->s[0]=='*' || p->s[0]=='/') {
+        పూర్ణాంకం c= *p->s++;
         e1 = e0;
-        if ((ret = parse_factor(&e2, p)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        ఒకవేళ ((ret = parse_గుణకం(&e2, p)) < 0) {
+            av_సమాసం_free(e1);
+            తిరిగి ret;
         }
-        e0 = make_eval_expr(c == '*' ? e_mul : e_div, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_సమాసం(c == '*' ? e_mul : e_div, 1, e1, e2);
+        ఒకవేళ (!e0) {
+            av_సమాసం_free(e1);
+            av_సమాసం_free(e2);
+            తిరిగి AVERROR(ENOMEM);
         }
     }
     *e = e0;
-    return 0;
+    తిరిగి 0;
 }
 
-static int parse_subexpr(AVExpr **e, Parser *p)
+స్థిర పూర్ణాంకం parse_subexpr(AVExpr **e, Parser *p)
 {
-    int ret;
+    పూర్ణాంకం ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_term(&e0, p)) < 0)
-        return ret;
-    while (*p->s == '+' || *p->s == '-') {
+    ఒకవేళ ((ret = parse_పదం(&e0, p)) < 0)
+        తిరిగి ret;
+    అయితే (*p->s == '+' || *p->s == '-') {
         e1 = e0;
-        if ((ret = parse_term(&e2, p)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        ఒకవేళ ((ret = parse_పదం(&e2, p)) < 0) {
+            av_సమాసం_free(e1);
+            తిరిగి ret;
         }
-        e0 = make_eval_expr(e_add, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_సమాసం(e_కూడు, 1, e1, e2);
+        ఒకవేళ (!e0) {
+            av_సమాసం_free(e1);
+            av_సమాసం_free(e2);
+            తిరిగి AVERROR(ENOMEM);
         }
     };
 
     *e = e0;
-    return 0;
+    తిరిగి 0;
 }
 
-static int parse_expr(AVExpr **e, Parser *p)
+స్థిర పూర్ణాంకం parse_సమాసం(AVExpr **e, Parser *p)
 {
-    int ret;
+    పూర్ణాంకం ret;
     AVExpr *e0, *e1, *e2;
-    if (p->stack_index <= 0) //protect against stack overflows
-        return AVERROR(EINVAL);
-    p->stack_index--;
+    ఒకవేళ (p->దొంతర_సూచీ <= 0) //protect against stack overflows
+        తిరిగి AVERROR(EINVAL);
+    p->దొంతర_సూచీ--;
 
-    if ((ret = parse_subexpr(&e0, p)) < 0)
-        return ret;
-    while (*p->s == ';') {
+    ఒకవేళ ((ret = parse_subexpr(&e0, p)) < 0)
+        తిరిగి ret;
+    అయితే (*p->s == ';') {
         p->s++;
         e1 = e0;
-        if ((ret = parse_subexpr(&e2, p)) < 0) {
-            av_expr_free(e1);
-            return ret;
+        ఒకవేళ ((ret = parse_subexpr(&e2, p)) < 0) {
+            av_సమాసం_free(e1);
+            తిరిగి ret;
         }
-        e0 = make_eval_expr(e_last, 1, e1, e2);
-        if (!e0) {
-            av_expr_free(e1);
-            av_expr_free(e2);
-            return AVERROR(ENOMEM);
+        e0 = make_eval_సమాసం(e_చివరి, 1, e1, e2);
+        ఒకవేళ (!e0) {
+            av_సమాసం_free(e1);
+            av_సమాసం_free(e2);
+            తిరిగి AVERROR(ENOMEM);
         }
     };
 
-    p->stack_index++;
+    p->దొంతర_సూచీ++;
     *e = e0;
-    return 0;
+    తిరిగి 0;
 }
 
-static int verify_expr(AVExpr *e)
+స్థిర పూర్ణాంకం verify_సమాసం(AVExpr *e)
 {
-    if (!e) return 0;
-    switch (e->type) {
-        case e_value:
-        case e_const: return 1;
-        case e_func0:
-        case e_func1:
-        case e_squish:
-        case e_ld:
-        case e_gauss:
-        case e_isnan:
-        case e_isinf:
-        case e_floor:
-        case e_ceil:
-        case e_trunc:
-        case e_round:
-        case e_sqrt:
-        case e_not:
-        case e_random:
-        case e_sgn:
-            return verify_expr(e->param[0]) && !e->param[1];
-        case e_print:
-            return verify_expr(e->param[0])
-                   && (!e->param[1] || verify_expr(e->param[1]));
-        case e_if:
-        case e_ifnot:
-        case e_taylor:
-            return verify_expr(e->param[0]) && verify_expr(e->param[1])
-                   && (!e->param[2] || verify_expr(e->param[2]));
-        case e_between:
-        case e_clip:
-        case e_lerp:
-        case e_randomi:
-            return verify_expr(e->param[0]) &&
-                   verify_expr(e->param[1]) &&
-                   verify_expr(e->param[2]);
-        default: return verify_expr(e->param[0]) && verify_expr(e->param[1]) && !e->param[2];
+    ఒకవేళ (!e) తిరిగి 0;
+    ఎంపిక (e->type) {
+        స్థితి e_విలువ:
+        స్థితి e_const: తిరిగి 1;
+        స్థితి e_func0:
+        స్థితి e_func1:
+        స్థితి e_squish:
+        స్థితి e_ld:
+        స్థితి e_gauss:
+        స్థితి e_isnan:
+        స్థితి e_isinf:
+        స్థితి e_floor:
+        స్థితి e_ceil:
+        స్థితి e_trunc:
+        స్థితి e_విడత:
+        స్థితి e_sqrt:
+        స్థితి e_not:
+        స్థితి e_random:
+        స్థితి e_sgn:
+            తిరిగి verify_సమాసం(e->param[0]) && !e->param[1];
+        స్థితి e_print:
+            తిరిగి verify_సమాసం(e->param[0])
+                   && (!e->param[1] || verify_సమాసం(e->param[1]));
+        స్థితి e_if:
+        స్థితి e_ifnot:
+        స్థితి e_taylor:
+            తిరిగి verify_సమాసం(e->param[0]) && verify_సమాసం(e->param[1])
+                   && (!e->param[2] || verify_సమాసం(e->param[2]));
+        స్థితి e_between:
+        స్థితి e_clip:
+        స్థితి e_lerp:
+        స్థితి e_randomi:
+            తిరిగి verify_సమాసం(e->param[0]) &&
+                   verify_సమాసం(e->param[1]) &&
+                   verify_సమాసం(e->param[2]);
+        అప్రమేయ: తిరిగి verify_సమాసం(e->param[0]) && verify_సమాసం(e->param[1]) && !e->param[2];
     }
 }
 
-int av_expr_parse(AVExpr **expr, const char *s,
-                  const char * const *const_names,
-                  const char * const *func1_names, double (* const *funcs1)(void *, double),
-                  const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                  int log_offset, void *log_ctx)
+పూర్ణాంకం av_సమాసం_parse(AVExpr **సమాసం, స్థిరరాశి అక్షరం *s,
+                  స్థిరరాశి అక్షరం * స్థిరరాశి *const_పేర్లు,
+                  స్థిరరాశి అక్షరం * స్థిరరాశి *func1_పేర్లు, ద్విగుణ (* స్థిరరాశి *funcs1)(శూన్య *, ద్విగుణ),
+                  స్థిరరాశి అక్షరం * స్థిరరాశి *func2_పేర్లు, ద్విగుణ (* స్థిరరాశి *funcs2)(శూన్య *, ద్విగుణ, ద్విగుణ),
+                  పూర్ణాంకం log_స్థానభ్రంశం, శూన్య *log_ctx)
 {
     Parser p = { 0 };
-    AVExpr *e = NULL;
-    char *w = av_malloc(strlen(s) + 1);
-    char *wp = w;
-    const char *s0 = s;
-    int ret = 0;
+    AVExpr *e = ఖాళీ;
+    అక్షరం *w = av_malloc(అక్షరశ్రేణి_పొడవు(s) + 1);
+    అక్షరం *wp = w;
+    స్థిరరాశి అక్షరం *s0 = s;
+    పూర్ణాంకం ret = 0;
 
-    if (!w)
-        return AVERROR(ENOMEM);
+    ఒకవేళ (!w)
+        తిరిగి AVERROR(ENOMEM);
 
-    while (*s)
-        if (!av_isspace(*s++)) *wp++ = s[-1];
+    అయితే (*s)
+        ఒకవేళ (!av_isspace(*s++)) *wp++ = s[-1];
     *wp++ = 0;
 
     p.class      = &eval_class;
-    p.stack_index=100;
+    p.దొంతర_సూచీ=100;
     p.s= w;
-    p.const_names = const_names;
+    p.const_పేర్లు = const_పేర్లు;
     p.funcs1      = funcs1;
-    p.func1_names = func1_names;
+    p.func1_పేర్లు = func1_పేర్లు;
     p.funcs2      = funcs2;
-    p.func2_names = func2_names;
-    p.log_offset = log_offset;
+    p.func2_పేర్లు = func2_పేర్లు;
+    p.log_స్థానభ్రంశం = log_స్థానభ్రంశం;
     p.log_ctx    = log_ctx;
 
-    if ((ret = parse_expr(&e, &p)) < 0)
-        goto end;
-    if (*p.s) {
+    ఒకవేళ ((ret = parse_సమాసం(&e, &p)) < 0)
+        వెళ్ళు చివర;
+    ఒకవేళ (*p.s) {
         av_log(&p, AV_LOG_ERROR, "Invalid chars '%s' at the end of expression '%s'\n", p.s, s0);
         ret = AVERROR(EINVAL);
-        goto end;
+        వెళ్ళు చివర;
     }
-    if (!verify_expr(e)) {
+    ఒకవేళ (!verify_సమాసం(e)) {
         ret = AVERROR(EINVAL);
-        goto end;
+        వెళ్ళు చివర;
     }
-    AVExprRoot *r = av_realloc(e, sizeof(*r));
-    if (!r) {
+    AVExpr_మూలం *r = av_realloc(e, పరిమాణం(*r));
+    ఒకవేళ (!r) {
         ret = AVERROR(ENOMEM);
-        goto end;
+        వెళ్ళు చివర;
     }
     e = (AVExpr*)r;
-    e->root = 1;
-    r->var= av_mallocz(sizeof(double) *VARS);
-    r->prng_state = av_mallocz(sizeof(*r->prng_state) *VARS);
-    if (!r->var || !r->prng_state) {
+    e->మూలం = 1;
+    r->var= av_mallocz(పరిమాణం(ద్విగుణ) *VARS);
+    r->prng_state = av_mallocz(పరిమాణం(*r->prng_state) *VARS);
+    ఒకవేళ (!r->var || !r->prng_state) {
         ret = AVERROR(ENOMEM);
-        goto end;
+        వెళ్ళు చివర;
     }
-    *expr = e;
-    e = NULL;
-end:
-    av_expr_free(e);
+    *సమాసం = e;
+    e = ఖాళీ;
+చివర:
+    av_సమాసం_free(e);
     av_free(w);
-    return ret;
+    తిరిగి ret;
 }
 
-static int expr_count(AVExpr *e, unsigned *counter, int size, int type)
+స్థిర పూర్ణాంకం సమాసం_లెక్క(AVExpr *e, గుర్తులేని *counter, పూర్ణాంకం కొలత, పూర్ణాంకం type)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    if (!e || !counter || !size)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!e || !counter || !కొలత)
+        తిరిగి AVERROR(EINVAL);
 
-    for (i = 0; e->type != type && i < 3 && e->param[i]; i++)
-        expr_count(e->param[i], counter, size, type);
+    కొరకు (i = 0; e->type != type && i < 3 && e->param[i]; i++)
+        సమాసం_లెక్క(e->param[i], counter, కొలత, type);
 
-    if (e->type == type && e->const_index < size)
-        counter[e->const_index]++;
+    ఒకవేళ (e->type == type && e->const_సూచీ < కొలత)
+        counter[e->const_సూచీ]++;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size)
+పూర్ణాంకం av_సమాసం_లెక్క_vars(AVExpr *e, గుర్తులేని *counter, పూర్ణాంకం కొలత)
 {
-    return expr_count(e, counter, size, e_const);
+    తిరిగి సమాసం_లెక్క(e, counter, కొలత, e_const);
 }
 
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg)
+పూర్ణాంకం av_సమాసం_లెక్క_func(AVExpr *e, గుర్తులేని *counter, పూర్ణాంకం కొలత, పూర్ణాంకం arg)
 {
-    return expr_count(e, counter, size, ((int[]){e_const, e_func1, e_func2})[arg]);
+    తిరిగి సమాసం_లెక్క(e, counter, కొలత, ((పూర్ణాంకం[]){e_const, e_func1, e_func2})[arg]);
 }
 
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque)
+ద్విగుణ av_సమాసం_eval(AVExpr *e, స్థిరరాశి ద్విగుణ *const_విలువలు, శూన్య *opaque)
 {
-    av_assert1(e->root);
-    AVExprRoot *r = (AVExprRoot *)e;
+    av_assert1(e->మూలం);
+    AVExpr_మూలం *r = (AVExpr_మూలం *)e;
     Parser p = {
         .class        = &eval_class,
-        .const_values = const_values,
+        .const_విలువలు = const_విలువలు,
         .opaque       = opaque,
         .var          = r->var,
         .prng_state   = r->prng_state,
     };
 
-    return eval_expr(&p, e);
+    తిరిగి eval_సమాసం(&p, e);
 }
 
-int av_expr_parse_and_eval(double *d, const char *s,
-                           const char * const *const_names, const double *const_values,
-                           const char * const *func1_names, double (* const *funcs1)(void *, double),
-                           const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                           void *opaque, int log_offset, void *log_ctx)
+పూర్ణాంకం av_సమాసం_parse_and_eval(ద్విగుణ *d, స్థిరరాశి అక్షరం *s,
+                           స్థిరరాశి అక్షరం * స్థిరరాశి *const_పేర్లు, స్థిరరాశి ద్విగుణ *const_విలువలు,
+                           స్థిరరాశి అక్షరం * స్థిరరాశి *func1_పేర్లు, ద్విగుణ (* స్థిరరాశి *funcs1)(శూన్య *, ద్విగుణ),
+                           స్థిరరాశి అక్షరం * స్థిరరాశి *func2_పేర్లు, ద్విగుణ (* స్థిరరాశి *funcs2)(శూన్య *, ద్విగుణ, ద్విగుణ),
+                           శూన్య *opaque, పూర్ణాంకం log_స్థానభ్రంశం, శూన్య *log_ctx)
 {
-    AVExpr *e = NULL;
-    int ret = av_expr_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
+    AVExpr *e = ఖాళీ;
+    పూర్ణాంకం ret = av_సమాసం_parse(&e, s, const_పేర్లు, func1_పేర్లు, funcs1, func2_పేర్లు, funcs2, log_స్థానభ్రంశం, log_ctx);
 
-    if (ret < 0) {
+    ఒకవేళ (ret < 0) {
         *d = NAN;
-        return ret;
+        తిరిగి ret;
     }
-    *d = av_expr_eval(e, const_values, opaque);
-    av_expr_free(e);
-    return isnan(*d) ? AVERROR(EINVAL) : 0;
+    *d = av_సమాసం_eval(e, const_విలువలు, opaque);
+    av_సమాసం_free(e);
+    తిరిగి isnan(*d) ? AVERROR(EINVAL) : 0;
 }

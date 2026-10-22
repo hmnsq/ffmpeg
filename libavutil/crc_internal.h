@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CRC_INTERNAL_H
-#define AVUTIL_CRC_INTERNAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_చక్రీయ_తనిఖీ_అంతర్గత_H
+#నిర్వచించు AVUTIL_చక్రీయ_తనిఖీ_అంతర్గత_H
 
-#include <stdint.h>
-#include "libavutil/attributes.h"
-#include "libavutil/reverse.h"
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/reverse.h"
 
-static uint64_t reverse(uint64_t p, unsigned int deg)
+స్థిర uint64_t తిరగేయి(uint64_t p, గుర్తులేని పూర్ణాంకం deg)
 {
     uint64_t ret = 0;
-    int i;
-    for (i = 0; i < (deg / 8); i += 1) {
-        ret = (ret << 8) | (ff_reverse[p & 0xff]);
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < (deg / 8); i += 1) {
+        ret = (ret << 8) | (ff_తిరగేయి[p & 0xff]);
         p >>= 8;
     }
-    int rem = (deg + 1) - 8 * i;
-    ret = (ret << rem) | (ff_reverse[p & 0xff] >> (8 - rem));
-    return ret;
+    పూర్ణాంకం rem = (deg + 1) - 8 * i;
+    ret = (ret << rem) | (ff_తిరగేయి[p & 0xff] >> (8 - rem));
+    తిరిగి ret;
 }
 
-av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
-                                 uint64_t *div, int bitreverse)
+av_వాడని స్థిర uint64_t xnmodp(గుర్తులేని n, uint64_t poly, గుర్తులేని deg,
+                                 uint64_t *div, పూర్ణాంకం bitreverse)
 {
-    uint64_t mod, mask, high;
+    uint64_t mod, ముసుగు_2, ఎగువ;
 
-    if (n < deg) {
+    ఒకవేళ (n < deg) {
         *div = 0;
-        return poly;
+        తిరిగి poly;
     }
-    mask = ((uint64_t)1 << deg) - 1;
-    poly &= mask;
+    ముసుగు_2 = ((uint64_t)1 << deg) - 1;
+    poly &= ముసుగు_2;
     mod = poly;
     *div = 1;
     deg--;
-    while (--n > deg) {
-        high = (mod >> deg) & 1;
-        *div = (*div << 1) | high;
+    అయితే (--n > deg) {
+        ఎగువ = (mod >> deg) & 1;
+        *div = (*div << 1) | ఎగువ;
         mod <<= 1;
-        if (high)
+        ఒకవేళ (ఎగువ)
             mod ^= poly;
     }
-    uint64_t ret = mod & mask;
-    if (bitreverse) {
-        *div = reverse(*div, deg) << 1;
-        return reverse(ret, deg) << 1;
+    uint64_t ret = mod & ముసుగు_2;
+    ఒకవేళ (bitreverse) {
+        *div = తిరగేయి(*div, deg) << 1;
+        తిరిగి తిరగేయి(ret, deg) << 1;
     }
-    return ret;
+    తిరిగి ret;
 }
 
-#endif /* AVUTIL_CRC_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_CRC_INTERNAL_H */

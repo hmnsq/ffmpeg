@@ -25,133 +25,133 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#include "avutil.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "channel_layout.h"
-#include "dict.h"
-#include "eval.h"
-#include "log.h"
-#include "mem.h"
-#include "parseutils.h"
-#include "pixdesc.h"
-#include "mathematics.h"
-#include "opt.h"
-#include "samplefmt.h"
-#include "bprint.h"
+#అన్తర్భావ "avutil.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "avstring.h"
+#అన్తర్భావ "channel_layout.h"
+#అన్తర్భావ "dict.h"
+#అన్తర్భావ "eval.h"
+#అన్తర్భావ "log.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "parseutils.h"
+#అన్తర్భావ "pixdesc.h"
+#అన్తర్భావ "mathematics.h"
+#అన్తర్భావ "opt.h"
+#అన్తర్భావ "samplefmt.h"
+#అన్తర్భావ "bprint.h"
 
-#include <float.h>
+#అన్తర్భావ <float.h>
 
-#define TYPE_BASE(type) ((type) & ~AV_OPT_TYPE_FLAG_ARRAY)
+#నిర్వచించు TYPE_పునాది(type) ((type) & ~AV_OPT_TYPE_FLAG_ARRAY)
 
-const AVOption *av_opt_next(const void *obj, const AVOption *last)
+స్థిరరాశి AVOption *av_opt_తదుపరి(స్థిరరాశి శూన్య *obj, స్థిరరాశి AVOption *చివరి)
 {
-    const AVClass *class;
-    if (!obj)
-        return NULL;
-    class = *(const AVClass**)obj;
-    if (!last && class && class->option && class->option[0].name)
-        return class->option;
-    if (last && last[1].name)
-        return ++last;
-    return NULL;
+    స్థిరరాశి AVClass *class;
+    ఒకవేళ (!obj)
+        తిరిగి ఖాళీ;
+    class = *(స్థిరరాశి AVClass**)obj;
+    ఒకవేళ (!చివరి && class && class->option && class->option[0].name)
+        తిరిగి class->option;
+    ఒకవేళ (చివరి && చివరి[1].name)
+        తిరిగి ++చివరి;
+    తిరిగి ఖాళీ;
 }
 
-static const struct {
-    size_t      size;
-    const char *name;
+స్థిర స్థిరరాశి నిర్మాణం {
+    size_t      కొలత;
+    స్థిరరాశి అక్షరం *name;
 } opt_type_desc[] = {
-    [AV_OPT_TYPE_FLAGS]         = { sizeof(unsigned),       "<flags>" },
-    [AV_OPT_TYPE_INT]           = { sizeof(int),            "<int>" },
-    [AV_OPT_TYPE_INT64]         = { sizeof(int64_t),        "<int64>" },
-    [AV_OPT_TYPE_UINT]          = { sizeof(unsigned),       "<unsigned>" },
-    [AV_OPT_TYPE_UINT64]        = { sizeof(uint64_t),       "<uint64>" },
-    [AV_OPT_TYPE_DOUBLE]        = { sizeof(double),         "<double>" },
-    [AV_OPT_TYPE_FLOAT]         = { sizeof(float),          "<float>" },
-    [AV_OPT_TYPE_STRING]        = { sizeof(char *),         "<string>" },
-    [AV_OPT_TYPE_RATIONAL]      = { sizeof(AVRational),     "<rational>" },
-    [AV_OPT_TYPE_BINARY]        = { sizeof(uint8_t *),      "<binary>" },
-    [AV_OPT_TYPE_DICT]          = { sizeof(AVDictionary *), "<dictionary>" },
-    [AV_OPT_TYPE_IMAGE_SIZE]    = { sizeof(int[2]),         "<image_size>" },
-    [AV_OPT_TYPE_VIDEO_RATE]    = { sizeof(AVRational),     "<video_rate>" },
-    [AV_OPT_TYPE_PIXEL_FMT]     = { sizeof(enum AVPixelFormat),  "<pix_fmt>" },
-    [AV_OPT_TYPE_SAMPLE_FMT]    = { sizeof(enum AVSampleFormat), "<sample_fmt>" },
-    [AV_OPT_TYPE_DURATION]      = { sizeof(int64_t),        "<duration>" },
-    [AV_OPT_TYPE_COLOR]         = { sizeof(uint8_t[4]),     "<color>" },
-    [AV_OPT_TYPE_CHLAYOUT]      = { sizeof(AVChannelLayout),"<channel_layout>" },
-    [AV_OPT_TYPE_BOOL]          = { sizeof(int),            "<boolean>" },
+    [AV_OPT_TYPE_FLAGS]         = { పరిమాణం(గుర్తులేని),       "<flags>" },
+    [AV_OPT_TYPE_INT]           = { పరిమాణం(పూర్ణాంకం),            "<int>" },
+    [AV_OPT_TYPE_INT64]         = { పరిమాణం(int64_t),        "<int64>" },
+    [AV_OPT_TYPE_UINT]          = { పరిమాణం(గుర్తులేని),       "<unsigned>" },
+    [AV_OPT_TYPE_UINT64]        = { పరిమాణం(uint64_t),       "<uint64>" },
+    [AV_OPT_TYPE_DOUBLE]        = { పరిమాణం(ద్విగుణ),         "<double>" },
+    [AV_OPT_TYPE_FLOAT]         = { పరిమాణం(దశాంశం),          "<float>" },
+    [AV_OPT_TYPE_STRING]        = { పరిమాణం(అక్షరం *),         "<string>" },
+    [AV_OPT_TYPE_RATIONAL]      = { పరిమాణం(AVRational),     "<rational>" },
+    [AV_OPT_TYPE_ద్విమాన]        = { పరిమాణం(uint8_t *),      "<binary>" },
+    [AV_OPT_TYPE_DICT]          = { పరిమాణం(AVDictionary *), "<dictionary>" },
+    [AV_OPT_TYPE_IMAGE_కొలత]    = { పరిమాణం(పూర్ణాంకం[2]),         "<image_size>" },
+    [AV_OPT_TYPE_VIDEO_రేటు]    = { పరిమాణం(AVRational),     "<video_rate>" },
+    [AV_OPT_TYPE_PIXEL_FMT]     = { పరిమాణం(గణన AVPixelFormat),  "<pix_fmt>" },
+    [AV_OPT_TYPE_SAMPLE_FMT]    = { పరిమాణం(గణన AVSampleFormat), "<sample_fmt>" },
+    [AV_OPT_TYPE_DURATION]      = { పరిమాణం(int64_t),        "<duration>" },
+    [AV_OPT_TYPE_COLOR]         = { పరిమాణం(uint8_t[4]),     "<color>" },
+    [AV_OPT_TYPE_CHLAYOUT]      = { పరిమాణం(AVChannelLayout),"<channel_layout>" },
+    [AV_OPT_TYPE_BOOL]          = { పరిమాణం(పూర్ణాంకం),            "<boolean>" },
 };
 
 // option is plain old data
-static int opt_is_pod(enum AVOptionType type)
+స్థిర పూర్ణాంకం opt_is_pod(గణన AVOptionType type)
 {
-    switch (type) {
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_FLOAT:
-    case AV_OPT_TYPE_RATIONAL:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_IMAGE_SIZE:
-    case AV_OPT_TYPE_PIXEL_FMT:
-    case AV_OPT_TYPE_SAMPLE_FMT:
-    case AV_OPT_TYPE_VIDEO_RATE:
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_COLOR:
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_UINT:
-        return 1;
+    ఎంపిక (type) {
+    స్థితి AV_OPT_TYPE_FLAGS:
+    స్థితి AV_OPT_TYPE_INT:
+    స్థితి AV_OPT_TYPE_INT64:
+    స్థితి AV_OPT_TYPE_DOUBLE:
+    స్థితి AV_OPT_TYPE_FLOAT:
+    స్థితి AV_OPT_TYPE_RATIONAL:
+    స్థితి AV_OPT_TYPE_UINT64:
+    స్థితి AV_OPT_TYPE_IMAGE_కొలత:
+    స్థితి AV_OPT_TYPE_PIXEL_FMT:
+    స్థితి AV_OPT_TYPE_SAMPLE_FMT:
+    స్థితి AV_OPT_TYPE_VIDEO_రేటు:
+    స్థితి AV_OPT_TYPE_DURATION:
+    స్థితి AV_OPT_TYPE_COLOR:
+    స్థితి AV_OPT_TYPE_BOOL:
+    స్థితి AV_OPT_TYPE_UINT:
+        తిరిగి 1;
     }
-    return 0;
+    తిరిగి 0;
 }
 
-static uint8_t opt_array_sep(const AVOption *o)
+స్థిర uint8_t opt_array_sep(స్థిరరాశి AVOption *o)
 {
-    const AVOptionArrayDef *d = o->default_val.arr;
+    స్థిరరాశి AVOptionArrayDef *d = o->default_val.arr;
     av_assert1(o->type & AV_OPT_TYPE_FLAG_ARRAY);
-    return (d && d->sep) ? d->sep : ',';
+    తిరిగి (d && d->sep) ? d->sep : ',';
 }
 
-static void *opt_array_pelem(const AVOption *o, void *array, unsigned idx)
+స్థిర శూన్య *opt_array_pelem(స్థిరరాశి AVOption *o, శూన్య *array, గుర్తులేని idx)
 {
     av_assert1(o->type & AV_OPT_TYPE_FLAG_ARRAY);
-    return (uint8_t *)array + idx * opt_type_desc[TYPE_BASE(o->type)].size;
+    తిరిగి (uint8_t *)array + idx * opt_type_desc[TYPE_పునాది(o->type)].కొలత;
 }
 
-static unsigned *opt_array_pcount(const void *parray)
+స్థిర గుర్తులేని *opt_array_pcount(స్థిరరాశి శూన్య *parray)
 {
-    return (unsigned *)((const void * const *)parray + 1);
+    తిరిగి (గుర్తులేని *)((స్థిరరాశి శూన్య * స్థిరరాశి *)parray + 1);
 }
 
-static void opt_free_elem(enum AVOptionType type, void *ptr)
+స్థిర శూన్య opt_free_elem(గణన AVOptionType type, శూన్య *ptr)
 {
-    switch (TYPE_BASE(type)) {
-    case AV_OPT_TYPE_STRING:
-    case AV_OPT_TYPE_BINARY:
+    ఎంపిక (TYPE_పునాది(type)) {
+    స్థితి AV_OPT_TYPE_STRING:
+    స్థితి AV_OPT_TYPE_ద్విమాన:
         av_freep(ptr);
-        break;
+        ఆపు;
 
-    case AV_OPT_TYPE_DICT:
+    స్థితి AV_OPT_TYPE_DICT:
         av_dict_free((AVDictionary **)ptr);
-        break;
+        ఆపు;
 
-    case AV_OPT_TYPE_CHLAYOUT:
+    స్థితి AV_OPT_TYPE_CHLAYOUT:
         av_channel_layout_uninit((AVChannelLayout *)ptr);
-        break;
+        ఆపు;
 
-    default:
-        break;
+    అప్రమేయ:
+        ఆపు;
     }
 }
 
-static void opt_free_array(const AVOption *o, void *parray, unsigned *count)
+స్థిర శూన్య opt_free_array(స్థిరరాశి AVOption *o, శూన్య *parray, గుర్తులేని *లెక్క)
 {
-    for (unsigned i = 0; i < *count; i++)
-        opt_free_elem(o->type, opt_array_pelem(o, *(void **)parray, i));
+    కొరకు (గుర్తులేని i = 0; i < *లెక్క; i++)
+        opt_free_elem(o->type, opt_array_pelem(o, *(శూన్య **)parray, i));
 
     av_freep(parray);
-    *count = 0;
+    *లెక్క = 0;
 }
 
 /**
@@ -162,261 +162,261 @@ static void opt_free_array(const AVOption *o, void *parray, unsigned *count)
  * @param po           the option is written here
  * @param pdst         pointer to option value is written here
  */
-static int opt_set_init(void *obj, const char *name, int search_flags,
-                        int require_type,
-                        void **ptgt, const AVOption **po, void **pdst)
+స్థిర పూర్ణాంకం opt_సమితి_init(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags,
+                        పూర్ణాంకం require_type,
+                        శూన్య **ptgt, స్థిరరాశి AVOption **po, శూన్య **pdst)
 {
-    void *logctx;
-    const AVOption *o;
-    void *tgt;
+    శూన్య *logctx;
+    స్థిరరాశి AVOption *o;
+    శూన్య *tgt;
 
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &tgt);
-    if (!o || (!tgt && !(search_flags & AV_OPT_SEARCH_FAKE_OBJ)))
-        return AVERROR_OPTION_NOT_FOUND;
+    o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &tgt);
+    ఒకవేళ (!o || (!tgt && !(శోధన_flags & AV_OPT_శోధన_FAKE_OBJ)))
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
 
-    if (o->flags & AV_OPT_FLAG_READONLY)
-        return AVERROR(EINVAL);
+    ఒకవేళ (o->flags & AV_OPT_FLAG_READONLY)
+        తిరిగి AVERROR(EINVAL);
 
-    logctx = tgt ? obj : NULL;
+    logctx = tgt ? obj : ఖాళీ;
 
-    if (require_type && (o->type != require_type)) {
+    ఒకవేళ (require_type && (o->type != require_type)) {
         av_log(logctx, AV_LOG_ERROR,
                "Tried to set option '%s' of type %s from value of type %s, "
                "this is not supported\n", o->name, opt_type_desc[o->type].name,
                opt_type_desc[require_type].name);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    if (!(o->flags & AV_OPT_FLAG_RUNTIME_PARAM)) {
-        unsigned *state_flags = NULL;
-        const AVClass *class;
+    ఒకవేళ (!(o->flags & AV_OPT_FLAG_RUNTIME_PARAM)) {
+        గుర్తులేని *state_flags = ఖాళీ;
+        స్థిరరాశి AVClass *class;
 
         // try state flags first from the target (child), then from its parent
-        class = *(const AVClass**)tgt;
-        if (class->state_flags_offset)
-            state_flags = (unsigned*)((uint8_t*)tgt + class->state_flags_offset);
+        class = *(స్థిరరాశి AVClass**)tgt;
+        ఒకవేళ (class->state_flags_స్థానభ్రంశం)
+            state_flags = (గుర్తులేని*)((uint8_t*)tgt + class->state_flags_స్థానభ్రంశం);
 
-        if (!state_flags && obj != tgt) {
-            class = *(const AVClass**)obj;
-            if (class->state_flags_offset)
-                state_flags = (unsigned*)((uint8_t*)obj + class->state_flags_offset);
+        ఒకవేళ (!state_flags && obj != tgt) {
+            class = *(స్థిరరాశి AVClass**)obj;
+            ఒకవేళ (class->state_flags_స్థానభ్రంశం)
+                state_flags = (గుర్తులేని*)((uint8_t*)obj + class->state_flags_స్థానభ్రంశం);
         }
 
-        if (state_flags && (*state_flags & AV_CLASS_STATE_INITIALIZED)) {
+        ఒకవేళ (state_flags && (*state_flags & AV_CLASS_STATE_INITIALIZED)) {
             av_log(logctx, AV_LOG_ERROR, "Option '%s' is not a runtime option and "
                    "so cannot be set after the object has been initialized\n",
                    o->name);
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
     }
 
-    if (o->flags & AV_OPT_FLAG_DEPRECATED)
+    ఒకవేళ (o->flags & AV_OPT_FLAG_DEPRECATED)
         av_log(logctx, AV_LOG_WARNING, "The \"%s\" option is deprecated: %s\n", name, o->help);
 
-    if (po)
+    ఒకవేళ (po)
         *po   = o;
-    if (ptgt)
+    ఒకవేళ (ptgt)
         *ptgt = tgt;
-    if (pdst)
-        *pdst = tgt ? ((uint8_t *)tgt) + o->offset : NULL;
+    ఒకవేళ (pdst)
+        *pdst = tgt ? ((uint8_t *)tgt) + o->స్థానభ్రంశం : ఖాళీ;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static AVRational double_to_rational(double d)
+స్థిర AVRational double_గమ్యం_rational(ద్విగుణ d)
 {
      AVRational r = av_d2q(d, 1 << 24);
-     if ((!r.num || !r.den) && d)
-         r = av_d2q(d, INT_MAX);
-     return r;
+     ఒకవేళ ((!r.అంకె || !r.den) && d)
+         r = av_d2q(d, గరిష్ఠ_పూర్ణాంకం);
+     తిరిగి r;
 }
 
-static int read_number(const AVOption *o, const void *dst, double *num, int *den, int64_t *intnum)
+స్థిర పూర్ణాంకం read_సంఖ్య(స్థిరరాశి AVOption *o, స్థిరరాశి శూన్య *dst, ద్విగుణ *అంకె, పూర్ణాంకం *den, int64_t *intnum)
 {
-    switch (TYPE_BASE(o->type)) {
-    case AV_OPT_TYPE_FLAGS:
-        *intnum = *(unsigned int*)dst;
-        return 0;
-    case AV_OPT_TYPE_PIXEL_FMT:
-        *intnum = *(enum AVPixelFormat *)dst;
-        return 0;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        *intnum = *(enum AVSampleFormat *)dst;
-        return 0;
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_INT:
-        *intnum = *(int *)dst;
-        return 0;
-    case AV_OPT_TYPE_UINT:
-        *intnum = *(unsigned int *)dst;
-        return 0;
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
+    ఎంపిక (TYPE_పునాది(o->type)) {
+    స్థితి AV_OPT_TYPE_FLAGS:
+        *intnum = *(గుర్తులేని పూర్ణాంకం*)dst;
+        తిరిగి 0;
+    స్థితి AV_OPT_TYPE_PIXEL_FMT:
+        *intnum = *(గణన AVPixelFormat *)dst;
+        తిరిగి 0;
+    స్థితి AV_OPT_TYPE_SAMPLE_FMT:
+        *intnum = *(గణన AVSampleFormat *)dst;
+        తిరిగి 0;
+    స్థితి AV_OPT_TYPE_BOOL:
+    స్థితి AV_OPT_TYPE_INT:
+        *intnum = *(పూర్ణాంకం *)dst;
+        తిరిగి 0;
+    స్థితి AV_OPT_TYPE_UINT:
+        *intnum = *(గుర్తులేని పూర్ణాంకం *)dst;
+        తిరిగి 0;
+    స్థితి AV_OPT_TYPE_DURATION:
+    స్థితి AV_OPT_TYPE_INT64:
+    స్థితి AV_OPT_TYPE_UINT64:
         *intnum = *(int64_t *)dst;
-        return 0;
-    case AV_OPT_TYPE_FLOAT:
-        *num = *(float *)dst;
-        return 0;
-    case AV_OPT_TYPE_DOUBLE:
-        *num = *(double *)dst;
-        return 0;
-    case AV_OPT_TYPE_RATIONAL:
-        *intnum = ((AVRational *)dst)->num;
+        తిరిగి 0;
+    స్థితి AV_OPT_TYPE_FLOAT:
+        *అంకె = *(దశాంశం *)dst;
+        తిరిగి 0;
+    స్థితి AV_OPT_TYPE_DOUBLE:
+        *అంకె = *(ద్విగుణ *)dst;
+        తిరిగి 0;
+    స్థితి AV_OPT_TYPE_RATIONAL:
+        *intnum = ((AVRational *)dst)->అంకె;
         *den    = ((AVRational *)dst)->den;
-        return 0;
-    case AV_OPT_TYPE_CONST:
+        తిరిగి 0;
+    స్థితి AV_OPT_TYPE_CONST:
         *intnum = o->default_val.i64;
-        return 0;
+        తిరిగి 0;
     }
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-static int write_number(void *obj, const AVOption *o, void *dst,
-                        double num, int den, int64_t intnum,
-                        int ignore_range)
+స్థిర పూర్ణాంకం write_సంఖ్య(శూన్య *obj, స్థిరరాశి AVOption *o, శూన్య *dst,
+                        ద్విగుణ అంకె, పూర్ణాంకం den, int64_t intnum,
+                        పూర్ణాంకం ignore_range)
 {
-    void *logctx = dst ? obj : NULL;
-    const enum AVOptionType type = TYPE_BASE(o->type);
+    శూన్య *logctx = dst ? obj : ఖాళీ;
+    స్థిరరాశి గణన AVOptionType type = TYPE_పునాది(o->type);
 
-    if (!ignore_range && type != AV_OPT_TYPE_FLAGS &&
-        (!den || o->max * den < num * intnum || o->min * den > num * intnum)) {
-        num = den ? num * intnum / den : (num && intnum ? INFINITY : NAN);
+    ఒకవేళ (!ignore_range && type != AV_OPT_TYPE_FLAGS &&
+        (!den || o->max * den < అంకె * intnum || o->min * den > అంకె * intnum)) {
+        అంకె = den ? అంకె * intnum / den : (అంకె && intnum ? INFINITY : NAN);
         av_log(obj, AV_LOG_ERROR, "Value %f for parameter '%s' out of range [%g - %g]\n",
-               num, o->name, o->min, o->max);
-        return AVERROR(ERANGE);
+               అంకె, o->name, o->min, o->max);
+        తిరిగి AVERROR(ERANGE);
     }
-    if (!ignore_range && type == AV_OPT_TYPE_FLAGS) {
-        double d = num*intnum/den;
-        if (d < -1.5 || d > 0xFFFFFFFF+0.5 || (llrint(d*256) & 255)) {
+    ఒకవేళ (!ignore_range && type == AV_OPT_TYPE_FLAGS) {
+        ద్విగుణ d = అంకె*intnum/den;
+        ఒకవేళ (d < -1.5 || d > 0xFFFFFFFF+0.5 || (llrint(d*256) & 255)) {
             av_log(logctx, AV_LOG_ERROR,
                    "Value %f for parameter '%s' is not a valid set of 32bit integer flags\n",
-                   num*intnum/den, o->name);
-            return AVERROR(ERANGE);
+                   అంకె*intnum/den, o->name);
+            తిరిగి AVERROR(ERANGE);
         }
     }
 
-    if (!dst)
-        return 0;
+    ఒకవేళ (!dst)
+        తిరిగి 0;
 
-    switch (type) {
-    case AV_OPT_TYPE_PIXEL_FMT:
-        *(enum AVPixelFormat *)dst = llrint(num / den) * intnum;
-        break;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        *(enum AVSampleFormat *)dst = llrint(num / den) * intnum;
-        break;
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-        *(int *)dst = llrint(num / den) * intnum;
-        break;
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_INT64:{
-        double d = num / den;
-        if (intnum == 1 && d == (double)INT64_MAX) {
+    ఎంపిక (type) {
+    స్థితి AV_OPT_TYPE_PIXEL_FMT:
+        *(గణన AVPixelFormat *)dst = llrint(అంకె / den) * intnum;
+        ఆపు;
+    స్థితి AV_OPT_TYPE_SAMPLE_FMT:
+        *(గణన AVSampleFormat *)dst = llrint(అంకె / den) * intnum;
+        ఆపు;
+    స్థితి AV_OPT_TYPE_BOOL:
+    స్థితి AV_OPT_TYPE_FLAGS:
+    స్థితి AV_OPT_TYPE_INT:
+    స్థితి AV_OPT_TYPE_UINT:
+        *(పూర్ణాంకం *)dst = llrint(అంకె / den) * intnum;
+        ఆపు;
+    స్థితి AV_OPT_TYPE_DURATION:
+    స్థితి AV_OPT_TYPE_INT64:{
+        ద్విగుణ d = అంకె / den;
+        ఒకవేళ (intnum == 1 && d == (ద్విగుణ)INT64_MAX) {
             *(int64_t *)dst = INT64_MAX;
-        } else
+        } లేకపోతే
             *(int64_t *)dst = llrint(d) * intnum;
-        break;}
-    case AV_OPT_TYPE_UINT64:{
-        double d = num / den;
+        ఆపు;}
+    స్థితి AV_OPT_TYPE_UINT64:{
+        ద్విగుణ d = అంకె / den;
         // We must special case uint64_t here as llrint() does not support values
         // outside the int64_t range and there is no portable function which does
         // "INT64_MAX + 1ULL" is used as it is representable exactly as IEEE double
         // while INT64_MAX is not
-        if (intnum == 1 && d == (double)UINT64_MAX) {
+        ఒకవేళ (intnum == 1 && d == (ద్విగుణ)UINT64_MAX) {
             *(uint64_t *)dst = UINT64_MAX;
-        } else if (d > INT64_MAX + 1ULL) {
+        } లేకపోతే ఒకవేళ (d > INT64_MAX + 1ULL) {
             *(uint64_t *)dst = (llrint(d - (INT64_MAX + 1ULL)) + (INT64_MAX + 1ULL))*intnum;
-        } else {
+        } లేకపోతే {
             *(uint64_t *)dst = llrint(d) * intnum;
         }
-        break;}
-    case AV_OPT_TYPE_FLOAT:
-        *(float *)dst = num * intnum / den;
-        break;
-    case AV_OPT_TYPE_DOUBLE:
-        *(double    *)dst = num * intnum / den;
-        break;
-    case AV_OPT_TYPE_RATIONAL:
-    case AV_OPT_TYPE_VIDEO_RATE:
-        if ((int) num == num)
-            *(AVRational *)dst = (AVRational) { num *intnum, den };
-        else
-            *(AVRational *)dst = double_to_rational(num * intnum / den);
-        break;
-    default:
-        return AVERROR(EINVAL);
+        ఆపు;}
+    స్థితి AV_OPT_TYPE_FLOAT:
+        *(దశాంశం *)dst = అంకె * intnum / den;
+        ఆపు;
+    స్థితి AV_OPT_TYPE_DOUBLE:
+        *(ద్విగుణ    *)dst = అంకె * intnum / den;
+        ఆపు;
+    స్థితి AV_OPT_TYPE_RATIONAL:
+    స్థితి AV_OPT_TYPE_VIDEO_రేటు:
+        ఒకవేళ ((పూర్ణాంకం) అంకె == అంకె)
+            *(AVRational *)dst = (AVRational) { అంకె *intnum, den };
+        లేకపోతే
+            *(AVRational *)dst = double_గమ్యం_rational(అంకె * intnum / den);
+        ఆపు;
+    అప్రమేయ:
+        తిరిగి AVERROR(EINVAL);
     }
-    return 0;
+    తిరిగి 0;
 }
 
-static int hexchar2int(char c) {
-    if (c >= '0' && c <= '9')
-        return c - '0';
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
-    if (c >= 'A' && c <= 'F')
-        return c - 'A' + 10;
-    return -1;
+స్థిర పూర్ణాంకం hexchar2int(అక్షరం c) {
+    ఒకవేళ (c >= '0' && c <= '9')
+        తిరిగి c - '0';
+    ఒకవేళ (c >= 'a' && c <= 'f')
+        తిరిగి c - 'a' + 10;
+    ఒకవేళ (c >= 'A' && c <= 'F')
+        తిరిగి c - 'A' + 10;
+    తిరిగి -1;
 }
 
-static int set_string_binary(void *obj, const AVOption *o, const char *val, uint8_t **dst)
+స్థిర పూర్ణాంకం సమితి_string_ద్విమాన(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, uint8_t **dst)
 {
-    int *lendst;
+    పూర్ణాంకం *lendst;
     uint8_t *bin, *ptr;
-    int len;
+    పూర్ణాంకం len;
 
-    if (dst) {
-        lendst = (int *)(dst + 1);
+    ఒకవేళ (dst) {
+        lendst = (పూర్ణాంకం *)(dst + 1);
         av_freep(dst);
         *lendst = 0;
     }
 
-    if (!val || !(len = strlen(val)))
-        return 0;
+    ఒకవేళ (!val || !(len = అక్షరశ్రేణి_పొడవు(val)))
+        తిరిగి 0;
 
-    if (len & 1)
-        return AVERROR(EINVAL);
+    ఒకవేళ (len & 1)
+        తిరిగి AVERROR(EINVAL);
     len /= 2;
 
     ptr = bin = av_malloc(len);
-    if (!ptr)
-        return AVERROR(ENOMEM);
-    while (*val) {
-        int a = hexchar2int(*val++);
-        int b = hexchar2int(*val++);
-        if (a < 0 || b < 0) {
+    ఒకవేళ (!ptr)
+        తిరిగి AVERROR(ENOMEM);
+    అయితే (*val) {
+        పూర్ణాంకం a = hexchar2int(*val++);
+        పూర్ణాంకం b = hexchar2int(*val++);
+        ఒకవేళ (a < 0 || b < 0) {
             av_free(bin);
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
         *ptr++ = (a << 4) | b;
     }
 
-    if (dst) {
+    ఒకవేళ (dst) {
         *dst    = bin;
         *lendst = len;
-    } else {
+    } లేకపోతే {
         av_free(bin);
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int set_string(void *obj, const AVOption *o, const char *val, uint8_t **dst)
+స్థిర పూర్ణాంకం సమితి_string(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, uint8_t **dst)
 {
-    if (!dst)
-        return 0;
+    ఒకవేళ (!dst)
+        తిరిగి 0;
     av_freep(dst);
-    if (!val)
-        return 0;
+    ఒకవేళ (!val)
+        తిరిగి 0;
     *dst = av_strdup(val);
-    return *dst ? 0 : AVERROR(ENOMEM);
+    తిరిగి *dst ? 0 : AVERROR(ENOMEM);
 }
 
-#define DEFAULT_NUMVAL(opt) ((opt->type == AV_OPT_TYPE_INT64 || \
+#నిర్వచించు DEFAULT_NUMVAL(opt) ((opt->type == AV_OPT_TYPE_INT64 || \
                               opt->type == AV_OPT_TYPE_UINT64 || \
                               opt->type == AV_OPT_TYPE_CONST || \
                               opt->type == AV_OPT_TYPE_FLAGS || \
@@ -425,215 +425,215 @@ static int set_string(void *obj, const AVOption *o, const char *val, uint8_t **d
                              ? opt->default_val.i64             \
                              : opt->default_val.dbl)
 
-static int set_string_number(void *obj, void *target_obj, const AVOption *o, const char *val, void *dst)
+స్థిర పూర్ణాంకం సమితి_string_సంఖ్య(శూన్య *obj, శూన్య *లక్ష్యం_obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, శూన్య *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    const enum AVOptionType type = TYPE_BASE(o->type);
-    int ret = 0;
+    శూన్య *logctx = dst ? obj : ఖాళీ;
+    స్థిరరాశి గణన AVOptionType type = TYPE_పునాది(o->type);
+    పూర్ణాంకం ret = 0;
 
-    if (type == AV_OPT_TYPE_RATIONAL || type == AV_OPT_TYPE_VIDEO_RATE) {
-        int num, den;
-        char c;
-        if (sscanf(val, "%d%*1[:/]%d%c", &num, &den, &c) == 2) {
-            if ((ret = write_number(obj, o, dst, 1, den, num, 0)) >= 0)
-                return ret;
+    ఒకవేళ (type == AV_OPT_TYPE_RATIONAL || type == AV_OPT_TYPE_VIDEO_రేటు) {
+        పూర్ణాంకం అంకె, den;
+        అక్షరం c;
+        ఒకవేళ (అక్షరశ్రేణి_చదువు(val, "%d%*1[:/]%d%c", &అంకె, &den, &c) == 2) {
+            ఒకవేళ ((ret = write_సంఖ్య(obj, o, dst, 1, den, అంకె, 0)) >= 0)
+                తిరిగి ret;
             ret = 0;
         }
     }
 
-    for (;;) {
-        int i = 0;
-        char buf[256];
-        int cmd = 0;
-        double d;
+    కొరకు (;;) {
+        పూర్ణాంకం i = 0;
+        అక్షరం buf[256];
+        పూర్ణాంకం cmd = 0;
+        ద్విగుణ d;
         int64_t intnum = 1;
 
-        if (type == AV_OPT_TYPE_FLAGS) {
-            if (*val == '+' || *val == '-')
+        ఒకవేళ (type == AV_OPT_TYPE_FLAGS) {
+            ఒకవేళ (*val == '+' || *val == '-')
                 cmd = *(val++);
-            for (; i < sizeof(buf) - 1 && val[i] && val[i] != '+' && val[i] != '-'; i++)
+            కొరకు (; i < పరిమాణం(buf) - 1 && val[i] && val[i] != '+' && val[i] != '-'; i++)
                 buf[i] = val[i];
             buf[i] = 0;
         }
 
         {
-            int res;
-            int ci = 0;
-            double const_values[64];
-            const char * const_names[64];
-            int search_flags = (o->flags & AV_OPT_FLAG_CHILD_CONSTS) ? AV_OPT_SEARCH_CHILDREN : 0;
-            const AVOption *o_named = av_opt_find(target_obj, i ? buf : val, o->unit, 0, search_flags);
-            if (o_named && o_named->type == AV_OPT_TYPE_CONST) {
+            పూర్ణాంకం res;
+            పూర్ణాంకం ci = 0;
+            ద్విగుణ const_విలువలు[64];
+            స్థిరరాశి అక్షరం * const_పేర్లు[64];
+            పూర్ణాంకం శోధన_flags = (o->flags & AV_OPT_FLAG_బిడ్డ_CONSTS) ? AV_OPT_శోధన_CHILDREN : 0;
+            స్థిరరాశి AVOption *o_named = av_opt_కనుగొను(లక్ష్యం_obj, i ? buf : val, o->unit, 0, శోధన_flags);
+            ఒకవేళ (o_named && o_named->type == AV_OPT_TYPE_CONST) {
                 d = DEFAULT_NUMVAL(o_named);
-                if (o_named->flags & AV_OPT_FLAG_DEPRECATED)
+                ఒకవేళ (o_named->flags & AV_OPT_FLAG_DEPRECATED)
                     av_log(logctx, AV_LOG_WARNING, "The \"%s\" option is deprecated: %s\n",
                            o_named->name, o_named->help);
-            } else {
-                if (o->unit) {
-                    for (o_named = NULL; o_named = av_opt_next(target_obj, o_named); ) {
-                        if (o_named->type == AV_OPT_TYPE_CONST &&
+            } లేకపోతే {
+                ఒకవేళ (o->unit) {
+                    కొరకు (o_named = ఖాళీ; o_named = av_opt_తదుపరి(లక్ష్యం_obj, o_named); ) {
+                        ఒకవేళ (o_named->type == AV_OPT_TYPE_CONST &&
                             o_named->unit &&
                             !strcmp(o_named->unit, o->unit)) {
-                            if (ci + 6 >= FF_ARRAY_ELEMS(const_values)) {
+                            ఒకవేళ (ci + 6 >= FF_ARRAY_ELEMS(const_విలువలు)) {
                                 av_log(logctx, AV_LOG_ERROR, "const_values array too small for %s\n", o->unit);
-                                return AVERROR_PATCHWELCOME;
+                                తిరిగి AVERROR_PATCHWELCOME;
                             }
-                            const_names [ci  ] = o_named->name;
-                            const_values[ci++] = DEFAULT_NUMVAL(o_named);
+                            const_పేర్లు [ci  ] = o_named->name;
+                            const_విలువలు[ci++] = DEFAULT_NUMVAL(o_named);
                         }
                     }
                 }
-                const_names [ci  ] = "default";
-                const_values[ci++] = DEFAULT_NUMVAL(o);
-                const_names [ci  ] = "max";
-                const_values[ci++] = o->max;
-                const_names [ci  ] = "min";
-                const_values[ci++] = o->min;
-                const_names [ci  ] = "none";
-                const_values[ci++] = 0;
-                const_names [ci  ] = "all";
-                const_values[ci++] = ~0;
-                const_names [ci] = NULL;
-                const_values[ci] = 0;
+                const_పేర్లు [ci  ] = "default";
+                const_విలువలు[ci++] = DEFAULT_NUMVAL(o);
+                const_పేర్లు [ci  ] = "max";
+                const_విలువలు[ci++] = o->max;
+                const_పేర్లు [ci  ] = "min";
+                const_విలువలు[ci++] = o->min;
+                const_పేర్లు [ci  ] = "none";
+                const_విలువలు[ci++] = 0;
+                const_పేర్లు [ci  ] = "all";
+                const_విలువలు[ci++] = ~0;
+                const_పేర్లు [ci] = ఖాళీ;
+                const_విలువలు[ci] = 0;
 
-                res = av_expr_parse_and_eval(&d, i ? buf : val, const_names,
-                                            const_values, NULL, NULL, NULL, NULL, NULL, 0, obj);
-                if (res < 0) {
+                res = av_సమాసం_parse_and_eval(&d, i ? buf : val, const_పేర్లు,
+                                            const_విలువలు, ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ, 0, obj);
+                ఒకవేళ (res < 0) {
                     av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\"\n", o->name, val);
-                    return res;
+                    తిరిగి res;
                 }
             }
         }
-        if (type == AV_OPT_TYPE_FLAGS && dst) {
-            intnum = *(unsigned int*)dst;
-            if (cmd == '+')
+        ఒకవేళ (type == AV_OPT_TYPE_FLAGS && dst) {
+            intnum = *(గుర్తులేని పూర్ణాంకం*)dst;
+            ఒకవేళ (cmd == '+')
                 d = intnum | (int64_t)d;
-            else if (cmd == '-')
+            లేకపోతే ఒకవేళ (cmd == '-')
                 d = intnum &~(int64_t)d;
         }
 
-        if ((ret = write_number(obj, o, dst, d, 1, 1, 0)) < 0)
-            return ret;
+        ఒకవేళ ((ret = write_సంఖ్య(obj, o, dst, d, 1, 1, 0)) < 0)
+            తిరిగి ret;
         val += i;
-        if (!i || !*val)
-            return 0;
+        ఒకవేళ (!i || !*val)
+            తిరిగి 0;
     }
 }
 
-static int set_string_image_size(void *obj, const AVOption *o, const char *val, int *dst)
+స్థిర పూర్ణాంకం సమితి_string_image_కొలత(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, పూర్ణాంకం *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    int tmp[2];
-    int ret;
+    శూన్య *logctx = dst ? obj : ఖాళీ;
+    పూర్ణాంకం tmp[2];
+    పూర్ణాంకం ret;
 
-    if (!val || !strcmp(val, "none")) {
-        if (dst) {
+    ఒకవేళ (!val || !strcmp(val, "none")) {
+        ఒకవేళ (dst) {
         dst[0] =
         dst[1] = 0;
         }
-        return 0;
+        తిరిగి 0;
     }
-    ret = av_parse_video_size(&tmp[0], &tmp[1], val);
-    if (ret < 0) {
+    ret = av_parse_video_కొలత(&tmp[0], &tmp[1], val);
+    ఒకవేళ (ret < 0) {
         av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as image size\n", o->name, val);
-        return ret;
+        తిరిగి ret;
     }
-    if (dst)
-        memcpy(dst, tmp, sizeof(tmp));
-    return ret;
+    ఒకవేళ (dst)
+        జ్ఞాపకం_నకలు(dst, tmp, పరిమాణం(tmp));
+    తిరిగి ret;
 }
 
-static int set_string_video_rate(void *obj, const AVOption *o, const char *val, AVRational *dst)
+స్థిర పూర్ణాంకం సమితి_string_video_రేటు(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, AVRational *dst)
 {
-    void *logctx = dst ? obj : NULL;
+    శూన్య *logctx = dst ? obj : ఖాళీ;
     AVRational tmp;
-    int ret = av_parse_video_rate(&tmp, val);
-    if (ret < 0)
+    పూర్ణాంకం ret = av_parse_video_రేటు(&tmp, val);
+    ఒకవేళ (ret < 0)
         av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as video rate\n", o->name, val);
-    if (dst)
+    ఒకవేళ (dst)
         *dst = tmp;
-    return ret;
+    తిరిగి ret;
 }
 
-static int set_string_color(void *obj, const AVOption *o, const char *val, uint8_t *dst)
+స్థిర పూర్ణాంకం సమితి_string_color(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, uint8_t *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    int ret;
+    శూన్య *logctx = dst ? obj : ఖాళీ;
+    పూర్ణాంకం ret;
 
-    if (!val) {
-        return 0;
-    } else {
+    ఒకవేళ (!val) {
+        తిరిగి 0;
+    } లేకపోతే {
         uint8_t tmp[4];
         ret = av_parse_color(tmp, val, -1, obj);
-        if (ret < 0) {
+        ఒకవేళ (ret < 0) {
             av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as color\n", o->name, val);
-            return ret;
+            తిరిగి ret;
         }
-        if (dst)
-            memcpy(dst, tmp, sizeof(tmp));
-        return ret;
+        ఒకవేళ (dst)
+            జ్ఞాపకం_నకలు(dst, tmp, పరిమాణం(tmp));
+        తిరిగి ret;
     }
-    return 0;
+    తిరిగి 0;
 }
 
-static const char *get_bool_name(int val)
+స్థిర స్థిరరాశి అక్షరం *get_bool_name(పూర్ణాంకం val)
 {
-    if (val < 0)
-        return "auto";
-    return val ? "true" : "false";
+    ఒకవేళ (val < 0)
+        తిరిగి "auto";
+    తిరిగి val ? "true" : "false";
 }
 
-static int set_string_bool(void *obj, const AVOption *o, const char *val, int *dst)
+స్థిర పూర్ణాంకం సమితి_string_bool(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, పూర్ణాంకం *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    int n;
+    శూన్య *logctx = dst ? obj : ఖాళీ;
+    పూర్ణాంకం n;
 
-    if (!val)
-        return 0;
+    ఒకవేళ (!val)
+        తిరిగి 0;
 
-    if (!strcmp(val, "auto")) {
+    ఒకవేళ (!strcmp(val, "auto")) {
         n = -1;
-    } else if (av_match_name(val, "true,y,yes,enable,enabled,on")) {
+    } లేకపోతే ఒకవేళ (av_సరిపోలిక_name(val, "true,y,yes,enable,enabled,on")) {
         n = 1;
-    } else if (av_match_name(val, "false,n,no,disable,disabled,off")) {
+    } లేకపోతే ఒకవేళ (av_సరిపోలిక_name(val, "false,n,no,disable,disabled,off")) {
         n = 0;
-    } else {
-        char *end = NULL;
-        n = strtol(val, &end, 10);
-        if (val + strlen(val) != end)
-            goto fail;
+    } లేకపోతే {
+        అక్షరం *చివర = ఖాళీ;
+        n = strtol(val, &చివర, 10);
+        ఒకవేళ (val + అక్షరశ్రేణి_పొడవు(val) != చివర)
+            వెళ్ళు fail;
     }
 
-    if (n < o->min || n > o->max)
-        goto fail;
+    ఒకవేళ (n < o->min || n > o->max)
+        వెళ్ళు fail;
 
-    if (dst)
+    ఒకవేళ (dst)
     *dst = n;
-    return 0;
+    తిరిగి 0;
 
 fail:
     av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as boolean\n", o->name, val);
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-static int set_string_fmt(void *obj, const AVOption *o, const char *val, uint8_t *dst,
-                          int fmt_nb, int ((*get_fmt)(const char *)), const char *desc,
-                          enum AVOptionType type)
+స్థిర పూర్ణాంకం సమితి_string_fmt(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, uint8_t *dst,
+                          పూర్ణాంకం fmt_nb, పూర్ణాంకం ((*get_fmt)(స్థిరరాశి అక్షరం *)), స్థిరరాశి అక్షరం *desc,
+                          గణన AVOptionType type)
 {
-    void *logctx = dst ? obj : NULL;
-    int fmt, min, max;
+    శూన్య *logctx = dst ? obj : ఖాళీ;
+    పూర్ణాంకం fmt, min, max;
 
-    if (!val || !strcmp(val, "none")) {
+    ఒకవేళ (!val || !strcmp(val, "none")) {
         fmt = -1;
-    } else {
+    } లేకపోతే {
         fmt = get_fmt(val);
-        if (fmt == -1) {
-            char *tail;
-            fmt = strtol(val, &tail, 0);
-            if (*tail || (unsigned)fmt >= fmt_nb) {
+        ఒకవేళ (fmt == -1) {
+            అక్షరం *తోక;
+            fmt = strtol(val, &తోక, 0);
+            ఒకవేళ (*తోక || (గుర్తులేని)fmt >= fmt_nb) {
                 av_log(logctx, AV_LOG_ERROR,
                        "Unable to parse \"%s\" option value \"%s\" as %s\n", o->name, val, desc);
-                return AVERROR(EINVAL);
+                తిరిగి AVERROR(EINVAL);
             }
         }
     }
@@ -642,1065 +642,1065 @@ static int set_string_fmt(void *obj, const AVOption *o, const char *val, uint8_t
     max = FFMIN(o->max, fmt_nb-1);
 
     // hack for compatibility with old ffmpeg
-    if(min == 0 && max == 0) {
+    ఒకవేళ(min == 0 && max == 0) {
         min = -1;
         max = fmt_nb-1;
     }
 
-    if (fmt < min || fmt > max) {
+    ఒకవేళ (fmt < min || fmt > max) {
         av_log(logctx, AV_LOG_ERROR,
                "Value %d for parameter '%s' out of %s format range [%d - %d]\n",
                fmt, o->name, desc, min, max);
-        return AVERROR(ERANGE);
+        తిరిగి AVERROR(ERANGE);
     }
 
-    if (dst)
-    switch (type) {
-    case AV_OPT_TYPE_PIXEL_FMT:  *(enum AVPixelFormat *)dst = fmt; break;
-    case AV_OPT_TYPE_SAMPLE_FMT: *(enum AVSampleFormat*)dst = fmt; break;
-    default: av_unreachable("set_string_fmt() is only called for pixel and sample formats");
+    ఒకవేళ (dst)
+    ఎంపిక (type) {
+    స్థితి AV_OPT_TYPE_PIXEL_FMT:  *(గణన AVPixelFormat *)dst = fmt; ఆపు;
+    స్థితి AV_OPT_TYPE_SAMPLE_FMT: *(గణన AVSampleFormat*)dst = fmt; ఆపు;
+    అప్రమేయ: av_unreachable("set_string_fmt() is only called for pixel and sample formats");
     }
-    return 0;
+    తిరిగి 0;
 }
 
-static int get_pix_fmt(const char *name)
+స్థిర పూర్ణాంకం get_pix_fmt(స్థిరరాశి అక్షరం *name)
 {
-    return av_get_pix_fmt(name);
+    తిరిగి av_get_pix_fmt(name);
 }
 
-static int set_string_pixel_fmt(void *obj, const AVOption *o, const char *val, uint8_t *dst)
+స్థిర పూర్ణాంకం సమితి_string_pixel_fmt(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, uint8_t *dst)
 {
-    return set_string_fmt(obj, o, val, dst,
+    తిరిగి సమితి_string_fmt(obj, o, val, dst,
                           AV_PIX_FMT_NB, get_pix_fmt,
                           "pixel format", AV_OPT_TYPE_PIXEL_FMT);
 }
 
-static int get_sample_fmt(const char *name)
+స్థిర పూర్ణాంకం get_sample_fmt(స్థిరరాశి అక్షరం *name)
 {
-    return av_get_sample_fmt(name);
+    తిరిగి av_get_sample_fmt(name);
 }
 
-static int set_string_sample_fmt(void *obj, const AVOption *o, const char *val, uint8_t *dst)
+స్థిర పూర్ణాంకం సమితి_string_sample_fmt(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, uint8_t *dst)
 {
-    return set_string_fmt(obj, o, val, dst,
+    తిరిగి సమితి_string_fmt(obj, o, val, dst,
                           AV_SAMPLE_FMT_NB, get_sample_fmt,
                           "sample format", AV_OPT_TYPE_SAMPLE_FMT);
 }
 
-static int set_string_dict(void *obj, const AVOption *o, const char *val, uint8_t **dst)
+స్థిర పూర్ణాంకం సమితి_string_dict(శూన్య *obj, స్థిరరాశి AVOption *o, స్థిరరాశి అక్షరం *val, uint8_t **dst)
 {
-    AVDictionary *options = NULL;
+    AVDictionary *options = ఖాళీ;
 
-    if (val) {
-        int ret = av_dict_parse_string(&options, val, "=", ":", 0);
-        if (ret < 0) {
+    ఒకవేళ (val) {
+        పూర్ణాంకం ret = av_dict_parse_string(&options, val, "=", ":", 0);
+        ఒకవేళ (ret < 0) {
             av_dict_free(&options);
-            return ret;
+            తిరిగి ret;
         }
     }
 
-    if (!dst) {
+    ఒకవేళ (!dst) {
         av_dict_free(&options);
-        return 0;
+        తిరిగి 0;
     }
 
     av_dict_free((AVDictionary **)dst);
     *dst = (uint8_t *)options;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int set_string_channel_layout(void *obj, const AVOption *o,
-                                     const char *val, void *dst)
+స్థిర పూర్ణాంకం సమితి_string_channel_layout(శూన్య *obj, స్థిరరాశి AVOption *o,
+                                     స్థిరరాశి అక్షరం *val, శూన్య *dst)
 {
     AVChannelLayout tmp;
     AVChannelLayout *channel_layout = dst;
-    int ret;
-    if (dst)
+    పూర్ణాంకం ret;
+    ఒకవేళ (dst)
     av_channel_layout_uninit(channel_layout);
-    else
+    లేకపోతే
         channel_layout = &tmp;
-    if (!val)
-        return 0;
+    ఒకవేళ (!val)
+        తిరిగి 0;
     ret = av_channel_layout_from_string(channel_layout, val);
-    if (ret < 0)
-        return ret;
-    if (!dst)
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
+    ఒకవేళ (!dst)
         av_channel_layout_uninit(channel_layout);
-    return 0;
+    తిరిగి 0;
 }
 
-static int opt_set_elem(void *obj, void *target_obj, const AVOption *o,
-                        const char *val, void *dst)
+స్థిర పూర్ణాంకం opt_సమితి_elem(శూన్య *obj, శూన్య *లక్ష్యం_obj, స్థిరరాశి AVOption *o,
+                        స్థిరరాశి అక్షరం *val, శూన్య *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    const enum AVOptionType type = TYPE_BASE(o->type);
-    int ret;
+    శూన్య *logctx = dst ? obj : ఖాళీ;
+    స్థిరరాశి గణన AVOptionType type = TYPE_పునాది(o->type);
+    పూర్ణాంకం ret;
 
-    if (!val && (type != AV_OPT_TYPE_STRING &&
+    ఒకవేళ (!val && (type != AV_OPT_TYPE_STRING &&
                  type != AV_OPT_TYPE_PIXEL_FMT && type != AV_OPT_TYPE_SAMPLE_FMT &&
-                 type != AV_OPT_TYPE_IMAGE_SIZE &&
+                 type != AV_OPT_TYPE_IMAGE_కొలత &&
                  type != AV_OPT_TYPE_DURATION && type != AV_OPT_TYPE_COLOR &&
                  type != AV_OPT_TYPE_BOOL))
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
 
-    switch (type) {
-    case AV_OPT_TYPE_BOOL:
-        return set_string_bool(obj, o, val, dst);
-    case AV_OPT_TYPE_STRING:
-        return set_string(obj, o, val, dst);
-    case AV_OPT_TYPE_BINARY:
-        return set_string_binary(obj, o, val, dst);
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_FLOAT:
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_RATIONAL:
-        return set_string_number(obj, target_obj, o, val, dst);
-    case AV_OPT_TYPE_IMAGE_SIZE:
-        return set_string_image_size(obj, o, val, dst);
-    case AV_OPT_TYPE_VIDEO_RATE: {
+    ఎంపిక (type) {
+    స్థితి AV_OPT_TYPE_BOOL:
+        తిరిగి సమితి_string_bool(obj, o, val, dst);
+    స్థితి AV_OPT_TYPE_STRING:
+        తిరిగి సమితి_string(obj, o, val, dst);
+    స్థితి AV_OPT_TYPE_ద్విమాన:
+        తిరిగి సమితి_string_ద్విమాన(obj, o, val, dst);
+    స్థితి AV_OPT_TYPE_FLAGS:
+    స్థితి AV_OPT_TYPE_INT:
+    స్థితి AV_OPT_TYPE_UINT:
+    స్థితి AV_OPT_TYPE_INT64:
+    స్థితి AV_OPT_TYPE_UINT64:
+    స్థితి AV_OPT_TYPE_FLOAT:
+    స్థితి AV_OPT_TYPE_DOUBLE:
+    స్థితి AV_OPT_TYPE_RATIONAL:
+        తిరిగి సమితి_string_సంఖ్య(obj, లక్ష్యం_obj, o, val, dst);
+    స్థితి AV_OPT_TYPE_IMAGE_కొలత:
+        తిరిగి సమితి_string_image_కొలత(obj, o, val, dst);
+    స్థితి AV_OPT_TYPE_VIDEO_రేటు: {
         AVRational tmp;
-        ret = set_string_video_rate(obj, o, val, &tmp);
-        if (ret < 0)
-            return ret;
-        return write_number(obj, o, dst, 1, tmp.den, tmp.num, 0);
+        ret = సమితి_string_video_రేటు(obj, o, val, &tmp);
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
+        తిరిగి write_సంఖ్య(obj, o, dst, 1, tmp.den, tmp.అంకె, 0);
     }
-    case AV_OPT_TYPE_PIXEL_FMT:
-        return set_string_pixel_fmt(obj, o, val, dst);
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        return set_string_sample_fmt(obj, o, val, dst);
-    case AV_OPT_TYPE_DURATION:
+    స్థితి AV_OPT_TYPE_PIXEL_FMT:
+        తిరిగి సమితి_string_pixel_fmt(obj, o, val, dst);
+    స్థితి AV_OPT_TYPE_SAMPLE_FMT:
+        తిరిగి సమితి_string_sample_fmt(obj, o, val, dst);
+    స్థితి AV_OPT_TYPE_DURATION:
         {
             int64_t usecs = 0;
-            if (val) {
-                if ((ret = av_parse_time(&usecs, val, 1)) < 0) {
+            ఒకవేళ (val) {
+                ఒకవేళ ((ret = av_parse_సమయం(&usecs, val, 1)) < 0) {
                     av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as duration\n", o->name, val);
-                    return ret;
+                    తిరిగి ret;
                 }
             }
-            if (usecs < o->min || usecs > o->max) {
+            ఒకవేళ (usecs < o->min || usecs > o->max) {
                 av_log(logctx, AV_LOG_ERROR, "Value %f for parameter '%s' out of range [%g - %g]\n",
                        usecs / 1000000.0, o->name, o->min / 1000000.0, o->max / 1000000.0);
-                return AVERROR(ERANGE);
+                తిరిగి AVERROR(ERANGE);
             }
-            if (dst)
+            ఒకవేళ (dst)
             *(int64_t *)dst = usecs;
-            return 0;
+            తిరిగి 0;
         }
-    case AV_OPT_TYPE_COLOR:
-        return set_string_color(obj, o, val, dst);
-    case AV_OPT_TYPE_CHLAYOUT:
-        ret = set_string_channel_layout(obj, o, val, dst);
-        if (ret < 0) {
+    స్థితి AV_OPT_TYPE_COLOR:
+        తిరిగి సమితి_string_color(obj, o, val, dst);
+    స్థితి AV_OPT_TYPE_CHLAYOUT:
+        ret = సమితి_string_channel_layout(obj, o, val, dst);
+        ఒకవేళ (ret < 0) {
             av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as channel layout\n", o->name, val);
             ret = AVERROR(EINVAL);
         }
-        return ret;
-    case AV_OPT_TYPE_DICT:
-        return set_string_dict(obj, o, val, dst);
+        తిరిగి ret;
+    స్థితి AV_OPT_TYPE_DICT:
+        తిరిగి సమితి_string_dict(obj, o, val, dst);
     }
 
     av_log(logctx, AV_LOG_ERROR, "Invalid option type.\n");
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-static int opt_set_array(void *obj, void *target_obj, const AVOption *o,
-                         const char *val, void *dst)
+స్థిర పూర్ణాంకం opt_సమితి_array(శూన్య *obj, శూన్య *లక్ష్యం_obj, స్థిరరాశి AVOption *o,
+                         స్థిరరాశి అక్షరం *val, శూన్య *dst)
 {
-    const AVOptionArrayDef *arr = o->default_val.arr;
-    const size_t      elem_size = opt_type_desc[TYPE_BASE(o->type)].size;
-    const uint8_t           sep = opt_array_sep(o);
-    uint8_t                *str = NULL;
+    స్థిరరాశి AVOptionArrayDef *arr = o->default_val.arr;
+    స్థిరరాశి size_t      elem_కొలత = opt_type_desc[TYPE_పునాది(o->type)].కొలత;
+    స్థిరరాశి uint8_t           sep = opt_array_sep(o);
+    uint8_t                *str = ఖాళీ;
 
-    void      *logctx = dst ? obj : NULL;
-    void       *elems = NULL;
-    unsigned nb_elems = 0;
-    int ret;
+    శూన్య      *logctx = dst ? obj : ఖాళీ;
+    శూన్య       *elems = ఖాళీ;
+    గుర్తులేని nb_elems = 0;
+    పూర్ణాంకం ret;
 
-    if (val && *val) {
-        str = av_malloc(strlen(val) + 1);
-        if (!str)
-            return AVERROR(ENOMEM);
+    ఒకవేళ (val && *val) {
+        str = av_malloc(అక్షరశ్రేణి_పొడవు(val) + 1);
+        ఒకవేళ (!str)
+            తిరిగి AVERROR(ENOMEM);
     }
 
     // split and unescape the string
-    while (val && *val) {
+    అయితే (val && *val) {
         uint8_t *p = str;
-        void *tmp;
+        శూన్య *tmp;
 
-        if (arr && arr->size_max && nb_elems >= arr->size_max) {
+        ఒకవేళ (arr && arr->కొలత_max && nb_elems >= arr->కొలత_max) {
             av_log(logctx, AV_LOG_ERROR,
                    "Cannot assign more than %u elements to array option %s\n",
-                   arr->size_max, o->name);
+                   arr->కొలత_max, o->name);
             ret = AVERROR(EINVAL);
-            goto fail;
+            వెళ్ళు fail;
         }
 
-        for (; *val; val++, p++) {
-            if (*val == '\\' && val[1])
+        కొరకు (; *val; val++, p++) {
+            ఒకవేళ (*val == '\\' && val[1])
                 val++;
-            else if (*val == sep) {
+            లేకపోతే ఒకవేళ (*val == sep) {
                 val++;
-                break;
+                ఆపు;
             }
             *p = *val;
         }
         *p = 0;
 
-        tmp = av_realloc_array(elems, nb_elems + 1, elem_size);
-        if (!tmp) {
+        tmp = av_realloc_array(elems, nb_elems + 1, elem_కొలత);
+        ఒకవేళ (!tmp) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            వెళ్ళు fail;
         }
         elems = tmp;
 
         tmp = opt_array_pelem(o, elems, nb_elems);
-        memset(tmp, 0, elem_size);
+        memset(tmp, 0, elem_కొలత);
 
-        ret = opt_set_elem(obj, target_obj, o, str, tmp);
-        if (ret < 0)
-            goto fail;
+        ret = opt_సమితి_elem(obj, లక్ష్యం_obj, o, str, tmp);
+        ఒకవేళ (ret < 0)
+            వెళ్ళు fail;
         nb_elems++;
     }
     av_freep(&str);
 
-    if (dst)
+    ఒకవేళ (dst)
     opt_free_array(o, dst, opt_array_pcount(dst));
 
-    if (arr && nb_elems < arr->size_min) {
+    ఒకవేళ (arr && nb_elems < arr->కొలత_min) {
         av_log(logctx, AV_LOG_ERROR,
                "Cannot assign fewer than %u elements to array option %s\n",
-               arr->size_min, o->name);
+               arr->కొలత_min, o->name);
         ret = AVERROR(EINVAL);
-        goto fail;
+        వెళ్ళు fail;
     }
 
-    if (dst) {
-    *((void **)dst)        = elems;
+    ఒకవేళ (dst) {
+    *((శూన్య **)dst)        = elems;
     *opt_array_pcount(dst) = nb_elems;
-    } else
+    } లేకపోతే
         opt_free_array(o, &elems, &nb_elems);
 
-    return 0;
+    తిరిగి 0;
 fail:
     av_freep(&str);
     opt_free_array(o, &elems, &nb_elems);
-    return ret;
+    తిరిగి ret;
 }
 
-int av_opt_set(void *obj, const char *name, const char *val, int search_flags)
+పూర్ణాంకం av_opt_సమితి(శూన్య *obj, స్థిరరాశి అక్షరం *name, స్థిరరాశి అక్షరం *val, పూర్ణాంకం శోధన_flags)
 {
-    void *dst, *target_obj;
-    const AVOption *o;
-    int ret;
+    శూన్య *dst, *లక్ష్యం_obj;
+    స్థిరరాశి AVOption *o;
+    పూర్ణాంకం ret;
 
-    ret = opt_set_init(obj, name, search_flags, 0, &target_obj, &o, &dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_సమితి_init(obj, name, శోధన_flags, 0, &లక్ష్యం_obj, &o, &dst);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
-    return ((o->type & AV_OPT_TYPE_FLAG_ARRAY) ?
-            opt_set_array : opt_set_elem)(obj, target_obj, o, val, dst);
+    తిరిగి ((o->type & AV_OPT_TYPE_FLAG_ARRAY) ?
+            opt_సమితి_array : opt_సమితి_elem)(obj, లక్ష్యం_obj, o, val, dst);
 }
 
-#define OPT_EVAL_NUMBER(name, opttype, vartype)                         \
-int av_opt_eval_ ## name(void *obj, const AVOption *o,                  \
-                         const char *val, vartype *name ## _out)        \
+#నిర్వచించు OPT_EVAL_సంఖ్య(name, opttype, vartype)                         \
+పూర్ణాంకం av_opt_eval_ ## name(శూన్య *obj, స్థిరరాశి AVOption *o,                  \
+                         స్థిరరాశి అక్షరం *val, vartype *name ## బహిర్గతం_3)        \
 {                                                                       \
-    if (!o || o->type != opttype || o->flags & AV_OPT_FLAG_READONLY)    \
-        return AVERROR(EINVAL);                                         \
-    return set_string_number(obj, obj, o, val, name ## _out);           \
+    ఒకవేళ (!o || o->type != opttype || o->flags & AV_OPT_FLAG_READONLY)    \
+        తిరిగి AVERROR(EINVAL);                                         \
+    తిరిగి సమితి_string_సంఖ్య(obj, obj, o, val, name ## బహిర్గతం_3);           \
 }
 
-OPT_EVAL_NUMBER(flags,  AV_OPT_TYPE_FLAGS,    int)
-OPT_EVAL_NUMBER(int,    AV_OPT_TYPE_INT,      int)
-OPT_EVAL_NUMBER(uint,   AV_OPT_TYPE_UINT,     unsigned)
-OPT_EVAL_NUMBER(int64,  AV_OPT_TYPE_INT64,    int64_t)
-OPT_EVAL_NUMBER(float,  AV_OPT_TYPE_FLOAT,    float)
-OPT_EVAL_NUMBER(double, AV_OPT_TYPE_DOUBLE,   double)
-OPT_EVAL_NUMBER(q,      AV_OPT_TYPE_RATIONAL, AVRational)
+OPT_EVAL_సంఖ్య(flags,  AV_OPT_TYPE_FLAGS,    పూర్ణాంకం)
+OPT_EVAL_సంఖ్య(పూర్ణాంకం,    AV_OPT_TYPE_INT,      పూర్ణాంకం)
+OPT_EVAL_సంఖ్య(uint,   AV_OPT_TYPE_UINT,     గుర్తులేని)
+OPT_EVAL_సంఖ్య(int64,  AV_OPT_TYPE_INT64,    int64_t)
+OPT_EVAL_సంఖ్య(దశాంశం,  AV_OPT_TYPE_FLOAT,    దశాంశం)
+OPT_EVAL_సంఖ్య(ద్విగుణ, AV_OPT_TYPE_DOUBLE,   ద్విగుణ)
+OPT_EVAL_సంఖ్య(q,      AV_OPT_TYPE_RATIONAL, AVRational)
 
-static int set_number(void *obj, const char *name, double num, int den, int64_t intnum,
-                      int search_flags, int require_type)
+స్థిర పూర్ణాంకం సమితి_సంఖ్య(శూన్య *obj, స్థిరరాశి అక్షరం *name, ద్విగుణ అంకె, పూర్ణాంకం den, int64_t intnum,
+                      పూర్ణాంకం శోధన_flags, పూర్ణాంకం require_type)
 {
-    void *dst;
-    const AVOption *o;
-    int ret;
+    శూన్య *dst;
+    స్థిరరాశి AVOption *o;
+    పూర్ణాంకం ret;
 
-    ret = opt_set_init(obj, name, search_flags, require_type, NULL, &o, &dst);
-    if (ret < 0)
-        return ret;
-    if (dst)
-        ret = write_number(obj, o, dst, num, den, intnum, 0);
+    ret = opt_సమితి_init(obj, name, శోధన_flags, require_type, ఖాళీ, &o, &dst);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
+    ఒకవేళ (dst)
+        ret = write_సంఖ్య(obj, o, dst, అంకె, den, intnum, 0);
 
-    return ret;
+    తిరిగి ret;
 }
 
-int av_opt_set_int(void *obj, const char *name, int64_t val, int search_flags)
+పూర్ణాంకం av_opt_సమితి_int(శూన్య *obj, స్థిరరాశి అక్షరం *name, int64_t val, పూర్ణాంకం శోధన_flags)
 {
-    return set_number(obj, name, 1, 1, val, search_flags, 0);
+    తిరిగి సమితి_సంఖ్య(obj, name, 1, 1, val, శోధన_flags, 0);
 }
 
-int av_opt_set_double(void *obj, const char *name, double val, int search_flags)
+పూర్ణాంకం av_opt_సమితి_double(శూన్య *obj, స్థిరరాశి అక్షరం *name, ద్విగుణ val, పూర్ణాంకం శోధన_flags)
 {
-    return set_number(obj, name, val, 1, 1, search_flags, 0);
+    తిరిగి సమితి_సంఖ్య(obj, name, val, 1, 1, శోధన_flags, 0);
 }
 
-int av_opt_set_q(void *obj, const char *name, AVRational val, int search_flags)
+పూర్ణాంకం av_opt_సమితి_q(శూన్య *obj, స్థిరరాశి అక్షరం *name, AVRational val, పూర్ణాంకం శోధన_flags)
 {
-    return set_number(obj, name, val.num, val.den, 1, search_flags, 0);
+    తిరిగి సమితి_సంఖ్య(obj, name, val.అంకె, val.den, 1, శోధన_flags, 0);
 }
 
-int av_opt_set_bin(void *obj, const char *name, const uint8_t *val, int len, int search_flags)
+పూర్ణాంకం av_opt_సమితి_bin(శూన్య *obj, స్థిరరాశి అక్షరం *name, స్థిరరాశి uint8_t *val, పూర్ణాంకం len, పూర్ణాంకం శోధన_flags)
 {
     uint8_t *ptr;
     uint8_t **dst;
-    int *lendst;
-    int ret;
+    పూర్ణాంకం *lendst;
+    పూర్ణాంకం ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_BINARY,
-                       NULL, NULL, (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_సమితి_init(obj, name, శోధన_flags, AV_OPT_TYPE_ద్విమాన,
+                       ఖాళీ, ఖాళీ, (శూన్య**)&dst);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
-    if (dst) {
-    ptr = len ? av_malloc(len) : NULL;
-    if (len && !ptr)
-        return AVERROR(ENOMEM);
+    ఒకవేళ (dst) {
+    ptr = len ? av_malloc(len) : ఖాళీ;
+    ఒకవేళ (len && !ptr)
+        తిరిగి AVERROR(ENOMEM);
 
-    lendst = (int *)(dst + 1);
+    lendst = (పూర్ణాంకం *)(dst + 1);
 
     av_free(*dst);
     *dst    = ptr;
     *lendst = len;
-    if (len)
-        memcpy(ptr, val, len);
+    ఒకవేళ (len)
+        జ్ఞాపకం_నకలు(ptr, val, len);
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_set_image_size(void *obj, const char *name, int w, int h, int search_flags)
+పూర్ణాంకం av_opt_సమితి_image_కొలత(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం w, పూర్ణాంకం h, పూర్ణాంకం శోధన_flags)
 {
-    const AVOption *o;
-    void *logctx;
-    int *dst;
-    int ret;
+    స్థిరరాశి AVOption *o;
+    శూన్య *logctx;
+    పూర్ణాంకం *dst;
+    పూర్ణాంకం ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_IMAGE_SIZE,
-                       NULL, &o, (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_సమితి_init(obj, name, శోధన_flags, AV_OPT_TYPE_IMAGE_కొలత,
+                       ఖాళీ, &o, (శూన్య**)&dst);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
-    logctx = dst ? obj : NULL;
+    logctx = dst ? obj : ఖాళీ;
 
-    if (w<0 || h<0) {
+    ఒకవేళ (w<0 || h<0) {
         av_log(logctx, AV_LOG_ERROR,
                "Invalid negative size value %dx%d for size '%s'\n", w, h, o->name);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    if (dst) {
+    ఒకవేళ (dst) {
     dst[0] = w;
     dst[1] = h;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_set_video_rate(void *obj, const char *name, AVRational val, int search_flags)
+పూర్ణాంకం av_opt_సమితి_video_రేటు(శూన్య *obj, స్థిరరాశి అక్షరం *name, AVRational val, పూర్ణాంకం శోధన_flags)
 {
-    return set_number(obj, name, val.num, val.den, 1, search_flags, AV_OPT_TYPE_VIDEO_RATE);
+    తిరిగి సమితి_సంఖ్య(obj, name, val.అంకె, val.den, 1, శోధన_flags, AV_OPT_TYPE_VIDEO_రేటు);
 }
 
-static int set_format(void *obj, const char *name, int fmt, int search_flags,
-                      enum AVOptionType type, const char *desc, int nb_fmts)
+స్థిర పూర్ణాంకం సమితి_format(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం fmt, పూర్ణాంకం శోధన_flags,
+                      గణన AVOptionType type, స్థిరరాశి అక్షరం *desc, పూర్ణాంకం nb_fmts)
 {
-    const AVOption *o;
-    void *logctx;
-    int *dst;
-    int min, max, ret;
+    స్థిరరాశి AVOption *o;
+    శూన్య *logctx;
+    పూర్ణాంకం *dst;
+    పూర్ణాంకం min, max, ret;
 
-    ret = opt_set_init(obj, name, search_flags, type, NULL, &o, (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_సమితి_init(obj, name, శోధన_flags, type, ఖాళీ, &o, (శూన్య**)&dst);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
-    logctx = dst ? obj : NULL;
+    logctx = dst ? obj : ఖాళీ;
 
     min = FFMAX(o->min, -1);
     max = FFMIN(o->max, nb_fmts-1);
 
-    if (fmt < min || fmt > max) {
+    ఒకవేళ (fmt < min || fmt > max) {
         av_log(logctx, AV_LOG_ERROR,
                "Value %d for parameter '%s' out of %s format range [%d - %d]\n",
                fmt, name, desc, min, max);
-        return AVERROR(ERANGE);
+        తిరిగి AVERROR(ERANGE);
     }
-    if (dst)
+    ఒకవేళ (dst)
     *dst = fmt;
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_set_pixel_fmt(void *obj, const char *name, enum AVPixelFormat fmt, int search_flags)
+పూర్ణాంకం av_opt_సమితి_pixel_fmt(శూన్య *obj, స్థిరరాశి అక్షరం *name, గణన AVPixelFormat fmt, పూర్ణాంకం శోధన_flags)
 {
-    return set_format(obj, name, fmt, search_flags, AV_OPT_TYPE_PIXEL_FMT, "pixel", AV_PIX_FMT_NB);
+    తిరిగి సమితి_format(obj, name, fmt, శోధన_flags, AV_OPT_TYPE_PIXEL_FMT, "pixel", AV_PIX_FMT_NB);
 }
 
-int av_opt_set_sample_fmt(void *obj, const char *name, enum AVSampleFormat fmt, int search_flags)
+పూర్ణాంకం av_opt_సమితి_sample_fmt(శూన్య *obj, స్థిరరాశి అక్షరం *name, గణన AVSampleFormat fmt, పూర్ణాంకం శోధన_flags)
 {
-    return set_format(obj, name, fmt, search_flags, AV_OPT_TYPE_SAMPLE_FMT, "sample", AV_SAMPLE_FMT_NB);
+    తిరిగి సమితి_format(obj, name, fmt, శోధన_flags, AV_OPT_TYPE_SAMPLE_FMT, "sample", AV_SAMPLE_FMT_NB);
 }
 
-int av_opt_set_dict_val(void *obj, const char *name, const AVDictionary *val,
-                        int search_flags)
+పూర్ణాంకం av_opt_సమితి_dict_val(శూన్య *obj, స్థిరరాశి అక్షరం *name, స్థిరరాశి AVDictionary *val,
+                        పూర్ణాంకం శోధన_flags)
 {
     AVDictionary **dst;
-    int ret;
+    పూర్ణాంకం ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_DICT, NULL, NULL,
-                       (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_సమితి_init(obj, name, శోధన_flags, AV_OPT_TYPE_DICT, ఖాళీ, ఖాళీ,
+                       (శూన్య**)&dst);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
-    if (dst) {
+    ఒకవేళ (dst) {
     av_dict_free(dst);
 
         ret = av_dict_copy(dst, val, 0);
     }
 
-    return ret;
+    తిరిగి ret;
 }
 
-int av_opt_set_chlayout(void *obj, const char *name,
-                        const AVChannelLayout *channel_layout,
-                        int search_flags)
+పూర్ణాంకం av_opt_సమితి_chlayout(శూన్య *obj, స్థిరరాశి అక్షరం *name,
+                        స్థిరరాశి AVChannelLayout *channel_layout,
+                        పూర్ణాంకం శోధన_flags)
 {
     AVChannelLayout *dst;
-    int ret;
+    పూర్ణాంకం ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_CHLAYOUT, NULL, NULL,
-                       (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_సమితి_init(obj, name, శోధన_flags, AV_OPT_TYPE_CHLAYOUT, ఖాళీ, ఖాళీ,
+                       (శూన్య**)&dst);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
-    if (dst)
+    ఒకవేళ (dst)
         ret = av_channel_layout_copy(dst, channel_layout);
 
-    return ret;
+    తిరిగి ret;
 }
 
-static void format_duration(char *buf, size_t size, int64_t d)
+స్థిర శూన్య format_duration(అక్షరం *buf, size_t కొలత, int64_t d)
 {
-    char *e;
+    అక్షరం *e;
 
-    av_assert0(size >= 25);
-    if (d < 0 && d != INT64_MIN) {
+    av_assert0(కొలత >= 25);
+    ఒకవేళ (d < 0 && d != INT64_MIN) {
         *(buf++) = '-';
-        size--;
+        కొలత--;
         d = -d;
     }
-    if (d == INT64_MAX)
-        snprintf(buf, size, "INT64_MAX");
-    else if (d == INT64_MIN)
-        snprintf(buf, size, "INT64_MIN");
-    else if (d > (int64_t)3600*1000000)
-        snprintf(buf, size, "%"PRId64":%02d:%02d.%06d", d / 3600000000,
-                 (int)((d / 60000000) % 60),
-                 (int)((d / 1000000) % 60),
-                 (int)(d % 1000000));
-    else if (d > 60*1000000)
-        snprintf(buf, size, "%d:%02d.%06d",
-                 (int)(d / 60000000),
-                 (int)((d / 1000000) % 60),
-                 (int)(d % 1000000));
-    else
-        snprintf(buf, size, "%d.%06d",
-                 (int)(d / 1000000),
-                 (int)(d % 1000000));
-    e = buf + strlen(buf);
-    while (e > buf && e[-1] == '0')
+    ఒకవేళ (d == INT64_MAX)
+        snprintf(buf, కొలత, "INT64_MAX");
+    లేకపోతే ఒకవేళ (d == INT64_MIN)
+        snprintf(buf, కొలత, "INT64_MIN");
+    లేకపోతే ఒకవేళ (d > (int64_t)3600*1000000)
+        snprintf(buf, కొలత, "%"PRId64":%02d:%02d.%06d", d / 3600000000,
+                 (పూర్ణాంకం)((d / 60000000) % 60),
+                 (పూర్ణాంకం)((d / 1000000) % 60),
+                 (పూర్ణాంకం)(d % 1000000));
+    లేకపోతే ఒకవేళ (d > 60*1000000)
+        snprintf(buf, కొలత, "%d:%02d.%06d",
+                 (పూర్ణాంకం)(d / 60000000),
+                 (పూర్ణాంకం)((d / 1000000) % 60),
+                 (పూర్ణాంకం)(d % 1000000));
+    లేకపోతే
+        snprintf(buf, కొలత, "%d.%06d",
+                 (పూర్ణాంకం)(d / 1000000),
+                 (పూర్ణాంకం)(d % 1000000));
+    e = buf + అక్షరశ్రేణి_పొడవు(buf);
+    అయితే (e > buf && e[-1] == '0')
         *(--e) = 0;
-    if (e > buf && e[-1] == '.')
+    ఒకవేళ (e > buf && e[-1] == '.')
         *(--e) = 0;
 }
 
-static int opt_get_elem(const AVOption *o, uint8_t **pbuf, size_t buf_len,
-                        const void *dst, int search_flags)
+స్థిర పూర్ణాంకం opt_get_elem(స్థిరరాశి AVOption *o, uint8_t **pbuf, size_t buf_len,
+                        స్థిరరాశి శూన్య *dst, పూర్ణాంకం శోధన_flags)
 {
-    int ret;
+    పూర్ణాంకం ret;
 
-    switch (TYPE_BASE(o->type)) {
-    case AV_OPT_TYPE_BOOL:
-        ret = snprintf(*pbuf, buf_len, "%s", get_bool_name(*(int *)dst));
-        break;
-    case AV_OPT_TYPE_FLAGS:
-        ret = snprintf(*pbuf, buf_len, "0x%08X", *(int *)dst);
-        break;
-    case AV_OPT_TYPE_INT:
-        ret = snprintf(*pbuf, buf_len, "%d", *(int *)dst);
-        break;
-    case AV_OPT_TYPE_UINT:
-        ret = snprintf(*pbuf, buf_len, "%u", *(unsigned *)dst);
-        break;
-    case AV_OPT_TYPE_INT64:
+    ఎంపిక (TYPE_పునాది(o->type)) {
+    స్థితి AV_OPT_TYPE_BOOL:
+        ret = snprintf(*pbuf, buf_len, "%s", get_bool_name(*(పూర్ణాంకం *)dst));
+        ఆపు;
+    స్థితి AV_OPT_TYPE_FLAGS:
+        ret = snprintf(*pbuf, buf_len, "0x%08X", *(పూర్ణాంకం *)dst);
+        ఆపు;
+    స్థితి AV_OPT_TYPE_INT:
+        ret = snprintf(*pbuf, buf_len, "%d", *(పూర్ణాంకం *)dst);
+        ఆపు;
+    స్థితి AV_OPT_TYPE_UINT:
+        ret = snprintf(*pbuf, buf_len, "%u", *(గుర్తులేని *)dst);
+        ఆపు;
+    స్థితి AV_OPT_TYPE_INT64:
         ret = snprintf(*pbuf, buf_len, "%"PRId64, *(int64_t *)dst);
-        break;
-    case AV_OPT_TYPE_UINT64:
+        ఆపు;
+    స్థితి AV_OPT_TYPE_UINT64:
         ret = snprintf(*pbuf, buf_len, "%"PRIu64, *(uint64_t *)dst);
-        break;
-    case AV_OPT_TYPE_FLOAT:
-        ret = snprintf(*pbuf, buf_len, "%f", *(float *)dst);
-        break;
-    case AV_OPT_TYPE_DOUBLE:
-        ret = snprintf(*pbuf, buf_len, "%f", *(double *)dst);
-        break;
-    case AV_OPT_TYPE_VIDEO_RATE:
-    case AV_OPT_TYPE_RATIONAL:
-        ret = snprintf(*pbuf, buf_len, "%d/%d", ((AVRational *)dst)->num, ((AVRational *)dst)->den);
-        break;
-    case AV_OPT_TYPE_CONST:
+        ఆపు;
+    స్థితి AV_OPT_TYPE_FLOAT:
+        ret = snprintf(*pbuf, buf_len, "%f", *(దశాంశం *)dst);
+        ఆపు;
+    స్థితి AV_OPT_TYPE_DOUBLE:
+        ret = snprintf(*pbuf, buf_len, "%f", *(ద్విగుణ *)dst);
+        ఆపు;
+    స్థితి AV_OPT_TYPE_VIDEO_రేటు:
+    స్థితి AV_OPT_TYPE_RATIONAL:
+        ret = snprintf(*pbuf, buf_len, "%d/%d", ((AVRational *)dst)->అంకె, ((AVRational *)dst)->den);
+        ఆపు;
+    స్థితి AV_OPT_TYPE_CONST:
         ret = snprintf(*pbuf, buf_len, "%"PRId64, o->default_val.i64);
-        break;
-    case AV_OPT_TYPE_STRING:
-        if (*(uint8_t **)dst) {
+        ఆపు;
+    స్థితి AV_OPT_TYPE_STRING:
+        ఒకవేళ (*(uint8_t **)dst) {
             *pbuf = av_strdup(*(uint8_t **)dst);
-        } else if (search_flags & AV_OPT_ALLOW_NULL) {
-            *pbuf = NULL;
-            return 0;
-        } else {
+        } లేకపోతే ఒకవేళ (శోధన_flags & AV_OPT_ALLOW_NULL) {
+            *pbuf = ఖాళీ;
+            తిరిగి 0;
+        } లేకపోతే {
             *pbuf = av_strdup("");
         }
-        return *pbuf ? 0 : AVERROR(ENOMEM);
-    case AV_OPT_TYPE_BINARY: {
-        const uint8_t *bin;
-        int len;
+        తిరిగి *pbuf ? 0 : AVERROR(ENOMEM);
+    స్థితి AV_OPT_TYPE_ద్విమాన: {
+        స్థిరరాశి uint8_t *bin;
+        పూర్ణాంకం len;
 
-        if (!*(uint8_t **)dst && (search_flags & AV_OPT_ALLOW_NULL)) {
-            *pbuf = NULL;
-            return 0;
+        ఒకవేళ (!*(uint8_t **)dst && (శోధన_flags & AV_OPT_ALLOW_NULL)) {
+            *pbuf = ఖాళీ;
+            తిరిగి 0;
         }
-        len = *(int *)(((uint8_t *)dst) + sizeof(uint8_t *));
-        if ((uint64_t)len * 2 + 1 > INT_MAX)
-            return AVERROR(EINVAL);
-        if (!(*pbuf = av_malloc(len * 2 + 1)))
-            return AVERROR(ENOMEM);
-        if (!len) {
+        len = *(పూర్ణాంకం *)(((uint8_t *)dst) + పరిమాణం(uint8_t *));
+        ఒకవేళ ((uint64_t)len * 2 + 1 > గరిష్ఠ_పూర్ణాంకం)
+            తిరిగి AVERROR(EINVAL);
+        ఒకవేళ (!(*pbuf = av_malloc(len * 2 + 1)))
+            తిరిగి AVERROR(ENOMEM);
+        ఒకవేళ (!len) {
             *pbuf[0] = '\0';
-            return 0;
+            తిరిగి 0;
         }
         bin = *(uint8_t **)dst;
-        for (int i = 0; i < len; i++)
+        కొరకు (పూర్ణాంకం i = 0; i < len; i++)
             snprintf(*pbuf + i * 2, 3, "%02X", bin[i]);
-        return 0;
+        తిరిగి 0;
     }
-    case AV_OPT_TYPE_IMAGE_SIZE:
-        ret = snprintf(*pbuf, buf_len, "%dx%d", ((int *)dst)[0], ((int *)dst)[1]);
-        break;
-    case AV_OPT_TYPE_PIXEL_FMT:
-        ret = snprintf(*pbuf, buf_len, "%s", (char *)av_x_if_null(av_get_pix_fmt_name(*(enum AVPixelFormat *)dst), "none"));
-        break;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        ret = snprintf(*pbuf, buf_len, "%s", (char *)av_x_if_null(av_get_sample_fmt_name(*(enum AVSampleFormat *)dst), "none"));
-        break;
-    case AV_OPT_TYPE_DURATION: {
+    స్థితి AV_OPT_TYPE_IMAGE_కొలత:
+        ret = snprintf(*pbuf, buf_len, "%dx%d", ((పూర్ణాంకం *)dst)[0], ((పూర్ణాంకం *)dst)[1]);
+        ఆపు;
+    స్థితి AV_OPT_TYPE_PIXEL_FMT:
+        ret = snprintf(*pbuf, buf_len, "%s", (అక్షరం *)av_x_if_null(av_get_pix_fmt_name(*(గణన AVPixelFormat *)dst), "none"));
+        ఆపు;
+    స్థితి AV_OPT_TYPE_SAMPLE_FMT:
+        ret = snprintf(*pbuf, buf_len, "%s", (అక్షరం *)av_x_if_null(av_get_sample_fmt_name(*(గణన AVSampleFormat *)dst), "none"));
+        ఆపు;
+    స్థితి AV_OPT_TYPE_DURATION: {
         int64_t i64 = *(int64_t *)dst;
         format_duration(*pbuf, buf_len, i64);
-        ret = strlen(*pbuf); // no overflow possible, checked by an assert
-        break;
+        ret = అక్షరశ్రేణి_పొడవు(*pbuf); // no overflow possible, checked by an assert
+        ఆపు;
     }
-    case AV_OPT_TYPE_COLOR:
+    స్థితి AV_OPT_TYPE_COLOR:
         ret = snprintf(*pbuf, buf_len, "0x%02x%02x%02x%02x",
-                       (int)((uint8_t *)dst)[0], (int)((uint8_t *)dst)[1],
-                       (int)((uint8_t *)dst)[2], (int)((uint8_t *)dst)[3]);
-        break;
-    case AV_OPT_TYPE_CHLAYOUT:
+                       (పూర్ణాంకం)((uint8_t *)dst)[0], (పూర్ణాంకం)((uint8_t *)dst)[1],
+                       (పూర్ణాంకం)((uint8_t *)dst)[2], (పూర్ణాంకం)((uint8_t *)dst)[3]);
+        ఆపు;
+    స్థితి AV_OPT_TYPE_CHLAYOUT:
         ret = av_channel_layout_describe(dst, *pbuf, buf_len);
-        break;
-    case AV_OPT_TYPE_DICT:
-        if (!*(AVDictionary **)dst && (search_flags & AV_OPT_ALLOW_NULL)) {
-            *pbuf = NULL;
-            return 0;
+        ఆపు;
+    స్థితి AV_OPT_TYPE_DICT:
+        ఒకవేళ (!*(AVDictionary **)dst && (శోధన_flags & AV_OPT_ALLOW_NULL)) {
+            *pbuf = ఖాళీ;
+            తిరిగి 0;
         }
-        return av_dict_get_string(*(AVDictionary **)dst, (char **)pbuf, '=', ':');
-    default:
-        return AVERROR(EINVAL);
+        తిరిగి av_dict_get_string(*(AVDictionary **)dst, (అక్షరం **)pbuf, '=', ':');
+    అప్రమేయ:
+        తిరిగి AVERROR(EINVAL);
     }
 
-    return ret;
+    తిరిగి ret;
 }
 
-static int opt_get_array(const AVOption *o, void *dst, uint8_t **out_val)
+స్థిర పూర్ణాంకం opt_get_array(స్థిరరాశి AVOption *o, శూన్య *dst, uint8_t **బహిర్గతం_val)
 {
-    const unsigned count = *opt_array_pcount(dst);
-    const uint8_t    sep = opt_array_sep(o);
+    స్థిరరాశి గుర్తులేని లెక్క = *opt_array_pcount(dst);
+    స్థిరరాశి uint8_t    sep = opt_array_sep(o);
 
-    uint8_t *str     = NULL;
+    uint8_t *str     = ఖాళీ;
     size_t   str_len = 0;
-    int ret;
+    పూర్ణాంకం ret;
 
-    *out_val = NULL;
+    *బహిర్గతం_val = ఖాళీ;
 
-    for (unsigned i = 0; i < count; i++) {
-        uint8_t buf[128], *out = buf;
-        size_t out_len;
+    కొరకు (గుర్తులేని i = 0; i < లెక్క; i++) {
+        uint8_t buf[128], *బహిర్గతం = buf;
+        size_t బహిర్గతం_len;
 
-        ret = opt_get_elem(o, &out, sizeof(buf),
-                           opt_array_pelem(o, *(void **)dst, i), 0);
-        if (ret < 0)
-            goto fail;
+        ret = opt_get_elem(o, &బహిర్గతం, పరిమాణం(buf),
+                           opt_array_pelem(o, *(శూన్య **)dst, i), 0);
+        ఒకవేళ (ret < 0)
+            వెళ్ళు fail;
 
-        out_len = strlen(out);
-        if (out_len > SIZE_MAX / 2 - !!i ||
-            !!i + out_len * 2 > SIZE_MAX - str_len - 1) {
+        బహిర్గతం_len = అక్షరశ్రేణి_పొడవు(బహిర్గతం);
+        ఒకవేళ (బహిర్గతం_len > SIZE_MAX / 2 - !!i ||
+            !!i + బహిర్గతం_len * 2 > SIZE_MAX - str_len - 1) {
             ret = AVERROR(ERANGE);
-            goto fail;
+            వెళ్ళు fail;
         }
 
         //                         terminator     escaping  separator
         //                                ↓             ↓     ↓
-        ret = av_reallocp(&str, str_len + 1 + out_len * 2 + !!i);
-        if (ret < 0)
-            goto fail;
+        ret = av_reallocp(&str, str_len + 1 + బహిర్గతం_len * 2 + !!i);
+        ఒకవేళ (ret < 0)
+            వెళ్ళు fail;
 
         // add separator if needed
-        if (i)
+        ఒకవేళ (i)
             str[str_len++] = sep;
 
         // escape the element
-        for (unsigned j = 0; j < out_len; j++) {
-            uint8_t val = out[j];
-            if (val == sep || val == '\\')
+        కొరకు (గుర్తులేని j = 0; j < బహిర్గతం_len; j++) {
+            uint8_t val = బహిర్గతం[j];
+            ఒకవేళ (val == sep || val == '\\')
                 str[str_len++] = '\\';
             str[str_len++] = val;
         }
         str[str_len] = 0;
 
 fail:
-        if (out != buf)
-            av_freep(&out);
-        if (ret < 0) {
+        ఒకవేళ (బహిర్గతం != buf)
+            av_freep(&బహిర్గతం);
+        ఒకవేళ (ret < 0) {
             av_freep(&str);
-            return ret;
+            తిరిగి ret;
         }
     }
 
-    *out_val = str;
+    *బహిర్గతం_val = str;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_get(void *obj, const char *name, int search_flags, uint8_t **out_val)
+పూర్ణాంకం av_opt_get(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, uint8_t **బహిర్గతం_val)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    uint8_t *out, buf[128];
-    int ret;
+    శూన్య *dst, *లక్ష్యం_obj;
+    స్థిరరాశి AVOption *o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &లక్ష్యం_obj);
+    uint8_t *బహిర్గతం, buf[128];
+    పూర్ణాంకం ret;
 
-    if (!o || !target_obj || (o->offset<=0 && o->type != AV_OPT_TYPE_CONST))
-        return AVERROR_OPTION_NOT_FOUND;
+    ఒకవేళ (!o || !లక్ష్యం_obj || (o->స్థానభ్రంశం<=0 && o->type != AV_OPT_TYPE_CONST))
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
 
-    if (o->flags & AV_OPT_FLAG_DEPRECATED)
+    ఒకవేళ (o->flags & AV_OPT_FLAG_DEPRECATED)
         av_log(obj, AV_LOG_WARNING, "The \"%s\" option is deprecated: %s\n", name, o->help);
 
-    dst = (uint8_t *)target_obj + o->offset;
+    dst = (uint8_t *)లక్ష్యం_obj + o->స్థానభ్రంశం;
 
-    if (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
-        ret = opt_get_array(o, dst, out_val);
-        if (ret < 0)
-            return ret;
-        if (!*out_val && !(search_flags & AV_OPT_ALLOW_NULL)) {
-            *out_val = av_strdup("");
-            if (!*out_val)
-               return AVERROR(ENOMEM);
+    ఒకవేళ (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
+        ret = opt_get_array(o, dst, బహిర్గతం_val);
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
+        ఒకవేళ (!*బహిర్గతం_val && !(శోధన_flags & AV_OPT_ALLOW_NULL)) {
+            *బహిర్గతం_val = av_strdup("");
+            ఒకవేళ (!*బహిర్గతం_val)
+               తిరిగి AVERROR(ENOMEM);
         }
-        return 0;
+        తిరిగి 0;
     }
 
     buf[0] = 0;
-    out = buf;
-    ret = opt_get_elem(o, &out, sizeof(buf), dst, search_flags);
-    if (ret < 0)
-        return ret;
-    if (out != buf) {
-        *out_val = out;
-        return 0;
+    బహిర్గతం = buf;
+    ret = opt_get_elem(o, &బహిర్గతం, పరిమాణం(buf), dst, శోధన_flags);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
+    ఒకవేళ (బహిర్గతం != buf) {
+        *బహిర్గతం_val = బహిర్గతం;
+        తిరిగి 0;
     }
 
-    if (ret >= sizeof(buf))
-        return AVERROR(EINVAL);
-    *out_val = av_strdup(out);
-    return *out_val ? 0 : AVERROR(ENOMEM);
+    ఒకవేళ (ret >= పరిమాణం(buf))
+        తిరిగి AVERROR(EINVAL);
+    *బహిర్గతం_val = av_strdup(బహిర్గతం);
+    తిరిగి *బహిర్గతం_val ? 0 : AVERROR(ENOMEM);
 }
 
-static int get_number(void *obj, const char *name, double *num, int *den, int64_t *intnum,
-                      int search_flags)
+స్థిర పూర్ణాంకం get_సంఖ్య(శూన్య *obj, స్థిరరాశి అక్షరం *name, ద్విగుణ *అంకె, పూర్ణాంకం *den, int64_t *intnum,
+                      పూర్ణాంకం శోధన_flags)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type & AV_OPT_TYPE_FLAG_ARRAY)
-        return AVERROR(EINVAL);
+    శూన్య *dst, *లక్ష్యం_obj;
+    స్థిరరాశి AVOption *o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &లక్ష్యం_obj);
+    ఒకవేళ (!o || !లక్ష్యం_obj)
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
+    ఒకవేళ (o->type & AV_OPT_TYPE_FLAG_ARRAY)
+        తిరిగి AVERROR(EINVAL);
 
-    dst = ((uint8_t *)target_obj) + o->offset;
+    dst = ((uint8_t *)లక్ష్యం_obj) + o->స్థానభ్రంశం;
 
-    return read_number(o, dst, num, den, intnum);
+    తిరిగి read_సంఖ్య(o, dst, అంకె, den, intnum);
 }
 
-int av_opt_get_int(void *obj, const char *name, int search_flags, int64_t *out_val)
-{
-    int64_t intnum = 1;
-    double num = 1;
-    int ret, den = 1;
-
-    if ((ret = get_number(obj, name, &num, &den, &intnum, search_flags)) < 0)
-        return ret;
-    if (num == den)
-        *out_val = intnum;
-    else
-        *out_val = num * intnum / den;
-    return 0;
-}
-
-int av_opt_get_double(void *obj, const char *name, int search_flags, double *out_val)
+పూర్ణాంకం av_opt_get_int(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, int64_t *బహిర్గతం_val)
 {
     int64_t intnum = 1;
-    double num = 1;
-    int ret, den = 1;
+    ద్విగుణ అంకె = 1;
+    పూర్ణాంకం ret, den = 1;
 
-    if ((ret = get_number(obj, name, &num, &den, &intnum, search_flags)) < 0)
-        return ret;
-    *out_val = num * intnum / den;
-    return 0;
+    ఒకవేళ ((ret = get_సంఖ్య(obj, name, &అంకె, &den, &intnum, శోధన_flags)) < 0)
+        తిరిగి ret;
+    ఒకవేళ (అంకె == den)
+        *బహిర్గతం_val = intnum;
+    లేకపోతే
+        *బహిర్గతం_val = అంకె * intnum / den;
+    తిరిగి 0;
 }
 
-int av_opt_get_q(void *obj, const char *name, int search_flags, AVRational *out_val)
+పూర్ణాంకం av_opt_get_double(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, ద్విగుణ *బహిర్గతం_val)
 {
     int64_t intnum = 1;
-    double num = 1;
-    int ret, den = 1;
+    ద్విగుణ అంకె = 1;
+    పూర్ణాంకం ret, den = 1;
 
-    if ((ret = get_number(obj, name, &num, &den, &intnum, search_flags)) < 0)
-        return ret;
-
-    if (num == 1.0 && (int)intnum == intnum)
-        *out_val = (AVRational){intnum, den};
-    else
-        *out_val = double_to_rational(num*intnum/den);
-    return 0;
+    ఒకవేళ ((ret = get_సంఖ్య(obj, name, &అంకె, &den, &intnum, శోధన_flags)) < 0)
+        తిరిగి ret;
+    *బహిర్గతం_val = అంకె * intnum / den;
+    తిరిగి 0;
 }
 
-int av_opt_get_image_size(void *obj, const char *name, int search_flags, int *w_out, int *h_out)
+పూర్ణాంకం av_opt_get_q(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, AVRational *బహిర్గతం_val)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != AV_OPT_TYPE_IMAGE_SIZE) {
+    int64_t intnum = 1;
+    ద్విగుణ అంకె = 1;
+    పూర్ణాంకం ret, den = 1;
+
+    ఒకవేళ ((ret = get_సంఖ్య(obj, name, &అంకె, &den, &intnum, శోధన_flags)) < 0)
+        తిరిగి ret;
+
+    ఒకవేళ (అంకె == 1.0 && (పూర్ణాంకం)intnum == intnum)
+        *బహిర్గతం_val = (AVRational){intnum, den};
+    లేకపోతే
+        *బహిర్గతం_val = double_గమ్యం_rational(అంకె*intnum/den);
+    తిరిగి 0;
+}
+
+పూర్ణాంకం av_opt_get_image_కొలత(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, పూర్ణాంకం *w_బహిర్గతం, పూర్ణాంకం *h_బహిర్గతం)
+{
+    శూన్య *dst, *లక్ష్యం_obj;
+    స్థిరరాశి AVOption *o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &లక్ష్యం_obj);
+    ఒకవేళ (!o || !లక్ష్యం_obj)
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
+    ఒకవేళ (o->type != AV_OPT_TYPE_IMAGE_కొలత) {
         av_log(obj, AV_LOG_ERROR,
                "The value for option '%s' is not a image size.\n", name);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    dst = ((uint8_t*)target_obj) + o->offset;
-    if (w_out) *w_out = *(int *)dst;
-    if (h_out) *h_out = *((int *)dst+1);
-    return 0;
+    dst = ((uint8_t*)లక్ష్యం_obj) + o->స్థానభ్రంశం;
+    ఒకవేళ (w_బహిర్గతం) *w_బహిర్గతం = *(పూర్ణాంకం *)dst;
+    ఒకవేళ (h_బహిర్గతం) *h_బహిర్గతం = *((పూర్ణాంకం *)dst+1);
+    తిరిగి 0;
 }
 
-int av_opt_get_video_rate(void *obj, const char *name, int search_flags, AVRational *out_val)
+పూర్ణాంకం av_opt_get_video_రేటు(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, AVRational *బహిర్గతం_val)
 {
-    return av_opt_get_q(obj, name, search_flags, out_val);
+    తిరిగి av_opt_get_q(obj, name, శోధన_flags, బహిర్గతం_val);
 }
 
-static int get_format(void *obj, const char *name, int search_flags, void *out_fmt,
-                      enum AVOptionType type, const char *desc)
+స్థిర పూర్ణాంకం get_format(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, శూన్య *బహిర్గతం_fmt,
+                      గణన AVOptionType type, స్థిరరాశి అక్షరం *desc)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != type) {
+    శూన్య *dst, *లక్ష్యం_obj;
+    స్థిరరాశి AVOption *o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &లక్ష్యం_obj);
+    ఒకవేళ (!o || !లక్ష్యం_obj)
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
+    ఒకవేళ (o->type != type) {
         av_log(obj, AV_LOG_ERROR,
                "The value for option '%s' is not a %s format.\n", desc, name);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    dst = ((uint8_t*)target_obj) + o->offset;
-    if (type == AV_OPT_TYPE_PIXEL_FMT)
-        *(enum AVPixelFormat *)out_fmt = *(enum AVPixelFormat *)dst;
-    else
-        *(enum AVSampleFormat*)out_fmt = *(enum AVSampleFormat*)dst;
+    dst = ((uint8_t*)లక్ష్యం_obj) + o->స్థానభ్రంశం;
+    ఒకవేళ (type == AV_OPT_TYPE_PIXEL_FMT)
+        *(గణన AVPixelFormat *)బహిర్గతం_fmt = *(గణన AVPixelFormat *)dst;
+    లేకపోతే
+        *(గణన AVSampleFormat*)బహిర్గతం_fmt = *(గణన AVSampleFormat*)dst;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_get_pixel_fmt(void *obj, const char *name, int search_flags, enum AVPixelFormat *out_fmt)
+పూర్ణాంకం av_opt_get_pixel_fmt(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, గణన AVPixelFormat *బహిర్గతం_fmt)
 {
-    return get_format(obj, name, search_flags, out_fmt, AV_OPT_TYPE_PIXEL_FMT, "pixel");
+    తిరిగి get_format(obj, name, శోధన_flags, బహిర్గతం_fmt, AV_OPT_TYPE_PIXEL_FMT, "pixel");
 }
 
-int av_opt_get_sample_fmt(void *obj, const char *name, int search_flags, enum AVSampleFormat *out_fmt)
+పూర్ణాంకం av_opt_get_sample_fmt(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, గణన AVSampleFormat *బహిర్గతం_fmt)
 {
-    return get_format(obj, name, search_flags, out_fmt, AV_OPT_TYPE_SAMPLE_FMT, "sample");
+    తిరిగి get_format(obj, name, శోధన_flags, బహిర్గతం_fmt, AV_OPT_TYPE_SAMPLE_FMT, "sample");
 }
 
-int av_opt_get_chlayout(void *obj, const char *name, int search_flags, AVChannelLayout *cl)
+పూర్ణాంకం av_opt_get_chlayout(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, AVChannelLayout *cl)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != AV_OPT_TYPE_CHLAYOUT) {
+    శూన్య *dst, *లక్ష్యం_obj;
+    స్థిరరాశి AVOption *o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &లక్ష్యం_obj);
+    ఒకవేళ (!o || !లక్ష్యం_obj)
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
+    ఒకవేళ (o->type != AV_OPT_TYPE_CHLAYOUT) {
         av_log(obj, AV_LOG_ERROR,
                "The value for option '%s' is not a channel layout.\n", name);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    dst = ((uint8_t*)target_obj) + o->offset;
-    return av_channel_layout_copy(cl, dst);
+    dst = ((uint8_t*)లక్ష్యం_obj) + o->స్థానభ్రంశం;
+    తిరిగి av_channel_layout_copy(cl, dst);
 }
 
-int av_opt_get_dict_val(void *obj, const char *name, int search_flags, AVDictionary **out_val)
+పూర్ణాంకం av_opt_get_dict_val(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags, AVDictionary **బహిర్గతం_val)
 {
-    void *target_obj;
+    శూన్య *లక్ష్యం_obj;
     AVDictionary *src;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
+    స్థిరరాశి AVOption *o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &లక్ష్యం_obj);
 
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != AV_OPT_TYPE_DICT)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!o || !లక్ష్యం_obj)
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
+    ఒకవేళ (o->type != AV_OPT_TYPE_DICT)
+        తిరిగి AVERROR(EINVAL);
 
-    src = *(AVDictionary **)(((uint8_t *)target_obj) + o->offset);
+    src = *(AVDictionary **)(((uint8_t *)లక్ష్యం_obj) + o->స్థానభ్రంశం);
 
-    return av_dict_copy(out_val, src, 0);
+    తిరిగి av_dict_copy(బహిర్గతం_val, src, 0);
 }
 
-int av_opt_flag_is_set(void *obj, const char *field_name, const char *flag_name)
+పూర్ణాంకం av_opt_flag_is_సమితి(శూన్య *obj, స్థిరరాశి అక్షరం *క్షేత్రం_name, స్థిరరాశి అక్షరం *flag_name)
 {
-    const AVOption *field = av_opt_find(obj, field_name, NULL, 0, 0);
-    const AVOption *flag  = av_opt_find(obj, flag_name,
-                                        field ? field->unit : NULL, 0, 0);
+    స్థిరరాశి AVOption *క్షేత్రం = av_opt_కనుగొను(obj, క్షేత్రం_name, ఖాళీ, 0, 0);
+    స్థిరరాశి AVOption *flag  = av_opt_కనుగొను(obj, flag_name,
+                                        క్షేత్రం ? క్షేత్రం->unit : ఖాళీ, 0, 0);
     int64_t res;
 
-    if (!field || !flag || flag->type != AV_OPT_TYPE_CONST ||
-        av_opt_get_int(obj, field_name, 0, &res) < 0)
-        return 0;
-    return res & flag->default_val.i64;
+    ఒకవేళ (!క్షేత్రం || !flag || flag->type != AV_OPT_TYPE_CONST ||
+        av_opt_get_int(obj, క్షేత్రం_name, 0, &res) < 0)
+        తిరిగి 0;
+    తిరిగి res & flag->default_val.i64;
 }
 
-static void log_int_value(void *av_log_obj, int level, int64_t i)
+స్థిర శూన్య log_int_విలువ(శూన్య *av_log_obj, పూర్ణాంకం level, int64_t i)
 {
-    if (i == INT_MAX) {
+    ఒకవేళ (i == గరిష్ఠ_పూర్ణాంకం) {
         av_log(av_log_obj, level, "INT_MAX");
-    } else if (i == INT_MIN) {
+    } లేకపోతే ఒకవేళ (i == INT_MIN) {
         av_log(av_log_obj, level, "INT_MIN");
-    } else if (i == UINT32_MAX) {
+    } లేకపోతే ఒకవేళ (i == UINT32_MAX) {
         av_log(av_log_obj, level, "UINT32_MAX");
-    } else if (i == INT64_MAX) {
+    } లేకపోతే ఒకవేళ (i == INT64_MAX) {
         av_log(av_log_obj, level, "I64_MAX");
-    } else if (i == INT64_MIN) {
+    } లేకపోతే ఒకవేళ (i == INT64_MIN) {
         av_log(av_log_obj, level, "I64_MIN");
-    } else {
+    } లేకపోతే {
         av_log(av_log_obj, level, "%"PRId64, i);
     }
 }
 
-static void log_value(void *av_log_obj, int level, double d)
+స్థిర శూన్య log_విలువ(శూన్య *av_log_obj, పూర్ణాంకం level, ద్విగుణ d)
 {
-    if      (d == INT_MAX) {
+    ఒకవేళ      (d == గరిష్ఠ_పూర్ణాంకం) {
         av_log(av_log_obj, level, "INT_MAX");
-    } else if (d == INT_MIN) {
+    } లేకపోతే ఒకవేళ (d == INT_MIN) {
         av_log(av_log_obj, level, "INT_MIN");
-    } else if (d == UINT32_MAX) {
+    } లేకపోతే ఒకవేళ (d == UINT32_MAX) {
         av_log(av_log_obj, level, "UINT32_MAX");
-    } else if (d == (double)INT64_MAX) {
+    } లేకపోతే ఒకవేళ (d == (ద్విగుణ)INT64_MAX) {
         av_log(av_log_obj, level, "I64_MAX");
-    } else if (d == INT64_MIN) {
+    } లేకపోతే ఒకవేళ (d == INT64_MIN) {
         av_log(av_log_obj, level, "I64_MIN");
-    } else if (d == FLT_MAX) {
+    } లేకపోతే ఒకవేళ (d == FLT_MAX) {
         av_log(av_log_obj, level, "FLT_MAX");
-    } else if (d == FLT_MIN) {
+    } లేకపోతే ఒకవేళ (d == FLT_MIN) {
         av_log(av_log_obj, level, "FLT_MIN");
-    } else if (d == -FLT_MAX) {
+    } లేకపోతే ఒకవేళ (d == -FLT_MAX) {
         av_log(av_log_obj, level, "-FLT_MAX");
-    } else if (d == -FLT_MIN) {
+    } లేకపోతే ఒకవేళ (d == -FLT_MIN) {
         av_log(av_log_obj, level, "-FLT_MIN");
-    } else if (d == DBL_MAX) {
+    } లేకపోతే ఒకవేళ (d == DBL_MAX) {
         av_log(av_log_obj, level, "DBL_MAX");
-    } else if (d == DBL_MIN) {
+    } లేకపోతే ఒకవేళ (d == DBL_MIN) {
         av_log(av_log_obj, level, "DBL_MIN");
-    } else if (d == -DBL_MAX) {
+    } లేకపోతే ఒకవేళ (d == -DBL_MAX) {
         av_log(av_log_obj, level, "-DBL_MAX");
-    } else if (d == -DBL_MIN) {
+    } లేకపోతే ఒకవేళ (d == -DBL_MIN) {
         av_log(av_log_obj, level, "-DBL_MIN");
-    } else {
+    } లేకపోతే {
         av_log(av_log_obj, level, "%g", d);
     }
 }
 
-static const char *get_opt_const_name(void *obj, const char *unit, int64_t value)
+స్థిర స్థిరరాశి అక్షరం *get_opt_const_name(శూన్య *obj, స్థిరరాశి అక్షరం *unit, int64_t విలువ)
 {
-    const AVOption *opt = NULL;
+    స్థిరరాశి AVOption *opt = ఖాళీ;
 
-    if (!unit)
-        return NULL;
-    while ((opt = av_opt_next(obj, opt)))
-        if (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
-            opt->default_val.i64 == value)
-            return opt->name;
-    return NULL;
+    ఒకవేళ (!unit)
+        తిరిగి ఖాళీ;
+    అయితే ((opt = av_opt_తదుపరి(obj, opt)))
+        ఒకవేళ (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
+            opt->default_val.i64 == విలువ)
+            తిరిగి opt->name;
+    తిరిగి ఖాళీ;
 }
 
-static char *get_opt_flags_string(void *obj, const char *unit, int64_t value)
+స్థిర అక్షరం *get_opt_flags_string(శూన్య *obj, స్థిరరాశి అక్షరం *unit, int64_t విలువ)
 {
-    const AVOption *opt = NULL;
-    char flags[512];
+    స్థిరరాశి AVOption *opt = ఖాళీ;
+    అక్షరం flags[512];
 
     flags[0] = 0;
-    if (!unit)
-        return NULL;
-    while ((opt = av_opt_next(obj, opt))) {
-        if (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
-            opt->default_val.i64 & value) {
-            if (flags[0])
-                av_strlcatf(flags, sizeof(flags), "+");
-            av_strlcatf(flags, sizeof(flags), "%s", opt->name);
+    ఒకవేళ (!unit)
+        తిరిగి ఖాళీ;
+    అయితే ((opt = av_opt_తదుపరి(obj, opt))) {
+        ఒకవేళ (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
+            opt->default_val.i64 & విలువ) {
+            ఒకవేళ (flags[0])
+                av_strlcatf(flags, పరిమాణం(flags), "+");
+            av_strlcatf(flags, పరిమాణం(flags), "%s", opt->name);
         }
     }
-    if (flags[0])
-        return av_strdup(flags);
-    return NULL;
+    ఒకవేళ (flags[0])
+        తిరిగి av_strdup(flags);
+    తిరిగి ఖాళీ;
 }
 
-static void log_type(void *av_log_obj, const AVOption *o,
-                     enum AVOptionType parent_type)
+స్థిర శూన్య log_type(శూన్య *av_log_obj, స్థిరరాశి AVOption *o,
+                     గణన AVOptionType మాతృ_type)
 {
-    const enum AVOptionType type = TYPE_BASE(o->type);
+    స్థిరరాశి గణన AVOptionType type = TYPE_పునాది(o->type);
 
-    if (o->type == AV_OPT_TYPE_CONST && (TYPE_BASE(parent_type) == AV_OPT_TYPE_INT || TYPE_BASE(parent_type) == AV_OPT_TYPE_INT64))
+    ఒకవేళ (o->type == AV_OPT_TYPE_CONST && (TYPE_పునాది(మాతృ_type) == AV_OPT_TYPE_INT || TYPE_పునాది(మాతృ_type) == AV_OPT_TYPE_INT64))
         av_log(av_log_obj, AV_LOG_INFO, "%-12"PRId64" ", o->default_val.i64);
-    else if (type < FF_ARRAY_ELEMS(opt_type_desc) && opt_type_desc[type].name) {
-        if (o->type & AV_OPT_TYPE_FLAG_ARRAY)
+    లేకపోతే ఒకవేళ (type < FF_ARRAY_ELEMS(opt_type_desc) && opt_type_desc[type].name) {
+        ఒకవేళ (o->type & AV_OPT_TYPE_FLAG_ARRAY)
             av_log(av_log_obj, AV_LOG_INFO, "[%-10s]", opt_type_desc[type].name);
-        else
+        లేకపోతే
             av_log(av_log_obj, AV_LOG_INFO, "%-12s ", opt_type_desc[type].name);
     }
-    else
+    లేకపోతే
         av_log(av_log_obj, AV_LOG_INFO, "%-12s ", "");
 }
 
-static void log_default(void *obj, void *av_log_obj, const AVOption *opt)
+స్థిర శూన్య log_default(శూన్య *obj, శూన్య *av_log_obj, స్థిరరాశి AVOption *opt)
 {
-    if (opt->type == AV_OPT_TYPE_CONST || opt->type == AV_OPT_TYPE_BINARY)
-        return;
-    if ((opt->type == AV_OPT_TYPE_COLOR      ||
-         opt->type == AV_OPT_TYPE_IMAGE_SIZE ||
+    ఒకవేళ (opt->type == AV_OPT_TYPE_CONST || opt->type == AV_OPT_TYPE_ద్విమాన)
+        తిరిగి;
+    ఒకవేళ ((opt->type == AV_OPT_TYPE_COLOR      ||
+         opt->type == AV_OPT_TYPE_IMAGE_కొలత ||
          opt->type == AV_OPT_TYPE_STRING     ||
          opt->type == AV_OPT_TYPE_DICT       ||
          opt->type == AV_OPT_TYPE_CHLAYOUT   ||
-         opt->type == AV_OPT_TYPE_VIDEO_RATE) &&
+         opt->type == AV_OPT_TYPE_VIDEO_రేటు) &&
         !opt->default_val.str)
-        return;
+        తిరిగి;
 
-    if (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
-        const AVOptionArrayDef *arr = opt->default_val.arr;
-        if (arr && arr->def)
+    ఒకవేళ (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
+        స్థిరరాశి AVOptionArrayDef *arr = opt->default_val.arr;
+        ఒకవేళ (arr && arr->def)
             av_log(av_log_obj, AV_LOG_INFO, " (default %s)", arr->def);
-        return;
+        తిరిగి;
     }
 
     av_log(av_log_obj, AV_LOG_INFO, " (default ");
-    switch (opt->type) {
-    case AV_OPT_TYPE_BOOL:
+    ఎంపిక (opt->type) {
+    స్థితి AV_OPT_TYPE_BOOL:
         av_log(av_log_obj, AV_LOG_INFO, "%s", get_bool_name(opt->default_val.i64));
-        break;
-    case AV_OPT_TYPE_FLAGS: {
-        char *def_flags = get_opt_flags_string(obj, opt->unit, opt->default_val.i64);
-        if (def_flags) {
+        ఆపు;
+    స్థితి AV_OPT_TYPE_FLAGS: {
+        అక్షరం *def_flags = get_opt_flags_string(obj, opt->unit, opt->default_val.i64);
+        ఒకవేళ (def_flags) {
             av_log(av_log_obj, AV_LOG_INFO, "%s", def_flags);
             av_freep(&def_flags);
-        } else {
+        } లేకపోతే {
             av_log(av_log_obj, AV_LOG_INFO, "%"PRIX64, opt->default_val.i64);
         }
-        break;
+        ఆపు;
     }
-    case AV_OPT_TYPE_DURATION: {
-        char buf[25];
-        format_duration(buf, sizeof(buf), opt->default_val.i64);
+    స్థితి AV_OPT_TYPE_DURATION: {
+        అక్షరం buf[25];
+        format_duration(buf, పరిమాణం(buf), opt->default_val.i64);
         av_log(av_log_obj, AV_LOG_INFO, "%s", buf);
-        break;
+        ఆపు;
     }
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_INT64: {
-        const char *def_const = get_opt_const_name(obj, opt->unit, opt->default_val.i64);
-        if (def_const)
+    స్థితి AV_OPT_TYPE_UINT:
+    స్థితి AV_OPT_TYPE_INT:
+    స్థితి AV_OPT_TYPE_UINT64:
+    స్థితి AV_OPT_TYPE_INT64: {
+        స్థిరరాశి అక్షరం *def_const = get_opt_const_name(obj, opt->unit, opt->default_val.i64);
+        ఒకవేళ (def_const)
             av_log(av_log_obj, AV_LOG_INFO, "%s", def_const);
-        else
-            log_int_value(av_log_obj, AV_LOG_INFO, opt->default_val.i64);
-        break;
+        లేకపోతే
+            log_int_విలువ(av_log_obj, AV_LOG_INFO, opt->default_val.i64);
+        ఆపు;
     }
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_FLOAT:
-        log_value(av_log_obj, AV_LOG_INFO, opt->default_val.dbl);
-        break;
-    case AV_OPT_TYPE_RATIONAL: {
-        AVRational q = av_d2q(opt->default_val.dbl, INT_MAX);
-        av_log(av_log_obj, AV_LOG_INFO, "%d/%d", q.num, q.den); }
-        break;
-    case AV_OPT_TYPE_PIXEL_FMT:
-        av_log(av_log_obj, AV_LOG_INFO, "%s", (char *)av_x_if_null(av_get_pix_fmt_name(opt->default_val.i64), "none"));
-        break;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        av_log(av_log_obj, AV_LOG_INFO, "%s", (char *)av_x_if_null(av_get_sample_fmt_name(opt->default_val.i64), "none"));
-        break;
-    case AV_OPT_TYPE_COLOR:
-    case AV_OPT_TYPE_IMAGE_SIZE:
-    case AV_OPT_TYPE_STRING:
-    case AV_OPT_TYPE_DICT:
-    case AV_OPT_TYPE_VIDEO_RATE:
-    case AV_OPT_TYPE_CHLAYOUT:
+    స్థితి AV_OPT_TYPE_DOUBLE:
+    స్థితి AV_OPT_TYPE_FLOAT:
+        log_విలువ(av_log_obj, AV_LOG_INFO, opt->default_val.dbl);
+        ఆపు;
+    స్థితి AV_OPT_TYPE_RATIONAL: {
+        AVRational q = av_d2q(opt->default_val.dbl, గరిష్ఠ_పూర్ణాంకం);
+        av_log(av_log_obj, AV_LOG_INFO, "%d/%d", q.అంకె, q.den); }
+        ఆపు;
+    స్థితి AV_OPT_TYPE_PIXEL_FMT:
+        av_log(av_log_obj, AV_LOG_INFO, "%s", (అక్షరం *)av_x_if_null(av_get_pix_fmt_name(opt->default_val.i64), "none"));
+        ఆపు;
+    స్థితి AV_OPT_TYPE_SAMPLE_FMT:
+        av_log(av_log_obj, AV_LOG_INFO, "%s", (అక్షరం *)av_x_if_null(av_get_sample_fmt_name(opt->default_val.i64), "none"));
+        ఆపు;
+    స్థితి AV_OPT_TYPE_COLOR:
+    స్థితి AV_OPT_TYPE_IMAGE_కొలత:
+    స్థితి AV_OPT_TYPE_STRING:
+    స్థితి AV_OPT_TYPE_DICT:
+    స్థితి AV_OPT_TYPE_VIDEO_రేటు:
+    స్థితి AV_OPT_TYPE_CHLAYOUT:
         av_log(av_log_obj, AV_LOG_INFO, "\"%s\"", opt->default_val.str);
-        break;
+        ఆపు;
     }
     av_log(av_log_obj, AV_LOG_INFO, ")");
 }
 
-static void opt_list(void *obj, void *av_log_obj, const char *unit,
-                     int req_flags, int rej_flags, enum AVOptionType parent_type)
+స్థిర శూన్య opt_list(శూన్య *obj, శూన్య *av_log_obj, స్థిరరాశి అక్షరం *unit,
+                     పూర్ణాంకం req_flags, పూర్ణాంకం rej_flags, గణన AVOptionType మాతృ_type)
 {
-    const AVOption *opt = NULL;
+    స్థిరరాశి AVOption *opt = ఖాళీ;
     AVOptionRanges *r;
-    int i;
+    పూర్ణాంకం i;
 
-    while ((opt = av_opt_next(obj, opt))) {
-        if (!(opt->flags & req_flags) || (opt->flags & rej_flags))
-            continue;
+    అయితే ((opt = av_opt_తదుపరి(obj, opt))) {
+        ఒకవేళ (!(opt->flags & req_flags) || (opt->flags & rej_flags))
+            కొనసాగు;
 
         /* Don't print CONST's on level one.
          * Don't print anything but CONST's on level two.
          * Only print items from the requested unit.
          */
-        if (!unit && opt->type == AV_OPT_TYPE_CONST)
-            continue;
-        else if (unit && opt->type != AV_OPT_TYPE_CONST)
-            continue;
-        else if (unit && opt->type == AV_OPT_TYPE_CONST && strcmp(unit, opt->unit))
-            continue;
-        else if (unit && opt->type == AV_OPT_TYPE_CONST)
+        ఒకవేళ (!unit && opt->type == AV_OPT_TYPE_CONST)
+            కొనసాగు;
+        లేకపోతే ఒకవేళ (unit && opt->type != AV_OPT_TYPE_CONST)
+            కొనసాగు;
+        లేకపోతే ఒకవేళ (unit && opt->type == AV_OPT_TYPE_CONST && strcmp(unit, opt->unit))
+            కొనసాగు;
+        లేకపోతే ఒకవేళ (unit && opt->type == AV_OPT_TYPE_CONST)
             av_log(av_log_obj, AV_LOG_INFO, "     %-15s ", opt->name);
-        else
+        లేకపోతే
             av_log(av_log_obj, AV_LOG_INFO, "  %s%-17s ",
                    (opt->flags & AV_OPT_FLAG_FILTERING_PARAM) ? " " : "-",
                    opt->name);
 
-        log_type(av_log_obj, opt, parent_type);
+        log_type(av_log_obj, opt, మాతృ_type);
 
         av_log(av_log_obj, AV_LOG_INFO, "%c%c%c%c%c%c%c%c%c%c%c",
                (opt->flags & AV_OPT_FLAG_ENCODING_PARAM)  ? 'E' : '.',
@@ -1715,26 +1715,26 @@ static void opt_list(void *obj, void *av_log_obj, const char *unit,
                (opt->flags & AV_OPT_FLAG_RUNTIME_PARAM)   ? 'T' : '.',
                (opt->flags & AV_OPT_FLAG_DEPRECATED)      ? 'P' : '.');
 
-        if (opt->help)
+        ఒకవేళ (opt->help)
             av_log(av_log_obj, AV_LOG_INFO, " %s", opt->help);
 
-        if (av_opt_query_ranges(&r, obj, opt->name, AV_OPT_SEARCH_FAKE_OBJ) >= 0) {
-            switch (opt->type) {
-            case AV_OPT_TYPE_INT:
-            case AV_OPT_TYPE_UINT:
-            case AV_OPT_TYPE_INT64:
-            case AV_OPT_TYPE_UINT64:
-            case AV_OPT_TYPE_DOUBLE:
-            case AV_OPT_TYPE_FLOAT:
-            case AV_OPT_TYPE_RATIONAL:
-                for (i = 0; i < r->nb_ranges; i++) {
+        ఒకవేళ (av_opt_query_ranges(&r, obj, opt->name, AV_OPT_శోధన_FAKE_OBJ) >= 0) {
+            ఎంపిక (opt->type) {
+            స్థితి AV_OPT_TYPE_INT:
+            స్థితి AV_OPT_TYPE_UINT:
+            స్థితి AV_OPT_TYPE_INT64:
+            స్థితి AV_OPT_TYPE_UINT64:
+            స్థితి AV_OPT_TYPE_DOUBLE:
+            స్థితి AV_OPT_TYPE_FLOAT:
+            స్థితి AV_OPT_TYPE_RATIONAL:
+                కొరకు (i = 0; i < r->nb_ranges; i++) {
                     av_log(av_log_obj, AV_LOG_INFO, " (from ");
-                    log_value(av_log_obj, AV_LOG_INFO, r->range[i]->value_min);
+                    log_విలువ(av_log_obj, AV_LOG_INFO, r->range[i]->విలువ_min);
                     av_log(av_log_obj, AV_LOG_INFO, " to ");
-                    log_value(av_log_obj, AV_LOG_INFO, r->range[i]->value_max);
+                    log_విలువ(av_log_obj, AV_LOG_INFO, r->range[i]->విలువ_max);
                     av_log(av_log_obj, AV_LOG_INFO, ")");
                 }
-                break;
+                ఆపు;
             }
             av_opt_freep_ranges(&r);
         }
@@ -1742,105 +1742,105 @@ static void opt_list(void *obj, void *av_log_obj, const char *unit,
         log_default(obj, av_log_obj, opt);
 
         av_log(av_log_obj, AV_LOG_INFO, "\n");
-        if (opt->unit && opt->type != AV_OPT_TYPE_CONST)
+        ఒకవేళ (opt->unit && opt->type != AV_OPT_TYPE_CONST)
             opt_list(obj, av_log_obj, opt->unit, req_flags, rej_flags, opt->type);
     }
 }
 
-int av_opt_show2(void *obj, void *av_log_obj, int req_flags, int rej_flags)
+పూర్ణాంకం av_opt_show2(శూన్య *obj, శూన్య *av_log_obj, పూర్ణాంకం req_flags, పూర్ణాంకం rej_flags)
 {
-    if (!obj)
-        return -1;
+    ఒకవేళ (!obj)
+        తిరిగి -1;
 
     av_log(av_log_obj, AV_LOG_INFO, "%s AVOptions:\n", (*(AVClass **)obj)->class_name);
 
-    opt_list(obj, av_log_obj, NULL, req_flags, rej_flags, -1);
+    opt_list(obj, av_log_obj, ఖాళీ, req_flags, rej_flags, -1);
 
-    return 0;
+    తిరిగి 0;
 }
 
-void av_opt_set_defaults(void *s)
+శూన్య av_opt_సమితి_defaults(శూన్య *s)
 {
-    av_opt_set_defaults2(s, 0, 0);
+    av_opt_సమితి_defaults2(s, 0, 0);
 }
 
-void av_opt_set_defaults2(void *s, int mask, int flags)
+శూన్య av_opt_సమితి_defaults2(శూన్య *s, పూర్ణాంకం ముసుగు_2, పూర్ణాంకం flags)
 {
-    const AVOption *opt = NULL;
-    while ((opt = av_opt_next(s, opt))) {
-        void *dst = ((uint8_t*)s) + opt->offset;
+    స్థిరరాశి AVOption *opt = ఖాళీ;
+    అయితే ((opt = av_opt_తదుపరి(s, opt))) {
+        శూన్య *dst = ((uint8_t*)s) + opt->స్థానభ్రంశం;
 
-        if ((opt->flags & mask) != flags)
-            continue;
+        ఒకవేళ ((opt->flags & ముసుగు_2) != flags)
+            కొనసాగు;
 
-        if (opt->flags & AV_OPT_FLAG_READONLY)
-            continue;
+        ఒకవేళ (opt->flags & AV_OPT_FLAG_READONLY)
+            కొనసాగు;
 
-        if (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
-            const AVOptionArrayDef *arr = opt->default_val.arr;
-            const char              sep = opt_array_sep(opt);
+        ఒకవేళ (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
+            స్థిరరాశి AVOptionArrayDef *arr = opt->default_val.arr;
+            స్థిరరాశి అక్షరం              sep = opt_array_sep(opt);
 
             av_assert0(sep && sep != '\\' &&
                        (sep < 'a' || sep > 'z') &&
                        (sep < 'A' || sep > 'Z') &&
                        (sep < '0' || sep > '9'));
 
-            if (arr && arr->def)
-                opt_set_array(s, s, opt, arr->def, dst);
+            ఒకవేళ (arr && arr->def)
+                opt_సమితి_array(s, s, opt, arr->def, dst);
 
-            continue;
+            కొనసాగు;
         }
 
-        switch (opt->type) {
-            case AV_OPT_TYPE_CONST:
+        ఎంపిక (opt->type) {
+            స్థితి AV_OPT_TYPE_CONST:
                 /* Nothing to be done here */
-                break;
-            case AV_OPT_TYPE_BOOL:
-            case AV_OPT_TYPE_FLAGS:
-            case AV_OPT_TYPE_INT:
-            case AV_OPT_TYPE_UINT:
-            case AV_OPT_TYPE_INT64:
-            case AV_OPT_TYPE_UINT64:
-            case AV_OPT_TYPE_DURATION:
-            case AV_OPT_TYPE_PIXEL_FMT:
-            case AV_OPT_TYPE_SAMPLE_FMT:
-                write_number(s, opt, dst, 1, 1, opt->default_val.i64, 1);
-                break;
-            case AV_OPT_TYPE_DOUBLE:
-            case AV_OPT_TYPE_FLOAT: {
-                double val;
+                ఆపు;
+            స్థితి AV_OPT_TYPE_BOOL:
+            స్థితి AV_OPT_TYPE_FLAGS:
+            స్థితి AV_OPT_TYPE_INT:
+            స్థితి AV_OPT_TYPE_UINT:
+            స్థితి AV_OPT_TYPE_INT64:
+            స్థితి AV_OPT_TYPE_UINT64:
+            స్థితి AV_OPT_TYPE_DURATION:
+            స్థితి AV_OPT_TYPE_PIXEL_FMT:
+            స్థితి AV_OPT_TYPE_SAMPLE_FMT:
+                write_సంఖ్య(s, opt, dst, 1, 1, opt->default_val.i64, 1);
+                ఆపు;
+            స్థితి AV_OPT_TYPE_DOUBLE:
+            స్థితి AV_OPT_TYPE_FLOAT: {
+                ద్విగుణ val;
                 val = opt->default_val.dbl;
-                write_number(s, opt, dst, val, 1, 1, 1);
+                write_సంఖ్య(s, opt, dst, val, 1, 1, 1);
             }
-            break;
-            case AV_OPT_TYPE_RATIONAL: {
+            ఆపు;
+            స్థితి AV_OPT_TYPE_RATIONAL: {
                 AVRational val;
-                val = av_d2q(opt->default_val.dbl, INT_MAX);
-                write_number(s, opt, dst, 1, val.den, val.num, 1);
+                val = av_d2q(opt->default_val.dbl, గరిష్ఠ_పూర్ణాంకం);
+                write_సంఖ్య(s, opt, dst, 1, val.den, val.అంకె, 1);
             }
-            break;
-            case AV_OPT_TYPE_COLOR:
-                set_string_color(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_STRING:
-                set_string(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_IMAGE_SIZE:
-                set_string_image_size(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_VIDEO_RATE:
-                set_string_video_rate(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_BINARY:
-                set_string_binary(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_CHLAYOUT:
-                set_string_channel_layout(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_DICT:
-                set_string_dict(s, opt, opt->default_val.str, dst);
-                break;
-        default:
+            ఆపు;
+            స్థితి AV_OPT_TYPE_COLOR:
+                సమితి_string_color(s, opt, opt->default_val.str, dst);
+                ఆపు;
+            స్థితి AV_OPT_TYPE_STRING:
+                సమితి_string(s, opt, opt->default_val.str, dst);
+                ఆపు;
+            స్థితి AV_OPT_TYPE_IMAGE_కొలత:
+                సమితి_string_image_కొలత(s, opt, opt->default_val.str, dst);
+                ఆపు;
+            స్థితి AV_OPT_TYPE_VIDEO_రేటు:
+                సమితి_string_video_రేటు(s, opt, opt->default_val.str, dst);
+                ఆపు;
+            స్థితి AV_OPT_TYPE_ద్విమాన:
+                సమితి_string_ద్విమాన(s, opt, opt->default_val.str, dst);
+                ఆపు;
+            స్థితి AV_OPT_TYPE_CHLAYOUT:
+                సమితి_string_channel_layout(s, opt, opt->default_val.str, dst);
+                ఆపు;
+            స్థితి AV_OPT_TYPE_DICT:
+                సమితి_string_dict(s, opt, opt->default_val.str, dst);
+                ఆపు;
+        అప్రమేయ:
             av_log(s, AV_LOG_DEBUG, "AVOption type %d of option %s not implemented yet\n",
                    opt->type, opt->name);
         }
@@ -1864,66 +1864,66 @@ void av_opt_set_defaults2(void *s, int mask, int flags)
  * the error code issued by av_opt_set() if the key/value pair
  * cannot be set
  */
-static int parse_key_value_pair(void *ctx, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep)
+స్థిర పూర్ణాంకం parse_కీలకం_విలువ_pair(శూన్య *ctx, స్థిరరాశి అక్షరం **buf,
+                                స్థిరరాశి అక్షరం *కీలకం_val_sep, స్థిరరాశి అక్షరం *జతలు_sep)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val;
-    int ret;
+    అక్షరం *కీలకం = av_get_token(buf, కీలకం_val_sep);
+    అక్షరం *val;
+    పూర్ణాంకం ret;
 
-    if (!key)
-        return AVERROR(ENOMEM);
+    ఒకవేళ (!కీలకం)
+        తిరిగి AVERROR(ENOMEM);
 
-    if (*key && strspn(*buf, key_val_sep)) {
+    ఒకవేళ (*కీలకం && strspn(*buf, కీలకం_val_sep)) {
         (*buf)++;
-        val = av_get_token(buf, pairs_sep);
-        if (!val) {
-            av_freep(&key);
-            return AVERROR(ENOMEM);
+        val = av_get_token(buf, జతలు_sep);
+        ఒకవేళ (!val) {
+            av_freep(&కీలకం);
+            తిరిగి AVERROR(ENOMEM);
         }
-    } else {
-        av_log(ctx, AV_LOG_ERROR, "Missing key or no key/value separator found after key '%s'\n", key);
-        av_free(key);
-        return AVERROR(EINVAL);
+    } లేకపోతే {
+        av_log(ctx, AV_LOG_ERROR, "Missing key or no key/value separator found after key '%s'\n", కీలకం);
+        av_free(కీలకం);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    av_log(ctx, AV_LOG_DEBUG, "Setting entry with key '%s' to value '%s'\n", key, val);
+    av_log(ctx, AV_LOG_DEBUG, "Setting entry with key '%s' to value '%s'\n", కీలకం, val);
 
-    ret = av_opt_set(ctx, key, val, AV_OPT_SEARCH_CHILDREN);
-    if (ret == AVERROR_OPTION_NOT_FOUND)
-        av_log(ctx, AV_LOG_ERROR, "Key '%s' not found.\n", key);
+    ret = av_opt_సమితి(ctx, కీలకం, val, AV_OPT_శోధన_CHILDREN);
+    ఒకవేళ (ret == AVERROR_OPTION_NOT_దొరికింది)
+        av_log(ctx, AV_LOG_ERROR, "Key '%s' not found.\n", కీలకం);
 
-    av_free(key);
+    av_free(కీలకం);
     av_free(val);
-    return ret;
+    తిరిగి ret;
 }
 
-int av_set_options_string(void *ctx, const char *opts,
-                          const char *key_val_sep, const char *pairs_sep)
+పూర్ణాంకం av_సమితి_options_string(శూన్య *ctx, స్థిరరాశి అక్షరం *opts,
+                          స్థిరరాశి అక్షరం *కీలకం_val_sep, స్థిరరాశి అక్షరం *జతలు_sep)
 {
-    int ret, count = 0;
+    పూర్ణాంకం ret, లెక్క = 0;
 
-    if (!opts)
-        return 0;
+    ఒకవేళ (!opts)
+        తిరిగి 0;
 
-    while (*opts) {
-        if ((ret = parse_key_value_pair(ctx, &opts, key_val_sep, pairs_sep)) < 0)
-            return ret;
-        count++;
+    అయితే (*opts) {
+        ఒకవేళ ((ret = parse_కీలకం_విలువ_pair(ctx, &opts, కీలకం_val_sep, జతలు_sep)) < 0)
+            తిరిగి ret;
+        లెక్క++;
 
-        if (*opts)
+        ఒకవేళ (*opts)
             opts++;
     }
 
-    return count;
+    తిరిగి లెక్క;
 }
 
-#define WHITESPACES " \n\t\r"
+#నిర్వచించు WHITESPACES " \n\t\r"
 
-static int is_key_char(char c)
+స్థిర పూర్ణాంకం is_కీలకం_char(అక్షరం c)
 {
-    return (unsigned)((c | 32) - 'a') < 26 ||
-           (unsigned)(c - '0') < 10 ||
+    తిరిగి (గుర్తులేని)((c | 32) - 'a') < 26 ||
+           (గుర్తులేని)(c - '0') < 10 ||
            c == '-' || c == '_' || c == '/' || c == '.';
 }
 
@@ -1935,648 +1935,648 @@ static int is_key_char(char c)
  *
  * @return  0 for success (even with ellipsis), <0 for failure
  */
-static int get_key(const char **ropts, const char *delim, char **rkey)
+స్థిర పూర్ణాంకం get_కీలకం(స్థిరరాశి అక్షరం **ropts, స్థిరరాశి అక్షరం *delim, అక్షరం **rkey)
 {
-    const char *opts = *ropts;
-    const char *key_start, *key_end;
+    స్థిరరాశి అక్షరం *opts = *ropts;
+    స్థిరరాశి అక్షరం *కీలకం_ప్రారంభం, *కీలకం_చివర;
 
-    key_start = opts += strspn(opts, WHITESPACES);
-    while (is_key_char(*opts))
+    కీలకం_ప్రారంభం = opts += strspn(opts, WHITESPACES);
+    అయితే (is_కీలకం_char(*opts))
         opts++;
-    key_end = opts;
+    కీలకం_చివర = opts;
     opts += strspn(opts, WHITESPACES);
-    if (!*opts || !strchr(delim, *opts))
-        return AVERROR(EINVAL);
+    ఒకవేళ (!*opts || !strchr(delim, *opts))
+        తిరిగి AVERROR(EINVAL);
     opts++;
-    if (!(*rkey = av_malloc(key_end - key_start + 1)))
-        return AVERROR(ENOMEM);
-    memcpy(*rkey, key_start, key_end - key_start);
-    (*rkey)[key_end - key_start] = 0;
+    ఒకవేళ (!(*rkey = av_malloc(కీలకం_చివర - కీలకం_ప్రారంభం + 1)))
+        తిరిగి AVERROR(ENOMEM);
+    జ్ఞాపకం_నకలు(*rkey, కీలకం_ప్రారంభం, కీలకం_చివర - కీలకం_ప్రారంభం);
+    (*rkey)[కీలకం_చివర - కీలకం_ప్రారంభం] = 0;
     *ropts = opts;
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_get_key_value(const char **ropts,
-                         const char *key_val_sep, const char *pairs_sep,
-                         unsigned flags,
-                         char **rkey, char **rval)
+పూర్ణాంకం av_opt_get_కీలకం_విలువ(స్థిరరాశి అక్షరం **ropts,
+                         స్థిరరాశి అక్షరం *కీలకం_val_sep, స్థిరరాశి అక్షరం *జతలు_sep,
+                         గుర్తులేని flags,
+                         అక్షరం **rkey, అక్షరం **rval)
 {
-    int ret;
-    char *key = NULL, *val;
-    const char *opts = *ropts;
+    పూర్ణాంకం ret;
+    అక్షరం *కీలకం = ఖాళీ, *val;
+    స్థిరరాశి అక్షరం *opts = *ropts;
 
-    if ((ret = get_key(&opts, key_val_sep, &key)) < 0 &&
-        !(flags & AV_OPT_FLAG_IMPLICIT_KEY))
-        return AVERROR(EINVAL);
-    if (!(val = av_get_token(&opts, pairs_sep))) {
-        av_free(key);
-        return AVERROR(ENOMEM);
+    ఒకవేళ ((ret = get_కీలకం(&opts, కీలకం_val_sep, &కీలకం)) < 0 &&
+        !(flags & AV_OPT_FLAG_IMPLICIT_కీలకం))
+        తిరిగి AVERROR(EINVAL);
+    ఒకవేళ (!(val = av_get_token(&opts, జతలు_sep))) {
+        av_free(కీలకం);
+        తిరిగి AVERROR(ENOMEM);
     }
     *ropts = opts;
-    *rkey  = key;
+    *rkey  = కీలకం;
     *rval  = val;
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_set_from_string(void *ctx, const char *opts,
-                           const char *const *shorthand,
-                           const char *key_val_sep, const char *pairs_sep)
+పూర్ణాంకం av_opt_సమితి_from_string(శూన్య *ctx, స్థిరరాశి అక్షరం *opts,
+                           స్థిరరాశి అక్షరం *స్థిరరాశి *shorthand,
+                           స్థిరరాశి అక్షరం *కీలకం_val_sep, స్థిరరాశి అక్షరం *జతలు_sep)
 {
-    int ret, count = 0;
-    const char *dummy_shorthand = NULL;
-    const char *key;
+    పూర్ణాంకం ret, లెక్క = 0;
+    స్థిరరాశి అక్షరం *dummy_shorthand = ఖాళీ;
+    స్థిరరాశి అక్షరం *కీలకం;
 
-    if (!opts)
-        return 0;
-    if (!shorthand)
+    ఒకవేళ (!opts)
+        తిరిగి 0;
+    ఒకవేళ (!shorthand)
         shorthand = &dummy_shorthand;
 
-    while (*opts) {
-        char *parsed_key, *value;
-        ret = av_opt_get_key_value(&opts, key_val_sep, pairs_sep,
-                                   *shorthand ? AV_OPT_FLAG_IMPLICIT_KEY : 0,
-                                   &parsed_key, &value);
-        if (ret < 0) {
-            if (ret == AVERROR(EINVAL))
+    అయితే (*opts) {
+        అక్షరం *parsed_కీలకం, *విలువ;
+        ret = av_opt_get_కీలకం_విలువ(&opts, కీలకం_val_sep, జతలు_sep,
+                                   *shorthand ? AV_OPT_FLAG_IMPLICIT_కీలకం : 0,
+                                   &parsed_కీలకం, &విలువ);
+        ఒకవేళ (ret < 0) {
+            ఒకవేళ (ret == AVERROR(EINVAL))
                 av_log(ctx, AV_LOG_ERROR, "No option name near '%s'\n", opts);
-            else
+            లేకపోతే
                 av_log(ctx, AV_LOG_ERROR, "Unable to parse '%s': %s\n", opts,
                        av_err2str(ret));
-            return ret;
+            తిరిగి ret;
         }
-        if (*opts)
+        ఒకవేళ (*opts)
             opts++;
-        if (parsed_key) {
-            key = parsed_key;
-            while (*shorthand) /* discard all remaining shorthand */
+        ఒకవేళ (parsed_కీలకం) {
+            కీలకం = parsed_కీలకం;
+            అయితే (*shorthand) /* discard all remaining shorthand */
                 shorthand++;
-        } else {
-            key = *(shorthand++);
+        } లేకపోతే {
+            కీలకం = *(shorthand++);
         }
 
-        av_log(ctx, AV_LOG_DEBUG, "Setting '%s' to value '%s'\n", key, value);
-        if ((ret = av_opt_set(ctx, key, value, 0)) < 0) {
-            if (ret == AVERROR_OPTION_NOT_FOUND)
-                av_log(ctx, AV_LOG_ERROR, "Option '%s' not found\n", key);
-            av_free(value);
-            av_free(parsed_key);
-            return ret;
+        av_log(ctx, AV_LOG_DEBUG, "Setting '%s' to value '%s'\n", కీలకం, విలువ);
+        ఒకవేళ ((ret = av_opt_సమితి(ctx, కీలకం, విలువ, 0)) < 0) {
+            ఒకవేళ (ret == AVERROR_OPTION_NOT_దొరికింది)
+                av_log(ctx, AV_LOG_ERROR, "Option '%s' not found\n", కీలకం);
+            av_free(విలువ);
+            av_free(parsed_కీలకం);
+            తిరిగి ret;
         }
 
-        av_free(value);
-        av_free(parsed_key);
-        count++;
+        av_free(విలువ);
+        av_free(parsed_కీలకం);
+        లెక్క++;
     }
-    return count;
+    తిరిగి లెక్క;
 }
 
-void av_opt_free(void *obj)
+శూన్య av_opt_free(శూన్య *obj)
 {
-    const AVOption *o = NULL;
-    while ((o = av_opt_next(obj, o))) {
-        void *pitem = (uint8_t *)obj + o->offset;
+    స్థిరరాశి AVOption *o = ఖాళీ;
+    అయితే ((o = av_opt_తదుపరి(obj, o))) {
+        శూన్య *pitem = (uint8_t *)obj + o->స్థానభ్రంశం;
 
-        if (o->type & AV_OPT_TYPE_FLAG_ARRAY)
+        ఒకవేళ (o->type & AV_OPT_TYPE_FLAG_ARRAY)
             opt_free_array(o, pitem, opt_array_pcount(pitem));
-        else
+        లేకపోతే
             opt_free_elem(o->type, pitem);
     }
 }
 
-int av_opt_set_dict2(void *obj, AVDictionary **options, int search_flags)
+పూర్ణాంకం av_opt_సమితి_dict2(శూన్య *obj, AVDictionary **options, పూర్ణాంకం శోధన_flags)
 {
-    const AVDictionaryEntry *t = NULL;
-    AVDictionary    *tmp = NULL;
-    int ret;
+    స్థిరరాశి AVDictionary_నమోదు *t = ఖాళీ;
+    AVDictionary    *tmp = ఖాళీ;
+    పూర్ణాంకం ret;
 
-    if (!options)
-        return 0;
+    ఒకవేళ (!options)
+        తిరిగి 0;
 
-    while ((t = av_dict_iterate(*options, t))) {
-        ret = av_opt_set(obj, t->key, t->value, search_flags);
-        if (ret == AVERROR_OPTION_NOT_FOUND)
-            ret = av_dict_set(&tmp, t->key, t->value, AV_DICT_MULTIKEY);
-        if (ret < 0) {
-            av_log(obj, AV_LOG_ERROR, "Error setting option %s to value %s.\n", t->key, t->value);
+    అయితే ((t = av_dict_iterate(*options, t))) {
+        ret = av_opt_సమితి(obj, t->కీలకం, t->విలువ, శోధన_flags);
+        ఒకవేళ (ret == AVERROR_OPTION_NOT_దొరికింది)
+            ret = av_dict_సమితి(&tmp, t->కీలకం, t->విలువ, AV_DICT_MULTIKEY);
+        ఒకవేళ (ret < 0) {
+            av_log(obj, AV_LOG_ERROR, "Error setting option %s to value %s.\n", t->కీలకం, t->విలువ);
             av_dict_free(&tmp);
-            return ret;
+            తిరిగి ret;
         }
     }
     av_dict_free(options);
     *options = tmp;
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_set_dict(void *obj, AVDictionary **options)
+పూర్ణాంకం av_opt_సమితి_dict(శూన్య *obj, AVDictionary **options)
 {
-    return av_opt_set_dict2(obj, options, 0);
+    తిరిగి av_opt_సమితి_dict2(obj, options, 0);
 }
 
-const AVOption *av_opt_find(void *obj, const char *name, const char *unit,
-                            int opt_flags, int search_flags)
+స్థిరరాశి AVOption *av_opt_కనుగొను(శూన్య *obj, స్థిరరాశి అక్షరం *name, స్థిరరాశి అక్షరం *unit,
+                            పూర్ణాంకం opt_flags, పూర్ణాంకం శోధన_flags)
 {
-    return av_opt_find2(obj, name, unit, opt_flags, search_flags, NULL);
+    తిరిగి av_opt_find2(obj, name, unit, opt_flags, శోధన_flags, ఖాళీ);
 }
 
-const AVOption *av_opt_find2(void *obj, const char *name, const char *unit,
-                             int opt_flags, int search_flags, void **target_obj)
+స్థిరరాశి AVOption *av_opt_find2(శూన్య *obj, స్థిరరాశి అక్షరం *name, స్థిరరాశి అక్షరం *unit,
+                             పూర్ణాంకం opt_flags, పూర్ణాంకం శోధన_flags, శూన్య **లక్ష్యం_obj)
 {
-    const AVClass  *c;
-    const AVOption *o = NULL;
+    స్థిరరాశి AVClass  *c;
+    స్థిరరాశి AVOption *o = ఖాళీ;
 
-    if(!obj)
-        return NULL;
+    ఒకవేళ(!obj)
+        తిరిగి ఖాళీ;
 
     c= *(AVClass**)obj;
 
-    if (!c)
-        return NULL;
+    ఒకవేళ (!c)
+        తిరిగి ఖాళీ;
 
-    if (search_flags & AV_OPT_SEARCH_CHILDREN) {
-        if (search_flags & AV_OPT_SEARCH_FAKE_OBJ) {
-            void *iter = NULL;
-            const AVClass *child;
-            while (child = av_opt_child_class_iterate(c, &iter))
-                if (o = av_opt_find2(&child, name, unit, opt_flags, search_flags, NULL))
-                    return o;
-        } else {
-            void *child = NULL;
-            while (child = av_opt_child_next(obj, child))
-                if (o = av_opt_find2(child, name, unit, opt_flags, search_flags, target_obj))
-                    return o;
+    ఒకవేళ (శోధన_flags & AV_OPT_శోధన_CHILDREN) {
+        ఒకవేళ (శోధన_flags & AV_OPT_శోధన_FAKE_OBJ) {
+            శూన్య *iter = ఖాళీ;
+            స్థిరరాశి AVClass *బిడ్డ;
+            అయితే (బిడ్డ = av_opt_బిడ్డ_class_iterate(c, &iter))
+                ఒకవేళ (o = av_opt_find2(&బిడ్డ, name, unit, opt_flags, శోధన_flags, ఖాళీ))
+                    తిరిగి o;
+        } లేకపోతే {
+            శూన్య *బిడ్డ = ఖాళీ;
+            అయితే (బిడ్డ = av_opt_బిడ్డ_తదుపరి(obj, బిడ్డ))
+                ఒకవేళ (o = av_opt_find2(బిడ్డ, name, unit, opt_flags, శోధన_flags, లక్ష్యం_obj))
+                    తిరిగి o;
         }
     }
 
-    while (o = av_opt_next(obj, o)) {
-        if (!strcmp(o->name, name) && (o->flags & opt_flags) == opt_flags &&
+    అయితే (o = av_opt_తదుపరి(obj, o)) {
+        ఒకవేళ (!strcmp(o->name, name) && (o->flags & opt_flags) == opt_flags &&
             ((!unit && o->type != AV_OPT_TYPE_CONST) ||
              (unit  && o->type == AV_OPT_TYPE_CONST && o->unit && !strcmp(o->unit, unit)))) {
-            if (target_obj) {
-                if (!(search_flags & AV_OPT_SEARCH_FAKE_OBJ))
-                    *target_obj = obj;
-                else
-                    *target_obj = NULL;
+            ఒకవేళ (లక్ష్యం_obj) {
+                ఒకవేళ (!(శోధన_flags & AV_OPT_శోధన_FAKE_OBJ))
+                    *లక్ష్యం_obj = obj;
+                లేకపోతే
+                    *లక్ష్యం_obj = ఖాళీ;
             }
-            return o;
+            తిరిగి o;
         }
     }
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
-void *av_opt_child_next(void *obj, void *prev)
+శూన్య *av_opt_బిడ్డ_తదుపరి(శూన్య *obj, శూన్య *prev)
 {
-    const AVClass *c = *(AVClass **)obj;
-    if (c->child_next)
-        return c->child_next(obj, prev);
-    return NULL;
+    స్థిరరాశి AVClass *c = *(AVClass **)obj;
+    ఒకవేళ (c->బిడ్డ_తదుపరి)
+        తిరిగి c->బిడ్డ_తదుపరి(obj, prev);
+    తిరిగి ఖాళీ;
 }
 
-const AVClass *av_opt_child_class_iterate(const AVClass *parent, void **iter)
+స్థిరరాశి AVClass *av_opt_బిడ్డ_class_iterate(స్థిరరాశి AVClass *మాతృ, శూన్య **iter)
 {
-    if (parent->child_class_iterate)
-        return parent->child_class_iterate(iter);
-    return NULL;
+    ఒకవేళ (మాతృ->బిడ్డ_class_iterate)
+        తిరిగి మాతృ->బిడ్డ_class_iterate(iter);
+    తిరిగి ఖాళీ;
 }
 
-static int opt_copy_elem(void *logctx, enum AVOptionType type,
-                         void *dst, const void *src)
+స్థిర పూర్ణాంకం opt_copy_elem(శూన్య *logctx, గణన AVOptionType type,
+                         శూన్య *dst, స్థిరరాశి శూన్య *src)
 {
-    if (type == AV_OPT_TYPE_STRING) {
-        const char *src_str = *(const char *const *)src;
-        char         **dstp =  (char **)dst;
-        if (*dstp != src_str)
+    ఒకవేళ (type == AV_OPT_TYPE_STRING) {
+        స్థిరరాశి అక్షరం *src_str = *(స్థిరరాశి అక్షరం *స్థిరరాశి *)src;
+        అక్షరం         **dstp =  (అక్షరం **)dst;
+        ఒకవేళ (*dstp != src_str)
             av_freep(dstp);
-        if (src_str) {
+        ఒకవేళ (src_str) {
             *dstp = av_strdup(src_str);
-            if (!*dstp)
-                return AVERROR(ENOMEM);
+            ఒకవేళ (!*dstp)
+                తిరిగి AVERROR(ENOMEM);
         }
-    } else if (type == AV_OPT_TYPE_BINARY) {
-        const uint8_t *const *src8 = (const uint8_t *const *)src;
+    } లేకపోతే ఒకవేళ (type == AV_OPT_TYPE_ద్విమాన) {
+        స్థిరరాశి uint8_t *స్థిరరాశి *src8 = (స్థిరరాశి uint8_t *స్థిరరాశి *)src;
         uint8_t             **dst8 = (uint8_t **)dst;
-        int len = *(const int *)(src8 + 1);
-        if (*dst8 != *src8)
+        పూర్ణాంకం len = *(స్థిరరాశి పూర్ణాంకం *)(src8 + 1);
+        ఒకవేళ (*dst8 != *src8)
             av_freep(dst8);
         *dst8 = av_memdup(*src8, len);
-        if (len && !*dst8) {
-            *(int *)(dst8 + 1) = 0;
-            return AVERROR(ENOMEM);
+        ఒకవేళ (len && !*dst8) {
+            *(పూర్ణాంకం *)(dst8 + 1) = 0;
+            తిరిగి AVERROR(ENOMEM);
         }
-        *(int *)(dst8 + 1) = len;
-    } else if (type == AV_OPT_TYPE_CONST) {
+        *(పూర్ణాంకం *)(dst8 + 1) = len;
+    } లేకపోతే ఒకవేళ (type == AV_OPT_TYPE_CONST) {
         // do nothing
-    } else if (type == AV_OPT_TYPE_DICT) {
-        const AVDictionary *sdict = *(const AVDictionary * const *)src;
+    } లేకపోతే ఒకవేళ (type == AV_OPT_TYPE_DICT) {
+        స్థిరరాశి AVDictionary *sdict = *(స్థిరరాశి AVDictionary * స్థిరరాశి *)src;
         AVDictionary     **ddictp = (AVDictionary **)dst;
-        if (sdict != *ddictp)
+        ఒకవేళ (sdict != *ddictp)
             av_dict_free(ddictp);
-        *ddictp = NULL;
-        return av_dict_copy(ddictp, sdict, 0);
-    } else if (type == AV_OPT_TYPE_CHLAYOUT) {
-        const AVChannelLayout *slayout = (const AVChannelLayout *)src;
+        *ddictp = ఖాళీ;
+        తిరిగి av_dict_copy(ddictp, sdict, 0);
+    } లేకపోతే ఒకవేళ (type == AV_OPT_TYPE_CHLAYOUT) {
+        స్థిరరాశి AVChannelLayout *slayout = (స్థిరరాశి AVChannelLayout *)src;
         AVChannelLayout *dlayout = (AVChannelLayout *)dst;
-        if (dlayout != slayout) {
-            if (dlayout->order == AV_CHANNEL_ORDER_CUSTOM &&
-                slayout->order == AV_CHANNEL_ORDER_CUSTOM &&
+        ఒకవేళ (dlayout != slayout) {
+            ఒకవేళ (dlayout->క్రమం == AV_CHANNEL_క్రమం_CUSTOM &&
+                slayout->క్రమం == AV_CHANNEL_క్రమం_CUSTOM &&
                 dlayout->u.map == slayout->u.map)
-                dlayout->u.map = NULL;
-            return av_channel_layout_copy(dst, src);
+                dlayout->u.map = ఖాళీ;
+            తిరిగి av_channel_layout_copy(dst, src);
         }
-    } else if (opt_is_pod(type)) {
-        size_t size = opt_type_desc[type].size;
-        memcpy(dst, src, size);
-    } else {
+    } లేకపోతే ఒకవేళ (opt_is_pod(type)) {
+        size_t కొలత = opt_type_desc[type].కొలత;
+        జ్ఞాపకం_నకలు(dst, src, కొలత);
+    } లేకపోతే {
         av_log(logctx, AV_LOG_ERROR, "Unhandled option type: %d\n", type);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int opt_copy_array(void *logctx, const AVOption *o,
-                          void **pdst, const void * const *psrc)
+స్థిర పూర్ణాంకం opt_copy_array(శూన్య *logctx, స్థిరరాశి AVOption *o,
+                          శూన్య **pdst, స్థిరరాశి శూన్య * స్థిరరాశి *psrc)
 {
-    unsigned nb_elems = *opt_array_pcount(psrc);
-    void         *dst = NULL;
-    int ret;
+    గుర్తులేని nb_elems = *opt_array_pcount(psrc);
+    శూన్య         *dst = ఖాళీ;
+    పూర్ణాంకం ret;
 
-    if (*pdst == *psrc) {
-        *pdst                   = NULL;
+    ఒకవేళ (*pdst == *psrc) {
+        *pdst                   = ఖాళీ;
         *opt_array_pcount(pdst) = 0;
     }
 
     opt_free_array(o, pdst, opt_array_pcount(pdst));
 
-    dst = av_calloc(nb_elems, opt_type_desc[TYPE_BASE(o->type)].size);
-    if (!dst)
-        return AVERROR(ENOMEM);
+    dst = av_calloc(nb_elems, opt_type_desc[TYPE_పునాది(o->type)].కొలత);
+    ఒకవేళ (!dst)
+        తిరిగి AVERROR(ENOMEM);
 
-    for (unsigned i = 0; i < nb_elems; i++) {
-        ret = opt_copy_elem(logctx, TYPE_BASE(o->type),
+    కొరకు (గుర్తులేని i = 0; i < nb_elems; i++) {
+        ret = opt_copy_elem(logctx, TYPE_పునాది(o->type),
                             opt_array_pelem(o, dst, i),
-                            opt_array_pelem(o, *(void**)psrc, i));
-        if (ret < 0) {
+                            opt_array_pelem(o, *(శూన్య**)psrc, i));
+        ఒకవేళ (ret < 0) {
             opt_free_array(o, &dst, &nb_elems);
-            return ret;
+            తిరిగి ret;
         }
     }
 
     *pdst                   = dst;
     *opt_array_pcount(pdst) = nb_elems;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_copy(void *dst, const void *src)
+పూర్ణాంకం av_opt_copy(శూన్య *dst, స్థిరరాశి శూన్య *src)
 {
-    const AVOption *o = NULL;
-    const AVClass *c;
-    int ret = 0;
+    స్థిరరాశి AVOption *o = ఖాళీ;
+    స్థిరరాశి AVClass *c;
+    పూర్ణాంకం ret = 0;
 
-    if (!src)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!src)
+        తిరిగి AVERROR(EINVAL);
 
     c = *(AVClass **)src;
-    if (!c || c != *(AVClass **)dst)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!c || c != *(AVClass **)dst)
+        తిరిగి AVERROR(EINVAL);
 
-    while ((o = av_opt_next(src, o))) {
-        void *field_dst = (uint8_t *)dst + o->offset;
-        void *field_src = (uint8_t *)src + o->offset;
+    అయితే ((o = av_opt_తదుపరి(src, o))) {
+        శూన్య *క్షేత్రం_dst = (uint8_t *)dst + o->స్థానభ్రంశం;
+        శూన్య *క్షేత్రం_src = (uint8_t *)src + o->స్థానభ్రంశం;
 
-        int err = (o->type & AV_OPT_TYPE_FLAG_ARRAY)                 ?
-                  opt_copy_array(dst, o,       field_dst, field_src) :
-                  opt_copy_elem (dst, o->type, field_dst, field_src);
-        if (err < 0)
+        పూర్ణాంకం err = (o->type & AV_OPT_TYPE_FLAG_ARRAY)                 ?
+                  opt_copy_array(dst, o,       క్షేత్రం_dst, క్షేత్రం_src) :
+                  opt_copy_elem (dst, o->type, క్షేత్రం_dst, క్షేత్రం_src);
+        ఒకవేళ (err < 0)
             ret = err;
     }
-    return ret;
+    తిరిగి ret;
 }
 
-int av_opt_get_array_size(void *obj, const char *name, int search_flags,
-                          unsigned int *out_val)
+పూర్ణాంకం av_opt_get_array_కొలత(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags,
+                          గుర్తులేని పూర్ణాంకం *బహిర్గతం_val)
 {
-    void *target_obj, *parray;
-    const AVOption *o;
+    శూన్య *లక్ష్యం_obj, *parray;
+    స్థిరరాశి AVOption *o;
 
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (!(o->type & AV_OPT_TYPE_FLAG_ARRAY))
-        return AVERROR(EINVAL);
+    o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &లక్ష్యం_obj);
+    ఒకవేళ (!o || !లక్ష్యం_obj)
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
+    ఒకవేళ (!(o->type & AV_OPT_TYPE_FLAG_ARRAY))
+        తిరిగి AVERROR(EINVAL);
 
-    parray = (uint8_t *)target_obj + o->offset;
-    *out_val = *opt_array_pcount(parray);
+    parray = (uint8_t *)లక్ష్యం_obj + o->స్థానభ్రంశం;
+    *బహిర్గతం_val = *opt_array_pcount(parray);
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_get_array(void *obj, const char *name, int search_flags,
-                     unsigned int start_elem, unsigned int nb_elems,
-                     enum AVOptionType out_type, void *out_val)
+పూర్ణాంకం av_opt_get_array(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags,
+                     గుర్తులేని పూర్ణాంకం ప్రారంభం_elem, గుర్తులేని పూర్ణాంకం nb_elems,
+                     గణన AVOptionType బహిర్గతం_type, శూన్య *బహిర్గతం_val)
 {
-    const size_t elem_size_out = opt_type_desc[TYPE_BASE(out_type)].size;
+    స్థిరరాశి size_t elem_కొలత_బహిర్గతం = opt_type_desc[TYPE_పునాది(బహిర్గతం_type)].కొలత;
 
-    const AVOption *o;
-    void *target_obj;
+    స్థిరరాశి AVOption *o;
+    శూన్య *లక్ష్యం_obj;
 
-    const void *parray;
-    unsigned array_size;
+    స్థిరరాశి శూన్య *parray;
+    గుర్తులేని array_కొలత;
 
-    int ret;
+    పూర్ణాంకం ret;
 
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
-        (out_type & AV_OPT_TYPE_FLAG_ARRAY))
-        return AVERROR(EINVAL);
+    o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &లక్ష్యం_obj);
+    ఒకవేళ (!o || !లక్ష్యం_obj)
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
+    ఒకవేళ (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
+        (బహిర్గతం_type & AV_OPT_TYPE_FLAG_ARRAY))
+        తిరిగి AVERROR(EINVAL);
 
-    parray     = (uint8_t *)target_obj + o->offset;
-    array_size = *opt_array_pcount(parray);
+    parray     = (uint8_t *)లక్ష్యం_obj + o->స్థానభ్రంశం;
+    array_కొలత = *opt_array_pcount(parray);
 
-    if (start_elem >= array_size ||
-        array_size - start_elem < nb_elems)
-        return AVERROR(EINVAL);
+    ఒకవేళ (ప్రారంభం_elem >= array_కొలత ||
+        array_కొలత - ప్రారంభం_elem < nb_elems)
+        తిరిగి AVERROR(EINVAL);
 
-    for (unsigned i = 0; i < nb_elems; i++) {
-        const void *src = opt_array_pelem(o, *(void**)parray, start_elem + i);
-        void       *dst = (uint8_t*)out_val + i * elem_size_out;
+    కొరకు (గుర్తులేని i = 0; i < nb_elems; i++) {
+        స్థిరరాశి శూన్య *src = opt_array_pelem(o, *(శూన్య**)parray, ప్రారంభం_elem + i);
+        శూన్య       *dst = (uint8_t*)బహిర్గతం_val + i * elem_కొలత_బహిర్గతం;
 
-        if (out_type == TYPE_BASE(o->type)) {
-            ret = opt_copy_elem(obj, out_type, dst, src);
-            if (ret < 0)
-                goto fail;
-        } else if (out_type == AV_OPT_TYPE_STRING) {
-            uint8_t buf[128], *out = buf;
+        ఒకవేళ (బహిర్గతం_type == TYPE_పునాది(o->type)) {
+            ret = opt_copy_elem(obj, బహిర్గతం_type, dst, src);
+            ఒకవేళ (ret < 0)
+                వెళ్ళు fail;
+        } లేకపోతే ఒకవేళ (బహిర్గతం_type == AV_OPT_TYPE_STRING) {
+            uint8_t buf[128], *బహిర్గతం = buf;
 
-            ret = opt_get_elem(o, &out, sizeof(buf), src, search_flags);
-            if (ret < 0)
-                goto fail;
+            ret = opt_get_elem(o, &బహిర్గతం, పరిమాణం(buf), src, శోధన_flags);
+            ఒకవేళ (ret < 0)
+                వెళ్ళు fail;
 
-            if (out == buf) {
-                out = av_strdup(buf);
-                if (!out) {
+            ఒకవేళ (బహిర్గతం == buf) {
+                బహిర్గతం = av_strdup(buf);
+                ఒకవేళ (!బహిర్గతం) {
                     ret = AVERROR(ENOMEM);
-                    goto fail;
+                    వెళ్ళు fail;
                 }
             }
 
-            *(uint8_t**)dst = out;
-        } else if (out_type == AV_OPT_TYPE_INT64    ||
-                   out_type == AV_OPT_TYPE_DOUBLE   ||
-                   out_type == AV_OPT_TYPE_RATIONAL) {
-            double     num = 1.0;
-            int        den = 1;
+            *(uint8_t**)dst = బహిర్గతం;
+        } లేకపోతే ఒకవేళ (బహిర్గతం_type == AV_OPT_TYPE_INT64    ||
+                   బహిర్గతం_type == AV_OPT_TYPE_DOUBLE   ||
+                   బహిర్గతం_type == AV_OPT_TYPE_RATIONAL) {
+            ద్విగుణ     అంకె = 1.0;
+            పూర్ణాంకం        den = 1;
             int64_t intnum = 1;
 
-            ret = read_number(o, src, &num, &den, &intnum);
-            if (ret < 0)
-                goto fail;
+            ret = read_సంఖ్య(o, src, &అంకె, &den, &intnum);
+            ఒకవేళ (ret < 0)
+                వెళ్ళు fail;
 
-            switch (out_type) {
-            case AV_OPT_TYPE_INT64:
-                *(int64_t*)dst = (num == den) ?  intnum : num * intnum / den;
-                break;
-            case AV_OPT_TYPE_DOUBLE:
-                *(double*)dst = num * intnum / den;
-                break;
-            case AV_OPT_TYPE_RATIONAL:
-                *(AVRational*)dst = (num == 1.0 && (int)intnum == intnum) ?
+            ఎంపిక (బహిర్గతం_type) {
+            స్థితి AV_OPT_TYPE_INT64:
+                *(int64_t*)dst = (అంకె == den) ?  intnum : అంకె * intnum / den;
+                ఆపు;
+            స్థితి AV_OPT_TYPE_DOUBLE:
+                *(ద్విగుణ*)dst = అంకె * intnum / den;
+                ఆపు;
+            స్థితి AV_OPT_TYPE_RATIONAL:
+                *(AVRational*)dst = (అంకె == 1.0 && (పూర్ణాంకం)intnum == intnum) ?
                                     (AVRational){ intnum, den }           :
-                                    double_to_rational(num * intnum / den);
-                break;
-            default: av_assert0(0);
+                                    double_గమ్యం_rational(అంకె * intnum / den);
+                ఆపు;
+            అప్రమేయ: av_assert0(0);
             }
-        } else
-            return AVERROR(ENOSYS);
+        } లేకపోతే
+            తిరిగి AVERROR(ENOSYS);
     }
 
-    return 0;
+    తిరిగి 0;
 fail:
-    for (unsigned i = 0; i < nb_elems; i++)
-        opt_free_elem(out_type, (uint8_t*)out_val + i * elem_size_out);
-    return ret;
+    కొరకు (గుర్తులేని i = 0; i < nb_elems; i++)
+        opt_free_elem(బహిర్గతం_type, (uint8_t*)బహిర్గతం_val + i * elem_కొలత_బహిర్గతం);
+    తిరిగి ret;
 }
 
-int av_opt_set_array(void *obj, const char *name, int search_flags,
-                     unsigned int start_elem, unsigned int nb_elems,
-                     enum AVOptionType val_type, const void *val)
+పూర్ణాంకం av_opt_సమితి_array(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags,
+                     గుర్తులేని పూర్ణాంకం ప్రారంభం_elem, గుర్తులేని పూర్ణాంకం nb_elems,
+                     గణన AVOptionType val_type, స్థిరరాశి శూన్య *val)
 {
-    const size_t elem_size_val = opt_type_desc[TYPE_BASE(val_type)].size;
+    స్థిరరాశి size_t elem_కొలత_val = opt_type_desc[TYPE_పునాది(val_type)].కొలత;
 
-    const AVOption *o;
-    const AVOptionArrayDef *arr;
-    void *target_obj;
+    స్థిరరాశి AVOption *o;
+    స్థిరరాశి AVOptionArrayDef *arr;
+    శూన్య *లక్ష్యం_obj;
 
-    void *parray;
-    void *new_elems;
-    unsigned *array_size, new_size;
-    size_t elem_size;
+    శూన్య *parray;
+    శూన్య *new_elems;
+    గుర్తులేని *array_కొలత, new_కొలత;
+    size_t elem_కొలత;
 
-    int ret = 0;
+    పూర్ణాంకం ret = 0;
 
-    ret = opt_set_init(obj, name, search_flags, 0, &target_obj, &o, &parray);
-    if (ret < 0)
-        return ret;
+    ret = opt_సమితి_init(obj, name, శోధన_flags, 0, &లక్ష్యం_obj, &o, &parray);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
-    if (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
+    ఒకవేళ (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
         (val_type & AV_OPT_TYPE_FLAG_ARRAY))
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
 
     arr        = o->default_val.arr;
-    array_size = opt_array_pcount(parray);
-    elem_size  = opt_type_desc[TYPE_BASE(o->type)].size;
+    array_కొలత = opt_array_pcount(parray);
+    elem_కొలత  = opt_type_desc[TYPE_పునాది(o->type)].కొలత;
 
-    if (start_elem > *array_size)
-        return AVERROR(EINVAL);
+    ఒకవేళ (ప్రారంభం_elem > *array_కొలత)
+        తిరిగి AVERROR(EINVAL);
 
     // compute new array size
-    if (!val) {
-        if (*array_size - start_elem < nb_elems)
-            return AVERROR(EINVAL);
+    ఒకవేళ (!val) {
+        ఒకవేళ (*array_కొలత - ప్రారంభం_elem < nb_elems)
+            తిరిగి AVERROR(EINVAL);
 
-        new_size = *array_size - nb_elems;
-    } else if (search_flags & AV_OPT_ARRAY_REPLACE) {
-        if (start_elem >= UINT_MAX - nb_elems)
-            return AVERROR(EINVAL);
+        new_కొలత = *array_కొలత - nb_elems;
+    } లేకపోతే ఒకవేళ (శోధన_flags & AV_OPT_ARRAY_REPLACE) {
+        ఒకవేళ (ప్రారంభం_elem >= UINT_MAX - nb_elems)
+            తిరిగి AVERROR(EINVAL);
 
-        new_size = FFMAX(*array_size, start_elem + nb_elems);
-    } else {
-        if (nb_elems >= UINT_MAX - *array_size)
-            return AVERROR(EINVAL);
+        new_కొలత = FFMAX(*array_కొలత, ప్రారంభం_elem + nb_elems);
+    } లేకపోతే {
+        ఒకవేళ (nb_elems >= UINT_MAX - *array_కొలత)
+            తిరిగి AVERROR(EINVAL);
 
-        new_size = *array_size + nb_elems;
+        new_కొలత = *array_కొలత + nb_elems;
     }
 
-    if (arr &&
-        ((arr->size_max && new_size > arr->size_max) ||
-         (arr->size_min && new_size < arr->size_min)))
-        return AVERROR(EINVAL);
+    ఒకవేళ (arr &&
+        ((arr->కొలత_max && new_కొలత > arr->కొలత_max) ||
+         (arr->కొలత_min && new_కొలత < arr->కొలత_min)))
+        తిరిగి AVERROR(EINVAL);
 
     // desired operation is shrinking the array
-    if (!val) {
-        void *array = *(void**)parray;
+    ఒకవేళ (!val) {
+        శూన్య *array = *(శూన్య**)parray;
 
-        for (unsigned i = 0; i < nb_elems; i++) {
+        కొరకు (గుర్తులేని i = 0; i < nb_elems; i++) {
             opt_free_elem(o->type,
-                          opt_array_pelem(o, array, start_elem + i));
+                          opt_array_pelem(o, array, ప్రారంభం_elem + i));
         }
 
-        if (new_size > 0) {
-            memmove(opt_array_pelem(o, array, start_elem),
-                    opt_array_pelem(o, array, start_elem + nb_elems),
-                    elem_size * (*array_size - start_elem - nb_elems));
+        ఒకవేళ (new_కొలత > 0) {
+            memmove(opt_array_pelem(o, array, ప్రారంభం_elem),
+                    opt_array_pelem(o, array, ప్రారంభం_elem + nb_elems),
+                    elem_కొలత * (*array_కొలత - ప్రారంభం_elem - nb_elems));
 
-            array = av_realloc_array(array, new_size, elem_size);
-            if (!array)
-                return AVERROR(ENOMEM);
+            array = av_realloc_array(array, new_కొలత, elem_కొలత);
+            ఒకవేళ (!array)
+                తిరిగి AVERROR(ENOMEM);
 
-            *(void**)parray = array;
-        } else
+            *(శూన్య**)parray = array;
+        } లేకపోతే
             av_freep(parray);
 
-        *array_size = new_size;
+        *array_కొలత = new_కొలత;
 
-        return 0;
+        తిరిగి 0;
     }
 
     // otherwise, desired operation is insert/replace;
     // first, store new elements in a separate array to simplify
     // rollback on failure
-    new_elems = av_calloc(nb_elems, elem_size);
-    if (!new_elems)
-        return AVERROR(ENOMEM);
+    new_elems = av_calloc(nb_elems, elem_కొలత);
+    ఒకవేళ (!new_elems)
+        తిరిగి AVERROR(ENOMEM);
 
     // convert/validate each new element
-    for (unsigned i = 0; i < nb_elems; i++) {
-        void       *dst = opt_array_pelem(o, new_elems, i);
-        const void *src = (uint8_t*)val + i * elem_size_val;
+    కొరకు (గుర్తులేని i = 0; i < nb_elems; i++) {
+        శూన్య       *dst = opt_array_pelem(o, new_elems, i);
+        స్థిరరాశి శూన్య *src = (uint8_t*)val + i * elem_కొలత_val;
 
-        double     num = 1.0;
-        int        den = 1;
+        ద్విగుణ     అంకె = 1.0;
+        పూర్ణాంకం        den = 1;
         int64_t intnum = 1;
 
-        if (val_type == TYPE_BASE(o->type)) {
-            int err;
+        ఒకవేళ (val_type == TYPE_పునాది(o->type)) {
+            పూర్ణాంకం err;
 
             ret = opt_copy_elem(obj, val_type, dst, src);
-            if (ret < 0)
-                goto fail;
+            ఒకవేళ (ret < 0)
+                వెళ్ళు fail;
 
             // validate the range for numeric options
-            err = read_number(o, dst, &num, &den, &intnum);
-            if (err >= 0 && TYPE_BASE(o->type) != AV_OPT_TYPE_FLAGS &&
-                (!den || o->max * den < num * intnum || o->min * den > num * intnum)) {
-                num = den ? num * intnum / den : (num && intnum ? INFINITY : NAN);
+            err = read_సంఖ్య(o, dst, &అంకె, &den, &intnum);
+            ఒకవేళ (err >= 0 && TYPE_పునాది(o->type) != AV_OPT_TYPE_FLAGS &&
+                (!den || o->max * den < అంకె * intnum || o->min * den > అంకె * intnum)) {
+                అంకె = den ? అంకె * intnum / den : (అంకె && intnum ? INFINITY : NAN);
                 av_log(obj, AV_LOG_ERROR, "Cannot set array element %u for "
                        "parameter '%s': value %f out of range [%g - %g]\n",
-                       start_elem + i, o->name, num, o->min, o->max);
+                       ప్రారంభం_elem + i, o->name, అంకె, o->min, o->max);
                 ret = AVERROR(ERANGE);
-                goto fail;
+                వెళ్ళు fail;
             }
-        } else if (val_type == AV_OPT_TYPE_STRING) {
-            ret = opt_set_elem(obj, target_obj, o, *(const char **)src, dst);
-            if (ret < 0)
-                goto fail;
-        } else if (val_type == AV_OPT_TYPE_INT ||
+        } లేకపోతే ఒకవేళ (val_type == AV_OPT_TYPE_STRING) {
+            ret = opt_సమితి_elem(obj, లక్ష్యం_obj, o, *(స్థిరరాశి అక్షరం **)src, dst);
+            ఒకవేళ (ret < 0)
+                వెళ్ళు fail;
+        } లేకపోతే ఒకవేళ (val_type == AV_OPT_TYPE_INT ||
               val_type == AV_OPT_TYPE_INT64    ||
               val_type == AV_OPT_TYPE_FLOAT    ||
               val_type == AV_OPT_TYPE_DOUBLE   ||
               val_type == AV_OPT_TYPE_RATIONAL) {
 
-            switch (val_type) {
-            case AV_OPT_TYPE_INT:       intnum = *(int*)src;                break;
-            case AV_OPT_TYPE_INT64:     intnum = *(int64_t*)src;            break;
-            case AV_OPT_TYPE_FLOAT:     num    = *(float*)src;              break;
-            case AV_OPT_TYPE_DOUBLE:    num    = *(double*)src;             break;
-            case AV_OPT_TYPE_RATIONAL:  intnum = ((AVRational*)src)->num;
-                                        den    = ((AVRational*)src)->den;   break;
-            default: av_assert0(0);
+            ఎంపిక (val_type) {
+            స్థితి AV_OPT_TYPE_INT:       intnum = *(పూర్ణాంకం*)src;                ఆపు;
+            స్థితి AV_OPT_TYPE_INT64:     intnum = *(int64_t*)src;            ఆపు;
+            స్థితి AV_OPT_TYPE_FLOAT:     అంకె    = *(దశాంశం*)src;              ఆపు;
+            స్థితి AV_OPT_TYPE_DOUBLE:    అంకె    = *(ద్విగుణ*)src;             ఆపు;
+            స్థితి AV_OPT_TYPE_RATIONAL:  intnum = ((AVRational*)src)->అంకె;
+                                        den    = ((AVRational*)src)->den;   ఆపు;
+            అప్రమేయ: av_assert0(0);
             }
 
-            ret = write_number(obj, o, dst, num, den, intnum, 0);
-            if (ret < 0)
-                goto fail;
-        } else {
+            ret = write_సంఖ్య(obj, o, dst, అంకె, den, intnum, 0);
+            ఒకవేళ (ret < 0)
+                వెళ్ళు fail;
+        } లేకపోతే {
             ret = AVERROR(ENOSYS);
-            goto fail;
+            వెళ్ళు fail;
         }
     }
 
     // commit new elements to the array
-    if (start_elem == 0 && nb_elems == new_size) {
+    ఒకవేళ (ప్రారంభం_elem == 0 && nb_elems == new_కొలత) {
         // replacing the existing array entirely
-        opt_free_array(o, parray, array_size);
-        *(void**)parray = new_elems;
-        *array_size     = nb_elems;
+        opt_free_array(o, parray, array_కొలత);
+        *(శూన్య**)parray = new_elems;
+        *array_కొలత     = nb_elems;
 
-        new_elems = NULL;
+        new_elems = ఖాళీ;
         nb_elems  = 0;
-    } else {
-        void *array = av_realloc_array(*(void**)parray, new_size, elem_size);
-        if (!array) {
+    } లేకపోతే {
+        శూన్య *array = av_realloc_array(*(శూన్య**)parray, new_కొలత, elem_కొలత);
+        ఒకవేళ (!array) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            వెళ్ళు fail;
         }
 
-        if (search_flags & AV_OPT_ARRAY_REPLACE) {
+        ఒకవేళ (శోధన_flags & AV_OPT_ARRAY_REPLACE) {
             // free the elements being overwritten
-            for (unsigned i = start_elem; i < FFMIN(start_elem + nb_elems, *array_size); i++)
+            కొరకు (గుర్తులేని i = ప్రారంభం_elem; i < FFMIN(ప్రారంభం_elem + nb_elems, *array_కొలత); i++)
                 opt_free_elem(o->type, opt_array_pelem(o, array, i));
-        } else {
+        } లేకపోతే {
             // shift existing elements to the end
-            memmove(opt_array_pelem(o, array, start_elem + nb_elems),
-                    opt_array_pelem(o, array, start_elem),
-                    elem_size * (*array_size - start_elem));
+            memmove(opt_array_pelem(o, array, ప్రారంభం_elem + nb_elems),
+                    opt_array_pelem(o, array, ప్రారంభం_elem),
+                    elem_కొలత * (*array_కొలత - ప్రారంభం_elem));
         }
 
-        memcpy((uint8_t*)array + elem_size * start_elem, new_elems, elem_size * nb_elems);
+        జ్ఞాపకం_నకలు((uint8_t*)array + elem_కొలత * ప్రారంభం_elem, new_elems, elem_కొలత * nb_elems);
 
         av_freep(&new_elems);
         nb_elems = 0;
 
-        *(void**)parray = array;
-        *array_size     = new_size;
+        *(శూన్య**)parray = array;
+        *array_కొలత     = new_కొలత;
     }
 
 fail:
     opt_free_array(o, &new_elems, &nb_elems);
 
-    return ret;
+    తిరిగి ret;
 }
 
-int av_opt_query_ranges(AVOptionRanges **ranges_arg, void *obj, const char *key, int flags)
+పూర్ణాంకం av_opt_query_ranges(AVOptionRanges **ranges_arg, శూన్య *obj, స్థిరరాశి అక్షరం *కీలకం, పూర్ణాంకం flags)
 {
-    int ret;
-    const AVClass *c = *(AVClass**)obj;
-    int (*callback)(AVOptionRanges **, void *obj, const char *key, int flags) = c->query_ranges;
+    పూర్ణాంకం ret;
+    స్థిరరాశి AVClass *c = *(AVClass**)obj;
+    పూర్ణాంకం (*callback)(AVOptionRanges **, శూన్య *obj, స్థిరరాశి అక్షరం *కీలకం, పూర్ణాంకం flags) = c->query_ranges;
 
-    if (!callback)
+    ఒకవేళ (!callback)
         callback = av_opt_query_ranges_default;
 
-    ret = callback(ranges_arg, obj, key, flags);
-    if (ret >= 0) {
-        if (!(flags & AV_OPT_MULTI_COMPONENT_RANGE))
+    ret = callback(ranges_arg, obj, కీలకం, flags);
+    ఒకవేళ (ret >= 0) {
+        ఒకవేళ (!(flags & AV_OPT_MULTI_COMPONENT_RANGE))
             ret = 1;
         (*ranges_arg)->nb_components = ret;
     }
-    return ret;
+    తిరిగి ret;
 }
 
-int av_opt_query_ranges_default(AVOptionRanges **ranges_arg, void *obj, const char *key, int flags)
+పూర్ణాంకం av_opt_query_ranges_default(AVOptionRanges **ranges_arg, శూన్య *obj, స్థిరరాశి అక్షరం *కీలకం, పూర్ణాంకం flags)
 {
-    AVOptionRanges *ranges = av_mallocz(sizeof(*ranges));
-    AVOptionRange **range_array = av_mallocz(sizeof(void*));
-    AVOptionRange *range = av_mallocz(sizeof(*range));
-    const AVOption *field = av_opt_find(obj, key, NULL, 0, flags);
-    int ret;
+    AVOptionRanges *ranges = av_mallocz(పరిమాణం(*ranges));
+    AVOptionRange **range_array = av_mallocz(పరిమాణం(శూన్య*));
+    AVOptionRange *range = av_mallocz(పరిమాణం(*range));
+    స్థిరరాశి AVOption *క్షేత్రం = av_opt_కనుగొను(obj, కీలకం, ఖాళీ, 0, flags);
+    పూర్ణాంకం ret;
 
-    *ranges_arg = NULL;
+    *ranges_arg = ఖాళీ;
 
-    if (!ranges || !range || !range_array || !field) {
+    ఒకవేళ (!ranges || !range || !range_array || !క్షేత్రం) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        వెళ్ళు fail;
     }
 
     ranges->range = range_array;
@@ -2584,69 +2584,69 @@ int av_opt_query_ranges_default(AVOptionRanges **ranges_arg, void *obj, const ch
     ranges->nb_ranges = 1;
     ranges->nb_components = 1;
     range->is_range = 1;
-    range->value_min = field->min;
-    range->value_max = field->max;
+    range->విలువ_min = క్షేత్రం->min;
+    range->విలువ_max = క్షేత్రం->max;
 
-    switch (field->type) {
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_PIXEL_FMT:
-    case AV_OPT_TYPE_SAMPLE_FMT:
-    case AV_OPT_TYPE_FLOAT:
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_COLOR:
-        break;
-    case AV_OPT_TYPE_STRING:
+    ఎంపిక (క్షేత్రం->type) {
+    స్థితి AV_OPT_TYPE_BOOL:
+    స్థితి AV_OPT_TYPE_INT:
+    స్థితి AV_OPT_TYPE_UINT:
+    స్థితి AV_OPT_TYPE_INT64:
+    స్థితి AV_OPT_TYPE_UINT64:
+    స్థితి AV_OPT_TYPE_PIXEL_FMT:
+    స్థితి AV_OPT_TYPE_SAMPLE_FMT:
+    స్థితి AV_OPT_TYPE_FLOAT:
+    స్థితి AV_OPT_TYPE_DOUBLE:
+    స్థితి AV_OPT_TYPE_DURATION:
+    స్థితి AV_OPT_TYPE_COLOR:
+        ఆపు;
+    స్థితి AV_OPT_TYPE_STRING:
         range->component_min = 0;
         range->component_max = 0x10FFFF; // max unicode value
-        range->value_min = -1;
-        range->value_max = INT_MAX;
-        break;
-    case AV_OPT_TYPE_RATIONAL:
+        range->విలువ_min = -1;
+        range->విలువ_max = గరిష్ఠ_పూర్ణాంకం;
+        ఆపు;
+    స్థితి AV_OPT_TYPE_RATIONAL:
         range->component_min = INT_MIN;
-        range->component_max = INT_MAX;
-        break;
-    case AV_OPT_TYPE_IMAGE_SIZE:
+        range->component_max = గరిష్ఠ_పూర్ణాంకం;
+        ఆపు;
+    స్థితి AV_OPT_TYPE_IMAGE_కొలత:
         range->component_min = 0;
-        range->component_max = INT_MAX/128/8;
-        range->value_min = 0;
-        range->value_max = INT_MAX/8;
-        break;
-    case AV_OPT_TYPE_VIDEO_RATE:
+        range->component_max = గరిష్ఠ_పూర్ణాంకం/128/8;
+        range->విలువ_min = 0;
+        range->విలువ_max = గరిష్ఠ_పూర్ణాంకం/8;
+        ఆపు;
+    స్థితి AV_OPT_TYPE_VIDEO_రేటు:
         range->component_min = 1;
-        range->component_max = INT_MAX;
-        range->value_min = 1;
-        range->value_max = INT_MAX;
-        break;
-    default:
+        range->component_max = గరిష్ఠ_పూర్ణాంకం;
+        range->విలువ_min = 1;
+        range->విలువ_max = గరిష్ఠ_పూర్ణాంకం;
+        ఆపు;
+    అప్రమేయ:
         ret = AVERROR(ENOSYS);
-        goto fail;
+        వెళ్ళు fail;
     }
 
     *ranges_arg = ranges;
-    return 1;
+    తిరిగి 1;
 fail:
     av_free(ranges);
     av_free(range);
     av_free(range_array);
-    return ret;
+    తిరిగి ret;
 }
 
-void av_opt_freep_ranges(AVOptionRanges **rangesp)
+శూన్య av_opt_freep_ranges(AVOptionRanges **rangesp)
 {
-    int i;
+    పూర్ణాంకం i;
     AVOptionRanges *ranges = *rangesp;
 
-    if (!ranges)
-        return;
+    ఒకవేళ (!ranges)
+        తిరిగి;
 
-    for (i = 0; i < ranges->nb_ranges * ranges->nb_components; i++) {
+    కొరకు (i = 0; i < ranges->nb_ranges * ranges->nb_components; i++) {
         AVOptionRange *range = ranges->range[i];
-        if (range) {
+        ఒకవేళ (range) {
             av_freep(&range->str);
             av_freep(&ranges->range[i]);
         }
@@ -2655,234 +2655,234 @@ void av_opt_freep_ranges(AVOptionRanges **rangesp)
     av_freep(rangesp);
 }
 
-int av_opt_is_set_to_default(void *obj, const AVOption *o)
+పూర్ణాంకం av_opt_is_సమితి_గమ్యం_default(శూన్య *obj, స్థిరరాశి AVOption *o)
 {
     int64_t i64;
-    double d;
+    ద్విగుణ d;
     AVRational q;
-    int ret, w, h;
-    char *str;
-    void *dst;
+    పూర్ణాంకం ret, w, h;
+    అక్షరం *str;
+    శూన్య *dst;
 
-    if (!o || !obj)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!o || !obj)
+        తిరిగి AVERROR(EINVAL);
 
-    dst = ((uint8_t*)obj) + o->offset;
+    dst = ((uint8_t*)obj) + o->స్థానభ్రంశం;
 
-    if (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
-        const char *def = o->default_val.arr ? o->default_val.arr->def : NULL;
+    ఒకవేళ (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
+        స్థిరరాశి అక్షరం *def = o->default_val.arr ? o->default_val.arr->def : ఖాళీ;
         uint8_t *val;
 
         ret = opt_get_array(o, dst, &val);
-        if (ret < 0)
-            return ret;
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
 
-        if (!!val != !!def)
+        ఒకవేళ (!!val != !!def)
             ret = 0;
-        else if (val)
+        లేకపోతే ఒకవేళ (val)
             ret = !strcmp(val, def);
-        else
+        లేకపోతే
             ret = 1;
 
         av_freep(&val);
 
-        return ret;
+        తిరిగి ret;
     }
 
-    switch (o->type) {
-    case AV_OPT_TYPE_CONST:
-        return 1;
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_PIXEL_FMT:
-    case AV_OPT_TYPE_SAMPLE_FMT:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
-        read_number(o, dst, NULL, NULL, &i64);
-        return o->default_val.i64 == i64;
-    case AV_OPT_TYPE_CHLAYOUT: {
+    ఎంపిక (o->type) {
+    స్థితి AV_OPT_TYPE_CONST:
+        తిరిగి 1;
+    స్థితి AV_OPT_TYPE_BOOL:
+    స్థితి AV_OPT_TYPE_FLAGS:
+    స్థితి AV_OPT_TYPE_PIXEL_FMT:
+    స్థితి AV_OPT_TYPE_SAMPLE_FMT:
+    స్థితి AV_OPT_TYPE_INT:
+    స్థితి AV_OPT_TYPE_UINT:
+    స్థితి AV_OPT_TYPE_DURATION:
+    స్థితి AV_OPT_TYPE_INT64:
+    స్థితి AV_OPT_TYPE_UINT64:
+        read_సంఖ్య(o, dst, ఖాళీ, ఖాళీ, &i64);
+        తిరిగి o->default_val.i64 == i64;
+    స్థితి AV_OPT_TYPE_CHLAYOUT: {
         AVChannelLayout ch_layout = { 0 };
-        if (o->default_val.str) {
-            if ((ret = av_channel_layout_from_string(&ch_layout, o->default_val.str)) < 0)
-                return ret;
+        ఒకవేళ (o->default_val.str) {
+            ఒకవేళ ((ret = av_channel_layout_from_string(&ch_layout, o->default_val.str)) < 0)
+                తిరిగి ret;
         }
         ret = !av_channel_layout_compare((AVChannelLayout *)dst, &ch_layout);
         av_channel_layout_uninit(&ch_layout);
-        return ret;
+        తిరిగి ret;
     }
-    case AV_OPT_TYPE_STRING:
-        str = *(char **)dst;
-        if (str == o->default_val.str) //2 NULLs
-            return 1;
-        if (!str || !o->default_val.str) //1 NULL
-            return 0;
-        return !strcmp(str, o->default_val.str);
-    case AV_OPT_TYPE_DOUBLE:
-        d = *(double *)dst;
-        return o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
-    case AV_OPT_TYPE_FLOAT:
-        d = *(float *)dst;
-        return (float)o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
-    case AV_OPT_TYPE_RATIONAL: {
+    స్థితి AV_OPT_TYPE_STRING:
+        str = *(అక్షరం **)dst;
+        ఒకవేళ (str == o->default_val.str) //2 NULLs
+            తిరిగి 1;
+        ఒకవేళ (!str || !o->default_val.str) //1 NULL
+            తిరిగి 0;
+        తిరిగి !strcmp(str, o->default_val.str);
+    స్థితి AV_OPT_TYPE_DOUBLE:
+        d = *(ద్విగుణ *)dst;
+        తిరిగి o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
+    స్థితి AV_OPT_TYPE_FLOAT:
+        d = *(దశాంశం *)dst;
+        తిరిగి (దశాంశం)o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
+    స్థితి AV_OPT_TYPE_RATIONAL: {
         AVRational v = *(AVRational *) dst;
-        q = av_d2q(o->default_val.dbl, INT_MAX);
-        return !av_cmp_q(v, q) || (!q.den && !v.den);
+        q = av_d2q(o->default_val.dbl, గరిష్ఠ_పూర్ణాంకం);
+        తిరిగి !av_cmp_q(v, q) || (!q.den && !v.den);
     }
-    case AV_OPT_TYPE_BINARY: {
-        struct {
-            uint8_t *data;
-            int size;
+    స్థితి AV_OPT_TYPE_ద్విమాన: {
+        నిర్మాణం {
+            uint8_t *దత్తాంశం;
+            పూర్ణాంకం కొలత;
         } tmp = {0};
-        int opt_size = *(int *)((void **)dst + 1);
-        void *opt_ptr = *(void **)dst;
-        if (!opt_size && (!o->default_val.str || !strlen(o->default_val.str)))
-            return 1;
-        if (!opt_size ||  !o->default_val.str || !strlen(o->default_val.str ))
-            return 0;
-        if (opt_size != strlen(o->default_val.str) / 2)
-            return 0;
-        ret = set_string_binary(NULL, NULL, o->default_val.str, &tmp.data);
-        if (!ret)
-            ret = !memcmp(opt_ptr, tmp.data, tmp.size);
-        av_free(tmp.data);
-        return ret;
+        పూర్ణాంకం opt_కొలత = *(పూర్ణాంకం *)((శూన్య **)dst + 1);
+        శూన్య *opt_ptr = *(శూన్య **)dst;
+        ఒకవేళ (!opt_కొలత && (!o->default_val.str || !అక్షరశ్రేణి_పొడవు(o->default_val.str)))
+            తిరిగి 1;
+        ఒకవేళ (!opt_కొలత ||  !o->default_val.str || !అక్షరశ్రేణి_పొడవు(o->default_val.str ))
+            తిరిగి 0;
+        ఒకవేళ (opt_కొలత != అక్షరశ్రేణి_పొడవు(o->default_val.str) / 2)
+            తిరిగి 0;
+        ret = సమితి_string_ద్విమాన(ఖాళీ, ఖాళీ, o->default_val.str, &tmp.దత్తాంశం);
+        ఒకవేళ (!ret)
+            ret = !memcmp(opt_ptr, tmp.దత్తాంశం, tmp.కొలత);
+        av_free(tmp.దత్తాంశం);
+        తిరిగి ret;
     }
-    case AV_OPT_TYPE_DICT: {
-        AVDictionary *dict1 = NULL;
+    స్థితి AV_OPT_TYPE_DICT: {
+        AVDictionary *dict1 = ఖాళీ;
         AVDictionary *dict2 = *(AVDictionary **)dst;
-        const AVDictionaryEntry *en1 = NULL;
-        const AVDictionaryEntry *en2 = NULL;
+        స్థిరరాశి AVDictionary_నమోదు *en1 = ఖాళీ;
+        స్థిరరాశి AVDictionary_నమోదు *en2 = ఖాళీ;
         ret = av_dict_parse_string(&dict1, o->default_val.str, "=", ":", 0);
-        if (ret < 0) {
+        ఒకవేళ (ret < 0) {
             av_dict_free(&dict1);
-            return ret;
+            తిరిగి ret;
         }
-        do {
+        చేయి {
             en1 = av_dict_iterate(dict1, en1);
             en2 = av_dict_iterate(dict2, en2);
-        } while (en1 && en2 && !strcmp(en1->key, en2->key) && !strcmp(en1->value, en2->value));
+        } అయితే (en1 && en2 && !strcmp(en1->కీలకం, en2->కీలకం) && !strcmp(en1->విలువ, en2->విలువ));
         av_dict_free(&dict1);
-        return (!en1 && !en2);
+        తిరిగి (!en1 && !en2);
     }
-    case AV_OPT_TYPE_IMAGE_SIZE:
-        if (!o->default_val.str || !strcmp(o->default_val.str, "none"))
+    స్థితి AV_OPT_TYPE_IMAGE_కొలత:
+        ఒకవేళ (!o->default_val.str || !strcmp(o->default_val.str, "none"))
             w = h = 0;
-        else if ((ret = av_parse_video_size(&w, &h, o->default_val.str)) < 0)
-            return ret;
-        return (w == *(int *)dst) && (h == *((int *)dst+1));
-    case AV_OPT_TYPE_VIDEO_RATE:
+        లేకపోతే ఒకవేళ ((ret = av_parse_video_కొలత(&w, &h, o->default_val.str)) < 0)
+            తిరిగి ret;
+        తిరిగి (w == *(పూర్ణాంకం *)dst) && (h == *((పూర్ణాంకం *)dst+1));
+    స్థితి AV_OPT_TYPE_VIDEO_రేటు:
         q = (AVRational){0, 0};
-        if (o->default_val.str) {
-            if ((ret = av_parse_video_rate(&q, o->default_val.str)) < 0)
-                return ret;
+        ఒకవేళ (o->default_val.str) {
+            ఒకవేళ ((ret = av_parse_video_రేటు(&q, o->default_val.str)) < 0)
+                తిరిగి ret;
         }
-        return !av_cmp_q(*(AVRational*)dst, q);
-    case AV_OPT_TYPE_COLOR: {
+        తిరిగి !av_cmp_q(*(AVRational*)dst, q);
+    స్థితి AV_OPT_TYPE_COLOR: {
         uint8_t color[4] = {0, 0, 0, 0};
-        if (o->default_val.str) {
-            if ((ret = av_parse_color(color, o->default_val.str, -1, NULL)) < 0)
-                return ret;
+        ఒకవేళ (o->default_val.str) {
+            ఒకవేళ ((ret = av_parse_color(color, o->default_val.str, -1, ఖాళీ)) < 0)
+                తిరిగి ret;
         }
-        return !memcmp(color, dst, sizeof(color));
+        తిరిగి !memcmp(color, dst, పరిమాణం(color));
     }
-    default:
+    అప్రమేయ:
         av_log(obj, AV_LOG_WARNING, "Not supported option type: %d, option name: %s\n", o->type, o->name);
-        break;
+        ఆపు;
     }
-    return AVERROR_PATCHWELCOME;
+    తిరిగి AVERROR_PATCHWELCOME;
 }
 
-int av_opt_is_set_to_default_by_name(void *obj, const char *name, int search_flags)
+పూర్ణాంకం av_opt_is_సమితి_గమ్యం_default_by_name(శూన్య *obj, స్థిరరాశి అక్షరం *name, పూర్ణాంకం శోధన_flags)
 {
-    const AVOption *o;
-    void *target;
-    if (!obj)
-        return AVERROR(EINVAL);
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &target);
-    if (!o)
-        return AVERROR_OPTION_NOT_FOUND;
-    return av_opt_is_set_to_default(target, o);
+    స్థిరరాశి AVOption *o;
+    శూన్య *లక్ష్యం;
+    ఒకవేళ (!obj)
+        తిరిగి AVERROR(EINVAL);
+    o = av_opt_find2(obj, name, ఖాళీ, 0, శోధన_flags, &లక్ష్యం);
+    ఒకవేళ (!o)
+        తిరిగి AVERROR_OPTION_NOT_దొరికింది;
+    తిరిగి av_opt_is_సమితి_గమ్యం_default(లక్ష్యం, o);
 }
 
-static int opt_serialize(void *obj, int opt_flags, int flags, int *cnt,
-                         AVBPrint *bprint, const char key_val_sep, const char pairs_sep)
+స్థిర పూర్ణాంకం opt_serialize(శూన్య *obj, పూర్ణాంకం opt_flags, పూర్ణాంకం flags, పూర్ణాంకం *cnt,
+                         AVBPrint *bprint, స్థిరరాశి అక్షరం కీలకం_val_sep, స్థిరరాశి అక్షరం జతలు_sep)
 {
-    const AVOption *o = NULL;
-    void *child = NULL;
+    స్థిరరాశి AVOption *o = ఖాళీ;
+    శూన్య *బిడ్డ = ఖాళీ;
     uint8_t *buf;
-    int ret;
-    const char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    పూర్ణాంకం ret;
+    స్థిరరాశి అక్షరం special_chars[] = {జతలు_sep, కీలకం_val_sep, '\0'};
 
-    if (flags & AV_OPT_SERIALIZE_SEARCH_CHILDREN)
-        while (child = av_opt_child_next(obj, child)) {
-            ret = opt_serialize(child, opt_flags, flags, cnt, bprint,
-                                key_val_sep, pairs_sep);
-            if (ret < 0)
-                return ret;
+    ఒకవేళ (flags & AV_OPT_SERIALIZE_శోధన_CHILDREN)
+        అయితే (బిడ్డ = av_opt_బిడ్డ_తదుపరి(obj, బిడ్డ)) {
+            ret = opt_serialize(బిడ్డ, opt_flags, flags, cnt, bprint,
+                                కీలకం_val_sep, జతలు_sep);
+            ఒకవేళ (ret < 0)
+                తిరిగి ret;
         }
 
-    while (o = av_opt_next(obj, o)) {
-        if (o->type == AV_OPT_TYPE_CONST)
-            continue;
-        if ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE)) {
-            if ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT)) {
-                if (o->flags == opt_flags)
-                    continue;
-            } else if ((o->flags & opt_flags) == opt_flags)
-                continue;
-        } else {
-            if ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT) && o->flags != opt_flags)
-                continue;
-            else if (((o->flags & opt_flags) != opt_flags))
-                continue;
+    అయితే (o = av_opt_తదుపరి(obj, o)) {
+        ఒకవేళ (o->type == AV_OPT_TYPE_CONST)
+            కొనసాగు;
+        ఒకవేళ ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE)) {
+            ఒకవేళ ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT)) {
+                ఒకవేళ (o->flags == opt_flags)
+                    కొనసాగు;
+            } లేకపోతే ఒకవేళ ((o->flags & opt_flags) == opt_flags)
+                కొనసాగు;
+        } లేకపోతే {
+            ఒకవేళ ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT) && o->flags != opt_flags)
+                కొనసాగు;
+            లేకపోతే ఒకవేళ (((o->flags & opt_flags) != opt_flags))
+                కొనసాగు;
         }
-        if (flags & AV_OPT_SERIALIZE_SKIP_DEFAULTS && av_opt_is_set_to_default(obj, o) > 0)
-            continue;
-        if ((ret = av_opt_get(obj, o->name, 0, &buf)) < 0) {
-            av_bprint_finalize(bprint, NULL);
-            return ret;
+        ఒకవేళ (flags & AV_OPT_SERIALIZE_SKIP_DEFAULTS && av_opt_is_సమితి_గమ్యం_default(obj, o) > 0)
+            కొనసాగు;
+        ఒకవేళ ((ret = av_opt_get(obj, o->name, 0, &buf)) < 0) {
+            av_bprint_finalize(bprint, ఖాళీ);
+            తిరిగి ret;
         }
-        if (buf) {
-            if ((*cnt)++)
-                av_bprint_append_data(bprint, &pairs_sep, 1);
-            av_bprint_escape(bprint, o->name, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
-            av_bprint_append_data(bprint, &key_val_sep, 1);
-            av_bprint_escape(bprint, buf, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        ఒకవేళ (buf) {
+            ఒకవేళ ((*cnt)++)
+                av_bprint_append_దత్తాంశం(bprint, &జతలు_sep, 1);
+            av_bprint_escape(bprint, o->name, special_chars, AV_ESCAPE_బహుళకం_BACKSLASH, 0);
+            av_bprint_append_దత్తాంశం(bprint, &కీలకం_val_sep, 1);
+            av_bprint_escape(bprint, buf, special_chars, AV_ESCAPE_బహుళకం_BACKSLASH, 0);
             av_freep(&buf);
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_opt_serialize(void *obj, int opt_flags, int flags, char **buffer,
-                     const char key_val_sep, const char pairs_sep)
+పూర్ణాంకం av_opt_serialize(శూన్య *obj, పూర్ణాంకం opt_flags, పూర్ణాంకం flags, అక్షరం **బఫరు,
+                     స్థిరరాశి అక్షరం కీలకం_val_sep, స్థిరరాశి అక్షరం జతలు_sep)
 {
     AVBPrint bprint;
-    int ret, cnt = 0;
+    పూర్ణాంకం ret, cnt = 0;
 
-    if (pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
-        pairs_sep == '\\' || key_val_sep == '\\') {
+    ఒకవేళ (జతలు_sep == '\0' || కీలకం_val_sep == '\0' || జతలు_sep == కీలకం_val_sep ||
+        జతలు_sep == '\\' || కీలకం_val_sep == '\\') {
         av_log(obj, AV_LOG_ERROR, "Invalid separator(s) found.");
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    if (!obj || !buffer)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!obj || !బఫరు)
+        తిరిగి AVERROR(EINVAL);
 
-    *buffer = NULL;
-    av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
+    *బఫరు = ఖాళీ;
+    av_bprint_init(&bprint, 64, AV_BPRINT_కొలత_UNLIMITED);
 
     ret = opt_serialize(obj, opt_flags, flags, &cnt, &bprint,
-                        key_val_sep, pairs_sep);
-    if (ret < 0)
-        return ret;
+                        కీలకం_val_sep, జతలు_sep);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
-    ret = av_bprint_finalize(&bprint, buffer);
-    if (ret < 0)
-        return ret;
-    return 0;
+    ret = av_bprint_finalize(&bprint, బఫరు);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
+    తిరిగి 0;
 }

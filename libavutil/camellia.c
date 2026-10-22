@@ -19,38 +19,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "camellia.h"
-#include "error.h"
-#include "intreadwrite.h"
-#include "mem.h"
-#include "attributes.h"
+#అన్తర్భావ "camellia.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "intreadwrite.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "attributes.h"
 
-#define LR32(x,c) ((x) << (c) | (x) >> (32 - (c)))
-#define RR32(x,c) ((x) >> (c) | (x) << (32 - (c)))
+#నిర్వచించు LR32(x,c) ((x) << (c) | (x) >> (32 - (c)))
+#నిర్వచించు RR32(x,c) ((x) >> (c) | (x) << (32 - (c)))
 
-#define MASK8 0xff
-#define MASK32 0xffffffff
-#define MASK64 0xffffffffffffffff
+#నిర్వచించు MASK8 0xff
+#నిర్వచించు MASK32 0xffffffff
+#నిర్వచించు MASK64 0xffffffffffffffff
 
-#define Sigma1  0xA09E667F3BCC908B
-#define Sigma2  0xB67AE8584CAA73B2
-#define Sigma3  0xC6EF372FE94F82BE
-#define Sigma4  0x54FF53A5F1D36F1C
-#define Sigma5  0x10E527FADE682D1D
-#define Sigma6  0xB05688C2B3E6C1FD
+#నిర్వచించు Sigma1  0xA09E667F3BCC908B
+#నిర్వచించు Sigma2  0xB67AE8584CAA73B2
+#నిర్వచించు Sigma3  0xC6EF372FE94F82BE
+#నిర్వచించు Sigma4  0x54FF53A5F1D36F1C
+#నిర్వచించు Sigma5  0x10E527FADE682D1D
+#నిర్వచించు Sigma6  0xB05688C2B3E6C1FD
 
-static uint64_t SP[8][256];
+స్థిర uint64_t SP[8][256];
 
-typedef struct AVCAMELLIA {
+రకనిర్వచనం నిర్మాణం AVCAMELLIA {
     uint64_t Kw[4];
     uint64_t Ke[6];
     uint64_t K[24];
-    int key_bits;
+    పూర్ణాంకం కీలకం_బిట్లు;
 } AVCAMELLIA;
 
-static const uint8_t SBOX1[256] = {
+స్థిర స్థిరరాశి uint8_t SBOX1[256] = {
 112, 130,  44, 236, 179,  39, 192, 229, 228, 133,  87,  53, 234,  12, 174,  65,
  35, 239, 107, 147,  69,  25, 165,  33, 237,  14,  79,  78,  29, 101, 146, 189,
 134, 184, 175, 143, 124, 235,  31, 206,  62,  48, 220,  95,  94, 197,  11,  26,
@@ -69,7 +69,7 @@ static const uint8_t SBOX1[256] = {
  64,  40, 211, 123, 187, 201,  67, 193,  21, 227, 173, 244, 119, 199, 128, 158
 };
 
-static const uint8_t SBOX2[256] = {
+స్థిర స్థిరరాశి uint8_t SBOX2[256] = {
 224,   5,  88, 217, 103,  78, 129, 203, 201,  11, 174, 106, 213,  24,  93, 130,
  70, 223, 214,  39, 138,  50,  75,  66, 219,  28, 158, 156,  58, 202,  37, 123,
  13, 113,  95,  31, 248, 215,  62, 157, 124,  96, 185, 190, 188, 139,  22,  52,
@@ -88,7 +88,7 @@ static const uint8_t SBOX2[256] = {
 128,  80, 167, 246, 119, 147, 134, 131,  42, 199,  91, 233, 238, 143,   1,  61
 };
 
-static const uint8_t SBOX3[256] = {
+స్థిర స్థిరరాశి uint8_t SBOX3[256] = {
  56,  65,  22, 118, 217, 147,  96, 242, 114, 194, 171, 154, 117,   6,  87, 160,
 145, 247, 181, 201, 162, 140, 210, 144, 246,   7, 167,  39, 142, 178,  73, 222,
  67,  92, 215, 199,  62, 245, 143, 103,  31,  24, 110, 175,  47, 226, 133,  13,
@@ -107,7 +107,7 @@ static const uint8_t SBOX3[256] = {
  32,  20, 233, 189, 221, 228, 161, 224, 138, 241, 214, 122, 187, 227,  64,  79
 };
 
-static const uint8_t SBOX4[256] = {
+స్థిర స్థిరరాశి uint8_t SBOX4[256] = {
 112,  44, 179, 192, 228,  87, 234, 174,  35, 107,  69, 165, 237,  79,  29, 146,
 134, 175, 124,  31,  62, 220,  94,  11, 166,  57, 213,  93, 217,  90,  81, 108,
 139, 154, 251, 176, 116,  43, 240, 132, 223, 203,  52, 118, 109, 169, 209,   4,
@@ -126,68 +126,68 @@ static const uint8_t SBOX4[256] = {
   7,  85, 238,  10,  73, 104,  56, 164,  40, 123, 201, 193, 227, 244, 199, 158
 };
 
-const int av_camellia_size = sizeof(AVCAMELLIA);
+స్థిరరాశి పూర్ణాంకం av_camellia_కొలత = పరిమాణం(AVCAMELLIA);
 
-static void LR128(uint64_t d[2], const uint64_t K[2], int x)
+స్థిర శూన్య LR128(uint64_t d[2], స్థిరరాశి uint64_t K[2], పూర్ణాంకం x)
 {
-    int i = 0;
-    if (64 <= x && x < 128) {
+    పూర్ణాంకం i = 0;
+    ఒకవేళ (64 <= x && x < 128) {
         i = 1;
         x -= 64;
     }
-    if (x <= 0 || x >= 128) {
+    ఒకవేళ (x <= 0 || x >= 128) {
         d[0] = K[i];
         d[1] = K[!i];
-        return;
+        తిరిగి;
     }
     d[0] = (K[i] << x | K[!i] >> (64 - x));
     d[1] = (K[!i] << x | K[i] >> (64 - x));
 }
 
-static uint64_t F(uint64_t F_IN, uint64_t KE)
+స్థిర uint64_t F(uint64_t F_లోపల, uint64_t KE)
 {
-    KE ^= F_IN;
-    F_IN=SP[0][KE >> 56]^SP[1][(KE >> 48) & MASK8]^SP[2][(KE >> 40) & MASK8]^SP[3][(KE >> 32) & MASK8]^SP[4][(KE >> 24) & MASK8]^SP[5][(KE >> 16) & MASK8]^SP[6][(KE >> 8) & MASK8]^SP[7][KE & MASK8];
-    return F_IN;
+    KE ^= F_లోపల;
+    F_లోపల=SP[0][KE >> 56]^SP[1][(KE >> 48) & MASK8]^SP[2][(KE >> 40) & MASK8]^SP[3][(KE >> 32) & MASK8]^SP[4][(KE >> 24) & MASK8]^SP[5][(KE >> 16) & MASK8]^SP[6][(KE >> 8) & MASK8]^SP[7][KE & MASK8];
+    తిరిగి F_లోపల;
 }
 
-static uint64_t FL(uint64_t FL_IN, uint64_t KE)
+స్థిర uint64_t FL(uint64_t FL_లోపల, uint64_t KE)
 {
     uint32_t x1, x2, k1, k2;
-    x1 = FL_IN >> 32;
-    x2 = FL_IN & MASK32;
+    x1 = FL_లోపల >> 32;
+    x2 = FL_లోపల & MASK32;
     k1 = KE >> 32;
     k2 = KE & MASK32;
     x2 = x2 ^ LR32((x1 & k1), 1);
     x1 = x1 ^ (x2 | k2);
-    return ((uint64_t)x1 << 32) | (uint64_t)x2;
+    తిరిగి ((uint64_t)x1 << 32) | (uint64_t)x2;
 }
 
-static uint64_t FLINV(uint64_t FLINV_IN, uint64_t KE)
+స్థిర uint64_t FLINV(uint64_t FLINV_లోపల, uint64_t KE)
 {
     uint32_t x1, x2, k1, k2;
-    x1 = FLINV_IN >> 32;
-    x2 = FLINV_IN & MASK32;
+    x1 = FLINV_లోపల >> 32;
+    x2 = FLINV_లోపల & MASK32;
     k1 = KE >> 32;
     k2 = KE & MASK32;
     x1 = x1 ^ (x2 | k2);
     x2 = x2 ^ LR32((x1 & k1), 1);
-    return ((uint64_t)x1 << 32) | (uint64_t)x2;
+    తిరిగి ((uint64_t)x1 << 32) | (uint64_t)x2;
 }
 
-static const uint8_t shifts[2][12] = {
+స్థిర స్థిరరాశి uint8_t shifts[2][12] = {
     {0, 15, 15, 45, 45, 60, 94, 94, 111},
     {0, 15, 15, 30, 45, 45, 60, 60,  77, 94, 94, 111}
 };
 
-static const uint8_t vars[2][12] = {
+స్థిర స్థిరరాశి uint8_t vars[2][12] = {
     {2, 0, 2, 0, 2, 2, 0, 2, 0},
     {3, 1, 2, 3, 0, 2, 1, 3, 0, 1, 2, 0}
 };
 
-static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], uint64_t Ka[2], uint64_t Kb[2])
+స్థిర శూన్య generate_విడత_కీలకాలు(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], uint64_t Ka[2], uint64_t Kb[2])
 {
-    int i;
+    పూర్ణాంకం i;
     uint64_t *Kd[4], d[2];
     Kd[0] = Kl;
     Kd[1] = Kr;
@@ -195,8 +195,8 @@ static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], 
     Kd[3] = Kb;
     cs->Kw[0] = Kl[0];
     cs->Kw[1] = Kl[1];
-    if (cs->key_bits == 128) {
-        for (i = 0; i < 9; i++) {
+    ఒకవేళ (cs->కీలకం_బిట్లు == 128) {
+        కొరకు (i = 0; i < 9; i++) {
             LR128(d, Kd[vars[0][i]], shifts[0][i]);
             cs->K[2*i] = d[0];
             cs->K[2*i+1] = d[1];
@@ -212,8 +212,8 @@ static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], 
         LR128(d, Kd[2], 111);
         cs->Kw[2] = d[0];
         cs->Kw[3] = d[1];
-    } else {
-        for (i = 0; i < 12; i++) {
+    } లేకపోతే {
+        కొరకు (i = 0; i < 12; i++) {
             LR128(d, Kd[vars[1][i]], shifts[1][i]);
             cs->K[2*i] = d[0];
             cs->K[2*i+1] = d[1];
@@ -233,7 +233,7 @@ static void generate_round_keys(AVCAMELLIA *cs, uint64_t Kl[2], uint64_t Kr[2], 
     }
 }
 
-static void camellia_encrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src)
+స్థిర శూన్య camellia_encrypt(AVCAMELLIA *cs, uint8_t *dst, స్థిరరాశి uint8_t *src)
 {
     uint64_t D1, D2;
     D1 = AV_RB64(src);
@@ -262,7 +262,7 @@ static void camellia_encrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src)
     D1 ^= F(D2, cs->K[15]);
     D2 ^= F(D1, cs->K[16]);
     D1 ^= F(D2, cs->K[17]);
-    if (cs->key_bits != 128) {
+    ఒకవేళ (cs->కీలకం_బిట్లు != 128) {
         D1 = FL(D1, cs->Ke[4]);
         D2 = FLINV(D2, cs->Ke[5]);
         D2 ^= F(D1, cs->K[18]);
@@ -278,14 +278,14 @@ static void camellia_encrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src)
     AV_WB64(dst + 8, D1);
 }
 
-static void camellia_decrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, uint8_t *iv)
+స్థిర శూన్య camellia_decrypt(AVCAMELLIA *cs, uint8_t *dst, స్థిరరాశి uint8_t *src, uint8_t *iv)
 {
     uint64_t D1, D2;
     D1 = AV_RB64(src);
     D2 = AV_RB64(src + 8);
     D1 ^= cs->Kw[2];
     D2 ^= cs->Kw[3];
-    if (cs->key_bits != 128) {
+    ఒకవేళ (cs->కీలకం_బిట్లు != 128) {
         D2 ^= F(D1, cs->K[23]);
         D1 ^= F(D2, cs->K[22]);
         D2 ^= F(D1, cs->K[21]);
@@ -319,20 +319,20 @@ static void camellia_decrypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, u
     D1 ^= F(D2, cs->K[0]);
     D2 ^= cs->Kw[0];
     D1 ^= cs->Kw[1];
-    if (iv) {
+    ఒకవేళ (iv) {
         D2 ^= AV_RB64(iv);
         D1 ^= AV_RB64(iv + 8);
-        memcpy(iv, src, 16);
+        జ్ఞాపకం_నకలు(iv, src, 16);
     }
     AV_WB64(dst, D2);
     AV_WB64(dst + 8, D1);
 }
 
-static void computeSP(void)
+స్థిర శూన్య computeSP(శూన్య)
 {
     uint64_t z;
-    int i;
-    for (i = 0; i < 256; i++) {
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < 256; i++) {
         z = SBOX1[i];
         SP[0][i] = (z << 56) ^ (z << 48) ^ (z << 40) ^ (z << 24) ^ z;
         SP[7][i] = (z << 56) ^ (z << 48) ^ (z << 40) ^ (z << 24) ^ (z << 16) ^ (z << 8);
@@ -348,28 +348,28 @@ static void computeSP(void)
     }
 }
 
-struct AVCAMELLIA *av_camellia_alloc(void)
+నిర్మాణం AVCAMELLIA *av_camellia_alloc(శూన్య)
 {
-    return av_mallocz(sizeof(struct AVCAMELLIA));
+    తిరిగి av_mallocz(పరిమాణం(నిర్మాణం AVCAMELLIA));
 }
 
-av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *key, int key_bits)
+av_cold పూర్ణాంకం av_camellia_init(AVCAMELLIA *cs, స్థిరరాశి uint8_t *కీలకం, పూర్ణాంకం కీలకం_బిట్లు)
 {
     uint64_t Kl[2], Kr[2], Ka[2], Kb[2];
     uint64_t D1, D2;
-    if (key_bits != 128 && key_bits != 192 && key_bits != 256)
-        return AVERROR(EINVAL);
-    memset(Kb, 0, sizeof(Kb));
-    memset(Kr, 0, sizeof(Kr));
-    cs->key_bits = key_bits;
-    Kl[0] = AV_RB64(key);
-    Kl[1] = AV_RB64(key + 8);
-    if (key_bits == 192) {
-        Kr[0] = AV_RB64(key + 16);
+    ఒకవేళ (కీలకం_బిట్లు != 128 && కీలకం_బిట్లు != 192 && కీలకం_బిట్లు != 256)
+        తిరిగి AVERROR(EINVAL);
+    memset(Kb, 0, పరిమాణం(Kb));
+    memset(Kr, 0, పరిమాణం(Kr));
+    cs->కీలకం_బిట్లు = కీలకం_బిట్లు;
+    Kl[0] = AV_RB64(కీలకం);
+    Kl[1] = AV_RB64(కీలకం + 8);
+    ఒకవేళ (కీలకం_బిట్లు == 192) {
+        Kr[0] = AV_RB64(కీలకం + 16);
         Kr[1] = ~Kr[0];
-    } else if (key_bits == 256) {
-        Kr[0] = AV_RB64(key + 16);
-        Kr[1] = AV_RB64(key + 24);
+    } లేకపోతే ఒకవేళ (కీలకం_బిట్లు == 256) {
+        Kr[0] = AV_RB64(కీలకం + 16);
+        Kr[1] = AV_RB64(కీలకం + 24);
     }
     computeSP();
     D1 = Kl[0] ^ Kr[0];
@@ -382,7 +382,7 @@ av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *key, int key_bits)
     D1 ^= F(D2, Sigma4);
     Ka[0] = D1;
     Ka[1] = D2;
-    if (key_bits != 128) {
+    ఒకవేళ (కీలకం_బిట్లు != 128) {
         D1 = Ka[0] ^ Kr[0];
         D2 = Ka[1] ^ Kr[1];
         D2 ^= F(D1, Sigma5);
@@ -390,23 +390,23 @@ av_cold int av_camellia_init(AVCAMELLIA *cs, const uint8_t *key, int key_bits)
         Kb[0] = D1;
         Kb[1] = D2;
     }
-    generate_round_keys(cs, Kl, Kr, Ka, Kb);
-    return 0;
+    generate_విడత_కీలకాలు(cs, Kl, Kr, Ka, Kb);
+    తిరిగి 0;
 }
 
-void av_camellia_crypt(AVCAMELLIA *cs, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt)
+శూన్య av_camellia_crypt(AVCAMELLIA *cs, uint8_t *dst, స్థిరరాశి uint8_t *src, పూర్ణాంకం లెక్క, uint8_t *iv, పూర్ణాంకం decrypt)
 {
-    int i;
-    while (count--) {
-        if (decrypt) {
+    పూర్ణాంకం i;
+    అయితే (లెక్క--) {
+        ఒకవేళ (decrypt) {
             camellia_decrypt(cs, dst, src, iv);
-        } else {
-            if (iv) {
-                for (i = 0; i < 16; i++)
+        } లేకపోతే {
+            ఒకవేళ (iv) {
+                కొరకు (i = 0; i < 16; i++)
                     dst[i] = src[i] ^ iv[i];
                 camellia_encrypt(cs, dst, dst);
-                memcpy(iv, dst, 16);
-            } else {
+                జ్ఞాపకం_నకలు(iv, dst, 16);
+            } లేకపోతే {
                 camellia_encrypt(cs, dst, src);
             }
         }

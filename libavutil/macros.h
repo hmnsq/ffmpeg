@@ -22,16 +22,16 @@
  * Utility Preprocessor macros
  */
 
-#ifndef AVUTIL_MACROS_H
-#define AVUTIL_MACROS_H
+#నిర్వచితం_కాకపోతే AVUTIL_MACROS_H
+#నిర్వచించు AVUTIL_MACROS_H
 
-#include "libavutil/avconfig.h"
+#అన్తర్భావ "libavutil/avconfig.h"
 
-#if AV_HAVE_BIGENDIAN
+#ఒకవేళ AV_HAVE_BIGENDIAN
 #   define AV_NE(be, le) (be)
-#else
+#లేకపోతే
 #   define AV_NE(be, le) (le)
-#endif
+#అయితే_ముగింపు
 
 /**
  * Comparator.
@@ -42,18 +42,18 @@
  * As with many macros, this evaluates its argument multiple times, it thus
  * must not have a side-effect.
  */
-#define FFDIFFSIGN(x,y) (((x)>(y)) - ((x)<(y)))
+#నిర్వచించు FFDIFFSIGN(x,y) (((x)>(y)) - ((x)<(y)))
 
-#define FFMAX(a,b) ((a) > (b) ? (a) : (b))
-#define FFMAX3(a,b,c) FFMAX(FFMAX(a,b),c)
-#define FFMIN(a,b) ((a) > (b) ? (b) : (a))
-#define FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
+#నిర్వచించు FFMAX(a,b) ((a) > (b) ? (a) : (b))
+#నిర్వచించు FFMAX3(a,b,c) FFMAX(FFMAX(a,b),c)
+#నిర్వచించు FFMIN(a,b) ((a) > (b) ? (b) : (a))
+#నిర్వచించు FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
 
-#define FFSWAP(type,a,b) do{type SWAP_tmp= b; b= a; a= SWAP_tmp;}while(0)
-#define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
+#నిర్వచించు FFSWAP(type,a,b) చేయి{type మార్పిడి_tmp= b; b= a; a= మార్పిడి_tmp;}అయితే(0)
+#నిర్వచించు FF_ARRAY_ELEMS(a) (పరిమాణం(a) / పరిమాణం((a)[0]))
 
-#define MKTAG(a,b,c,d)   ((a) | ((b) << 8) | ((c) << 16) | ((unsigned)(d) << 24))
-#define MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((unsigned)(a) << 24))
+#నిర్వచించు MKTAG(a,b,c,d)   ((a) | ((b) << 8) | ((c) << 16) | ((గుర్తులేని)(d) << 24))
+#నిర్వచించు MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((గుర్తులేని)(a) << 24))
 
 /**
  * @addtogroup preproc_misc Preprocessor String Macros
@@ -63,18 +63,18 @@
  * @{
  */
 
-#define AV_STRINGIFY(s)         AV_TOSTRING(s)
-#define AV_TOSTRING(s) #s
+#నిర్వచించు AV_STRINGIFY(s)         AV_TOSTRING(s)
+#నిర్వచించు AV_TOSTRING(s) #s
 
-#define AV_GLUE(a, b) a ## b
-#define AV_JOIN(a, b) AV_GLUE(a, b)
+#నిర్వచించు AV_GLUE(a, b) a ## b
+#నిర్వచించు AV_JOIN(a, b) AV_GLUE(a, b)
 
 /**
  * @}
  */
 
-#define AV_PRAGMA(s) _Pragma(#s)
+#నిర్వచించు AV_PRAGMA(s) _Pragma(#s)
 
-#define FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
+#నిర్వచించు FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
 
-#endif /* AVUTIL_MACROS_H */
+#అయితే_ముగింపు /* AVUTIL_MACROS_H */

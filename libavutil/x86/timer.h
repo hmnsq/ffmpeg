@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_TIMER_H
-#define AVUTIL_X86_TIMER_H
+#నిర్వచితం_కాకపోతే AVUTIL_X86_TIMER_H
+#నిర్వచించు AVUTIL_X86_TIMER_H
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
-#if HAVE_INLINE_ASM
+#ఒకవేళ HAVE_INLINE_ASM
 
-#define FF_TIMER_UNITS "decicycles"
-#define AV_READ_TIME read_time
+#నిర్వచించు FF_TIMER_UNITS "decicycles"
+#నిర్వచించు AV_READ_సమయం read_సమయం
 
-static inline uint64_t read_time(void)
+స్థిర అంతఃవరుస uint64_t read_సమయం(శూన్య)
 {
     uint32_t a, d;
-    __asm__ volatile(
-#if ARCH_X86_64 || defined(__SSE2__)
+    __asm__ అస్థిర(
+#ఒకవేళ ARCH_X86_64 || defined(__SSE2__)
                      "lfence \n\t"
-#endif
+#అయితే_ముగింపు
                      "rdtsc  \n\t"
                      : "=a" (a), "=d" (d));
-    return ((uint64_t)d << 32) + a;
+    తిరిగి ((uint64_t)d << 32) + a;
 }
 
-#elif HAVE_RDTSC
+#లేదావేళ HAVE_RDTSC
 
-#include <intrin.h>
-#define AV_READ_TIME __rdtsc
+#అన్తర్భావ <intrin.h>
+#నిర్వచించు AV_READ_సమయం __rdtsc
 
-#endif /* HAVE_INLINE_ASM */
+#అయితే_ముగింపు /* HAVE_INLINE_ASM */
 
-#endif /* AVUTIL_X86_TIMER_H */
+#అయితే_ముగింపు /* AVUTIL_X86_TIMER_H */

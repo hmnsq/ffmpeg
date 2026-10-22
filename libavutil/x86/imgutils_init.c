@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
 
-#include "libavutil/cpu.h"
-#include "libavutil/error.h"
-#include "libavutil/imgutils_internal.h"
-#include "libavutil/macros.h"
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/error.h"
+#అన్తర్భావ "libavutil/imgutils_internal.h"
+#అన్తర్భావ "libavutil/macros.h"
 
-#include "cpu.h"
+#అన్తర్భావ "cpu.h"
 
-void ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
-                                      const uint8_t *src, ptrdiff_t src_linesize,
-                                      ptrdiff_t bytewidth, int height);
+శూన్య ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
+                                      స్థిరరాశి uint8_t *src, ptrdiff_t src_linesize,
+                                      ptrdiff_t bytewidth, పూర్ణాంకం ఎత్తు);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                    const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height)
+పూర్ణాంకం ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
+                                    స్థిరరాశి uint8_t *src, ptrdiff_t src_linesize,
+                                    ptrdiff_t bytewidth, పూర్ణాంకం ఎత్తు)
 {
-    int cpu_flags = av_get_cpu_flags();
+    పూర్ణాంకం cpu_flags = av_get_cpu_flags();
     ptrdiff_t bw_aligned = FFALIGN(bytewidth, 64);
 
-    if (EXTERNAL_SSE4(cpu_flags) &&
+    ఒకవేళ (EXTERNAL_SSE4(cpu_flags) &&
         bw_aligned <= dst_linesize && bw_aligned <= src_linesize)
         ff_image_copy_plane_uc_from_sse4(dst, dst_linesize, src, src_linesize,
-                                         bw_aligned, height);
-    else
-        return AVERROR(ENOSYS);
+                                         bw_aligned, ఎత్తు);
+    లేకపోతే
+        తిరిగి AVERROR(ENOSYS);
 
-    return 0;
+    తిరిగి 0;
 }

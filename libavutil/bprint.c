@@ -18,107 +18,107 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <stdarg.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <string.h>
+#అన్తర్భావ <time.h>
+#అన్తర్భావ "avstring.h"
+#అన్తర్భావ "bprint.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mem.h"
 
-#define av_bprint_room(buf) ((buf)->size - FFMIN((buf)->len, (buf)->size))
-#define av_bprint_is_allocated(buf) ((buf)->str != (buf)->reserved_internal_buffer)
+#నిర్వచించు av_bprint_స్థలం(buf) ((buf)->కొలత - FFMIN((buf)->len, (buf)->కొలత))
+#నిర్వచించు av_bprint_is_allocated(buf) ((buf)->str != (buf)->reserved_అంతర్గత_బఫరు)
 
-static int av_bprint_alloc(AVBPrint *buf, unsigned room)
+స్థిర పూర్ణాంకం av_bprint_alloc(AVBPrint *buf, గుర్తులేని స్థలం)
 {
-    char *old_str, *new_str;
-    unsigned min_size, new_size;
+    అక్షరం *old_str, *new_str;
+    గుర్తులేని min_కొలత, new_కొలత;
 
-    if (buf->size == buf->size_max)
-        return AVERROR(EIO);
-    if (!av_bprint_is_complete(buf))
-        return AVERROR_INVALIDDATA; /* it is already truncated anyway */
-    min_size = buf->len + 1 + FFMIN(UINT_MAX - buf->len - 1, room);
-    new_size = buf->size > buf->size_max / 2 ? buf->size_max : buf->size * 2;
-    if (new_size < min_size)
-        new_size = FFMIN(buf->size_max, min_size);
-    old_str = av_bprint_is_allocated(buf) ? buf->str : NULL;
-    new_str = av_realloc(old_str, new_size);
-    if (!new_str)
-        return AVERROR(ENOMEM);
-    if (!old_str)
-        memcpy(new_str, buf->str, buf->len + 1);
+    ఒకవేళ (buf->కొలత == buf->కొలత_max)
+        తిరిగి AVERROR(EIO);
+    ఒకవేళ (!av_bprint_is_complete(buf))
+        తిరిగి AVERROR_INVALIDDATA; /* it is already truncated anyway */
+    min_కొలత = buf->len + 1 + FFMIN(UINT_MAX - buf->len - 1, స్థలం);
+    new_కొలత = buf->కొలత > buf->కొలత_max / 2 ? buf->కొలత_max : buf->కొలత * 2;
+    ఒకవేళ (new_కొలత < min_కొలత)
+        new_కొలత = FFMIN(buf->కొలత_max, min_కొలత);
+    old_str = av_bprint_is_allocated(buf) ? buf->str : ఖాళీ;
+    new_str = av_realloc(old_str, new_కొలత);
+    ఒకవేళ (!new_str)
+        తిరిగి AVERROR(ENOMEM);
+    ఒకవేళ (!old_str)
+        జ్ఞాపకం_నకలు(new_str, buf->str, buf->len + 1);
     buf->str  = new_str;
-    buf->size = new_size;
-    return 0;
+    buf->కొలత = new_కొలత;
+    తిరిగి 0;
 }
 
-static void av_bprint_grow(AVBPrint *buf, unsigned extra_len)
+స్థిర శూన్య av_bprint_grow(AVBPrint *buf, గుర్తులేని extra_len)
 {
     /* arbitrary margin to avoid small overflows */
     extra_len = FFMIN(extra_len, UINT_MAX - 5 - buf->len);
     buf->len += extra_len;
-    if (buf->size)
-        buf->str[FFMIN(buf->len, buf->size - 1)] = 0;
+    ఒకవేళ (buf->కొలత)
+        buf->str[FFMIN(buf->len, buf->కొలత - 1)] = 0;
 }
 
-void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max)
+శూన్య av_bprint_init(AVBPrint *buf, గుర్తులేని కొలత_init, గుర్తులేని కొలత_max)
 {
-    unsigned size_auto = (char *)buf + sizeof(*buf) -
-                         buf->reserved_internal_buffer;
+    గుర్తులేని కొలత_auto = (అక్షరం *)buf + పరిమాణం(*buf) -
+                         buf->reserved_అంతర్గత_బఫరు;
 
-    if (size_max == AV_BPRINT_SIZE_AUTOMATIC)
-        size_max = size_auto;
-    buf->str      = buf->reserved_internal_buffer;
+    ఒకవేళ (కొలత_max == AV_BPRINT_కొలత_AUTOMATIC)
+        కొలత_max = కొలత_auto;
+    buf->str      = buf->reserved_అంతర్గత_బఫరు;
     buf->len      = 0;
-    buf->size     = FFMIN(size_auto, size_max);
-    buf->size_max = size_max;
+    buf->కొలత     = FFMIN(కొలత_auto, కొలత_max);
+    buf->కొలత_max = కొలత_max;
     *buf->str = 0;
-    if (size_init > buf->size)
-        av_bprint_alloc(buf, size_init - 1);
+    ఒకవేళ (కొలత_init > buf->కొలత)
+        av_bprint_alloc(buf, కొలత_init - 1);
 }
 
-void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size)
+శూన్య av_bprint_init_for_బఫరు(AVBPrint *buf, అక్షరం *బఫరు, గుర్తులేని కొలత)
 {
-    if (size == 0) {
-        av_bprint_init(buf, 0, AV_BPRINT_SIZE_COUNT_ONLY);
-        return;
+    ఒకవేళ (కొలత == 0) {
+        av_bprint_init(buf, 0, AV_BPRINT_కొలత_లెక్క_ONLY);
+        తిరిగి;
     }
 
-    buf->str      = buffer;
+    buf->str      = బఫరు;
     buf->len      = 0;
-    buf->size     = size;
-    buf->size_max = size;
+    buf->కొలత     = కొలత;
+    buf->కొలత_max = కొలత;
     *buf->str = 0;
 }
 
-void av_vbprintf(AVBPrint *buf, const char *fmt, va_list vl_arg)
+శూన్య av_vbprintf(AVBPrint *buf, స్థిరరాశి అక్షరం *fmt, va_list vl_arg)
 {
-    unsigned room;
-    char *dst;
-    int extra_len;
+    గుర్తులేని స్థలం;
+    అక్షరం *dst;
+    పూర్ణాంకం extra_len;
     va_list vl;
 
-    while (1) {
-        room = av_bprint_room(buf);
-        dst = room ? buf->str + buf->len : NULL;
+    అయితే (1) {
+        స్థలం = av_bprint_స్థలం(buf);
+        dst = స్థలం ? buf->str + buf->len : ఖాళీ;
         va_copy(vl, vl_arg);
-        extra_len = vsnprintf(dst, room, fmt, vl);
+        extra_len = vsnprintf(dst, స్థలం, fmt, vl);
         va_end(vl);
-        if (extra_len <= 0)
-            return;
-        if (extra_len < room)
-            break;
-        if (av_bprint_alloc(buf, extra_len))
-            break;
+        ఒకవేళ (extra_len <= 0)
+            తిరిగి;
+        ఒకవేళ (extra_len < స్థలం)
+            ఆపు;
+        ఒకవేళ (av_bprint_alloc(buf, extra_len))
+            ఆపు;
     }
     av_bprint_grow(buf, extra_len);
 }
 
-void av_bprintf(AVBPrint *buf, const char *fmt, ...)
+శూన్య av_bprintf(AVBPrint *buf, స్థిరరాశి అక్షరం *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
@@ -126,206 +126,206 @@ void av_bprintf(AVBPrint *buf, const char *fmt, ...)
     va_end(vl);
 }
 
-void av_bprint_chars(AVBPrint *buf, char c, unsigned n)
+శూన్య av_bprint_chars(AVBPrint *buf, అక్షరం c, గుర్తులేని n)
 {
-    unsigned room, real_n;
+    గుర్తులేని స్థలం, real_n;
 
-    while (1) {
-        room = av_bprint_room(buf);
-        if (n < room)
-            break;
-        if (av_bprint_alloc(buf, n))
-            break;
+    అయితే (1) {
+        స్థలం = av_bprint_స్థలం(buf);
+        ఒకవేళ (n < స్థలం)
+            ఆపు;
+        ఒకవేళ (av_bprint_alloc(buf, n))
+            ఆపు;
     }
-    if (room) {
-        real_n = FFMIN(n, room - 1);
+    ఒకవేళ (స్థలం) {
+        real_n = FFMIN(n, స్థలం - 1);
         memset(buf->str + buf->len, c, real_n);
     }
     av_bprint_grow(buf, n);
 }
 
-void av_bprint_append_data(AVBPrint *buf, const char *data, unsigned size)
+శూన్య av_bprint_append_దత్తాంశం(AVBPrint *buf, స్థిరరాశి అక్షరం *దత్తాంశం, గుర్తులేని కొలత)
 {
-    unsigned room, real_n;
+    గుర్తులేని స్థలం, real_n;
 
-    while (1) {
-        room = av_bprint_room(buf);
-        if (size < room)
-            break;
-        if (av_bprint_alloc(buf, size))
-            break;
+    అయితే (1) {
+        స్థలం = av_bprint_స్థలం(buf);
+        ఒకవేళ (కొలత < స్థలం)
+            ఆపు;
+        ఒకవేళ (av_bprint_alloc(buf, కొలత))
+            ఆపు;
     }
-    if (room) {
-        real_n = FFMIN(size, room - 1);
-        memcpy(buf->str + buf->len, data, real_n);
+    ఒకవేళ (స్థలం) {
+        real_n = FFMIN(కొలత, స్థలం - 1);
+        జ్ఞాపకం_నకలు(buf->str + buf->len, దత్తాంశం, real_n);
     }
-    av_bprint_grow(buf, size);
+    av_bprint_grow(buf, కొలత);
 }
 
-void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm)
+శూన్య av_bprint_strftime(AVBPrint *buf, స్థిరరాశి అక్షరం *fmt, స్థిరరాశి నిర్మాణం tm *tm)
 {
-    unsigned room;
+    గుర్తులేని స్థలం;
     size_t l;
-    size_t fmt_len = strlen(fmt);
+    size_t fmt_len = అక్షరశ్రేణి_పొడవు(fmt);
 
-    if (!*fmt)
-        return;
-    while (1) {
-        room = av_bprint_room(buf);
-        if (room && (l = strftime(buf->str + buf->len, room, fmt, tm)))
-            break;
+    ఒకవేళ (!*fmt)
+        తిరిగి;
+    అయితే (1) {
+        స్థలం = av_bprint_స్థలం(buf);
+        ఒకవేళ (స్థలం && (l = strftime(buf->str + buf->len, స్థలం, fmt, tm)))
+            ఆపు;
 
         /* Due to the limitations of strftime() it is not possible to know if
          * the output buffer is too small or the output is empty.
          * However, a 256x output space requirement compared to the format
          * string length is so unlikely we can safely assume empty output. This
          * allows supporting possibly empty format strings like "%p". */
-        if (room >> 8 > fmt_len)
-            break;
+        ఒకవేళ (స్థలం >> 8 > fmt_len)
+            ఆపు;
 
         /* strftime does not tell us how much room it would need: let us
            retry with twice as much until the buffer is large enough */
-        room = !room ? fmt_len + 1 :
-               room <= INT_MAX / 2 ? room * 2 : INT_MAX;
-        if (av_bprint_alloc(buf, room)) {
+        స్థలం = !స్థలం ? fmt_len + 1 :
+               స్థలం <= గరిష్ఠ_పూర్ణాంకం / 2 ? స్థలం * 2 : గరిష్ఠ_పూర్ణాంకం;
+        ఒకవేళ (av_bprint_alloc(buf, స్థలం)) {
             /* impossible to grow, try to manage something useful anyway */
-            room = av_bprint_room(buf);
-            if (room < 1024) {
+            స్థలం = av_bprint_స్థలం(buf);
+            ఒకవేళ (స్థలం < 1024) {
                 /* if strftime fails because the buffer has (almost) reached
                    its maximum size, let us try in a local buffer; 1k should
                    be enough to format any real date+time string */
-                char buf2[1024];
-                if ((l = strftime(buf2, sizeof(buf2), fmt, tm))) {
+                అక్షరం buf2[1024];
+                ఒకవేళ ((l = strftime(buf2, పరిమాణం(buf2), fmt, tm))) {
                     av_bprintf(buf, "%s", buf2);
-                    return;
+                    తిరిగి;
                 }
             }
-            if (room) {
+            ఒకవేళ (స్థలం) {
                 /* if anything else failed and the buffer is not already
                    truncated, let us add a stock string and force truncation */
-                static const char txt[] = "[truncated strftime output]";
-                memset(buf->str + buf->len, '!', room);
-                memcpy(buf->str + buf->len, txt, FFMIN(sizeof(txt) - 1, room));
-                av_bprint_grow(buf, room); /* force truncation */
+                స్థిర స్థిరరాశి అక్షరం txt[] = "[truncated strftime output]";
+                memset(buf->str + buf->len, '!', స్థలం);
+                జ్ఞాపకం_నకలు(buf->str + buf->len, txt, FFMIN(పరిమాణం(txt) - 1, స్థలం));
+                av_bprint_grow(buf, స్థలం); /* force truncation */
             }
-            return;
+            తిరిగి;
         }
     }
     av_bprint_grow(buf, l);
 }
 
-void av_bprint_get_buffer(AVBPrint *buf, unsigned size,
-                          unsigned char **mem, unsigned *actual_size)
+శూన్య av_bprint_get_బఫరు(AVBPrint *buf, గుర్తులేని కొలత,
+                          గుర్తులేని అక్షరం **mem, గుర్తులేని *actual_కొలత)
 {
-    if (size > av_bprint_room(buf))
-        av_bprint_alloc(buf, size);
-    *actual_size = av_bprint_room(buf);
-    *mem = *actual_size ? (unsigned char *) (buf->str + buf->len) : NULL;
+    ఒకవేళ (కొలత > av_bprint_స్థలం(buf))
+        av_bprint_alloc(buf, కొలత);
+    *actual_కొలత = av_bprint_స్థలం(buf);
+    *mem = *actual_కొలత ? (గుర్తులేని అక్షరం *) (buf->str + buf->len) : ఖాళీ;
 }
 
-void av_bprint_clear(AVBPrint *buf)
+శూన్య av_bprint_clear(AVBPrint *buf)
 {
-    if (buf->len) {
+    ఒకవేళ (buf->len) {
         *buf->str = 0;
         buf->len  = 0;
     }
 }
 
-int av_bprint_finalize(AVBPrint *buf, char **ret_str)
+పూర్ణాంకం av_bprint_finalize(AVBPrint *buf, అక్షరం **ret_str)
 {
-    unsigned real_size = FFMIN(buf->len + 1, buf->size);
-    char *str;
-    int ret = 0;
+    గుర్తులేని real_కొలత = FFMIN(buf->len + 1, buf->కొలత);
+    అక్షరం *str;
+    పూర్ణాంకం ret = 0;
 
-    if (ret_str) {
-        if (av_bprint_is_allocated(buf)) {
-            str = av_realloc(buf->str, real_size);
-            if (!str)
+    ఒకవేళ (ret_str) {
+        ఒకవేళ (av_bprint_is_allocated(buf)) {
+            str = av_realloc(buf->str, real_కొలత);
+            ఒకవేళ (!str)
                 str = buf->str;
-            buf->str = NULL;
-        } else {
-            str = av_memdup(buf->str, real_size);
-            if (!str)
+            buf->str = ఖాళీ;
+        } లేకపోతే {
+            str = av_memdup(buf->str, real_కొలత);
+            ఒకవేళ (!str)
                 ret = AVERROR(ENOMEM);
         }
         *ret_str = str;
-    } else {
-        if (av_bprint_is_allocated(buf))
+    } లేకపోతే {
+        ఒకవేళ (av_bprint_is_allocated(buf))
             av_freep(&buf->str);
     }
-    buf->size = real_size;
-    return ret;
+    buf->కొలత = real_కొలత;
+    తిరిగి ret;
 }
 
-#define WHITESPACES " \n\t\r"
+#నిర్వచించు WHITESPACES " \n\t\r"
 
-void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
-                      enum AVEscapeMode mode, int flags)
+శూన్య av_bprint_escape(AVBPrint *dstbuf, స్థిరరాశి అక్షరం *src, స్థిరరాశి అక్షరం *special_chars,
+                      గణన AVEscape_బహుళకం బహుళకం, పూర్ణాంకం flags)
 {
-    const char *src0 = src;
+    స్థిరరాశి అక్షరం *src0 = src;
 
-    if (mode == AV_ESCAPE_MODE_AUTO)
-        mode = AV_ESCAPE_MODE_BACKSLASH; /* TODO: implement a heuristic */
+    ఒకవేళ (బహుళకం == AV_ESCAPE_బహుళకం_AUTO)
+        బహుళకం = AV_ESCAPE_బహుళకం_BACKSLASH; /* TODO: implement a heuristic */
 
-    switch (mode) {
-    case AV_ESCAPE_MODE_QUOTE:
+    ఎంపిక (బహుళకం) {
+    స్థితి AV_ESCAPE_బహుళకం_QUOTE:
         /* enclose the string between '' */
         av_bprint_chars(dstbuf, '\'', 1);
-        for (; *src; src++) {
-            if (*src == '\'')
+        కొరకు (; *src; src++) {
+            ఒకవేళ (*src == '\'')
                 av_bprintf(dstbuf, "'\\''");
-            else
+            లేకపోతే
                 av_bprint_chars(dstbuf, *src, 1);
         }
         av_bprint_chars(dstbuf, '\'', 1);
-        break;
+        ఆపు;
 
-    case AV_ESCAPE_MODE_XML:
+    స్థితి AV_ESCAPE_బహుళకం_XML:
         /* escape XML non-markup character data as per 2.4 by default: */
         /*  [^<&]* - ([^<&]* ']]>' [^<&]*) */
 
         /* additionally, given one of the AV_ESCAPE_FLAG_XML_* flags, */
         /* escape those specific characters as required. */
-        for (; *src; src++) {
-            switch (*src) {
-            case '&' : av_bprintf(dstbuf, "%s", "&amp;");  break;
-            case '<' : av_bprintf(dstbuf, "%s", "&lt;");   break;
-            case '>' : av_bprintf(dstbuf, "%s", "&gt;");   break;
-            case '\'':
-                if (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+        కొరకు (; *src; src++) {
+            ఎంపిక (*src) {
+            స్థితి '&' : av_bprintf(dstbuf, "%s", "&amp;");  ఆపు;
+            స్థితి '<' : av_bprintf(dstbuf, "%s", "&lt;");   ఆపు;
+            స్థితి '>' : av_bprintf(dstbuf, "%s", "&gt;");   ఆపు;
+            స్థితి '\'':
+                ఒకవేళ (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
+                    వెళ్ళు XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&apos;");
-                break;
-            case '"' :
-                if (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+                ఆపు;
+            స్థితి '"' :
+                ఒకవేళ (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
+                    వెళ్ళు XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&quot;");
-                break;
+                ఆపు;
 XML_DEFAULT_HANDLING:
-            default: av_bprint_chars(dstbuf, *src, 1);
+            అప్రమేయ: av_bprint_chars(dstbuf, *src, 1);
             }
         }
-        break;
+        ఆపు;
 
     /* case AV_ESCAPE_MODE_BACKSLASH or unknown mode */
-    default:
+    అప్రమేయ:
         /* \-escape characters */
-        for (; *src; src++) {
-            int is_first_last       = src == src0 || !*(src+1);
-            int is_ws               = !!strchr(WHITESPACES, *src);
-            int is_strictly_special = special_chars && strchr(special_chars, *src);
-            int is_special          =
+        కొరకు (; *src; src++) {
+            పూర్ణాంకం is_మొదటి_చివరి       = src == src0 || !*(src+1);
+            పూర్ణాంకం is_ws               = !!strchr(WHITESPACES, *src);
+            పూర్ణాంకం is_strictly_special = special_chars && strchr(special_chars, *src);
+            పూర్ణాంకం is_special          =
                 is_strictly_special || strchr("'\\", *src) ||
                 (is_ws && (flags & AV_ESCAPE_FLAG_WHITESPACE));
 
-            if (is_strictly_special ||
+            ఒకవేళ (is_strictly_special ||
                 (!(flags & AV_ESCAPE_FLAG_STRICT) &&
-                 (is_special || (is_ws && is_first_last))))
+                 (is_special || (is_ws && is_మొదటి_చివరి))))
                 av_bprint_chars(dstbuf, '\\', 1);
             av_bprint_chars(dstbuf, *src, 1);
         }
-        break;
+        ఆపు;
     }
 }

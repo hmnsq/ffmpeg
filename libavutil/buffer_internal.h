@@ -16,28 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BUFFER_INTERNAL_H
-#define AVUTIL_BUFFER_INTERNAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_బఫరు_అంతర్గత_H
+#నిర్వచించు AVUTIL_బఫరు_అంతర్గత_H
 
-#include <stdatomic.h>
-#include <stdint.h>
+#అన్తర్భావ <stdatomic.h>
+#అన్తర్భావ <stdint.h>
 
-#include "buffer.h"
-#include "thread.h"
+#అన్తర్భావ "buffer.h"
+#అన్తర్భావ "thread.h"
 
 /**
  * The buffer was av_realloc()ed, so it is reallocatable.
  */
-#define BUFFER_FLAG_REALLOCATABLE (1 << 0)
+#నిర్వచించు బఫరు_FLAG_REALLOCATABLE (1 << 0)
 /**
  * The AVBuffer structure is part of a larger structure
  * and should not be freed.
  */
-#define BUFFER_FLAG_NO_FREE       (1 << 1)
+#నిర్వచించు బఫరు_FLAG_NO_FREE       (1 << 1)
 
-struct AVBuffer {
-    uint8_t *data; /**< data described by this buffer */
-    size_t size; /**< size of data in bytes */
+నిర్మాణం AVBuffer {
+    uint8_t *దత్తాంశం; /**< data described by this buffer */
+    size_t కొలత; /**< size of data in bytes */
 
     /**
      *  number of existing AVBufferRef instances referring to this buffer
@@ -47,47 +47,47 @@ struct AVBuffer {
     /**
      * a callback for freeing the data
      */
-    void (*free)(void *opaque, uint8_t *data);
+    శూన్య (*విడుదల)(శూన్య *opaque, uint8_t *దత్తాంశం);
 
     /**
      * an opaque pointer, to be used by the freeing callback
      */
-    void *opaque;
+    శూన్య *opaque;
 
     /**
      * A combination of AV_BUFFER_FLAG_*
      */
-    int flags;
+    పూర్ణాంకం flags;
 
     /**
      * A combination of BUFFER_FLAG_*
      */
-    int flags_internal;
+    పూర్ణాంకం flags_అంతర్గత;
 };
 
-typedef struct BufferPoolEntry {
-    uint8_t *data;
+రకనిర్వచనం నిర్మాణం బఫరు_Pool_నమోదు {
+    uint8_t *దత్తాంశం;
 
     /*
      * Backups of the original opaque/free of the AVBuffer corresponding to
      * data. They will be used to free the buffer when the pool is freed.
      */
-    void *opaque;
-    void (*free)(void *opaque, uint8_t *data);
+    శూన్య *opaque;
+    శూన్య (*విడుదల)(శూన్య *opaque, uint8_t *దత్తాంశం);
 
     AVBufferPool *pool;
-    struct BufferPoolEntry *next;
+    నిర్మాణం బఫరు_Pool_నమోదు *తదుపరి;
 
     /*
      * An AVBuffer structure to (re)use as AVBuffer for subsequent uses
      * of this BufferPoolEntry.
      */
-    AVBuffer buffer;
-} BufferPoolEntry;
+    AVBuffer బఫరు;
+} బఫరు_Pool_నమోదు;
 
-struct AVBufferPool {
+నిర్మాణం AVBufferPool {
     AVMutex mutex;
-    BufferPoolEntry *pool;
+    బఫరు_Pool_నమోదు *pool;
 
     /*
      * This is used to track when the pool is to be freed.
@@ -100,11 +100,11 @@ struct AVBufferPool {
      */
     atomic_uint refcount;
 
-    size_t size;
-    void *opaque;
-    AVBufferRef* (*alloc)(size_t size);
-    AVBufferRef* (*alloc2)(void *opaque, size_t size);
-    void         (*pool_free)(void *opaque);
+    size_t కొలత;
+    శూన్య *opaque;
+    AVBufferRef* (*alloc)(size_t కొలత);
+    AVBufferRef* (*alloc2)(శూన్య *opaque, size_t కొలత);
+    శూన్య         (*pool_free)(శూన్య *opaque);
 };
 
-#endif /* AVUTIL_BUFFER_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_BUFFER_INTERNAL_H */

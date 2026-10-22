@@ -16,264 +16,264 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include "cpu.h"
-#include "internal.h"
-#include "slicethread.h"
-#include "mem.h"
-#include "thread.h"
-#include "avassert.h"
+#అన్తర్భావ <stdatomic.h>
+#అన్తర్భావ "cpu.h"
+#అన్తర్భావ "internal.h"
+#అన్తర్భావ "slicethread.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "thread.h"
+#అన్తర్భావ "avassert.h"
 
-#define MAX_AUTO_THREADS 16
+#నిర్వచించు MAX_AUTO_దారాలు 16
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#ఒకవేళ HAVE_PTHREADS || HAVE_W32_దారాలు || HAVE_OS2_దారాలు
 
-typedef struct WorkerContext {
+రకనిర్వచనం నిర్మాణం కార్మికుడు_Context {
     AVSliceThread   *ctx;
     pthread_mutex_t mutex;
     pthread_cond_t  cond;
     pthread_t       thread;
-    int             done;
-} WorkerContext;
+    పూర్ణాంకం             పూర్తి;
+} కార్మికుడు_Context;
 
-struct AVSliceThread {
-    WorkerContext   *workers;
-    int             nb_threads;
-    int             nb_active_threads;
-    int             nb_jobs;
+నిర్మాణం AVSliceThread {
+    కార్మికుడు_Context   *workers;
+    పూర్ణాంకం             nb_దారాలు;
+    పూర్ణాంకం             nb_చురుకైన_దారాలు;
+    పూర్ణాంకం             nb_jobs;
 
-    atomic_uint     first_job;
-    atomic_uint     current_job;
-    pthread_mutex_t done_mutex;
-    pthread_cond_t  done_cond;
-    int             done;
-    int             finished;
+    atomic_uint     మొదటి_పని;
+    atomic_uint     current_పని;
+    pthread_mutex_t పూర్తి_mutex;
+    pthread_cond_t  పూర్తి_cond;
+    పూర్ణాంకం             పూర్తి;
+    పూర్ణాంకం             ముగిసిన;
     atomic_int      error;
 
-    void            *priv;
-    int            (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
-    int            (*main_func)(void *priv);
+    శూన్య            *priv;
+    పూర్ణాంకం            (*కార్మికుడు_func)(శూన్య *priv, పూర్ణాంకం jobnr, పూర్ణాంకం threadnr, పూర్ణాంకం nb_jobs, పూర్ణాంకం nb_దారాలు);
+    పూర్ణాంకం            (*main_func)(శూన్య *priv);
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
-    void           (*worker_func_v1)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads);
-    void           (*main_func_v1)(void *priv);
-    void            *priv_v1;
-#endif
+#ఒకవేళ LIBAVUTIL_సంస్కరణ_MAJOR < 62
+    శూన్య           (*కార్మికుడు_func_v1)(శూన్య *priv, పూర్ణాంకం jobnr, పూర్ణాంకం threadnr, పూర్ణాంకం nb_jobs, పూర్ణాంకం nb_దారాలు);
+    శూన్య           (*main_func_v1)(శూన్య *priv);
+    శూన్య            *priv_v1;
+#అయితే_ముగింపు
 };
 
-static int run_jobs(AVSliceThread *ctx)
+స్థిర పూర్ణాంకం నిరంతరం_jobs(AVSliceThread *ctx)
 {
-    unsigned nb_jobs    = ctx->nb_jobs;
-    unsigned nb_active_threads = ctx->nb_active_threads;
-    unsigned first_job    = atomic_fetch_add_explicit(&ctx->first_job, 1, memory_order_acq_rel);
-    unsigned current_job  = first_job;
+    గుర్తులేని nb_jobs    = ctx->nb_jobs;
+    గుర్తులేని nb_చురుకైన_దారాలు = ctx->nb_చురుకైన_దారాలు;
+    గుర్తులేని మొదటి_పని    = atomic_fetch_add_explicit(&ctx->మొదటి_పని, 1, memory_order_acq_rel);
+    గుర్తులేని current_పని  = మొదటి_పని;
 
-    do {
-        int ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
-        if (ret)
-            continue;
-        ret = ctx->worker_func(ctx->priv, current_job, first_job, nb_jobs, nb_active_threads);
-        if (ret) {
-            int prev = 0;
+    చేయి {
+        పూర్ణాంకం ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
+        ఒకవేళ (ret)
+            కొనసాగు;
+        ret = ctx->కార్మికుడు_func(ctx->priv, current_పని, మొదటి_పని, nb_jobs, nb_చురుకైన_దారాలు);
+        ఒకవేళ (ret) {
+            పూర్ణాంకం prev = 0;
             atomic_compare_exchange_strong_explicit(&ctx->error, &prev, ret,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed);
         }
-    } while ((current_job = atomic_fetch_add_explicit(&ctx->current_job, 1, memory_order_acq_rel)) < nb_jobs);
+    } అయితే ((current_పని = atomic_fetch_add_explicit(&ctx->current_పని, 1, memory_order_acq_rel)) < nb_jobs);
 
-    return current_job == nb_jobs + nb_active_threads - 1;
+    తిరిగి current_పని == nb_jobs + nb_చురుకైన_దారాలు - 1;
 }
 
-static void *attribute_align_arg thread_worker(void *v)
+స్థిర శూన్య *attribute_align_arg thread_కార్మికుడు(శూన్య *v)
 {
-    WorkerContext *w = v;
+    కార్మికుడు_Context *w = v;
     AVSliceThread *ctx = w->ctx;
 
-    pthread_mutex_lock(&w->mutex);
+    pthread_mutex_తాళం(&w->mutex);
     pthread_cond_signal(&w->cond);
 
-    while (1) {
-        w->done = 1;
-        while (w->done)
+    అయితే (1) {
+        w->పూర్తి = 1;
+        అయితే (w->పూర్తి)
             pthread_cond_wait(&w->cond, &w->mutex);
 
-        if (ctx->finished) {
+        ఒకవేళ (ctx->ముగిసిన) {
             pthread_mutex_unlock(&w->mutex);
-            return NULL;
+            తిరిగి ఖాళీ;
         }
 
-        if (run_jobs(ctx)) {
-            pthread_mutex_lock(&ctx->done_mutex);
-            ctx->done = 1;
-            pthread_cond_signal(&ctx->done_cond);
-            pthread_mutex_unlock(&ctx->done_mutex);
+        ఒకవేళ (నిరంతరం_jobs(ctx)) {
+            pthread_mutex_తాళం(&ctx->పూర్తి_mutex);
+            ctx->పూర్తి = 1;
+            pthread_cond_signal(&ctx->పూర్తి_cond);
+            pthread_mutex_unlock(&ctx->పూర్తి_mutex);
         }
     }
 }
 
 av_cold
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+పూర్ణాంకం avpriv_slicethread_create2(AVSliceThread **pctx, శూన్య *priv,
+                               పూర్ణాంకం (*కార్మికుడు_func)(శూన్య *priv, పూర్ణాంకం jobnr, పూర్ణాంకం threadnr, పూర్ణాంకం nb_jobs, పూర్ణాంకం nb_దారాలు),
+                               పూర్ణాంకం (*main_func)(శూన్య *priv),
+                               పూర్ణాంకం nb_దారాలు)
 {
     AVSliceThread *ctx;
-    int nb_workers, i;
-    int ret;
+    పూర్ణాంకం nb_workers, i;
+    పూర్ణాంకం ret;
 
-    av_assert0(nb_threads >= 0);
-    if (!nb_threads) {
-        int nb_cpus = av_cpu_count();
-        if (nb_cpus > 1)
-            nb_threads = FFMIN(nb_cpus + 1, MAX_AUTO_THREADS);
-        else
-            nb_threads = 1;
+    av_assert0(nb_దారాలు >= 0);
+    ఒకవేళ (!nb_దారాలు) {
+        పూర్ణాంకం nb_cpus = av_cpu_లెక్క();
+        ఒకవేళ (nb_cpus > 1)
+            nb_దారాలు = FFMIN(nb_cpus + 1, MAX_AUTO_దారాలు);
+        లేకపోతే
+            nb_దారాలు = 1;
     }
 
-    nb_workers = nb_threads;
-    if (!main_func)
+    nb_workers = nb_దారాలు;
+    ఒకవేళ (!main_func)
         nb_workers--;
 
-    *pctx = ctx = av_mallocz(sizeof(*ctx));
-    if (!ctx)
-        return AVERROR(ENOMEM);
+    *pctx = ctx = av_mallocz(పరిమాణం(*ctx));
+    ఒకవేళ (!ctx)
+        తిరిగి AVERROR(ENOMEM);
 
-    if (nb_workers && !(ctx->workers = av_calloc(nb_workers, sizeof(*ctx->workers)))) {
+    ఒకవేళ (nb_workers && !(ctx->workers = av_calloc(nb_workers, పరిమాణం(*ctx->workers)))) {
         av_freep(pctx);
-        return AVERROR(ENOMEM);
+        తిరిగి AVERROR(ENOMEM);
     }
 
     ctx->priv        = priv;
-    ctx->worker_func = worker_func;
+    ctx->కార్మికుడు_func = కార్మికుడు_func;
     ctx->main_func   = main_func;
-    ctx->nb_threads  = nb_threads;
-    ctx->nb_active_threads = 0;
+    ctx->nb_దారాలు  = nb_దారాలు;
+    ctx->nb_చురుకైన_దారాలు = 0;
     ctx->nb_jobs     = 0;
-    ctx->finished    = 0;
+    ctx->ముగిసిన    = 0;
 
-    atomic_init(&ctx->first_job, 0);
-    atomic_init(&ctx->current_job, 0);
-    ret = pthread_mutex_init(&ctx->done_mutex, NULL);
-    if (ret) {
+    atomic_init(&ctx->మొదటి_పని, 0);
+    atomic_init(&ctx->current_పని, 0);
+    ret = pthread_mutex_init(&ctx->పూర్తి_mutex, ఖాళీ);
+    ఒకవేళ (ret) {
         av_freep(&ctx->workers);
         av_freep(pctx);
-        return AVERROR(ret);
+        తిరిగి AVERROR(ret);
     }
-    ret = pthread_cond_init(&ctx->done_cond, NULL);
-    if (ret) {
-        ctx->nb_threads = main_func ? 0 : 1;
+    ret = pthread_cond_init(&ctx->పూర్తి_cond, ఖాళీ);
+    ఒకవేళ (ret) {
+        ctx->nb_దారాలు = main_func ? 0 : 1;
         avpriv_slicethread_free(pctx);
-        return AVERROR(ret);
+        తిరిగి AVERROR(ret);
     }
-    ctx->done        = 0;
+    ctx->పూర్తి        = 0;
 
-    for (i = 0; i < nb_workers; i++) {
-        WorkerContext *w = &ctx->workers[i];
+    కొరకు (i = 0; i < nb_workers; i++) {
+        కార్మికుడు_Context *w = &ctx->workers[i];
         w->ctx = ctx;
-        ret = pthread_mutex_init(&w->mutex, NULL);
-        if (ret) {
-            ctx->nb_threads = main_func ? i : i + 1;
+        ret = pthread_mutex_init(&w->mutex, ఖాళీ);
+        ఒకవేళ (ret) {
+            ctx->nb_దారాలు = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            తిరిగి AVERROR(ret);
         }
-        ret = pthread_cond_init(&w->cond, NULL);
-        if (ret) {
+        ret = pthread_cond_init(&w->cond, ఖాళీ);
+        ఒకవేళ (ret) {
             pthread_mutex_destroy(&w->mutex);
-            ctx->nb_threads = main_func ? i : i + 1;
+            ctx->nb_దారాలు = main_func ? i : i + 1;
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            తిరిగి AVERROR(ret);
         }
-        pthread_mutex_lock(&w->mutex);
-        w->done = 0;
+        pthread_mutex_తాళం(&w->mutex);
+        w->పూర్తి = 0;
 
-        if (ret = pthread_create(&w->thread, NULL, thread_worker, w)) {
-            ctx->nb_threads = main_func ? i : i + 1;
+        ఒకవేళ (ret = pthread_create(&w->thread, ఖాళీ, thread_కార్మికుడు, w)) {
+            ctx->nb_దారాలు = main_func ? i : i + 1;
             pthread_mutex_unlock(&w->mutex);
             pthread_cond_destroy(&w->cond);
             pthread_mutex_destroy(&w->mutex);
             avpriv_slicethread_free(pctx);
-            return AVERROR(ret);
+            తిరిగి AVERROR(ret);
         }
 
-        while (!w->done)
+        అయితే (!w->పూర్తి)
             pthread_cond_wait(&w->cond, &w->mutex);
         pthread_mutex_unlock(&w->mutex);
     }
 
-    return nb_threads;
+    తిరిగి nb_దారాలు;
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+పూర్ణాంకం avpriv_slicethread_execute2(AVSliceThread *ctx, పూర్ణాంకం nb_jobs, పూర్ణాంకం execute_main)
 {
-    int nb_workers, i, is_last = 0, ret = 0;
+    పూర్ణాంకం nb_workers, i, is_చివరి = 0, ret = 0;
 
     av_assert0(nb_jobs > 0);
     ctx->nb_jobs           = nb_jobs;
-    ctx->nb_active_threads = FFMIN(nb_jobs, ctx->nb_threads);
+    ctx->nb_చురుకైన_దారాలు = FFMIN(nb_jobs, ctx->nb_దారాలు);
     atomic_store_explicit(&ctx->error, 0, memory_order_relaxed);
-    atomic_store_explicit(&ctx->first_job, 0, memory_order_relaxed);
-    atomic_store_explicit(&ctx->current_job, ctx->nb_active_threads, memory_order_relaxed);
-    nb_workers             = ctx->nb_active_threads;
-    if (!ctx->main_func || !execute_main)
+    atomic_store_explicit(&ctx->మొదటి_పని, 0, memory_order_relaxed);
+    atomic_store_explicit(&ctx->current_పని, ctx->nb_చురుకైన_దారాలు, memory_order_relaxed);
+    nb_workers             = ctx->nb_చురుకైన_దారాలు;
+    ఒకవేళ (!ctx->main_func || !execute_main)
         nb_workers--;
 
-    for (i = 0; i < nb_workers; i++) {
-        WorkerContext *w = &ctx->workers[i];
-        pthread_mutex_lock(&w->mutex);
-        w->done = 0;
+    కొరకు (i = 0; i < nb_workers; i++) {
+        కార్మికుడు_Context *w = &ctx->workers[i];
+        pthread_mutex_తాళం(&w->mutex);
+        w->పూర్తి = 0;
         pthread_cond_signal(&w->cond);
         pthread_mutex_unlock(&w->mutex);
     }
 
-    if (ctx->main_func && execute_main) {
+    ఒకవేళ (ctx->main_func && execute_main) {
         ret = ctx->main_func(ctx->priv);
-    } else
-        is_last = run_jobs(ctx);
+    } లేకపోతే
+        is_చివరి = నిరంతరం_jobs(ctx);
 
-    if (!is_last) {
-        pthread_mutex_lock(&ctx->done_mutex);
-        while (!ctx->done)
-            pthread_cond_wait(&ctx->done_cond, &ctx->done_mutex);
-        ctx->done = 0;
-        pthread_mutex_unlock(&ctx->done_mutex);
+    ఒకవేళ (!is_చివరి) {
+        pthread_mutex_తాళం(&ctx->పూర్తి_mutex);
+        అయితే (!ctx->పూర్తి)
+            pthread_cond_wait(&ctx->పూర్తి_cond, &ctx->పూర్తి_mutex);
+        ctx->పూర్తి = 0;
+        pthread_mutex_unlock(&ctx->పూర్తి_mutex);
     }
 
-    if (!ret)
+    ఒకవేళ (!ret)
         ret = atomic_load_explicit(&ctx->error, memory_order_relaxed);
 
-    return ret;
+    తిరిగి ret;
 }
 
-av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
+av_cold శూన్య avpriv_slicethread_free(AVSliceThread **pctx)
 {
     AVSliceThread *ctx = *pctx;
-    int nb_workers, i;
+    పూర్ణాంకం nb_workers, i;
 
-    if (!ctx)
-        return;
+    ఒకవేళ (!ctx)
+        తిరిగి;
 
-    nb_workers = ctx->nb_threads;
-    if (!ctx->main_func)
+    nb_workers = ctx->nb_దారాలు;
+    ఒకవేళ (!ctx->main_func)
         nb_workers--;
 
-    ctx->finished = 1;
-    for (i = 0; i < nb_workers; i++) {
-        WorkerContext *w = &ctx->workers[i];
-        pthread_mutex_lock(&w->mutex);
-        w->done = 0;
+    ctx->ముగిసిన = 1;
+    కొరకు (i = 0; i < nb_workers; i++) {
+        కార్మికుడు_Context *w = &ctx->workers[i];
+        pthread_mutex_తాళం(&w->mutex);
+        w->పూర్తి = 0;
         pthread_cond_signal(&w->cond);
         pthread_mutex_unlock(&w->mutex);
     }
 
-    for (i = 0; i < nb_workers; i++) {
-        WorkerContext *w = &ctx->workers[i];
-        pthread_join(w->thread, NULL);
+    కొరకు (i = 0; i < nb_workers; i++) {
+        కార్మికుడు_Context *w = &ctx->workers[i];
+        pthread_join(w->thread, ఖాళీ);
         pthread_cond_destroy(&w->cond);
         pthread_mutex_destroy(&w->mutex);
     }
 
-    pthread_cond_destroy(&ctx->done_cond);
-    pthread_mutex_destroy(&ctx->done_mutex);
+    pthread_cond_destroy(&ctx->పూర్తి_cond);
+    pthread_mutex_destroy(&ctx->పూర్తి_mutex);
     av_freep(&ctx->workers);
     av_freep(pctx);
 }
@@ -282,84 +282,84 @@ av_cold void avpriv_slicethread_free(AVSliceThread **pctx)
  * Backwards compatibility wrapper for the deprecated avpriv_ slicethread API.
  */
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#ఒకవేళ LIBAVUTIL_సంస్కరణ_MAJOR < 62
 
-static int wrapper_worker(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads)
+స్థిర పూర్ణాంకం wrapper_కార్మికుడు(శూన్య *priv, పూర్ణాంకం jobnr, పూర్ణాంకం threadnr, పూర్ణాంకం nb_jobs, పూర్ణాంకం nb_దారాలు)
 {
     AVSliceThread *ctx = priv;
-    ctx->worker_func_v1(ctx->priv_v1, jobnr, threadnr, nb_jobs, nb_threads);
-    return 0;
+    ctx->కార్మికుడు_func_v1(ctx->priv_v1, jobnr, threadnr, nb_jobs, nb_దారాలు);
+    తిరిగి 0;
 }
 
-static int wrapper_main(void *priv)
+స్థిర పూర్ణాంకం wrapper_main(శూన్య *priv)
 {
     AVSliceThread *ctx = priv;
     ctx->main_func_v1(ctx->priv_v1);
-    return 0;
+    తిరిగి 0;
 }
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads)
+పూర్ణాంకం avpriv_slicethread_create(AVSliceThread **pctx, శూన్య *priv,
+                              శూన్య (*కార్మికుడు_func)(శూన్య *priv, పూర్ణాంకం jobnr, పూర్ణాంకం threadnr, పూర్ణాంకం nb_jobs, పూర్ణాంకం nb_దారాలు),
+                              శూన్య (*main_func)(శూన్య *priv),
+                              పూర్ణాంకం nb_దారాలు)
 {
-    int ret = avpriv_slicethread_create2(pctx, NULL, wrapper_worker,
-                                         main_func ? wrapper_main : NULL,
-                                         nb_threads);
-    if (ret < 0)
-        return ret;
+    పూర్ణాంకం ret = avpriv_slicethread_create2(pctx, ఖాళీ, wrapper_కార్మికుడు,
+                                         main_func ? wrapper_main : ఖాళీ,
+                                         nb_దారాలు);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
     (*pctx)->priv           = *pctx;
     (*pctx)->priv_v1        = priv;
-    (*pctx)->worker_func_v1 = worker_func;
+    (*pctx)->కార్మికుడు_func_v1 = కార్మికుడు_func;
     (*pctx)->main_func_v1   = main_func;
-    return ret;
+    తిరిగి ret;
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+శూన్య avpriv_slicethread_execute(AVSliceThread *ctx, పూర్ణాంకం nb_jobs, పూర్ణాంకం execute_main)
 {
     avpriv_slicethread_execute2(ctx, nb_jobs, execute_main);
 }
 
-#endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
+#అయితే_ముగింపు /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
-#else /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
+#లేకపోతే /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
 
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads)
+పూర్ణాంకం avpriv_slicethread_create2(AVSliceThread **pctx, శూన్య *priv,
+                               పూర్ణాంకం (*కార్మికుడు_func)(శూన్య *priv, పూర్ణాంకం jobnr, పూర్ణాంకం threadnr, పూర్ణాంకం nb_jobs, పూర్ణాంకం nb_దారాలు),
+                               పూర్ణాంకం (*main_func)(శూన్య *priv),
+                               పూర్ణాంకం nb_దారాలు)
 {
-    *pctx = NULL;
-    return AVERROR(ENOSYS);
+    *pctx = ఖాళీ;
+    తిరిగి AVERROR(ENOSYS);
 }
 
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main)
+పూర్ణాంకం avpriv_slicethread_execute2(AVSliceThread *ctx, పూర్ణాంకం nb_jobs, పూర్ణాంకం execute_main)
 {
     av_assert0(0);
 }
 
-void avpriv_slicethread_free(AVSliceThread **pctx)
+శూన్య avpriv_slicethread_free(AVSliceThread **pctx)
 {
     av_assert0(!pctx || !*pctx);
 }
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#ఒకవేళ LIBAVUTIL_సంస్కరణ_MAJOR < 62
 
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads)
+పూర్ణాంకం avpriv_slicethread_create(AVSliceThread **pctx, శూన్య *priv,
+                              శూన్య (*కార్మికుడు_func)(శూన్య *priv, పూర్ణాంకం jobnr, పూర్ణాంకం threadnr, పూర్ణాంకం nb_jobs, పూర్ణాంకం nb_దారాలు),
+                              శూన్య (*main_func)(శూన్య *priv),
+                              పూర్ణాంకం nb_దారాలు)
 {
-    *pctx = NULL;
-    return AVERROR(ENOSYS);
+    *pctx = ఖాళీ;
+    తిరిగి AVERROR(ENOSYS);
 }
 
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main)
+శూన్య avpriv_slicethread_execute(AVSliceThread *ctx, పూర్ణాంకం nb_jobs, పూర్ణాంకం execute_main)
 {
     av_assert0(0);
 }
 
-#endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
+#అయితే_ముగింపు /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
-#endif /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */
+#అయితే_ముగింపు /* HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS32THREADS */

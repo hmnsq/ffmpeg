@@ -24,55 +24,55 @@
  * default memory allocator for libavutil
  */
 
-#define _XOPEN_SOURCE 600
+#నిర్వచించు XOPEN_ఆధారం 600
 
-#include "config.h"
+#అన్తర్భావ "config.h"
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdatomic.h>
-#include <string.h>
-#if HAVE_MALLOC_H
-#include <malloc.h>
-#endif
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stdlib.h>
+#అన్తర్భావ <stdatomic.h>
+#అన్తర్భావ <string.h>
+#ఒకవేళ HAVE_MALLOC_H
+#అన్తర్భావ <malloc.h>
+#అయితే_ముగింపు
 
-#include "attributes.h"
-#include "avassert.h"
-#include "dynarray.h"
-#include "error.h"
-#include "internal.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "sanitizer.h"
+#అన్తర్భావ "attributes.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "dynarray.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "internal.h"
+#అన్తర్భావ "intreadwrite.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "sanitizer.h"
 
-#ifdef MALLOC_PREFIX
+#నిర్వచితమైతే MALLOC_ఉపసర్గ
 
-#define malloc         AV_JOIN(MALLOC_PREFIX, malloc)
-#define memalign       AV_JOIN(MALLOC_PREFIX, memalign)
-#define posix_memalign AV_JOIN(MALLOC_PREFIX, posix_memalign)
-#define realloc        AV_JOIN(MALLOC_PREFIX, realloc)
-#define free           AV_JOIN(MALLOC_PREFIX, free)
+#నిర్వచించు జ్ఞాపకం_ఇవ్వు         AV_JOIN(MALLOC_ఉపసర్గ, జ్ఞాపకం_ఇవ్వు)
+#నిర్వచించు memalign       AV_JOIN(MALLOC_ఉపసర్గ, memalign)
+#నిర్వచించు posix_memalign AV_JOIN(MALLOC_ఉపసర్గ, posix_memalign)
+#నిర్వచించు realloc        AV_JOIN(MALLOC_ఉపసర్గ, realloc)
+#నిర్వచించు విడుదల           AV_JOIN(MALLOC_ఉపసర్గ, విడుదల)
 
-void *malloc(size_t size);
-void *memalign(size_t align, size_t size);
-int   posix_memalign(void **ptr, size_t align, size_t size);
-void *realloc(void *ptr, size_t size);
-void  free(void *ptr);
+శూన్య *జ్ఞాపకం_ఇవ్వు(size_t కొలత);
+శూన్య *memalign(size_t align, size_t కొలత);
+పూర్ణాంకం   posix_memalign(శూన్య **ptr, size_t align, size_t కొలత);
+శూన్య *realloc(శూన్య *ptr, size_t కొలత);
+శూన్య  విడుదల(శూన్య *ptr);
 
-#endif /* MALLOC_PREFIX */
+#అయితే_ముగింపు /* MALLOC_PREFIX */
 
-#define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : (HAVE_SIMD_ALIGN_32 ? 32 : 16))
+#నిర్వచించు ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : (HAVE_SIMD_ALIGN_32 ? 32 : 16))
 
-#define FF_MEMORY_POISON 0x2a
+#నిర్వచించు FF_జ్ఞాపకం_POISON 0x2a
 
-static void poison_memory(void *ptr, size_t size)
+స్థిర శూన్య poison_జ్ఞాపకం(శూన్య *ptr, size_t కొలత)
 {
-#if CONFIG_MEMORY_POISONING
-    memset(ptr, FF_MEMORY_POISON, size);
-#endif
-    FF_MEM_UNDEFINED(ptr, size);
+#ఒకవేళ CONFIG_జ్ఞాపకం_POISONING
+    memset(ptr, FF_జ్ఞాపకం_POISON, కొలత);
+#అయితే_ముగింపు
+    FF_MEM_UNDEFINED(ptr, కొలత);
 }
 
 /* The LLVM ASan runtime for Windows does not intercept the _aligned_malloc
@@ -81,139 +81,139 @@ static void poison_memory(void *ptr, size_t size)
  * intercept it. Which one is linked cannot be told at compile time, so probe
  * once whether the byte after an aligned allocation is poisoned and align by
  * hand only when it is not. */
-#if HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
-#define ASAN_ALIGNED_ALLOC 1
+#ఒకవేళ HAVE_ASAN && HAVE_ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
+#నిర్వచించు ASAN_ALIGNED_ALLOC 1
 
-static int asan_aligned_alloc_needed(void)
+స్థిర పూర్ణాంకం asan_aligned_alloc_needed(శూన్య)
 {
-    static atomic_int needed = -1;
-    int ret = atomic_load_explicit(&needed, memory_order_relaxed);
+    స్థిర atomic_int needed = -1;
+    పూర్ణాంకం ret = atomic_load_explicit(&needed, memory_order_relaxed);
 
-    if (ret < 0) {
+    ఒకవేళ (ret < 0) {
         uint8_t *p = _aligned_malloc(16, ALIGN);
-        int probed = !p || !__asan_address_is_poisoned(p + 16);
+        పూర్ణాంకం probed = !p || !__asan_address_is_poisoned(p + 16);
         _aligned_free(p);
         /* Every block must be freed by the allocator that made it, so the
          * first probe to finish decides for all callers. */
-        if (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
+        ఒకవేళ (atomic_compare_exchange_strong_explicit(&needed, &ret, probed,
                                                     memory_order_relaxed,
                                                     memory_order_relaxed))
             ret = probed;
     }
-    return ret;
+    తిరిగి ret;
 }
 
-typedef struct AsanAlignedHeader {
-    void  *base;
-    size_t size;
-} AsanAlignedHeader;
+రకనిర్వచనం నిర్మాణం Asan_Aligned_శీర్షిక {
+    శూన్య  *పునాది_2;
+    size_t కొలత;
+} Asan_Aligned_శీర్షిక;
 
-static void *asan_aligned_malloc(size_t size)
+స్థిర శూన్య *asan_aligned_malloc(size_t కొలత)
 {
-    AsanAlignedHeader *hdr;
-    uint8_t *base, *ptr;
-    size_t total;
+    Asan_Aligned_శీర్షిక *hdr;
+    uint8_t *పునాది_2, *ptr;
+    size_t మొత్తం;
 
-    if (size > SIZE_MAX - ALIGN - sizeof(*hdr))
-        return NULL;
-    total = size + ALIGN + sizeof(*hdr);
-    base  = malloc(total);
-    if (!base)
-        return NULL;
-    ptr = (uint8_t *)FFALIGN((uintptr_t)base + sizeof(*hdr), ALIGN);
-    hdr = (AsanAlignedHeader *)ptr - 1;
-    hdr->base = base;
-    hdr->size = size;
-    FF_ASAN_POISON(base, ptr - base);
-    FF_ASAN_POISON(ptr + size, base + total - (ptr + size));
-    return ptr;
+    ఒకవేళ (కొలత > SIZE_MAX - ALIGN - పరిమాణం(*hdr))
+        తిరిగి ఖాళీ;
+    మొత్తం = కొలత + ALIGN + పరిమాణం(*hdr);
+    పునాది_2  = జ్ఞాపకం_ఇవ్వు(మొత్తం);
+    ఒకవేళ (!పునాది_2)
+        తిరిగి ఖాళీ;
+    ptr = (uint8_t *)FFALIGN((uintptr_t)పునాది_2 + పరిమాణం(*hdr), ALIGN);
+    hdr = (Asan_Aligned_శీర్షిక *)ptr - 1;
+    hdr->పునాది_2 = పునాది_2;
+    hdr->కొలత = కొలత;
+    FF_ASAN_POISON(పునాది_2, ptr - పునాది_2);
+    FF_ASAN_POISON(ptr + కొలత, పునాది_2 + మొత్తం - (ptr + కొలత));
+    తిరిగి ptr;
 }
 
-static AsanAlignedHeader *asan_aligned_header(void *ptr)
+స్థిర Asan_Aligned_శీర్షిక *asan_aligned_శీర్షిక(శూన్య *ptr)
 {
-    AsanAlignedHeader *hdr = (AsanAlignedHeader *)ptr - 1;
-    FF_ASAN_UNPOISON(hdr, sizeof(*hdr));
-    return hdr;
+    Asan_Aligned_శీర్షిక *hdr = (Asan_Aligned_శీర్షిక *)ptr - 1;
+    FF_ASAN_UNPOISON(hdr, పరిమాణం(*hdr));
+    తిరిగి hdr;
 }
 
-static void asan_aligned_free(void *ptr)
+స్థిర శూన్య asan_aligned_free(శూన్య *ptr)
 {
-    if (ptr)
-        free(asan_aligned_header(ptr)->base);
+    ఒకవేళ (ptr)
+        విడుదల(asan_aligned_శీర్షిక(ptr)->పునాది_2);
 }
 
-static void *asan_aligned_realloc(void *ptr, size_t size)
+స్థిర శూన్య *asan_aligned_realloc(శూన్య *ptr, size_t కొలత)
 {
-    AsanAlignedHeader *hdr;
-    void *ret;
+    Asan_Aligned_శీర్షిక *hdr;
+    శూన్య *ret;
 
-    if (!ptr)
-        return asan_aligned_malloc(size);
-    ret = asan_aligned_malloc(size);
-    if (!ret)
-        return NULL;
-    hdr = asan_aligned_header(ptr);
-    memcpy(ret, ptr, FFMIN(size, hdr->size));
-    free(hdr->base);
-    return ret;
+    ఒకవేళ (!ptr)
+        తిరిగి asan_aligned_malloc(కొలత);
+    ret = asan_aligned_malloc(కొలత);
+    ఒకవేళ (!ret)
+        తిరిగి ఖాళీ;
+    hdr = asan_aligned_శీర్షిక(ptr);
+    జ్ఞాపకం_నకలు(ret, ptr, FFMIN(కొలత, hdr->కొలత));
+    విడుదల(hdr->పునాది_2);
+    తిరిగి ret;
 }
-#else
-#define ASAN_ALIGNED_ALLOC 0
-#endif
+#లేకపోతే
+#నిర్వచించు ASAN_ALIGNED_ALLOC 0
+#అయితే_ముగింపు
 
 /* NOTE: if you want to override these functions with your own
  * implementations (not recommended) you have to link libav* as
  * dynamic libraries and remove -Wl,-Bsymbolic from the linker flags.
  * Note that this will cost performance. */
 
-static atomic_size_t max_alloc_size = INT_MAX;
+స్థిర atomic_size_t max_alloc_కొలత = గరిష్ఠ_పూర్ణాంకం;
 
-void av_max_alloc(size_t max){
-    atomic_store_explicit(&max_alloc_size, max, memory_order_relaxed);
+శూన్య av_max_alloc(size_t max){
+    atomic_store_explicit(&max_alloc_కొలత, max, memory_order_relaxed);
 }
 
-static int size_mult(size_t a, size_t b, size_t *r)
+స్థిర పూర్ణాంకం కొలత_mult(size_t a, size_t b, size_t *r)
 {
     size_t t;
 
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
-    if (__builtin_mul_overflow(a, b, &t))
-        return AVERROR(EINVAL);
-#else
+#ఒకవేళ (!defined(__INTEL_COMPILER) && AV_GCC_సంస్కరణ_AT_కనిష్ఠ(5,1)) || AV_HAS_BUILTIN(__builtin_mul_overflow)
+    ఒకవేళ (__builtin_mul_overflow(a, b, &t))
+        తిరిగి AVERROR(EINVAL);
+#లేకపోతే
     t = a * b;
     /* Hack inspired from glibc: don't try the division if nelem and elsize
      * are both less than sqrt(SIZE_MAX). */
-    if ((a | b) >= ((size_t)1 << (sizeof(size_t) * 4)) && a && t / a != b)
-        return AVERROR(EINVAL);
-#endif
+    ఒకవేళ ((a | b) >= ((size_t)1 << (పరిమాణం(size_t) * 4)) && a && t / a != b)
+        తిరిగి AVERROR(EINVAL);
+#అయితే_ముగింపు
     *r = t;
-    return 0;
+    తిరిగి 0;
 }
 
-void *av_malloc(size_t size)
+శూన్య *av_malloc(size_t కొలత)
 {
-    void *ptr = NULL;
+    శూన్య *ptr = ఖాళీ;
 
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    ఒకవేళ (కొలత > atomic_load_explicit(&max_alloc_కొలత, memory_order_relaxed))
+        తిరిగి ఖాళీ;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
-        ptr = asan_aligned_malloc(size);
-    else
-        ptr = _aligned_malloc(size, ALIGN);
-#elif HAVE_POSIX_MEMALIGN
-    if (size) //OS X on SDK 10.6 has a broken posix_memalign implementation
-    if (posix_memalign(&ptr, ALIGN, size))
-        ptr = NULL;
-#elif HAVE_ALIGNED_MALLOC
-    ptr = _aligned_malloc(size, ALIGN);
-#elif HAVE_MEMALIGN
-#ifndef __DJGPP__
-    ptr = memalign(ALIGN, size);
-#else
-    ptr = memalign(size, ALIGN);
-#endif
+#ఒకవేళ ASAN_ALIGNED_ALLOC
+    ఒకవేళ (asan_aligned_alloc_needed())
+        ptr = asan_aligned_malloc(కొలత);
+    లేకపోతే
+        ptr = _aligned_malloc(కొలత, ALIGN);
+#లేదావేళ HAVE_POSIX_MEMALIGN
+    ఒకవేళ (కొలత) //OS X on SDK 10.6 has a broken posix_memalign implementation
+    ఒకవేళ (posix_memalign(&ptr, ALIGN, కొలత))
+        ptr = ఖాళీ;
+#లేదావేళ HAVE_ALIGNED_MALLOC
+    ptr = _aligned_malloc(కొలత, ALIGN);
+#లేదావేళ HAVE_MEMALIGN
+#నిర్వచితం_కాకపోతే __DJGPP__
+    ptr = memalign(ALIGN, కొలత);
+#లేకపోతే
+    ptr = memalign(కొలత, ALIGN);
+#అయితే_ముగింపు
     /* Why 64?
      * Indeed, we should align it:
      *   on  4 for 386
@@ -238,263 +238,263 @@ void *av_malloc(size_t size)
      *
      * BTW, malloc seems to do 8-byte alignment by default here.
      */
-#else
-    ptr = malloc(size);
-#endif
-    if(!ptr && !size) {
-        size = 1;
+#లేకపోతే
+    ptr = జ్ఞాపకం_ఇవ్వు(కొలత);
+#అయితే_ముగింపు
+    ఒకవేళ(!ptr && !కొలత) {
+        కొలత = 1;
         ptr= av_malloc(1);
     }
-    if (ptr)
-        poison_memory(ptr, size);
-    return ptr;
+    ఒకవేళ (ptr)
+        poison_జ్ఞాపకం(ptr, కొలత);
+    తిరిగి ptr;
 }
 
-void *av_realloc(void *ptr, size_t size)
+శూన్య *av_realloc(శూన్య *ptr, size_t కొలత)
 {
-    void *ret;
-    if (size > atomic_load_explicit(&max_alloc_size, memory_order_relaxed))
-        return NULL;
+    శూన్య *ret;
+    ఒకవేళ (కొలత > atomic_load_explicit(&max_alloc_కొలత, memory_order_relaxed))
+        తిరిగి ఖాళీ;
 
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
-        ret = asan_aligned_realloc(ptr, size + !size);
-    else
-        ret = _aligned_realloc(ptr, size + !size, ALIGN);
-#elif HAVE_ALIGNED_MALLOC
-    ret = _aligned_realloc(ptr, size + !size, ALIGN);
-#else
-    ret = realloc(ptr, size + !size);
-#endif
-    if (ret && !ptr)
-        poison_memory(ret, size);
-    return ret;
+#ఒకవేళ ASAN_ALIGNED_ALLOC
+    ఒకవేళ (asan_aligned_alloc_needed())
+        ret = asan_aligned_realloc(ptr, కొలత + !కొలత);
+    లేకపోతే
+        ret = _aligned_realloc(ptr, కొలత + !కొలత, ALIGN);
+#లేదావేళ HAVE_ALIGNED_MALLOC
+    ret = _aligned_realloc(ptr, కొలత + !కొలత, ALIGN);
+#లేకపోతే
+    ret = realloc(ptr, కొలత + !కొలత);
+#అయితే_ముగింపు
+    ఒకవేళ (ret && !ptr)
+        poison_జ్ఞాపకం(ret, కొలత);
+    తిరిగి ret;
 }
 
-void *av_realloc_f(void *ptr, size_t nelem, size_t elsize)
+శూన్య *av_realloc_f(శూన్య *ptr, size_t nelem, size_t elsize)
 {
-    size_t size;
-    void *r;
+    size_t కొలత;
+    శూన్య *r;
 
-    if (size_mult(elsize, nelem, &size)) {
+    ఒకవేళ (కొలత_mult(elsize, nelem, &కొలత)) {
         av_free(ptr);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
-    r = av_realloc(ptr, size);
-    if (!r)
+    r = av_realloc(ptr, కొలత);
+    ఒకవేళ (!r)
         av_free(ptr);
-    return r;
+    తిరిగి r;
 }
 
-int av_reallocp(void *ptr, size_t size)
+పూర్ణాంకం av_reallocp(శూన్య *ptr, size_t కొలత)
 {
-    void *val;
+    శూన్య *val;
 
-    if (!size) {
+    ఒకవేళ (!కొలత) {
         av_freep(ptr);
-        return 0;
+        తిరిగి 0;
     }
 
-    memcpy(&val, ptr, sizeof(val));
-    val = av_realloc(val, size);
+    జ్ఞాపకం_నకలు(&val, ptr, పరిమాణం(val));
+    val = av_realloc(val, కొలత);
 
-    if (!val) {
+    ఒకవేళ (!val) {
         av_freep(ptr);
-        return AVERROR(ENOMEM);
+        తిరిగి AVERROR(ENOMEM);
     }
 
-    memcpy(ptr, &val, sizeof(val));
-    return 0;
+    జ్ఞాపకం_నకలు(ptr, &val, పరిమాణం(val));
+    తిరిగి 0;
 }
 
-void *av_malloc_array(size_t nmemb, size_t size)
+శూన్య *av_malloc_array(size_t nmemb, size_t కొలత)
 {
-    size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_malloc(result);
+    size_t ఫలితం;
+    ఒకవేళ (కొలత_mult(nmemb, కొలత, &ఫలితం) < 0)
+        తిరిగి ఖాళీ;
+    తిరిగి av_malloc(ఫలితం);
 }
 
-void *av_realloc_array(void *ptr, size_t nmemb, size_t size)
+శూన్య *av_realloc_array(శూన్య *ptr, size_t nmemb, size_t కొలత)
 {
-    size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_realloc(ptr, result);
+    size_t ఫలితం;
+    ఒకవేళ (కొలత_mult(nmemb, కొలత, &ఫలితం) < 0)
+        తిరిగి ఖాళీ;
+    తిరిగి av_realloc(ptr, ఫలితం);
 }
 
-int av_reallocp_array(void *ptr, size_t nmemb, size_t size)
+పూర్ణాంకం av_reallocp_array(శూన్య *ptr, size_t nmemb, size_t కొలత)
 {
-    void *val;
+    శూన్య *val;
 
-    memcpy(&val, ptr, sizeof(val));
-    val = av_realloc_f(val, nmemb, size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val && nmemb && size)
-        return AVERROR(ENOMEM);
+    జ్ఞాపకం_నకలు(&val, ptr, పరిమాణం(val));
+    val = av_realloc_f(val, nmemb, కొలత);
+    జ్ఞాపకం_నకలు(ptr, &val, పరిమాణం(val));
+    ఒకవేళ (!val && nmemb && కొలత)
+        తిరిగి AVERROR(ENOMEM);
 
-    return 0;
+    తిరిగి 0;
 }
 
-void av_free(void *ptr)
+శూన్య av_free(శూన్య *ptr)
 {
-#if ASAN_ALIGNED_ALLOC
-    if (asan_aligned_alloc_needed())
+#ఒకవేళ ASAN_ALIGNED_ALLOC
+    ఒకవేళ (asan_aligned_alloc_needed())
         asan_aligned_free(ptr);
-    else
+    లేకపోతే
         _aligned_free(ptr);
-#elif HAVE_ALIGNED_MALLOC
+#లేదావేళ HAVE_ALIGNED_MALLOC
     _aligned_free(ptr);
-#else
-    free(ptr);
-#endif
+#లేకపోతే
+    విడుదల(ptr);
+#అయితే_ముగింపు
 }
 
-void av_freep(void *arg)
+శూన్య av_freep(శూన్య *arg)
 {
-    void *val;
+    శూన్య *val;
 
-    memcpy(&val, arg, sizeof(val));
-    memcpy(arg, &(void *){ NULL }, sizeof(val));
+    జ్ఞాపకం_నకలు(&val, arg, పరిమాణం(val));
+    జ్ఞాపకం_నకలు(arg, &(శూన్య *){ ఖాళీ }, పరిమాణం(val));
     av_free(val);
 }
 
-void *av_mallocz(size_t size)
+శూన్య *av_mallocz(size_t కొలత)
 {
-    void *ptr = av_malloc(size);
-    if (ptr)
-        memset(ptr, 0, size);
-    return ptr;
+    శూన్య *ptr = av_malloc(కొలత);
+    ఒకవేళ (ptr)
+        memset(ptr, 0, కొలత);
+    తిరిగి ptr;
 }
 
-void *av_calloc(size_t nmemb, size_t size)
+శూన్య *av_calloc(size_t nmemb, size_t కొలత)
 {
-    size_t result;
-    if (size_mult(nmemb, size, &result) < 0)
-        return NULL;
-    return av_mallocz(result);
+    size_t ఫలితం;
+    ఒకవేళ (కొలత_mult(nmemb, కొలత, &ఫలితం) < 0)
+        తిరిగి ఖాళీ;
+    తిరిగి av_mallocz(ఫలితం);
 }
 
-char *av_strdup(const char *s)
+అక్షరం *av_strdup(స్థిరరాశి అక్షరం *s)
 {
-    char *ptr = NULL;
-    if (s) {
-        size_t len = strlen(s) + 1;
-        ptr = av_realloc(NULL, len);
-        if (ptr)
-            memcpy(ptr, s, len);
+    అక్షరం *ptr = ఖాళీ;
+    ఒకవేళ (s) {
+        size_t len = అక్షరశ్రేణి_పొడవు(s) + 1;
+        ptr = av_realloc(ఖాళీ, len);
+        ఒకవేళ (ptr)
+            జ్ఞాపకం_నకలు(ptr, s, len);
     }
-    return ptr;
+    తిరిగి ptr;
 }
 
-char *av_strndup(const char *s, size_t len)
+అక్షరం *av_strndup(స్థిరరాశి అక్షరం *s, size_t len)
 {
-    if (!s)
-        return NULL;
+    ఒకవేళ (!s)
+        తిరిగి ఖాళీ;
 
-    const char *end = memchr(s, 0, len);
-    if (end)
-        len = end - s;
+    స్థిరరాశి అక్షరం *చివర = memchr(s, 0, len);
+    ఒకవేళ (చివర)
+        len = చివర - s;
 
-    char *ret = av_realloc(NULL, len + 1);
-    if (!ret)
-        return NULL;
+    అక్షరం *ret = av_realloc(ఖాళీ, len + 1);
+    ఒకవేళ (!ret)
+        తిరిగి ఖాళీ;
 
-    memcpy(ret, s, len);
+    జ్ఞాపకం_నకలు(ret, s, len);
     ret[len] = 0;
-    return ret;
+    తిరిగి ret;
 }
 
-void *av_memdup(const void *p, size_t size)
+శూన్య *av_memdup(స్థిరరాశి శూన్య *p, size_t కొలత)
 {
-    void *ptr = NULL;
-    if (p) {
-        ptr = av_malloc(size);
-        if (ptr)
-            memcpy(ptr, p, size);
+    శూన్య *ptr = ఖాళీ;
+    ఒకవేళ (p) {
+        ptr = av_malloc(కొలత);
+        ఒకవేళ (ptr)
+            జ్ఞాపకం_నకలు(ptr, p, కొలత);
     }
-    return ptr;
+    తిరిగి ptr;
 }
 
-int av_dynarray_add_nofree(void *tab_ptr, int *nb_ptr, void *elem)
+పూర్ణాంకం av_dynarray_కూడు_nofree(శూన్య *tab_ptr, పూర్ణాంకం *nb_ptr, శూన్య *elem)
 {
-    void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    శూన్య **tab;
+    జ్ఞాపకం_నకలు(&tab, tab_ptr, పరిమాణం(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_కూడు(గరిష్ఠ_పూర్ణాంకం, పరిమాణం(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        జ్ఞాపకం_నకలు(tab_ptr, &tab, పరిమాణం(tab));
     }, {
-        return AVERROR(ENOMEM);
+        తిరిగి AVERROR(ENOMEM);
     });
-    return 0;
+    తిరిగి 0;
 }
 
-void av_dynarray_add(void *tab_ptr, int *nb_ptr, void *elem)
+శూన్య av_dynarray_కూడు(శూన్య *tab_ptr, పూర్ణాంకం *nb_ptr, శూన్య *elem)
 {
-    void **tab;
-    memcpy(&tab, tab_ptr, sizeof(tab));
+    శూన్య **tab;
+    జ్ఞాపకం_నకలు(&tab, tab_ptr, పరిమాణం(tab));
 
-    FF_DYNARRAY_ADD(INT_MAX, sizeof(*tab), tab, *nb_ptr, {
+    FF_DYNARRAY_కూడు(గరిష్ఠ_పూర్ణాంకం, పరిమాణం(*tab), tab, *nb_ptr, {
         tab[*nb_ptr] = elem;
-        memcpy(tab_ptr, &tab, sizeof(tab));
+        జ్ఞాపకం_నకలు(tab_ptr, &tab, పరిమాణం(tab));
     }, {
         *nb_ptr = 0;
         av_freep(tab_ptr);
     });
 }
 
-void *av_dynarray2_add(void **tab_ptr, int *nb_ptr, size_t elem_size,
-                       const uint8_t *elem_data)
+శూన్య *av_dynarray2_కూడు(శూన్య **tab_ptr, పూర్ణాంకం *nb_ptr, size_t elem_కొలత,
+                       స్థిరరాశి uint8_t *elem_దత్తాంశం)
 {
-    uint8_t *tab_elem_data = NULL;
+    uint8_t *tab_elem_దత్తాంశం = ఖాళీ;
 
-    FF_DYNARRAY_ADD(INT_MAX, elem_size, *tab_ptr, *nb_ptr, {
-        tab_elem_data = (uint8_t *)*tab_ptr + (*nb_ptr) * elem_size;
-        if (elem_data)
-            memcpy(tab_elem_data, elem_data, elem_size);
-        else
-            poison_memory(tab_elem_data, elem_size);
+    FF_DYNARRAY_కూడు(గరిష్ఠ_పూర్ణాంకం, elem_కొలత, *tab_ptr, *nb_ptr, {
+        tab_elem_దత్తాంశం = (uint8_t *)*tab_ptr + (*nb_ptr) * elem_కొలత;
+        ఒకవేళ (elem_దత్తాంశం)
+            జ్ఞాపకం_నకలు(tab_elem_దత్తాంశం, elem_దత్తాంశం, elem_కొలత);
+        లేకపోతే
+            poison_జ్ఞాపకం(tab_elem_దత్తాంశం, elem_కొలత);
     }, {
         av_freep(tab_ptr);
         *nb_ptr = 0;
     });
-    return tab_elem_data;
+    తిరిగి tab_elem_దత్తాంశం;
 }
 
-static void fill16(uint8_t *dst, int len)
+స్థిర శూన్య fill16(uint8_t *dst, పూర్ణాంకం len)
 {
     uint32_t v = AV_RN16(dst - 2);
 
     v |= v << 16;
 
-    while (len >= 4) {
+    అయితే (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    అయితే (len--) {
         *dst = dst[-2];
         dst++;
     }
 }
 
-static void fill24(uint8_t *dst, int len)
+స్థిర శూన్య fill24(uint8_t *dst, పూర్ణాంకం len)
 {
-#if HAVE_BIGENDIAN
+#ఒకవేళ HAVE_BIGENDIAN
     uint32_t v = AV_RB24(dst - 3);
     uint32_t a = v << 8  | v >> 16;
     uint32_t b = v << 16 | v >> 8;
     uint32_t c = v << 24 | v;
-#else
+#లేకపోతే
     uint32_t v = AV_RL24(dst - 3);
     uint32_t a = v       | v << 24;
     uint32_t b = v >> 8  | v << 16;
     uint32_t c = v >> 16 | v << 8;
-#endif
+#అయితే_ముగింపు
 
-    while (len >= 12) {
+    అయితే (len >= 12) {
         AV_WN32(dst,     a);
         AV_WN32(dst + 4, b);
         AV_WN32(dst + 8, c);
@@ -502,31 +502,31 @@ static void fill24(uint8_t *dst, int len)
         len -= 12;
     }
 
-    if (len >= 4) {
+    ఒకవేళ (len >= 4) {
         AV_WN32(dst, a);
         dst += 4;
         len -= 4;
     }
 
-    if (len >= 4) {
+    ఒకవేళ (len >= 4) {
         AV_WN32(dst, b);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    అయితే (len--) {
         *dst = dst[-3];
         dst++;
     }
 }
 
-static void fill32(uint8_t *dst, int len)
+స్థిర శూన్య fill32(uint8_t *dst, పూర్ణాంకం len)
 {
     uint32_t v = AV_RN32(dst - 4);
 
-#if HAVE_FAST_64BIT
+#ఒకవేళ HAVE_FAST_64_బిట్టు
     uint64_t v2= v + ((uint64_t)v<<32);
-    while (len >= 32) {
+    అయితే (len >= 32) {
         AV_WN64(dst   , v2);
         AV_WN64(dst+ 8, v2);
         AV_WN64(dst+16, v2);
@@ -534,141 +534,141 @@ static void fill32(uint8_t *dst, int len)
         dst += 32;
         len -= 32;
     }
-#endif
+#అయితే_ముగింపు
 
-    while (len >= 4) {
+    అయితే (len >= 4) {
         AV_WN32(dst, v);
         dst += 4;
         len -= 4;
     }
 
-    while (len--) {
+    అయితే (len--) {
         *dst = dst[-4];
         dst++;
     }
 }
 
-void av_memcpy_backptr(uint8_t *dst, int back, int cnt)
+శూన్య av_memcpy_backptr(uint8_t *dst, పూర్ణాంకం వెనుక, పూర్ణాంకం cnt)
 {
-    const uint8_t *src = &dst[-back];
-    if (!back)
-        return;
+    స్థిరరాశి uint8_t *src = &dst[-వెనుక];
+    ఒకవేళ (!వెనుక)
+        తిరిగి;
 
-    if (back == 1) {
+    ఒకవేళ (వెనుక == 1) {
         memset(dst, *src, cnt);
-    } else if (back == 2) {
+    } లేకపోతే ఒకవేళ (వెనుక == 2) {
         fill16(dst, cnt);
-    } else if (back == 3) {
+    } లేకపోతే ఒకవేళ (వెనుక == 3) {
         fill24(dst, cnt);
-    } else if (back == 4) {
+    } లేకపోతే ఒకవేళ (వెనుక == 4) {
         fill32(dst, cnt);
-    } else {
-        if (cnt >= 16) {
-            int blocklen = back;
-            while (cnt > blocklen) {
-                memcpy(dst, src, blocklen);
+    } లేకపోతే {
+        ఒకవేళ (cnt >= 16) {
+            పూర్ణాంకం blocklen = వెనుక;
+            అయితే (cnt > blocklen) {
+                జ్ఞాపకం_నకలు(dst, src, blocklen);
                 dst       += blocklen;
                 cnt       -= blocklen;
                 blocklen <<= 1;
             }
-            memcpy(dst, src, cnt);
-            return;
+            జ్ఞాపకం_నకలు(dst, src, cnt);
+            తిరిగి;
         }
-        if (cnt >= 8) {
+        ఒకవేళ (cnt >= 8) {
             AV_COPY32U(dst,     src);
             AV_COPY32U(dst + 4, src + 4);
             src += 8;
             dst += 8;
             cnt -= 8;
         }
-        if (cnt >= 4) {
+        ఒకవేళ (cnt >= 4) {
             AV_COPY32U(dst, src);
             src += 4;
             dst += 4;
             cnt -= 4;
         }
-        if (cnt >= 2) {
+        ఒకవేళ (cnt >= 2) {
             AV_COPY16U(dst, src);
             src += 2;
             dst += 2;
             cnt -= 2;
         }
-        if (cnt)
+        ఒకవేళ (cnt)
             *dst = *src;
     }
 }
 
-void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
+శూన్య *av_fast_realloc(శూన్య *ptr, గుర్తులేని పూర్ణాంకం *కొలత, size_t min_కొలత)
 {
-    size_t max_size;
+    size_t max_కొలత;
 
-    if (min_size <= *size)
-        return ptr;
+    ఒకవేళ (min_కొలత <= *కొలత)
+        తిరిగి ptr;
 
-    max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
+    max_కొలత = atomic_load_explicit(&max_alloc_కొలత, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
-    max_size = FFMIN(max_size, UINT_MAX);
+    max_కొలత = FFMIN(max_కొలత, UINT_MAX);
 
-    if (min_size > max_size) {
-        *size = 0;
-        return NULL;
+    ఒకవేళ (min_కొలత > max_కొలత) {
+        *కొలత = 0;
+        తిరిగి ఖాళీ;
     }
 
-    min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
+    min_కొలత = FFMIN(max_కొలత, FFMAX(min_కొలత + min_కొలత / 16 + 32, min_కొలత));
 
-    ptr = av_realloc(ptr, min_size);
+    ptr = av_realloc(ptr, min_కొలత);
     /* we could set this to the unmodified min_size but this is safer
      * if the user lost the ptr and uses NULL now
      */
-    if (!ptr)
-        min_size = 0;
+    ఒకవేళ (!ptr)
+        min_కొలత = 0;
 
-    *size = min_size;
+    *కొలత = min_కొలత;
 
-    return ptr;
+    తిరిగి ptr;
 }
 
-static inline void fast_malloc(void *ptr, unsigned int *size, size_t min_size, int zero_realloc)
+స్థిర అంతఃవరుస శూన్య fast_malloc(శూన్య *ptr, గుర్తులేని పూర్ణాంకం *కొలత, size_t min_కొలత, పూర్ణాంకం zero_realloc)
 {
-    size_t max_size;
-    void *val;
+    size_t max_కొలత;
+    శూన్య *val;
 
-    memcpy(&val, ptr, sizeof(val));
-    if (min_size <= *size) {
-        av_assert0(val || !min_size);
-        return;
+    జ్ఞాపకం_నకలు(&val, ptr, పరిమాణం(val));
+    ఒకవేళ (min_కొలత <= *కొలత) {
+        av_assert0(val || !min_కొలత);
+        తిరిగి;
     }
 
-    max_size = atomic_load_explicit(&max_alloc_size, memory_order_relaxed);
+    max_కొలత = atomic_load_explicit(&max_alloc_కొలత, memory_order_relaxed);
     /* *size is an unsigned, so the real maximum is <= UINT_MAX. */
-    max_size = FFMIN(max_size, UINT_MAX);
+    max_కొలత = FFMIN(max_కొలత, UINT_MAX);
 
-    if (min_size > max_size) {
+    ఒకవేళ (min_కొలత > max_కొలత) {
         av_freep(ptr);
-        *size = 0;
-        return;
+        *కొలత = 0;
+        తిరిగి;
     }
-    min_size = FFMIN(max_size, FFMAX(min_size + min_size / 16 + 32, min_size));
+    min_కొలత = FFMIN(max_కొలత, FFMAX(min_కొలత + min_కొలత / 16 + 32, min_కొలత));
     av_freep(ptr);
-    val = zero_realloc ? av_mallocz(min_size) : av_malloc(min_size);
-    memcpy(ptr, &val, sizeof(val));
-    if (!val)
-        min_size = 0;
-    *size = min_size;
-    return;
+    val = zero_realloc ? av_mallocz(min_కొలత) : av_malloc(min_కొలత);
+    జ్ఞాపకం_నకలు(ptr, &val, పరిమాణం(val));
+    ఒకవేళ (!val)
+        min_కొలత = 0;
+    *కొలత = min_కొలత;
+    తిరిగి;
 }
 
-void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size)
+శూన్య av_fast_malloc(శూన్య *ptr, గుర్తులేని పూర్ణాంకం *కొలత, size_t min_కొలత)
 {
-    fast_malloc(ptr, size, min_size, 0);
+    fast_malloc(ptr, కొలత, min_కొలత, 0);
 }
 
-void av_fast_mallocz(void *ptr, unsigned int *size, size_t min_size)
+శూన్య av_fast_mallocz(శూన్య *ptr, గుర్తులేని పూర్ణాంకం *కొలత, size_t min_కొలత)
 {
-    fast_malloc(ptr, size, min_size, 1);
+    fast_malloc(ptr, కొలత, min_కొలత, 1);
 }
 
-int av_size_mult(size_t a, size_t b, size_t *r)
+పూర్ణాంకం av_కొలత_mult(size_t a, size_t b, size_t *r)
 {
-    return size_mult(a, b, r);
+    తిరిగి కొలత_mult(a, b, r);
 }

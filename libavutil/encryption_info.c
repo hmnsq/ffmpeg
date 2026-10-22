@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "encryption_info.h"
-#include "error.h"
-#include "mem.h"
-#include "intreadwrite.h"
+#అన్తర్భావ "encryption_info.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "intreadwrite.h"
 
-#define FF_ENCRYPTION_INFO_EXTRA 24
+#నిర్వచించు FF_ENCRYPTION_INFO_EXTRA 24
 
 // The format of the AVEncryptionInfo side data:
 // u32be scheme
@@ -39,127 +39,127 @@
 //   u32be bytes_of_protected_data
 // }[subsample_count]
 
-AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_count, uint32_t key_id_size, uint32_t iv_size)
+AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_లెక్క, uint32_t కీలకం_id_కొలత, uint32_t iv_కొలత)
 {
     AVEncryptionInfo *info;
 
-    info = av_mallocz(sizeof(*info));
-    if (!info)
-        return NULL;
+    info = av_mallocz(పరిమాణం(*info));
+    ఒకవేళ (!info)
+        తిరిగి ఖాళీ;
 
-    info->key_id = av_mallocz(key_id_size);
-    info->key_id_size = key_id_size;
-    info->iv = av_mallocz(iv_size);
-    info->iv_size = iv_size;
-    info->subsamples = av_calloc(subsample_count, sizeof(*info->subsamples));
-    info->subsample_count = subsample_count;
+    info->కీలకం_id = av_mallocz(కీలకం_id_కొలత);
+    info->కీలకం_id_కొలత = కీలకం_id_కొలత;
+    info->iv = av_mallocz(iv_కొలత);
+    info->iv_కొలత = iv_కొలత;
+    info->subsamples = av_calloc(subsample_లెక్క, పరిమాణం(*info->subsamples));
+    info->subsample_లెక్క = subsample_లెక్క;
 
     // Allow info->subsamples to be NULL if there are no subsamples.
-    if (!info->key_id || !info->iv || (!info->subsamples && subsample_count)) {
+    ఒకవేళ (!info->కీలకం_id || !info->iv || (!info->subsamples && subsample_లెక్క)) {
         av_encryption_info_free(info);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    return info;
+    తిరిగి info;
 }
 
-AVEncryptionInfo *av_encryption_info_clone(const AVEncryptionInfo *info)
+AVEncryptionInfo *av_encryption_info_clone(స్థిరరాశి AVEncryptionInfo *info)
 {
     AVEncryptionInfo *ret;
 
-    ret = av_encryption_info_alloc(info->subsample_count, info->key_id_size, info->iv_size);
-    if (!ret)
-        return NULL;
+    ret = av_encryption_info_alloc(info->subsample_లెక్క, info->కీలకం_id_కొలత, info->iv_కొలత);
+    ఒకవేళ (!ret)
+        తిరిగి ఖాళీ;
 
     ret->scheme = info->scheme;
-    ret->crypt_byte_block = info->crypt_byte_block;
-    ret->skip_byte_block = info->skip_byte_block;
-    memcpy(ret->iv, info->iv, info->iv_size);
-    memcpy(ret->key_id, info->key_id, info->key_id_size);
-    memcpy(ret->subsamples, info->subsamples, sizeof(*info->subsamples) * info->subsample_count);
-    return ret;
+    ret->crypt_byte_ఖండం = info->crypt_byte_ఖండం;
+    ret->skip_byte_ఖండం = info->skip_byte_ఖండం;
+    జ్ఞాపకం_నకలు(ret->iv, info->iv, info->iv_కొలత);
+    జ్ఞాపకం_నకలు(ret->కీలకం_id, info->కీలకం_id, info->కీలకం_id_కొలత);
+    జ్ఞాపకం_నకలు(ret->subsamples, info->subsamples, పరిమాణం(*info->subsamples) * info->subsample_లెక్క);
+    తిరిగి ret;
 }
 
-void av_encryption_info_free(AVEncryptionInfo *info)
+శూన్య av_encryption_info_free(AVEncryptionInfo *info)
 {
-    if (info) {
-        av_free(info->key_id);
+    ఒకవేళ (info) {
+        av_free(info->కీలకం_id);
         av_free(info->iv);
         av_free(info->subsamples);
         av_free(info);
     }
 }
 
-AVEncryptionInfo *av_encryption_info_get_side_data(const uint8_t* buffer, size_t size)
+AVEncryptionInfo *av_encryption_info_get_side_దత్తాంశం(స్థిరరాశి uint8_t* బఫరు, size_t కొలత)
 {
     AVEncryptionInfo *info;
-    uint64_t key_id_size, iv_size, subsample_count, i;
+    uint64_t కీలకం_id_కొలత, iv_కొలత, subsample_లెక్క, i;
 
-    if (!buffer || size < FF_ENCRYPTION_INFO_EXTRA)
-        return NULL;
+    ఒకవేళ (!బఫరు || కొలత < FF_ENCRYPTION_INFO_EXTRA)
+        తిరిగి ఖాళీ;
 
-    key_id_size = AV_RB32(buffer + 12);
-    iv_size = AV_RB32(buffer + 16);
-    subsample_count = AV_RB32(buffer + 20);
+    కీలకం_id_కొలత = AV_RB32(బఫరు + 12);
+    iv_కొలత = AV_RB32(బఫరు + 16);
+    subsample_లెక్క = AV_RB32(బఫరు + 20);
 
-    if (size < FF_ENCRYPTION_INFO_EXTRA + key_id_size + iv_size + subsample_count * 8)
-        return NULL;
+    ఒకవేళ (కొలత < FF_ENCRYPTION_INFO_EXTRA + కీలకం_id_కొలత + iv_కొలత + subsample_లెక్క * 8)
+        తిరిగి ఖాళీ;
 
-    info = av_encryption_info_alloc(subsample_count, key_id_size, iv_size);
-    if (!info)
-        return NULL;
+    info = av_encryption_info_alloc(subsample_లెక్క, కీలకం_id_కొలత, iv_కొలత);
+    ఒకవేళ (!info)
+        తిరిగి ఖాళీ;
 
-    info->scheme = AV_RB32(buffer);
-    info->crypt_byte_block = AV_RB32(buffer + 4);
-    info->skip_byte_block = AV_RB32(buffer + 8);
-    memcpy(info->key_id, buffer + 24, key_id_size);
-    memcpy(info->iv, buffer + key_id_size + 24, iv_size);
+    info->scheme = AV_RB32(బఫరు);
+    info->crypt_byte_ఖండం = AV_RB32(బఫరు + 4);
+    info->skip_byte_ఖండం = AV_RB32(బఫరు + 8);
+    జ్ఞాపకం_నకలు(info->కీలకం_id, బఫరు + 24, కీలకం_id_కొలత);
+    జ్ఞాపకం_నకలు(info->iv, బఫరు + కీలకం_id_కొలత + 24, iv_కొలత);
 
-    buffer += key_id_size + iv_size + 24;
-    for (i = 0; i < subsample_count; i++) {
-        info->subsamples[i].bytes_of_clear_data = AV_RB32(buffer);
-        info->subsamples[i].bytes_of_protected_data = AV_RB32(buffer + 4);
-        buffer += 8;
+    బఫరు += కీలకం_id_కొలత + iv_కొలత + 24;
+    కొరకు (i = 0; i < subsample_లెక్క; i++) {
+        info->subsamples[i].బైట్లు_యొక్క_clear_దత్తాంశం = AV_RB32(బఫరు);
+        info->subsamples[i].బైట్లు_యొక్క_protected_దత్తాంశం = AV_RB32(బఫరు + 4);
+        బఫరు += 8;
     }
 
-    return info;
+    తిరిగి info;
 }
 
-uint8_t *av_encryption_info_add_side_data(const AVEncryptionInfo *info, size_t *size)
+uint8_t *av_encryption_info_కూడు_side_దత్తాంశం(స్థిరరాశి AVEncryptionInfo *info, size_t *కొలత)
 {
-    uint8_t *buffer, *cur_buffer;
+    uint8_t *బఫరు, *cur_బఫరు;
     uint32_t i;
 
-    if (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA < info->key_id_size ||
-        UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->key_id_size < info->iv_size ||
-        (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->key_id_size - info->iv_size) / 8 < info->subsample_count) {
-        return NULL;
+    ఒకవేళ (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA < info->కీలకం_id_కొలత ||
+        UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->కీలకం_id_కొలత < info->iv_కొలత ||
+        (UINT32_MAX - FF_ENCRYPTION_INFO_EXTRA - info->కీలకం_id_కొలత - info->iv_కొలత) / 8 < info->subsample_లెక్క) {
+        తిరిగి ఖాళీ;
     }
 
-    *size = FF_ENCRYPTION_INFO_EXTRA + info->key_id_size + info->iv_size +
-            (info->subsample_count * 8);
-    cur_buffer = buffer = av_malloc(*size);
-    if (!buffer)
-        return NULL;
+    *కొలత = FF_ENCRYPTION_INFO_EXTRA + info->కీలకం_id_కొలత + info->iv_కొలత +
+            (info->subsample_లెక్క * 8);
+    cur_బఫరు = బఫరు = av_malloc(*కొలత);
+    ఒకవేళ (!బఫరు)
+        తిరిగి ఖాళీ;
 
-    AV_WB32(cur_buffer,      info->scheme);
-    AV_WB32(cur_buffer +  4, info->crypt_byte_block);
-    AV_WB32(cur_buffer +  8, info->skip_byte_block);
-    AV_WB32(cur_buffer + 12, info->key_id_size);
-    AV_WB32(cur_buffer + 16, info->iv_size);
-    AV_WB32(cur_buffer + 20, info->subsample_count);
-    cur_buffer += 24;
-    memcpy(cur_buffer, info->key_id, info->key_id_size);
-    cur_buffer += info->key_id_size;
-    memcpy(cur_buffer, info->iv, info->iv_size);
-    cur_buffer += info->iv_size;
-    for (i = 0; i < info->subsample_count; i++) {
-        AV_WB32(cur_buffer, info->subsamples[i].bytes_of_clear_data);
-        AV_WB32(cur_buffer + 4, info->subsamples[i].bytes_of_protected_data);
-        cur_buffer += 8;
+    AV_WB32(cur_బఫరు,      info->scheme);
+    AV_WB32(cur_బఫరు +  4, info->crypt_byte_ఖండం);
+    AV_WB32(cur_బఫరు +  8, info->skip_byte_ఖండం);
+    AV_WB32(cur_బఫరు + 12, info->కీలకం_id_కొలత);
+    AV_WB32(cur_బఫరు + 16, info->iv_కొలత);
+    AV_WB32(cur_బఫరు + 20, info->subsample_లెక్క);
+    cur_బఫరు += 24;
+    జ్ఞాపకం_నకలు(cur_బఫరు, info->కీలకం_id, info->కీలకం_id_కొలత);
+    cur_బఫరు += info->కీలకం_id_కొలత;
+    జ్ఞాపకం_నకలు(cur_బఫరు, info->iv, info->iv_కొలత);
+    cur_బఫరు += info->iv_కొలత;
+    కొరకు (i = 0; i < info->subsample_లెక్క; i++) {
+        AV_WB32(cur_బఫరు, info->subsamples[i].బైట్లు_యొక్క_clear_దత్తాంశం);
+        AV_WB32(cur_బఫరు + 4, info->subsamples[i].బైట్లు_యొక్క_protected_దత్తాంశం);
+        cur_బఫరు += 8;
     }
 
-    return buffer;
+    తిరిగి బఫరు;
 }
 
 // The format of the AVEncryptionInitInfo side data:
@@ -174,188 +174,188 @@ uint8_t *av_encryption_info_add_side_data(const AVEncryptionInfo *info, size_t *
 //   u8[data_size] data
 // }[init_info_count]
 
-#define FF_ENCRYPTION_INIT_INFO_EXTRA 16
+#నిర్వచించు FF_ENCRYPTION_INIT_INFO_EXTRA 16
 
 AVEncryptionInitInfo *av_encryption_init_info_alloc(
-    uint32_t system_id_size, uint32_t num_key_ids, uint32_t key_id_size, uint32_t data_size)
+    uint32_t system_id_కొలత, uint32_t అంకె_కీలకం_ids, uint32_t కీలకం_id_కొలత, uint32_t దత్తాంశం_కొలత)
 {
     AVEncryptionInitInfo *info;
     uint32_t i;
 
-    if (num_key_ids && !key_id_size)
-        return NULL;
+    ఒకవేళ (అంకె_కీలకం_ids && !కీలకం_id_కొలత)
+        తిరిగి ఖాళీ;
 
-    info = av_mallocz(sizeof(*info));
-    if (!info)
-        return NULL;
+    info = av_mallocz(పరిమాణం(*info));
+    ఒకవేళ (!info)
+        తిరిగి ఖాళీ;
 
-    info->system_id = av_mallocz(system_id_size);
-    info->system_id_size = system_id_size;
-    info->key_ids = key_id_size ? av_calloc(num_key_ids, sizeof(*info->key_ids)) : NULL;
-    info->num_key_ids = num_key_ids;
-    info->key_id_size = key_id_size;
-    info->data = av_mallocz(data_size);
-    info->data_size = data_size;
+    info->system_id = av_mallocz(system_id_కొలత);
+    info->system_id_కొలత = system_id_కొలత;
+    info->కీలకం_ids = కీలకం_id_కొలత ? av_calloc(అంకె_కీలకం_ids, పరిమాణం(*info->కీలకం_ids)) : ఖాళీ;
+    info->అంకె_కీలకం_ids = అంకె_కీలకం_ids;
+    info->కీలకం_id_కొలత = కీలకం_id_కొలత;
+    info->దత్తాంశం = av_mallocz(దత్తాంశం_కొలత);
+    info->దత్తాంశం_కొలత = దత్తాంశం_కొలత;
 
     // Allow pointers to be NULL if the size is 0.
-    if ((!info->system_id && system_id_size) || (!info->data && data_size) ||
-        (!info->key_ids && num_key_ids && key_id_size)) {
+    ఒకవేళ ((!info->system_id && system_id_కొలత) || (!info->దత్తాంశం && దత్తాంశం_కొలత) ||
+        (!info->కీలకం_ids && అంకె_కీలకం_ids && కీలకం_id_కొలత)) {
         av_encryption_init_info_free(info);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    if (key_id_size) {
-        for (i = 0; i < num_key_ids; i++) {
-            info->key_ids[i] = av_mallocz(key_id_size);
-            if (!info->key_ids[i]) {
+    ఒకవేళ (కీలకం_id_కొలత) {
+        కొరకు (i = 0; i < అంకె_కీలకం_ids; i++) {
+            info->కీలకం_ids[i] = av_mallocz(కీలకం_id_కొలత);
+            ఒకవేళ (!info->కీలకం_ids[i]) {
                 av_encryption_init_info_free(info);
-                return NULL;
+                తిరిగి ఖాళీ;
             }
         }
     }
 
-    return info;
+    తిరిగి info;
 }
 
-void av_encryption_init_info_free(AVEncryptionInitInfo *info)
+శూన్య av_encryption_init_info_free(AVEncryptionInitInfo *info)
 {
-    while (info) {
-        AVEncryptionInitInfo *next = info->next;
+    అయితే (info) {
+        AVEncryptionInitInfo *తదుపరి = info->తదుపరి;
         uint32_t i;
 
-        for (i = 0; i < info->num_key_ids; i++) {
-            av_free(info->key_ids[i]);
+        కొరకు (i = 0; i < info->అంకె_కీలకం_ids; i++) {
+            av_free(info->కీలకం_ids[i]);
         }
         av_free(info->system_id);
-        av_free(info->key_ids);
-        av_free(info->data);
+        av_free(info->కీలకం_ids);
+        av_free(info->దత్తాంశం);
         av_free(info);
 
-        info = next;
+        info = తదుపరి;
     }
 }
 
-AVEncryptionInitInfo *av_encryption_init_info_get_side_data(
-    const uint8_t *side_data, size_t side_data_size)
+AVEncryptionInitInfo *av_encryption_init_info_get_side_దత్తాంశం(
+    స్థిరరాశి uint8_t *side_దత్తాంశం, size_t side_దత్తాంశం_కొలత)
 {
     // |ret| tracks the front of the list, |info| tracks the back.
-    AVEncryptionInitInfo *ret = NULL, *info, *temp_info;
-    uint64_t system_id_size, num_key_ids, key_id_size, data_size, i, j;
-    uint64_t init_info_count;
+    AVEncryptionInitInfo *ret = ఖాళీ, *info, *తాత్కాలిక_info;
+    uint64_t system_id_కొలత, అంకె_కీలకం_ids, కీలకం_id_కొలత, దత్తాంశం_కొలత, i, j;
+    uint64_t init_info_లెక్క;
 
-    if (!side_data || side_data_size < 4)
-        return NULL;
+    ఒకవేళ (!side_దత్తాంశం || side_దత్తాంశం_కొలత < 4)
+        తిరిగి ఖాళీ;
 
-    init_info_count = AV_RB32(side_data);
-    side_data += 4;
-    side_data_size -= 4;
-    for (i = 0; i < init_info_count; i++) {
-        if (side_data_size < FF_ENCRYPTION_INIT_INFO_EXTRA) {
+    init_info_లెక్క = AV_RB32(side_దత్తాంశం);
+    side_దత్తాంశం += 4;
+    side_దత్తాంశం_కొలత -= 4;
+    కొరకు (i = 0; i < init_info_లెక్క; i++) {
+        ఒకవేళ (side_దత్తాంశం_కొలత < FF_ENCRYPTION_INIT_INFO_EXTRA) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            తిరిగి ఖాళీ;
         }
 
-        system_id_size = AV_RB32(side_data);
-        num_key_ids = AV_RB32(side_data + 4);
-        key_id_size = AV_RB32(side_data + 8);
-        data_size = AV_RB32(side_data + 12);
+        system_id_కొలత = AV_RB32(side_దత్తాంశం);
+        అంకె_కీలకం_ids = AV_RB32(side_దత్తాంశం + 4);
+        కీలకం_id_కొలత = AV_RB32(side_దత్తాంశం + 8);
+        దత్తాంశం_కొలత = AV_RB32(side_దత్తాంశం + 12);
 
         // UINT32_MAX + UINT32_MAX + UINT32_MAX * UINT32_MAX == UINT64_MAX
-        if (side_data_size - FF_ENCRYPTION_INIT_INFO_EXTRA < system_id_size + data_size + num_key_ids * key_id_size) {
+        ఒకవేళ (side_దత్తాంశం_కొలత - FF_ENCRYPTION_INIT_INFO_EXTRA < system_id_కొలత + దత్తాంశం_కొలత + అంకె_కీలకం_ids * కీలకం_id_కొలత) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            తిరిగి ఖాళీ;
         }
-        side_data += FF_ENCRYPTION_INIT_INFO_EXTRA;
-        side_data_size -= FF_ENCRYPTION_INIT_INFO_EXTRA;
+        side_దత్తాంశం += FF_ENCRYPTION_INIT_INFO_EXTRA;
+        side_దత్తాంశం_కొలత -= FF_ENCRYPTION_INIT_INFO_EXTRA;
 
-        temp_info = av_encryption_init_info_alloc(system_id_size, num_key_ids, key_id_size, data_size);
-        if (!temp_info) {
+        తాత్కాలిక_info = av_encryption_init_info_alloc(system_id_కొలత, అంకె_కీలకం_ids, కీలకం_id_కొలత, దత్తాంశం_కొలత);
+        ఒకవేళ (!తాత్కాలిక_info) {
             av_encryption_init_info_free(ret);
-            return NULL;
+            తిరిగి ఖాళీ;
         }
-        if (i == 0) {
-            info = ret = temp_info;
-        } else {
-            info->next = temp_info;
-            info = temp_info;
+        ఒకవేళ (i == 0) {
+            info = ret = తాత్కాలిక_info;
+        } లేకపోతే {
+            info->తదుపరి = తాత్కాలిక_info;
+            info = తాత్కాలిక_info;
         }
 
-        memcpy(info->system_id, side_data, system_id_size);
-        side_data += system_id_size;
-        side_data_size -= system_id_size;
-        for (j = 0; j < num_key_ids; j++) {
-            memcpy(info->key_ids[j], side_data, key_id_size);
-            side_data += key_id_size;
-            side_data_size -= key_id_size;
+        జ్ఞాపకం_నకలు(info->system_id, side_దత్తాంశం, system_id_కొలత);
+        side_దత్తాంశం += system_id_కొలత;
+        side_దత్తాంశం_కొలత -= system_id_కొలత;
+        కొరకు (j = 0; j < అంకె_కీలకం_ids; j++) {
+            జ్ఞాపకం_నకలు(info->కీలకం_ids[j], side_దత్తాంశం, కీలకం_id_కొలత);
+            side_దత్తాంశం += కీలకం_id_కొలత;
+            side_దత్తాంశం_కొలత -= కీలకం_id_కొలత;
         }
-        memcpy(info->data, side_data, data_size);
-        side_data += data_size;
-        side_data_size -= data_size;
+        జ్ఞాపకం_నకలు(info->దత్తాంశం, side_దత్తాంశం, దత్తాంశం_కొలత);
+        side_దత్తాంశం += దత్తాంశం_కొలత;
+        side_దత్తాంశం_కొలత -= దత్తాంశం_కొలత;
     }
 
-    return ret;
+    తిరిగి ret;
 }
 
-int av_encryption_init_info_append_side_data(uint8_t **side_data, size_t *side_data_size,
-                                             unsigned int *allocated_size,
-                                             const AVEncryptionInitInfo *info)
+పూర్ణాంకం av_encryption_init_info_append_side_దత్తాంశం(uint8_t **side_దత్తాంశం, size_t *side_దత్తాంశం_కొలత,
+                                             గుర్తులేని పూర్ణాంకం *allocated_కొలత,
+                                             స్థిరరాశి AVEncryptionInitInfo *info)
 {
-    const AVEncryptionInitInfo *cur_info;
-    uint8_t *buffer, *cur_buffer;
+    స్థిరరాశి AVEncryptionInitInfo *cur_info;
+    uint8_t *బఫరు, *cur_బఫరు;
     uint32_t i;
-    uint64_t init_info_count    = *side_data ? AV_RB32(*side_data) : 0;
-    size_t   old_side_data_size = *side_data ? *side_data_size : 4;
-    uint64_t new_side_data_size = old_side_data_size;
+    uint64_t init_info_లెక్క    = *side_దత్తాంశం ? AV_RB32(*side_దత్తాంశం) : 0;
+    size_t   old_side_దత్తాంశం_కొలత = *side_దత్తాంశం ? *side_దత్తాంశం_కొలత : 4;
+    uint64_t new_side_దత్తాంశం_కొలత = old_side_దత్తాంశం_కొలత;
 
-    for (cur_info = info; cur_info; cur_info = cur_info->next) {
-        new_side_data_size += (uint64_t)FF_ENCRYPTION_INIT_INFO_EXTRA + cur_info->system_id_size + cur_info->data_size;
-        if (init_info_count == UINT32_MAX || new_side_data_size > UINT32_MAX)
-            return AVERROR(EINVAL);
-        init_info_count++;
+    కొరకు (cur_info = info; cur_info; cur_info = cur_info->తదుపరి) {
+        new_side_దత్తాంశం_కొలత += (uint64_t)FF_ENCRYPTION_INIT_INFO_EXTRA + cur_info->system_id_కొలత + cur_info->దత్తాంశం_కొలత;
+        ఒకవేళ (init_info_లెక్క == UINT32_MAX || new_side_దత్తాంశం_కొలత > UINT32_MAX)
+            తిరిగి AVERROR(EINVAL);
+        init_info_లెక్క++;
 
-        if (cur_info->num_key_ids) {
-            new_side_data_size += (uint64_t)cur_info->num_key_ids * cur_info->key_id_size;
-            if (new_side_data_size > UINT32_MAX)
-                return AVERROR(EINVAL);
+        ఒకవేళ (cur_info->అంకె_కీలకం_ids) {
+            new_side_దత్తాంశం_కొలత += (uint64_t)cur_info->అంకె_కీలకం_ids * cur_info->కీలకం_id_కొలత;
+            ఒకవేళ (new_side_దత్తాంశం_కొలత > UINT32_MAX)
+                తిరిగి AVERROR(EINVAL);
         }
     }
 
-    buffer = av_fast_realloc(*side_data, allocated_size, new_side_data_size);
-    if (!buffer)
-        return AVERROR(ENOMEM);
+    బఫరు = av_fast_realloc(*side_దత్తాంశం, allocated_కొలత, new_side_దత్తాంశం_కొలత);
+    ఒకవేళ (!బఫరు)
+        తిరిగి AVERROR(ENOMEM);
 
-    AV_WB32(buffer, init_info_count);
-    cur_buffer = buffer + old_side_data_size;
-    for (cur_info = info; cur_info; cur_info = cur_info->next) {
-        AV_WB32(cur_buffer,      cur_info->system_id_size);
-        AV_WB32(cur_buffer +  4, cur_info->num_key_ids);
-        AV_WB32(cur_buffer +  8, cur_info->key_id_size);
-        AV_WB32(cur_buffer + 12, cur_info->data_size);
-        cur_buffer += 16;
+    AV_WB32(బఫరు, init_info_లెక్క);
+    cur_బఫరు = బఫరు + old_side_దత్తాంశం_కొలత;
+    కొరకు (cur_info = info; cur_info; cur_info = cur_info->తదుపరి) {
+        AV_WB32(cur_బఫరు,      cur_info->system_id_కొలత);
+        AV_WB32(cur_బఫరు +  4, cur_info->అంకె_కీలకం_ids);
+        AV_WB32(cur_బఫరు +  8, cur_info->కీలకం_id_కొలత);
+        AV_WB32(cur_బఫరు + 12, cur_info->దత్తాంశం_కొలత);
+        cur_బఫరు += 16;
 
-        memcpy(cur_buffer, cur_info->system_id, cur_info->system_id_size);
-        cur_buffer += cur_info->system_id_size;
-        for (i = 0; i < cur_info->num_key_ids; i++) {
-            memcpy(cur_buffer, cur_info->key_ids[i], cur_info->key_id_size);
-            cur_buffer += cur_info->key_id_size;
+        జ్ఞాపకం_నకలు(cur_బఫరు, cur_info->system_id, cur_info->system_id_కొలత);
+        cur_బఫరు += cur_info->system_id_కొలత;
+        కొరకు (i = 0; i < cur_info->అంకె_కీలకం_ids; i++) {
+            జ్ఞాపకం_నకలు(cur_బఫరు, cur_info->కీలకం_ids[i], cur_info->కీలకం_id_కొలత);
+            cur_బఫరు += cur_info->కీలకం_id_కొలత;
         }
-        if (cur_info->data_size > 0) {
-            memcpy(cur_buffer, cur_info->data, cur_info->data_size);
-            cur_buffer += cur_info->data_size;
+        ఒకవేళ (cur_info->దత్తాంశం_కొలత > 0) {
+            జ్ఞాపకం_నకలు(cur_బఫరు, cur_info->దత్తాంశం, cur_info->దత్తాంశం_కొలత);
+            cur_బఫరు += cur_info->దత్తాంశం_కొలత;
         }
     }
 
-    *side_data      = buffer;
-    *side_data_size = new_side_data_size;
-    return 0;
+    *side_దత్తాంశం      = బఫరు;
+    *side_దత్తాంశం_కొలత = new_side_దత్తాంశం_కొలత;
+    తిరిగి 0;
 }
 
-uint8_t *av_encryption_init_info_add_side_data(const AVEncryptionInitInfo *info, size_t *side_data_size)
+uint8_t *av_encryption_init_info_కూడు_side_దత్తాంశం(స్థిరరాశి AVEncryptionInitInfo *info, size_t *side_దత్తాంశం_కొలత)
 {
-    uint8_t *side_data = NULL;
-    unsigned int allocated_size = 0;
+    uint8_t *side_దత్తాంశం = ఖాళీ;
+    గుర్తులేని పూర్ణాంకం allocated_కొలత = 0;
 
-    if (av_encryption_init_info_append_side_data(&side_data, side_data_size, &allocated_size, info) < 0)
-        return NULL;
-    return side_data;
+    ఒకవేళ (av_encryption_init_info_append_side_దత్తాంశం(&side_దత్తాంశం, side_దత్తాంశం_కొలత, &allocated_కొలత, info) < 0)
+        తిరిగి ఖాళీ;
+    తిరిగి side_దత్తాంశం;
 }

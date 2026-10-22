@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SIDE_DATA_H
-#define AVUTIL_SIDE_DATA_H
+#నిర్వచితం_కాకపోతే AVUTIL_SIDE_దత్తాంశం_H
+#నిర్వచించు AVUTIL_SIDE_దత్తాంశం_H
 
-#include "buffer.h"
-#include "frame.h"
+#అన్తర్భావ "buffer.h"
+#అన్తర్భావ "frame.h"
 
-AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_దత్తాంశం *ff_చట్రం_side_దత్తాంశం_కూడు_from_buf(AVFrame_Side_దత్తాంశం ***sd,
+                                                 పూర్ణాంకం *nb_sd,
+                                                 గణన AVFrame_Side_దత్తాంశం_Type type,
                                                  AVBufferRef *buf);
 
-#endif // AVUTIL_SIDE_DATA_H
+#అయితే_ముగింపు // AVUTIL_SIDE_DATA_H

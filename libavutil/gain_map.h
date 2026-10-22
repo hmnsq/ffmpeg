@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_GAIN_MAP_H
-#define AVUTIL_GAIN_MAP_H
+#నిర్వచితం_కాకపోతే AVUTIL_GAIN_MAP_H
+#నిర్వచించు AVUTIL_GAIN_MAP_H
 
-#include <stddef.h>
+#అన్తర్భావ <stddef.h>
 
-#include "rational.h"
-#include "frame.h"
+#అన్తర్భావ "rational.h"
+#అన్తర్భావ "frame.h"
 
-#define AV_ISO21496_VERSION    0
-#define AV_ISO21496_IDENTIFIER "urn:iso:std:iso:ts:21496:-1"
+#నిర్వచించు AV_ISO21496_సంస్కరణ    0
+#నిర్వచించు AV_ISO21496_IDENTIFIER "urn:iso:std:iso:ts:21496:-1"
 
 /**
  * Parameters describing how to combine a gain map rendition with its base
@@ -36,27 +36,27 @@
  * Note: sizeof(AVGainMapParams) is not part of the ABI. New fields may be
  * added at the end of the struct.
  */
-typedef struct AVGainMapParams {
+రకనిర్వచనం నిర్మాణం AVGainMapParams {
     /**
      * The version of this gain map struct. Reserved to allow future
      * extensions of the struct. Must be <= AV_ISO21496_VERSION.
      */
-    int version;
+    పూర్ణాంకం సంస్కరణ;
 
     /**
      * If non-zero, the gain map is applied in the colour space of the base
      * rendition; otherwise in that of the alternate rendition.
      */
-    int use_base_color_space;
+    పూర్ణాంకం use_పునాది_color_space;
 
     /**
      * log2 of the display headroom at which the base rendition is shown
      * unmodified, and at which the map is applied in full.
      */
-    AVRational base_hdr_headroom;
+    AVRational పునాది_hdr_headroom;
     AVRational alternate_hdr_headroom;
 
-    struct AVGainMapChannel {
+    నిర్మాణం AVGainMapChannel {
         /**
         * log2-domain minimum and maximum gain applied by the map, i.e. the
         * values the map's 0.0 and 1.0 endpoints decode to.
@@ -73,14 +73,14 @@ typedef struct AVGainMapParams {
         * Small constants added before the log-domain math to avoid a
         * singularity at zero.
         */
-        AVRational base_offset;
-        AVRational alternate_offset;
+        AVRational పునాది_స్థానభ్రంశం;
+        AVRational alternate_స్థానభ్రంశం;
     } channels[3]; /* R, G, B */
 
     /**
      * Must be 1 or 3. If 1, all channels share the same set of parameters.
      */
-    int nb_channels;
+    పూర్ణాంకం nb_channels;
 } AVGainMapParams;
 
 /**
@@ -92,10 +92,10 @@ typedef struct AVGainMapParams {
  *
  * @return >= 0 on success, or a negative AVERROR on failure
  */
-int av_gain_map_params_from_iso21496(AVGainMapParams *p, const uint8_t *data,
-                                     size_t size);
+పూర్ణాంకం av_gain_map_params_from_iso21496(AVGainMapParams *p, స్థిరరాశి uint8_t *దత్తాంశం,
+                                     size_t కొలత);
 
-#define AV_GAIN_MAP_MAX_PAYLOAD_SIZE 141 /* = 5 + 2*8 + 3*5*8 */
+#నిర్వచించు AV_GAIN_MAP_MAX_PAYLOAD_కొలత 141 /* = 5 + 2*8 + 3*5*8 */
 
 /**
  * Serialize an AVGainMapParams as an ISO 21496-1 gain map metadata blob.
@@ -111,19 +111,19 @@ int av_gain_map_params_from_iso21496(AVGainMapParams *p, const uint8_t *data,
  *
  * @note Always succeeds if av_gain_map_params_validate() returns >= 0.
  */
-int av_gain_map_params_to_iso21496(const AVGainMapParams *p, uint8_t *buf);
+పూర్ణాంకం av_gain_map_params_గమ్యం_iso21496(స్థిరరాశి AVGainMapParams *p, uint8_t *buf);
 
 /**
  * Returns >= 0 if the given AVGainMapParams struct contains valid data;
  * or a negative AVERROR otherwise.
  */
-int av_gain_map_params_validate(const AVGainMapParams *p);
+పూర్ణాంకం av_gain_map_params_validate(స్థిరరాశి AVGainMapParams *p);
 
 /**
  * Returns 1 if all channels of the gain map have identical parameters,
  * 0 otherwise.
  */
-int av_gain_map_channels_identical(const AVGainMapParams *p);
+పూర్ణాంకం av_gain_map_channels_identical(స్థిరరాశి AVGainMapParams *p);
 
 /**
  * Allocate an AVGainMapParams structure and initialize it to default values.
@@ -132,7 +132,7 @@ int av_gain_map_channels_identical(const AVGainMapParams *p);
  * @param size if non-NULL, set to sizeof(AVGainMapParams)
  * @return the newly allocated struct, or NULL on failure
  */
-AVGainMapParams *av_gain_map_params_alloc(size_t *size);
+AVGainMapParams *av_gain_map_params_alloc(size_t *కొలత);
 
 /**
  * Allocate and add an AVGainMapParams structure to an existing AVFrameSideData
@@ -140,6 +140,6 @@ AVGainMapParams *av_gain_map_params_alloc(size_t *size);
  *
  * @return the newly allocated struct, or NULL on failure
  */
-AVGainMapParams *av_gain_map_params_create_side_data(AVFrameSideData ***sd, int *nb_sd);
+AVGainMapParams *av_gain_map_params_create_side_దత్తాంశం(AVFrame_Side_దత్తాంశం ***sd, పూర్ణాంకం *nb_sd);
 
-#endif /* AVUTIL_GAIN_MAP_H */
+#అయితే_ముగింపు /* AVUTIL_GAIN_MAP_H */

@@ -16,34 +16,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_TIME_INTERNAL_H
-#define AVUTIL_TIME_INTERNAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_సమయం_అంతర్గత_H
+#నిర్వచించు AVUTIL_సమయం_అంతర్గత_H
 
-#include <time.h>
-#include "config.h"
+#అన్తర్భావ <time.h>
+#అన్తర్భావ "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#ఒకవేళ !HAVE_GMTIME_R && !defined(gmtime_r)
+స్థిర అంతఃవరుస నిర్మాణం tm *ff_gmtime_r(స్థిరరాశి time_t* clock, నిర్మాణం tm *ఫలితం)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
-    *result = *ptr;
-    return result;
+    నిర్మాణం tm *ptr = gmtime(clock);
+    ఒకవేళ (!ptr)
+        తిరిగి ఖాళీ;
+    *ఫలితం = *ptr;
+    తిరిగి ఫలితం;
 }
-#define gmtime_r ff_gmtime_r
-#endif
+#నిర్వచించు gmtime_r ff_gmtime_r
+#అయితే_ముగింపు
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#ఒకవేళ !HAVE_LOCALTIME_R && !defined(localtime_r)
+స్థిర అంతఃవరుస నిర్మాణం tm *ff_localtime_r(స్థిరరాశి time_t* clock, నిర్మాణం tm *ఫలితం)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
-    *result = *ptr;
-    return result;
+    నిర్మాణం tm *ptr = localtime(clock);
+    ఒకవేళ (!ptr)
+        తిరిగి ఖాళీ;
+    *ఫలితం = *ptr;
+    తిరిగి ఫలితం;
 }
-#define localtime_r ff_localtime_r
-#endif
+#నిర్వచించు localtime_r ff_localtime_r
+#అయితే_ముగింపు
 
-#endif /* AVUTIL_TIME_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_TIME_INTERNAL_H */

@@ -19,445 +19,445 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <stdarg.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <string.h>
 
-#include "config.h"
-#include "mem.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "avstring.h"
+#అన్తర్భావ "bprint.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "macros.h"
 
-int av_strstart(const char *str, const char *pfx, const char **ptr)
+పూర్ణాంకం av_strstart(స్థిరరాశి అక్షరం *str, స్థిరరాశి అక్షరం *pfx, స్థిరరాశి అక్షరం **ptr)
 {
-    while (*pfx && *pfx == *str) {
+    అయితే (*pfx && *pfx == *str) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ఒకవేళ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    తిరిగి !*pfx;
 }
 
-int av_stristart(const char *str, const char *pfx, const char **ptr)
+పూర్ణాంకం av_stristart(స్థిరరాశి అక్షరం *str, స్థిరరాశి అక్షరం *pfx, స్థిరరాశి అక్షరం **ptr)
 {
-    while (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
+    అయితే (*pfx && av_toupper((గుర్తులేని)*pfx) == av_toupper((గుర్తులేని)*str)) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ఒకవేళ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    తిరిగి !*pfx;
 }
 
-char *av_stristr(const char *s1, const char *s2)
+అక్షరం *av_stristr(స్థిరరాశి అక్షరం *s1, స్థిరరాశి అక్షరం *s2)
 {
-    if (!*s2)
-        return (char*)(intptr_t)s1;
+    ఒకవేళ (!*s2)
+        తిరిగి (అక్షరం*)(intptr_t)s1;
 
-    do
-        if (av_stristart(s1, s2, NULL))
-            return (char*)(intptr_t)s1;
-    while (*s1++);
+    చేయి
+        ఒకవేళ (av_stristart(s1, s2, ఖాళీ))
+            తిరిగి (అక్షరం*)(intptr_t)s1;
+    అయితే (*s1++);
 
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length)
+అక్షరం *av_strnstr(స్థిరరాశి అక్షరం *haystack, స్థిరరాశి అక్షరం *needle, size_t hay_నిడివి)
 {
-    size_t needle_len = strlen(needle);
-    if (!needle_len)
-        return (char*)haystack;
-    while (hay_length >= needle_len) {
-        hay_length--;
-        if (!memcmp(haystack, needle, needle_len))
-            return (char*)haystack;
+    size_t needle_len = అక్షరశ్రేణి_పొడవు(needle);
+    ఒకవేళ (!needle_len)
+        తిరిగి (అక్షరం*)haystack;
+    అయితే (hay_నిడివి >= needle_len) {
+        hay_నిడివి--;
+        ఒకవేళ (!memcmp(haystack, needle, needle_len))
+            తిరిగి (అక్షరం*)haystack;
         haystack++;
     }
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
-size_t av_strlcpy(char *dst, const char *src, size_t size)
+size_t av_strlcpy(అక్షరం *dst, స్థిరరాశి అక్షరం *src, size_t కొలత)
 {
     size_t len = 0;
-    while (++len < size && *src)
+    అయితే (++len < కొలత && *src)
         *dst++ = *src++;
-    if (len <= size)
+    ఒకవేళ (len <= కొలత)
         *dst = 0;
-    return len + strlen(src) - 1;
+    తిరిగి len + అక్షరశ్రేణి_పొడవు(src) - 1;
 }
 
-size_t av_strlcat(char *dst, const char *src, size_t size)
+size_t av_strlcat(అక్షరం *dst, స్థిరరాశి అక్షరం *src, size_t కొలత)
 {
-    size_t len = strlen(dst);
-    if (size <= len + 1)
-        return len + strlen(src);
-    return len + av_strlcpy(dst + len, src, size - len);
+    size_t len = అక్షరశ్రేణి_పొడవు(dst);
+    ఒకవేళ (కొలత <= len + 1)
+        తిరిగి len + అక్షరశ్రేణి_పొడవు(src);
+    తిరిగి len + av_strlcpy(dst + len, src, కొలత - len);
 }
 
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
+size_t av_strlcatf(అక్షరం *dst, size_t కొలత, స్థిరరాశి అక్షరం *fmt, ...)
 {
-    size_t len = strlen(dst);
+    size_t len = అక్షరశ్రేణి_పొడవు(dst);
     va_list vl;
 
     va_start(vl, fmt);
-    len += vsnprintf(dst + len, size > len ? size - len : 0, fmt, vl);
+    len += vsnprintf(dst + len, కొలత > len ? కొలత - len : 0, fmt, vl);
     va_end(vl);
 
-    return len;
+    తిరిగి len;
 }
 
-char *av_asprintf(const char *fmt, ...)
+అక్షరం *av_asprintf(స్థిరరాశి అక్షరం *fmt, ...)
 {
-    char *p = NULL;
+    అక్షరం *p = ఖాళీ;
     va_list va;
-    int len;
+    పూర్ణాంకం len;
 
     va_start(va, fmt);
-    len = vsnprintf(NULL, 0, fmt, va);
+    len = vsnprintf(ఖాళీ, 0, fmt, va);
     va_end(va);
-    if (len < 0)
-        goto end;
+    ఒకవేళ (len < 0)
+        వెళ్ళు చివర;
 
     p = av_malloc(len + 1);
-    if (!p)
-        goto end;
+    ఒకవేళ (!p)
+        వెళ్ళు చివర;
 
     va_start(va, fmt);
     len = vsnprintf(p, len + 1, fmt, va);
     va_end(va);
-    if (len < 0)
+    ఒకవేళ (len < 0)
         av_freep(&p);
 
-end:
-    return p;
+చివర:
+    తిరిగి p;
 }
 
-#define WHITESPACES " \n\t\r"
+#నిర్వచించు WHITESPACES " \n\t\r"
 
-char *av_get_token(const char **buf, const char *term)
+అక్షరం *av_get_token(స్థిరరాశి అక్షరం **buf, స్థిరరాశి అక్షరం *పదం)
 {
-    char *out     = av_realloc(NULL, strlen(*buf) + 1);
-    char *ret     = out, *end = out;
-    const char *p = *buf;
-    if (!out)
-        return NULL;
+    అక్షరం *బహిర్గతం     = av_realloc(ఖాళీ, అక్షరశ్రేణి_పొడవు(*buf) + 1);
+    అక్షరం *ret     = బహిర్గతం, *చివర = బహిర్గతం;
+    స్థిరరాశి అక్షరం *p = *buf;
+    ఒకవేళ (!బహిర్గతం)
+        తిరిగి ఖాళీ;
     p += strspn(p, WHITESPACES);
 
-    while (*p && !strspn(p, term)) {
-        char c = *p++;
-        if (c == '\\' && *p) {
-            *out++ = *p++;
-            end    = out;
-        } else if (c == '\'') {
-            while (*p && *p != '\'')
-                *out++ = *p++;
-            if (*p) {
+    అయితే (*p && !strspn(p, పదం)) {
+        అక్షరం c = *p++;
+        ఒకవేళ (c == '\\' && *p) {
+            *బహిర్గతం++ = *p++;
+            చివర    = బహిర్గతం;
+        } లేకపోతే ఒకవేళ (c == '\'') {
+            అయితే (*p && *p != '\'')
+                *బహిర్గతం++ = *p++;
+            ఒకవేళ (*p) {
                 p++;
-                end = out;
+                చివర = బహిర్గతం;
             }
-        } else {
-            *out++ = c;
+        } లేకపోతే {
+            *బహిర్గతం++ = c;
         }
     }
 
-    do
-        *out-- = 0;
-    while (out >= end && strspn(out, WHITESPACES));
+    చేయి
+        *బహిర్గతం-- = 0;
+    అయితే (బహిర్గతం >= చివర && strspn(బహిర్గతం, WHITESPACES));
 
     *buf = p;
 
-    char *small_ret = av_realloc(ret, out - ret + 2);
-    return small_ret ? small_ret : ret;
+    అక్షరం *small_ret = av_realloc(ret, బహిర్గతం - ret + 2);
+    తిరిగి small_ret ? small_ret : ret;
 }
 
-char *av_strtok(char *s, const char *delim, char **saveptr)
+అక్షరం *av_strtok(అక్షరం *s, స్థిరరాశి అక్షరం *delim, అక్షరం **saveptr)
 {
-    char *tok;
+    అక్షరం *tok;
 
-    if (!s && !(s = *saveptr))
-        return NULL;
+    ఒకవేళ (!s && !(s = *saveptr))
+        తిరిగి ఖాళీ;
 
     /* skip leading delimiters */
     s += strspn(s, delim);
 
     /* s now points to the first non delimiter char, or to the end of the string */
-    if (!*s) {
-        *saveptr = NULL;
-        return NULL;
+    ఒకవేళ (!*s) {
+        *saveptr = ఖాళీ;
+        తిరిగి ఖాళీ;
     }
     tok = s++;
 
     /* skip non delimiters */
     s += strcspn(s, delim);
-    if (*s) {
+    ఒకవేళ (*s) {
         *s = 0;
         *saveptr = s+1;
-    } else {
-        *saveptr = NULL;
+    } లేకపోతే {
+        *saveptr = ఖాళీ;
     }
 
-    return tok;
+    తిరిగి tok;
 }
 
-int av_strcasecmp(const char *a, const char *b)
+పూర్ణాంకం av_strcasecmp(స్థిరరాశి అక్షరం *a, స్థిరరాశి అక్షరం *b)
 {
     uint8_t c1, c2;
-    do {
+    చేయి {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (c1 && c1 == c2);
-    return c1 - c2;
+    } అయితే (c1 && c1 == c2);
+    తిరిగి c1 - c2;
 }
 
-int av_strncasecmp(const char *a, const char *b, size_t n)
+పూర్ణాంకం av_strncasecmp(స్థిరరాశి అక్షరం *a, స్థిరరాశి అక్షరం *b, size_t n)
 {
     uint8_t c1, c2;
-    if (n <= 0)
-        return 0;
-    do {
+    ఒకవేళ (n <= 0)
+        తిరిగి 0;
+    చేయి {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (--n && c1 && c1 == c2);
-    return c1 - c2;
+    } అయితే (--n && c1 && c1 == c2);
+    తిరిగి c1 - c2;
 }
 
-char *av_strireplace(const char *str, const char *from, const char *to)
+అక్షరం *av_strireplace(స్థిరరాశి అక్షరం *str, స్థిరరాశి అక్షరం *from, స్థిరరాశి అక్షరం *గమ్యం)
 {
-    char *ret = NULL;
-    const char *pstr2, *pstr = str;
-    size_t tolen = strlen(to), fromlen = strlen(from);
+    అక్షరం *ret = ఖాళీ;
+    స్థిరరాశి అక్షరం *pstr2, *pstr = str;
+    size_t tolen = అక్షరశ్రేణి_పొడవు(గమ్యం), fromlen = అక్షరశ్రేణి_పొడవు(from);
     AVBPrint pbuf;
 
-    if (!fromlen)
-        return av_strdup(str);
+    ఒకవేళ (!fromlen)
+        తిరిగి av_strdup(str);
 
-    av_bprint_init(&pbuf, 1, AV_BPRINT_SIZE_UNLIMITED);
-    while ((pstr2 = av_stristr(pstr, from))) {
-        av_bprint_append_data(&pbuf, pstr, pstr2 - pstr);
+    av_bprint_init(&pbuf, 1, AV_BPRINT_కొలత_UNLIMITED);
+    అయితే ((pstr2 = av_stristr(pstr, from))) {
+        av_bprint_append_దత్తాంశం(&pbuf, pstr, pstr2 - pstr);
         pstr = pstr2 + fromlen;
-        av_bprint_append_data(&pbuf, to, tolen);
+        av_bprint_append_దత్తాంశం(&pbuf, గమ్యం, tolen);
     }
-    av_bprint_append_data(&pbuf, pstr, strlen(pstr));
-    if (!av_bprint_is_complete(&pbuf)) {
-        av_bprint_finalize(&pbuf, NULL);
-    } else {
+    av_bprint_append_దత్తాంశం(&pbuf, pstr, అక్షరశ్రేణి_పొడవు(pstr));
+    ఒకవేళ (!av_bprint_is_complete(&pbuf)) {
+        av_bprint_finalize(&pbuf, ఖాళీ);
+    } లేకపోతే {
         av_bprint_finalize(&pbuf, &ret);
     }
 
-    return ret;
+    తిరిగి ret;
 }
 
-const char *av_basename(const char *path)
+స్థిరరాశి అక్షరం *av_basename(స్థిరరాశి అక్షరం *మార్గం)
 {
-    if (!path || *path == '\0')
-        return ".";
+    ఒకవేళ (!మార్గం || *మార్గం == '\0')
+        తిరిగి ".";
 
-    const char *p = strrchr(path, '/');
-#if HAVE_DOS_PATHS
-    const char *q = strrchr(path, '\\');
-    const char *d = strchr(path, ':');
+    స్థిరరాశి అక్షరం *p = strrchr(మార్గం, '/');
+#ఒకవేళ HAVE_DOS_PATHS
+    స్థిరరాశి అక్షరం *q = strrchr(మార్గం, '\\');
+    స్థిరరాశి అక్షరం *d = strchr(మార్గం, ':');
     p = FFMAX3(p, q, d);
-#endif
+#అయితే_ముగింపు
 
-    if (!p)
-        return path;
+    ఒకవేళ (!p)
+        తిరిగి మార్గం;
 
-    return p + 1;
+    తిరిగి p + 1;
 }
 
-const char *av_dirname(char *path)
+స్థిరరాశి అక్షరం *av_dirname(అక్షరం *మార్గం)
 {
-    char *p = path ? strrchr(path, '/') : NULL;
+    అక్షరం *p = మార్గం ? strrchr(మార్గం, '/') : ఖాళీ;
 
-#if HAVE_DOS_PATHS
-    char *q = path ? strrchr(path, '\\') : NULL;
-    char *d = path ? strchr(path, ':')  : NULL;
+#ఒకవేళ HAVE_DOS_PATHS
+    అక్షరం *q = మార్గం ? strrchr(మార్గం, '\\') : ఖాళీ;
+    అక్షరం *d = మార్గం ? strchr(మార్గం, ':')  : ఖాళీ;
 
     d = d ? d + 1 : d;
 
     p = FFMAX3(p, q, d);
-#endif
+#అయితే_ముగింపు
 
-    if (!p)
-        return ".";
+    ఒకవేళ (!p)
+        తిరిగి ".";
 
     *p = '\0';
 
-    return path;
+    తిరిగి మార్గం;
 }
 
-char *av_append_path_component(const char *path, const char *component)
+అక్షరం *av_append_మార్గం_component(స్థిరరాశి అక్షరం *మార్గం, స్థిరరాశి అక్షరం *component)
 {
     size_t p_len, c_len;
-    char *fullpath;
+    అక్షరం *fullpath;
 
-    if (!path)
-        return av_strdup(component);
-    if (!component)
-        return av_strdup(path);
+    ఒకవేళ (!మార్గం)
+        తిరిగి av_strdup(component);
+    ఒకవేళ (!component)
+        తిరిగి av_strdup(మార్గం);
 
-    p_len = strlen(path);
-    c_len = strlen(component);
-    if (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
-        return NULL;
+    p_len = అక్షరశ్రేణి_పొడవు(మార్గం);
+    c_len = అక్షరశ్రేణి_పొడవు(component);
+    ఒకవేళ (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
+        తిరిగి ఖాళీ;
     fullpath = av_malloc(p_len + c_len + 2);
-    if (fullpath) {
-        if (p_len) {
-            av_strlcpy(fullpath, path, p_len + 1);
-            if (c_len) {
-                if (fullpath[p_len - 1] != '/' && component[0] != '/')
+    ఒకవేళ (fullpath) {
+        ఒకవేళ (p_len) {
+            av_strlcpy(fullpath, మార్గం, p_len + 1);
+            ఒకవేళ (c_len) {
+                ఒకవేళ (fullpath[p_len - 1] != '/' && component[0] != '/')
                     fullpath[p_len++] = '/';
-                else if (fullpath[p_len - 1] == '/' && component[0] == '/')
+                లేకపోతే ఒకవేళ (fullpath[p_len - 1] == '/' && component[0] == '/')
                     p_len--;
             }
         }
         av_strlcpy(&fullpath[p_len], component, c_len + 1);
         fullpath[p_len + c_len] = 0;
     }
-    return fullpath;
+    తిరిగి fullpath;
 }
 
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags)
+పూర్ణాంకం av_escape(అక్షరం **dst, స్థిరరాశి అక్షరం *src, స్థిరరాశి అక్షరం *special_chars,
+              గణన AVEscape_బహుళకం బహుళకం, పూర్ణాంకం flags)
 {
     AVBPrint dstbuf;
-    int ret;
+    పూర్ణాంకం ret;
 
-    av_bprint_init(&dstbuf, 1, INT_MAX); /* (int)dstbuf.len must be >= 0 */
-    av_bprint_escape(&dstbuf, src, special_chars, mode, flags);
+    av_bprint_init(&dstbuf, 1, గరిష్ఠ_పూర్ణాంకం); /* (int)dstbuf.len must be >= 0 */
+    av_bprint_escape(&dstbuf, src, special_chars, బహుళకం, flags);
 
-    if (!av_bprint_is_complete(&dstbuf)) {
-        av_bprint_finalize(&dstbuf, NULL);
-        return AVERROR(ENOMEM);
+    ఒకవేళ (!av_bprint_is_complete(&dstbuf)) {
+        av_bprint_finalize(&dstbuf, ఖాళీ);
+        తిరిగి AVERROR(ENOMEM);
     }
-    if ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
-        return ret;
-    return dstbuf.len;
+    ఒకవేళ ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
+        తిరిగి ret;
+    తిరిగి dstbuf.len;
 }
 
-int av_match_name(const char *name, const char *names)
+పూర్ణాంకం av_సరిపోలిక_name(స్థిరరాశి అక్షరం *name, స్థిరరాశి అక్షరం *పేర్లు)
 {
-    const char *p;
+    స్థిరరాశి అక్షరం *p;
     size_t len, namelen;
 
-    if (!name || !names)
-        return 0;
+    ఒకవేళ (!name || !పేర్లు)
+        తిరిగి 0;
 
-    namelen = strlen(name);
-    while (*names) {
-        int negate = '-' == *names;
-        p = strchr(names, ',');
-        if (!p)
-            p = names + strlen(names);
-        names += negate;
-        len = FFMAX(p - names, namelen);
-        if (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
-            return !negate;
-        names = p + (*p == ',');
+    namelen = అక్షరశ్రేణి_పొడవు(name);
+    అయితే (*పేర్లు) {
+        పూర్ణాంకం negate = '-' == *పేర్లు;
+        p = strchr(పేర్లు, ',');
+        ఒకవేళ (!p)
+            p = పేర్లు + అక్షరశ్రేణి_పొడవు(పేర్లు);
+        పేర్లు += negate;
+        len = FFMAX(p - పేర్లు, namelen);
+        ఒకవేళ (!av_strncasecmp(name, పేర్లు, len) || !అక్షరశ్రేణి_పోలిక("ALL", పేర్లు, FFMAX(3, p - పేర్లు)))
+            తిరిగి !negate;
+        పేర్లు = p + (*p == ',');
     }
-    return 0;
+    తిరిగి 0;
 }
 
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags)
+పూర్ణాంకం av_utf8_decode(int32_t *codep, స్థిరరాశి uint8_t **bufp, స్థిరరాశి uint8_t *buf_చివర,
+                   గుర్తులేని పూర్ణాంకం flags)
 {
-    const uint8_t *p = *bufp;
-    uint32_t top;
-    uint64_t code;
-    int ret = 0, tail_len;
+    స్థిరరాశి uint8_t *p = *bufp;
+    uint32_t శిఖరం;
+    uint64_t సంకేతం_2;
+    పూర్ణాంకం ret = 0, తోక_len;
     uint32_t overlong_encoding_mins[6] = {
         0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000,
     };
 
-    if (p >= buf_end)
-        return 0;
+    ఒకవేళ (p >= buf_చివర)
+        తిరిగి 0;
 
-    code = *p++;
+    సంకేతం_2 = *p++;
 
     /* first sequence byte starts with 10, or is 1111-1110 or 1111-1111,
        which is not admitted */
-    if ((code & 0xc0) == 0x80 || code >= 0xFE) {
+    ఒకవేళ ((సంకేతం_2 & 0xc0) == 0x80 || సంకేతం_2 >= 0xFE) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        వెళ్ళు చివర;
     }
-    top = (code & 128) >> 1;
+    శిఖరం = (సంకేతం_2 & 128) >> 1;
 
-    tail_len = 0;
-    while (code & top) {
-        int tmp;
-        tail_len++;
-        if (p >= buf_end) {
+    తోక_len = 0;
+    అయితే (సంకేతం_2 & శిఖరం) {
+        పూర్ణాంకం tmp;
+        తోక_len++;
+        ఒకవేళ (p >= buf_చివర) {
             (*bufp) ++;
-            return AVERROR(EILSEQ); /* incomplete sequence */
+            తిరిగి AVERROR(EILSEQ); /* incomplete sequence */
         }
 
         /* we assume the byte to be in the form 10xx-xxxx */
         tmp = *p++ - 128;   /* strip leading 1 */
-        if (tmp>>6) {
+        ఒకవేళ (tmp>>6) {
             (*bufp) ++;
-            return AVERROR(EILSEQ);
+            తిరిగి AVERROR(EILSEQ);
         }
-        code = (code<<6) + tmp;
-        top <<= 5;
+        సంకేతం_2 = (సంకేతం_2<<6) + tmp;
+        శిఖరం <<= 5;
     }
-    code &= (top << 1) - 1;
+    సంకేతం_2 &= (శిఖరం << 1) - 1;
 
     /* check for overlong encodings */
-    av_assert0(tail_len <= 5);
-    if (code < overlong_encoding_mins[tail_len]) {
+    av_assert0(తోక_len <= 5);
+    ఒకవేళ (సంకేతం_2 < overlong_encoding_mins[తోక_len]) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        వెళ్ళు చివర;
     }
 
-    if (code >= 1U<<31) {
+    ఒకవేళ (సంకేతం_2 >= 1U<<31) {
         ret = AVERROR(EILSEQ);  /* out-of-range value */
-        goto end;
+        వెళ్ళు చివర;
     }
 
-    *codep = code;
+    *codep = సంకేతం_2;
 
-    if (code > 0x10FFFF &&
+    ఒకవేళ (సంకేతం_2 > 0x10FFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES))
         ret = AVERROR(EILSEQ);
-    if (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
+    ఒకవేళ (సంకేతం_2 < 0x20 && సంకేతం_2 != 0x9 && సంకేతం_2 != 0xA && సంకేతం_2 != 0xD &&
         flags & AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES)
         ret = AVERROR(EILSEQ);
-    if (code >= 0xD800 && code <= 0xDFFF &&
+    ఒకవేళ (సంకేతం_2 >= 0xD800 && సంకేతం_2 <= 0xDFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_SURROGATES))
         ret = AVERROR(EILSEQ);
-    if ((code == 0xFFFE || code == 0xFFFF) &&
+    ఒకవేళ ((సంకేతం_2 == 0xFFFE || సంకేతం_2 == 0xFFFF) &&
         !(flags & AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS))
         ret = AVERROR(EILSEQ);
 
-end:
+చివర:
     *bufp = p;
-    return ret;
+    తిరిగి ret;
 }
 
-int av_match_list(const char *name, const char *list, char separator)
+పూర్ణాంకం av_సరిపోలిక_list(స్థిరరాశి అక్షరం *name, స్థిరరాశి అక్షరం *list, అక్షరం separator)
 {
-    const char *p, *q;
+    స్థిరరాశి అక్షరం *p, *q;
 
-    for (p = name; p && *p; ) {
-        for (q = list; q && *q; ) {
-            int k;
-            for (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
-                if (k && (!p[k] || p[k] == separator))
-                    return 1;
+    కొరకు (p = name; p && *p; ) {
+        కొరకు (q = list; q && *q; ) {
+            పూర్ణాంకం k;
+            కొరకు (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
+                ఒకవేళ (k && (!p[k] || p[k] == separator))
+                    తిరిగి 1;
             q = strchr(q, separator);
-            if(q)
+            ఒకవేళ(q)
                 q++;
         }
         p = strchr(p, separator);
-        if (p)
+        ఒకవేళ (p)
             p++;
     }
 
-    return 0;
+    తిరిగి 0;
 }

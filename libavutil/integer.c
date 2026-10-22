@@ -25,142 +25,142 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "integer.h"
-#include "avassert.h"
-#include "intmath.h"
+#అన్తర్భావ "integer.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "intmath.h"
 
-static const AVInteger zero_i;
+స్థిర స్థిరరాశి AVInteger zero_i;
 
-AVInteger av_add_i(AVInteger a, AVInteger b){
-    int i, carry=0;
+AVInteger av_కూడు_i(AVInteger a, AVInteger b){
+    పూర్ణాంకం i, వాహకం=0;
 
-    for(i=0; i<AV_INTEGER_SIZE; i++){
-        carry= (carry>>16) + a.v[i] + b.v[i];
-        a.v[i]= carry;
+    కొరకు(i=0; i<AV_INTEGER_కొలత; i++){
+        వాహకం= (వాహకం>>16) + a.v[i] + b.v[i];
+        a.v[i]= వాహకం;
     }
-    return a;
+    తిరిగి a;
 }
 
 AVInteger av_sub_i(AVInteger a, AVInteger b){
-    int i, carry=0;
+    పూర్ణాంకం i, వాహకం=0;
 
-    for(i=0; i<AV_INTEGER_SIZE; i++){
-        carry= (carry>>16) + a.v[i] - b.v[i];
-        a.v[i]= carry;
+    కొరకు(i=0; i<AV_INTEGER_కొలత; i++){
+        వాహకం= (వాహకం>>16) + a.v[i] - b.v[i];
+        a.v[i]= వాహకం;
     }
-    return a;
+    తిరిగి a;
 }
 
-int av_log2_i(AVInteger a){
-    int i;
+పూర్ణాంకం av_log2_i(AVInteger a){
+    పూర్ణాంకం i;
 
-    for(i=AV_INTEGER_SIZE-1; i>=0; i--){
-        if(a.v[i])
-            return av_log2_16bit(a.v[i]) + 16*i;
+    కొరకు(i=AV_INTEGER_కొలత-1; i>=0; i--){
+        ఒకవేళ(a.v[i])
+            తిరిగి av_log2_16bit(a.v[i]) + 16*i;
     }
-    return -1;
+    తిరిగి -1;
 }
 
 AVInteger av_mul_i(AVInteger a, AVInteger b){
-    AVInteger out;
-    int i, j;
-    int na= (av_log2_i(a)+16) >> 4;
-    int nb= (av_log2_i(b)+16) >> 4;
+    AVInteger బహిర్గతం;
+    పూర్ణాంకం i, j;
+    పూర్ణాంకం na= (av_log2_i(a)+16) >> 4;
+    పూర్ణాంకం nb= (av_log2_i(b)+16) >> 4;
 
-    memset(&out, 0, sizeof(out));
+    memset(&బహిర్గతం, 0, పరిమాణం(బహిర్గతం));
 
-    for(i=0; i<na; i++){
-        unsigned int carry=0;
+    కొరకు(i=0; i<na; i++){
+        గుర్తులేని పూర్ణాంకం వాహకం=0;
 
-        if(a.v[i])
-            for(j=i; j<AV_INTEGER_SIZE && j-i<=nb; j++){
-                carry= (carry>>16) + out.v[j] + a.v[i]*(unsigned)b.v[j-i];
-                out.v[j]= carry;
+        ఒకవేళ(a.v[i])
+            కొరకు(j=i; j<AV_INTEGER_కొలత && j-i<=nb; j++){
+                వాహకం= (వాహకం>>16) + బహిర్గతం.v[j] + a.v[i]*(గుర్తులేని)b.v[j-i];
+                బహిర్గతం.v[j]= వాహకం;
             }
     }
 
-    return out;
+    తిరిగి బహిర్గతం;
 }
 
-int av_cmp_i(AVInteger a, AVInteger b){
-    int i;
-    int v= (int16_t)a.v[AV_INTEGER_SIZE-1] - (int16_t)b.v[AV_INTEGER_SIZE-1];
-    if(v) return (v>>16)|1;
+పూర్ణాంకం av_cmp_i(AVInteger a, AVInteger b){
+    పూర్ణాంకం i;
+    పూర్ణాంకం v= (int16_t)a.v[AV_INTEGER_కొలత-1] - (int16_t)b.v[AV_INTEGER_కొలత-1];
+    ఒకవేళ(v) తిరిగి (v>>16)|1;
 
-    for(i=AV_INTEGER_SIZE-2; i>=0; i--){
-        int v= a.v[i] - b.v[i];
-        if(v) return (v>>16)|1;
+    కొరకు(i=AV_INTEGER_కొలత-2; i>=0; i--){
+        పూర్ణాంకం v= a.v[i] - b.v[i];
+        ఒకవేళ(v) తిరిగి (v>>16)|1;
     }
-    return 0;
+    తిరిగి 0;
 }
 
-AVInteger av_shr_i(AVInteger a, int s){
-    AVInteger out;
-    int i;
+AVInteger av_shr_i(AVInteger a, పూర్ణాంకం s){
+    AVInteger బహిర్గతం;
+    పూర్ణాంకం i;
 
-    for(i=0; i<AV_INTEGER_SIZE; i++){
-        unsigned int index= i + (s>>4);
-        unsigned int v=0;
-        if (index + 1 < AV_INTEGER_SIZE) v  = a.v[index + 1] * (1U << 16);
-        if (index     < AV_INTEGER_SIZE) v |= a.v[index];
-        out.v[i]= v >> (s&15);
+    కొరకు(i=0; i<AV_INTEGER_కొలత; i++){
+        గుర్తులేని పూర్ణాంకం సూచీ= i + (s>>4);
+        గుర్తులేని పూర్ణాంకం v=0;
+        ఒకవేళ (సూచీ + 1 < AV_INTEGER_కొలత) v  = a.v[సూచీ + 1] * (1U << 16);
+        ఒకవేళ (సూచీ     < AV_INTEGER_కొలత) v |= a.v[సూచీ];
+        బహిర్గతం.v[i]= v >> (s&15);
     }
-    return out;
+    తిరిగి బహిర్గతం;
 }
 
 AVInteger av_mod_i(AVInteger *quot, AVInteger a, AVInteger b){
-    int i= av_log2_i(a) - av_log2_i(b);
-    AVInteger quot_temp;
-    if(!quot) quot = &quot_temp;
+    పూర్ణాంకం i= av_log2_i(a) - av_log2_i(b);
+    AVInteger quot_తాత్కాలిక;
+    ఒకవేళ(!quot) quot = &quot_తాత్కాలిక;
 
-    if ((int16_t)a.v[AV_INTEGER_SIZE-1] < 0) {
+    ఒకవేళ ((int16_t)a.v[AV_INTEGER_కొలత-1] < 0) {
         a = av_mod_i(quot, av_sub_i(zero_i, a), b);
         *quot = av_sub_i(zero_i, *quot);
-        return av_sub_i(zero_i, a);
+        తిరిగి av_sub_i(zero_i, a);
     }
 
-    av_assert2((int16_t)a.v[AV_INTEGER_SIZE-1] >= 0 && (int16_t)b.v[AV_INTEGER_SIZE-1] >= 0);
+    av_assert2((int16_t)a.v[AV_INTEGER_కొలత-1] >= 0 && (int16_t)b.v[AV_INTEGER_కొలత-1] >= 0);
     av_assert2(av_log2_i(b)>=0);
 
-    if(i > 0)
+    ఒకవేళ(i > 0)
         b= av_shr_i(b, -i);
 
-    memset(quot, 0, sizeof(AVInteger));
+    memset(quot, 0, పరిమాణం(AVInteger));
 
-    while(i-- >= 0){
+    అయితే(i-- >= 0){
         *quot= av_shr_i(*quot, -1);
-        if(av_cmp_i(a, b) >= 0){
+        ఒకవేళ(av_cmp_i(a, b) >= 0){
             a= av_sub_i(a, b);
             quot->v[0] += 1;
         }
         b= av_shr_i(b, 1);
     }
-    return a;
+    తిరిగి a;
 }
 
 AVInteger av_div_i(AVInteger a, AVInteger b){
     AVInteger quot;
     av_mod_i(&quot, a, b);
-    return quot;
+    తిరిగి quot;
 }
 
 AVInteger av_int2i(int64_t a){
-    AVInteger out;
-    int i;
+    AVInteger బహిర్గతం;
+    పూర్ణాంకం i;
 
-    for(i=0; i<AV_INTEGER_SIZE; i++){
-        out.v[i]= a;
+    కొరకు(i=0; i<AV_INTEGER_కొలత; i++){
+        బహిర్గతం.v[i]= a;
         a>>=16;
     }
-    return out;
+    తిరిగి బహిర్గతం;
 }
 
 int64_t av_i2int(AVInteger a){
-    uint64_t out = a.v[3];
+    uint64_t బహిర్గతం = a.v[3];
 
-    for (int i = 2; i >= 0; i--)
-        out = (out << 16) | a.v[i];
-    return out;
+    కొరకు (పూర్ణాంకం i = 2; i >= 0; i--)
+        బహిర్గతం = (బహిర్గతం << 16) | a.v[i];
+    తిరిగి బహిర్గతం;
 }

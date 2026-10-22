@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BASE64_H
-#define AVUTIL_BASE64_H
+#నిర్వచితం_కాకపోతే AVUTIL_BASE64_H
+#నిర్వచించు AVUTIL_BASE64_H
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
 /**
  * @defgroup lavu_base64 Base64
@@ -39,13 +39,13 @@
  * @return         number of bytes written, or a negative value in case of
  *                 invalid input
  */
-int av_base64_decode(uint8_t *out, const char *in, int out_size);
+పూర్ణాంకం av_base64_decode(uint8_t *బహిర్గతం, స్థిరరాశి అక్షరం *లోపల, పూర్ణాంకం బహిర్గతం_కొలత);
 
 /**
  * Calculate the output size in bytes needed to decode a base64 string
  * with length x to a data buffer.
  */
-#define AV_BASE64_DECODE_SIZE(x) ((x) * 3LL / 4)
+#నిర్వచించు AV_BASE64_DECODE_కొలత(x) ((x) * 3LL / 4)
 
 /**
  * Encode data to base64 and null-terminate.
@@ -57,16 +57,16 @@ int av_base64_decode(uint8_t *out, const char *in, int out_size);
  * @param in_size  size in bytes of the in buffer
  * @return         out or NULL in case of error
  */
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size);
+అక్షరం *av_base64_encode(అక్షరం *బహిర్గతం, పూర్ణాంకం బహిర్గతం_కొలత, స్థిరరాశి uint8_t *లోపల, పూర్ణాంకం లోపల_కొలత);
 
 /**
  * Calculate the output size needed to base64-encode x bytes to a
  * null-terminated string.
  */
-#define AV_BASE64_SIZE(x)  (((x)+2) / 3 * 4 + 1)
+#నిర్వచించు AV_BASE64_కొలత(x)  (((x)+2) / 3 * 4 + 1)
 
  /**
   * @}
   */
 
-#endif /* AVUTIL_BASE64_H */
+#అయితే_ముగింపు /* AVUTIL_BASE64_H */

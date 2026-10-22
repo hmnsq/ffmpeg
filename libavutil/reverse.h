@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_REVERSE_H
-#define AVUTIL_REVERSE_H
+#నిర్వచితం_కాకపోతే AVUTIL_తిరగేయి_H
+#నిర్వచించు AVUTIL_తిరగేయి_H
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
-extern const uint8_t ff_reverse[256];
+బాహ్య స్థిరరాశి uint8_t ff_తిరగేయి[256];
 
-#endif /* AVUTIL_REVERSE_H */
+#అయితే_ముగింపు /* AVUTIL_REVERSE_H */

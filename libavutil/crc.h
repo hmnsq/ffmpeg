@@ -24,12 +24,12 @@
  * Public header for CRC hash function implementation.
  */
 
-#ifndef AVUTIL_CRC_H
-#define AVUTIL_CRC_H
+#నిర్వచితం_కాకపోతే AVUTIL_చక్రీయ_తనిఖీ_H
+#నిర్వచించు AVUTIL_చక్రీయ_తనిఖీ_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include "attributes.h"
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ "attributes.h"
 
 /**
  * @defgroup lavu_crc32 CRC
@@ -43,18 +43,18 @@
  * @{
  */
 
-typedef uint32_t AVCRC;
+రకనిర్వచనం uint32_t AVCRC;
 
-typedef enum {
-    AV_CRC_8_ATM,
-    AV_CRC_16_ANSI,
-    AV_CRC_16_CCITT,
-    AV_CRC_32_IEEE,
-    AV_CRC_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
-    AV_CRC_16_ANSI_LE,  /*< reversed bitorder version of AV_CRC_16_ANSI */
-    AV_CRC_24_IEEE,
-    AV_CRC_8_EBU,
-    AV_CRC_MAX,         /*< Not part of public API! Do not use outside libavutil. */
+రకనిర్వచనం గణన {
+    AV_చక్రీయ_తనిఖీ_8_ATM,
+    AV_చక్రీయ_తనిఖీ_16_ANSI,
+    AV_చక్రీయ_తనిఖీ_16_CCITT,
+    AV_చక్రీయ_తనిఖీ_32_IEEE,
+    AV_చక్రీయ_తనిఖీ_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
+    AV_చక్రీయ_తనిఖీ_16_ANSI_LE,  /*< reversed bitorder version of AV_CRC_16_ANSI */
+    AV_చక్రీయ_తనిఖీ_24_IEEE,
+    AV_చక్రీయ_తనిఖీ_8_EBU,
+    AV_చక్రీయ_తనిఖీ_MAX,         /*< Not part of public API! Do not use outside libavutil. */
 }AVCRCId;
 
 /**
@@ -73,14 +73,14 @@ typedef enum {
  * @param ctx_size size of ctx in bytes
  * @return <0 on failure
  */
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
+పూర్ణాంకం av_చక్రీయ_తనిఖీ_init(AVCRC *ctx, పూర్ణాంకం le, పూర్ణాంకం బిట్లు, uint32_t poly, పూర్ణాంకం ctx_కొలత);
 
 /**
  * Get an initialized standard CRC table.
  * @param crc_id ID of a standard CRC
  * @return a pointer to the CRC table or NULL on failure
  */
-const AVCRC *av_crc_get_table(AVCRCId crc_id);
+స్థిరరాశి AVCRC *av_చక్రీయ_తనిఖీ_get_పట్టిక(AVCRCId చక్రీయ_తనిఖీ_id);
 
 /**
  * Calculate the CRC of a block.
@@ -92,11 +92,11 @@ const AVCRC *av_crc_get_table(AVCRCId crc_id);
  *
  * @see av_crc_init() "le" parameter
  */
-uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
-                const uint8_t *buffer, size_t length) av_pure;
+uint32_t av_చక్రీయ_తనిఖీ(స్థిరరాశి AVCRC *ctx, uint32_t చక్రీయ_తనిఖీ,
+                స్థిరరాశి uint8_t *బఫరు, size_t నిడివి) av_శుద్ధ;
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_CRC_H */
+#అయితే_ముగింపు /* AVUTIL_CRC_H */

@@ -18,37 +18,37 @@
 
 // LCOV_EXCL_START
 
-#include "libavutil/timer.h"
+#అన్తర్భావ "libavutil/timer.h"
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "libavutil/log.h"
-#include "libavutil/adler32.h"
+#అన్తర్భావ "libavutil/log.h"
+#అన్తర్భావ "libavutil/adler32.h"
 
-#define LEN 7001
+#నిర్వచించు LEN 7001
 
-int main(int argc, char **argv)
+పూర్ణాంకం ప్రధాన(పూర్ణాంకం argc, అక్షరం **argv)
 {
-    int i;
-    uint8_t data[LEN];
+    పూర్ణాంకం i;
+    uint8_t దత్తాంశం[LEN];
     AVAdler checksum;
 
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_సమితి_level(AV_LOG_DEBUG);
 
-    for (i = 0; i < LEN; i++)
-        data[i] = ((i * i) >> 3) + 123 * i;
+    కొరకు (i = 0; i < LEN; i++)
+        దత్తాంశం[i] = ((i * i) >> 3) + 123 * i;
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1000; i++) {
-            START_TIMER;
-            checksum = av_adler32_update(1, data, LEN);
+    ఒకవేళ (argc > 1 && !strcmp(argv[1], "-t")) {
+        కొరకు (i = 0; i < 1000; i++) {
+            ప్రారంభం_TIMER;
+            checksum = av_adler32_update(1, దత్తాంశం, LEN);
             STOP_TIMER("adler");
         }
-    } else {
-        checksum = av_adler32_update(1, data, LEN);
+    } లేకపోతే {
+        checksum = av_adler32_update(1, దత్తాంశం, LEN);
     }
 
-    av_log(NULL, AV_LOG_DEBUG, "%X (expected 50E6E508)\n", checksum);
-    return checksum == 0x50e6e508 ? 0 : 1;
+    av_log(ఖాళీ, AV_LOG_DEBUG, "%X (expected 50E6E508)\n", checksum);
+    తిరిగి checksum == 0x50e6e508 ? 0 : 1;
 }
 // LCOV_EXCL_STOP

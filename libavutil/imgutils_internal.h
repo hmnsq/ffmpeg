@@ -16,19 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_IMGUTILS_INTERNAL_H
-#define AVUTIL_IMGUTILS_INTERNAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_IMGUTILS_అంతర్గత_H
+#నిర్వచించు AVUTIL_IMGUTILS_అంతర్గత_H
 
-#include <stddef.h>
-#include <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
 
-#include "pixfmt.h"
+#అన్తర్భావ "pixfmt.h"
 
-int avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt);
+పూర్ణాంకం avpriv_సమితి_systematic_pal2(uint32_t pal[256], గణన AVPixelFormat pix_fmt);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                    const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height);
+పూర్ణాంకం ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
+                                    స్థిరరాశి uint8_t *src, ptrdiff_t src_linesize,
+                                    ptrdiff_t bytewidth, పూర్ణాంకం ఎత్తు);
 
 
-#endif /* AVUTIL_IMGUTILS_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_IMGUTILS_INTERNAL_H */

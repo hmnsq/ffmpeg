@@ -19,44 +19,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <string.h>
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <string.h>
 
-#include "avassert.h"
-#include "intreadwrite.h"
-#include "lzo.h"
-#include "macros.h"
-#include "mem.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "intreadwrite.h"
+#అన్తర్భావ "lzo.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mem.h"
 
 /// Define if we may write up to 12 bytes beyond the output buffer.
-#define OUTBUF_PADDED 1
+#నిర్వచించు OUTBUF_PADDED 1
 /// Define if we may read up to 8 bytes beyond the input buffer.
-#define INBUF_PADDED 1
+#నిర్వచించు INBUF_PADDED 1
 
-typedef struct LZOContext {
-    const uint8_t *in, *in_end;
-    uint8_t *out_start, *out, *out_end;
-    int error;
+రకనిర్వచనం నిర్మాణం LZOContext {
+    స్థిరరాశి uint8_t *లోపల, *లోపల_చివర;
+    uint8_t *బహిర్గతం_ప్రారంభం, *బహిర్గతం, *బహిర్గతం_చివర;
+    పూర్ణాంకం error;
 } LZOContext;
 
 /**
  * @brief Reads one byte from the input buffer, avoiding an overrun.
  * @return byte read
  */
-static inline int get_byte(LZOContext *c)
+స్థిర అంతఃవరుస పూర్ణాంకం get_byte(LZOContext *c)
 {
-    if (c->in < c->in_end)
-        return *c->in++;
-    c->error |= AV_LZO_INPUT_DEPLETED;
-    return 1;
+    ఒకవేళ (c->లోపల < c->లోపల_చివర)
+        తిరిగి *c->లోపల++;
+    c->error |= AV_LZO_ఆదానం_DEPLETED;
+    తిరిగి 1;
 }
 
-#ifdef INBUF_PADDED
-#define GETB(c) (*(c).in++)
-#else
-#define GETB(c) get_byte(&(c))
-#endif
+#నిర్వచితమైతే INBUF_PADDED
+#నిర్వచించు GETB(c) (*(c).లోపల++)
+#లేకపోతే
+#నిర్వచించు GETB(c) get_byte(&(c))
+#అయితే_ముగింపు
 
 /**
  * @brief Decodes a length value in the coding used by lzo.
@@ -64,49 +64,49 @@ static inline int get_byte(LZOContext *c)
  * @param mask bits used from x
  * @return decoded length value
  */
-static inline int get_len(LZOContext *c, int x, int mask)
+స్థిర అంతఃవరుస పూర్ణాంకం get_len(LZOContext *c, పూర్ణాంకం x, పూర్ణాంకం ముసుగు_2)
 {
-    int cnt = x & mask;
-    if (!cnt) {
-        while (!(x = get_byte(c))) {
-            if (cnt >= INT_MAX - 1000) {
+    పూర్ణాంకం cnt = x & ముసుగు_2;
+    ఒకవేళ (!cnt) {
+        అయితే (!(x = get_byte(c))) {
+            ఒకవేళ (cnt >= గరిష్ఠ_పూర్ణాంకం - 1000) {
                 c->error |= AV_LZO_ERROR;
-                break;
+                ఆపు;
             }
             cnt += 255;
         }
-        cnt += mask + x;
+        cnt += ముసుగు_2 + x;
     }
-    return cnt;
+    తిరిగి cnt;
 }
 
 /**
  * @brief Copies bytes from input to output buffer with checking.
  * @param cnt number of bytes to copy, must be >= 0
  */
-static inline void copy(LZOContext *c, int cnt)
+స్థిర అంతఃవరుస శూన్య copy(LZOContext *c, పూర్ణాంకం cnt)
 {
-    register const uint8_t *src = c->in;
-    register uint8_t *dst       = c->out;
+    నమోదు స్థిరరాశి uint8_t *src = c->లోపల;
+    నమోదు uint8_t *dst       = c->బహిర్గతం;
     av_assert0(cnt >= 0);
-    if (cnt > c->in_end - src) {
-        cnt       = FFMAX(c->in_end - src, 0);
-        c->error |= AV_LZO_INPUT_DEPLETED;
+    ఒకవేళ (cnt > c->లోపల_చివర - src) {
+        cnt       = FFMAX(c->లోపల_చివర - src, 0);
+        c->error |= AV_LZO_ఆదానం_DEPLETED;
     }
-    if (cnt > c->out_end - dst) {
-        cnt       = FFMAX(c->out_end - dst, 0);
-        c->error |= AV_LZO_OUTPUT_FULL;
+    ఒకవేళ (cnt > c->బహిర్గతం_చివర - dst) {
+        cnt       = FFMAX(c->బహిర్గతం_చివర - dst, 0);
+        c->error |= AV_LZO_OUTPUT_నిండిన;
     }
-#if defined(INBUF_PADDED) && defined(OUTBUF_PADDED)
+#ఒకవేళ defined(INBUF_PADDED) && defined(OUTBUF_PADDED)
     AV_COPY32U(dst, src);
     src += 4;
     dst += 4;
     cnt -= 4;
-    if (cnt > 0)
-#endif
-    memcpy(dst, src, cnt);
-    c->in  = src + cnt;
-    c->out = dst + cnt;
+    ఒకవేళ (cnt > 0)
+#అయితే_ముగింపు
+    జ్ఞాపకం_నకలు(dst, src, cnt);
+    c->లోపల  = src + cnt;
+    c->బహిర్గతం = dst + cnt;
 }
 
 /**
@@ -117,91 +117,91 @@ static inline void copy(LZOContext *c, int cnt)
  * cnt > back is valid, this will copy the bytes we just copied,
  * thus creating a repeating pattern with a period length of back.
  */
-static inline void copy_backptr(LZOContext *c, int back, int cnt)
+స్థిర అంతఃవరుస శూన్య copy_backptr(LZOContext *c, పూర్ణాంకం వెనుక, పూర్ణాంకం cnt)
 {
-    register uint8_t *dst       = c->out;
+    నమోదు uint8_t *dst       = c->బహిర్గతం;
     av_assert0(cnt > 0);
-    if (dst - c->out_start < back) {
+    ఒకవేళ (dst - c->బహిర్గతం_ప్రారంభం < వెనుక) {
         c->error |= AV_LZO_INVALID_BACKPTR;
-        return;
+        తిరిగి;
     }
-    if (cnt > c->out_end - dst) {
-        cnt       = FFMAX(c->out_end - dst, 0);
-        c->error |= AV_LZO_OUTPUT_FULL;
+    ఒకవేళ (cnt > c->బహిర్గతం_చివర - dst) {
+        cnt       = FFMAX(c->బహిర్గతం_చివర - dst, 0);
+        c->error |= AV_LZO_OUTPUT_నిండిన;
     }
-    av_memcpy_backptr(dst, back, cnt);
-    c->out = dst + cnt;
+    av_memcpy_backptr(dst, వెనుక, cnt);
+    c->బహిర్గతం = dst + cnt;
 }
 
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen)
+పూర్ణాంకం av_lzo1x_decode(శూన్య *బహిర్గతం, పూర్ణాంకం *outlen, స్థిరరాశి శూన్య *లోపల, పూర్ణాంకం *inlen)
 {
-    int state = 0;
-    int x;
+    పూర్ణాంకం state = 0;
+    పూర్ణాంకం x;
     LZOContext c;
-    if (*outlen <= 0 || *inlen <= 0) {
-        int res = 0;
-        if (*outlen <= 0)
-            res |= AV_LZO_OUTPUT_FULL;
-        if (*inlen <= 0)
-            res |= AV_LZO_INPUT_DEPLETED;
-        return res;
+    ఒకవేళ (*outlen <= 0 || *inlen <= 0) {
+        పూర్ణాంకం res = 0;
+        ఒకవేళ (*outlen <= 0)
+            res |= AV_LZO_OUTPUT_నిండిన;
+        ఒకవేళ (*inlen <= 0)
+            res |= AV_LZO_ఆదానం_DEPLETED;
+        తిరిగి res;
     }
-    c.in      = in;
-    c.in_end  = (const uint8_t *)in + *inlen;
-    c.out     = c.out_start = out;
-    c.out_end = (uint8_t *)out + *outlen;
+    c.లోపల      = లోపల;
+    c.లోపల_చివర  = (స్థిరరాశి uint8_t *)లోపల + *inlen;
+    c.బహిర్గతం     = c.బహిర్గతం_ప్రారంభం = బహిర్గతం;
+    c.బహిర్గతం_చివర = (uint8_t *)బహిర్గతం + *outlen;
     c.error   = 0;
     x         = GETB(c);
-    if (x > 17) {
+    ఒకవేళ (x > 17) {
         copy(&c, x - 17);
         x = GETB(c);
-        if (x < 16)
+        ఒకవేళ (x < 16)
             c.error |= AV_LZO_ERROR;
     }
-    if (c.in > c.in_end)
-        c.error |= AV_LZO_INPUT_DEPLETED;
-    while (!c.error) {
-        int cnt, back;
-        if (x > 15) {
-            if (x > 63) {
+    ఒకవేళ (c.లోపల > c.లోపల_చివర)
+        c.error |= AV_LZO_ఆదానం_DEPLETED;
+    అయితే (!c.error) {
+        పూర్ణాంకం cnt, వెనుక;
+        ఒకవేళ (x > 15) {
+            ఒకవేళ (x > 63) {
                 cnt  = (x >> 5) - 1;
-                back = (GETB(c) << 3) + ((x >> 2) & 7) + 1;
-            } else if (x > 31) {
+                వెనుక = (GETB(c) << 3) + ((x >> 2) & 7) + 1;
+            } లేకపోతే ఒకవేళ (x > 31) {
                 cnt  = get_len(&c, x, 31);
                 x    = GETB(c);
-                back = (GETB(c) << 6) + (x >> 2) + 1;
-            } else {
+                వెనుక = (GETB(c) << 6) + (x >> 2) + 1;
+            } లేకపోతే {
                 cnt   = get_len(&c, x, 7);
-                back  = (1 << 14) + ((x & 8) << 11);
+                వెనుక  = (1 << 14) + ((x & 8) << 11);
                 x     = GETB(c);
-                back += (GETB(c) << 6) + (x >> 2);
-                if (back == (1 << 14)) {
-                    if (cnt != 1)
+                వెనుక += (GETB(c) << 6) + (x >> 2);
+                ఒకవేళ (వెనుక == (1 << 14)) {
+                    ఒకవేళ (cnt != 1)
                         c.error |= AV_LZO_ERROR;
-                    break;
+                    ఆపు;
                 }
             }
-        } else if (!state) {
+        } లేకపోతే ఒకవేళ (!state) {
             cnt = get_len(&c, x, 15);
             copy(&c, cnt + 3);
             x = GETB(c);
-            if (x > 15)
-                continue;
+            ఒకవేళ (x > 15)
+                కొనసాగు;
             cnt  = 1;
-            back = (1 << 11) + (GETB(c) << 2) + (x >> 2) + 1;
-        } else {
+            వెనుక = (1 << 11) + (GETB(c) << 2) + (x >> 2) + 1;
+        } లేకపోతే {
             cnt  = 0;
-            back = (GETB(c) << 2) + (x >> 2) + 1;
+            వెనుక = (GETB(c) << 2) + (x >> 2) + 1;
         }
-        copy_backptr(&c, back, cnt + 2);
+        copy_backptr(&c, వెనుక, cnt + 2);
         state =
         cnt   = x & 3;
         copy(&c, cnt);
         x = GETB(c);
     }
-    *inlen = c.in_end - c.in;
-    if (c.in > c.in_end)
+    *inlen = c.లోపల_చివర - c.లోపల;
+    ఒకవేళ (c.లోపల > c.లోపల_చివర)
         *inlen = 0;
-    *outlen = c.out_end - c.out;
-    return c.error;
+    *outlen = c.బహిర్గతం_చివర - c.బహిర్గతం;
+    తిరిగి c.error;
 }

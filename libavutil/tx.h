@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_TX_H
-#define AVUTIL_TX_H
+#నిర్వచితం_కాకపోతే AVUTIL_TX_H
+#నిర్వచించు AVUTIL_TX_H
 
-#include <stdint.h>
-#include <stddef.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stddef.h>
 
-typedef struct AVTXContext AVTXContext;
+రకనిర్వచనం నిర్మాణం AVTXContext AVTXContext;
 
-typedef struct AVComplexFloat {
-    float re, im;
+రకనిర్వచనం నిర్మాణం AVComplexFloat {
+    దశాంశం re, im;
 } AVComplexFloat;
 
-typedef struct AVComplexDouble {
-    double re, im;
+రకనిర్వచనం నిర్మాణం AVComplexDouble {
+    ద్విగుణ re, im;
 } AVComplexDouble;
 
-typedef struct AVComplexInt32 {
+రకనిర్వచనం నిర్మాణం AVComplexInt32 {
     int32_t re, im;
 } AVComplexInt32;
 
-enum AVTXType {
+గణన AVTXType {
     /**
      * Standard complex to complex FFT with sample data type of AVComplexFloat,
      * AVComplexDouble or AVComplexInt32, for each respective variant.
@@ -148,12 +148,12 @@ enum AVTXType {
  * architecture unless the AV_TX_UNALIGNED flag was set in av_tx_init().
  * The stride must follow the constraints the transform type has specified.
  */
-typedef void (*av_tx_fn)(AVTXContext *s, void *out, void *in, ptrdiff_t stride);
+రకనిర్వచనం శూన్య (*av_tx_fn)(AVTXContext *s, శూన్య *బహిర్గతం, శూన్య *లోపల, ptrdiff_t stride);
 
 /**
  * Flags for av_tx_init()
  */
-enum AVTXFlags {
+గణన AVTXFlags {
     /**
      * Allows for in-place transformations, where input == output.
      * May be unsupported or slower for some transform types.
@@ -172,7 +172,7 @@ enum AVTXFlags {
      * rather than the usual 'len/2' floats.
      * Ignored for all transforms but inverse MDCTs.
      */
-    AV_TX_FULL_IMDCT = 1ULL << 2,
+    AV_TX_నిండిన_IMDCT = 1ULL << 2,
 
     /**
      * Perform a real to half-complex RDFT.
@@ -181,8 +181,8 @@ enum AVTXFlags {
      * Output array must have enough space to hold N complex values
      * (regular size for a real to complex transform).
      */
-    AV_TX_REAL_TO_REAL      = 1ULL << 3,
-    AV_TX_REAL_TO_IMAGINARY = 1ULL << 4,
+    AV_TX_REAL_గమ్యం_REAL      = 1ULL << 3,
+    AV_TX_REAL_గమ్యం_IMAGINARY = 1ULL << 4,
 };
 
 /**
@@ -199,12 +199,12 @@ enum AVTXFlags {
  *
  * @return 0 on success, negative error code on failure
  */
-int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
-               int inv, int len, const void *scale, uint64_t flags);
+పూర్ణాంకం av_tx_init(AVTXContext **ctx, av_tx_fn *tx, గణన AVTXType type,
+               పూర్ణాంకం inv, పూర్ణాంకం len, స్థిరరాశి శూన్య *scale, uint64_t flags);
 
 /**
  * Frees a context and sets *ctx to NULL, does nothing when *ctx == NULL.
  */
-void av_tx_uninit(AVTXContext **ctx);
+శూన్య av_tx_uninit(AVTXContext **ctx);
 
-#endif /* AVUTIL_TX_H */
+#అయితే_ముగింపు /* AVUTIL_TX_H */

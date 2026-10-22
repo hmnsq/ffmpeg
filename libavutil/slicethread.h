@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SLICETHREAD_H
-#define AVUTIL_SLICETHREAD_H
+#నిర్వచితం_కాకపోతే AVUTIL_SLICETHREAD_H
+#నిర్వచించు AVUTIL_SLICETHREAD_H
 
-#include "attributes.h"
-#include "version.h"
+#అన్తర్భావ "attributes.h"
+#అన్తర్భావ "version.h"
 
-typedef struct AVSliceThread AVSliceThread;
+రకనిర్వచనం నిర్మాణం AVSliceThread AVSliceThread;
 
 /**
  * Create slice threading context.
@@ -33,10 +33,10 @@ typedef struct AVSliceThread AVSliceThread;
  * @param nb_threads number of threads, 0 for automatic, must be >= 0
  * @return return number of threads or negative AVERROR on failure
  */
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads);
+పూర్ణాంకం avpriv_slicethread_create2(AVSliceThread **pctx, శూన్య *priv,
+                               పూర్ణాంకం (*కార్మికుడు_func)(శూన్య *priv, పూర్ణాంకం jobnr, పూర్ణాంకం threadnr, పూర్ణాంకం nb_jobs, పూర్ణాంకం nb_దారాలు),
+                               పూర్ణాంకం (*main_func)(శూన్య *priv),
+                               పూర్ణాంకం nb_దారాలు);
 
 /**
  * Execute slice threading. If any job returns a nonzero value,
@@ -50,31 +50,31 @@ int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
  * @param execute_main also execute main_func
  * @return 0 on success, else first seen return value
  */
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main);
+పూర్ణాంకం avpriv_slicethread_execute2(AVSliceThread *ctx, పూర్ణాంకం nb_jobs, పూర్ణాంకం execute_main);
 
 /**
  * Destroy slice threading context.
  * @param pctx pointer to context
  */
-void avpriv_slicethread_free(AVSliceThread **pctx);
+శూన్య avpriv_slicethread_free(AVSliceThread **pctx);
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#ఒకవేళ LIBAVUTIL_సంస్కరణ_MAJOR < 62
 /**
  * @deprecated
  * Wrapper around avpriv_slicethread_create2() for ABI backwards compatibility.
  */
 attribute_deprecated
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads);
+పూర్ణాంకం avpriv_slicethread_create(AVSliceThread **pctx, శూన్య *priv,
+                              శూన్య (*కార్మికుడు_func)(శూన్య *priv, పూర్ణాంకం jobnr, పూర్ణాంకం threadnr, పూర్ణాంకం nb_jobs, పూర్ణాంకం nb_దారాలు),
+                              శూన్య (*main_func)(శూన్య *priv),
+                              పూర్ణాంకం nb_దారాలు);
 
 /**
  * @deprecated
  * Wrapper around avpriv_slicethread_execute2() for ABI backwards compatibility.
  */
 attribute_deprecated
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main);
-#endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
+శూన్య avpriv_slicethread_execute(AVSliceThread *ctx, పూర్ణాంకం nb_jobs, పూర్ణాంకం execute_main);
+#అయితే_ముగింపు /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
-#endif
+#అయితే_ముగింపు

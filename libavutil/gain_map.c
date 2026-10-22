@@ -16,47 +16,47 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "gain_map.h"
-#include "mem.h"
-#include "libavcodec/bytestream.h"
+#అన్తర్భావ "gain_map.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "libavcodec/bytestream.h"
 
-static void gain_map_params_default(AVGainMapParams *p)
+స్థిర శూన్య gain_map_params_default(AVGainMapParams *p)
 {
     *p = (AVGainMapParams) {
-        .base_hdr_headroom      = { 0, 1 },
+        .పునాది_hdr_headroom      = { 0, 1 },
         .alternate_hdr_headroom = { 0, 1 },
         .nb_channels = 1,
     };
 
     /* Pre-fill all three channels as a convenience */
-    for (int c = 0; c < 3; c++) {
-        p->channels[c] = (struct AVGainMapChannel) {
+    కొరకు (పూర్ణాంకం c = 0; c < 3; c++) {
+        p->channels[c] = (నిర్మాణం AVGainMapChannel) {
             .gain_map_min       = { 0, 1 },
             .gain_map_max       = { 0, 1 },
             .gamma              = { 1, 1 },
-            .base_offset        = { 1, 64 },
-            .alternate_offset   = { 1, 64 },
+            .పునాది_స్థానభ్రంశం        = { 1, 64 },
+            .alternate_స్థానభ్రంశం   = { 1, 64 },
         };
     }
 }
 
-#define CHECK(cond) do { if (!(cond)) return AVERROR_INVALIDDATA; } while (0)
-#define CHECK_SIGNED(q)   CHECK((q).den > 0);
-#define CHECK_UNSIGNED(q) CHECK((q).num >= 0 && (q).den > 0);
+#నిర్వచించు CHECK(cond) చేయి { ఒకవేళ (!(cond)) తిరిగి AVERROR_INVALIDDATA; } అయితే (0)
+#నిర్వచించు CHECK_SIGNED(q)   CHECK((q).den > 0);
+#నిర్వచించు CHECK_UNSIGNED(q) CHECK((q).అంకె >= 0 && (q).den > 0);
 
-int av_gain_map_params_validate(const AVGainMapParams *p)
+పూర్ణాంకం av_gain_map_params_validate(స్థిరరాశి AVGainMapParams *p)
 {
-    CHECK(0 <= p->version && p->version <= AV_ISO21496_VERSION);
+    CHECK(0 <= p->సంస్కరణ && p->సంస్కరణ <= AV_ISO21496_సంస్కరణ);
     CHECK(p->nb_channels == 1 || p->nb_channels == 3);
-    CHECK_UNSIGNED(p->base_hdr_headroom);
+    CHECK_UNSIGNED(p->పునాది_hdr_headroom);
     CHECK_UNSIGNED(p->alternate_hdr_headroom);
 
-    for (int c = 0; c < p->nb_channels; c++) {
-        const struct AVGainMapChannel *const ch = &p->channels[c];
+    కొరకు (పూర్ణాంకం c = 0; c < p->nb_channels; c++) {
+        స్థిరరాశి నిర్మాణం AVGainMapChannel *స్థిరరాశి ch = &p->channels[c];
         CHECK_SIGNED(ch->gain_map_min);
         CHECK_SIGNED(ch->gain_map_max);
         CHECK_UNSIGNED(ch->gamma);
-        CHECK(ch->gamma.num != 0);
+        CHECK(ch->gamma.అంకె != 0);
         /**
          * Note: The ISO spec declares these as signed, but a negative value
          * makes no numeric sense and would result in infinities in the
@@ -65,68 +65,68 @@ int av_gain_map_params_validate(const AVGainMapParams *p)
          * requires them to be nonnegative as well, so this avoids an
          * inconsistency.
          */
-        CHECK_UNSIGNED(ch->base_offset);
-        CHECK_UNSIGNED(ch->alternate_offset);
+        CHECK_UNSIGNED(ch->పునాది_స్థానభ్రంశం);
+        CHECK_UNSIGNED(ch->alternate_స్థానభ్రంశం);
         CHECK(av_cmp_q(ch->gain_map_min, ch->gain_map_max) <= 0);
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-#define ISO21496_HEADER_SIZE 5
+#నిర్వచించు ISO21496_శీర్షిక_కొలత 5
 
-#define ISO21496_FLAG_MULTICHANNEL (1 << 7)
-#define ISO21496_FLAG_USE_BASE_CG  (1 << 6)
-#define ISO21496_FLAG_RESERVED     0x3f
+#నిర్వచించు ISO21496_FLAG_MULTICHANNEL (1 << 7)
+#నిర్వచించు ISO21496_FLAG_USE_పునాది_CG  (1 << 6)
+#నిర్వచించు ISO21496_FLAG_RESERVED     0x3f
 
-static size_t iso21496_payload_size(int nb_channels)
+స్థిర size_t iso21496_payload_కొలత(పూర్ణాంకం nb_channels)
 {
-    return 4 * 4 + (size_t) nb_channels * 10 * 4;
+    తిరిగి 4 * 4 + (size_t) nb_channels * 10 * 4;
 }
 
-static int make_q(int64_t num, uint32_t den, AVRational *out)
+స్థిర పూర్ణాంకం make_q(int64_t అంకె, uint32_t den, AVRational *బహిర్గతం)
 {
-    if (!den)
-        return AVERROR_INVALIDDATA;
+    ఒకవేళ (!den)
+        తిరిగి AVERROR_INVALIDDATA;
 
     /* Ensure the result fits in AVRational */
-    av_reduce(&out->num, &out->den, num, den, INT32_MAX);
-    return 0;
+    av_reduce(&బహిర్గతం->అంకె, &బహిర్గతం->den, అంకె, den, INT32_MAX);
+    తిరిగి 0;
 }
 
-static int get_sq(GetByteContext *gb, AVRational *out)
+స్థిర పూర్ణాంకం get_sq(GetByteContext *gb, AVRational *బహిర్గతం)
 {
-    int32_t  num = (int32_t) bytestream2_get_be32(gb);
+    int32_t  అంకె = (int32_t) bytestream2_get_be32(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    తిరిగి make_q(అంకె, den, బహిర్గతం);
 }
 
-static int get_uq(GetByteContext *gb, AVRational *out)
+స్థిర పూర్ణాంకం get_uq(GetByteContext *gb, AVRational *బహిర్గతం)
 {
-    uint32_t num = bytestream2_get_be32u(gb);
+    uint32_t అంకె = bytestream2_get_be32u(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    తిరిగి make_q(అంకె, den, బహిర్గతం);
 }
 
-int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
-                                     const uint8_t *data, size_t size)
+పూర్ణాంకం av_gain_map_params_from_iso21496(AVGainMapParams *పరిమిత p,
+                                     స్థిరరాశి uint8_t *దత్తాంశం, size_t కొలత)
 {
-    int ret;
-    if (!p || !data)
-        return AVERROR(EINVAL);
+    పూర్ణాంకం ret;
+    ఒకవేళ (!p || !దత్తాంశం)
+        తిరిగి AVERROR(EINVAL);
 
-    if (size < ISO21496_HEADER_SIZE || size > INT_MAX)
-        return AVERROR_INVALIDDATA;
+    ఒకవేళ (కొలత < ISO21496_శీర్షిక_కొలత || కొలత > గరిష్ఠ_పూర్ణాంకం)
+        తిరిగి AVERROR_INVALIDDATA;
 
     GetByteContext gb;
-    bytestream2_init(&gb, data, size);
+    bytestream2_init(&gb, దత్తాంశం, కొలత);
 
     /* Parse header */
-    const uint16_t minimum_version = bytestream2_get_be16(&gb);
-    const uint16_t writer_version  = bytestream2_get_be16(&gb);
-    if (minimum_version > AV_ISO21496_VERSION || writer_version < minimum_version)
-        return AVERROR_PATCHWELCOME;
-    const uint8_t flags = bytestream2_get_byte(&gb);
+    స్థిరరాశి uint16_t minimum_సంస్కరణ = bytestream2_get_be16(&gb);
+    స్థిరరాశి uint16_t writer_సంస్కరణ  = bytestream2_get_be16(&gb);
+    ఒకవేళ (minimum_సంస్కరణ > AV_ISO21496_సంస్కరణ || writer_సంస్కరణ < minimum_సంస్కరణ)
+        తిరిగి AVERROR_PATCHWELCOME;
+    స్థిరరాశి uint8_t flags = bytestream2_get_byte(&gb);
 
     /**
      * While the spec does not require reserved bits to be 0, older versions
@@ -136,115 +136,115 @@ int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
      * additions to later revisions of the published spec, the validity of
      * ignoring which is already guarded by the `minimum_version` check.
      */
-    if (writer_version == 0 && (flags & ISO21496_FLAG_RESERVED))
-        return AVERROR_INVALIDDATA;
+    ఒకవేళ (writer_సంస్కరణ == 0 && (flags & ISO21496_FLAG_RESERVED))
+        తిరిగి AVERROR_INVALIDDATA;
 
-    p->version              = AV_ISO21496_VERSION;
+    p->సంస్కరణ              = AV_ISO21496_సంస్కరణ;
     p->nb_channels          =   (flags & ISO21496_FLAG_MULTICHANNEL) ? 3 : 1;
-    p->use_base_color_space = !!(flags & ISO21496_FLAG_USE_BASE_CG);
+    p->use_పునాది_color_space = !!(flags & ISO21496_FLAG_USE_పునాది_CG);
 
     /* Parse payload */
-    if (bytestream2_get_bytes_left(&gb) < iso21496_payload_size(p->nb_channels))
-        return AVERROR_INVALIDDATA;
+    ఒకవేళ (bytestream2_get_బైట్లు_ఎడమ(&gb) < iso21496_payload_కొలత(p->nb_channels))
+        తిరిగి AVERROR_INVALIDDATA;
 
-    if ((ret = get_uq(&gb, &p->base_hdr_headroom))      < 0 ||
+    ఒకవేళ ((ret = get_uq(&gb, &p->పునాది_hdr_headroom))      < 0 ||
         (ret = get_uq(&gb, &p->alternate_hdr_headroom)) < 0)
-        return ret;
+        తిరిగి ret;
 
-    for (int c = 0; c < p->nb_channels; c++) {
-        struct AVGainMapChannel *const ch = &p->channels[c];
-        if ((ret = get_sq(&gb, &ch->gain_map_min))     < 0 ||
+    కొరకు (పూర్ణాంకం c = 0; c < p->nb_channels; c++) {
+        నిర్మాణం AVGainMapChannel *స్థిరరాశి ch = &p->channels[c];
+        ఒకవేళ ((ret = get_sq(&gb, &ch->gain_map_min))     < 0 ||
             (ret = get_sq(&gb, &ch->gain_map_max))     < 0 ||
             (ret = get_uq(&gb, &ch->gamma))            < 0 ||
-            (ret = get_sq(&gb, &ch->base_offset))      < 0 ||
-            (ret = get_sq(&gb, &ch->alternate_offset)) < 0)
-            return ret;
+            (ret = get_sq(&gb, &ch->పునాది_స్థానభ్రంశం))      < 0 ||
+            (ret = get_sq(&gb, &ch->alternate_స్థానభ్రంశం)) < 0)
+            తిరిగి ret;
     }
 
     /* nb_channels == 1 means every channel shares the same parameters */
-    for (int c = p->nb_channels; c < 3; c++)
+    కొరకు (పూర్ణాంకం c = p->nb_channels; c < 3; c++)
         p->channels[c] = p->channels[0];
 
-    return av_gain_map_params_validate(p);
+    తిరిగి av_gain_map_params_validate(p);
 }
 
-static void put_q(PutByteContext *pb, AVRational q)
+స్థిర శూన్య put_q(PutByteContext *pb, AVRational q)
 {
-    bytestream2_put_be32(pb, (unsigned) q.num);
-    bytestream2_put_be32(pb, (unsigned) q.den);
+    bytestream2_put_be32(pb, (గుర్తులేని) q.అంకె);
+    bytestream2_put_be32(pb, (గుర్తులేని) q.den);
 }
 
-int av_gain_map_params_to_iso21496(const AVGainMapParams *p, uint8_t *buf)
+పూర్ణాంకం av_gain_map_params_గమ్యం_iso21496(స్థిరరాశి AVGainMapParams *p, uint8_t *buf)
 {
-    if (!p || !buf)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!p || !buf)
+        తిరిగి AVERROR(EINVAL);
 
     /* Ensures representability in the bitstream */
-    int ret = av_gain_map_params_validate(p);
-    if (ret < 0)
-        return ret;
+    పూర్ణాంకం ret = av_gain_map_params_validate(p);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
     PutByteContext pb;
-    bytestream2_init_writer(&pb, buf, AV_GAIN_MAP_MAX_PAYLOAD_SIZE);
+    bytestream2_init_writer(&pb, buf, AV_GAIN_MAP_MAX_PAYLOAD_కొలత);
 
-    int channels = av_gain_map_channels_identical(p) ? 1 : p->nb_channels;
+    పూర్ణాంకం channels = av_gain_map_channels_identical(p) ? 1 : p->nb_channels;
     uint8_t flags = 0;
-    if (channels == 3)
+    ఒకవేళ (channels == 3)
         flags |= ISO21496_FLAG_MULTICHANNEL;
-    if (p->use_base_color_space)
-        flags |= ISO21496_FLAG_USE_BASE_CG;
+    ఒకవేళ (p->use_పునాది_color_space)
+        flags |= ISO21496_FLAG_USE_పునాది_CG;
 
-    bytestream2_put_be16(&pb, p->version); /* minimum_version */
-    bytestream2_put_be16(&pb, p->version); /* writer_version */
+    bytestream2_put_be16(&pb, p->సంస్కరణ); /* minimum_version */
+    bytestream2_put_be16(&pb, p->సంస్కరణ); /* writer_version */
     bytestream2_put_byte(&pb, flags);
-    put_q(&pb, p->base_hdr_headroom);
+    put_q(&pb, p->పునాది_hdr_headroom);
     put_q(&pb, p->alternate_hdr_headroom);
 
-    for (int c = 0; c < channels; c++) {
-        const struct AVGainMapChannel *const ch = &p->channels[c];
+    కొరకు (పూర్ణాంకం c = 0; c < channels; c++) {
+        స్థిరరాశి నిర్మాణం AVGainMapChannel *స్థిరరాశి ch = &p->channels[c];
         put_q(&pb, ch->gain_map_min);
         put_q(&pb, ch->gain_map_max);
         put_q(&pb, ch->gamma);
-        put_q(&pb, ch->base_offset);
-        put_q(&pb, ch->alternate_offset);
+        put_q(&pb, ch->పునాది_స్థానభ్రంశం);
+        put_q(&pb, ch->alternate_స్థానభ్రంశం);
     }
 
-    return bytestream2_tell_p(&pb);
+    తిరిగి bytestream2_tell_p(&pb);
 }
 
-int av_gain_map_channels_identical(const AVGainMapParams *p)
+పూర్ణాంకం av_gain_map_channels_identical(స్థిరరాశి AVGainMapParams *p)
 {
-    static_assert(sizeof(p->channels[0]) == sizeof(int[2]) * 5,
+    static_assert(పరిమాణం(p->channels[0]) == పరిమాణం(పూర్ణాంకం[2]) * 5,
                   "AVGainMapChannel struct is tightly packed");
 
-    return !memcmp(&p->channels[0], &p->channels[1], sizeof(p->channels[0])) &&
-           !memcmp(&p->channels[0], &p->channels[2], sizeof(p->channels[0]));
+    తిరిగి !memcmp(&p->channels[0], &p->channels[1], పరిమాణం(p->channels[0])) &&
+           !memcmp(&p->channels[0], &p->channels[2], పరిమాణం(p->channels[0]));
 }
 
-AVGainMapParams *av_gain_map_params_alloc(size_t *size)
+AVGainMapParams *av_gain_map_params_alloc(size_t *కొలత)
 {
-    AVGainMapParams *p = av_malloc(sizeof(AVGainMapParams));
-    if (!p)
-        return NULL;
+    AVGainMapParams *p = av_malloc(పరిమాణం(AVGainMapParams));
+    ఒకవేళ (!p)
+        తిరిగి ఖాళీ;
 
     gain_map_params_default(p);
 
-    if (size)
-        *size = sizeof(*p);
+    ఒకవేళ (కొలత)
+        *కొలత = పరిమాణం(*p);
 
-    return p;
+    తిరిగి p;
 }
 
-AVGainMapParams *av_gain_map_params_create_side_data(AVFrameSideData ***fsd, int *nb_sd)
+AVGainMapParams *av_gain_map_params_create_side_దత్తాంశం(AVFrame_Side_దత్తాంశం ***fsd, పూర్ణాంకం *nb_sd)
 {
-    AVFrameSideData *sd;
-    sd = av_frame_side_data_new(fsd, nb_sd, AV_FRAME_DATA_GAIN_MAP_PARAMS,
-                                sizeof(AVGainMapParams),
-                                AV_FRAME_SIDE_DATA_FLAG_REPLACE);
-    if (!sd)
-        return NULL;
+    AVFrame_Side_దత్తాంశం *sd;
+    sd = av_చట్రం_side_దత్తాంశం_new(fsd, nb_sd, AV_చట్రం_దత్తాంశం_GAIN_MAP_PARAMS,
+                                పరిమాణం(AVGainMapParams),
+                                AV_చట్రం_SIDE_దత్తాంశం_FLAG_REPLACE);
+    ఒకవేళ (!sd)
+        తిరిగి ఖాళీ;
 
-    AVGainMapParams *const p = (AVGainMapParams *) sd->data;
+    AVGainMapParams *స్థిరరాశి p = (AVGainMapParams *) sd->దత్తాంశం;
     gain_map_params_default(p);
-    return p;
+    తిరిగి p;
 }

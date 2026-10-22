@@ -16,62 +16,62 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_INTERNAL_H
-#define AVUTIL_HWCONTEXT_INTERNAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_HWCONTEXT_అంతర్గత_H
+#నిర్వచించు AVUTIL_HWCONTEXT_అంతర్గత_H
 
-#include <stddef.h>
+#అన్తర్భావ <stddef.h>
 
-#include "buffer.h"
-#include "hwcontext.h"
-#include "thread.h"
-#include "frame.h"
-#include "pixfmt.h"
+#అన్తర్భావ "buffer.h"
+#అన్తర్భావ "hwcontext.h"
+#అన్తర్భావ "thread.h"
+#అన్తర్భావ "frame.h"
+#అన్తర్భావ "pixfmt.h"
 
-typedef struct HWContextType {
-    enum AVHWDeviceType type;
-    const char         *name;
+రకనిర్వచనం నిర్మాణం HWContextType {
+    గణన AVHWDeviceType type;
+    స్థిరరాశి అక్షరం         *name;
 
     /**
      * An array of pixel formats supported by the AVHWFramesContext instances
      * Terminated by AV_PIX_FMT_NONE.
      */
-    const enum AVPixelFormat *pix_fmts;
+    స్థిరరాశి గణన AVPixelFormat *pix_fmts;
 
     /**
      * size of the public hardware-specific context,
      * i.e. AVHWDeviceContext.hwctx
      */
-    size_t             device_hwctx_size;
+    size_t             device_hwctx_కొలత;
 
     /**
      * Size of the hardware-specific device configuration.
      * (Used to query hwframe constraints.)
      */
-    size_t             device_hwconfig_size;
+    size_t             device_hwconfig_కొలత;
 
     /**
      * size of the public frame pool hardware-specific context,
      * i.e. AVHWFramesContext.hwctx
      */
-    size_t             frames_hwctx_size;
+    size_t             చట్రాలు_hwctx_కొలత;
 
-    int              (*device_create)(AVHWDeviceContext *ctx, const char *device,
-                                      AVDictionary *opts, int flags);
-    int              (*device_derive)(AVHWDeviceContext *dst_ctx,
+    పూర్ణాంకం              (*device_create)(AVHWDeviceContext *ctx, స్థిరరాశి అక్షరం *device,
+                                      AVDictionary *opts, పూర్ణాంకం flags);
+    పూర్ణాంకం              (*device_derive)(AVHWDeviceContext *dst_ctx,
                                       AVHWDeviceContext *src_ctx,
-                                      AVDictionary *opts, int flags);
+                                      AVDictionary *opts, పూర్ణాంకం flags);
 
-    int              (*device_init)(AVHWDeviceContext *ctx);
-    void             (*device_uninit)(AVHWDeviceContext *ctx);
+    పూర్ణాంకం              (*device_init)(AVHWDeviceContext *ctx);
+    శూన్య             (*device_uninit)(AVHWDeviceContext *ctx);
 
-    int              (*frames_get_constraints)(AVHWDeviceContext *ctx,
-                                               const void *hwconfig,
+    పూర్ణాంకం              (*చట్రాలు_get_constraints)(AVHWDeviceContext *ctx,
+                                               స్థిరరాశి శూన్య *hwconfig,
                                                AVHWFramesConstraints *constraints);
 
-    int              (*frames_init)(AVHWFramesContext *ctx);
-    void             (*frames_uninit)(AVHWFramesContext *ctx);
+    పూర్ణాంకం              (*చట్రాలు_init)(AVHWFramesContext *ctx);
+    శూన్య             (*చట్రాలు_uninit)(AVHWFramesContext *ctx);
 
-    int              (*frames_get_buffer)(AVHWFramesContext *ctx, AVFrame *frame);
+    పూర్ణాంకం              (*చట్రాలు_get_బఫరు)(AVHWFramesContext *ctx, AVFrame *చట్రం);
 
     /**
      * Allocate a buffer of size bytes for av_hwframe_get_transfer_buffer(),
@@ -79,108 +79,108 @@ typedef struct HWContextType {
      *
      * @param device_ref the AVBufferRef of the AVHWDeviceContext
      */
-    AVBufferRef     *(*transfer_buffer_alloc)(void *device_ref, size_t size);
-    int              (*transfer_get_formats)(AVHWFramesContext *ctx,
-                                             enum AVHWFrameTransferDirection dir,
-                                             enum AVPixelFormat **formats);
-    int              (*transfer_data_to)(AVHWFramesContext *ctx, AVFrame *dst,
-                                         const AVFrame *src);
-    int              (*transfer_data_from)(AVHWFramesContext *ctx, AVFrame *dst,
-                                           const AVFrame *src);
+    AVBufferRef     *(*transfer_బఫరు_alloc)(శూన్య *device_ref, size_t కొలత);
+    పూర్ణాంకం              (*transfer_get_formats)(AVHWFramesContext *ctx,
+                                             గణన AVHWFrameTransferDirection dir,
+                                             గణన AVPixelFormat **formats);
+    పూర్ణాంకం              (*transfer_దత్తాంశం_గమ్యం)(AVHWFramesContext *ctx, AVFrame *dst,
+                                         స్థిరరాశి AVFrame *src);
+    పూర్ణాంకం              (*transfer_దత్తాంశం_from)(AVHWFramesContext *ctx, AVFrame *dst,
+                                           స్థిరరాశి AVFrame *src);
 
-    int              (*map_to)(AVHWFramesContext *ctx, AVFrame *dst,
-                               const AVFrame *src, int flags);
-    int              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src, int flags);
+    పూర్ణాంకం              (*map_గమ్యం)(AVHWFramesContext *ctx, AVFrame *dst,
+                               స్థిరరాశి AVFrame *src, పూర్ణాంకం flags);
+    పూర్ణాంకం              (*map_from)(AVHWFramesContext *ctx, AVFrame *dst,
+                                 స్థిరరాశి AVFrame *src, పూర్ణాంకం flags);
 
-    int              (*frames_derive_to)(AVHWFramesContext *dst_ctx,
-                                         AVHWFramesContext *src_ctx, int flags);
-    int              (*frames_derive_from)(AVHWFramesContext *dst_ctx,
-                                           AVHWFramesContext *src_ctx, int flags);
+    పూర్ణాంకం              (*చట్రాలు_derive_గమ్యం)(AVHWFramesContext *dst_ctx,
+                                         AVHWFramesContext *src_ctx, పూర్ణాంకం flags);
+    పూర్ణాంకం              (*చట్రాలు_derive_from)(AVHWFramesContext *dst_ctx,
+                                           AVHWFramesContext *src_ctx, పూర్ణాంకం flags);
 } HWContextType;
 
-typedef struct FFHWFramesContext {
+రకనిర్వచనం నిర్మాణం FFHWFramesContext {
     /**
      * The public AVHWFramesContext. See hwcontext.h for it.
      */
     AVHWFramesContext p;
 
-    const HWContextType *hw_type;
+    స్థిరరాశి HWContextType *hw_type;
 
-    AVBufferPool *pool_internal;
+    AVBufferPool *pool_అంతర్గత;
 
     /**
      * Buffers of transfer_pool_size bytes for av_hwframe_get_transfer_buffer(),
      * both guarded by transfer_pool_lock.
      */
     AVBufferPool *transfer_pool;
-    size_t        transfer_pool_size;
-    AVMutex       transfer_pool_lock;
+    size_t        transfer_pool_కొలత;
+    AVMutex       transfer_pool_తాళం;
 
     /**
      * For a derived context, a reference to the original frames
      * context it was derived from.
      */
-    AVBufferRef *source_frames;
+    AVBufferRef *ఆధారం_చట్రాలు;
     /**
      * Flags to apply to the mapping from the source to the derived
      * frame context when trying to allocate in the derived context.
      */
-    int source_allocation_map_flags;
+    పూర్ణాంకం ఆధారం_కేటాయింపు_map_flags;
 } FFHWFramesContext;
 
-static inline FFHWFramesContext *ffhwframesctx(AVHWFramesContext *ctx)
+స్థిర అంతఃవరుస FFHWFramesContext *ffhwframesctx(AVHWFramesContext *ctx)
 {
-    return (FFHWFramesContext*)ctx;
+    తిరిగి (FFHWFramesContext*)ctx;
 }
 
-typedef struct HWMapDescriptor {
+రకనిర్వచనం నిర్మాణం HWMapDescriptor {
     /**
      * A reference to the original source of the mapping.
      */
-    AVFrame *source;
+    AVFrame *ఆధారం;
     /**
      * A reference to the hardware frames context in which this
      * mapping was made.  May be the same as source->hw_frames_ctx,
      * but need not be.
      */
-    AVBufferRef *hw_frames_ctx;
+    AVBufferRef *hw_చట్రాలు_ctx;
     /**
      * Unmap function.
      */
-    void (*unmap)(AVHWFramesContext *ctx,
-                  struct HWMapDescriptor *hwmap);
+    శూన్య (*unmap)(AVHWFramesContext *ctx,
+                  నిర్మాణం HWMapDescriptor *hwmap);
     /**
      * Hardware-specific private data associated with the mapping.
      */
-    void          *priv;
+    శూన్య          *priv;
 } HWMapDescriptor;
 
-int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
-                          AVFrame *dst, const AVFrame *src,
-                          void (*unmap)(AVHWFramesContext *ctx,
+పూర్ణాంకం ff_hwframe_map_create(AVBufferRef *hwframe_ref,
+                          AVFrame *dst, స్థిరరాశి AVFrame *src,
+                          శూన్య (*unmap)(AVHWFramesContext *ctx,
                                         HWMapDescriptor *hwmap),
-                          void *priv);
+                          శూన్య *priv);
 
 /**
  * Replace the current hwmap of dst with the one from src, used for indirect
  * mappings like VAAPI->(DRM)->OpenCL/Vulkan where a direct interop is missing
  */
-int ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src);
+పూర్ణాంకం ff_hwframe_map_replace(AVFrame *dst, స్థిరరాశి AVFrame *src);
 
-extern const HWContextType ff_hwcontext_type_cuda;
-extern const HWContextType ff_hwcontext_type_d3d11va;
-extern const HWContextType ff_hwcontext_type_d3d12va;
-extern const HWContextType ff_hwcontext_type_drm;
-extern const HWContextType ff_hwcontext_type_dxva2;
-extern const HWContextType ff_hwcontext_type_opencl;
-extern const HWContextType ff_hwcontext_type_qsv;
-extern const HWContextType ff_hwcontext_type_vaapi;
-extern const HWContextType ff_hwcontext_type_vdpau;
-extern const HWContextType ff_hwcontext_type_videotoolbox;
-extern const HWContextType ff_hwcontext_type_mediacodec;
-extern const HWContextType ff_hwcontext_type_vulkan;
-extern const HWContextType ff_hwcontext_type_amf;
-extern const HWContextType ff_hwcontext_type_oh;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_cuda;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_d3d11va;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_d3d12va;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_drm;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_dxva2;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_opencl;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_qsv;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_vaapi;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_vdpau;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_videotoolbox;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_mediacodec;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_vulkan;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_amf;
+బాహ్య స్థిరరాశి HWContextType ff_hwcontext_type_oh;
 
-#endif /* AVUTIL_HWCONTEXT_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_HWCONTEXT_INTERNAL_H */

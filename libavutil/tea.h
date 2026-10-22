@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_TEA_H
-#define AVUTIL_TEA_H
+#నిర్వచితం_కాకపోతే AVUTIL_TEA_H
+#నిర్వచించు AVUTIL_TEA_H
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
 /**
  * @file
@@ -32,15 +32,15 @@
  * @{
  */
 
-extern const int av_tea_size;
+బాహ్య స్థిరరాశి పూర్ణాంకం av_tea_కొలత;
 
-struct AVTEA;
+నిర్మాణం AVTEA;
 
 /**
   * Allocate an AVTEA context
   * To free the struct: av_free(ptr)
   */
-struct AVTEA *av_tea_alloc(void);
+నిర్మాణం AVTEA *av_tea_alloc(శూన్య);
 
 /**
  * Initialize an AVTEA context.
@@ -49,7 +49,7 @@ struct AVTEA *av_tea_alloc(void);
  * @param key a key of 16 bytes used for encryption/decryption
  * @param rounds the number of rounds in TEA (64 is the "standard")
  */
-void av_tea_init(struct AVTEA *ctx, const uint8_t key[16], int rounds);
+శూన్య av_tea_init(నిర్మాణం AVTEA *ctx, స్థిరరాశి uint8_t కీలకం[16], పూర్ణాంకం విడతలు);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -61,11 +61,11 @@ void av_tea_init(struct AVTEA *ctx, const uint8_t key[16], int rounds);
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_tea_crypt(struct AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                  int count, uint8_t *iv, int decrypt);
+శూన్య av_tea_crypt(నిర్మాణం AVTEA *ctx, uint8_t *dst, స్థిరరాశి uint8_t *src,
+                  పూర్ణాంకం లెక్క, uint8_t *iv, పూర్ణాంకం decrypt);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_TEA_H */
+#అయితే_ముగింపు /* AVUTIL_TEA_H */

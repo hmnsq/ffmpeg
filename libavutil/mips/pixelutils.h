@@ -16,26 +16,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MIPS_PIXELUTILS_H
-#define AVUTIL_MIPS_PIXELUTILS_H
+#నిర్వచితం_కాకపోతే AVUTIL_MIPS_PIXELUTILS_H
+#నిర్వచించు AVUTIL_MIPS_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#అన్తర్భావ "cpu.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_msa(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+పూర్ణాంకం ff_pixelutils_sad16_msa(స్థిరరాశి uint8_t *src1, ptrdiff_t stride1,
+                            స్థిరరాశి uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, int aligned)
+స్థిర అంతఃవరుస av_cold శూన్య ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, పూర్ణాంకం aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    పూర్ణాంకం cpu_flags = av_get_cpu_flags();
 
-    if (have_msa(cpu_flags)) {
+    ఒకవేళ (have_msa(cpu_flags)) {
         sad[3] = ff_pixelutils_sad16_msa;
     }
 }
-#endif
+#అయితే_ముగింపు

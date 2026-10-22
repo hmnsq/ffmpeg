@@ -16,63 +16,63 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "container_fifo.h"
-#include "error.h"
-#include "fifo.h"
-#include "frame.h"
-#include "mem.h"
-#include "refstruct.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "container_fifo.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "fifo.h"
+#అన్తర్భావ "frame.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "refstruct.h"
 
-struct AVContainerFifo {
+నిర్మాణం AVContainerFifo {
     AVFifo             *fifo;
     AVRefStructPool    *pool;
 
-    void               *opaque;
-    void*             (*container_alloc)(void *opaque);
-    void              (*container_reset)(void *opaque, void *obj);
-    void              (*container_free) (void *opaque, void *obj);
-    int               (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags);
+    శూన్య               *opaque;
+    శూన్య*             (*container_alloc)(శూన్య *opaque);
+    శూన్య              (*container_reset)(శూన్య *opaque, శూన్య *obj);
+    శూన్య              (*container_free) (శూన్య *opaque, శూన్య *obj);
+    పూర్ణాంకం               (*fifo_transfer)  (శూన్య *opaque, శూన్య *dst, శూన్య *src, గుర్తులేని flags);
 
 };
 
-static int container_fifo_init_entry(AVRefStructOpaque opaque, void *obj)
+స్థిర పూర్ణాంకం container_fifo_init_నమోదు(AVRefStructOpaque opaque, శూన్య *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    void **pobj = obj;
+    శూన్య **pobj = obj;
 
     *pobj = cf->container_alloc(cf->opaque);
-    if (!*pobj)
-        return AVERROR(ENOMEM);
+    ఒకవేళ (!*pobj)
+        తిరిగి AVERROR(ENOMEM);
 
-    return 0;
+    తిరిగి 0;
 }
 
-static void container_fifo_reset_entry(AVRefStructOpaque opaque, void *obj)
+స్థిర శూన్య container_fifo_reset_నమోదు(AVRefStructOpaque opaque, శూన్య *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    cf->container_reset(cf->opaque, *(void**)obj);
+    cf->container_reset(cf->opaque, *(శూన్య**)obj);
 }
 
-static void container_fifo_free_entry(AVRefStructOpaque opaque, void *obj)
+స్థిర శూన్య container_fifo_free_నమోదు(AVRefStructOpaque opaque, శూన్య *obj)
 {
     AVContainerFifo *cf = opaque.nc;
-    cf->container_free(cf->opaque, *(void**)obj);
+    cf->container_free(cf->opaque, *(శూన్య**)obj);
 }
 
 AVContainerFifo*
-av_container_fifo_alloc(void *opaque,
-                        void* (*container_alloc)(void *opaque),
-                        void  (*container_reset)(void *opaque, void *obj),
-                        void  (*container_free) (void *opaque, void *obj),
-                        int   (*fifo_transfer)  (void *opaque, void *dst, void *src, unsigned flags),
-                        unsigned flags)
+av_container_fifo_alloc(శూన్య *opaque,
+                        శూన్య* (*container_alloc)(శూన్య *opaque),
+                        శూన్య  (*container_reset)(శూన్య *opaque, శూన్య *obj),
+                        శూన్య  (*container_free) (శూన్య *opaque, శూన్య *obj),
+                        పూర్ణాంకం   (*fifo_transfer)  (శూన్య *opaque, శూన్య *dst, శూన్య *src, గుర్తులేని flags),
+                        గుర్తులేని flags)
 {
     AVContainerFifo *cf;
 
-    cf = av_mallocz(sizeof(*cf));
-    if (!cf)
-        return NULL;
+    cf = av_mallocz(పరిమాణం(*cf));
+    ఒకవేళ (!cf)
+        తిరిగి ఖాళీ;
 
     cf->opaque          = opaque;
     cf->container_alloc = container_alloc;
@@ -80,36 +80,36 @@ av_container_fifo_alloc(void *opaque,
     cf->container_free  = container_free;
     cf->fifo_transfer   = fifo_transfer;
 
-    cf->fifo = av_fifo_alloc2(1, sizeof(void*), AV_FIFO_FLAG_AUTO_GROW);
-    if (!cf->fifo)
-        goto fail;
+    cf->fifo = av_fifo_alloc2(1, పరిమాణం(శూన్య*), AV_FIFO_FLAG_AUTO_GROW);
+    ఒకవేళ (!cf->fifo)
+        వెళ్ళు fail;
 
-    cf->pool = av_refstruct_pool_alloc_ext(sizeof(void*), 0, cf,
-                                           container_fifo_init_entry,
-                                           container_fifo_reset_entry,
-                                           container_fifo_free_entry,
-                                           NULL);
-    if (!cf->pool)
-        goto fail;
+    cf->pool = av_refstruct_pool_alloc_ext(పరిమాణం(శూన్య*), 0, cf,
+                                           container_fifo_init_నమోదు,
+                                           container_fifo_reset_నమోదు,
+                                           container_fifo_free_నమోదు,
+                                           ఖాళీ);
+    ఒకవేళ (!cf->pool)
+        వెళ్ళు fail;
 
-    return cf;
+    తిరిగి cf;
 fail:
     av_container_fifo_free(&cf);
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
-void av_container_fifo_free(AVContainerFifo **pcf)
+శూన్య av_container_fifo_free(AVContainerFifo **pcf)
 {
     AVContainerFifo *cf;
 
-    if (!*pcf)
-        return;
+    ఒకవేళ (!*pcf)
+        తిరిగి;
 
     cf = *pcf;
 
-    if (cf->fifo) {
-        void *obj;
-        while (av_fifo_read(cf->fifo, &obj, 1) >= 0)
+    ఒకవేళ (cf->fifo) {
+        శూన్య *obj;
+        అయితే (av_fifo_read(cf->fifo, &obj, 1) >= 0)
             av_refstruct_unref(&obj);
         av_fifo_freep2(&cf->fifo);
     }
@@ -119,101 +119,101 @@ void av_container_fifo_free(AVContainerFifo **pcf)
     av_freep(pcf);
 }
 
-int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags)
+పూర్ణాంకం av_container_fifo_read(AVContainerFifo *cf, శూన్య *obj, గుర్తులేని flags)
 {
-    void **psrc;
-    int ret;
+    శూన్య **psrc;
+    పూర్ణాంకం ret;
 
     ret = av_fifo_read(cf->fifo, &psrc, 1);
-    if (ret < 0)
-        return ret;
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
     ret = cf->fifo_transfer(cf->opaque, obj, *psrc, flags);
     av_refstruct_unref(&psrc);
 
-    return ret;
+    తిరిగి ret;
 }
 
-int av_container_fifo_peek(AVContainerFifo *cf, void **pdst, size_t offset)
+పూర్ణాంకం av_container_fifo_peek(AVContainerFifo *cf, శూన్య **pdst, size_t స్థానభ్రంశం)
 {
-    void **pobj;
-    int ret;
+    శూన్య **pobj;
+    పూర్ణాంకం ret;
 
-    ret = av_fifo_peek(cf->fifo, &pobj, 1, offset);
-    if (ret < 0)
-        return ret;
+    ret = av_fifo_peek(cf->fifo, &pobj, 1, స్థానభ్రంశం);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
 
     *pdst = *pobj;
 
-    return 0;
+    తిరిగి 0;
 }
 
-void av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems)
+శూన్య av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems)
 {
     av_assert0(nb_elems <= av_fifo_can_read(cf->fifo));
-    while (nb_elems--) {
-        void **pobj;
-        int ret = av_fifo_read(cf->fifo, &pobj, 1);
+    అయితే (nb_elems--) {
+        శూన్య **pobj;
+        పూర్ణాంకం ret = av_fifo_read(cf->fifo, &pobj, 1);
         av_assert0(ret >= 0);
         av_refstruct_unref(&pobj);
     }
 }
 
-int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags)
+పూర్ణాంకం av_container_fifo_write(AVContainerFifo *cf, శూన్య *obj, గుర్తులేని flags)
 {
-    void **pdst;
-    int ret;
+    శూన్య **pdst;
+    పూర్ణాంకం ret;
 
     pdst = av_refstruct_pool_get(cf->pool);
-    if (!pdst)
-        return AVERROR(ENOMEM);
+    ఒకవేళ (!pdst)
+        తిరిగి AVERROR(ENOMEM);
 
     ret = cf->fifo_transfer(cf->opaque, *pdst, obj, flags);
-    if (ret < 0)
-        goto fail;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు fail;
 
     ret = av_fifo_write(cf->fifo, &pdst, 1);
-    if (ret < 0)
-        goto fail;
+    ఒకవేళ (ret < 0)
+        వెళ్ళు fail;
 
-    return 0;
+    తిరిగి 0;
 fail:
     av_refstruct_unref(&pdst);
-    return ret;
+    తిరిగి ret;
 }
 
-size_t av_container_fifo_can_read(const AVContainerFifo *cf)
+size_t av_container_fifo_can_read(స్థిరరాశి AVContainerFifo *cf)
 {
-    return av_fifo_can_read(cf->fifo);
+    తిరిగి av_fifo_can_read(cf->fifo);
 }
 
-static void *frame_alloc(void *opaque)
+స్థిర శూన్య *చట్రం_alloc(శూన్య *opaque)
 {
-    return av_frame_alloc();
+    తిరిగి av_చట్రం_alloc();
 }
 
-static void frame_reset(void *opaque, void *obj)
+స్థిర శూన్య చట్రం_reset(శూన్య *opaque, శూన్య *obj)
 {
-    av_frame_unref(obj);
+    av_చట్రం_unref(obj);
 }
 
-static void frame_free(void *opaque, void *obj)
+స్థిర శూన్య చట్రం_free(శూన్య *opaque, శూన్య *obj)
 {
-    AVFrame *frame = obj;
-    av_frame_free(&frame);
+    AVFrame *చట్రం = obj;
+    av_చట్రం_free(&చట్రం);
 }
 
-static int frame_transfer(void *opaque, void *dst, void *src, unsigned flags)
+స్థిర పూర్ణాంకం చట్రం_transfer(శూన్య *opaque, శూన్య *dst, శూన్య *src, గుర్తులేని flags)
 {
-    if (flags & AV_CONTAINER_FIFO_FLAG_REF)
-        return av_frame_ref(dst, src);
+    ఒకవేళ (flags & AV_CONTAINER_FIFO_FLAG_REF)
+        తిరిగి av_చట్రం_ref(dst, src);
 
-    av_frame_move_ref(dst, src);
-    return 0;
+    av_చట్రం_move_ref(dst, src);
+    తిరిగి 0;
 }
 
-AVContainerFifo *av_container_fifo_alloc_avframe(unsigned flags)
+AVContainerFifo *av_container_fifo_alloc_avframe(గుర్తులేని flags)
 {
-    return av_container_fifo_alloc(NULL, frame_alloc, frame_reset, frame_free,
-                                   frame_transfer, 0);
+    తిరిగి av_container_fifo_alloc(ఖాళీ, చట్రం_alloc, చట్రం_reset, చట్రం_free,
+                                   చట్రం_transfer, 0);
 }

@@ -16,22 +16,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_EMMS_H
-#define AVUTIL_EMMS_H
+#నిర్వచితం_కాకపోతే AVUTIL_EMMS_H
+#నిర్వచించు AVUTIL_EMMS_H
 
-#include <stdint.h>
-#include <stdlib.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stdlib.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/log.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/log.h"
 
-#if ARCH_X86
+#ఒకవేళ ARCH_X86
 
-#if HAVE_MMX_INLINE
-#ifndef __MMX__
-#include "libavutil/cpu.h"
-#endif
+#ఒకవేళ HAVE_MMX_INLINE
+#నిర్వచితం_కాకపోతే __MMX__
+#అన్తర్భావ "libavutil/cpu.h"
+#అయితే_ముగింపు
 
 #   define emms_c emms_c
 /**
@@ -41,61 +41,61 @@
  * Note, *alloc() and *free() also use float code in some libc implementations
  * thus this also applies to them or any function using them.
  */
-static av_always_inline void emms_c(void)
+స్థిర av_always_inline శూన్య emms_c(శూన్య)
 {
 /* Some inlined functions may also use mmx instructions regardless of
  * runtime cpuflags. With that in mind, we unconditionally empty the
  * mmx state if the target cpu chosen at configure time supports it.
  */
-#if !defined(__MMX__)
-    if(av_get_cpu_flags() & AV_CPU_FLAG_MMX)
-#endif
-        __asm__ volatile ("emms" ::: "memory");
+#ఒకవేళ !defined(__MMX__)
+    ఒకవేళ(av_get_cpu_flags() & AV_CPU_FLAG_MMX)
+#అయితే_ముగింపు
+        __asm__ అస్థిర ("emms" ::: "memory");
 }
 
-static inline void ff_assert0_fpu(const char *file, int line_number)
+స్థిర అంతఃవరుస శూన్య ff_assert0_fpu(స్థిరరాశి అక్షరం *file, పూర్ణాంకం పంక్తి_సంఖ్య)
 {
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ అస్థిర (
         "fstenv %0 \n\t"
         : "+m" (state)
         :
         : "memory"
     );
-    if ((state[4] & 3) != 3) {
+    ఒకవేళ ((state[4] & 3) != 3) {
         emms_c();
-        av_log(NULL, AV_LOG_PANIC,
+        av_log(ఖాళీ, AV_LOG_PANIC,
                "Invalid floating point state assertion "
                "triggered at line %u in file %s\n",
-               line_number, file);
+               పంక్తి_సంఖ్య, file);
         abort();
     }
 }
 
-#define ff_assert0_fpu() ff_assert0_fpu(__FILE__, __LINE__)
+#నిర్వచించు ff_assert0_fpu() ff_assert0_fpu(__FILE__, __LINE__)
 
-#elif HAVE_MMX && HAVE_MM_EMPTY
+#లేదావేళ HAVE_MMX && HAVE_MM_ఖాళీలు
 #   include <mmintrin.h>
-#   define emms_c _mm_empty
-#elif HAVE_MMX_EXTERNAL
-void ff_emms_asm(void);
+#   define emms_c mm_ఖాళీలు
+#లేదావేళ HAVE_MMX_EXTERNAL
+శూన్య ff_emms_asm(శూన్య);
 #   define emms_c ff_emms_asm
-#endif /* HAVE_MMX_INLINE */
+#అయితే_ముగింపు /* HAVE_MMX_INLINE */
 
-#endif /* ARCH_X86 */
+#అయితే_ముగింపు /* ARCH_X86 */
 
-#ifndef emms_c
-#   define emms_c() do {} while(0)
-#endif
+#నిర్వచితం_కాకపోతే emms_c
+#   define emms_c() చేయి {} అయితే(0)
+#అయితే_ముగింపు
 
-#ifndef ff_assert0_fpu
-#define ff_assert0_fpu() ((void)0)
-#endif
+#నిర్వచితం_కాకపోతే ff_assert0_fpu
+#నిర్వచించు ff_assert0_fpu() ((శూన్య)0)
+#అయితే_ముగింపు
 
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 1
-#define ff_assert1_fpu() ff_assert0_fpu()
-#else
-#define ff_assert1_fpu() ((void)0)
-#endif
+#ఒకవేళ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 1
+#నిర్వచించు ff_assert1_fpu() ff_assert0_fpu()
+#లేకపోతే
+#నిర్వచించు ff_assert1_fpu() ((శూన్య)0)
+#అయితే_ముగింపు
 
-#endif /* AVUTIL_EMMS_H */
+#అయితే_ముగింపు /* AVUTIL_EMMS_H */

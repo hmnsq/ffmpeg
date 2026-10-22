@@ -18,237 +18,237 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#అన్తర్భావ <inttypes.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <string.h>
 
-#include "libavutil/bprint.h"
-#include "libavutil/channel_layout.h"
-#include "libavutil/error.h"
-#include "libavutil/macros.h"
-#include "libavutil/mem.h"
+#అన్తర్భావ "libavutil/bprint.h"
+#అన్తర్భావ "libavutil/channel_layout.h"
+#అన్తర్భావ "libavutil/error.h"
+#అన్తర్భావ "libavutil/macros.h"
+#అన్తర్భావ "libavutil/mem.h"
 
-#define BPRINT_ARGS1(bp, ...)     (bp), __VA_ARGS__
-#define BPRINT_ARGS0(bp, ...)     __VA_ARGS__, (bp)
-#define ORD_ARGS1(str, size, ...) (str), (size), __VA_ARGS__
-#define ORD_ARGS0(str, size, ...) __VA_ARGS__, (str), (size)
+#నిర్వచించు BPRINT_ARGS1(bp, ...)     (bp), __VA_ARGS__
+#నిర్వచించు BPRINT_ARGS0(bp, ...)     __VA_ARGS__, (bp)
+#నిర్వచించు ORD_ARGS1(str, కొలత, ...) (str), (కొలత), __VA_ARGS__
+#నిర్వచించు ORD_ARGS0(str, కొలత, ...) __VA_ARGS__, (str), (కొలత)
 
 // This macro presumes the AVBPrint to have been cleared before usage.
-#define CMP_BPRINT_AND_NONBPRINT(bp, func_name, ARG_ORDER, ...) do {       \
-    char *str;                                                             \
-    int size;                                                              \
-    func_name ## _bprint(BPRINT_ARGS ## ARG_ORDER((bp), __VA_ARGS__));     \
-    if (strlen((bp)->str) != (bp)->len) {                                  \
-        printf("strlen of AVBPrint-string returned by "#func_name"_bprint" \
+#నిర్వచించు CMP_BPRINT_AND_NONBPRINT(bp, func_name, ARG_క్రమం, ...) చేయి {       \
+    అక్షరం *str;                                                             \
+    పూర్ణాంకం కొలత;                                                              \
+    func_name ## _bprint(BPRINT_వాదనలు ## ARG_క్రమం((bp), __VA_ARGS__));     \
+    ఒకవేళ (అక్షరశ్రేణి_పొడవు((bp)->str) != (bp)->len) {                                  \
+        రాయి("strlen of AVBPrint-string returned by "#func_name"_bprint" \
                " differs from AVBPrint.len: %zu vs. %u\n",                 \
-               strlen((bp)->str), (bp)->len);                              \
-        break;                                                             \
+               అక్షరశ్రేణి_పొడవు((bp)->str), (bp)->len);                              \
+        ఆపు;                                                             \
     }                                                                      \
-    size = func_name(ORD_ARGS ## ARG_ORDER(NULL, 0, __VA_ARGS__));         \
-    if (size <= 0) {                                                       \
-        printf(#func_name " returned %d\n", size);                         \
-        break;                                                             \
+    కొలత = func_name(ORD_వాదనలు ## ARG_క్రమం(ఖాళీ, 0, __VA_ARGS__));         \
+    ఒకవేళ (కొలత <= 0) {                                                       \
+        రాయి(#func_name " returned %d\n", కొలత);                         \
+        ఆపు;                                                             \
     }                                                                      \
-    if ((bp)->len != size - 1) {                                           \
-        printf("Return value %d of " #func_name " inconsistent with length"\
+    ఒకవేళ ((bp)->len != కొలత - 1) {                                           \
+        రాయి("Return value %d of " #func_name " inconsistent with length"\
                " %u obtained from corresponding bprint version\n",         \
-               size, (bp)->len);                                           \
-        break;                                                             \
+               కొలత, (bp)->len);                                           \
+        ఆపు;                                                             \
     }                                                                      \
-    str = av_malloc(size);                                                 \
-    if (!str) {                                                            \
-        printf("string of size %d could not be allocated.\n", size);       \
-        break;                                                             \
+    str = av_malloc(కొలత);                                                 \
+    ఒకవేళ (!str) {                                                            \
+        రాయి("string of size %d could not be allocated.\n", కొలత);       \
+        ఆపు;                                                             \
     }                                                                      \
-    size = func_name(ORD_ARGS ## ARG_ORDER(str, size, __VA_ARGS__));       \
-    if (size <= 0 || (bp)->len != size - 1) {                              \
-        printf("Return value %d of " #func_name " inconsistent with length"\
-               " %d obtained in first pass.\n", size, (bp)->len);          \
+    కొలత = func_name(ORD_వాదనలు ## ARG_క్రమం(str, కొలత, __VA_ARGS__));       \
+    ఒకవేళ (కొలత <= 0 || (bp)->len != కొలత - 1) {                              \
+        రాయి("Return value %d of " #func_name " inconsistent with length"\
+               " %d obtained in first pass.\n", కొలత, (bp)->len);          \
         av_free(str);                                                      \
-        break;                                                             \
+        ఆపు;                                                             \
     }                                                                      \
-    if (strcmp(str, (bp)->str)) {                                          \
-        printf("Ordinary and _bprint versions of "#func_name" disagree: "  \
+    ఒకవేళ (strcmp(str, (bp)->str)) {                                          \
+        రాయి("Ordinary and _bprint versions of "#func_name" disagree: "  \
                "'%s' vs. '%s'\n", str, (bp)->str);                         \
         av_free(str);                                                      \
-        break;                                                             \
+        ఆపు;                                                             \
     }                                                                      \
     av_free(str);                                                          \
-    } while (0)
+    } అయితే (0)
 
 
-static void channel_name(AVBPrint *bp, enum AVChannel channel)
+స్థిర శూన్య channel_name(AVBPrint *bp, గణన AVChannel channel)
 {
     av_bprint_clear(bp);
     CMP_BPRINT_AND_NONBPRINT(bp, av_channel_name, 1, channel);
 }
 
-static void channel_description(AVBPrint *bp, enum AVChannel channel)
+స్థిర శూన్య channel_description(AVBPrint *bp, గణన AVChannel channel)
 {
     av_bprint_clear(bp);
     CMP_BPRINT_AND_NONBPRINT(bp, av_channel_description, 1, channel);
 }
 
-static void channel_layout_from_mask(AVChannelLayout *layout,
+స్థిర శూన్య channel_layout_from_ముసుగు(AVChannelLayout *layout,
                                      AVBPrint *bp, uint64_t channel_layout)
 {
     av_channel_layout_uninit(layout);
     av_bprint_clear(bp);
-    if (!av_channel_layout_from_mask(layout, channel_layout) &&
+    ఒకవేళ (!av_channel_layout_from_ముసుగు(layout, channel_layout) &&
          av_channel_layout_check(layout))
         CMP_BPRINT_AND_NONBPRINT(bp, av_channel_layout_describe, 0, layout);
-    else
+    లేకపోతే
         av_bprintf(bp, "fail");
 }
 
-static void channel_layout_from_string(AVChannelLayout *layout,
-                                       AVBPrint *bp, const char *channel_layout)
+స్థిర శూన్య channel_layout_from_string(AVChannelLayout *layout,
+                                       AVBPrint *bp, స్థిరరాశి అక్షరం *channel_layout)
 {
     av_channel_layout_uninit(layout);
     av_bprint_clear(bp);
-    if (!av_channel_layout_from_string(layout, channel_layout) &&
+    ఒకవేళ (!av_channel_layout_from_string(layout, channel_layout) &&
          av_channel_layout_check(layout))
         CMP_BPRINT_AND_NONBPRINT(bp, av_channel_layout_describe, 0, layout);
-    else
+    లేకపోతే
         av_bprintf(bp, "fail");
 }
 
-static const char* channel_order_names[]  = {"UNSPEC", "NATIVE", "CUSTOM", "AMBI"};
+స్థిర స్థిరరాశి అక్షరం* channel_క్రమం_పేర్లు[]  = {"UNSPEC", "NATIVE", "CUSTOM", "AMBI"};
 
-static void describe_type(AVBPrint *bp, AVChannelLayout *layout)
+స్థిర శూన్య describe_type(AVBPrint *bp, AVChannelLayout *layout)
 {
-    if ((unsigned)layout->order < FF_ARRAY_ELEMS(channel_order_names)) {
-        av_bprintf(bp, "%-6s (", channel_order_names[layout->order]);
+    ఒకవేళ ((గుర్తులేని)layout->క్రమం < FF_ARRAY_ELEMS(channel_క్రమం_పేర్లు)) {
+        av_bprintf(bp, "%-6s (", channel_క్రమం_పేర్లు[layout->క్రమం]);
         av_channel_layout_describe_bprint(layout, bp);
         av_bprintf(bp, ")");
-    } else {
+    } లేకపోతే {
         av_bprintf(bp, "???");
     }
 }
 
-static const char *channel_layout_retype(AVChannelLayout *layout, AVBPrint *bp, const char *channel_layout)
+స్థిర స్థిరరాశి అక్షరం *channel_layout_retype(AVChannelLayout *layout, AVBPrint *bp, స్థిరరాశి అక్షరం *channel_layout)
 {
     av_channel_layout_uninit(layout);
     av_bprint_clear(bp);
-    if (!av_channel_layout_from_string(layout, channel_layout) &&
+    ఒకవేళ (!av_channel_layout_from_string(layout, channel_layout) &&
         av_channel_layout_check(layout)) {
         describe_type(bp, layout);
-        for (int i = 0; i < FF_CHANNEL_ORDER_NB; i++) {
-            int ret;
+        కొరకు (పూర్ణాంకం i = 0; i < FF_CHANNEL_క్రమం_NB; i++) {
+            పూర్ణాంకం ret;
             AVChannelLayout copy = {0};
             av_bprintf(bp, "\n ");
-            if (av_channel_layout_copy(&copy, layout) < 0)
-                return "nomem";
+            ఒకవేళ (av_channel_layout_copy(&copy, layout) < 0)
+                తిరిగి "nomem";
             ret = av_channel_layout_retype(&copy, i, 0);
-            if (ret < 0 && (copy.order != layout->order || av_channel_layout_compare(&copy, layout)))
+            ఒకవేళ (ret < 0 && (copy.క్రమం != layout->క్రమం || av_channel_layout_compare(&copy, layout)))
                 av_bprintf(bp, "failed to keep existing layout on failure");
-            if (ret >= 0 && copy.order != i)
+            ఒకవేళ (ret >= 0 && copy.క్రమం != i)
                 av_bprintf(bp, "returned success but did not change order");
-            if (ret == AVERROR(ENOSYS)) {
-                av_bprintf(bp, " != %s", channel_order_names[i]);
-            } else if (ret < 0) {
+            ఒకవేళ (ret == AVERROR(ENOSYS)) {
+                av_bprintf(bp, " != %s", channel_క్రమం_పేర్లు[i]);
+            } లేకపోతే ఒకవేళ (ret < 0) {
                 av_bprintf(bp, "FAIL");
-            } else {
+            } లేకపోతే {
                 av_bprintf(bp, " %s ", ret ? "~~" : "==");
                 describe_type(bp, &copy);
             }
             av_channel_layout_uninit(&copy);
         }
-    } else {
+    } లేకపోతే {
         av_bprintf(bp, "fail");
     }
-    return bp->str;
+    తిరిగి bp->str;
 }
 
-#define CHANNEL_NAME(x)                                                    \
+#నిర్వచించు CHANNEL_NAME(x)                                                    \
     channel_name(&bp, (x));                                                \
-    printf("With %-32s %14s\n", AV_STRINGIFY(x)":", bp.str)
+    రాయి("With %-32s %14s\n", AV_STRINGIFY(x)":", bp.str)
 
-#define CHANNEL_DESCRIPTION(x)                                             \
+#నిర్వచించు CHANNEL_DESCRIPTION(x)                                             \
     channel_description(&bp, (x));                                         \
-    printf("With %-23s %23s\n", AV_STRINGIFY(x)":", bp.str);
+    రాయి("With %-23s %23s\n", AV_STRINGIFY(x)":", bp.str);
 
-#define CHANNEL_FROM_STRING(x)                                             \
-    printf("With %-38s %8d\n", AV_STRINGIFY(x)":", av_channel_from_string(x))
+#నిర్వచించు CHANNEL_FROM_STRING(x)                                             \
+    రాయి("With %-38s %8d\n", AV_STRINGIFY(x)":", av_channel_from_string(x))
 
-#define CHANNEL_LAYOUT_FROM_MASK(x)                                        \
-    channel_layout_from_mask(&layout, &bp, (x));
+#నిర్వచించు CHANNEL_LAYOUT_FROM_ముసుగు(x)                                        \
+    channel_layout_from_ముసుగు(&layout, &bp, (x));
 
-#define CHANNEL_LAYOUT_FROM_STRING(x)                                      \
+#నిర్వచించు CHANNEL_LAYOUT_FROM_STRING(x)                                      \
     channel_layout_from_string(&layout, &bp, (x));                         \
-    printf("With \"%s\":%*s %32s\n", x, strlen(x) > 32 ? 0 : 32 - (int)strlen(x), "", bp.str);
+    రాయి("With \"%s\":%*s %32s\n", x, అక్షరశ్రేణి_పొడవు(x) > 32 ? 0 : 32 - (పూర్ణాంకం)అక్షరశ్రేణి_పొడవు(x), "", bp.str);
 
-#define CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(l, x)                            \
-    ret = av_channel_layout_channel_from_index(&layout, x);                \
-    if (ret < 0)                                                           \
+#నిర్వచించు CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(l, x)                            \
+    ret = av_channel_layout_channel_from_సూచీ(&layout, x);                \
+    ఒకవేళ (ret < 0)                                                           \
         ret = -1;                                                          \
-    printf("On \"%s\" layout with %2d: %8d\n", l,  x, ret)
+    రాయి("On \"%s\" layout with %2d: %8d\n", l,  x, ret)
 
-#define CHANNEL_LAYOUT_SUBSET(l, xstr, x)                                  \
-    mask = av_channel_layout_subset(&layout, x);                           \
-    printf("On \"%s\" layout with %-22s 0x%"PRIx64"\n", l, xstr, mask)
+#నిర్వచించు CHANNEL_LAYOUT_SUBSET(l, xstr, x)                                  \
+    ముసుగు_2 = av_channel_layout_subset(&layout, x);                           \
+    రాయి("On \"%s\" layout with %-22s 0x%"PRIx64"\n", l, xstr, ముసుగు_2)
 
-#define CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(l, x)                            \
-    ret = av_channel_layout_index_from_channel(&layout, x);                \
-    if (ret < 0)                                                           \
+#నిర్వచించు CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(l, x)                            \
+    ret = av_channel_layout_సూచీ_from_channel(&layout, x);                \
+    ఒకవేళ (ret < 0)                                                           \
         ret = -1;                                                          \
-    printf("On \"%s\" layout with %-23s %3d\n", l, AV_STRINGIFY(x)":", ret)
+    రాయి("On \"%s\" layout with %-23s %3d\n", l, AV_STRINGIFY(x)":", ret)
 
-#define CHANNEL_LAYOUT_CHANNEL_FROM_STRING(l, x)                           \
+#నిర్వచించు CHANNEL_LAYOUT_CHANNEL_FROM_STRING(l, x)                           \
     ret = av_channel_layout_channel_from_string(&layout, x);               \
-    if (ret < 0)                                                           \
+    ఒకవేళ (ret < 0)                                                           \
         ret = -1;                                                          \
-    printf("On \"%s\" layout with %-21s %3d\n", bp.str, AV_STRINGIFY(x)":", ret);
+    రాయి("On \"%s\" layout with %-21s %3d\n", bp.str, AV_STRINGIFY(x)":", ret);
 
-#define CHANNEL_LAYOUT_INDEX_FROM_STRING(l, x)                             \
-    ret = av_channel_layout_index_from_string(&layout, x);                 \
-    if (ret < 0)                                                           \
+#నిర్వచించు CHANNEL_LAYOUT_సూచీ_FROM_STRING(l, x)                             \
+    ret = av_channel_layout_సూచీ_from_string(&layout, x);                 \
+    ఒకవేళ (ret < 0)                                                           \
         ret = -1;                                                          \
-    printf("On \"%s\" layout with %-20s %3d\n", l, AV_STRINGIFY(x)":", ret);
+    రాయి("On \"%s\" layout with %-20s %3d\n", l, AV_STRINGIFY(x)":", ret);
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
-    const AVChannelLayout *playout;
+    స్థిరరాశి AVChannelLayout *playout;
     AVChannelLayout layout = { 0 }, layout2 = { 0 };
     AVBPrint bp;
-    void *iter = NULL;
-    uint64_t mask;
-    int ret;
+    శూన్య *iter = ఖాళీ;
+    uint64_t ముసుగు_2;
+    పూర్ణాంకం ret;
 
-    av_bprint_init(&bp, 64, AV_BPRINT_SIZE_AUTOMATIC);
+    av_bprint_init(&bp, 64, AV_BPRINT_కొలత_AUTOMATIC);
 
-    printf("Testing av_channel_layout_standard\n");
-    while (playout = av_channel_layout_standard(&iter)) {
+    రాయి("Testing av_channel_layout_standard\n");
+    అయితే (playout = av_channel_layout_standard(&iter)) {
         av_channel_layout_describe_bprint(playout, &bp);
-        printf("%-14s ", bp.str);
+        రాయి("%-14s ", bp.str);
         av_bprint_clear(&bp);
-        for (int i = 0; i < 63; i++) {
-            int idx = av_channel_layout_index_from_channel(playout, i);
-            if (idx >= 0) {
-                if (idx)
+        కొరకు (పూర్ణాంకం i = 0; i < 63; i++) {
+            పూర్ణాంకం idx = av_channel_layout_సూచీ_from_channel(playout, i);
+            ఒకవేళ (idx >= 0) {
+                ఒకవేళ (idx)
                     av_bprintf(&bp, "+");
                 av_channel_name_bprint(&bp, i);
             }
         }
-        printf("%s\n", bp.str);
+        రాయి("%s\n", bp.str);
         av_bprint_clear(&bp);
     }
 
-    printf("\nTesting av_channel_name\n");
-    CHANNEL_NAME(AV_CHAN_FRONT_LEFT);
-    CHANNEL_NAME(AV_CHAN_FRONT_RIGHT);
+    రాయి("\nTesting av_channel_name\n");
+    CHANNEL_NAME(AV_CHAN_FRONT_ఎడమ);
+    CHANNEL_NAME(AV_CHAN_FRONT_కుడి);
     CHANNEL_NAME(63);
-    CHANNEL_NAME(AV_CHAN_AMBISONIC_BASE);
-    CHANNEL_NAME(AV_CHAN_AMBISONIC_END);
+    CHANNEL_NAME(AV_CHAN_AMBISONIC_పునాది);
+    CHANNEL_NAME(AV_CHAN_AMBISONIC_చివర);
 
-    printf("Testing av_channel_description\n");
-    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_LEFT);
-    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_RIGHT);
+    రాయి("Testing av_channel_description\n");
+    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_ఎడమ);
+    CHANNEL_DESCRIPTION(AV_CHAN_FRONT_కుడి);
     CHANNEL_DESCRIPTION(63);
-    CHANNEL_DESCRIPTION(AV_CHAN_AMBISONIC_BASE);
-    CHANNEL_DESCRIPTION(AV_CHAN_AMBISONIC_END);
+    CHANNEL_DESCRIPTION(AV_CHAN_AMBISONIC_పునాది);
+    CHANNEL_DESCRIPTION(AV_CHAN_AMBISONIC_చివర);
 
-    printf("\nTesting av_channel_from_string\n");
+    రాయి("\nTesting av_channel_from_string\n");
     CHANNEL_FROM_STRING("FL");
     CHANNEL_FROM_STRING("FR");
     CHANNEL_FROM_STRING("USR63");
@@ -260,9 +260,9 @@ int main(void)
     CHANNEL_FROM_STRING("Foo@FL");
     CHANNEL_FROM_STRING("@FL");
 
-    printf("\n==Native layouts==\n");
+    రాయి("\n==Native layouts==\n");
 
-    printf("\nTesting av_channel_layout_from_string\n");
+    రాయి("\nTesting av_channel_layout_from_string\n");
     CHANNEL_LAYOUT_FROM_STRING("0x3f");
     CHANNEL_LAYOUT_FROM_STRING("63");
     CHANNEL_LAYOUT_FROM_STRING("6c");
@@ -275,29 +275,29 @@ int main(void)
     CHANNEL_LAYOUT_FROM_STRING("FL+FR+FC+LFE+SL+SR");
     CHANNEL_LAYOUT_FROM_STRING("5.1(side)");
 
-    printf("\nTesting av_channel_layout_from_mask\n");
-    CHANNEL_LAYOUT_FROM_MASK(AV_CH_LAYOUT_5POINT1);
-    printf("With AV_CH_LAYOUT_5POINT1: %25s\n", bp.str);
+    రాయి("\nTesting av_channel_layout_from_mask\n");
+    CHANNEL_LAYOUT_FROM_ముసుగు(AV_CH_LAYOUT_5POINT1);
+    రాయి("With AV_CH_LAYOUT_5POINT1: %25s\n", bp.str);
 
-    printf("\nTesting av_channel_layout_channel_from_index\n");
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 0);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 1);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 2);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 3);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 4);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 5);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 6);
+    రాయి("\nTesting av_channel_layout_channel_from_index\n");
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 0);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 1);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 2);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 3);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 4);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 5);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 6);
 
-    printf("\nTesting av_channel_layout_index_from_channel\n");
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_RIGHT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_CENTER);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_LOW_FREQUENCY);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_RIGHT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
+    రాయి("\nTesting av_channel_layout_index_from_channel\n");
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_ఎడమ);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_కుడి);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_CENTER);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_దిగువ_FREQUENCY);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_ఎడమ);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_SIDE_కుడి);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_వెనుక_CENTER);
 
-    printf("\nTesting av_channel_layout_channel_from_string\n");
+    రాయి("\nTesting av_channel_layout_channel_from_string\n");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "FL");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "FR");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "FC");
@@ -309,23 +309,23 @@ int main(void)
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "@Foo");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "FL@Foo");
 
-    printf("\nTesting av_channel_layout_index_from_string\n");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FL");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FR");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FC");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "LFE");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "SL");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "SR");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "BC");
+    రాయి("\nTesting av_channel_layout_index_from_string\n");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "FL");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "FR");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "FC");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "LFE");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "SL");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "SR");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "BC");
 
-    printf("\nTesting av_channel_layout_subset\n");
+    రాయి("\nTesting av_channel_layout_subset\n");
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_STEREO:",  AV_CH_LAYOUT_STEREO);
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_2POINT1:", AV_CH_LAYOUT_2POINT1);
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_4POINT1:", AV_CH_LAYOUT_4POINT1);
 
-    printf("\n==Custom layouts==\n");
+    రాయి("\n==Custom layouts==\n");
 
-    printf("\nTesting av_channel_layout_from_string\n");
+    రాయి("\nTesting av_channel_layout_from_string\n");
     CHANNEL_LAYOUT_FROM_STRING("FL+FR+FC+BL+BR+LFE");
     CHANNEL_LAYOUT_FROM_STRING("2 channels (FR+FL)");
     CHANNEL_LAYOUT_FROM_STRING("2 channels (AMBI1023+FL)");
@@ -354,26 +354,26 @@ int main(void)
     CHANNEL_LAYOUT_FROM_STRING("FR+FL@Foo+USR63@Foo");
 
     ret = av_channel_layout_copy(&layout2, &layout);
-    if (ret < 0) {
-        printf("Copying channel layout \"FR+FL@Foo+USR63@Foo\" failed; "
+    ఒకవేళ (ret < 0) {
+        రాయి("Copying channel layout \"FR+FL@Foo+USR63@Foo\" failed; "
                "ret %d\n", ret);
     }
     ret = av_channel_layout_compare(&layout, &layout2);
-    if (ret)
-        printf("Channel layout and its copy compare unequal; ret: %d\n", ret);
+    ఒకవేళ (ret)
+        రాయి("Channel layout and its copy compare unequal; ret: %d\n", ret);
 
-    printf("\nTesting av_channel_layout_index_from_string\n");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FR");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FL");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "USR63");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "@Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FR@Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "FL@Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "USR63@Foo");
-    CHANNEL_LAYOUT_INDEX_FROM_STRING(bp.str, "BC");
+    రాయి("\nTesting av_channel_layout_index_from_string\n");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "FR");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "FL");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "USR63");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "Foo");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "@Foo");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "FR@Foo");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "FL@Foo");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "USR63@Foo");
+    CHANNEL_LAYOUT_సూచీ_FROM_STRING(bp.str, "BC");
 
-    printf("\nTesting av_channel_layout_channel_from_string\n");
+    రాయి("\nTesting av_channel_layout_channel_from_string\n");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "FR");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "FL");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "USR63");
@@ -384,61 +384,61 @@ int main(void)
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "USR63@Foo");
     CHANNEL_LAYOUT_CHANNEL_FROM_STRING(bp.str, "BC");
 
-    printf("\nTesting av_channel_layout_index_from_channel\n");
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_RIGHT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, 63);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
+    రాయి("\nTesting av_channel_layout_index_from_channel\n");
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_కుడి);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_ఎడమ);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, 63);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_వెనుక_CENTER);
 
-    printf("\nTesting av_channel_layout_channel_from_index\n");
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 0);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 1);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 2);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 3);
+    రాయి("\nTesting av_channel_layout_channel_from_index\n");
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 0);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 1);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 2);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 3);
 
-    printf("\nTesting av_channel_layout_subset\n");
+    రాయి("\nTesting av_channel_layout_subset\n");
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_STEREO:", AV_CH_LAYOUT_STEREO);
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_QUAD:", AV_CH_LAYOUT_QUAD);
 
-    printf("\n==Ambisonic layouts==\n");
+    రాయి("\n==Ambisonic layouts==\n");
 
-    printf("\nTesting av_channel_layout_from_string\n");
+    రాయి("\nTesting av_channel_layout_from_string\n");
     CHANNEL_LAYOUT_FROM_STRING("ambisonic 1");
     CHANNEL_LAYOUT_FROM_STRING("ambisonic 2+stereo");
 
-    printf("\nTesting av_channel_layout_index_from_channel\n");
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_AMBISONIC_BASE);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_LEFT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_RIGHT);
-    CHANNEL_LAYOUT_INDEX_FROM_CHANNEL(bp.str, AV_CHAN_BACK_CENTER);
+    రాయి("\nTesting av_channel_layout_index_from_channel\n");
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_AMBISONIC_పునాది);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_ఎడమ);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_FRONT_కుడి);
+    CHANNEL_LAYOUT_సూచీ_FROM_CHANNEL(bp.str, AV_CHAN_వెనుక_CENTER);
 
-    printf("\nTesting av_channel_layout_channel_from_index\n");
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 0);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 9);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 10);
-    CHANNEL_LAYOUT_CHANNEL_FROM_INDEX(bp.str, 11);
+    రాయి("\nTesting av_channel_layout_channel_from_index\n");
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 0);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 9);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 10);
+    CHANNEL_LAYOUT_CHANNEL_FROM_సూచీ(bp.str, 11);
 
-    printf("\nTesting av_channel_layout_subset\n");
+    రాయి("\nTesting av_channel_layout_subset\n");
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_STEREO:", AV_CH_LAYOUT_STEREO);
     CHANNEL_LAYOUT_SUBSET(bp.str, "AV_CH_LAYOUT_QUAD:", AV_CH_LAYOUT_QUAD);
 
     av_channel_layout_uninit(&layout);
     av_channel_layout_uninit(&layout2);
 
-    printf("\nTesting av_channel_layout_retype\n");
+    రాయి("\nTesting av_channel_layout_retype\n");
     {
-        const char* layouts[] = {
+        స్థిరరాశి అక్షరం* layouts[] = {
             "FL@Boo",
             "stereo",
             "FR+FL",
             "ambisonic 2+stereo",
             "2C",
-            NULL
+            ఖాళీ
         };
-        for (int i = 0; layouts[i]; i++)
-            printf("With \"%s\": %s\n", layouts[i], channel_layout_retype(&layout, &bp, layouts[i]));
+        కొరకు (పూర్ణాంకం i = 0; layouts[i]; i++)
+            రాయి("With \"%s\": %s\n", layouts[i], channel_layout_retype(&layout, &bp, layouts[i]));
     }
-    av_bprint_finalize(&bp, NULL);
+    av_bprint_finalize(&bp, ఖాళీ);
 
-    return 0;
+    తిరిగి 0;
 }

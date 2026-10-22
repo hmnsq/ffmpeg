@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#అన్తర్భావ "buffer.h"
+#అన్తర్భావ "frame.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(గణన AVVideoEncParamsType type,
+                                            గుర్తులేని పూర్ణాంకం nb_ఖండాలు, size_t *బహిర్గతం_కొలత)
 {
-    struct TestStruct {
+    నిర్మాణం TestStruct {
         AVVideoEncParams   p;
-        AVVideoBlockParams b;
+        AVVideo_ఖండం_Params b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
-    size_t size = blocks_offset;
+    స్థిరరాశి size_t ఖండాలు_స్థానభ్రంశం = offsetof(నిర్మాణం TestStruct, b);
+    size_t కొలత = ఖండాలు_స్థానభ్రంశం;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    ఒకవేళ (nb_ఖండాలు > (SIZE_MAX - కొలత) / పరిమాణం(AVVideo_ఖండం_Params))
+        తిరిగి ఖాళీ;
+    కొలత += పరిమాణం(AVVideo_ఖండం_Params) * nb_ఖండాలు;
 
-    par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    par = av_mallocz(కొలత);
+    ఒకవేళ (!par)
+        తిరిగి ఖాళీ;
 
     par->type          = type;
-    par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
-    par->blocks_offset = blocks_offset;
+    par->nb_ఖండాలు     = nb_ఖండాలు;
+    par->ఖండం_కొలత    = పరిమాణం(AVVideo_ఖండం_Params);
+    par->ఖండాలు_స్థానభ్రంశం = ఖండాలు_స్థానభ్రంశం;
 
-    if (out_size)
-        *out_size = size;
+    ఒకవేళ (బహిర్గతం_కొలత)
+        *బహిర్గతం_కొలత = కొలత;
 
-    return par;
+    తిరిగి par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_దత్తాంశం(AVFrame *చట్రం, గణన AVVideoEncParamsType type,
+                                     గుర్తులేని పూర్ణాంకం nb_ఖండాలు)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
-    size_t size;
+    size_t కొలత;
 
-    par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    par = av_video_enc_params_alloc(type, nb_ఖండాలు, &కొలత);
+    ఒకవేళ (!par)
+        తిరిగి ఖాళీ;
+    buf = av_బఫరు_create((uint8_t *)par, కొలత, ఖాళీ, ఖాళీ, 0);
+    ఒకవేళ (!buf) {
         av_freep(&par);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    ఒకవేళ (!av_చట్రం_new_side_దత్తాంశం_from_buf(చట్రం, AV_చట్రం_దత్తాంశం_VIDEO_ENC_PARAMS, buf)) {
+        av_బఫరు_unref(&buf);
+        తిరిగి ఖాళీ;
     }
 
-    return par;
+    తిరిగి par;
 }

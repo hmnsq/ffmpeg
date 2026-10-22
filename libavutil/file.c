@@ -16,189 +16,189 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "error.h"
-#include "file.h"
-#include "file_open.h"
-#include "internal.h"
-#include "log.h"
-#include "mem.h"
-#include <fcntl.h>
-#include <sys/stat.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_IO_H
-#include <io.h>
-#endif
-#if HAVE_MMAP
-#include <sys/mman.h>
-#elif HAVE_MAPVIEWOFFILE
-#include <windows.h>
-#endif
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "file.h"
+#అన్తర్భావ "file_open.h"
+#అన్తర్భావ "internal.h"
+#అన్తర్భావ "log.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ <fcntl.h>
+#అన్తర్భావ <sys/stat.h>
+#ఒకవేళ HAVE_UNISTD_H
+#అన్తర్భావ <unistd.h>
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_IO_H
+#అన్తర్భావ <io.h>
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_MMAP
+#అన్తర్భావ <sys/mman.h>
+#లేదావేళ HAVE_MAPVIEWOFFILE
+#అన్తర్భావ <windows.h>
+#అయితే_ముగింపు
 
-#ifdef _WIN32
+#నిర్వచితమైతే _WIN32
 /* struct stat has a 32 bit st_size with the Windows SDK, use the 64 bit variants */
-#undef stat
-#undef fstat
-#define stat  _stat64
-#define fstat _fstat64
-#endif
+#నిర్వచనం_రద్దు stat
+#నిర్వచనం_రద్దు fstat
+#నిర్వచించు stat  _stat64
+#నిర్వచించు fstat _fstat64
+#అయితే_ముగింపు
 
-typedef struct FileLogContext {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+రకనిర్వచనం నిర్మాణం FileLogContext {
+    స్థిరరాశి AVClass *class;
+    పూర్ణాంకం   log_స్థానభ్రంశం;
+    శూన్య *log_ctx;
 } FileLogContext;
 
-static const AVClass file_log_ctx_class = {
+స్థిర స్థిరరాశి AVClass file_log_ctx_class = {
     .class_name                = "FILE",
-    .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(FileLogContext, log_offset),
-    .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
+    .అంశం_name                 = av_default_అంశం_name,
+    .option                    = ఖాళీ,
+    .సంస్కరణ                   = LIBAVUTIL_సంస్కరణ_INT,
+    .log_level_స్థానభ్రంశం_స్థానభ్రంశం   = offsetof(FileLogContext, log_స్థానభ్రంశం),
+    .మాతృ_log_context_స్థానభ్రంశం = offsetof(FileLogContext, log_ctx),
 };
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
+#ఒకవేళ HAVE_MMAP || HAVE_MAPVIEWOFFILE
 /* Map the first size bytes of the file, as a private copy or shared and
  * writable. The shared mapping extends the file to size, on Windows the
  * mapping object does it. */
-static int map_file(int fd, size_t size, int shared, void **ptr)
+స్థిర పూర్ణాంకం map_file(పూర్ణాంకం fd, size_t కొలత, పూర్ణాంకం shared, శూన్య **ptr)
 {
-#if HAVE_MMAP
-    if (shared) {
-        struct stat st;
-        if (fstat(fd, &st) < 0)
-            return AVERROR(errno);
-        if (st.st_size < size && ftruncate(fd, size) < 0)
-            return AVERROR(errno);
+#ఒకవేళ HAVE_MMAP
+    ఒకవేళ (shared) {
+        నిర్మాణం stat st;
+        ఒకవేళ (fstat(fd, &st) < 0)
+            తిరిగి AVERROR(errno);
+        ఒకవేళ (st.st_కొలత < కొలత && ftruncate(fd, కొలత) < 0)
+            తిరిగి AVERROR(errno);
     }
 
-    void *map = mmap(NULL, size, PROT_READ | PROT_WRITE,
-                     shared ? MAP_SHARED : MAP_PRIVATE, fd, 0);
-    if (map == MAP_FAILED)
-        return AVERROR(errno);
-#else
+    శూన్య *map = mmap(ఖాళీ, కొలత, PROT_READ | PROT_WRITE,
+                     shared ? MAP_SHARED : MAP_వ్యక్తిగత, fd, 0);
+    ఒకవేళ (map == MAP_FAILED)
+        తిరిగి AVERROR(errno);
+#లేకపోతే
     HANDLE fh = (HANDLE)_get_osfhandle(fd);
-    if (fh == INVALID_HANDLE_VALUE)
-        return AVERROR(EBADF);
+    ఒకవేళ (fh == INVALID_HANDLE_విలువ)
+        తిరిగి AVERROR(EBADF);
 
-    HANDLE mh = CreateFileMapping(fh, NULL,
-                                  shared ? PAGE_READWRITE : PAGE_READONLY,
-                                  (uint64_t)size >> 32, size, NULL);
-    if (!mh)
-        return AVERROR(EIO);
+    HANDLE mh = CreateFileMapping(fh, ఖాళీ,
+                                  shared ? పుట_READWRITE : పుట_READONLY,
+                                  (uint64_t)కొలత >> 32, కొలత, ఖాళీ);
+    ఒకవేళ (!mh)
+        తిరిగి AVERROR(EIO);
 
-    void *map = MapViewOfFile(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
-                              0, 0, size);
+    శూన్య *map = Map_View_యొక్క_File(mh, shared ? FILE_MAP_ALL_ACCESS : FILE_MAP_COPY,
+                              0, 0, కొలత);
     CloseHandle(mh);
-    if (!map)
-        return AVERROR(EIO);
-#endif
+    ఒకవేళ (!map)
+        తిరిగి AVERROR(EIO);
+#అయితే_ముగింపు
 
     *ptr = map;
-    return 0;
+    తిరిగి 0;
 }
 
-static void unmap_file(void *ptr, size_t size)
+స్థిర శూన్య unmap_file(శూన్య *ptr, size_t కొలత)
 {
-#if HAVE_MMAP
-    munmap(ptr, size);
-#else
-    UnmapViewOfFile(ptr);
-#endif
+#ఒకవేళ HAVE_MMAP
+    munmap(ptr, కొలత);
+#లేకపోతే
+    Unmap_View_యొక్క_File(ptr);
+#అయితే_ముగింపు
 }
-#endif
+#అయితే_ముగింపు
 
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx)
+పూర్ణాంకం av_file_map(స్థిరరాశి అక్షరం *filename, uint8_t **bufptr, size_t *కొలత,
+                పూర్ణాంకం log_స్థానభ్రంశం, శూన్య *log_ctx)
 {
-    FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int err, fd = avpriv_open(filename, O_RDONLY);
-    struct stat st;
-    av_unused void *ptr;
-    *bufptr = NULL;
-    *size = 0;
+    FileLogContext file_log_ctx = { &file_log_ctx_class, log_స్థానభ్రంశం, log_ctx };
+    పూర్ణాంకం err, fd = avpriv_open(filename, O_RDONLY);
+    నిర్మాణం stat st;
+    av_వాడని శూన్య *ptr;
+    *bufptr = ఖాళీ;
+    *కొలత = 0;
 
-    if (fd < 0) {
+    ఒకవేళ (fd < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot read file '%s': %s\n", filename, av_err2str(err));
-        return err;
+        తిరిగి err;
     }
 
-    if (fstat(fd, &st) < 0) {
+    ఒకవేళ (fstat(fd, &st) < 0) {
         err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "Error occurred in fstat(): %s\n", av_err2str(err));
         close(fd);
-        return err;
+        తిరిగి err;
     }
 
-    if (st.st_size > SIZE_MAX) {
+    ఒకవేళ (st.st_కొలత > SIZE_MAX) {
         av_log(&file_log_ctx, AV_LOG_ERROR,
                "File size for file '%s' is too big\n", filename);
         close(fd);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
-    *size = st.st_size;
+    *కొలత = st.st_కొలత;
 
-    if (!*size) {
-        *bufptr = NULL;
-        goto out;
+    ఒకవేళ (!*కొలత) {
+        *bufptr = ఖాళీ;
+        వెళ్ళు బహిర్గతం;
     }
 
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    err = map_file(fd, *size, 0, &ptr);
-    if (err < 0) {
+#ఒకవేళ HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    err = map_file(fd, *కొలత, 0, &ptr);
+    ఒకవేళ (err < 0) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Cannot map file '%s': %s\n", filename, av_err2str(err));
         close(fd);
-        *size = 0;
-        return err;
+        *కొలత = 0;
+        తిరిగి err;
     }
     *bufptr = ptr;
-#else
-    *bufptr = av_malloc(*size);
-    if (!*bufptr) {
+#లేకపోతే
+    *bufptr = av_malloc(*కొలత);
+    ఒకవేళ (!*bufptr) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "Memory allocation error occurred\n");
         close(fd);
-        *size = 0;
-        return AVERROR(ENOMEM);
+        *కొలత = 0;
+        తిరిగి AVERROR(ENOMEM);
     }
-    read(fd, *bufptr, *size);
-#endif
+    పఠ(fd, *bufptr, *కొలత);
+#అయితే_ముగింపు
 
-out:
+బహిర్గతం:
     close(fd);
-    return 0;
+    తిరిగి 0;
 }
 
-void av_file_unmap(uint8_t *bufptr, size_t size)
+శూన్య av_file_unmap(uint8_t *bufptr, size_t కొలత)
 {
-    if (!size || !bufptr)
-        return;
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    unmap_file(bufptr, size);
-#else
+    ఒకవేళ (!కొలత || !bufptr)
+        తిరిగి;
+#ఒకవేళ HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    unmap_file(bufptr, కొలత);
+#లేకపోతే
     av_free(bufptr);
-#endif
+#అయితే_ముగింపు
 }
 
-int av_file_map_shared(int fd, size_t size, void **bufptr)
+పూర్ణాంకం av_file_map_shared(పూర్ణాంకం fd, size_t కొలత, శూన్య **bufptr)
 {
-    *bufptr = NULL;
-    if (!size)
-        return AVERROR(EINVAL);
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    return map_file(fd, size, 1, bufptr);
-#else
-    return AVERROR(ENOSYS);
-#endif
+    *bufptr = ఖాళీ;
+    ఒకవేళ (!కొలత)
+        తిరిగి AVERROR(EINVAL);
+#ఒకవేళ HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    తిరిగి map_file(fd, కొలత, 1, bufptr);
+#లేకపోతే
+    తిరిగి AVERROR(ENOSYS);
+#అయితే_ముగింపు
 }
 
-void av_file_unmap_shared(void *bufptr, size_t size)
+శూన్య av_file_unmap_shared(శూన్య *bufptr, size_t కొలత)
 {
-#if HAVE_MMAP || HAVE_MAPVIEWOFFILE
-    if (size && bufptr)
-        unmap_file(bufptr, size);
-#endif
+#ఒకవేళ HAVE_MMAP || HAVE_MAPVIEWOFFILE
+    ఒకవేళ (కొలత && bufptr)
+        unmap_file(bufptr, కొలత);
+#అయితే_ముగింపు
 }

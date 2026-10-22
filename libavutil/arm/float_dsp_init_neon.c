@@ -19,41 +19,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "float_dsp_arm.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/float_dsp.h"
+#అన్తర్భావ "float_dsp_arm.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1, int len);
+శూన్య ff_సదిశ_fmul_neon(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1, పూర్ణాంకం len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+శూన్య ff_సదిశ_fmac_scalar_neon(దశాంశం *dst, స్థిరరాశి దశాంశం *src, దశాంశం mul,
+                                పూర్ణాంకం len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+శూన్య ff_సదిశ_fmul_scalar_neon(దశాంశం *dst, స్థిరరాశి దశాంశం *src, దశాంశం mul,
+                                పూర్ణాంకం len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+శూన్య ff_సదిశ_fmul_కిటికీ_neon(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                స్థిరరాశి దశాంశం *src1, స్థిరరాశి దశాంశం *win, పూర్ణాంకం len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+శూన్య ff_సదిశ_fmul_కూడు_neon(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1,
+                             స్థిరరాశి దశాంశం *src2, పూర్ణాంకం len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+శూన్య ff_సదిశ_fmul_తిరగేయి_neon(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                 స్థిరరాశి దశాంశం *src1, పూర్ణాంకం len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+శూన్య ff_butterflies_float_neon(దశాంశం *v1, దశాంశం *v2, పూర్ణాంకం len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+దశాంశం ff_scalarproduct_float_neon(స్థిరరాశి దశాంశం *v1, స్థిరరాశి దశాంశం *v2, పూర్ణాంకం len);
 
-av_cold void ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
+av_cold శూన్య ff_float_dsp_init_neon(AVFloatDSPContext *fdsp)
 {
-    fdsp->vector_fmul = ff_vector_fmul_neon;
-    fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_neon;
-    fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_neon;
-    fdsp->vector_fmul_window = ff_vector_fmul_window_neon;
-    fdsp->vector_fmul_add    = ff_vector_fmul_add_neon;
-    fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_neon;
+    fdsp->సదిశ_fmul = ff_సదిశ_fmul_neon;
+    fdsp->సదిశ_fmac_scalar = ff_సదిశ_fmac_scalar_neon;
+    fdsp->సదిశ_fmul_scalar = ff_సదిశ_fmul_scalar_neon;
+    fdsp->సదిశ_fmul_కిటికీ = ff_సదిశ_fmul_కిటికీ_neon;
+    fdsp->సదిశ_fmul_కూడు    = ff_సదిశ_fmul_కూడు_neon;
+    fdsp->సదిశ_fmul_తిరగేయి = ff_సదిశ_fmul_తిరగేయి_neon;
     fdsp->butterflies_float = ff_butterflies_float_neon;
     fdsp->scalarproduct_float = ff_scalarproduct_float_neon;
 }

@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AES_CTR_H
-#define AVUTIL_AES_CTR_H
+#నిర్వచితం_కాకపోతే AVUTIL_AES_CTR_H
+#నిర్వచించు AVUTIL_AES_CTR_H
 
 /**
  * @defgroup lavu_aes_ctr AES-CTR
@@ -28,19 +28,19 @@
  * @{
  */
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
-#include "attributes.h"
+#అన్తర్భావ "attributes.h"
 
-#define AES_CTR_KEY_SIZE (16)
-#define AES_CTR_IV_SIZE (8)
+#నిర్వచించు AES_CTR_కీలకం_కొలత (16)
+#నిర్వచించు AES_CTR_IV_కొలత (8)
 
-struct AVAESCTR;
+నిర్మాణం AVAESCTR;
 
 /**
  * Allocate an AVAESCTR context.
  */
-struct AVAESCTR *av_aes_ctr_alloc(void);
+నిర్మాణం AVAESCTR *av_aes_ctr_alloc(శూన్య);
 
 /**
  * Initialize an AVAESCTR context.
@@ -48,14 +48,14 @@ struct AVAESCTR *av_aes_ctr_alloc(void);
  * @param a The AVAESCTR context to initialize
  * @param key encryption key, must have a length of AES_CTR_KEY_SIZE
  */
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key);
+పూర్ణాంకం av_aes_ctr_init(నిర్మాణం AVAESCTR *a, స్థిరరాశి uint8_t *కీలకం);
 
 /**
  * Release an AVAESCTR context.
  *
  * @param a The AVAESCTR context
  */
-void av_aes_ctr_free(struct AVAESCTR *a);
+శూన్య av_aes_ctr_free(నిర్మాణం AVAESCTR *a);
 
 /**
  * Process a buffer using a previously initialized context.
@@ -65,35 +65,35 @@ void av_aes_ctr_free(struct AVAESCTR *a);
  * @param src source array, can be equal to dst
  * @param size the size of src and dst
  */
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int size);
+శూన్య av_aes_ctr_crypt(నిర్మాణం AVAESCTR *a, uint8_t *dst, స్థిరరాశి uint8_t *src, పూర్ణాంకం కొలత);
 
 /**
  * Get the current iv
  */
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a);
+స్థిరరాశి uint8_t* av_aes_ctr_get_iv(నిర్మాణం AVAESCTR *a);
 
 /**
  * Generate a random iv
  */
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a);
+శూన్య av_aes_ctr_సమితి_random_iv(నిర్మాణం AVAESCTR *a);
 
 /**
  * Forcefully change the 8-byte iv
  */
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv);
+శూన్య av_aes_ctr_సమితి_iv(నిర్మాణం AVAESCTR *a, స్థిరరాశి uint8_t* iv);
 
 /**
  * Forcefully change the "full" 16-byte iv, including the counter
  */
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv);
+శూన్య av_aes_ctr_సమితి_నిండిన_iv(నిర్మాణం AVAESCTR *a, స్థిరరాశి uint8_t* iv);
 
 /**
  * Increment the top 64 bit of the iv (performed after each frame)
  */
-void av_aes_ctr_increment_iv(struct AVAESCTR *a);
+శూన్య av_aes_ctr_increment_iv(నిర్మాణం AVAESCTR *a);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_AES_CTR_H */
+#అయితే_ముగింపు /* AVUTIL_AES_CTR_H */

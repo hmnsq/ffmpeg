@@ -24,33 +24,33 @@
  * Audio FIFO
  */
 
-#include <limits.h>
-#include <stddef.h>
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <stddef.h>
 
-#include "audio_fifo.h"
-#include "error.h"
-#include "fifo.h"
-#include "macros.h"
-#include "mem.h"
-#include "samplefmt.h"
+#అన్తర్భావ "audio_fifo.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "fifo.h"
+#అన్తర్భావ "macros.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "samplefmt.h"
 
-struct AVAudioFifo {
+నిర్మాణం AVAudioFifo {
     AVFifo **buf;                   /**< single buffer for interleaved, per-channel buffers for planar */
-    int nb_buffers;                 /**< number of buffers */
-    int nb_samples;                 /**< number of samples currently in the FIFO */
-    int allocated_samples;          /**< current allocated size, in samples */
+    పూర్ణాంకం nb_buffers;                 /**< number of buffers */
+    పూర్ణాంకం nb_samples;                 /**< number of samples currently in the FIFO */
+    పూర్ణాంకం allocated_samples;          /**< current allocated size, in samples */
 
-    int channels;                   /**< number of channels */
-    enum AVSampleFormat sample_fmt; /**< sample format */
-    int sample_size;                /**< size, in bytes, of one sample in a buffer */
+    పూర్ణాంకం channels;                   /**< number of channels */
+    గణన AVSampleFormat sample_fmt; /**< sample format */
+    పూర్ణాంకం sample_కొలత;                /**< size, in bytes, of one sample in a buffer */
 };
 
-void av_audio_fifo_free(AVAudioFifo *af)
+శూన్య av_audio_fifo_free(AVAudioFifo *af)
 {
-    if (af) {
-        if (af->buf) {
-            int i;
-            for (i = 0; i < af->nb_buffers; i++) {
+    ఒకవేళ (af) {
+        ఒకవేళ (af->buf) {
+            పూర్ణాంకం i;
+            కొరకు (i = 0; i < af->nb_buffers; i++) {
                 av_fifo_freep2(&af->buf[i]);
             }
             av_freep(&af->buf);
@@ -59,172 +59,172 @@ void av_audio_fifo_free(AVAudioFifo *af)
     }
 }
 
-AVAudioFifo *av_audio_fifo_alloc(enum AVSampleFormat sample_fmt, int channels,
-                                 int nb_samples)
+AVAudioFifo *av_audio_fifo_alloc(గణన AVSampleFormat sample_fmt, పూర్ణాంకం channels,
+                                 పూర్ణాంకం nb_samples)
 {
     AVAudioFifo *af;
-    int buf_size, i;
+    పూర్ణాంకం buf_కొలత, i;
 
     /* get channel buffer size (also validates parameters) */
-    if (av_samples_get_buffer_size(&buf_size, channels, nb_samples, sample_fmt, 1) < 0)
-        return NULL;
+    ఒకవేళ (av_samples_get_బఫరు_కొలత(&buf_కొలత, channels, nb_samples, sample_fmt, 1) < 0)
+        తిరిగి ఖాళీ;
 
-    af = av_mallocz(sizeof(*af));
-    if (!af)
-        return NULL;
+    af = av_mallocz(పరిమాణం(*af));
+    ఒకవేళ (!af)
+        తిరిగి ఖాళీ;
 
     af->channels    = channels;
     af->sample_fmt  = sample_fmt;
-    af->sample_size = buf_size / nb_samples;
+    af->sample_కొలత = buf_కొలత / nb_samples;
     af->nb_buffers  = av_sample_fmt_is_planar(sample_fmt) ? channels : 1;
 
-    af->buf = av_calloc(af->nb_buffers, sizeof(*af->buf));
-    if (!af->buf)
-        goto error;
+    af->buf = av_calloc(af->nb_buffers, పరిమాణం(*af->buf));
+    ఒకవేళ (!af->buf)
+        వెళ్ళు error;
 
-    for (i = 0; i < af->nb_buffers; i++) {
-        af->buf[i] = av_fifo_alloc2(buf_size, 1, 0);
-        if (!af->buf[i])
-            goto error;
+    కొరకు (i = 0; i < af->nb_buffers; i++) {
+        af->buf[i] = av_fifo_alloc2(buf_కొలత, 1, 0);
+        ఒకవేళ (!af->buf[i])
+            వెళ్ళు error;
     }
     af->allocated_samples = nb_samples;
 
-    return af;
+    తిరిగి af;
 
 error:
     av_audio_fifo_free(af);
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
-int av_audio_fifo_realloc(AVAudioFifo *af, int nb_samples)
+పూర్ణాంకం av_audio_fifo_realloc(AVAudioFifo *af, పూర్ణాంకం nb_samples)
 {
-    const size_t cur_size = av_fifo_can_read (af->buf[0]) +
+    స్థిరరాశి size_t cur_కొలత = av_fifo_can_read (af->buf[0]) +
                             av_fifo_can_write(af->buf[0]);
-    int i, ret, buf_size;
+    పూర్ణాంకం i, ret, buf_కొలత;
 
-    if ((ret = av_samples_get_buffer_size(&buf_size, af->channels, nb_samples,
+    ఒకవేళ ((ret = av_samples_get_బఫరు_కొలత(&buf_కొలత, af->channels, nb_samples,
                                           af->sample_fmt, 1)) < 0)
-        return ret;
+        తిరిగి ret;
 
-    if (buf_size > cur_size) {
-        for (i = 0; i < af->nb_buffers; i++) {
-            if ((ret = av_fifo_grow2(af->buf[i], buf_size - cur_size)) < 0)
-                return ret;
+    ఒకవేళ (buf_కొలత > cur_కొలత) {
+        కొరకు (i = 0; i < af->nb_buffers; i++) {
+            ఒకవేళ ((ret = av_fifo_grow2(af->buf[i], buf_కొలత - cur_కొలత)) < 0)
+                తిరిగి ret;
         }
     }
     af->allocated_samples = nb_samples;
-    return 0;
+    తిరిగి 0;
 }
 
-int av_audio_fifo_write(AVAudioFifo *af, void * const *data, int nb_samples)
+పూర్ణాంకం av_audio_fifo_write(AVAudioFifo *af, శూన్య * స్థిరరాశి *దత్తాంశం, పూర్ణాంకం nb_samples)
 {
-    int i, ret, size;
+    పూర్ణాంకం i, ret, కొలత;
 
     /* automatically reallocate buffers if needed */
-    if (av_audio_fifo_space(af) < nb_samples) {
-        int current_size = av_audio_fifo_size(af);
+    ఒకవేళ (av_audio_fifo_space(af) < nb_samples) {
+        పూర్ణాంకం current_కొలత = av_audio_fifo_కొలత(af);
         /* check for integer overflow in new size calculation */
-        if (INT_MAX / 2 - current_size < nb_samples)
-            return AVERROR(EINVAL);
+        ఒకవేళ (గరిష్ఠ_పూర్ణాంకం / 2 - current_కొలత < nb_samples)
+            తిరిగి AVERROR(EINVAL);
         /* reallocate buffers */
-        if ((ret = av_audio_fifo_realloc(af, 2 * (current_size + nb_samples))) < 0)
-            return ret;
+        ఒకవేళ ((ret = av_audio_fifo_realloc(af, 2 * (current_కొలత + nb_samples))) < 0)
+            తిరిగి ret;
     }
 
-    size = nb_samples * af->sample_size;
-    for (i = 0; i < af->nb_buffers; i++) {
-        ret = av_fifo_write(af->buf[i], data[i], size);
-        if (ret < 0)
-            return AVERROR_BUG;
+    కొలత = nb_samples * af->sample_కొలత;
+    కొరకు (i = 0; i < af->nb_buffers; i++) {
+        ret = av_fifo_write(af->buf[i], దత్తాంశం[i], కొలత);
+        ఒకవేళ (ret < 0)
+            తిరిగి AVERROR_BUG;
     }
     af->nb_samples += nb_samples;
 
-    return nb_samples;
+    తిరిగి nb_samples;
 }
 
-int av_audio_fifo_peek(const AVAudioFifo *af, void * const *data, int nb_samples)
+పూర్ణాంకం av_audio_fifo_peek(స్థిరరాశి AVAudioFifo *af, శూన్య * స్థిరరాశి *దత్తాంశం, పూర్ణాంకం nb_samples)
 {
-    return av_audio_fifo_peek_at(af, data, nb_samples, 0);
+    తిరిగి av_audio_fifo_peek_at(af, దత్తాంశం, nb_samples, 0);
 }
 
-int av_audio_fifo_peek_at(const AVAudioFifo *af, void * const *data,
-                          int nb_samples, int offset)
+పూర్ణాంకం av_audio_fifo_peek_at(స్థిరరాశి AVAudioFifo *af, శూన్య * స్థిరరాశి *దత్తాంశం,
+                          పూర్ణాంకం nb_samples, పూర్ణాంకం స్థానభ్రంశం)
 {
-    int i, ret, size;
+    పూర్ణాంకం i, ret, కొలత;
 
-    if (offset < 0 || offset >= af->nb_samples)
-        return AVERROR(EINVAL);
-    if (nb_samples < 0)
-        return AVERROR(EINVAL);
+    ఒకవేళ (స్థానభ్రంశం < 0 || స్థానభ్రంశం >= af->nb_samples)
+        తిరిగి AVERROR(EINVAL);
+    ఒకవేళ (nb_samples < 0)
+        తిరిగి AVERROR(EINVAL);
     nb_samples = FFMIN(nb_samples, af->nb_samples);
-    if (!nb_samples)
-        return 0;
-    if (offset > af->nb_samples - nb_samples)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!nb_samples)
+        తిరిగి 0;
+    ఒకవేళ (స్థానభ్రంశం > af->nb_samples - nb_samples)
+        తిరిగి AVERROR(EINVAL);
 
-    offset *= af->sample_size;
-    size = nb_samples * af->sample_size;
-    for (i = 0; i < af->nb_buffers; i++) {
-        if ((ret = av_fifo_peek(af->buf[i], data[i], size, offset)) < 0)
-            return AVERROR_BUG;
+    స్థానభ్రంశం *= af->sample_కొలత;
+    కొలత = nb_samples * af->sample_కొలత;
+    కొరకు (i = 0; i < af->nb_buffers; i++) {
+        ఒకవేళ ((ret = av_fifo_peek(af->buf[i], దత్తాంశం[i], కొలత, స్థానభ్రంశం)) < 0)
+            తిరిగి AVERROR_BUG;
     }
 
-    return nb_samples;
+    తిరిగి nb_samples;
 }
 
-int av_audio_fifo_read(AVAudioFifo *af, void * const *data, int nb_samples)
+పూర్ణాంకం av_audio_fifo_read(AVAudioFifo *af, శూన్య * స్థిరరాశి *దత్తాంశం, పూర్ణాంకం nb_samples)
 {
-    int i, size;
+    పూర్ణాంకం i, కొలత;
 
-    if (nb_samples < 0)
-        return AVERROR(EINVAL);
+    ఒకవేళ (nb_samples < 0)
+        తిరిగి AVERROR(EINVAL);
     nb_samples = FFMIN(nb_samples, af->nb_samples);
-    if (!nb_samples)
-        return 0;
+    ఒకవేళ (!nb_samples)
+        తిరిగి 0;
 
-    size = nb_samples * af->sample_size;
-    for (i = 0; i < af->nb_buffers; i++) {
-        if (av_fifo_read(af->buf[i], data[i], size) < 0)
-            return AVERROR_BUG;
+    కొలత = nb_samples * af->sample_కొలత;
+    కొరకు (i = 0; i < af->nb_buffers; i++) {
+        ఒకవేళ (av_fifo_read(af->buf[i], దత్తాంశం[i], కొలత) < 0)
+            తిరిగి AVERROR_BUG;
     }
     af->nb_samples -= nb_samples;
 
-    return nb_samples;
+    తిరిగి nb_samples;
 }
 
-int av_audio_fifo_drain(AVAudioFifo *af, int nb_samples)
+పూర్ణాంకం av_audio_fifo_drain(AVAudioFifo *af, పూర్ణాంకం nb_samples)
 {
-    int i, size;
+    పూర్ణాంకం i, కొలత;
 
-    if (nb_samples < 0)
-        return AVERROR(EINVAL);
+    ఒకవేళ (nb_samples < 0)
+        తిరిగి AVERROR(EINVAL);
     nb_samples = FFMIN(nb_samples, af->nb_samples);
 
-    if (nb_samples) {
-        size = nb_samples * af->sample_size;
-        for (i = 0; i < af->nb_buffers; i++)
-            av_fifo_drain2(af->buf[i], size);
+    ఒకవేళ (nb_samples) {
+        కొలత = nb_samples * af->sample_కొలత;
+        కొరకు (i = 0; i < af->nb_buffers; i++)
+            av_fifo_drain2(af->buf[i], కొలత);
         af->nb_samples -= nb_samples;
     }
-    return 0;
+    తిరిగి 0;
 }
 
-void av_audio_fifo_reset(AVAudioFifo *af)
+శూన్య av_audio_fifo_reset(AVAudioFifo *af)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < af->nb_buffers; i++)
+    కొరకు (i = 0; i < af->nb_buffers; i++)
         av_fifo_reset2(af->buf[i]);
 
     af->nb_samples = 0;
 }
 
-int av_audio_fifo_size(AVAudioFifo *af)
+పూర్ణాంకం av_audio_fifo_కొలత(AVAudioFifo *af)
 {
-    return af->nb_samples;
+    తిరిగి af->nb_samples;
 }
 
-int av_audio_fifo_space(AVAudioFifo *af)
+పూర్ణాంకం av_audio_fifo_space(AVAudioFifo *af)
 {
-    return af->allocated_samples - af->nb_samples;
+    తిరిగి af->allocated_samples - af->nb_samples;
 }

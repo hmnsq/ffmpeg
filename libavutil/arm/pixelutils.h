@@ -16,31 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ARM_PIXELUTILS_H
-#define AVUTIL_ARM_PIXELUTILS_H
+#నిర్వచితం_కాకపోతే AVUTIL_ARM_PIXELUTILS_H
+#నిర్వచించు AVUTIL_ARM_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#అన్తర్భావ "cpu.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_armv6(const uint8_t *src1, ptrdiff_t stride1,
-                              const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_armv6 (const uint8_t *src1, ptrdiff_t stride1,
-                              const uint8_t *src2, ptrdiff_t stride2);
+పూర్ణాంకం ff_pixelutils_sad16_armv6(స్థిరరాశి uint8_t *src1, ptrdiff_t stride1,
+                              స్థిరరాశి uint8_t *src2, ptrdiff_t stride2);
+పూర్ణాంకం ff_pixelutils_sad8_armv6 (స్థిరరాశి uint8_t *src1, ptrdiff_t stride1,
+                              స్థిరరాశి uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_arm(av_pixelutils_sad_fn *sad, int aligned)
+స్థిర అంతఃవరుస av_cold శూన్య ff_pixelutils_sad_init_arm(av_pixelutils_sad_fn *sad, పూర్ణాంకం aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    పూర్ణాంకం cpu_flags = av_get_cpu_flags();
 
-    if (have_armv6(cpu_flags)) {
-        if (aligned != 0) {
+    ఒకవేళ (have_armv6(cpu_flags)) {
+        ఒకవేళ (aligned != 0) {
             sad[2] = ff_pixelutils_sad8_armv6;
             sad[3] = ff_pixelutils_sad16_armv6;
         }
     }
 }
-#endif
+#అయితే_ముగింపు

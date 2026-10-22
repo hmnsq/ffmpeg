@@ -19,188 +19,188 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <string.h>
 
-#include "avstring.h"
-#include "common.h"
-#include "pixfmt.h"
-#include "pixdesc.h"
-#include "intreadwrite.h"
+#అన్తర్భావ "avstring.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "pixfmt.h"
+#అన్తర్భావ "pixdesc.h"
+#అన్తర్భావ "intreadwrite.h"
 
-void av_read_image_line2(void *dst,
-                        const uint8_t *data[4], const int linesize[4],
-                        const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w,
-                        int read_pal_component,
-                        int dst_element_size)
+శూన్య av_read_image_line2(శూన్య *dst,
+                        స్థిరరాశి uint8_t *దత్తాంశం[4], స్థిరరాశి పూర్ణాంకం linesize[4],
+                        స్థిరరాశి AVPixFmtDescriptor *desc,
+                        పూర్ణాంకం x, పూర్ణాంకం y, పూర్ణాంకం c, పూర్ణాంకం w,
+                        పూర్ణాంకం read_pal_component,
+                        పూర్ణాంకం dst_element_కొలత)
 {
     AVComponentDescriptor comp = desc->comp[c];
-    int plane = comp.plane;
-    int depth = comp.depth;
-    unsigned mask  = (1ULL << depth) - 1;
-    int shift = comp.shift;
-    int step  = comp.step;
-    int flags = desc->flags;
+    పూర్ణాంకం plane = comp.plane;
+    పూర్ణాంకం లోతు = comp.లోతు;
+    గుర్తులేని ముసుగు_2  = (1ULL << లోతు) - 1;
+    పూర్ణాంకం జరుపు = comp.జరుపు;
+    పూర్ణాంకం అడుగు  = comp.అడుగు;
+    పూర్ణాంకం flags = desc->flags;
     uint16_t *dst16 = dst;
     uint32_t *dst32 = dst;
 
-    if (!depth)
-        return;
+    ఒకవేళ (!లోతు)
+        తిరిగి;
 
-    if (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
-        if (step > 8) {
+    ఒకవేళ (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+        ఒకవేళ (అడుగు > 8) {
             // Assume all channels are packed into a 32bit value
-            const uint8_t *byte_p = data[plane] + y * linesize[plane];
-            const uint32_t *p = (uint32_t *)byte_p;
+            స్థిరరాశి uint8_t *byte_p = దత్తాంశం[plane] + y * linesize[plane];
+            స్థిరరాశి uint32_t *p = (uint32_t *)byte_p;
 
-            while (w--) {
-                int val = AV_RB32(p);
-                val = (val >> comp.offset) & mask;
-                if (read_pal_component)
-                    val = data[1][4*val + c];
-                if (dst_element_size == 4) *dst32++ = val;
-                else                       *dst16++ = val;
+            అయితే (w--) {
+                పూర్ణాంకం val = AV_RB32(p);
+                val = (val >> comp.స్థానభ్రంశం) & ముసుగు_2;
+                ఒకవేళ (read_pal_component)
+                    val = దత్తాంశం[1][4*val + c];
+                ఒకవేళ (dst_element_కొలత == 4) *dst32++ = val;
+                లేకపోతే                       *dst16++ = val;
                 p++;
             }
-        } else {
-            int skip = x * step + comp.offset;
-            const uint8_t *p = data[plane] + y * linesize[plane] + (skip >> 3);
-            int shift = 8 - depth - (skip & 7);
+        } లేకపోతే {
+            పూర్ణాంకం skip = x * అడుగు + comp.స్థానభ్రంశం;
+            స్థిరరాశి uint8_t *p = దత్తాంశం[plane] + y * linesize[plane] + (skip >> 3);
+            పూర్ణాంకం జరుపు = 8 - లోతు - (skip & 7);
 
-            while (w--) {
-                int val = (*p >> shift) & mask;
-                if (read_pal_component)
-                    val = data[1][4*val + c];
-                shift -= step;
-                p -= shift >> 3;
-                shift &= 7;
-                if (dst_element_size == 4) *dst32++ = val;
-                else                       *dst16++ = val;
+            అయితే (w--) {
+                పూర్ణాంకం val = (*p >> జరుపు) & ముసుగు_2;
+                ఒకవేళ (read_pal_component)
+                    val = దత్తాంశం[1][4*val + c];
+                జరుపు -= అడుగు;
+                p -= జరుపు >> 3;
+                జరుపు &= 7;
+                ఒకవేళ (dst_element_కొలత == 4) *dst32++ = val;
+                లేకపోతే                       *dst16++ = val;
             }
         }
-    } else {
-        const uint8_t *p = data[plane] + y * linesize[plane] +
-                           x * step + comp.offset;
-        int is_8bit = shift + depth <= 8;
-        int is_16bit= shift + depth <=16;
+    } లేకపోతే {
+        స్థిరరాశి uint8_t *p = దత్తాంశం[plane] + y * linesize[plane] +
+                           x * అడుగు + comp.స్థానభ్రంశం;
+        పూర్ణాంకం is_8bit = జరుపు + లోతు <= 8;
+        పూర్ణాంకం is_16bit= జరుపు + లోతు <=16;
 
-        if (is_8bit)
+        ఒకవేళ (is_8bit)
             p += !!(flags & AV_PIX_FMT_FLAG_BE);
 
-        while (w--) {
-            unsigned val;
-            if     (is_8bit)  val = *p;
-            else if(is_16bit) val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB16(p) : AV_RL16(p);
-            else              val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB32(p) : AV_RL32(p);
-            val = (val >> shift) & mask;
-            if (read_pal_component)
-                val = data[1][4 * val + c];
-            p += step;
-            if (dst_element_size == 4) *dst32++ = val;
-            else                       *dst16++ = val;
+        అయితే (w--) {
+            గుర్తులేని val;
+            ఒకవేళ     (is_8bit)  val = *p;
+            లేకపోతే ఒకవేళ(is_16bit) val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB16(p) : AV_RL16(p);
+            లేకపోతే              val = flags & AV_PIX_FMT_FLAG_BE ? AV_RB32(p) : AV_RL32(p);
+            val = (val >> జరుపు) & ముసుగు_2;
+            ఒకవేళ (read_pal_component)
+                val = దత్తాంశం[1][4 * val + c];
+            p += అడుగు;
+            ఒకవేళ (dst_element_కొలత == 4) *dst32++ = val;
+            లేకపోతే                       *dst16++ = val;
         }
     }
 }
 
-void av_read_image_line(uint16_t *dst,
-                        const uint8_t *data[4], const int linesize[4],
-                        const AVPixFmtDescriptor *desc,
-                        int x, int y, int c, int w,
-                        int read_pal_component)
+శూన్య av_read_image_పంక్తి(uint16_t *dst,
+                        స్థిరరాశి uint8_t *దత్తాంశం[4], స్థిరరాశి పూర్ణాంకం linesize[4],
+                        స్థిరరాశి AVPixFmtDescriptor *desc,
+                        పూర్ణాంకం x, పూర్ణాంకం y, పూర్ణాంకం c, పూర్ణాంకం w,
+                        పూర్ణాంకం read_pal_component)
 {
-    av_read_image_line2(dst, data, linesize, desc,x, y, c, w,
+    av_read_image_line2(dst, దత్తాంశం, linesize, desc,x, y, c, w,
                         read_pal_component,
                         2);
 }
 
-void av_write_image_line2(const void *src,
-                         uint8_t *data[4], const int linesize[4],
-                         const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w, int src_element_size)
+శూన్య av_write_image_line2(స్థిరరాశి శూన్య *src,
+                         uint8_t *దత్తాంశం[4], స్థిరరాశి పూర్ణాంకం linesize[4],
+                         స్థిరరాశి AVPixFmtDescriptor *desc,
+                         పూర్ణాంకం x, పూర్ణాంకం y, పూర్ణాంకం c, పూర్ణాంకం w, పూర్ణాంకం src_element_కొలత)
 {
     AVComponentDescriptor comp = desc->comp[c];
-    int plane = comp.plane;
-    int depth = comp.depth;
-    int step  = comp.step;
-    int flags = desc->flags;
-    const uint32_t *src32 = src;
-    const uint16_t *src16 = src;
+    పూర్ణాంకం plane = comp.plane;
+    పూర్ణాంకం లోతు = comp.లోతు;
+    పూర్ణాంకం అడుగు  = comp.అడుగు;
+    పూర్ణాంకం flags = desc->flags;
+    స్థిరరాశి uint32_t *src32 = src;
+    స్థిరరాశి uint16_t *src16 = src;
 
-    if (!depth)
-        return;
+    ఒకవేళ (!లోతు)
+        తిరిగి;
 
-    if (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
-        if (step > 8) {
+    ఒకవేళ (flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+        ఒకవేళ (అడుగు > 8) {
             // Assume all channels are packed into a 32bit value
-            const uint8_t *byte_p = data[plane] + y * linesize[plane];
+            స్థిరరాశి uint8_t *byte_p = దత్తాంశం[plane] + y * linesize[plane];
             uint32_t *p = (uint32_t *)byte_p;
-            int offset = comp.offset;
-            uint32_t mask  = ((1ULL << depth) - 1) << offset;
+            పూర్ణాంకం స్థానభ్రంశం = comp.స్థానభ్రంశం;
+            uint32_t ముసుగు_2  = ((1ULL << లోతు) - 1) << స్థానభ్రంశం;
 
-            while (w--) {
-                unsigned val = src_element_size == 4 ? *src32++ : *src16++;
-                AV_WB32(p, (AV_RB32(p) & ~mask) | (val << offset));
+            అయితే (w--) {
+                గుర్తులేని val = src_element_కొలత == 4 ? *src32++ : *src16++;
+                AV_WB32(p, (AV_RB32(p) & ~ముసుగు_2) | (val << స్థానభ్రంశం));
                 p++;
             }
-        } else {
-            int skip = x * step + comp.offset;
-            uint8_t *p = data[plane] + y * linesize[plane] + (skip >> 3);
-            int shift = 8 - depth - (skip & 7);
+        } లేకపోతే {
+            పూర్ణాంకం skip = x * అడుగు + comp.స్థానభ్రంశం;
+            uint8_t *p = దత్తాంశం[plane] + y * linesize[plane] + (skip >> 3);
+            పూర్ణాంకం జరుపు = 8 - లోతు - (skip & 7);
 
-            while (w--) {
-                *p |= (src_element_size == 4 ? *src32++ : *src16++) << shift;
-                shift -= step;
-                p -= shift >> 3;
-                shift &= 7;
+            అయితే (w--) {
+                *p |= (src_element_కొలత == 4 ? *src32++ : *src16++) << జరుపు;
+                జరుపు -= అడుగు;
+                p -= జరుపు >> 3;
+                జరుపు &= 7;
             }
         }
-    } else {
-        int shift = comp.shift;
-        uint8_t *p = data[plane] + y * linesize[plane] +
-                     x * step + comp.offset;
+    } లేకపోతే {
+        పూర్ణాంకం జరుపు = comp.జరుపు;
+        uint8_t *p = దత్తాంశం[plane] + y * linesize[plane] +
+                     x * అడుగు + comp.స్థానభ్రంశం;
 
-        if (shift + depth <= 8) {
+        ఒకవేళ (జరుపు + లోతు <= 8) {
             p += !!(flags & AV_PIX_FMT_FLAG_BE);
-            while (w--) {
-                *p |= ((src_element_size == 4 ? *src32++ : *src16++) << shift);
-                p += step;
+            అయితే (w--) {
+                *p |= ((src_element_కొలత == 4 ? *src32++ : *src16++) << జరుపు);
+                p += అడుగు;
             }
-        } else {
-            while (w--) {
-                unsigned s = (src_element_size == 4 ? *src32++ : *src16++);
-                if (shift + depth <= 16) {
-                    if (flags & AV_PIX_FMT_FLAG_BE) {
-                        uint16_t val = AV_RB16(p) | (s << shift);
+        } లేకపోతే {
+            అయితే (w--) {
+                గుర్తులేని s = (src_element_కొలత == 4 ? *src32++ : *src16++);
+                ఒకవేళ (జరుపు + లోతు <= 16) {
+                    ఒకవేళ (flags & AV_PIX_FMT_FLAG_BE) {
+                        uint16_t val = AV_RB16(p) | (s << జరుపు);
                         AV_WB16(p, val);
-                    } else {
-                        uint16_t val = AV_RL16(p) | (s << shift);
+                    } లేకపోతే {
+                        uint16_t val = AV_RL16(p) | (s << జరుపు);
                         AV_WL16(p, val);
                     }
-                } else {
-                    if (flags & AV_PIX_FMT_FLAG_BE) {
-                        uint32_t val = AV_RB32(p) | (s << shift);
+                } లేకపోతే {
+                    ఒకవేళ (flags & AV_PIX_FMT_FLAG_BE) {
+                        uint32_t val = AV_RB32(p) | (s << జరుపు);
                         AV_WB32(p, val);
-                    } else {
-                        uint32_t val = AV_RL32(p) | (s << shift);
+                    } లేకపోతే {
+                        uint32_t val = AV_RL32(p) | (s << జరుపు);
                         AV_WL32(p, val);
                     }
                 }
-                p += step;
+                p += అడుగు;
             }
         }
     }
 }
 
-void av_write_image_line(const uint16_t *src,
-                         uint8_t *data[4], const int linesize[4],
-                         const AVPixFmtDescriptor *desc,
-                         int x, int y, int c, int w)
+శూన్య av_write_image_పంక్తి(స్థిరరాశి uint16_t *src,
+                         uint8_t *దత్తాంశం[4], స్థిరరాశి పూర్ణాంకం linesize[4],
+                         స్థిరరాశి AVPixFmtDescriptor *desc,
+                         పూర్ణాంకం x, పూర్ణాంకం y, పూర్ణాంకం c, పూర్ణాంకం w)
 {
-    av_write_image_line2(src, data, linesize, desc, x, y, c, w, 2);
+    av_write_image_line2(src, దత్తాంశం, linesize, desc, x, y, c, w, 2);
 }
 
-static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
+స్థిర స్థిరరాశి AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
     [AV_PIX_FMT_YUV420P] = {
         .name = "yuv420p",
         .nb_components = 3,
@@ -2170,7 +2170,7 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
         .flags = AV_PIX_FMT_FLAG_PLANAR | AV_PIX_FMT_FLAG_XYZ | AV_PIX_FMT_FLAG_BE,
     },
 
-#define BAYER8_DESC_COMMON \
+#నిర్వచించు BAYER8_DESC_COMMON \
         .nb_components= 3, \
         .log2_chroma_w= 0, \
         .log2_chroma_h= 0, \
@@ -2180,7 +2180,7 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
             { 0, 1, 0, 0, 2 }, \
         },                 \
 
-#define BAYER16_DESC_COMMON \
+#నిర్వచించు BAYER16_DESC_COMMON \
         .nb_components= 3, \
         .log2_chroma_w= 0, \
         .log2_chroma_h= 0, \
@@ -2645,7 +2645,7 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
         .flags = AV_PIX_FMT_FLAG_PLANAR | AV_PIX_FMT_FLAG_ALPHA |
                  AV_PIX_FMT_FLAG_RGB | AV_PIX_FMT_FLAG_FLOAT,
     },
-    [AV_PIX_FMT_DRM_PRIME] = {
+    [AV_PIX_FMT_DRM_ప్రధానసంఖ్య] = {
         .name = "drm_prime",
         .flags = AV_PIX_FMT_FLAG_HWACCEL,
     },
@@ -3297,13 +3297,13 @@ static const AVPixFmtDescriptor av_pix_fmt_descriptors[AV_PIX_FMT_NB] = {
     },
 };
 
-static const char * const color_range_names[] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి color_range_పేర్లు[] = {
     [AVCOL_RANGE_UNSPECIFIED] = "unknown",
     [AVCOL_RANGE_MPEG] = "tv",
     [AVCOL_RANGE_JPEG] = "pc",
 };
 
-static const char * const color_primaries_names[AVCOL_PRI_NB] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి color_primaries_పేర్లు[AVCOL_PRI_NB] = {
     [AVCOL_PRI_RESERVED0] = "reserved",
     [AVCOL_PRI_BT709] = "bt709",
     [AVCOL_PRI_UNSPECIFIED] = "unknown",
@@ -3320,12 +3320,12 @@ static const char * const color_primaries_names[AVCOL_PRI_NB] = {
     [AVCOL_PRI_EBU3213] = "ebu3213",
 };
 
-static const char * const color_primaries_names_ext[AVCOL_PRI_EXT_NB -
-                                                    AVCOL_PRI_EXT_BASE] = {
-    [AVCOL_PRI_V_GAMUT - AVCOL_PRI_EXT_BASE] = "vgamut",
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి color_primaries_పేర్లు_ext[AVCOL_PRI_EXT_NB -
+                                                    AVCOL_PRI_EXT_పునాది] = {
+    [AVCOL_PRI_V_GAMUT - AVCOL_PRI_EXT_పునాది] = "vgamut",
 };
 
-static const char * const color_transfer_names[] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి color_transfer_పేర్లు[] = {
     [AVCOL_TRC_RESERVED0] = "reserved",
     [AVCOL_TRC_BT709] = "bt709",
     [AVCOL_TRC_UNSPECIFIED] = "unknown",
@@ -3334,7 +3334,7 @@ static const char * const color_transfer_names[] = {
     [AVCOL_TRC_GAMMA28] = "bt470bg",
     [AVCOL_TRC_SMPTE170M] = "smpte170m",
     [AVCOL_TRC_SMPTE240M] = "smpte240m",
-    [AVCOL_TRC_LINEAR] = "linear",
+    [AVCOL_TRC_రేఖీయ] = "linear",
     [AVCOL_TRC_LOG] = "log100",
     [AVCOL_TRC_LOG_SQRT] = "log316",
     [AVCOL_TRC_IEC61966_2_4] = "iec61966-2-4",
@@ -3347,11 +3347,11 @@ static const char * const color_transfer_names[] = {
     [AVCOL_TRC_ARIB_STD_B67] = "arib-std-b67",
 };
 
-static const char * const color_transfer_names_ext[] = {
-    [AVCOL_TRC_V_LOG - AVCOL_TRC_EXT_BASE] = "vlog",
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి color_transfer_పేర్లు_ext[] = {
+    [AVCOL_TRC_V_LOG - AVCOL_TRC_EXT_పునాది] = "vlog",
 };
 
-static const char * const color_space_names[] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి color_space_పేర్లు[] = {
     [AVCOL_SPC_RGB] = "gbr",
     [AVCOL_SPC_BT709] = "bt709",
     [AVCOL_SPC_UNSPECIFIED] = "unknown",
@@ -3372,595 +3372,595 @@ static const char * const color_space_names[] = {
     [AVCOL_SPC_YCGCO_RO] = "ycgco-ro",
 };
 
-static const char * const chroma_location_names[] = {
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి chroma_location_పేర్లు[] = {
     [AVCHROMA_LOC_UNSPECIFIED] = "unspecified",
-    [AVCHROMA_LOC_LEFT] = "left",
+    [AVCHROMA_LOC_ఎడమ] = "left",
     [AVCHROMA_LOC_CENTER] = "center",
     [AVCHROMA_LOC_TOPLEFT] = "topleft",
-    [AVCHROMA_LOC_TOP] = "top",
+    [AVCHROMA_LOC_శిఖరం] = "top",
     [AVCHROMA_LOC_BOTTOMLEFT] = "bottomleft",
     [AVCHROMA_LOC_BOTTOM] = "bottom",
 };
 
-static const char * const alpha_mode_names[] = {
-    [AVALPHA_MODE_UNSPECIFIED] = "unspecified",
-    [AVALPHA_MODE_PREMULTIPLIED] = "premultiplied",
-    [AVALPHA_MODE_STRAIGHT] = "straight",
+స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి alpha_బహుళకం_పేర్లు[] = {
+    [AVALPHA_బహుళకం_UNSPECIFIED] = "unspecified",
+    [AVALPHA_బహుళకం_PREMULTIPLIED] = "premultiplied",
+    [AVALPHA_బహుళకం_STRAIGHT] = "straight",
 };
 
-static enum AVPixelFormat get_pix_fmt_internal(const char *name)
+స్థిర గణన AVPixelFormat get_pix_fmt_అంతర్గత(స్థిరరాశి అక్షరం *name)
 {
-    enum AVPixelFormat pix_fmt;
+    గణన AVPixelFormat pix_fmt;
 
-    for (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++)
-        if (av_pix_fmt_descriptors[pix_fmt].name &&
+    కొరకు (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++)
+        ఒకవేళ (av_pix_fmt_descriptors[pix_fmt].name &&
             (!strcmp(av_pix_fmt_descriptors[pix_fmt].name, name) ||
-             av_match_name(name, av_pix_fmt_descriptors[pix_fmt].alias)))
-            return pix_fmt;
+             av_సరిపోలిక_name(name, av_pix_fmt_descriptors[pix_fmt].alias)))
+            తిరిగి pix_fmt;
 
-    return AV_PIX_FMT_NONE;
+    తిరిగి AV_PIX_FMT_NONE;
 }
 
-const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt)
+స్థిరరాశి అక్షరం *av_get_pix_fmt_name(గణన AVPixelFormat pix_fmt)
 {
-    return (unsigned)pix_fmt < AV_PIX_FMT_NB ?
-        av_pix_fmt_descriptors[pix_fmt].name : NULL;
+    తిరిగి (గుర్తులేని)pix_fmt < AV_PIX_FMT_NB ?
+        av_pix_fmt_descriptors[pix_fmt].name : ఖాళీ;
 }
 
-#if HAVE_BIGENDIAN
+#ఒకవేళ HAVE_BIGENDIAN
 #   define X_NE(be, le) be
-#else
+#లేకపోతే
 #   define X_NE(be, le) le
-#endif
+#అయితే_ముగింపు
 
-enum AVPixelFormat av_get_pix_fmt(const char *name)
+గణన AVPixelFormat av_get_pix_fmt(స్థిరరాశి అక్షరం *name)
 {
-    enum AVPixelFormat pix_fmt;
+    గణన AVPixelFormat pix_fmt;
 
-    if (!strcmp(name, "rgb32"))
+    ఒకవేళ (!strcmp(name, "rgb32"))
         name = X_NE("argb", "bgra");
-    else if (!strcmp(name, "bgr32"))
+    లేకపోతే ఒకవేళ (!strcmp(name, "bgr32"))
         name = X_NE("abgr", "rgba");
 
-    pix_fmt = get_pix_fmt_internal(name);
-    if (pix_fmt == AV_PIX_FMT_NONE) {
-        char name2[32];
+    pix_fmt = get_pix_fmt_అంతర్గత(name);
+    ఒకవేళ (pix_fmt == AV_PIX_FMT_NONE) {
+        అక్షరం name2[32];
 
-        snprintf(name2, sizeof(name2), "%s%s", name, X_NE("be", "le"));
-        pix_fmt = get_pix_fmt_internal(name2);
+        snprintf(name2, పరిమాణం(name2), "%s%s", name, X_NE("be", "le"));
+        pix_fmt = get_pix_fmt_అంతర్గత(name2);
     }
 
-    return pix_fmt;
+    తిరిగి pix_fmt;
 }
 
-int av_get_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
+పూర్ణాంకం av_get_బిట్లు_చొప్పున_pixel(స్థిరరాశి AVPixFmtDescriptor *pixdesc)
 {
-    int c, bits = 0;
-    int log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
+    పూర్ణాంకం c, బిట్లు = 0;
+    పూర్ణాంకం log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
 
-    for (c = 0; c < pixdesc->nb_components; c++) {
-        int s = c == 1 || c == 2 ? 0 : log2_pixels;
-        bits += pixdesc->comp[c].depth << s;
+    కొరకు (c = 0; c < pixdesc->nb_components; c++) {
+        పూర్ణాంకం s = c == 1 || c == 2 ? 0 : log2_pixels;
+        బిట్లు += pixdesc->comp[c].లోతు << s;
     }
 
-    return bits >> log2_pixels;
+    తిరిగి బిట్లు >> log2_pixels;
 }
 
-int av_get_padded_bits_per_pixel(const AVPixFmtDescriptor *pixdesc)
+పూర్ణాంకం av_get_padded_బిట్లు_చొప్పున_pixel(స్థిరరాశి AVPixFmtDescriptor *pixdesc)
 {
-    int c, bits = 0;
-    int log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
-    int steps[4] = {0};
+    పూర్ణాంకం c, బిట్లు = 0;
+    పూర్ణాంకం log2_pixels = pixdesc->log2_chroma_w + pixdesc->log2_chroma_h;
+    పూర్ణాంకం అడుగులు[4] = {0};
 
-    for (c = 0; c < pixdesc->nb_components; c++) {
-        const AVComponentDescriptor *comp = &pixdesc->comp[c];
-        int s = c == 1 || c == 2 ? 0 : log2_pixels;
-        steps[comp->plane] = comp->step << s;
+    కొరకు (c = 0; c < pixdesc->nb_components; c++) {
+        స్థిరరాశి AVComponentDescriptor *comp = &pixdesc->comp[c];
+        పూర్ణాంకం s = c == 1 || c == 2 ? 0 : log2_pixels;
+        అడుగులు[comp->plane] = comp->అడుగు << s;
     }
-    for (c = 0; c < 4; c++)
-        bits += steps[c];
+    కొరకు (c = 0; c < 4; c++)
+        బిట్లు += అడుగులు[c];
 
-    if(!(pixdesc->flags & AV_PIX_FMT_FLAG_BITSTREAM))
-        bits *= 8;
+    ఒకవేళ(!(pixdesc->flags & AV_PIX_FMT_FLAG_BITSTREAM))
+        బిట్లు *= 8;
 
-    return bits >> log2_pixels;
+    తిరిగి బిట్లు >> log2_pixels;
 }
 
-char *av_get_pix_fmt_string(char *buf, int buf_size,
-                            enum AVPixelFormat pix_fmt)
+అక్షరం *av_get_pix_fmt_string(అక్షరం *buf, పూర్ణాంకం buf_కొలత,
+                            గణన AVPixelFormat pix_fmt)
 {
     /* print header */
-    if (pix_fmt < 0) {
-       snprintf (buf, buf_size, "name" " nb_components" " nb_bits");
-    } else {
-        const AVPixFmtDescriptor *pixdesc = &av_pix_fmt_descriptors[pix_fmt];
-        snprintf(buf, buf_size, "%-11s %7d %10d", pixdesc->name,
-                 pixdesc->nb_components, av_get_bits_per_pixel(pixdesc));
+    ఒకవేళ (pix_fmt < 0) {
+       snprintf (buf, buf_కొలత, "name" " nb_components" " nb_bits");
+    } లేకపోతే {
+        స్థిరరాశి AVPixFmtDescriptor *pixdesc = &av_pix_fmt_descriptors[pix_fmt];
+        snprintf(buf, buf_కొలత, "%-11s %7d %10d", pixdesc->name,
+                 pixdesc->nb_components, av_get_బిట్లు_చొప్పున_pixel(pixdesc));
     }
 
-    return buf;
+    తిరిగి buf;
 }
 
-const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum AVPixelFormat pix_fmt)
+స్థిరరాశి AVPixFmtDescriptor *av_pix_fmt_desc_get(గణన AVPixelFormat pix_fmt)
 {
-    if (pix_fmt < 0 || pix_fmt >= AV_PIX_FMT_NB)
-        return NULL;
-    return &av_pix_fmt_descriptors[pix_fmt];
+    ఒకవేళ (pix_fmt < 0 || pix_fmt >= AV_PIX_FMT_NB)
+        తిరిగి ఖాళీ;
+    తిరిగి &av_pix_fmt_descriptors[pix_fmt];
 }
 
-const AVPixFmtDescriptor *av_pix_fmt_desc_next(const AVPixFmtDescriptor *prev)
+స్థిరరాశి AVPixFmtDescriptor *av_pix_fmt_desc_తదుపరి(స్థిరరాశి AVPixFmtDescriptor *prev)
 {
-    if (!prev)
-        return &av_pix_fmt_descriptors[0];
-    while (prev - av_pix_fmt_descriptors < FF_ARRAY_ELEMS(av_pix_fmt_descriptors) - 1) {
+    ఒకవేళ (!prev)
+        తిరిగి &av_pix_fmt_descriptors[0];
+    అయితే (prev - av_pix_fmt_descriptors < FF_ARRAY_ELEMS(av_pix_fmt_descriptors) - 1) {
         prev++;
-        if (prev->name)
-            return prev;
+        ఒకవేళ (prev->name)
+            తిరిగి prev;
     }
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
-enum AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc)
+గణన AVPixelFormat av_pix_fmt_desc_get_id(స్థిరరాశి AVPixFmtDescriptor *desc)
 {
-    if (desc < av_pix_fmt_descriptors ||
+    ఒకవేళ (desc < av_pix_fmt_descriptors ||
         desc >= av_pix_fmt_descriptors + FF_ARRAY_ELEMS(av_pix_fmt_descriptors))
-        return AV_PIX_FMT_NONE;
+        తిరిగి AV_PIX_FMT_NONE;
 
-    return desc - av_pix_fmt_descriptors;
+    తిరిగి desc - av_pix_fmt_descriptors;
 }
 
-int av_pix_fmt_get_chroma_sub_sample(enum AVPixelFormat pix_fmt,
-                                     int *h_shift, int *v_shift)
+పూర్ణాంకం av_pix_fmt_get_chroma_sub_sample(గణన AVPixelFormat pix_fmt,
+                                     పూర్ణాంకం *h_జరుపు, పూర్ణాంకం *v_జరుపు)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    if (!desc)
-        return AVERROR(ENOSYS);
-    *h_shift = desc->log2_chroma_w;
-    *v_shift = desc->log2_chroma_h;
+    స్థిరరాశి AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    ఒకవేళ (!desc)
+        తిరిగి AVERROR(ENOSYS);
+    *h_జరుపు = desc->log2_chroma_w;
+    *v_జరుపు = desc->log2_chroma_h;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_pix_fmt_count_planes(enum AVPixelFormat pix_fmt)
+పూర్ణాంకం av_pix_fmt_లెక్క_planes(గణన AVPixelFormat pix_fmt)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i, planes[4] = { 0 }, ret = 0;
+    స్థిరరాశి AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    పూర్ణాంకం i, planes[4] = { 0 }, ret = 0;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!desc)
+        తిరిగి AVERROR(EINVAL);
 
-    for (i = 0; i < desc->nb_components; i++)
+    కొరకు (i = 0; i < desc->nb_components; i++)
         planes[desc->comp[i].plane] = 1;
-    for (i = 0; i < FF_ARRAY_ELEMS(planes); i++)
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(planes); i++)
         ret += planes[i];
-    return ret;
+    తిరిగి ret;
 }
 
-enum AVPixelFormat av_pix_fmt_swap_endianness(enum AVPixelFormat pix_fmt)
+గణన AVPixelFormat av_pix_fmt_మార్పిడి_endianness(గణన AVPixelFormat pix_fmt)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    char name[16];
-    int i;
+    స్థిరరాశి AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    అక్షరం name[16];
+    పూర్ణాంకం i;
 
-    if (!desc || strlen(desc->name) < 2)
-        return AV_PIX_FMT_NONE;
-    av_strlcpy(name, desc->name, sizeof(name));
-    i = strlen(name) - 2;
-    if (strcmp(name + i, "be") && strcmp(name + i, "le"))
-        return AV_PIX_FMT_NONE;
+    ఒకవేళ (!desc || అక్షరశ్రేణి_పొడవు(desc->name) < 2)
+        తిరిగి AV_PIX_FMT_NONE;
+    av_strlcpy(name, desc->name, పరిమాణం(name));
+    i = అక్షరశ్రేణి_పొడవు(name) - 2;
+    ఒకవేళ (strcmp(name + i, "be") && strcmp(name + i, "le"))
+        తిరిగి AV_PIX_FMT_NONE;
 
     name[i] ^= 'b' ^ 'l';
 
-    return get_pix_fmt_internal(name);
+    తిరిగి get_pix_fmt_అంతర్గత(name);
 }
 
-#define FF_COLOR_NA      -1
-#define FF_COLOR_RGB      0 /**< RGB color space */
-#define FF_COLOR_GRAY     1 /**< gray color space */
-#define FF_COLOR_YUV      2 /**< YUV color space. 16 <= Y <= 235, 16 <= U, V <= 240 */
-#define FF_COLOR_YUV_JPEG 3 /**< YUV color space. 0 <= Y <= 255, 0 <= U, V <= 255 */
-#define FF_COLOR_XYZ      4
+#నిర్వచించు FF_COLOR_NA      -1
+#నిర్వచించు FF_COLOR_RGB      0 /**< RGB color space */
+#నిర్వచించు FF_COLOR_బూడిద     1 /**< gray color space */
+#నిర్వచించు FF_COLOR_YUV      2 /**< YUV color space. 16 <= Y <= 235, 16 <= U, V <= 240 */
+#నిర్వచించు FF_COLOR_YUV_JPEG 3 /**< YUV color space. 0 <= Y <= 255, 0 <= U, V <= 255 */
+#నిర్వచించు FF_COLOR_XYZ      4
 
-#define pixdesc_has_alpha(pixdesc) \
+#నిర్వచించు pixdesc_has_alpha(pixdesc) \
     ((pixdesc)->flags & AV_PIX_FMT_FLAG_ALPHA)
 
 
-static int get_color_type(const AVPixFmtDescriptor *desc) {
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL)
-        return FF_COLOR_RGB;
+స్థిర పూర్ణాంకం get_color_type(స్థిరరాశి AVPixFmtDescriptor *desc) {
+    ఒకవేళ (desc->flags & AV_PIX_FMT_FLAG_PAL)
+        తిరిగి FF_COLOR_RGB;
 
-    if(desc->nb_components == 1 || desc->nb_components == 2)
-        return FF_COLOR_GRAY;
+    ఒకవేళ(desc->nb_components == 1 || desc->nb_components == 2)
+        తిరిగి FF_COLOR_బూడిద;
 
-    if (desc->name) {
-        if (av_strstart(desc->name, "yuvj", NULL))
-            return FF_COLOR_YUV_JPEG;
+    ఒకవేళ (desc->name) {
+        ఒకవేళ (av_strstart(desc->name, "yuvj", ఖాళీ))
+            తిరిగి FF_COLOR_YUV_JPEG;
     }
 
-    if(desc->flags & AV_PIX_FMT_FLAG_RGB)
-        return FF_COLOR_RGB;
+    ఒకవేళ(desc->flags & AV_PIX_FMT_FLAG_RGB)
+        తిరిగి FF_COLOR_RGB;
 
-    if(desc->flags & AV_PIX_FMT_FLAG_XYZ)
-        return FF_COLOR_XYZ;
+    ఒకవేళ(desc->flags & AV_PIX_FMT_FLAG_XYZ)
+        తిరిగి FF_COLOR_XYZ;
 
-    if(desc->nb_components == 0)
-        return FF_COLOR_NA;
+    ఒకవేళ(desc->nb_components == 0)
+        తిరిగి FF_COLOR_NA;
 
-    return FF_COLOR_YUV;
+    తిరిగి FF_COLOR_YUV;
 }
 
-static int get_pix_fmt_depth(int *min, int *max, enum AVPixelFormat pix_fmt)
+స్థిర పూర్ణాంకం get_pix_fmt_లోతు(పూర్ణాంకం *min, పూర్ణాంకం *max, గణన AVPixelFormat pix_fmt)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i;
+    స్థిరరాశి AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+    పూర్ణాంకం i;
 
-    if (!desc || !desc->nb_components) {
+    ఒకవేళ (!desc || !desc->nb_components) {
         *min = *max = 0;
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    *min = INT_MAX, *max = -INT_MAX;
-    for (i = 0; i < desc->nb_components; i++) {
-        *min = FFMIN(desc->comp[i].depth, *min);
-        *max = FFMAX(desc->comp[i].depth, *max);
+    *min = గరిష్ఠ_పూర్ణాంకం, *max = -గరిష్ఠ_పూర్ణాంకం;
+    కొరకు (i = 0; i < desc->nb_components; i++) {
+        *min = FFMIN(desc->comp[i].లోతు, *min);
+        *max = FFMAX(desc->comp[i].లోతు, *max);
     }
-    return 0;
+    తిరిగి 0;
 }
 
-static int get_pix_fmt_score(enum AVPixelFormat dst_pix_fmt,
-                              enum AVPixelFormat src_pix_fmt,
-                              unsigned *lossp, unsigned consider)
+స్థిర పూర్ణాంకం get_pix_fmt_score(గణన AVPixelFormat dst_pix_fmt,
+                              గణన AVPixelFormat src_pix_fmt,
+                              గుర్తులేని *lossp, గుర్తులేని consider)
 {
-    const AVPixFmtDescriptor *src_desc = av_pix_fmt_desc_get(src_pix_fmt);
-    const AVPixFmtDescriptor *dst_desc = av_pix_fmt_desc_get(dst_pix_fmt);
-    int src_color, dst_color;
-    int src_min_depth, src_max_depth, dst_min_depth, dst_max_depth;
-    int ret, loss, i, nb_components;
-    int score = INT_MAX - 1;
+    స్థిరరాశి AVPixFmtDescriptor *src_desc = av_pix_fmt_desc_get(src_pix_fmt);
+    స్థిరరాశి AVPixFmtDescriptor *dst_desc = av_pix_fmt_desc_get(dst_pix_fmt);
+    పూర్ణాంకం src_color, dst_color;
+    పూర్ణాంకం src_min_లోతు, src_max_లోతు, dst_min_లోతు, dst_max_లోతు;
+    పూర్ణాంకం ret, loss, i, nb_components;
+    పూర్ణాంకం score = గరిష్ఠ_పూర్ణాంకం - 1;
 
-    if (!src_desc || !dst_desc)
-        return -4;
+    ఒకవేళ (!src_desc || !dst_desc)
+        తిరిగి -4;
 
-    if ((src_desc->flags & AV_PIX_FMT_FLAG_HWACCEL) ||
+    ఒకవేళ ((src_desc->flags & AV_PIX_FMT_FLAG_HWACCEL) ||
         (dst_desc->flags & AV_PIX_FMT_FLAG_HWACCEL)) {
-        if (dst_pix_fmt == src_pix_fmt)
-            return -1;
-        else
-            return -2;
+        ఒకవేళ (dst_pix_fmt == src_pix_fmt)
+            తిరిగి -1;
+        లేకపోతే
+            తిరిగి -2;
     }
 
     /* compute loss */
     *lossp = loss = 0;
 
-    if (dst_pix_fmt == src_pix_fmt)
-        return INT_MAX;
+    ఒకవేళ (dst_pix_fmt == src_pix_fmt)
+        తిరిగి గరిష్ఠ_పూర్ణాంకం;
 
-    if ((ret = get_pix_fmt_depth(&src_min_depth, &src_max_depth, src_pix_fmt)) < 0)
-        return -3;
-    if ((ret = get_pix_fmt_depth(&dst_min_depth, &dst_max_depth, dst_pix_fmt)) < 0)
-        return -3;
+    ఒకవేళ ((ret = get_pix_fmt_లోతు(&src_min_లోతు, &src_max_లోతు, src_pix_fmt)) < 0)
+        తిరిగి -3;
+    ఒకవేళ ((ret = get_pix_fmt_లోతు(&dst_min_లోతు, &dst_max_లోతు, dst_pix_fmt)) < 0)
+        తిరిగి -3;
 
     src_color = get_color_type(src_desc);
     dst_color = get_color_type(dst_desc);
-    if (dst_pix_fmt == AV_PIX_FMT_PAL8)
+    ఒకవేళ (dst_pix_fmt == AV_PIX_FMT_PAL8)
         nb_components = FFMIN(src_desc->nb_components, 4);
-    else
+    లేకపోతే
         nb_components = FFMIN(src_desc->nb_components, dst_desc->nb_components);
 
-    for (i = 0; i < nb_components; i++) {
-        int depth_minus1 = (dst_pix_fmt == AV_PIX_FMT_PAL8) ? 7/nb_components : (dst_desc->comp[i].depth - 1);
-        int depth_delta = src_desc->comp[i].depth - 1 - depth_minus1;
-        if (depth_delta > 0 && (consider & FF_LOSS_DEPTH)) {
-            loss |= FF_LOSS_DEPTH;
-            score -= 65536 >> depth_minus1;
-        } else if (depth_delta < 0 && (consider & FF_LOSS_EXCESS_DEPTH)) {
+    కొరకు (i = 0; i < nb_components; i++) {
+        పూర్ణాంకం లోతు_minus1 = (dst_pix_fmt == AV_PIX_FMT_PAL8) ? 7/nb_components : (dst_desc->comp[i].లోతు - 1);
+        పూర్ణాంకం లోతు_delta = src_desc->comp[i].లోతు - 1 - లోతు_minus1;
+        ఒకవేళ (లోతు_delta > 0 && (consider & FF_LOSS_లోతు)) {
+            loss |= FF_LOSS_లోతు;
+            score -= 65536 >> లోతు_minus1;
+        } లేకపోతే ఒకవేళ (లోతు_delta < 0 && (consider & FF_LOSS_EXCESS_లోతు)) {
             // Favour formats where bit depth exactly matches. If all other
             // scoring is equal, we'd rather use the bit depth that most closely
             // matches the source.
-            loss |= FF_LOSS_EXCESS_DEPTH;
-            score += depth_delta;
+            loss |= FF_LOSS_EXCESS_లోతు;
+            score += లోతు_delta;
         }
     }
 
-    if (consider & FF_LOSS_RESOLUTION) {
-        if (dst_desc->log2_chroma_w > src_desc->log2_chroma_w) {
+    ఒకవేళ (consider & FF_LOSS_RESOLUTION) {
+        ఒకవేళ (dst_desc->log2_chroma_w > src_desc->log2_chroma_w) {
             loss |= FF_LOSS_RESOLUTION;
             score -= 256 << dst_desc->log2_chroma_w;
         }
-        if (dst_desc->log2_chroma_h > src_desc->log2_chroma_h) {
+        ఒకవేళ (dst_desc->log2_chroma_h > src_desc->log2_chroma_h) {
             loss |= FF_LOSS_RESOLUTION;
             score -= 256 << dst_desc->log2_chroma_h;
         }
         // don't favor 422 over 420 if downsampling is needed, because 420 has much better support on the decoder side
-        if (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 0 &&
+        ఒకవేళ (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 0 &&
             dst_desc->log2_chroma_h == 1 && src_desc->log2_chroma_h == 0 ) {
             score += 512;
         }
     }
 
-    if (consider & FF_LOSS_EXCESS_RESOLUTION) {
+    ఒకవేళ (consider & FF_LOSS_EXCESS_RESOLUTION) {
         // Favour formats where chroma subsampling exactly matches. If all other
         // scoring is equal, we'd rather use the subsampling that most closely
         // matches the source.
-        if (dst_desc->log2_chroma_w < src_desc->log2_chroma_w) {
+        ఒకవేళ (dst_desc->log2_chroma_w < src_desc->log2_chroma_w) {
             loss |= FF_LOSS_EXCESS_RESOLUTION;
             score -= 1 << (src_desc->log2_chroma_w - dst_desc->log2_chroma_w);
         }
 
-        if (dst_desc->log2_chroma_h < src_desc->log2_chroma_h) {
+        ఒకవేళ (dst_desc->log2_chroma_h < src_desc->log2_chroma_h) {
             loss |= FF_LOSS_EXCESS_RESOLUTION;
             score -= 1 << (src_desc->log2_chroma_h - dst_desc->log2_chroma_h);
         }
 
         // don't favour 411 over 420, because 420 has much better support on the
         // decoder side.
-        if (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 2 &&
+        ఒకవేళ (dst_desc->log2_chroma_w == 1 && src_desc->log2_chroma_w == 2 &&
             dst_desc->log2_chroma_h == 1 && src_desc->log2_chroma_h == 2) {
                 score += 4;
             }
     }
 
-    if(consider & FF_LOSS_COLORSPACE)
-    switch(dst_color) {
-    case FF_COLOR_RGB:
-        if (src_color != FF_COLOR_RGB &&
-            src_color != FF_COLOR_GRAY)
+    ఒకవేళ(consider & FF_LOSS_COLORSPACE)
+    ఎంపిక(dst_color) {
+    స్థితి FF_COLOR_RGB:
+        ఒకవేళ (src_color != FF_COLOR_RGB &&
+            src_color != FF_COLOR_బూడిద)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_GRAY:
-        if (src_color != FF_COLOR_GRAY)
+        ఆపు;
+    స్థితి FF_COLOR_బూడిద:
+        ఒకవేళ (src_color != FF_COLOR_బూడిద)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_YUV:
-        if (src_color != FF_COLOR_YUV)
+        ఆపు;
+    స్థితి FF_COLOR_YUV:
+        ఒకవేళ (src_color != FF_COLOR_YUV)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    case FF_COLOR_YUV_JPEG:
-        if (src_color != FF_COLOR_YUV_JPEG &&
+        ఆపు;
+    స్థితి FF_COLOR_YUV_JPEG:
+        ఒకవేళ (src_color != FF_COLOR_YUV_JPEG &&
             src_color != FF_COLOR_YUV &&
-            src_color != FF_COLOR_GRAY)
+            src_color != FF_COLOR_బూడిద)
             loss |= FF_LOSS_COLORSPACE;
-        break;
-    default:
+        ఆపు;
+    అప్రమేయ:
         /* fail safe test */
-        if (src_color != dst_color)
+        ఒకవేళ (src_color != dst_color)
             loss |= FF_LOSS_COLORSPACE;
-        break;
+        ఆపు;
     }
-    if(loss & FF_LOSS_COLORSPACE)
-        score -= (nb_components * 65536) >> FFMIN(dst_desc->comp[0].depth - 1, src_desc->comp[0].depth - 1);
+    ఒకవేళ(loss & FF_LOSS_COLORSPACE)
+        score -= (nb_components * 65536) >> FFMIN(dst_desc->comp[0].లోతు - 1, src_desc->comp[0].లోతు - 1);
 
-    if (dst_color == FF_COLOR_GRAY &&
-        src_color != FF_COLOR_GRAY && (consider & FF_LOSS_CHROMA)) {
+    ఒకవేళ (dst_color == FF_COLOR_బూడిద &&
+        src_color != FF_COLOR_బూడిద && (consider & FF_LOSS_CHROMA)) {
         loss |= FF_LOSS_CHROMA;
         score -= 2 * 65536;
     }
-    if (!pixdesc_has_alpha(dst_desc) && (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))) {
+    ఒకవేళ (!pixdesc_has_alpha(dst_desc) && (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))) {
         loss |= FF_LOSS_ALPHA;
         score -= 65536;
     }
-    if (dst_pix_fmt == AV_PIX_FMT_PAL8 && (consider & FF_LOSS_COLORQUANT) &&
-        (src_pix_fmt != AV_PIX_FMT_PAL8 && (src_color != FF_COLOR_GRAY || (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))))) {
+    ఒకవేళ (dst_pix_fmt == AV_PIX_FMT_PAL8 && (consider & FF_LOSS_COLORQUANT) &&
+        (src_pix_fmt != AV_PIX_FMT_PAL8 && (src_color != FF_COLOR_బూడిద || (pixdesc_has_alpha(src_desc) && (consider & FF_LOSS_ALPHA))))) {
         loss |= FF_LOSS_COLORQUANT;
         score -= 65536;
     }
 
     *lossp = loss;
-    return score;
+    తిరిగి score;
 }
 
-int av_get_pix_fmt_loss(enum AVPixelFormat dst_pix_fmt,
-                            enum AVPixelFormat src_pix_fmt,
-                            int has_alpha)
+పూర్ణాంకం av_get_pix_fmt_loss(గణన AVPixelFormat dst_pix_fmt,
+                            గణన AVPixelFormat src_pix_fmt,
+                            పూర్ణాంకం has_alpha)
 {
-    int loss;
-    int ret = get_pix_fmt_score(dst_pix_fmt, src_pix_fmt, &loss, has_alpha ? ~0 : ~FF_LOSS_ALPHA);
-    if (ret < 0)
-        return ret;
-    return loss;
+    పూర్ణాంకం loss;
+    పూర్ణాంకం ret = get_pix_fmt_score(dst_pix_fmt, src_pix_fmt, &loss, has_alpha ? ~0 : ~FF_LOSS_ALPHA);
+    ఒకవేళ (ret < 0)
+        తిరిగి ret;
+    తిరిగి loss;
 }
 
-enum AVPixelFormat av_find_best_pix_fmt_of_2(enum AVPixelFormat dst_pix_fmt1, enum AVPixelFormat dst_pix_fmt2,
-                                             enum AVPixelFormat src_pix_fmt, int has_alpha, int *loss_ptr)
+గణన AVPixelFormat av_కనుగొను_ఉత్తమ_pix_fmt_యొక్క_2(గణన AVPixelFormat dst_pix_fmt1, గణన AVPixelFormat dst_pix_fmt2,
+                                             గణన AVPixelFormat src_pix_fmt, పూర్ణాంకం has_alpha, పూర్ణాంకం *loss_ptr)
 {
-    enum AVPixelFormat dst_pix_fmt;
-    int loss1, loss2, loss_mask;
-    const AVPixFmtDescriptor *desc1 = av_pix_fmt_desc_get(dst_pix_fmt1);
-    const AVPixFmtDescriptor *desc2 = av_pix_fmt_desc_get(dst_pix_fmt2);
-    int score1, score2;
+    గణన AVPixelFormat dst_pix_fmt;
+    పూర్ణాంకం loss1, loss2, loss_ముసుగు;
+    స్థిరరాశి AVPixFmtDescriptor *desc1 = av_pix_fmt_desc_get(dst_pix_fmt1);
+    స్థిరరాశి AVPixFmtDescriptor *desc2 = av_pix_fmt_desc_get(dst_pix_fmt2);
+    పూర్ణాంకం score1, score2;
 
-    if (!desc1) {
+    ఒకవేళ (!desc1) {
         dst_pix_fmt = dst_pix_fmt2;
-    } else if (!desc2) {
+    } లేకపోతే ఒకవేళ (!desc2) {
         dst_pix_fmt = dst_pix_fmt1;
-    } else {
-        loss_mask= loss_ptr?~*loss_ptr:~0; /* use loss mask if provided */
-        if(!has_alpha)
-            loss_mask &= ~FF_LOSS_ALPHA;
+    } లేకపోతే {
+        loss_ముసుగు= loss_ptr?~*loss_ptr:~0; /* use loss mask if provided */
+        ఒకవేళ(!has_alpha)
+            loss_ముసుగు &= ~FF_LOSS_ALPHA;
 
-        score1 = get_pix_fmt_score(dst_pix_fmt1, src_pix_fmt, &loss1, loss_mask);
-        score2 = get_pix_fmt_score(dst_pix_fmt2, src_pix_fmt, &loss2, loss_mask);
+        score1 = get_pix_fmt_score(dst_pix_fmt1, src_pix_fmt, &loss1, loss_ముసుగు);
+        score2 = get_pix_fmt_score(dst_pix_fmt2, src_pix_fmt, &loss2, loss_ముసుగు);
 
-        if (score1 == score2) {
-            if(av_get_padded_bits_per_pixel(desc2) != av_get_padded_bits_per_pixel(desc1)) {
-                dst_pix_fmt = av_get_padded_bits_per_pixel(desc2) < av_get_padded_bits_per_pixel(desc1) ? dst_pix_fmt2 : dst_pix_fmt1;
-            } else {
+        ఒకవేళ (score1 == score2) {
+            ఒకవేళ(av_get_padded_బిట్లు_చొప్పున_pixel(desc2) != av_get_padded_బిట్లు_చొప్పున_pixel(desc1)) {
+                dst_pix_fmt = av_get_padded_బిట్లు_చొప్పున_pixel(desc2) < av_get_padded_బిట్లు_చొప్పున_pixel(desc1) ? dst_pix_fmt2 : dst_pix_fmt1;
+            } లేకపోతే {
                 dst_pix_fmt = desc2->nb_components < desc1->nb_components ? dst_pix_fmt2 : dst_pix_fmt1;
             }
-        } else {
+        } లేకపోతే {
             dst_pix_fmt = score1 < score2 ? dst_pix_fmt2 : dst_pix_fmt1;
         }
     }
 
-    if (loss_ptr)
+    ఒకవేళ (loss_ptr)
         *loss_ptr = av_get_pix_fmt_loss(dst_pix_fmt, src_pix_fmt, has_alpha);
-    return dst_pix_fmt;
+    తిరిగి dst_pix_fmt;
 }
 
-const char *av_color_range_name(enum AVColorRange range)
+స్థిరరాశి అక్షరం *av_color_range_name(గణన AVColorRange range)
 {
-    return (unsigned) range < AVCOL_RANGE_NB ?
-        color_range_names[range] : NULL;
+    తిరిగి (గుర్తులేని) range < AVCOL_RANGE_NB ?
+        color_range_పేర్లు[range] : ఖాళీ;
 }
 
-int av_color_range_from_name(const char *name)
+పూర్ణాంకం av_color_range_from_name(స్థిరరాశి అక్షరం *name)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_range_names); i++) {
-        if (!strcmp(name, color_range_names[i]))
-            return i;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(color_range_పేర్లు); i++) {
+        ఒకవేళ (!strcmp(name, color_range_పేర్లు[i]))
+            తిరిగి i;
     }
 
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-const char *av_color_primaries_name(enum AVColorPrimaries primaries)
+స్థిరరాశి అక్షరం *av_color_primaries_name(గణన AVColorPrimaries primaries)
 {
-    if ((unsigned)primaries < AVCOL_PRI_NB)
-        return color_primaries_names[primaries];
-    else if (((unsigned)primaries >= AVCOL_PRI_EXT_BASE) &&
-             ((unsigned)primaries < AVCOL_PRI_EXT_NB))
-        return color_primaries_names_ext[primaries - AVCOL_TRC_EXT_BASE];
-    return NULL;
+    ఒకవేళ ((గుర్తులేని)primaries < AVCOL_PRI_NB)
+        తిరిగి color_primaries_పేర్లు[primaries];
+    లేకపోతే ఒకవేళ (((గుర్తులేని)primaries >= AVCOL_PRI_EXT_పునాది) &&
+             ((గుర్తులేని)primaries < AVCOL_PRI_EXT_NB))
+        తిరిగి color_primaries_పేర్లు_ext[primaries - AVCOL_TRC_EXT_పునాది];
+    తిరిగి ఖాళీ;
 }
 
-int av_color_primaries_from_name(const char *name)
+పూర్ణాంకం av_color_primaries_from_name(స్థిరరాశి అక్షరం *name)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names); i++) {
-        if (!color_primaries_names[i])
-            continue;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(color_primaries_పేర్లు); i++) {
+        ఒకవేళ (!color_primaries_పేర్లు[i])
+            కొనసాగు;
 
-        if (!strcmp(name, color_primaries_names[i]))
-            return i;
+        ఒకవేళ (!strcmp(name, color_primaries_పేర్లు[i]))
+            తిరిగి i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_primaries_names_ext); i++) {
-        if (!color_primaries_names_ext[i])
-            continue;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(color_primaries_పేర్లు_ext); i++) {
+        ఒకవేళ (!color_primaries_పేర్లు_ext[i])
+            కొనసాగు;
 
-        if (!strcmp(name, color_primaries_names_ext[i]))
-            return AVCOL_PRI_EXT_BASE + i;
+        ఒకవేళ (!strcmp(name, color_primaries_పేర్లు_ext[i]))
+            తిరిగి AVCOL_PRI_EXT_పునాది + i;
     }
 
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-const char *av_color_transfer_name(enum AVColorTransferCharacteristic transfer)
+స్థిరరాశి అక్షరం *av_color_transfer_name(గణన AVColorTransferCharacteristic transfer)
 {
-    if ((unsigned)transfer < AVCOL_TRC_NB)
-        return color_transfer_names[transfer];
-    else if (((unsigned)transfer >= AVCOL_TRC_EXT_BASE) &&
-             ((unsigned)transfer < AVCOL_TRC_EXT_NB))
-        return color_transfer_names_ext[transfer - AVCOL_TRC_EXT_BASE];
-    return NULL;
+    ఒకవేళ ((గుర్తులేని)transfer < AVCOL_TRC_NB)
+        తిరిగి color_transfer_పేర్లు[transfer];
+    లేకపోతే ఒకవేళ (((గుర్తులేని)transfer >= AVCOL_TRC_EXT_పునాది) &&
+             ((గుర్తులేని)transfer < AVCOL_TRC_EXT_NB))
+        తిరిగి color_transfer_పేర్లు_ext[transfer - AVCOL_TRC_EXT_పునాది];
+    తిరిగి ఖాళీ;
 }
 
-int av_color_transfer_from_name(const char *name)
+పూర్ణాంకం av_color_transfer_from_name(స్థిరరాశి అక్షరం *name)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names); i++) {
-        if (!color_transfer_names[i])
-            continue;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(color_transfer_పేర్లు); i++) {
+        ఒకవేళ (!color_transfer_పేర్లు[i])
+            కొనసాగు;
 
-        if (!strcmp(name, color_transfer_names[i]))
-            return i;
+        ఒకవేళ (!strcmp(name, color_transfer_పేర్లు[i]))
+            తిరిగి i;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_transfer_names_ext); i++) {
-        if (!color_transfer_names_ext[i])
-            continue;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(color_transfer_పేర్లు_ext); i++) {
+        ఒకవేళ (!color_transfer_పేర్లు_ext[i])
+            కొనసాగు;
 
-        if (!strcmp(name, color_transfer_names_ext[i]))
-            return AVCOL_TRC_EXT_BASE + i;
+        ఒకవేళ (!strcmp(name, color_transfer_పేర్లు_ext[i]))
+            తిరిగి AVCOL_TRC_EXT_పునాది + i;
     }
 
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-const char *av_color_space_name(enum AVColorSpace space)
+స్థిరరాశి అక్షరం *av_color_space_name(గణన AVColorSpace space)
 {
-    return (unsigned) space < AVCOL_SPC_NB ?
-        color_space_names[space] : NULL;
+    తిరిగి (గుర్తులేని) space < AVCOL_SPC_NB ?
+        color_space_పేర్లు[space] : ఖాళీ;
 }
 
-int av_color_space_from_name(const char *name)
+పూర్ణాంకం av_color_space_from_name(స్థిరరాశి అక్షరం *name)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_space_names); i++) {
-        if (!color_space_names[i])
-            continue;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(color_space_పేర్లు); i++) {
+        ఒకవేళ (!color_space_పేర్లు[i])
+            కొనసాగు;
 
-        if (!strcmp(name, color_space_names[i]))
-            return i;
+        ఒకవేళ (!strcmp(name, color_space_పేర్లు[i]))
+            తిరిగి i;
     }
 
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-const char *av_chroma_location_name(enum AVChromaLocation location)
+స్థిరరాశి అక్షరం *av_chroma_location_name(గణన AVChromaLocation location)
 {
-    return (unsigned) location < AVCHROMA_LOC_NB ?
-        chroma_location_names[location] : NULL;
+    తిరిగి (గుర్తులేని) location < AVCHROMA_LOC_NB ?
+        chroma_location_పేర్లు[location] : ఖాళీ;
 }
 
-int av_chroma_location_from_name(const char *name)
+పూర్ణాంకం av_chroma_location_from_name(స్థిరరాశి అక్షరం *name)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(chroma_location_names); i++) {
-        if (!chroma_location_names[i])
-            continue;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(chroma_location_పేర్లు); i++) {
+        ఒకవేళ (!chroma_location_పేర్లు[i])
+            కొనసాగు;
 
-        if (!strcmp(name, chroma_location_names[i]))
-            return i;
+        ఒకవేళ (!strcmp(name, chroma_location_పేర్లు[i]))
+            తిరిగి i;
     }
 
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }
 
-int av_chroma_location_enum_to_pos(int *xpos, int *ypos, enum AVChromaLocation pos)
+పూర్ణాంకం av_chroma_location_enum_గమ్యం_pos(పూర్ణాంకం *xpos, పూర్ణాంకం *ypos, గణన AVChromaLocation pos)
 {
-    if (pos <= AVCHROMA_LOC_UNSPECIFIED || pos >= AVCHROMA_LOC_NB)
-        return AVERROR(EINVAL);
+    ఒకవేళ (pos <= AVCHROMA_LOC_UNSPECIFIED || pos >= AVCHROMA_LOC_NB)
+        తిరిగి AVERROR(EINVAL);
     pos--;
 
     *xpos = (pos&1) * 128;
     *ypos = ((pos>>1)^(pos<4)) * 128;
 
-    return 0;
+    తిరిగి 0;
 }
 
-enum AVChromaLocation av_chroma_location_pos_to_enum(int xpos, int ypos)
+గణన AVChromaLocation av_chroma_location_pos_గమ్యం_enum(పూర్ణాంకం xpos, పూర్ణాంకం ypos)
 {
-    int pos, xout, yout;
+    పూర్ణాంకం pos, xout, yout;
 
-    for (pos = AVCHROMA_LOC_UNSPECIFIED + 1; pos < AVCHROMA_LOC_NB; pos++) {
-        if (av_chroma_location_enum_to_pos(&xout, &yout, pos) == 0 && xout == xpos && yout == ypos)
-            return pos;
+    కొరకు (pos = AVCHROMA_LOC_UNSPECIFIED + 1; pos < AVCHROMA_LOC_NB; pos++) {
+        ఒకవేళ (av_chroma_location_enum_గమ్యం_pos(&xout, &yout, pos) == 0 && xout == xpos && yout == ypos)
+            తిరిగి pos;
     }
-    return AVCHROMA_LOC_UNSPECIFIED;
+    తిరిగి AVCHROMA_LOC_UNSPECIFIED;
 }
 
-const char *av_alpha_mode_name(enum AVAlphaMode mode)
+స్థిరరాశి అక్షరం *av_alpha_బహుళకం_name(గణన AVAlpha_బహుళకం బహుళకం)
 {
-    return (unsigned) mode < AVALPHA_MODE_NB ?
-        alpha_mode_names[mode] : NULL;
+    తిరిగి (గుర్తులేని) బహుళకం < AVALPHA_బహుళకం_NB ?
+        alpha_బహుళకం_పేర్లు[బహుళకం] : ఖాళీ;
 }
 
-enum AVAlphaMode av_alpha_mode_from_name(const char *name)
+గణన AVAlpha_బహుళకం av_alpha_బహుళకం_from_name(స్థిరరాశి అక్షరం *name)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(alpha_mode_names); i++) {
-        if (!alpha_mode_names[i])
-            continue;
+    కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(alpha_బహుళకం_పేర్లు); i++) {
+        ఒకవేళ (!alpha_బహుళకం_పేర్లు[i])
+            కొనసాగు;
 
-        if (!strcmp(name, alpha_mode_names[i]))
-            return i;
+        ఒకవేళ (!strcmp(name, alpha_బహుళకం_పేర్లు[i]))
+            తిరిగి i;
     }
 
-    return AVERROR(EINVAL);
+    తిరిగి AVERROR(EINVAL);
 }

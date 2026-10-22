@@ -17,22 +17,22 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_CUDA_INTERNAL_H
-#define AVUTIL_HWCONTEXT_CUDA_INTERNAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_HWCONTEXT_CUDA_అంతర్గత_H
+#నిర్వచించు AVUTIL_HWCONTEXT_CUDA_అంతర్గత_H
 
-#include "compat/cuda/dynlink_loader.h"
-#include "hwcontext_cuda.h"
+#అన్తర్భావ "compat/cuda/dynlink_loader.h"
+#అన్తర్భావ "hwcontext_cuda.h"
 
 /**
  * @file
  * FFmpeg internal API for CUDA.
  */
 
-struct AVCUDADeviceContextInternal {
+నిర్మాణం AVCUDADevice_Context_అంతర్గత {
     CudaFunctions *cuda_dl;
-    int is_allocated;
+    పూర్ణాంకం is_allocated;
     CUdevice cuda_device;
-    int flags;
+    పూర్ణాంకం flags;
 };
 
 /**
@@ -41,19 +41,19 @@ struct AVCUDADeviceContextInternal {
  * Used to compute frame->linesize[] for CUarray frames (block-linear).
  * Callers that need a fallback should treat a 0 return as an error.
  */
-static inline int ff_cuda_cuarray_elem_size(CUarray_format fmt)
+స్థిర అంతఃవరుస పూర్ణాంకం ff_cuda_cuarray_elem_కొలత(CUarray_format fmt)
 {
-    switch (fmt) {
-    case CU_AD_FORMAT_UNSIGNED_INT8:
-    case CU_AD_FORMAT_SIGNED_INT8:   return 1;
-    case CU_AD_FORMAT_UNSIGNED_INT16:
-    case CU_AD_FORMAT_SIGNED_INT16:
-    case CU_AD_FORMAT_HALF:          return 2;
-    case CU_AD_FORMAT_UNSIGNED_INT32:
-    case CU_AD_FORMAT_SIGNED_INT32:
-    case CU_AD_FORMAT_FLOAT:         return 4;
-    default:                         return 0;
+    ఎంపిక (fmt) {
+    స్థితి CU_AD_FORMAT_UNSIGNED_INT8:
+    స్థితి CU_AD_FORMAT_SIGNED_INT8:   తిరిగి 1;
+    స్థితి CU_AD_FORMAT_UNSIGNED_INT16:
+    స్థితి CU_AD_FORMAT_SIGNED_INT16:
+    స్థితి CU_AD_FORMAT_HALF:          తిరిగి 2;
+    స్థితి CU_AD_FORMAT_UNSIGNED_INT32:
+    స్థితి CU_AD_FORMAT_SIGNED_INT32:
+    స్థితి CU_AD_FORMAT_FLOAT:         తిరిగి 4;
+    అప్రమేయ:                         తిరిగి 0;
     }
 }
 
-#endif /* AVUTIL_HWCONTEXT_CUDA_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_HWCONTEXT_CUDA_INTERNAL_H */

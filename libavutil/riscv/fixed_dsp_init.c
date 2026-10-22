@@ -18,47 +18,47 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/fixed_dsp.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/fixed_dsp.h"
 
-void ff_vector_fmul_window_scaled_rvv(int16_t *dst, const int32_t *src0,
-                                      const int32_t *src1, const int32_t *win,
-                                      int len, uint8_t bits);
-void ff_vector_fmul_window_fixed_rvv(int32_t *dst, const int32_t *src0,
-                                     const int32_t *src1, const int32_t *win,
-                                     int len);
-void ff_vector_fmul_fixed_rvv(int *dst, const int *src0, const int *src1,
-                              int len);
-void ff_vector_fmul_reverse_fixed_rvv(int *dst, const int *src0,
-                                      const int *src1, int len);
-void ff_vector_fmul_add_fixed_rvv(int *dst, const int *src0, const int *src1,
-                                  const int *src2, int len);
-int ff_scalarproduct_fixed_rvv(const int *v1, const int *v2, int len);
-void ff_butterflies_fixed_rvv(int *v1, int *v2, int len);
+శూన్య ff_సదిశ_fmul_కిటికీ_scaled_rvv(int16_t *dst, స్థిరరాశి int32_t *src0,
+                                      స్థిరరాశి int32_t *src1, స్థిరరాశి int32_t *win,
+                                      పూర్ణాంకం len, uint8_t బిట్లు);
+శూన్య ff_సదిశ_fmul_కిటికీ_fixed_rvv(int32_t *dst, స్థిరరాశి int32_t *src0,
+                                     స్థిరరాశి int32_t *src1, స్థిరరాశి int32_t *win,
+                                     పూర్ణాంకం len);
+శూన్య ff_సదిశ_fmul_fixed_rvv(పూర్ణాంకం *dst, స్థిరరాశి పూర్ణాంకం *src0, స్థిరరాశి పూర్ణాంకం *src1,
+                              పూర్ణాంకం len);
+శూన్య ff_సదిశ_fmul_తిరగేయి_fixed_rvv(పూర్ణాంకం *dst, స్థిరరాశి పూర్ణాంకం *src0,
+                                      స్థిరరాశి పూర్ణాంకం *src1, పూర్ణాంకం len);
+శూన్య ff_సదిశ_fmul_కూడు_fixed_rvv(పూర్ణాంకం *dst, స్థిరరాశి పూర్ణాంకం *src0, స్థిరరాశి పూర్ణాంకం *src1,
+                                  స్థిరరాశి పూర్ణాంకం *src2, పూర్ణాంకం len);
+పూర్ణాంకం ff_scalarproduct_fixed_rvv(స్థిరరాశి పూర్ణాంకం *v1, స్థిరరాశి పూర్ణాంకం *v2, పూర్ణాంకం len);
+శూన్య ff_butterflies_fixed_rvv(పూర్ణాంకం *v1, పూర్ణాంకం *v2, పూర్ణాంకం len);
 
-av_cold void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
+av_cold శూన్య ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ఒకవేళ HAVE_RVV
+    పూర్ణాంకం flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
-        if (flags & AV_CPU_FLAG_RVV_I64) {
-            fdsp->vector_fmul_window_scaled = ff_vector_fmul_window_scaled_rvv;
-            fdsp->vector_fmul_window = ff_vector_fmul_window_fixed_rvv;
+    ఒకవేళ ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
+        ఒకవేళ (flags & AV_CPU_FLAG_RVV_I64) {
+            fdsp->సదిశ_fmul_కిటికీ_scaled = ff_సదిశ_fmul_కిటికీ_scaled_rvv;
+            fdsp->సదిశ_fmul_కిటికీ = ff_సదిశ_fmul_కిటికీ_fixed_rvv;
         }
 
-        fdsp->vector_fmul = ff_vector_fmul_fixed_rvv;
-        fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_fixed_rvv;
-        fdsp->vector_fmul_add = ff_vector_fmul_add_fixed_rvv;
+        fdsp->సదిశ_fmul = ff_సదిశ_fmul_fixed_rvv;
+        fdsp->సదిశ_fmul_తిరగేయి = ff_సదిశ_fmul_తిరగేయి_fixed_rvv;
+        fdsp->సదిశ_fmul_కూడు = ff_సదిశ_fmul_కూడు_fixed_rvv;
 
-        if (flags & AV_CPU_FLAG_RVV_I64)
+        ఒకవేళ (flags & AV_CPU_FLAG_RVV_I64)
             fdsp->scalarproduct_fixed = ff_scalarproduct_fixed_rvv;
 
         fdsp->butterflies_fixed = ff_butterflies_fixed_rvv;
     }
-#endif
+#అయితే_ముగింపు
 }

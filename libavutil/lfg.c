@@ -19,69 +19,69 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <limits.h>
-#include <math.h>
-#include "lfg.h"
-#include "crc.h"
-#include "md5.h"
-#include "error.h"
-#include "intreadwrite.h"
-#include "attributes.h"
+#అన్తర్భావ <inttypes.h>
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <math.h>
+#అన్తర్భావ "lfg.h"
+#అన్తర్భావ "crc.h"
+#అన్తర్భావ "md5.h"
+#అన్తర్భావ "error.h"
+#అన్తర్భావ "intreadwrite.h"
+#అన్తర్భావ "attributes.h"
 
-av_cold void av_lfg_init(AVLFG *c, unsigned int seed)
+av_cold శూన్య av_lfg_init(AVLFG *c, గుర్తులేని పూర్ణాంకం విత్తనం)
 {
     uint8_t tmp[16] = { 0 };
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 8; i < 64; i += 4) {
-        AV_WL32(tmp, seed);
+    కొరకు (i = 8; i < 64; i += 4) {
+        AV_WL32(tmp, విత్తనం);
         tmp[4] = i;
-        av_md5_sum(tmp, tmp, 16);
+        av_md5_కూడిక(tmp, tmp, 16);
         c->state[i    ] = AV_RL32(tmp);
         c->state[i + 1] = AV_RL32(tmp + 4);
         c->state[i + 2] = AV_RL32(tmp + 8);
         c->state[i + 3] = AV_RL32(tmp + 12);
     }
-    c->index = 0;
+    c->సూచీ = 0;
 }
 
-void av_bmg_get(AVLFG *lfg, double out[2])
+శూన్య av_bmg_get(AVLFG *lfg, ద్విగుణ బహిర్గతం[2])
 {
-    double x1, x2, w;
+    ద్విగుణ x1, x2, w;
 
-    do {
+    చేయి {
         x1 = 2.0 / UINT_MAX * av_lfg_get(lfg) - 1.0;
         x2 = 2.0 / UINT_MAX * av_lfg_get(lfg) - 1.0;
         w  = x1 * x1 + x2 * x2;
-    } while (w >= 1.0);
+    } అయితే (w >= 1.0);
 
-    w = sqrt((-2.0 * log(w)) / w);
-    out[0] = x1 * w;
-    out[1] = x2 * w;
+    w = వర్గమూలం((-2.0 * సంవర్గమానం(w)) / w);
+    బహిర్గతం[0] = x1 * w;
+    బహిర్గతం[1] = x2 * w;
 }
 
-int av_lfg_init_from_data(AVLFG *c, const uint8_t *data, unsigned int length) {
-    unsigned int beg, end, segm;
-    const AVCRC *avcrc;
-    uint32_t crc = 1;
+పూర్ణాంకం av_lfg_init_from_దత్తాంశం(AVLFG *c, స్థిరరాశి uint8_t *దత్తాంశం, గుర్తులేని పూర్ణాంకం నిడివి) {
+    గుర్తులేని పూర్ణాంకం beg, చివర, segm;
+    స్థిరరాశి AVCRC *avcrc;
+    uint32_t చక్రీయ_తనిఖీ = 1;
 
     /* avoid integer overflow in the loop below. */
-    if (length > (UINT_MAX / 128U)) return AVERROR(EINVAL);
+    ఒకవేళ (నిడివి > (UINT_MAX / 128U)) తిరిగి AVERROR(EINVAL);
 
-    c->index = 0;
-    avcrc = av_crc_get_table(AV_CRC_32_IEEE); /* This can't fail. It's a well-defined table in crc.c */
+    c->సూచీ = 0;
+    avcrc = av_చక్రీయ_తనిఖీ_get_పట్టిక(AV_చక్రీయ_తనిఖీ_32_IEEE); /* This can't fail. It's a well-defined table in crc.c */
 
     /* across 64 segments of the incoming data,
      * do a running crc of each segment and store the crc as the state for that slot.
      * this works even if the length of the segment is 0 bytes. */
     beg = 0;
-    for (segm = 0;segm < 64;segm++) {
-        end = (((segm + 1) * length) / 64);
-        crc = av_crc(avcrc, crc, data + beg, end - beg);
-        c->state[segm] = (unsigned int)crc;
-        beg = end;
+    కొరకు (segm = 0;segm < 64;segm++) {
+        చివర = (((segm + 1) * నిడివి) / 64);
+        చక్రీయ_తనిఖీ = av_చక్రీయ_తనిఖీ(avcrc, చక్రీయ_తనిఖీ, దత్తాంశం + beg, చివర - beg);
+        c->state[segm] = (గుర్తులేని పూర్ణాంకం)చక్రీయ_తనిఖీ;
+        beg = చివర;
     }
 
-    return 0;
+    తిరిగి 0;
 }

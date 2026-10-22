@@ -21,59 +21,59 @@
  * misc parsing utilities
  */
 
-#include <time.h>
+#అన్తర్భావ <time.h>
 
-#include "avstring.h"
-#include "avutil.h"
-#include "common.h"
-#include "eval.h"
-#include "log.h"
-#include "random_seed.h"
-#include "time_internal.h"
-#include "parseutils.h"
-#include "time.h"
+#అన్తర్భావ "avstring.h"
+#అన్తర్భావ "avutil.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "eval.h"
+#అన్తర్భావ "log.h"
+#అన్తర్భావ "random_seed.h"
+#అన్తర్భావ "time_internal.h"
+#అన్తర్భావ "parseutils.h"
+#అన్తర్భావ "time.h"
 
-#ifdef TEST
+#నిర్వచితమైతే TEST
 
-#define av_get_random_seed av_get_random_seed_deterministic
-static uint32_t av_get_random_seed_deterministic(void);
+#నిర్వచించు av_get_random_విత్తనం av_get_random_విత్తనం_deterministic
+స్థిర uint32_t av_get_random_విత్తనం_deterministic(శూన్య);
 
-#define av_gettime() 1331972053200000
+#నిర్వచించు av_gettime() 1331972053200000
 
-#endif
+#అయితే_ముగింపు
 
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx)
+పూర్ణాంకం av_parse_నిష్పత్తి(AVRational *q, స్థిరరాశి అక్షరం *str, పూర్ణాంకం max,
+                   పూర్ణాంకం log_స్థానభ్రంశం, శూన్య *log_ctx)
 {
-    char c;
-    int ret;
+    అక్షరం c;
+    పూర్ణాంకం ret;
 
-    if (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
-        double d;
-        ret = av_expr_parse_and_eval(&d, str, NULL, NULL,
-                                     NULL, NULL, NULL, NULL,
-                                     NULL, log_offset, log_ctx);
-        if (ret < 0)
-            return ret;
+    ఒకవేళ (అక్షరశ్రేణి_చదువు(str, "%d:%d%c", &q->అంకె, &q->den, &c) != 2) {
+        ద్విగుణ d;
+        ret = av_సమాసం_parse_and_eval(&d, str, ఖాళీ, ఖాళీ,
+                                     ఖాళీ, ఖాళీ, ఖాళీ, ఖాళీ,
+                                     ఖాళీ, log_స్థానభ్రంశం, log_ctx);
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
         *q = av_d2q(d, max);
-    } else {
-        av_reduce(&q->num, &q->den, q->num, q->den, max);
+    } లేకపోతే {
+        av_reduce(&q->అంకె, &q->den, q->అంకె, q->den, max);
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-typedef struct VideoSizeAbbr {
-    const char *abbr;
-    int width, height;
-} VideoSizeAbbr;
+రకనిర్వచనం నిర్మాణం Video_కొలత_Abbr {
+    స్థిరరాశి అక్షరం *abbr;
+    పూర్ణాంకం వెడల్పు, ఎత్తు;
+} Video_కొలత_Abbr;
 
-typedef struct VideoRateAbbr {
-    const char *abbr;
-    AVRational rate;
-} VideoRateAbbr;
+రకనిర్వచనం నిర్మాణం Video_రేటు_Abbr {
+    స్థిరరాశి అక్షరం *abbr;
+    AVRational రేటు;
+} Video_రేటు_Abbr;
 
-static const VideoSizeAbbr video_size_abbrs[] = {
+స్థిర స్థిరరాశి Video_కొలత_Abbr video_కొలత_abbrs[] = {
     { "ntsc",      720, 480 },
     { "pal",       720, 576 },
     { "qntsc",     352, 240 }, /* VCD compliant NTSC */
@@ -131,7 +131,7 @@ static const VideoSizeAbbr video_size_abbrs[] = {
     { "uhd4320",  7680,4320 },
 };
 
-static const VideoRateAbbr video_rate_abbrs[]= {
+స్థిర స్థిరరాశి Video_రేటు_Abbr video_రేటు_abbrs[]= {
     { "ntsc",      { 30000, 1001 } },
     { "pal",       {    25,    1 } },
     { "qntsc",     { 30000, 1001 } }, /* VCD compliant NTSC */
@@ -142,71 +142,71 @@ static const VideoRateAbbr video_rate_abbrs[]= {
     { "ntsc-film", { 24000, 1001 } },
 };
 
-static const char *months[12] = {
+స్థిర స్థిరరాశి అక్షరం *months[12] = {
     "january", "february", "march", "april", "may", "june", "july", "august",
     "september", "october", "november", "december"
 };
 
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str)
+పూర్ణాంకం av_parse_video_కొలత(పూర్ణాంకం *వెడల్పు_ptr, పూర్ణాంకం *ఎత్తు_ptr, స్థిరరాశి అక్షరం *str)
 {
-    int i;
-    int n = FF_ARRAY_ELEMS(video_size_abbrs);
-    const char *p;
-    int width = 0, height = 0;
+    పూర్ణాంకం i;
+    పూర్ణాంకం n = FF_ARRAY_ELEMS(video_కొలత_abbrs);
+    స్థిరరాశి అక్షరం *p;
+    పూర్ణాంకం వెడల్పు = 0, ఎత్తు = 0;
 
-    for (i = 0; i < n; i++) {
-        if (!strcmp(video_size_abbrs[i].abbr, str)) {
-            width  = video_size_abbrs[i].width;
-            height = video_size_abbrs[i].height;
-            break;
+    కొరకు (i = 0; i < n; i++) {
+        ఒకవేళ (!strcmp(video_కొలత_abbrs[i].abbr, str)) {
+            వెడల్పు  = video_కొలత_abbrs[i].వెడల్పు;
+            ఎత్తు = video_కొలత_abbrs[i].ఎత్తు;
+            ఆపు;
         }
     }
-    if (i == n) {
-        width = strtol(str, (void*)&p, 10);
-        if (*p)
+    ఒకవేళ (i == n) {
+        వెడల్పు = strtol(str, (శూన్య*)&p, 10);
+        ఒకవేళ (*p)
             p++;
-        height = strtol(p, (void*)&p, 10);
+        ఎత్తు = strtol(p, (శూన్య*)&p, 10);
 
         /* trailing extraneous data detected, like in 123x345foobar */
-        if (*p)
-            return AVERROR(EINVAL);
+        ఒకవేళ (*p)
+            తిరిగి AVERROR(EINVAL);
     }
-    if (width <= 0 || height <= 0)
-        return AVERROR(EINVAL);
-    *width_ptr  = width;
-    *height_ptr = height;
-    return 0;
+    ఒకవేళ (వెడల్పు <= 0 || ఎత్తు <= 0)
+        తిరిగి AVERROR(EINVAL);
+    *వెడల్పు_ptr  = వెడల్పు;
+    *ఎత్తు_ptr = ఎత్తు;
+    తిరిగి 0;
 }
 
-int av_parse_video_rate(AVRational *rate, const char *arg)
+పూర్ణాంకం av_parse_video_రేటు(AVRational *రేటు, స్థిరరాశి అక్షరం *arg)
 {
-    int i, ret;
-    int n = FF_ARRAY_ELEMS(video_rate_abbrs);
+    పూర్ణాంకం i, ret;
+    పూర్ణాంకం n = FF_ARRAY_ELEMS(video_రేటు_abbrs);
 
     /* First, we check our abbreviation table */
-    for (i = 0; i < n; ++i)
-        if (!strcmp(video_rate_abbrs[i].abbr, arg)) {
-            *rate = video_rate_abbrs[i].rate;
-            return 0;
+    కొరకు (i = 0; i < n; ++i)
+        ఒకవేళ (!strcmp(video_రేటు_abbrs[i].abbr, arg)) {
+            *రేటు = video_రేటు_abbrs[i].రేటు;
+            తిరిగి 0;
         }
 
     /* Then, we try to parse it as fraction */
-    if ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
-        return ret;
-    if (!rate->num || !rate->den)
-        if ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
-            return ret;
-    if (rate->num <= 0 || rate->den <= 0)
-        return AVERROR(EINVAL);
-    return 0;
+    ఒకవేళ ((ret = av_parse_నిష్పత్తి_quiet(రేటు, arg, 1001000)) < 0)
+        తిరిగి ret;
+    ఒకవేళ (!రేటు->అంకె || !రేటు->den)
+        ఒకవేళ ((ret = av_parse_నిష్పత్తి_quiet(రేటు, arg, గరిష్ఠ_పూర్ణాంకం)) < 0)
+            తిరిగి ret;
+    ఒకవేళ (రేటు->అంకె <= 0 || రేటు->den <= 0)
+        తిరిగి AVERROR(EINVAL);
+    తిరిగి 0;
 }
 
-typedef struct ColorEntry {
-    const char *name;            ///< a string representing the name of the color
+రకనిర్వచనం నిర్మాణం Color_నమోదు {
+    స్థిరరాశి అక్షరం *name;            ///< a string representing the name of the color
     uint8_t     rgb_color[3];    ///< RGB values for the color
-} ColorEntry;
+} Color_నమోదు;
 
-static const ColorEntry color_table[] = {
+స్థిర స్థిరరాశి Color_నమోదు color_పట్టిక[] = {
     { "AliceBlue",            { 0xF0, 0xF8, 0xFF } },
     { "AntiqueWhite",         { 0xFA, 0xEB, 0xD7 } },
     { "Aqua",                 { 0x00, 0xFF, 0xFF } },
@@ -349,234 +349,234 @@ static const ColorEntry color_table[] = {
     { "YellowGreen",          { 0x9A, 0xCD, 0x32 } },
 };
 
-static int color_table_compare(const void *lhs, const void *rhs)
+స్థిర పూర్ణాంకం color_పట్టిక_compare(స్థిరరాశి శూన్య *lhs, స్థిరరాశి శూన్య *rhs)
 {
-    return av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
+    తిరిగి av_strcasecmp(lhs, ((స్థిరరాశి Color_నమోదు *)rhs)->name);
 }
 
-#define ALPHA_SEP '@'
+#నిర్వచించు ALPHA_SEP '@'
 
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx)
+పూర్ణాంకం av_parse_color(uint8_t *rgba_color, స్థిరరాశి అక్షరం *color_string, పూర్ణాంకం slen,
+                   శూన్య *log_ctx)
 {
-    char *tail, color_string2[128];
-    const ColorEntry *entry;
-    int len, hex_offset = 0;
+    అక్షరం *తోక, color_string2[128];
+    స్థిరరాశి Color_నమోదు *నమోదు_2;
+    పూర్ణాంకం len, hex_స్థానభ్రంశం = 0;
 
-    if (color_string[0] == '#') {
-        hex_offset = 1;
-    } else if (!strncmp(color_string, "0x", 2))
-        hex_offset = 2;
+    ఒకవేళ (color_string[0] == '#') {
+        hex_స్థానభ్రంశం = 1;
+    } లేకపోతే ఒకవేళ (!అక్షరశ్రేణి_పోలిక(color_string, "0x", 2))
+        hex_స్థానభ్రంశం = 2;
 
-    if (slen < 0)
-        slen = strlen(color_string);
-    av_strlcpy(color_string2, color_string + hex_offset,
-               FFMIN(slen-hex_offset+1, sizeof(color_string2)));
-    if ((tail = strchr(color_string2, ALPHA_SEP)))
-        *tail++ = 0;
-    len = strlen(color_string2);
+    ఒకవేళ (slen < 0)
+        slen = అక్షరశ్రేణి_పొడవు(color_string);
+    av_strlcpy(color_string2, color_string + hex_స్థానభ్రంశం,
+               FFMIN(slen-hex_స్థానభ్రంశం+1, పరిమాణం(color_string2)));
+    ఒకవేళ ((తోక = strchr(color_string2, ALPHA_SEP)))
+        *తోక++ = 0;
+    len = అక్షరశ్రేణి_పొడవు(color_string2);
     rgba_color[3] = 255;
 
-    if (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
-        int rgba = av_get_random_seed();
+    ఒకవేళ (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
+        పూర్ణాంకం rgba = av_get_random_విత్తనం();
         rgba_color[0] = rgba >> 24;
         rgba_color[1] = rgba >> 16;
         rgba_color[2] = rgba >> 8;
         rgba_color[3] = rgba;
-    } else if (hex_offset ||
+    } లేకపోతే ఒకవేళ (hex_స్థానభ్రంశం ||
                strspn(color_string2, "0123456789ABCDEFabcdef") == len) {
-        char *tail;
-        unsigned int rgba = strtoul(color_string2, &tail, 16);
+        అక్షరం *తోక;
+        గుర్తులేని పూర్ణాంకం rgba = strtoul(color_string2, &తోక, 16);
 
-        if (*tail || (len != 6 && len != 8)) {
+        ఒకవేళ (*తోక || (len != 6 && len != 8)) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid 0xRRGGBB[AA] color string: '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
-        if (len == 8) {
+        ఒకవేళ (len == 8) {
             rgba_color[3] = rgba;
             rgba >>= 8;
         }
         rgba_color[0] = rgba >> 16;
         rgba_color[1] = rgba >> 8;
         rgba_color[2] = rgba;
-    } else {
-        entry = bsearch(color_string2,
-                        color_table,
-                        FF_ARRAY_ELEMS(color_table),
-                        sizeof(ColorEntry),
-                        color_table_compare);
-        if (!entry) {
+    } లేకపోతే {
+        నమోదు_2 = bsearch(color_string2,
+                        color_పట్టిక,
+                        FF_ARRAY_ELEMS(color_పట్టిక),
+                        పరిమాణం(Color_నమోదు),
+                        color_పట్టిక_compare);
+        ఒకవేళ (!నమోదు_2) {
             av_log(log_ctx, AV_LOG_ERROR, "Cannot find color '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
-        memcpy(rgba_color, entry->rgb_color, 3);
+        జ్ఞాపకం_నకలు(rgba_color, నమోదు_2->rgb_color, 3);
     }
 
-    if (tail) {
-        double alpha;
-        const char *alpha_string = tail;
-        if (!strncmp(alpha_string, "0x", 2)) {
-            alpha = strtoul(alpha_string, &tail, 16);
-        } else {
-            double norm_alpha = strtod(alpha_string, &tail);
-            if (norm_alpha < 0.0 || norm_alpha > 1.0)
+    ఒకవేళ (తోక) {
+        ద్విగుణ alpha;
+        స్థిరరాశి అక్షరం *alpha_string = తోక;
+        ఒకవేళ (!అక్షరశ్రేణి_పోలిక(alpha_string, "0x", 2)) {
+            alpha = strtoul(alpha_string, &తోక, 16);
+        } లేకపోతే {
+            ద్విగుణ norm_alpha = strtod(alpha_string, &తోక);
+            ఒకవేళ (norm_alpha < 0.0 || norm_alpha > 1.0)
                 alpha = 256;
-            else
+            లేకపోతే
                 alpha = 255 * norm_alpha;
         }
 
-        if (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
+        ఒకవేళ (తోక == alpha_string || *తోక || alpha > 255 || alpha < 0) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid alpha value specifier '%s' in '%s'\n",
                    alpha_string, color_string);
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
         rgba_color[3] = alpha;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgbp)
+స్థిరరాశి అక్షరం *av_get_తెలిసిన_color_name(పూర్ణాంకం color_idx, స్థిరరాశి uint8_t **rgbp)
 {
-    const ColorEntry *color;
+    స్థిరరాశి Color_నమోదు *color;
 
-    if ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
-        return NULL;
+    ఒకవేళ ((గుర్తులేని)color_idx >= FF_ARRAY_ELEMS(color_పట్టిక))
+        తిరిగి ఖాళీ;
 
-    color = &color_table[color_idx];
-    if (rgbp)
+    color = &color_పట్టిక[color_idx];
+    ఒకవేళ (rgbp)
         *rgbp = color->rgb_color;
 
-    return color->name;
+    తిరిగి color->name;
 }
 
 /* get a positive number between n_min and n_max, for a maximum length
    of len_max. Return -1 if error. */
-static int date_get_num(const char **pp,
-                        int n_min, int n_max, int len_max)
+స్థిర పూర్ణాంకం date_get_అంకె(స్థిరరాశి అక్షరం **pp,
+                        పూర్ణాంకం n_min, పూర్ణాంకం n_max, పూర్ణాంకం len_max)
 {
-    int i, val, c;
-    const char *p;
+    పూర్ణాంకం i, val, c;
+    స్థిరరాశి అక్షరం *p;
 
     p = *pp;
     val = 0;
-    for(i = 0; i < len_max; i++) {
+    కొరకు(i = 0; i < len_max; i++) {
         c = *p;
-        if (!av_isdigit(c))
-            break;
+        ఒకవేళ (!av_isdigit(c))
+            ఆపు;
         val = (val * 10) + c - '0';
         p++;
     }
     /* no number read ? */
-    if (p == *pp)
-        return -1;
-    if (val < n_min || val > n_max)
-        return -1;
+    ఒకవేళ (p == *pp)
+        తిరిగి -1;
+    ఒకవేళ (val < n_min || val > n_max)
+        తిరిగి -1;
     *pp = p;
-    return val;
+    తిరిగి val;
 }
 
-static int date_get_month(const char **pp) {
-    int i = 0;
-    for (; i < 12; i++) {
-        if (!av_strncasecmp(*pp, months[i], 3)) {
-            const char *mo_full = months[i] + 3;
-            int len = strlen(mo_full);
+స్థిర పూర్ణాంకం date_get_month(స్థిరరాశి అక్షరం **pp) {
+    పూర్ణాంకం i = 0;
+    కొరకు (; i < 12; i++) {
+        ఒకవేళ (!av_strncasecmp(*pp, months[i], 3)) {
+            స్థిరరాశి అక్షరం *mo_నిండిన = months[i] + 3;
+            పూర్ణాంకం len = అక్షరశ్రేణి_పొడవు(mo_నిండిన);
             *pp += 3;
-            if (len > 0 && !av_strncasecmp(*pp, mo_full, len))
+            ఒకవేళ (len > 0 && !av_strncasecmp(*pp, mo_నిండిన, len))
                 *pp += len;
-            return i;
+            తిరిగి i;
         }
     }
-    return -1;
+    తిరిగి -1;
 }
 
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt)
+అక్షరం *av_small_strptime(స్థిరరాశి అక్షరం *p, స్థిరరాశి అక్షరం *fmt, నిర్మాణం tm *dt)
 {
-    int c, val;
+    పూర్ణాంకం c, val;
 
-    while((c = *fmt++)) {
-        if (c != '%') {
-            if (av_isspace(c))
-                for (; *p && av_isspace(*p); p++);
-            else if (*p != c)
-                return NULL;
-            else p++;
-            continue;
+    అయితే((c = *fmt++)) {
+        ఒకవేళ (c != '%') {
+            ఒకవేళ (av_isspace(c))
+                కొరకు (; *p && av_isspace(*p); p++);
+            లేకపోతే ఒకవేళ (*p != c)
+                తిరిగి ఖాళీ;
+            లేకపోతే p++;
+            కొనసాగు;
         }
 
         c = *fmt++;
-        switch(c) {
-        case 'H':
-        case 'J':
-            val = date_get_num(&p, 0, c == 'H' ? 23 : INT_MAX, c == 'H' ? 2 : 4);
+        ఎంపిక(c) {
+        స్థితి 'H':
+        స్థితి 'J':
+            val = date_get_అంకె(&p, 0, c == 'H' ? 23 : గరిష్ఠ_పూర్ణాంకం, c == 'H' ? 2 : 4);
 
-            if (val == -1)
-                return NULL;
+            ఒకవేళ (val == -1)
+                తిరిగి ఖాళీ;
             dt->tm_hour = val;
-            break;
-        case 'M':
-            val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            ఆపు;
+        స్థితి 'M':
+            val = date_get_అంకె(&p, 0, 59, 2);
+            ఒకవేళ (val == -1)
+                తిరిగి ఖాళీ;
             dt->tm_min = val;
-            break;
-        case 'S':
-            val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            ఆపు;
+        స్థితి 'S':
+            val = date_get_అంకె(&p, 0, 59, 2);
+            ఒకవేళ (val == -1)
+                తిరిగి ఖాళీ;
             dt->tm_sec = val;
-            break;
-        case 'Y':
-            val = date_get_num(&p, 0, 9999, 4);
-            if (val == -1)
-                return NULL;
+            ఆపు;
+        స్థితి 'Y':
+            val = date_get_అంకె(&p, 0, 9999, 4);
+            ఒకవేళ (val == -1)
+                తిరిగి ఖాళీ;
             dt->tm_year = val - 1900;
-            break;
-        case 'm':
-            val = date_get_num(&p, 1, 12, 2);
-            if (val == -1)
-                return NULL;
+            ఆపు;
+        స్థితి 'm':
+            val = date_get_అంకె(&p, 1, 12, 2);
+            ఒకవేళ (val == -1)
+                తిరిగి ఖాళీ;
             dt->tm_mon = val - 1;
-            break;
-        case 'd':
-            val = date_get_num(&p, 1, 31, 2);
-            if (val == -1)
-                return NULL;
+            ఆపు;
+        స్థితి 'd':
+            val = date_get_అంకె(&p, 1, 31, 2);
+            ఒకవేళ (val == -1)
+                తిరిగి ఖాళీ;
             dt->tm_mday = val;
-            break;
-        case 'T':
+            ఆపు;
+        స్థితి 'T':
             p = av_small_strptime(p, "%H:%M:%S", dt);
-            if (!p)
-                return NULL;
-            break;
-        case 'b':
-        case 'B':
-        case 'h':
+            ఒకవేళ (!p)
+                తిరిగి ఖాళీ;
+            ఆపు;
+        స్థితి 'b':
+        స్థితి 'B':
+        స్థితి 'h':
             val = date_get_month(&p);
-            if (val == -1)
-                return NULL;
+            ఒకవేళ (val == -1)
+                తిరిగి ఖాళీ;
             dt->tm_mon = val;
-            break;
-        case '%':
-            if (*p++ != '%')
-                return NULL;
-            break;
-        default:
-            return NULL;
+            ఆపు;
+        స్థితి '%':
+            ఒకవేళ (*p++ != '%')
+                తిరిగి ఖాళీ;
+            ఆపు;
+        అప్రమేయ:
+            తిరిగి ఖాళీ;
         }
     }
 
-    return (char*)p;
+    తిరిగి (అక్షరం*)p;
 }
 
-time_t av_timegm(struct tm *tm)
+time_t av_timegm(నిర్మాణం tm *tm)
 {
     time_t t;
 
-    int y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
+    పూర్ణాంకం y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
 
-    if (m < 3) {
+    ఒకవేళ (m < 3) {
         m += 12;
         y--;
     }
@@ -586,147 +586,147 @@ time_t av_timegm(struct tm *tm)
 
     t += 3600 * tm->tm_hour + 60 * tm->tm_min + tm->tm_sec;
 
-    return t;
+    తిరిగి t;
 }
 
-int av_parse_time(int64_t *timeval, const char *timestr, int duration)
+పూర్ణాంకం av_parse_సమయం(int64_t *timeval, స్థిరరాశి అక్షరం *timestr, పూర్ణాంకం duration)
 {
-    const char *p, *q;
+    స్థిరరాశి అక్షరం *p, *q;
     int64_t t, now64;
     time_t now;
-    struct tm dt = { 0 }, tmbuf;
-    int today = 0, negative = 0, microseconds = 0, suffix = 1000000;
-    int i;
-    static const char * const date_fmt[] = {
+    నిర్మాణం tm dt = { 0 }, tmbuf;
+    పూర్ణాంకం today = 0, negative = 0, microseconds = 0, suffix = 1000000;
+    పూర్ణాంకం i;
+    స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి date_fmt[] = {
         "%Y - %m - %d",
         "%Y%m%d",
     };
-    static const char * const time_fmt[] = {
+    స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి సమయం_fmt[] = {
         "%H:%M:%S",
         "%H%M%S",
     };
-    static const char * const tz_fmt[] = {
+    స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి tz_fmt[] = {
         "%H:%M",
         "%H%M",
         "%H",
     };
 
     p = timestr;
-    q = NULL;
+    q = ఖాళీ;
     *timeval = INT64_MIN;
-    if (!duration) {
+    ఒకవేళ (!duration) {
         now64 = av_gettime();
         now = now64 / 1000000;
 
-        if (!av_strcasecmp(timestr, "now")) {
+        ఒకవేళ (!av_strcasecmp(timestr, "now")) {
             *timeval = now64;
-            return 0;
+            తిరిగి 0;
         }
 
         /* parse the year-month-day part */
-        for (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
+        కొరకు (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
             q = av_small_strptime(p, date_fmt[i], &dt);
-            if (q)
-                break;
+            ఒకవేళ (q)
+                ఆపు;
         }
 
         /* if the year-month-day part is missing, then take the
          * current year-month-day time */
-        if (!q) {
+        ఒకవేళ (!q) {
             today = 1;
             q = p;
         }
         p = q;
 
-        if (*p == 'T' || *p == 't')
+        ఒకవేళ (*p == 'T' || *p == 't')
             p++;
-        else
-            while (av_isspace(*p))
+        లేకపోతే
+            అయితే (av_isspace(*p))
                 p++;
 
         /* parse the hour-minute-second part */
-        for (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
-            q = av_small_strptime(p, time_fmt[i], &dt);
-            if (q)
-                break;
+        కొరకు (i = 0; i < FF_ARRAY_ELEMS(సమయం_fmt); i++) {
+            q = av_small_strptime(p, సమయం_fmt[i], &dt);
+            ఒకవేళ (q)
+                ఆపు;
         }
-    } else {
+    } లేకపోతే {
         /* parse timestr as a duration */
-        if (p[0] == '-') {
+        ఒకవేళ (p[0] == '-') {
             negative = 1;
             ++p;
         }
         /* parse timestr as HH:MM:SS */
         q = av_small_strptime(p, "%J:%M:%S", &dt);
-        if (!q) {
+        ఒకవేళ (!q) {
             /* parse timestr as MM:SS */
             q = av_small_strptime(p, "%M:%S", &dt);
             dt.tm_hour = 0;
         }
-        if (!q) {
-            char *o;
+        ఒకవేళ (!q) {
+            అక్షరం *o;
             /* parse timestr as S+ */
             errno = 0;
             t = strtoll(p, &o, 10);
-            if (o == p) /* the parsing didn't succeed */
-                return AVERROR(EINVAL);
-            if (errno == ERANGE)
-                return AVERROR(ERANGE);
+            ఒకవేళ (o == p) /* the parsing didn't succeed */
+                తిరిగి AVERROR(EINVAL);
+            ఒకవేళ (errno == ERANGE)
+                తిరిగి AVERROR(ERANGE);
             q = o;
-        } else {
+        } లేకపోతే {
             t = dt.tm_hour * 3600 + dt.tm_min * 60 + dt.tm_sec;
         }
     }
 
     /* Now we have all the fields that we can get */
-    if (!q)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!q)
+        తిరిగి AVERROR(EINVAL);
 
     /* parse the .m... part */
-    if (*q == '.') {
-        int n;
+    ఒకవేళ (*q == '.') {
+        పూర్ణాంకం n;
         q++;
-        for (n = 100000; n >= 1; n /= 10, q++) {
-            if (!av_isdigit(*q))
-                break;
+        కొరకు (n = 100000; n >= 1; n /= 10, q++) {
+            ఒకవేళ (!av_isdigit(*q))
+                ఆపు;
             microseconds += n * (*q - '0');
         }
-        while (av_isdigit(*q))
+        అయితే (av_isdigit(*q))
             q++;
     }
 
-    if (duration) {
-        if (q[0] == 'm' && q[1] == 's') {
+    ఒకవేళ (duration) {
+        ఒకవేళ (q[0] == 'm' && q[1] == 's') {
             suffix = 1000;
             microseconds /= 1000;
             q += 2;
-        } else if (q[0] == 'u' && q[1] == 's') {
+        } లేకపోతే ఒకవేళ (q[0] == 'u' && q[1] == 's') {
             suffix = 1;
             microseconds = 0;
             q += 2;
-        } else if (*q == 's')
+        } లేకపోతే ఒకవేళ (*q == 's')
             q++;
-    } else {
-        int is_utc = *q == 'Z' || *q == 'z';
-        int tzoffset = 0;
+    } లేకపోతే {
+        పూర్ణాంకం is_utc = *q == 'Z' || *q == 'z';
+        పూర్ణాంకం tzoffset = 0;
         q += is_utc;
-        if (!today && !is_utc && (*q == '+' || *q == '-')) {
-            struct tm tz = { 0 };
-            int sign = (*q == '+' ? -1 : 1);
+        ఒకవేళ (!today && !is_utc && (*q == '+' || *q == '-')) {
+            నిర్మాణం tm tz = { 0 };
+            పూర్ణాంకం sign = (*q == '+' ? -1 : 1);
             q++;
             p = q;
-            for (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
+            కొరకు (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
                 q = av_small_strptime(p, tz_fmt[i], &tz);
-                if (q)
-                    break;
+                ఒకవేళ (q)
+                    ఆపు;
             }
-            if (!q)
-                return AVERROR(EINVAL);
+            ఒకవేళ (!q)
+                తిరిగి AVERROR(EINVAL);
             tzoffset = sign * (tz.tm_hour * 60 + tz.tm_min) * 60;
             is_utc = 1;
         }
-        if (today) { /* fill in today's date */
-            struct tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
+        ఒకవేళ (today) { /* fill in today's date */
+            నిర్మాణం tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
             dt2.tm_hour = dt.tm_hour;
             dt2.tm_min  = dt.tm_min;
             dt2.tm_sec  = dt.tm_sec;
@@ -738,56 +738,56 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     }
 
     /* Check that we are at the end of the string */
-    if (*q)
-        return AVERROR(EINVAL);
+    ఒకవేళ (*q)
+        తిరిగి AVERROR(EINVAL);
 
-    if (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
-        return AVERROR(ERANGE);
+    ఒకవేళ (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
+        తిరిగి AVERROR(ERANGE);
     t *= suffix;
-    if (INT64_MAX - microseconds < t)
-        return AVERROR(ERANGE);
+    ఒకవేళ (INT64_MAX - microseconds < t)
+        తిరిగి AVERROR(ERANGE);
     t += microseconds;
-    if (t == INT64_MIN && negative)
-        return AVERROR(ERANGE);
+    ఒకవేళ (t == INT64_MIN && negative)
+        తిరిగి AVERROR(ERANGE);
     *timeval = negative ? -t : t;
-    return 0;
+    తిరిగి 0;
 }
 
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info)
+పూర్ణాంకం av_కనుగొను_info_ట్యాగ్(అక్షరం *arg, పూర్ణాంకం arg_కొలత, స్థిరరాశి అక్షరం *tag1, స్థిరరాశి అక్షరం *info)
 {
-    const char *p;
-    char tag[128], *q;
+    స్థిరరాశి అక్షరం *p;
+    అక్షరం ట్యాగ్[128], *q;
 
     p = info;
-    if (*p == '?')
+    ఒకవేళ (*p == '?')
         p++;
-    for(;;) {
-        q = tag;
-        while (*p != '\0' && *p != '=' && *p != '&') {
-            if ((q - tag) < sizeof(tag) - 1)
+    కొరకు(;;) {
+        q = ట్యాగ్;
+        అయితే (*p != '\0' && *p != '=' && *p != '&') {
+            ఒకవేళ ((q - ట్యాగ్) < పరిమాణం(ట్యాగ్) - 1)
                 *q++ = *p;
             p++;
         }
         *q = '\0';
         q = arg;
-        if (*p == '=') {
+        ఒకవేళ (*p == '=') {
             p++;
-            while (*p != '&' && *p != '\0') {
-                if ((q - arg) < arg_size - 1) {
-                    if (*p == '+')
+            అయితే (*p != '&' && *p != '\0') {
+                ఒకవేళ ((q - arg) < arg_కొలత - 1) {
+                    ఒకవేళ (*p == '+')
                         *q++ = ' ';
-                    else
+                    లేకపోతే
                         *q++ = *p;
                 }
                 p++;
             }
         }
         *q = '\0';
-        if (!strcmp(tag, tag1))
-            return 1;
-        if (*p != '&')
-            break;
+        ఒకవేళ (!strcmp(ట్యాగ్, tag1))
+            తిరిగి 1;
+        ఒకవేళ (*p != '&')
+            ఆపు;
         p++;
     }
-    return 0;
+    తిరిగి 0;
 }

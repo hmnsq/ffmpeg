@@ -16,21 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_BSWAP_H
-#define AVUTIL_RISCV_BSWAP_H
+#నిర్వచితం_కాకపోతే AVUTIL_RISCV_BSWAP_H
+#నిర్వచించు AVUTIL_RISCV_BSWAP_H
 
-#include <stdint.h>
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/riscv/cpu.h"
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/riscv/cpu.h"
 
-#if defined (__GNUC__) || defined (__clang__)
-#define av_bswap16 __builtin_bswap16
+#ఒకవేళ defined (__GNUC__) || defined (__clang__)
+#నిర్వచించు av_bswap16 __builtin_bswap16
 
-static av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
+స్థిర av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ఒకవేళ HAVE_RV && !defined(__riscv_zbb)
+    ఒకవేళ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), 1)) {
         uintptr_t y;
 
@@ -39,18 +39,18 @@ static av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
             ".option arch, +zbb\n"
             "rev8    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        return y >> (__riscv_xlen - 32);
+        తిరిగి y >> (__riscv_xlen - 32);
     }
-#endif
-    return __builtin_bswap32(x);
+#అయితే_ముగింపు
+    తిరిగి __builtin_bswap32(x);
 }
-#define av_bswap32 av_bswap32_rv
+#నిర్వచించు av_bswap32 av_bswap32_rv
 
-#if __riscv_xlen >= 64
-static av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
+#ఒకవేళ __riscv_xlen >= 64
+స్థిర av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ఒకవేళ HAVE_RV && !defined(__riscv_zbb)
+    ఒకవేళ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), 1)) {
         uintptr_t y;
 
@@ -59,14 +59,14 @@ static av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
             ".option arch, +zbb\n"
             "rev8    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        return y >> (__riscv_xlen - 64);
+        తిరిగి y >> (__riscv_xlen - 64);
     }
-#endif
-    return __builtin_bswap64(x);
+#అయితే_ముగింపు
+    తిరిగి __builtin_bswap64(x);
 }
-#define av_bswap64 av_bswap64_rv
-#endif
+#నిర్వచించు av_bswap64 av_bswap64_rv
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు
 
-#endif /* AVUTIL_RISCV_BSWAP_H */
+#అయితే_ముగింపు /* AVUTIL_RISCV_BSWAP_H */

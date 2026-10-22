@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_QSORT_H
-#define AVUTIL_QSORT_H
+#నిర్వచితం_కాకపోతే AVUTIL_QSORT_H
+#నిర్వచించు AVUTIL_QSORT_H
 
-#include "macros.h"
+#అన్తర్భావ "macros.h"
 
 
 /**
@@ -30,69 +30,69 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
-    int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
-    while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
-                type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+#నిర్వచించు AV_QSORT(p, అంకె, type, cmp) చేయి {\
+    శూన్య *దొంతర[64][2];\
+    పూర్ణాంకం sp= 1;\
+    దొంతర[0][0] = p;\
+    దొంతర[0][1] = (p)+(అంకె)-1;\
+    అయితే(sp){\
+        type *ప్రారంభం= దొంతర[--sp][0];\
+        type *చివర  = దొంతర[  sp][1];\
+        అయితే(ప్రారంభం < చివర){\
+            ఒకవేళ(ప్రారంభం < చివర-1) {\
+                పూర్ణాంకం checksort=0;\
+                type *కుడి = చివర-2;\
+                type *ఎడమ  = ప్రారంభం+1;\
+                type *mid = ప్రారంభం + ((చివర-ప్రారంభం)>>1);\
+                ఒకవేళ(cmp(ప్రారంభం, చివర) > 0) {\
+                    ఒకవేళ(cmp(  చివర, mid) > 0) FFSWAP(type, *ప్రారంభం, *mid);\
+                    లేకపోతే                    FFSWAP(type, *ప్రారంభం, *చివర);\
+                }లేకపోతే{\
+                    ఒకవేళ(cmp(ప్రారంభం, mid) > 0) FFSWAP(type, *ప్రారంభం, *mid);\
+                    లేకపోతే checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
-                    FFSWAP(type, *mid, *end);\
+                ఒకవేళ(cmp(mid, చివర) > 0){ \
+                    FFSWAP(type, *mid, *చివర);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
-                FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                ఒకవేళ(ప్రారంభం == చివర-2) ఆపు;\
+                FFSWAP(type, చివర[-1], *mid);\
+                అయితే(ఎడమ <= కుడి){\
+                    అయితే(ఎడమ<=కుడి && cmp(ఎడమ, చివర-1) < 0)\
+                        ఎడమ++;\
+                    అయితే(ఎడమ<=కుడి && cmp(కుడి, చివర-1) > 0)\
+                        కుడి--;\
+                    ఒకవేళ(ఎడమ <= కుడి){\
+                        FFSWAP(type, *ఎడమ, *కుడి);\
+                        ఎడమ++;\
+                        కుడి--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
-                    mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                FFSWAP(type, చివర[-1], *ఎడమ);\
+                ఒకవేళ(checksort && (mid == ఎడమ-1 || mid == ఎడమ)){\
+                    mid= ప్రారంభం;\
+                    అయితే(mid<చివర && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    ఒకవేళ(mid==చివర)\
+                        ఆపు;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
-                }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                ఒకవేళ(చివర-ఎడమ < ఎడమ-ప్రారంభం){\
+                    దొంతర[sp  ][0]= ప్రారంభం;\
+                    దొంతర[sp++][1]= కుడి;\
+                    ప్రారంభం = ఎడమ+1;\
+                }లేకపోతే{\
+                    దొంతర[sp  ][0]= ఎడమ+1;\
+                    దొంతర[sp++][1]= చివర;\
+                    చివర = కుడి;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
-                    FFSWAP(type, *start, *end);\
-                break;\
+            }లేకపోతే{\
+                ఒకవేళ(cmp(ప్రారంభం, చివర) > 0)\
+                    FFSWAP(type, *ప్రారంభం, *చివర);\
+                ఆపు;\
             }\
         }\
     }\
-} while (0)
+} అయితే (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -100,23 +100,23 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
-    unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
-            unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+#నిర్వచించు AV_MSORT(p, tmp, అంకె, type, cmp) చేయి {\
+    గుర్తులేని i, j, అడుగు;\
+    కొరకు(అడుగు=1; అడుగు<(అంకె); అడుగు+=అడుగు){\
+        కొరకు(i=0; i<(అంకె); i+=2*అడుగు){\
+            గుర్తులేని a[2] = {i, i+అడుగు};\
+            గుర్తులేని చివర = FFMIN(i+2*అడుగు, (అంకె));\
+            కొరకు(j=i; a[0]<i+అడుగు && a[1]<చివర; j++){\
+                పూర్ణాంకం idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            ఒకవేళ(a[0]>=i+అడుగు) a[0] = a[1];\
+            కొరకు(; j<చివర; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} అయితే (0)
 
-#endif /* AVUTIL_QSORT_H */
+#అయితే_ముగింపు /* AVUTIL_QSORT_H */

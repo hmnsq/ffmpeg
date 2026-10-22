@@ -18,34 +18,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_CPU_H
-#define AVUTIL_RISCV_CPU_H
+#నిర్వచితం_కాకపోతే AVUTIL_RISCV_CPU_H
+#నిర్వచించు AVUTIL_RISCV_CPU_H
 
-#include "config.h"
-#include <stdbool.h>
-#include <stddef.h>
-#include "libavutil/attributes_internal.h"
-#include "libavutil/cpu.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ <stdbool.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ "libavutil/attributes_internal.h"
+#అన్తర్భావ "libavutil/cpu.h"
 
-#ifndef __riscv_zbb
-extern attribute_visibility_hidden bool ff_rv_zbb_supported;
-#endif
+#నిర్వచితం_కాకపోతే __riscv_zbb
+బాహ్య attribute_visibility_hidden bool ff_rv_zbb_supported;
+#అయితే_ముగింపు
 
-static inline av_const bool ff_rv_zbb_support(void)
+స్థిర అంతఃవరుస av_const bool ff_rv_zbb_support(శూన్య)
 {
-#ifndef __riscv_zbb
-    return ff_rv_zbb_supported;
-#else
-    return true;
-#endif
+#నిర్వచితం_కాకపోతే __riscv_zbb
+    తిరిగి ff_rv_zbb_supported;
+#లేకపోతే
+    తిరిగి true;
+#అయితే_ముగింపు
 }
 
-#if HAVE_RVV
+#ఒకవేళ HAVE_RVV
 /**
  * Returns the vector size in bytes (always a power of two and at least 4).
  * This is undefined behaviour if vectors are not implemented.
  */
-static inline av_const size_t ff_get_rv_vlenb(void)
+స్థిర అంతఃవరుస av_const size_t ff_get_rv_vlenb(శూన్య)
 {
     size_t vlenb;
 
@@ -54,27 +54,27 @@ static inline av_const size_t ff_get_rv_vlenb(void)
         ".option arch, +v\n"
         "    csrr %0, vlenb\n"
         ".option pop\n" : "=r" (vlenb));
-    return vlenb;
+    తిరిగి vlenb;
 }
 
 /**
  * Checks that the vector bit-size is at least the given value.
  * This is potentially undefined behaviour if vectors are not implemented.
  */
-static inline av_const bool ff_rv_vlen_least(unsigned int bits)
+స్థిర అంతఃవరుస av_const bool ff_rv_vlen_కనిష్ఠ(గుర్తులేని పూర్ణాంకం బిట్లు)
 {
-#ifdef __riscv_v_min_vlen
-    if (bits <= __riscv_v_min_vlen)
-        return true;
-#else
+#నిర్వచితమైతే __riscv_v_min_vlen
+    ఒకవేళ (బిట్లు <= __riscv_v_min_vlen)
+        తిరిగి true;
+#లేకపోతే
     /*
      * Vector lengths smaller than 128 bits are only possible in embedded cases
      * and cannot be run-time detected, so we can assume 128 bits at least.
      */
-    if (bits <= 128)
-        return true;
-#endif
-    return bits <= (8 * ff_get_rv_vlenb());
+    ఒకవేళ (బిట్లు <= 128)
+        తిరిగి true;
+#అయితే_ముగింపు
+    తిరిగి బిట్లు <= (8 * ff_get_rv_vlenb());
 }
-#endif
-#endif /* HAVE_RVV */
+#అయితే_ముగింపు
+#అయితే_ముగింపు /* HAVE_RVV */

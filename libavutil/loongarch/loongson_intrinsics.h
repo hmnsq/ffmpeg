@@ -23,8 +23,8 @@
  *
  */
 
-#ifndef AVUTIL_LOONGARCH_LOONGSON_INTRINSICS_H
-#define AVUTIL_LOONGARCH_LOONGSON_INTRINSICS_H
+#నిర్వచితం_కాకపోతే AVUTIL_LOONGARCH_LOONGSON_INTRINSICS_H
+#నిర్వచించు AVUTIL_LOONGARCH_LOONGSON_INTRINSICS_H
 
 /*
  * Copyright (c) 2021 Loongson Technology Corporation Limited
@@ -37,58 +37,58 @@
  *
  */
 
-#ifndef LOONGSON_INTRINSICS_H
-#define LOONGSON_INTRINSICS_H
+#నిర్వచితం_కాకపోతే LOONGSON_INTRINSICS_H
+#నిర్వచించు LOONGSON_INTRINSICS_H
 
 /**
  * MAJOR version: Macro usage changes.
  * MINOR version: Add new functions, or bug fixes.
  * MICRO version: Comment changes or implementation changes.
  */
-#define LSOM_VERSION_MAJOR 1
-#define LSOM_VERSION_MINOR 1
-#define LSOM_VERSION_MICRO 0
+#నిర్వచించు LSOM_సంస్కరణ_MAJOR 1
+#నిర్వచించు LSOM_సంస్కరణ_MINOR 1
+#నిర్వచించు LSOM_సంస్కరణ_MICRO 0
 
-#define DUP2_ARG1(_INS, _IN0, _IN1, _OUT0, _OUT1) \
+#నిర్వచించు DUP2_ARG1(_INS, _IN0, _IN1, _OUT0, _OUT1) \
   {                                               \
     _OUT0 = _INS(_IN0);                           \
     _OUT1 = _INS(_IN1);                           \
   }
 
-#define DUP2_ARG2(_INS, _IN0, _IN1, _IN2, _IN3, _OUT0, _OUT1) \
+#నిర్వచించు DUP2_ARG2(_INS, _IN0, _IN1, _IN2, _IN3, _OUT0, _OUT1) \
   {                                                           \
     _OUT0 = _INS(_IN0, _IN1);                                 \
     _OUT1 = _INS(_IN2, _IN3);                                 \
   }
 
-#define DUP2_ARG3(_INS, _IN0, _IN1, _IN2, _IN3, _IN4, _IN5, _OUT0, _OUT1) \
+#నిర్వచించు DUP2_ARG3(_INS, _IN0, _IN1, _IN2, _IN3, _IN4, _IN5, _OUT0, _OUT1) \
   {                                                                       \
     _OUT0 = _INS(_IN0, _IN1, _IN2);                                       \
     _OUT1 = _INS(_IN3, _IN4, _IN5);                                       \
   }
 
-#define DUP4_ARG1(_INS, _IN0, _IN1, _IN2, _IN3, _OUT0, _OUT1, _OUT2, _OUT3) \
+#నిర్వచించు DUP4_ARG1(_INS, _IN0, _IN1, _IN2, _IN3, _OUT0, _OUT1, _OUT2, _OUT3) \
   {                                                                         \
     DUP2_ARG1(_INS, _IN0, _IN1, _OUT0, _OUT1);                              \
     DUP2_ARG1(_INS, _IN2, _IN3, _OUT2, _OUT3);                              \
   }
 
-#define DUP4_ARG2(_INS, _IN0, _IN1, _IN2, _IN3, _IN4, _IN5, _IN6, _IN7, _OUT0, \
+#నిర్వచించు DUP4_ARG2(_INS, _IN0, _IN1, _IN2, _IN3, _IN4, _IN5, _IN6, _IN7, _OUT0, \
                   _OUT1, _OUT2, _OUT3)                                         \
   {                                                                            \
     DUP2_ARG2(_INS, _IN0, _IN1, _IN2, _IN3, _OUT0, _OUT1);                     \
     DUP2_ARG2(_INS, _IN4, _IN5, _IN6, _IN7, _OUT2, _OUT3);                     \
   }
 
-#define DUP4_ARG3(_INS, _IN0, _IN1, _IN2, _IN3, _IN4, _IN5, _IN6, _IN7, _IN8, \
+#నిర్వచించు DUP4_ARG3(_INS, _IN0, _IN1, _IN2, _IN3, _IN4, _IN5, _IN6, _IN7, _IN8, \
                   _IN9, _IN10, _IN11, _OUT0, _OUT1, _OUT2, _OUT3)             \
   {                                                                           \
     DUP2_ARG3(_INS, _IN0, _IN1, _IN2, _IN3, _IN4, _IN5, _OUT0, _OUT1);        \
     DUP2_ARG3(_INS, _IN6, _IN7, _IN8, _IN9, _IN10, _IN11, _OUT2, _OUT3);      \
   }
 
-#ifdef __loongarch_sx
-#include <lsxintrin.h>
+#నిర్వచితమైతే __loongarch_sx
+#అన్తర్భావ <lsxintrin.h>
 /*
  * =============================================================================
  * Description : Dot product & addition of byte vector elements
@@ -106,13 +106,13 @@
  *         out : 23,40,41,26, 23,40,41,26
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2add_h_b(__m128i in_c, __m128i in_h,
-                                        __m128i in_l) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vdp2add_h_b(__m128i లోపల_c, __m128i లోపల_h,
+                                        __m128i లోపల_l) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmaddwev_h_b(in_c, in_h, in_l);
-  out = __lsx_vmaddwod_h_b(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lsx_vmaddwev_h_b(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lsx_vmaddwod_h_b(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -132,13 +132,13 @@ static inline __m128i __lsx_vdp2add_h_b(__m128i in_c, __m128i in_h,
  *         out : 23,40,41,26, 23,40,41,26
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2add_h_bu(__m128i in_c, __m128i in_h,
-                                         __m128i in_l) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vdp2add_h_bu(__m128i లోపల_c, __m128i లోపల_h,
+                                         __m128i లోపల_l) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmaddwev_h_bu(in_c, in_h, in_l);
-  out = __lsx_vmaddwod_h_bu(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lsx_vmaddwev_h_bu(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lsx_vmaddwod_h_bu(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -158,13 +158,13 @@ static inline __m128i __lsx_vdp2add_h_bu(__m128i in_c, __m128i in_h,
  *         out : -4,-24,-60,-112, 6,26,62,114
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2add_h_bu_b(__m128i in_c, __m128i in_h,
-                                           __m128i in_l) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vdp2add_h_bu_b(__m128i లోపల_c, __m128i లోపల_h,
+                                           __m128i లోపల_l) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmaddwev_h_bu_b(in_c, in_h, in_l);
-  out = __lsx_vmaddwod_h_bu_b(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lsx_vmaddwev_h_bu_b(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lsx_vmaddwod_h_bu_b(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -184,13 +184,13 @@ static inline __m128i __lsx_vdp2add_h_bu_b(__m128i in_c, __m128i in_h,
  *         out : 23,40,41,26
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2add_w_h(__m128i in_c, __m128i in_h,
-                                        __m128i in_l) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vdp2add_w_h(__m128i లోపల_c, __m128i లోపల_h,
+                                        __m128i లోపల_l) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmaddwev_w_h(in_c, in_h, in_l);
-  out = __lsx_vmaddwod_w_h(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lsx_vmaddwev_w_h(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lsx_vmaddwod_w_h(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -208,12 +208,12 @@ static inline __m128i __lsx_vdp2add_w_h(__m128i in_c, __m128i in_h,
  *         out : 22,38,38,22, 22,38,38,22
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2_h_b(__m128i in_h, __m128i in_l) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vdp2_h_b(__m128i లోపల_h, __m128i లోపల_l) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmulwev_h_b(in_h, in_l);
-  out = __lsx_vmaddwod_h_b(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lsx_vmulwev_h_b(లోపల_h, లోపల_l);
+  బహిర్గతం = __lsx_vmaddwod_h_b(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -231,12 +231,12 @@ static inline __m128i __lsx_vdp2_h_b(__m128i in_h, __m128i in_l) {
  *         out : 22,38,38,22, 22,38,38,22
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2_h_bu(__m128i in_h, __m128i in_l) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vdp2_h_bu(__m128i లోపల_h, __m128i లోపల_l) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmulwev_h_bu(in_h, in_l);
-  out = __lsx_vmaddwod_h_bu(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lsx_vmulwev_h_bu(లోపల_h, లోపల_l);
+  బహిర్గతం = __lsx_vmaddwod_h_bu(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -254,12 +254,12 @@ static inline __m128i __lsx_vdp2_h_bu(__m128i in_h, __m128i in_l) {
  *         out : 22,38,38,22, 22,38,38,6
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2_h_bu_b(__m128i in_h, __m128i in_l) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vdp2_h_bu_b(__m128i లోపల_h, __m128i లోపల_l) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmulwev_h_bu_b(in_h, in_l);
-  out = __lsx_vmaddwod_h_bu_b(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lsx_vmulwev_h_bu_b(లోపల_h, లోపల_l);
+  బహిర్గతం = __lsx_vmaddwod_h_bu_b(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -277,12 +277,12 @@ static inline __m128i __lsx_vdp2_h_bu_b(__m128i in_h, __m128i in_l) {
  *         out : 22,38,38,22
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2_w_h(__m128i in_h, __m128i in_l) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vdp2_w_h(__m128i లోపల_h, __m128i లోపల_l) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmulwev_w_h(in_h, in_l);
-  out = __lsx_vmaddwod_w_h(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lsx_vmulwev_w_h(లోపల_h, లోపల_l);
+  బహిర్గతం = __lsx_vmaddwod_w_h(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -302,12 +302,12 @@ static inline __m128i __lsx_vdp2_w_h(__m128i in_h, __m128i in_l) {
  *         out : 1,2,9,9, 1,9,9,9
  * =============================================================================
  */
-static inline __m128i __lsx_vclip_h(__m128i _in, __m128i min, __m128i max) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vclip_h(__m128i లోపల_3, __m128i min, __m128i max) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmax_h(min, _in);
-  out = __lsx_vmin_h(max, out);
-  return out;
+  బహిర్గతం = __lsx_vmax_h(min, లోపల_3);
+  బహిర్గతం = __lsx_vmin_h(max, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -322,12 +322,12 @@ static inline __m128i __lsx_vclip_h(__m128i _in, __m128i min, __m128i max) {
  *         out : 0,255,255,249, 0,255,255,249
  * =============================================================================
  */
-static inline __m128i __lsx_vclip255_h(__m128i _in) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vclip255_h(__m128i లోపల_3) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmaxi_h(_in, 0);
-  out = __lsx_vsat_hu(out, 7);
-  return out;
+  బహిర్గతం = __lsx_vmaxi_h(లోపల_3, 0);
+  బహిర్గతం = __lsx_vsat_hu(బహిర్గతం, 7);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -342,12 +342,12 @@ static inline __m128i __lsx_vclip255_h(__m128i _in) {
  *         out : 0,255,255,249
  * =============================================================================
  */
-static inline __m128i __lsx_vclip255_w(__m128i _in) {
-  __m128i out;
+స్థిర అంతఃవరుస __m128i __lsx_vclip255_w(__m128i లోపల_3) {
+  __m128i బహిర్గతం;
 
-  out = __lsx_vmaxi_w(_in, 0);
-  out = __lsx_vsat_wu(out, 7);
-  return out;
+  బహిర్గతం = __lsx_vmaxi_w(లోపల_3, 0);
+  బహిర్గతం = __lsx_vsat_wu(బహిర్గతం, 7);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -363,7 +363,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  *   _in1(out) : 1,2,3,4
  * =============================================================================
  */
-#define LSX_SWAP(_in0, _in1)         \
+#నిర్వచించు LSX_మార్పిడి(_in0, _in1)         \
   {                                  \
     _in0 = __lsx_vxor_v(_in0, _in1); \
     _in1 = __lsx_vxor_v(_in0, _in1); \
@@ -383,7 +383,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  *              13,14,15,16            4, 8,12,16
  * =============================================================================
  */
-#define LSX_TRANSPOSE4x4_W(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
+#నిర్వచించు LSX_TRANSPOSE4x4_W(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
   {                                                                            \
     __m128i _t0, _t1, _t2, _t3;                                                \
                                                                                \
@@ -425,7 +425,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  *      _ out7 : 07,17,27,37,47,57,67,77, 00,00,00,00,00,00,00,00
  * =============================================================================
  */
-#define LSX_TRANSPOSE8x8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LSX_TRANSPOSE8x8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                            _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                            _out7)                                           \
   {                                                                         \
@@ -468,7 +468,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  *              70,71,72,73,74,75,76,77           07,17,27,37,47,57,67,77
  * =============================================================================
  */
-#define LSX_TRANSPOSE8x8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LSX_TRANSPOSE8x8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                            _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                            _out7)                                           \
   {                                                                         \
@@ -525,7 +525,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  *       _out3 : 03,13,23,33,43,53,63,73, 00,00,00,00,00,00,00,00
  * =============================================================================
  */
-#define LSX_TRANSPOSE8x4_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7, \
+#నిర్వచించు LSX_TRANSPOSE8x4_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7, \
                            _out0, _out1, _out2, _out3)                     \
   {                                                                        \
     __m128i _tmp0_m, _tmp1_m, _tmp2_m, _tmp3_m;                            \
@@ -572,7 +572,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  *              120,121,122,123,124,125,126,127
  * =============================================================================
  */
-#define LSX_TRANSPOSE16x8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LSX_TRANSPOSE16x8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                             _in8, _in9, _in10, _in11, _in12, _in13, _in14,   \
                             _in15, _out0, _out1, _out2, _out3, _out4, _out5, \
                             _out6, _out7)                                    \
@@ -610,28 +610,28 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  *               out3 = in0 - in3;
  * =============================================================================
  */
-#define LSX_BUTTERFLY_4_B(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
+#నిర్వచించు LSX_BUTTERFLY_4_B(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
   {                                                                           \
     _out0 = __lsx_vadd_b(_in0, _in3);                                         \
     _out1 = __lsx_vadd_b(_in1, _in2);                                         \
     _out2 = __lsx_vsub_b(_in1, _in2);                                         \
     _out3 = __lsx_vsub_b(_in0, _in3);                                         \
   }
-#define LSX_BUTTERFLY_4_H(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
+#నిర్వచించు LSX_BUTTERFLY_4_H(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
   {                                                                           \
     _out0 = __lsx_vadd_h(_in0, _in3);                                         \
     _out1 = __lsx_vadd_h(_in1, _in2);                                         \
     _out2 = __lsx_vsub_h(_in1, _in2);                                         \
     _out3 = __lsx_vsub_h(_in0, _in3);                                         \
   }
-#define LSX_BUTTERFLY_4_W(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
+#నిర్వచించు LSX_BUTTERFLY_4_W(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
   {                                                                           \
     _out0 = __lsx_vadd_w(_in0, _in3);                                         \
     _out1 = __lsx_vadd_w(_in1, _in2);                                         \
     _out2 = __lsx_vsub_w(_in1, _in2);                                         \
     _out3 = __lsx_vsub_w(_in0, _in3);                                         \
   }
-#define LSX_BUTTERFLY_4_D(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
+#నిర్వచించు LSX_BUTTERFLY_4_D(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
   {                                                                           \
     _out0 = __lsx_vadd_d(_in0, _in3);                                         \
     _out1 = __lsx_vadd_d(_in1, _in2);                                         \
@@ -656,7 +656,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  *              _out7 = _in0 - _in7;
  * =============================================================================
  */
-#define LSX_BUTTERFLY_8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LSX_BUTTERFLY_8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                           _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                           _out7)                                           \
   {                                                                        \
@@ -670,7 +670,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
     _out7 = __lsx_vsub_b(_in0, _in7);                                      \
   }
 
-#define LSX_BUTTERFLY_8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LSX_BUTTERFLY_8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                           _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                           _out7)                                           \
   {                                                                        \
@@ -684,7 +684,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
     _out7 = __lsx_vsub_h(_in0, _in7);                                      \
   }
 
-#define LSX_BUTTERFLY_8_W(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LSX_BUTTERFLY_8_W(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                           _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                           _out7)                                           \
   {                                                                        \
@@ -698,7 +698,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
     _out7 = __lsx_vsub_w(_in0, _in7);                                      \
   }
 
-#define LSX_BUTTERFLY_8_D(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LSX_BUTTERFLY_8_D(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                           _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                           _out7)                                           \
   {                                                                        \
@@ -712,10 +712,10 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
     _out7 = __lsx_vsub_d(_in0, _in7);                                      \
   }
 
-#endif  // LSX
+#అయితే_ముగింపు  // LSX
 
-#ifdef __loongarch_asx
-#include <lasxintrin.h>
+#నిర్వచితమైతే __loongarch_asx
+#అన్తర్భావ <lasxintrin.h>
 /*
  * =============================================================================
  * Description : Dot product of byte vector elements
@@ -730,12 +730,12 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  * Example     : See out = __lasx_xvdp2_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_h_bu(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2_h_bu(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmulwev_h_bu(in_h, in_l);
-  out = __lasx_xvmaddwod_h_bu(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmulwev_h_bu(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_h_bu(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -752,12 +752,12 @@ static inline __m256i __lasx_xvdp2_h_bu(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvdp2_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_h_b(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2_h_b(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmulwev_h_b(in_h, in_l);
-  out = __lasx_xvmaddwod_h_b(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmulwev_h_b(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_h_b(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -777,12 +777,12 @@ static inline __m256i __lasx_xvdp2_h_b(__m256i in_h, __m256i in_l) {
  *         out : 22,38,38,22, 22,38,38,22
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_w_h(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2_w_h(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmulwev_w_h(in_h, in_l);
-  out = __lasx_xvmaddwod_w_h(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmulwev_w_h(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_w_h(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -799,12 +799,12 @@ static inline __m256i __lasx_xvdp2_w_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvdp2_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_d_w(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2_d_w(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmulwev_d_w(in_h, in_l);
-  out = __lasx_xvmaddwod_d_w(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmulwev_d_w(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_d_w(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -821,12 +821,12 @@ static inline __m256i __lasx_xvdp2_d_w(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvdp2_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_w_hu_h(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2_w_hu_h(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmulwev_w_hu_h(in_h, in_l);
-  out = __lasx_xvmaddwod_w_hu_h(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmulwev_w_hu_h(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_w_hu_h(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -843,13 +843,13 @@ static inline __m256i __lasx_xvdp2_w_hu_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_h_b(__m256i in_c, __m256i in_h,
-                                          __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2add_h_b(__m256i లోపల_c, __m256i లోపల_h,
+                                          __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmaddwev_h_b(in_c, in_h, in_l);
-  out = __lasx_xvmaddwod_h_b(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmaddwev_h_b(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_h_b(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -866,13 +866,13 @@ static inline __m256i __lasx_xvdp2add_h_b(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_h_bu(__m256i in_c, __m256i in_h,
-                                           __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2add_h_bu(__m256i లోపల_c, __m256i లోపల_h,
+                                           __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmaddwev_h_bu(in_c, in_h, in_l);
-  out = __lasx_xvmaddwod_h_bu(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmaddwev_h_bu(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_h_bu(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -889,13 +889,13 @@ static inline __m256i __lasx_xvdp2add_h_bu(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_h_bu_b(__m256i in_c, __m256i in_h,
-                                             __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2add_h_bu_b(__m256i లోపల_c, __m256i లోపల_h,
+                                             __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmaddwev_h_bu_b(in_c, in_h, in_l);
-  out = __lasx_xvmaddwod_h_bu_b(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmaddwev_h_bu_b(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_h_bu_b(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -916,13 +916,13 @@ static inline __m256i __lasx_xvdp2add_h_bu_b(__m256i in_c, __m256i in_h,
  *         out : 23,40,41,26, 23,40,41,26
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_w_h(__m256i in_c, __m256i in_h,
-                                          __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2add_w_h(__m256i లోపల_c, __m256i లోపల_h,
+                                          __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmaddwev_w_h(in_c, in_h, in_l);
-  out = __lasx_xvmaddwod_w_h(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmaddwev_w_h(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_w_h(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -939,13 +939,13 @@ static inline __m256i __lasx_xvdp2add_w_h(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_w_hu(__m256i in_c, __m256i in_h,
-                                           __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2add_w_hu(__m256i లోపల_c, __m256i లోపల_h,
+                                           __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmaddwev_w_hu(in_c, in_h, in_l);
-  out = __lasx_xvmaddwod_w_hu(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmaddwev_w_hu(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_w_hu(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -962,13 +962,13 @@ static inline __m256i __lasx_xvdp2add_w_hu(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_w_hu_h(__m256i in_c, __m256i in_h,
-                                             __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2add_w_hu_h(__m256i లోపల_c, __m256i లోపల_h,
+                                             __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmaddwev_w_hu_h(in_c, in_h, in_l);
-  out = __lasx_xvmaddwod_w_hu_h(out, in_h, in_l);
-  return out;
+  బహిర్గతం = __lasx_xvmaddwev_w_hu_h(లోపల_c, లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_w_hu_h(బహిర్గతం, లోపల_h, లోపల_l);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -986,14 +986,14 @@ static inline __m256i __lasx_xvdp2add_w_hu_h(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2sub_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2sub_h_bu(__m256i in_c, __m256i in_h,
-                                           __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2sub_h_bu(__m256i లోపల_c, __m256i లోపల_h,
+                                           __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmulwev_h_bu(in_h, in_l);
-  out = __lasx_xvmaddwod_h_bu(out, in_h, in_l);
-  out = __lasx_xvsub_h(in_c, out);
-  return out;
+  బహిర్గతం = __lasx_xvmulwev_h_bu(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_h_bu(బహిర్గతం, లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvsub_h(లోపల_c, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1015,14 +1015,14 @@ static inline __m256i __lasx_xvdp2sub_h_bu(__m256i in_c, __m256i in_h,
  *         out : -7,-3,0,0, 0,-1,0,-1
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2sub_w_h(__m256i in_c, __m256i in_h,
-                                          __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp2sub_w_h(__m256i లోపల_c, __m256i లోపల_h,
+                                          __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmulwev_w_h(in_h, in_l);
-  out = __lasx_xvmaddwod_w_h(out, in_h, in_l);
-  out = __lasx_xvsub_w(in_c, out);
-  return out;
+  బహిర్గతం = __lasx_xvmulwev_w_h(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_w_h(బహిర్గతం, లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvsub_w(లోపల_c, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1042,13 +1042,13 @@ static inline __m256i __lasx_xvdp2sub_w_h(__m256i in_c, __m256i in_h,
  *         out : -2,0,1,1
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp4_d_h(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvdp4_d_h(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmulwev_w_h(in_h, in_l);
-  out = __lasx_xvmaddwod_w_h(out, in_h, in_l);
-  out = __lasx_xvhaddw_d_w(out, out);
-  return out;
+  బహిర్గతం = __lasx_xvmulwev_w_h(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvmaddwod_w_h(బహిర్గతం, లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvhaddw_d_w(బహిర్గతం, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1063,12 +1063,12 @@ static inline __m256i __lasx_xvdp4_d_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvaddwh_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwh_h_b(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvaddwh_h_b(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvilvh_b(in_h, in_l);
-  out = __lasx_xvhaddw_h_b(out, out);
-  return out;
+  బహిర్గతం = __lasx_xvilvh_b(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvhaddw_h_b(బహిర్గతం, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1086,12 +1086,12 @@ static inline __m256i __lasx_xvaddwh_h_b(__m256i in_h, __m256i in_l) {
  *         out : 1,0,0,-1, 1,0,0, 2
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwh_w_h(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvaddwh_w_h(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvilvh_h(in_h, in_l);
-  out = __lasx_xvhaddw_w_h(out, out);
-  return out;
+  బహిర్గతం = __lasx_xvilvh_h(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvhaddw_w_h(బహిర్గతం, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1106,12 +1106,12 @@ static inline __m256i __lasx_xvaddwh_w_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvaddwl_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwl_h_b(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvaddwl_h_b(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvilvl_b(in_h, in_l);
-  out = __lasx_xvhaddw_h_b(out, out);
-  return out;
+  బహిర్గతం = __lasx_xvilvl_b(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvhaddw_h_b(బహిర్గతం, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1129,12 +1129,12 @@ static inline __m256i __lasx_xvaddwl_h_b(__m256i in_h, __m256i in_l) {
  *         out : 5,-1,4,2, 1,0,2,-1
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwl_w_h(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvaddwl_w_h(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvilvl_h(in_h, in_l);
-  out = __lasx_xvhaddw_w_h(out, out);
-  return out;
+  బహిర్గతం = __lasx_xvilvl_h(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvhaddw_w_h(బహిర్గతం, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1149,12 +1149,12 @@ static inline __m256i __lasx_xvaddwl_w_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvaddwl_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwl_h_bu(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvaddwl_h_bu(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvilvl_b(in_h, in_l);
-  out = __lasx_xvhaddw_hu_bu(out, out);
-  return out;
+  బహిర్గతం = __lasx_xvilvl_b(లోపల_h, లోపల_l);
+  బహిర్గతం = __lasx_xvhaddw_hu_bu(బహిర్గతం, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1168,12 +1168,12 @@ static inline __m256i __lasx_xvaddwl_h_bu(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvaddw_w_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddw_h_h_bu(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvaddw_h_h_bu(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvsllwil_hu_bu(in_l, 0);
-  out = __lasx_xvadd_h(in_h, out);
-  return out;
+  బహిర్గతం = __lasx_xvsllwil_hu_bu(లోపల_l, 0);
+  బహిర్గతం = __lasx_xvadd_h(లోపల_h, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1190,12 +1190,12 @@ static inline __m256i __lasx_xvaddw_h_h_bu(__m256i in_h, __m256i in_l) {
  *         out : 2, 0,1,2, -1,0,1,1,
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddw_w_w_h(__m256i in_h, __m256i in_l) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvaddw_w_w_h(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvsllwil_w_h(in_l, 0);
-  out = __lasx_xvadd_w(in_h, out);
-  return out;
+  బహిర్గతం = __lasx_xvsllwil_w_h(లోపల_l, 0);
+  బహిర్గతం = __lasx_xvadd_w(లోపల_h, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1216,15 +1216,15 @@ static inline __m256i __lasx_xvaddw_w_w_h(__m256i in_h, __m256i in_l) {
  *         out : 201, 602,1203,2004, -995, -1794,-2793,-3992
  * =============================================================================
  */
-static inline __m256i __lasx_xvmaddwl_w_h(__m256i in_c, __m256i in_h,
-                                          __m256i in_l) {
-  __m256i tmp0, tmp1, out;
+స్థిర అంతఃవరుస __m256i __lasx_xvmaddwl_w_h(__m256i లోపల_c, __m256i లోపల_h,
+                                          __m256i లోపల_l) {
+  __m256i tmp0, tmp1, బహిర్గతం;
 
-  tmp0 = __lasx_xvsllwil_w_h(in_h, 0);
-  tmp1 = __lasx_xvsllwil_w_h(in_l, 0);
+  tmp0 = __lasx_xvsllwil_w_h(లోపల_h, 0);
+  tmp1 = __lasx_xvsllwil_w_h(లోపల_l, 0);
   tmp0 = __lasx_xvmul_w(tmp0, tmp1);
-  out = __lasx_xvadd_w(tmp0, in_c);
-  return out;
+  బహిర్గతం = __lasx_xvadd_w(tmp0, లోపల_c);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1240,15 +1240,15 @@ static inline __m256i __lasx_xvmaddwl_w_h(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvmaddwl_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvmaddwh_w_h(__m256i in_c, __m256i in_h,
-                                          __m256i in_l) {
-  __m256i tmp0, tmp1, out;
+స్థిర అంతఃవరుస __m256i __lasx_xvmaddwh_w_h(__m256i లోపల_c, __m256i లోపల_h,
+                                          __m256i లోపల_l) {
+  __m256i tmp0, tmp1, బహిర్గతం;
 
-  tmp0 = __lasx_xvilvh_h(in_h, in_h);
-  tmp1 = __lasx_xvilvh_h(in_l, in_l);
+  tmp0 = __lasx_xvilvh_h(లోపల_h, లోపల_h);
+  tmp1 = __lasx_xvilvh_h(లోపల_l, లోపల_l);
   tmp0 = __lasx_xvmulwev_w_h(tmp0, tmp1);
-  out = __lasx_xvadd_w(tmp0, in_c);
-  return out;
+  బహిర్గతం = __lasx_xvadd_w(tmp0, లోపల_c);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1266,13 +1266,13 @@ static inline __m256i __lasx_xvmaddwh_w_h(__m256i in_c, __m256i in_h,
  *         out : 6,1,3,0, 0,0,1,0
  * =============================================================================
  */
-static inline __m256i __lasx_xvmulwl_w_h(__m256i in_h, __m256i in_l) {
-  __m256i tmp0, tmp1, out;
+స్థిర అంతఃవరుస __m256i __lasx_xvmulwl_w_h(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i tmp0, tmp1, బహిర్గతం;
 
-  tmp0 = __lasx_xvsllwil_w_h(in_h, 0);
-  tmp1 = __lasx_xvsllwil_w_h(in_l, 0);
-  out = __lasx_xvmul_w(tmp0, tmp1);
-  return out;
+  tmp0 = __lasx_xvsllwil_w_h(లోపల_h, 0);
+  tmp1 = __lasx_xvsllwil_w_h(లోపల_l, 0);
+  బహిర్గతం = __lasx_xvmul_w(tmp0, tmp1);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1290,13 +1290,13 @@ static inline __m256i __lasx_xvmulwl_w_h(__m256i in_h, __m256i in_l) {
  *         out : 0,0,0,0, 0,0,0,1
  * =============================================================================
  */
-static inline __m256i __lasx_xvmulwh_w_h(__m256i in_h, __m256i in_l) {
-  __m256i tmp0, tmp1, out;
+స్థిర అంతఃవరుస __m256i __lasx_xvmulwh_w_h(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i tmp0, tmp1, బహిర్గతం;
 
-  tmp0 = __lasx_xvilvh_h(in_h, in_h);
-  tmp1 = __lasx_xvilvh_h(in_l, in_l);
-  out = __lasx_xvmulwev_w_h(tmp0, tmp1);
-  return out;
+  tmp0 = __lasx_xvilvh_h(లోపల_h, లోపల_h);
+  tmp1 = __lasx_xvilvh_h(లోపల_l, లోపల_l);
+  బహిర్గతం = __lasx_xvmulwev_w_h(tmp0, tmp1);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1316,13 +1316,13 @@ static inline __m256i __lasx_xvmulwh_w_h(__m256i in_h, __m256i in_l) {
  *        out  : 5,65535,4,2, 1,0,0,1, 3,18,4,0, 1,0,0,2,
  * =============================================================================
  */
-static inline __m256i __lasx_xvsaddw_hu_hu_bu(__m256i in_h, __m256i in_l) {
-  __m256i tmp1, out;
+స్థిర అంతఃవరుస __m256i __lasx_xvsaddw_hu_hu_bu(__m256i లోపల_h, __m256i లోపల_l) {
+  __m256i tmp1, బహిర్గతం;
   __m256i zero = { 0 };
 
-  tmp1 = __lasx_xvilvl_b(zero, in_l);
-  out = __lasx_xvsadd_hu(in_h, tmp1);
-  return out;
+  tmp1 = __lasx_xvilvl_b(zero, లోపల_l);
+  బహిర్గతం = __lasx_xvsadd_hu(లోపల_h, tmp1);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1341,12 +1341,12 @@ static inline __m256i __lasx_xvsaddw_hu_hu_bu(__m256i in_h, __m256i in_l) {
  *         out : 1,2,9,9, 1,9,9,9, 4,4,4,4, 5,5,5,5
  * =============================================================================
  */
-static inline __m256i __lasx_xvclip_h(__m256i in, __m256i min, __m256i max) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvclip_h(__m256i లోపల, __m256i min, __m256i max) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmax_h(min, in);
-  out = __lasx_xvmin_h(max, out);
-  return out;
+  బహిర్గతం = __lasx_xvmax_h(min, లోపల);
+  బహిర్గతం = __lasx_xvmin_h(max, బహిర్గతం);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1359,12 +1359,12 @@ static inline __m256i __lasx_xvclip_h(__m256i in, __m256i min, __m256i max) {
  * Example     : See out = __lasx_xvclip255_w(in)
  * =============================================================================
  */
-static inline __m256i __lasx_xvclip255_h(__m256i in) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvclip255_h(__m256i లోపల) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmaxi_h(in, 0);
-  out = __lasx_xvsat_hu(out, 7);
-  return out;
+  బహిర్గతం = __lasx_xvmaxi_h(లోపల, 0);
+  బహిర్గతం = __lasx_xvsat_hu(బహిర్గతం, 7);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1379,12 +1379,12 @@ static inline __m256i __lasx_xvclip255_h(__m256i in) {
  *         out :  0,255,255,249,  0,255,255,249
  * =============================================================================
  */
-static inline __m256i __lasx_xvclip255_w(__m256i in) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvclip255_w(__m256i లోపల) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvmaxi_w(in, 0);
-  out = __lasx_xvsat_wu(out, 7);
-  return out;
+  బహిర్గతం = __lasx_xvmaxi_w(లోపల, 0);
+  బహిర్గతం = __lasx_xvsat_wu(బహిర్గతం, 7);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1403,12 +1403,12 @@ static inline __m256i __lasx_xvclip255_w(__m256i in) {
  *         out : 11,11,11,11, 11,11,11,11, 11,11,11,11, 11,11,11,11
  * =============================================================================
  */
-static inline __m256i __lasx_xvsplati_l_h(__m256i in, int idx) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvsplati_l_h(__m256i లోపల, పూర్ణాంకం idx) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvpermi_q(in, in, 0x02);
-  out = __lasx_xvreplve_h(out, idx);
-  return out;
+  బహిర్గతం = __lasx_xvpermi_q(లోపల, లోపల, 0x02);
+  బహిర్గతం = __lasx_xvreplve_h(బహిర్గతం, idx);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1427,12 +1427,12 @@ static inline __m256i __lasx_xvsplati_l_h(__m256i in, int idx) {
  *         out : 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2
  * =============================================================================
  */
-static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
-  __m256i out;
+స్థిర అంతఃవరుస __m256i __lasx_xvsplati_h_h(__m256i లోపల, పూర్ణాంకం idx) {
+  __m256i బహిర్గతం;
 
-  out = __lasx_xvpermi_q(in, in, 0x13);
-  out = __lasx_xvreplve_h(out, idx);
-  return out;
+  బహిర్గతం = __lasx_xvpermi_q(లోపల, లోపల, 0x13);
+  బహిర్గతం = __lasx_xvreplve_h(బహిర్గతం, idx);
+  తిరిగి బహిర్గతం;
 }
 
 /*
@@ -1452,7 +1452,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  *       _out3 : 4,4,4,4
  * =============================================================================
  */
-#define LASX_TRANSPOSE4x4_D(_in0, _in1, _in2, _in3, _out0, _out1, _out2, \
+#నిర్వచించు LASX_TRANSPOSE4x4_D(_in0, _in1, _in2, _in3, _out0, _out1, _out2, \
                             _out3)                                       \
   {                                                                      \
     __m256i _tmp0, _tmp1, _tmp2, _tmp3;                                  \
@@ -1492,7 +1492,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  *       _out7 : 8,8,8,8,8,8,8,8
  * =============================================================================
  */
-#define LASX_TRANSPOSE8x8_W(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LASX_TRANSPOSE8x8_W(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                             _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                             _out7)                                           \
   {                                                                          \
@@ -1539,7 +1539,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  * Example     : See LASX_TRANSPOSE16x8_H
  * =============================================================================
  */
-#define LASX_TRANSPOSE16x8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LASX_TRANSPOSE16x8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                              _in8, _in9, _in10, _in11, _in12, _in13, _in14,   \
                              _in15, _out0, _out1, _out2, _out3, _out4, _out5, \
                              _out6, _out7)                                    \
@@ -1619,7 +1619,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  *       _out7 : 8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
  * =============================================================================
  */
-#define LASX_TRANSPOSE16x8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LASX_TRANSPOSE16x8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                              _in8, _in9, _in10, _in11, _in12, _in13, _in14,   \
                              _in15, _out0, _out1, _out2, _out3, _out4, _out5, \
                              _out6, _out7)                                    \
@@ -1698,7 +1698,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  * Example     : See LASX_TRANSPOSE8x8_H
  * =============================================================================
  */
-#define LASX_TRANSPOSE4x4_H(_in0, _in1, _in2, _in3, _out0, _out1, _out2, \
+#నిర్వచించు LASX_TRANSPOSE4x4_H(_in0, _in1, _in2, _in3, _out0, _out1, _out2, \
                             _out3)                                       \
   {                                                                      \
     __m256i _s0_m, _s1_m;                                                \
@@ -1721,7 +1721,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  * Example     : See LASX_TRANSPOSE8x8_H
  * =============================================================================
  */
-#define LASX_TRANSPOSE8x8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LASX_TRANSPOSE8x8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                             _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                             _out7)                                           \
   {                                                                          \
@@ -1772,7 +1772,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  *       _out7 : 8,8,8,8, 8,8,8,8, 8,8,8,8, 8,8,8,8
  * =============================================================================
  */
-#define LASX_TRANSPOSE8x8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LASX_TRANSPOSE8x8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                             _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                             _out7)                                           \
   {                                                                          \
@@ -1821,28 +1821,28 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  *               _out3 = _in0 - _in3;
  * =============================================================================
  */
-#define LASX_BUTTERFLY_4_B(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
+#నిర్వచించు LASX_BUTTERFLY_4_B(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
   {                                                                            \
     _out0 = __lasx_xvadd_b(_in0, _in3);                                        \
     _out1 = __lasx_xvadd_b(_in1, _in2);                                        \
     _out2 = __lasx_xvsub_b(_in1, _in2);                                        \
     _out3 = __lasx_xvsub_b(_in0, _in3);                                        \
   }
-#define LASX_BUTTERFLY_4_H(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
+#నిర్వచించు LASX_BUTTERFLY_4_H(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
   {                                                                            \
     _out0 = __lasx_xvadd_h(_in0, _in3);                                        \
     _out1 = __lasx_xvadd_h(_in1, _in2);                                        \
     _out2 = __lasx_xvsub_h(_in1, _in2);                                        \
     _out3 = __lasx_xvsub_h(_in0, _in3);                                        \
   }
-#define LASX_BUTTERFLY_4_W(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
+#నిర్వచించు LASX_BUTTERFLY_4_W(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
   {                                                                            \
     _out0 = __lasx_xvadd_w(_in0, _in3);                                        \
     _out1 = __lasx_xvadd_w(_in1, _in2);                                        \
     _out2 = __lasx_xvsub_w(_in1, _in2);                                        \
     _out3 = __lasx_xvsub_w(_in0, _in3);                                        \
   }
-#define LASX_BUTTERFLY_4_D(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
+#నిర్వచించు LASX_BUTTERFLY_4_D(_in0, _in1, _in2, _in3, _out0, _out1, _out2, _out3) \
   {                                                                            \
     _out0 = __lasx_xvadd_d(_in0, _in3);                                        \
     _out1 = __lasx_xvadd_d(_in1, _in2);                                        \
@@ -1867,7 +1867,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  *               _out7 = _in0 - _in7;
  * =============================================================================
  */
-#define LASX_BUTTERFLY_8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LASX_BUTTERFLY_8_B(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                            _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                            _out7)                                           \
   {                                                                         \
@@ -1881,7 +1881,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
     _out7 = __lasx_xvsub_b(_in0, _in7);                                     \
   }
 
-#define LASX_BUTTERFLY_8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LASX_BUTTERFLY_8_H(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                            _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                            _out7)                                           \
   {                                                                         \
@@ -1895,7 +1895,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
     _out7 = __lasx_xvsub_h(_in0, _in7);                                     \
   }
 
-#define LASX_BUTTERFLY_8_W(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LASX_BUTTERFLY_8_W(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                            _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                            _out7)                                           \
   {                                                                         \
@@ -1909,7 +1909,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
     _out7 = __lasx_xvsub_w(_in0, _in7);                                     \
   }
 
-#define LASX_BUTTERFLY_8_D(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
+#నిర్వచించు LASX_BUTTERFLY_8_D(_in0, _in1, _in2, _in3, _in4, _in5, _in6, _in7,  \
                            _out0, _out1, _out2, _out3, _out4, _out5, _out6, \
                            _out7)                                           \
   {                                                                         \
@@ -1923,7 +1923,7 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
     _out7 = __lasx_xvsub_d(_in0, _in7);                                     \
   }
 
-#endif  // LASX
+#అయితే_ముగింపు  // LASX
 
 /*
  * =============================================================================
@@ -1936,13 +1936,13 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  *               VP:1,2,3,4,
  * =============================================================================
  */
-#define VECT_PRINT(RTYPE, element_num, in0, enter)                 \
+#నిర్వచించు VECT_PRINT(RTYPE, element_అంకె, in0, enter)                 \
   {                                                                \
     RTYPE _tmp0 = (RTYPE)in0;                                      \
-    int _i = 0;                                                    \
-    if (enter) printf("\nVP:");                                    \
-    for (_i = 0; _i < element_num; _i++) printf("%d,", _tmp0[_i]); \
+    పూర్ణాంకం _i = 0;                                                    \
+    ఒకవేళ (enter) రాయి("\nVP:");                                    \
+    కొరకు (_i = 0; _i < element_అంకె; _i++) రాయి("%d,", _tmp0[_i]); \
   }
 
-#endif /* LOONGSON_INTRINSICS_H */
-#endif /* AVUTIL_LOONGARCH_LOONGSON_INTRINSICS_H */
+#అయితే_ముగింపు /* LOONGSON_INTRINSICS_H */
+#అయితే_ముగింపు /* AVUTIL_LOONGARCH_LOONGSON_INTRINSICS_H */

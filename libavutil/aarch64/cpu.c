@@ -16,249 +16,249 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "config.h"
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/cpu_internal.h"
+#అన్తర్భావ "config.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#include <stdint.h>
-#include <sys/auxv.h>
+#ఒకవేళ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <sys/auxv.h>
 
-#define HWCAP_AARCH64_AES     (1 << 3)
-#define HWCAP_AARCH64_PMULL   (1 << 4)
-#define HWCAP_AARCH64_CRC32   (1 << 7)
-#define HWCAP_AARCH64_SHA3    (1 << 17)
-#define HWCAP_AARCH64_ASIMDDP (1 << 20)
-#define HWCAP_AARCH64_SVE     (1 << 22)
-#define HWCAP2_AARCH64_SVE2   (1 << 1)
-#define HWCAP2_AARCH64_I8MM   (1 << 13)
-#define HWCAP2_AARCH64_SME    (1 << 23)
-#define HWCAP2_AARCH64_SME_I16I64 (1 << 24)
-#define HWCAP2_AARCH64_SME2   (1ULL << 37)
+#నిర్వచించు HWCAP_AARCH64_AES     (1 << 3)
+#నిర్వచించు HWCAP_AARCH64_PMULL   (1 << 4)
+#నిర్వచించు HWCAP_AARCH64_చక్రీయ_తనిఖీ_32   (1 << 7)
+#నిర్వచించు HWCAP_AARCH64_SHA3    (1 << 17)
+#నిర్వచించు HWCAP_AARCH64_ASIMDDP (1 << 20)
+#నిర్వచించు HWCAP_AARCH64_SVE     (1 << 22)
+#నిర్వచించు HWCAP2_AARCH64_SVE2   (1 << 1)
+#నిర్వచించు HWCAP2_AARCH64_I8MM   (1 << 13)
+#నిర్వచించు HWCAP2_AARCH64_SME    (1 << 23)
+#నిర్వచించు HWCAP2_AARCH64_SME_I16I64 (1 << 24)
+#నిర్వచించు HWCAP2_AARCH64_SME2   (1ULL << 37)
 
-static int detect_flags(void)
+స్థిర పూర్ణాంకం detect_flags(శూన్య)
 {
-    int flags = 0;
+    పూర్ణాంకం flags = 0;
 
-    unsigned long hwcap = ff_getauxval(AT_HWCAP);
-    unsigned long hwcap2 = ff_getauxval(AT_HWCAP2);
+    గుర్తులేని దీర్ఘ hwcap = ff_getauxval(AT_HWCAP);
+    గుర్తులేని దీర్ఘ hwcap2 = ff_getauxval(AT_HWCAP2);
 
-    if (hwcap & HWCAP_AARCH64_AES)
+    ఒకవేళ (hwcap & HWCAP_AARCH64_AES)
         flags |= AV_CPU_FLAG_ARM_AES;
-    if (hwcap & HWCAP_AARCH64_PMULL)
+    ఒకవేళ (hwcap & HWCAP_AARCH64_PMULL)
         flags |= AV_CPU_FLAG_PMULL;
-    if (hwcap & HWCAP_AARCH64_SHA3)
+    ఒకవేళ (hwcap & HWCAP_AARCH64_SHA3)
         flags |= AV_CPU_FLAG_EOR3;
-    if (hwcap & HWCAP_AARCH64_CRC32)
-        flags |= AV_CPU_FLAG_ARM_CRC;
-    if (hwcap & HWCAP_AARCH64_ASIMDDP)
+    ఒకవేళ (hwcap & HWCAP_AARCH64_చక్రీయ_తనిఖీ_32)
+        flags |= AV_CPU_FLAG_ARM_చక్రీయ_తనిఖీ;
+    ఒకవేళ (hwcap & HWCAP_AARCH64_ASIMDDP)
         flags |= AV_CPU_FLAG_DOTPROD;
-    if (hwcap & HWCAP_AARCH64_SVE)
+    ఒకవేళ (hwcap & HWCAP_AARCH64_SVE)
         flags |= AV_CPU_FLAG_SVE;
-    if (hwcap2 & HWCAP2_AARCH64_SVE2)
+    ఒకవేళ (hwcap2 & HWCAP2_AARCH64_SVE2)
         flags |= AV_CPU_FLAG_SVE2;
-    if (hwcap2 & HWCAP2_AARCH64_I8MM)
+    ఒకవేళ (hwcap2 & HWCAP2_AARCH64_I8MM)
         flags |= AV_CPU_FLAG_I8MM;
-    if (hwcap2 & HWCAP2_AARCH64_SME)
+    ఒకవేళ (hwcap2 & HWCAP2_AARCH64_SME)
         flags |= AV_CPU_FLAG_SME;
-    if (hwcap2 & HWCAP2_AARCH64_SME_I16I64)
+    ఒకవేళ (hwcap2 & HWCAP2_AARCH64_SME_I16I64)
         flags |= AV_CPU_FLAG_SME_I16I64;
-    if (hwcap2 & HWCAP2_AARCH64_SME2)
+    ఒకవేళ (hwcap2 & HWCAP2_AARCH64_SME2)
         flags |= AV_CPU_FLAG_SME2;
 
-    return flags;
+    తిరిగి flags;
 }
 
-#elif defined(__APPLE__) && HAVE_SYSCTLBYNAME
-#include <sys/sysctl.h>
+#లేదావేళ defined(__APPLE__) && HAVE_SYSCTLBYNAME
+#అన్తర్భావ <sys/sysctl.h>
 
-static int have_feature(const char *feature) {
-    uint32_t value = 0;
-    size_t size = sizeof(value);
-    if (!sysctlbyname(feature, &value, &size, NULL, 0))
-        return value;
-    return 0;
+స్థిర పూర్ణాంకం have_feature(స్థిరరాశి అక్షరం *feature) {
+    uint32_t విలువ = 0;
+    size_t కొలత = పరిమాణం(విలువ);
+    ఒకవేళ (!sysctlbyname(feature, &విలువ, &కొలత, ఖాళీ, 0))
+        తిరిగి విలువ;
+    తిరిగి 0;
 }
 
-static int detect_flags(void)
+స్థిర పూర్ణాంకం detect_flags(శూన్య)
 {
-    int flags = 0;
+    పూర్ణాంకం flags = 0;
 
-    if (have_feature("hw.optional.arm.FEAT_DotProd"))
+    ఒకవేళ (have_feature("hw.optional.arm.FEAT_DotProd"))
         flags |= AV_CPU_FLAG_DOTPROD;
-    if (have_feature("hw.optional.arm.FEAT_I8MM"))
+    ఒకవేళ (have_feature("hw.optional.arm.FEAT_I8MM"))
         flags |= AV_CPU_FLAG_I8MM;
-    if (have_feature("hw.optional.arm.FEAT_SME"))
+    ఒకవేళ (have_feature("hw.optional.arm.FEAT_SME"))
         flags |= AV_CPU_FLAG_SME;
-    if (have_feature("hw.optional.arm.FEAT_SME_I16I64"))
+    ఒకవేళ (have_feature("hw.optional.arm.FEAT_SME_I16I64"))
         flags |= AV_CPU_FLAG_SME_I16I64;
-    if (have_feature("hw.optional.armv8_crc32"))
-        flags |= AV_CPU_FLAG_ARM_CRC;
-    if (have_feature("hw.optional.arm.FEAT_AES"))
+    ఒకవేళ (have_feature("hw.optional.armv8_crc32"))
+        flags |= AV_CPU_FLAG_ARM_చక్రీయ_తనిఖీ;
+    ఒకవేళ (have_feature("hw.optional.arm.FEAT_AES"))
         flags |= AV_CPU_FLAG_ARM_AES;
-    if (have_feature("hw.optional.arm.FEAT_PMULL"))
+    ఒకవేళ (have_feature("hw.optional.arm.FEAT_PMULL"))
         flags |= AV_CPU_FLAG_PMULL;
-    if (have_feature("hw.optional.armv8_2_sha3"))
+    ఒకవేళ (have_feature("hw.optional.armv8_2_sha3"))
         flags |= AV_CPU_FLAG_EOR3;
-    if (have_feature("hw.optional.arm.FEAT_SME2"))
+    ఒకవేళ (have_feature("hw.optional.arm.FEAT_SME2"))
         flags |= AV_CPU_FLAG_SME2;
 
-    return flags;
+    తిరిగి flags;
 }
 
-#elif defined(__OpenBSD__)
-#include <machine/armreg.h>
-#include <machine/cpu.h>
-#include <sys/types.h>
-#include <sys/sysctl.h>
+#లేదావేళ defined(__OpenBSD__)
+#అన్తర్భావ <machine/armreg.h>
+#అన్తర్భావ <machine/cpu.h>
+#అన్తర్భావ <sys/types.h>
+#అన్తర్భావ <sys/sysctl.h>
 
-static int detect_flags(void)
+స్థిర పూర్ణాంకం detect_flags(శూన్య)
 {
-    int flags = 0;
+    పూర్ణాంకం flags = 0;
 
-#ifdef CPU_ID_AA64ISAR0
-    int mib[2];
+#నిర్వచితమైతే CPU_ID_AA64ISAR0
+    పూర్ణాంకం mib[2];
     uint64_t isar0;
     uint64_t isar1;
     size_t len;
 
     mib[0] = CTL_MACHDEP;
     mib[1] = CPU_ID_AA64ISAR0;
-    len = sizeof(isar0);
-    if (sysctl(mib, 2, &isar0, &len, NULL, 0) != -1) {
-        if (ID_AA64ISAR0_DP(isar0) >= ID_AA64ISAR0_DP_IMPL)
+    len = పరిమాణం(isar0);
+    ఒకవేళ (sysctl(mib, 2, &isar0, &len, ఖాళీ, 0) != -1) {
+        ఒకవేళ (ID_AA64ISAR0_DP(isar0) >= ID_AA64ISAR0_DP_IMPL)
             flags |= AV_CPU_FLAG_DOTPROD;
-        if (ID_AA64ISAR0_CRC32(isar0) >= ID_AA64ISAR0_CRC32_BASE)
-            flags |= AV_CPU_FLAG_ARM_CRC;
-        if (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_BASE)
+        ఒకవేళ (ID_AA64_ISAR0_చక్రీయ_తనిఖీ_32(isar0) >= ID_AA64_ISAR0_చక్రీయ_తనిఖీ_32_పునాది)
+            flags |= AV_CPU_FLAG_ARM_చక్రీయ_తనిఖీ;
+        ఒకవేళ (ID_AA64ISAR0_AES(isar0) >= ID_AA64_ISAR0_AES_పునాది)
             flags |= AV_CPU_FLAG_ARM_AES;
-        if (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_PMULL)
+        ఒకవేళ (ID_AA64ISAR0_AES(isar0) >= ID_AA64ISAR0_AES_PMULL)
             flags |= AV_CPU_FLAG_PMULL;
-        if (ID_AA64ISAR0_SHA3(isar0) >= ID_AA64ISAR0_SHA3_IMPL)
+        ఒకవేళ (ID_AA64ISAR0_SHA3(isar0) >= ID_AA64ISAR0_SHA3_IMPL)
             flags |= AV_CPU_FLAG_EOR3;
     }
 
     mib[0] = CTL_MACHDEP;
     mib[1] = CPU_ID_AA64ISAR1;
-    len = sizeof(isar1);
-    if (sysctl(mib, 2, &isar1, &len, NULL, 0) != -1) {
-#ifdef ID_AA64ISAR1_I8MM_IMPL
-        if (ID_AA64ISAR1_I8MM(isar1) >= ID_AA64ISAR1_I8MM_IMPL)
+    len = పరిమాణం(isar1);
+    ఒకవేళ (sysctl(mib, 2, &isar1, &len, ఖాళీ, 0) != -1) {
+#నిర్వచితమైతే ID_AA64ISAR1_I8MM_IMPL
+        ఒకవేళ (ID_AA64ISAR1_I8MM(isar1) >= ID_AA64ISAR1_I8MM_IMPL)
             flags |= AV_CPU_FLAG_I8MM;
-#endif
+#అయితే_ముగింపు
     }
-#endif
+#అయితే_ముగింపు
 
-    return flags;
+    తిరిగి flags;
 }
 
-#elif defined(_WIN32)
-#include <windows.h>
+#లేదావేళ defined(_WIN32)
+#అన్తర్భావ <windows.h>
 
-static int detect_flags(void)
+స్థిర పూర్ణాంకం detect_flags(శూన్య)
 {
-    int flags = 0;
-#ifdef PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE))
-        flags |= AV_CPU_FLAG_ARM_CRC;
-#endif
-#ifdef PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE)) {
+    పూర్ణాంకం flags = 0;
+#నిర్వచితమైతే PF_ARM_V8_చక్రీయ_తనిఖీ_32_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_V8_చక్రీయ_తనిఖీ_32_INSTRUCTIONS_అందుబాటు))
+        flags |= AV_CPU_FLAG_ARM_చక్రీయ_తనిఖీ;
+#అయితే_ముగింపు
+#నిర్వచితమైతే PF_ARM_V8_CRYPTO_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_అందుబాటు)) {
         flags |= AV_CPU_FLAG_ARM_AES;
         flags |= AV_CPU_FLAG_PMULL;
     }
-#endif
-#ifdef PF_ARM_SHA3_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SHA3_INSTRUCTIONS_AVAILABLE))
+#అయితే_ముగింపు
+#నిర్వచితమైతే PF_ARM_SHA3_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_SHA3_INSTRUCTIONS_అందుబాటు))
         flags |= AV_CPU_FLAG_EOR3;
-#endif
-#ifdef PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE))
+#అయితే_ముగింపు
+#నిర్వచితమైతే PF_ARM_V82_DP_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_V82_DP_INSTRUCTIONS_అందుబాటు))
         flags |= AV_CPU_FLAG_DOTPROD;
-#endif
-#ifdef PF_ARM_V82_I8MM_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_V82_I8MM_INSTRUCTIONS_AVAILABLE))
+#అయితే_ముగింపు
+#నిర్వచితమైతే PF_ARM_V82_I8_MM_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_V82_I8_MM_INSTRUCTIONS_అందుబాటు))
         flags |= AV_CPU_FLAG_I8MM;
-#endif
-#ifdef PF_ARM_SVE_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_AVAILABLE))
+#అయితే_ముగింపు
+#నిర్వచితమైతే PF_ARM_SVE_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_అందుబాటు))
         flags |= AV_CPU_FLAG_SVE;
-#endif
-#ifdef PF_ARM_SVE2_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SVE2_INSTRUCTIONS_AVAILABLE))
+#అయితే_ముగింపు
+#నిర్వచితమైతే PF_ARM_SVE2_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_SVE2_INSTRUCTIONS_అందుబాటు))
         flags |= AV_CPU_FLAG_SVE2;
-#endif
-#ifdef PF_ARM_SME_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SME_INSTRUCTIONS_AVAILABLE))
+#అయితే_ముగింపు
+#నిర్వచితమైతే PF_ARM_SME_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_SME_INSTRUCTIONS_అందుబాటు))
         flags |= AV_CPU_FLAG_SME;
-#endif
-#ifdef PF_ARM_SME_I16I64_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SME_I16I64_INSTRUCTIONS_AVAILABLE))
+#అయితే_ముగింపు
+#నిర్వచితమైతే PF_ARM_SME_I16_I64_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_SME_I16_I64_INSTRUCTIONS_అందుబాటు))
         flags |= AV_CPU_FLAG_SME_I16I64;
-#endif
-#ifdef PF_ARM_SME2_INSTRUCTIONS_AVAILABLE
-    if (IsProcessorFeaturePresent(PF_ARM_SME2_INSTRUCTIONS_AVAILABLE))
+#అయితే_ముగింపు
+#నిర్వచితమైతే PF_ARM_SME2_INSTRUCTIONS_అందుబాటు
+    ఒకవేళ (IsProcessorFeaturePresent(PF_ARM_SME2_INSTRUCTIONS_అందుబాటు))
         flags |= AV_CPU_FLAG_SME2;
-#endif
-    return flags;
+#అయితే_ముగింపు
+    తిరిగి flags;
 }
-#else
+#లేకపోతే
 
-static int detect_flags(void)
+స్థిర పూర్ణాంకం detect_flags(శూన్య)
 {
-    return 0;
+    తిరిగి 0;
 }
 
-#endif
+#అయితే_ముగింపు
 
-int ff_get_cpu_flags_aarch64(void)
+పూర్ణాంకం ff_get_cpu_flags_aarch64(శూన్య)
 {
-    int flags = AV_CPU_FLAG_ARMV8 * HAVE_ARMV8 |
+    పూర్ణాంకం flags = AV_CPU_FLAG_ARMV8 * HAVE_ARMV8 |
                 AV_CPU_FLAG_NEON  * HAVE_NEON;
 
-#ifdef __ARM_FEATURE_DOTPROD
+#నిర్వచితమైతే __ARM_FEATURE_DOTPROD
     flags |= AV_CPU_FLAG_DOTPROD;
-#endif
-#ifdef __ARM_FEATURE_MATMUL_INT8
+#అయితే_ముగింపు
+#నిర్వచితమైతే __ARM_FEATURE_MATMUL_INT8
     flags |= AV_CPU_FLAG_I8MM;
-#endif
-#ifdef __ARM_FEATURE_SVE
+#అయితే_ముగింపు
+#నిర్వచితమైతే __ARM_FEATURE_SVE
     flags |= AV_CPU_FLAG_SVE;
-#endif
-#ifdef __ARM_FEATURE_SVE2
+#అయితే_ముగింపు
+#నిర్వచితమైతే __ARM_FEATURE_SVE2
     flags |= AV_CPU_FLAG_SVE2;
-#endif
-#ifdef __ARM_FEATURE_SME
+#అయితే_ముగింపు
+#నిర్వచితమైతే __ARM_FEATURE_SME
     flags |= AV_CPU_FLAG_SME;
-#endif
-#ifdef __ARM_FEATURE_CRC32
-    flags |= AV_CPU_FLAG_ARM_CRC;
-#endif
-#ifdef __ARM_FEATURE_AES
+#అయితే_ముగింపు
+#నిర్వచితమైతే __ARM_FEATURE_CRC32
+    flags |= AV_CPU_FLAG_ARM_చక్రీయ_తనిఖీ;
+#అయితే_ముగింపు
+#నిర్వచితమైతే __ARM_FEATURE_AES
     flags |= AV_CPU_FLAG_ARM_AES;
     flags |= AV_CPU_FLAG_PMULL;
-#endif
-#ifdef __ARM_FEATURE_SHA3
+#అయితే_ముగింపు
+#నిర్వచితమైతే __ARM_FEATURE_SHA3
     flags |= AV_CPU_FLAG_EOR3;
-#endif
-#ifdef __ARM_FEATURE_SME_I16I64
+#అయితే_ముగింపు
+#నిర్వచితమైతే __ARM_FEATURE_SME_I16I64
     flags |= AV_CPU_FLAG_SME_I16I64;
-#endif
-#ifdef __ARM_FEATURE_SME2
+#అయితే_ముగింపు
+#నిర్వచితమైతే __ARM_FEATURE_SME2
     flags |= AV_CPU_FLAG_SME2;
-#endif
+#అయితే_ముగింపు
 
     flags |= detect_flags();
 
-    return flags;
+    తిరిగి flags;
 }
 
-size_t ff_get_cpu_max_align_aarch64(void)
+size_t ff_get_cpu_max_align_aarch64(శూన్య)
 {
-    int flags = av_get_cpu_flags();
+    పూర్ణాంకం flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_NEON)
-        return 16;
+    ఒకవేళ (flags & AV_CPU_FLAG_NEON)
+        తిరిగి 16;
 
-    return 8;
+    తిరిగి 8;
 }

@@ -19,223 +19,223 @@
 // This header should only be used to simplify code where
 // threading is optional, not as a generic threading abstraction.
 
-#ifndef AVUTIL_THREAD_H
-#define AVUTIL_THREAD_H
+#నిర్వచితం_కాకపోతే AVUTIL_THREAD_H
+#నిర్వచించు AVUTIL_THREAD_H
 
-#include "config.h"
+#అన్తర్భావ "config.h"
 
-#if HAVE_PRCTL
-#include <sys/prctl.h>
-#elif (HAVE_PTHREAD_SETNAME_NP || HAVE_PTHREAD_SET_NAME_NP) && HAVE_PTHREAD_NP_H
-#include <pthread_np.h>
-#endif
+#ఒకవేళ HAVE_PRCTL
+#అన్తర్భావ <sys/prctl.h>
+#లేదావేళ (HAVE_PTHREAD_SETNAME_NP || HAVE_PTHREAD_సమితి_NAME_NP) && HAVE_PTHREAD_NP_H
+#అన్తర్భావ <pthread_np.h>
+#అయితే_ముగింపు
 
-#include "error.h"
+#అన్తర్భావ "error.h"
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#ఒకవేళ HAVE_PTHREADS || HAVE_W32_దారాలు || HAVE_OS2_దారాలు
 
-#if HAVE_PTHREADS
-#include <pthread.h>
+#ఒకవేళ HAVE_PTHREADS
+#అన్తర్భావ <pthread.h>
 
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#ఒకవేళ defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
 
-#include <stdlib.h>
+#అన్తర్భావ <stdlib.h>
 
-#include "log.h"
-#include "macros.h"
+#అన్తర్భావ "log.h"
+#అన్తర్భావ "macros.h"
 
-#define ASSERT_PTHREAD_ABORT(func, ret) do {                            \
-    char errbuf[AV_ERROR_MAX_STRING_SIZE] = "";                         \
-    av_log(NULL, AV_LOG_FATAL, AV_STRINGIFY(func)                       \
+#నిర్వచించు ASSERT_PTHREAD_ABORT(func, ret) చేయి {                            \
+    అక్షరం errbuf[AV_ERROR_MAX_STRING_కొలత] = "";                         \
+    av_log(ఖాళీ, AV_LOG_FATAL, AV_STRINGIFY(func)                       \
            " failed with error: %s\n",                                  \
-           av_make_error_string(errbuf, AV_ERROR_MAX_STRING_SIZE,       \
+           av_make_error_string(errbuf, AV_ERROR_MAX_STRING_కొలత,       \
                                 AVERROR(ret)));                         \
     abort();                                                            \
-} while (0)
+} అయితే (0)
 
-#define ASSERT_PTHREAD_NORET(func, ...) do {                            \
-    int ret = func(__VA_ARGS__);                                        \
-    if (ret)                                                            \
+#నిర్వచించు ASSERT_PTHREAD_NORET(func, ...) చేయి {                            \
+    పూర్ణాంకం ret = func(__VA_ARGS__);                                        \
+    ఒకవేళ (ret)                                                            \
         ASSERT_PTHREAD_ABORT(func, ret);                                \
-} while (0)
+} అయితే (0)
 
-#define ASSERT_PTHREAD(func, ...) do {                                  \
+#నిర్వచించు ASSERT_PTHREAD(func, ...) చేయి {                                  \
     ASSERT_PTHREAD_NORET(func, __VA_ARGS__);                            \
-    return 0;                                                           \
-} while (0)
+    తిరిగి 0;                                                           \
+} అయితే (0)
 
-static inline int strict_pthread_join(pthread_t thread, void **value_ptr)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_join(pthread_t thread, శూన్య **విలువ_ptr)
 {
-    ASSERT_PTHREAD(pthread_join, thread, value_ptr);
+    ASSERT_PTHREAD(pthread_join, thread, విలువ_ptr);
 }
 
-static inline int strict_pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_mutex_init(pthread_mutex_t *mutex, స్థిరరాశి pthread_mutexattr_t *attr)
 {
-    if (attr) {
+    ఒకవేళ (attr) {
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, attr);
-    } else {
+    } లేకపోతే {
         pthread_mutexattr_t local_attr;
         ASSERT_PTHREAD_NORET(pthread_mutexattr_init, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_settype, &local_attr, PTHREAD_MUTEX_ERRORCHECK);
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_destroy, &local_attr);
     }
-    return 0;
+    తిరిగి 0;
 }
 
-static inline int strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_destroy, mutex);
 }
 
-static inline int strict_pthread_mutex_lock(pthread_mutex_t *mutex)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_mutex_తాళం(pthread_mutex_t *mutex)
 {
-    ASSERT_PTHREAD(pthread_mutex_lock, mutex);
+    ASSERT_PTHREAD(pthread_mutex_తాళం, mutex);
 }
 
-static inline int strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_unlock, mutex);
 }
 
-static inline int strict_pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_cond_init(pthread_cond_t *cond, స్థిరరాశి pthread_condattr_t *attr)
 {
     ASSERT_PTHREAD(pthread_cond_init, cond, attr);
 }
 
-static inline int strict_pthread_cond_destroy(pthread_cond_t *cond)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_cond_destroy(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_destroy, cond);
 }
 
-static inline int strict_pthread_cond_signal(pthread_cond_t *cond)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_cond_signal(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_signal, cond);
 }
 
-static inline int strict_pthread_cond_broadcast(pthread_cond_t *cond)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_cond_ప్రసారం(pthread_cond_t *cond)
 {
-    ASSERT_PTHREAD(pthread_cond_broadcast, cond);
+    ASSERT_PTHREAD(pthread_cond_ప్రసారం, cond);
 }
 
-static inline int strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_cond_wait, cond, mutex);
 }
 
-static inline int strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
-                                                const struct timespec *abstime)
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
+                                                స్థిరరాశి నిర్మాణం timespec *abstime)
 {
-    int ret = pthread_cond_timedwait(cond, mutex, abstime);
-    if (ret && ret != ETIMEDOUT)
+    పూర్ణాంకం ret = pthread_cond_timedwait(cond, mutex, abstime);
+    ఒకవేళ (ret && ret != ETIMEDOUT)
         ASSERT_PTHREAD_ABORT(pthread_cond_timedwait, ret);
-    return ret;
+    తిరిగి ret;
 }
 
-static inline int strict_pthread_once(pthread_once_t *once_control, void (*init_routine)(void))
+స్థిర అంతఃవరుస పూర్ణాంకం strict_pthread_once(pthread_once_t *once_control, శూన్య (*init_routine)(శూన్య))
 {
     ASSERT_PTHREAD(pthread_once, once_control, init_routine);
 }
 
-#define pthread_join           strict_pthread_join
-#define pthread_mutex_init     strict_pthread_mutex_init
-#define pthread_mutex_destroy  strict_pthread_mutex_destroy
-#define pthread_mutex_lock     strict_pthread_mutex_lock
-#define pthread_mutex_unlock   strict_pthread_mutex_unlock
-#define pthread_cond_init      strict_pthread_cond_init
-#define pthread_cond_destroy   strict_pthread_cond_destroy
-#define pthread_cond_signal    strict_pthread_cond_signal
-#define pthread_cond_broadcast strict_pthread_cond_broadcast
-#define pthread_cond_wait      strict_pthread_cond_wait
-#define pthread_cond_timedwait strict_pthread_cond_timedwait
-#define pthread_once           strict_pthread_once
-#endif
+#నిర్వచించు pthread_join           strict_pthread_join
+#నిర్వచించు pthread_mutex_init     strict_pthread_mutex_init
+#నిర్వచించు pthread_mutex_destroy  strict_pthread_mutex_destroy
+#నిర్వచించు pthread_mutex_తాళం     strict_pthread_mutex_తాళం
+#నిర్వచించు pthread_mutex_unlock   strict_pthread_mutex_unlock
+#నిర్వచించు pthread_cond_init      strict_pthread_cond_init
+#నిర్వచించు pthread_cond_destroy   strict_pthread_cond_destroy
+#నిర్వచించు pthread_cond_signal    strict_pthread_cond_signal
+#నిర్వచించు pthread_cond_ప్రసారం strict_pthread_cond_ప్రసారం
+#నిర్వచించు pthread_cond_wait      strict_pthread_cond_wait
+#నిర్వచించు pthread_cond_timedwait strict_pthread_cond_timedwait
+#నిర్వచించు pthread_once           strict_pthread_once
+#అయితే_ముగింపు
 
-#elif HAVE_OS2THREADS
-#include "compat/os2threads.h"
-#else
-#include "compat/w32pthreads.h"
-#endif
+#లేదావేళ HAVE_OS2_దారాలు
+#అన్తర్భావ "compat/os2threads.h"
+#లేకపోతే
+#అన్తర్భావ "compat/w32pthreads.h"
+#అయితే_ముగింపు
 
-#define AVMutex pthread_mutex_t
-#define AV_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+#నిర్వచించు AVMutex pthread_mutex_t
+#నిర్వచించు AV_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 
-#define ff_mutex_init    pthread_mutex_init
-#define ff_mutex_lock    pthread_mutex_lock
-#define ff_mutex_unlock  pthread_mutex_unlock
-#define ff_mutex_destroy pthread_mutex_destroy
+#నిర్వచించు ff_mutex_init    pthread_mutex_init
+#నిర్వచించు ff_mutex_తాళం    pthread_mutex_తాళం
+#నిర్వచించు ff_mutex_unlock  pthread_mutex_unlock
+#నిర్వచించు ff_mutex_destroy pthread_mutex_destroy
 
-#define AVCond pthread_cond_t
+#నిర్వచించు AVCond pthread_cond_t
 
-#define ff_cond_init      pthread_cond_init
-#define ff_cond_destroy   pthread_cond_destroy
-#define ff_cond_signal    pthread_cond_signal
-#define ff_cond_broadcast pthread_cond_broadcast
-#define ff_cond_wait      pthread_cond_wait
-#define ff_cond_timedwait pthread_cond_timedwait
+#నిర్వచించు ff_cond_init      pthread_cond_init
+#నిర్వచించు ff_cond_destroy   pthread_cond_destroy
+#నిర్వచించు ff_cond_signal    pthread_cond_signal
+#నిర్వచించు ff_cond_ప్రసారం pthread_cond_ప్రసారం
+#నిర్వచించు ff_cond_wait      pthread_cond_wait
+#నిర్వచించు ff_cond_timedwait pthread_cond_timedwait
 
-#define AVOnce pthread_once_t
-#define AV_ONCE_INIT PTHREAD_ONCE_INIT
+#నిర్వచించు AVOnce pthread_once_t
+#నిర్వచించు AV_ONCE_INIT PTHREAD_ONCE_INIT
 
-#define ff_thread_once(control, routine) pthread_once(control, routine)
+#నిర్వచించు ff_thread_once(control, routine) pthread_once(control, routine)
 
-#else
+#లేకపోతే
 
-#define AVMutex char
-#define AV_MUTEX_INITIALIZER 0
+#నిర్వచించు AVMutex అక్షరం
+#నిర్వచించు AV_MUTEX_INITIALIZER 0
 
-static inline int ff_mutex_init(AVMutex *mutex, const void *attr){ return 0; }
-static inline int ff_mutex_lock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_unlock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_destroy(AVMutex *mutex){ return 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_mutex_init(AVMutex *mutex, స్థిరరాశి శూన్య *attr){ తిరిగి 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_mutex_తాళం(AVMutex *mutex){ తిరిగి 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_mutex_unlock(AVMutex *mutex){ తిరిగి 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_mutex_destroy(AVMutex *mutex){ తిరిగి 0; }
 
-#define AVCond char
+#నిర్వచించు AVCond అక్షరం
 
-static inline int ff_cond_init(AVCond *cond, const void *attr){ return 0; }
-static inline int ff_cond_destroy(AVCond *cond){ return 0; }
-static inline int ff_cond_signal(AVCond *cond){ return 0; }
-static inline int ff_cond_broadcast(AVCond *cond){ return 0; }
-static inline int ff_cond_wait(AVCond *cond, AVMutex *mutex){ return 0; }
-static inline int ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
-                                    const void *abstime){ return 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_cond_init(AVCond *cond, స్థిరరాశి శూన్య *attr){ తిరిగి 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_cond_destroy(AVCond *cond){ తిరిగి 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_cond_signal(AVCond *cond){ తిరిగి 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_cond_ప్రసారం(AVCond *cond){ తిరిగి 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_cond_wait(AVCond *cond, AVMutex *mutex){ తిరిగి 0; }
+స్థిర అంతఃవరుస పూర్ణాంకం ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
+                                    స్థిరరాశి శూన్య *abstime){ తిరిగి 0; }
 
-#define AVOnce char
-#define AV_ONCE_INIT 0
+#నిర్వచించు AVOnce అక్షరం
+#నిర్వచించు AV_ONCE_INIT 0
 
-static inline int ff_thread_once(char *control, void (*routine)(void))
+స్థిర అంతఃవరుస పూర్ణాంకం ff_thread_once(అక్షరం *control, శూన్య (*routine)(శూన్య))
 {
-    if (!*control) {
+    ఒకవేళ (!*control) {
         routine();
         *control = 1;
     }
-    return 0;
+    తిరిగి 0;
 }
 
-#endif
+#అయితే_ముగింపు
 
-static inline int ff_thread_setname(const char *name)
+స్థిర అంతఃవరుస పూర్ణాంకం ff_thread_setname(స్థిరరాశి అక్షరం *name)
 {
-    int ret = 0;
+    పూర్ణాంకం ret = 0;
 
-#if HAVE_PRCTL
-    ret = AVERROR(prctl(PR_SET_NAME, name));
-#elif HAVE_PTHREAD_SETNAME_NP
-#if defined(__APPLE__)
+#ఒకవేళ HAVE_PRCTL
+    ret = AVERROR(prctl(PR_సమితి_NAME, name));
+#లేదావేళ HAVE_PTHREAD_SETNAME_NP
+#ఒకవేళ defined(__APPLE__)
     ret = AVERROR(pthread_setname_np(name));
-#elif defined(__NetBSD__)
+#లేదావేళ defined(__NetBSD__)
     ret = AVERROR(pthread_setname_np(pthread_self(), "%s", name));
-#else
+#లేకపోతే
     ret = AVERROR(pthread_setname_np(pthread_self(), name));
-#endif
-#elif HAVE_PTHREAD_SET_NAME_NP
-    pthread_set_name_np(pthread_self(), name);
-#elif HAVE_W32THREADS
+#అయితే_ముగింపు
+#లేదావేళ HAVE_PTHREAD_సమితి_NAME_NP
+    pthread_సమితి_name_np(pthread_self(), name);
+#లేదావేళ HAVE_W32_దారాలు
     ret = win32_thread_setname(name);
-#else
+#లేకపోతే
     ret = AVERROR(ENOSYS);
-#endif
+#అయితే_ముగింపు
 
-    return ret;
+    తిరిగి ret;
 }
 
-#endif /* AVUTIL_THREAD_H */
+#అయితే_ముగింపు /* AVUTIL_THREAD_H */

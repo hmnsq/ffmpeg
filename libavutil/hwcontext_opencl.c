@@ -16,75 +16,75 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
+#నిర్వచించు CL_USE_DEPRECATED_OPENCL_1_2_APIS
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "config.h"
+#అన్తర్భావ "config.h"
 
-#include "avassert.h"
-#include "avstring.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_opencl.h"
-#include "mem.h"
-#include "pixdesc.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "avstring.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "hwcontext.h"
+#అన్తర్భావ "hwcontext_internal.h"
+#అన్తర్భావ "hwcontext_opencl.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "pixdesc.h"
 
-#if HAVE_OPENCL_VAAPI_BEIGNET
-#include <unistd.h>
-#include <va/va.h>
-#include <va/va_drmcommon.h>
-#include <CL/cl_intel.h>
-#include "hwcontext_vaapi.h"
-#endif
+#ఒకవేళ HAVE_OPENCL_VAAPI_BEIGNET
+#అన్తర్భావ <unistd.h>
+#అన్తర్భావ <va/va.h>
+#అన్తర్భావ <va/va_drmcommon.h>
+#అన్తర్భావ <CL/cl_intel.h>
+#అన్తర్భావ "hwcontext_vaapi.h"
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DRM_BEIGNET
-#include <unistd.h>
-#include <CL/cl_intel.h>
-#include "hwcontext_drm.h"
-#endif
+#ఒకవేళ HAVE_OPENCL_DRM_BEIGNET
+#అన్తర్భావ <unistd.h>
+#అన్తర్భావ <CL/cl_intel.h>
+#అన్తర్భావ "hwcontext_drm.h"
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-#if CONFIG_LIBMFX
-#include <mfxstructures.h>
-#endif
-#include <va/va.h>
-#include <CL/cl_va_api_media_sharing_intel.h>
-#include "hwcontext_vaapi.h"
-#endif
+#ఒకవేళ HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#ఒకవేళ CONFIG_LIBMFX
+#అన్తర్భావ <mfxstructures.h>
+#అయితే_ముగింపు
+#అన్తర్భావ <va/va.h>
+#అన్తర్భావ <CL/cl_va_api_media_sharing_intel.h>
+#అన్తర్భావ "hwcontext_vaapi.h"
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DXVA2
-#define COBJMACROS
-#include <CL/cl_dx9_media_sharing.h>
-#include <dxva2api.h>
-#include "hwcontext_dxva2.h"
-#endif
+#ఒకవేళ HAVE_OPENCL_DXVA2
+#నిర్వచించు COBJMACROS
+#అన్తర్భావ <CL/cl_dx9_media_sharing.h>
+#అన్తర్భావ <dxva2api.h>
+#అన్తర్భావ "hwcontext_dxva2.h"
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_D3D11
-#include <CL/cl_d3d11.h>
-#include "hwcontext_d3d11va.h"
-#endif
+#ఒకవేళ HAVE_OPENCL_D3D11
+#అన్తర్భావ <CL/cl_d3d11.h>
+#అన్తర్భావ "hwcontext_d3d11va.h"
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DRM_ARM
-#include <CL/cl_ext.h>
-#include <drm_fourcc.h>
-#include "hwcontext_drm.h"
-#endif
+#ఒకవేళ HAVE_OPENCL_DRM_ARM
+#అన్తర్భావ <CL/cl_ext.h>
+#అన్తర్భావ <drm_fourcc.h>
+#అన్తర్భావ "hwcontext_drm.h"
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_VIDEOTOOLBOX
-#include <OpenCL/cl_gl_ext.h>
-#include <VideoToolbox/VideoToolbox.h>
-#endif
+#ఒకవేళ HAVE_OPENCL_VIDEOTOOLBOX
+#అన్తర్భావ <OpenCL/cl_gl_ext.h>
+#అన్తర్భావ <VideoToolbox/VideoToolbox.h>
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA && CONFIG_LIBMFX
-extern int ff_qsv_get_surface_base_handle(mfxFrameSurface1 *surf,
-                                          enum AVHWDeviceType base_dev_typ,
-                                          void **base_handle);
-#endif
+#ఒకవేళ HAVE_OPENCL_VAAPI_INTEL_MEDIA && CONFIG_LIBMFX
+బాహ్య పూర్ణాంకం ff_qsv_get_surface_పునాది_handle(mfx_చట్రం_Surface1 *surf,
+                                          గణన AVHWDeviceType పునాది_dev_typ,
+                                          శూన్య **పునాది_handle);
+#అయితే_ముగింపు
 
 
-typedef struct OpenCLDeviceContext {
+రకనిర్వచనం నిర్మాణం OpenCLDeviceContext {
     /**
      * The public AVOpenCLDeviceContext. See hwcontext_opencl.h for it.
      */
@@ -93,56 +93,56 @@ typedef struct OpenCLDeviceContext {
     // Default command queue to use for transfer/mapping operations on
     // the device.  If the user supplies one, this is a reference to it.
     // Otherwise, it is newly-created.
-    cl_command_queue command_queue;
+    cl_command_వరుస command_వరుస;
 
     // The platform the context exists on.  This is needed to query and
     // retrieve extension functions.
     cl_platform_id platform_id;
 
     // Platform/device-specific functions.
-#if HAVE_OPENCL_DRM_BEIGNET
-    int beignet_drm_mapping_usable;
+#ఒకవేళ HAVE_OPENCL_DRM_BEIGNET
+    పూర్ణాంకం beignet_drm_mapping_usable;
     clCreateImageFromFdINTEL_fn clCreateImageFromFdINTEL;
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-    int qsv_mapping_usable;
+#ఒకవేళ HAVE_OPENCL_VAAPI_INTEL_MEDIA
+    పూర్ణాంకం qsv_mapping_usable;
     clCreateFromVA_APIMediaSurfaceINTEL_fn
         clCreateFromVA_APIMediaSurfaceINTEL;
-    clEnqueueAcquireVA_APIMediaSurfacesINTEL_fn
-        clEnqueueAcquireVA_APIMediaSurfacesINTEL;
-    clEnqueueReleaseVA_APIMediaSurfacesINTEL_fn
-        clEnqueueReleaseVA_APIMediaSurfacesINTEL;
-#endif
+    cl_వరుసలో_చేర్చు_Acquire_VA_APIMedia_Surfaces_INTEL_fn
+        cl_వరుసలో_చేర్చు_Acquire_VA_APIMedia_Surfaces_INTEL;
+    cl_వరుసలో_చేర్చు_Release_VA_APIMedia_Surfaces_INTEL_fn
+        cl_వరుసలో_చేర్చు_Release_VA_APIMedia_Surfaces_INTEL;
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DXVA2
-    int dxva2_mapping_usable;
+#ఒకవేళ HAVE_OPENCL_DXVA2
+    పూర్ణాంకం dxva2_mapping_usable;
     cl_dx9_media_adapter_type_khr dx9_media_adapter_type;
 
     clCreateFromDX9MediaSurfaceKHR_fn
         clCreateFromDX9MediaSurfaceKHR;
-    clEnqueueAcquireDX9MediaSurfacesKHR_fn
-        clEnqueueAcquireDX9MediaSurfacesKHR;
-    clEnqueueReleaseDX9MediaSurfacesKHR_fn
-        clEnqueueReleaseDX9MediaSurfacesKHR;
-#endif
+    cl_వరుసలో_చేర్చు_Acquire_DX9_Media_Surfaces_KHR_fn
+        cl_వరుసలో_చేర్చు_Acquire_DX9_Media_Surfaces_KHR;
+    cl_వరుసలో_చేర్చు_Release_DX9_Media_Surfaces_KHR_fn
+        cl_వరుసలో_చేర్చు_Release_DX9_Media_Surfaces_KHR;
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_D3D11
-    int d3d11_mapping_usable;
+#ఒకవేళ HAVE_OPENCL_D3D11
+    పూర్ణాంకం d3d11_mapping_usable;
     clCreateFromD3D11Texture2DKHR_fn
         clCreateFromD3D11Texture2DKHR;
-    clEnqueueAcquireD3D11ObjectsKHR_fn
-        clEnqueueAcquireD3D11ObjectsKHR;
-    clEnqueueReleaseD3D11ObjectsKHR_fn
-        clEnqueueReleaseD3D11ObjectsKHR;
-#endif
+    cl_వరుసలో_చేర్చు_Acquire_D3_D11_Objects_KHR_fn
+        cl_వరుసలో_చేర్చు_Acquire_D3_D11_Objects_KHR;
+    cl_వరుసలో_చేర్చు_Release_D3_D11_Objects_KHR_fn
+        cl_వరుసలో_చేర్చు_Release_D3_D11_Objects_KHR;
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DRM_ARM
-    int drm_arm_mapping_usable;
-#endif
+#ఒకవేళ HAVE_OPENCL_DRM_ARM
+    పూర్ణాంకం drm_arm_mapping_usable;
+#అయితే_ముగింపు
 } OpenCLDeviceContext;
 
-typedef struct OpenCLFramesContext {
+రకనిర్వచనం నిర్మాణం OpenCLFramesContext {
     /**
      * The public AVOpenCLFramesContext. See hwcontext_opencl.h for it.
      */
@@ -152,64 +152,64 @@ typedef struct OpenCLFramesContext {
     // context.  If the user supplies one, this is a reference to it.
     // Otherwise, it is a reference to the default command queue for the
     // device.
-    cl_command_queue command_queue;
+    cl_command_వరుస command_వరుస;
 
-#if HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
+#ఒకవేళ HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
     // For mapping APIs which have separate creation and acquire/release
     // steps, this stores the OpenCL memory objects corresponding to each
     // frame.
-    int                   nb_mapped_frames;
-    AVOpenCLFrameDescriptor *mapped_frames;
-#endif
+    పూర్ణాంకం                   nb_mapped_చట్రాలు;
+    AVOpenCLFrameDescriptor *mapped_చట్రాలు;
+#అయితే_ముగింపు
 } OpenCLFramesContext;
 
 
-static void CL_CALLBACK opencl_error_callback(const char *errinfo,
-                                              const void *private_info,
+స్థిర శూన్య CL_CALLBACK opencl_error_callback(స్థిరరాశి అక్షరం *errinfo,
+                                              స్థిరరాశి శూన్య *వ్యక్తిగత_info,
                                               size_t cb,
-                                              void *user_data)
+                                              శూన్య *user_దత్తాంశం)
 {
-    AVHWDeviceContext *ctx = user_data;
+    AVHWDeviceContext *ctx = user_దత్తాంశం;
     av_log(ctx, AV_LOG_ERROR, "OpenCL error: %s\n", errinfo);
 }
 
-static void opencl_device_free(AVHWDeviceContext *hwdev)
+స్థిర శూన్య opencl_device_free(AVHWDeviceContext *hwdev)
 {
     AVOpenCLDeviceContext *hwctx = hwdev->hwctx;
     cl_int cle;
 
     cle = clReleaseContext(hwctx->context);
-    if (cle != CL_SUCCESS) {
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to release OpenCL "
                "context: %d.\n", cle);
     }
 }
 
-static struct {
-    const char *key;
+స్థిర నిర్మాణం {
+    స్థిరరాశి అక్షరం *కీలకం;
     cl_platform_info name;
 } opencl_platform_params[] = {
     { "platform_profile",    CL_PLATFORM_PROFILE    },
-    { "platform_version",    CL_PLATFORM_VERSION    },
+    { "platform_version",    CL_PLATFORM_సంస్కరణ    },
     { "platform_name",       CL_PLATFORM_NAME       },
     { "platform_vendor",     CL_PLATFORM_VENDOR     },
     { "platform_extensions", CL_PLATFORM_EXTENSIONS },
 };
 
-static struct {
-    const char *key;
+స్థిర నిర్మాణం {
+    స్థిరరాశి అక్షరం *కీలకం;
     cl_device_info name;
 } opencl_device_params[] = {
     { "device_name",         CL_DEVICE_NAME         },
     { "device_vendor",       CL_DEVICE_VENDOR       },
-    { "driver_version",      CL_DRIVER_VERSION      },
-    { "device_version",      CL_DEVICE_VERSION      },
+    { "driver_version",      CL_DRIVER_సంస్కరణ      },
+    { "device_version",      CL_DEVICE_సంస్కరణ      },
     { "device_profile",      CL_DEVICE_PROFILE      },
     { "device_extensions",   CL_DEVICE_EXTENSIONS   },
 };
 
-static struct {
-    const char *key;
+స్థిర నిర్మాణం {
+    స్థిరరాశి అక్షరం *కీలకం;
     cl_device_type type;
 } opencl_device_types[] = {
     { "cpu",         CL_DEVICE_TYPE_CPU         },
@@ -220,376 +220,376 @@ static struct {
     { "all",         CL_DEVICE_TYPE_ALL         },
 };
 
-static char *opencl_get_platform_string(cl_platform_id platform_id,
-                                        cl_platform_info key)
+స్థిర అక్షరం *opencl_get_platform_string(cl_platform_id platform_id,
+                                        cl_platform_info కీలకం)
 {
-    char *str;
-    size_t size;
+    అక్షరం *str;
+    size_t కొలత;
     cl_int cle;
-    cle = clGetPlatformInfo(platform_id, key, 0, NULL, &size);
-    if (cle != CL_SUCCESS)
-        return NULL;
-    str = av_malloc(size);
-    if (!str)
-        return NULL;
-    cle = clGetPlatformInfo(platform_id, key, size, str, &size);
-    if (cle != CL_SUCCESS) {
+    cle = clGetPlatformInfo(platform_id, కీలకం, 0, ఖాళీ, &కొలత);
+    ఒకవేళ (cle != CL_SUCCESS)
+        తిరిగి ఖాళీ;
+    str = av_malloc(కొలత);
+    ఒకవేళ (!str)
+        తిరిగి ఖాళీ;
+    cle = clGetPlatformInfo(platform_id, కీలకం, కొలత, str, &కొలత);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_free(str);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
-    av_assert0(strlen(str) + 1 == size);
-    return str;
+    av_assert0(అక్షరశ్రేణి_పొడవు(str) + 1 == కొలత);
+    తిరిగి str;
 }
 
-static char *opencl_get_device_string(cl_device_id device_id,
-                                      cl_device_info key)
+స్థిర అక్షరం *opencl_get_device_string(cl_device_id device_id,
+                                      cl_device_info కీలకం)
 {
-    char *str;
-    size_t size;
+    అక్షరం *str;
+    size_t కొలత;
     cl_int cle;
-    cle = clGetDeviceInfo(device_id, key, 0, NULL, &size);
-    if (cle != CL_SUCCESS)
-        return NULL;
-    str = av_malloc(size);
-    if (!str)
-        return NULL;
-    cle = clGetDeviceInfo(device_id, key, size, str, &size);
-    if (cle != CL_SUCCESS) {
+    cle = clGetDeviceInfo(device_id, కీలకం, 0, ఖాళీ, &కొలత);
+    ఒకవేళ (cle != CL_SUCCESS)
+        తిరిగి ఖాళీ;
+    str = av_malloc(కొలత);
+    ఒకవేళ (!str)
+        తిరిగి ఖాళీ;
+    cle = clGetDeviceInfo(device_id, కీలకం, కొలత, str, &కొలత);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_free(str);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
-    av_assert0(strlen(str) + 1== size);
-    return str;
+    av_assert0(అక్షరశ్రేణి_పొడవు(str) + 1== కొలత);
+    తిరిగి str;
 }
 
-static int opencl_check_platform_extension(cl_platform_id platform_id,
-                                           const char *name)
+స్థిర పూర్ణాంకం opencl_check_platform_extension(cl_platform_id platform_id,
+                                           స్థిరరాశి అక్షరం *name)
 {
-    char *str;
-    int found = 0;
+    అక్షరం *str;
+    పూర్ణాంకం దొరికింది = 0;
     str = opencl_get_platform_string(platform_id,
                                      CL_PLATFORM_EXTENSIONS);
-    if (str && strstr(str, name))
-        found = 1;
+    ఒకవేళ (str && అక్షరశ్రేణి_శోధన(str, name))
+        దొరికింది = 1;
     av_free(str);
-    return found;
+    తిరిగి దొరికింది;
 }
 
-static int opencl_check_device_extension(cl_device_id device_id,
-                                         const char *name)
+స్థిర పూర్ణాంకం opencl_check_device_extension(cl_device_id device_id,
+                                         స్థిరరాశి అక్షరం *name)
 {
-    char *str;
-    int found = 0;
+    అక్షరం *str;
+    పూర్ణాంకం దొరికింది = 0;
     str = opencl_get_device_string(device_id,
                                    CL_DEVICE_EXTENSIONS);
-    if (str && strstr(str, name))
-        found = 1;
+    ఒకవేళ (str && అక్షరశ్రేణి_శోధన(str, name))
+        దొరికింది = 1;
     av_free(str);
-    return found;
+    తిరిగి దొరికింది;
 }
 
-av_unused static int opencl_check_extension(AVHWDeviceContext *hwdev,
-                                            const char *name)
+av_వాడని స్థిర పూర్ణాంకం opencl_check_extension(AVHWDeviceContext *hwdev,
+                                            స్థిరరాశి అక్షరం *name)
 {
     OpenCLDeviceContext    *priv = hwdev->hwctx;
     AVOpenCLDeviceContext *hwctx = &priv->p;
 
-    if (opencl_check_platform_extension(priv->platform_id, name)) {
+    ఒకవేళ (opencl_check_platform_extension(priv->platform_id, name)) {
         av_log(hwdev, AV_LOG_DEBUG,
                "%s found as platform extension.\n", name);
-        return 1;
+        తిరిగి 1;
     }
 
-    if (opencl_check_device_extension(hwctx->device_id, name)) {
+    ఒకవేళ (opencl_check_device_extension(hwctx->device_id, name)) {
         av_log(hwdev, AV_LOG_DEBUG,
                "%s found as device extension.\n", name);
-        return 1;
+        తిరిగి 1;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int opencl_enumerate_platforms(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_enumerate_platforms(AVHWDeviceContext *hwdev,
                                       cl_uint *nb_platforms,
                                       cl_platform_id **platforms,
-                                      void *context)
+                                      శూన్య *context)
 {
     cl_int cle;
 
-    cle = clGetPlatformIDs(0, NULL, nb_platforms);
-    if (cle != CL_SUCCESS) {
+    cle = clGetPlatformIDs(0, ఖాళీ, nb_platforms);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of "
                "OpenCL platforms: %d.\n", cle);
-        return AVERROR(ENODEV);
+        తిరిగి AVERROR(ENODEV);
     }
     av_log(hwdev, AV_LOG_DEBUG, "%u OpenCL platforms found.\n",
            *nb_platforms);
 
-    *platforms = av_malloc_array(*nb_platforms, sizeof(**platforms));
-    if (!*platforms)
-        return AVERROR(ENOMEM);
+    *platforms = av_malloc_array(*nb_platforms, పరిమాణం(**platforms));
+    ఒకవేళ (!*platforms)
+        తిరిగి AVERROR(ENOMEM);
 
-    cle = clGetPlatformIDs(*nb_platforms, *platforms, NULL);
-    if (cle != CL_SUCCESS) {
+    cle = clGetPlatformIDs(*nb_platforms, *platforms, ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of OpenCL "
                "platforms: %d.\n", cle);
         av_freep(platforms);
-        return AVERROR(ENODEV);
+        తిరిగి AVERROR(ENODEV);
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int opencl_filter_platform(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_filter_platform(AVHWDeviceContext *hwdev,
                                   cl_platform_id platform_id,
-                                  const char *platform_name,
-                                  void *context)
+                                  స్థిరరాశి అక్షరం *platform_name,
+                                  శూన్య *context)
 {
     AVDictionary *opts = context;
-    const AVDictionaryEntry *param;
-    char *str;
-    int i, ret = 0;
+    స్థిరరాశి AVDictionary_నమోదు *param;
+    అక్షరం *str;
+    పూర్ణాంకం i, ret = 0;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(opencl_platform_params); i++) {
-        param = av_dict_get(opts, opencl_platform_params[i].key,
-                            NULL, 0);
-        if (!param)
-            continue;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(opencl_platform_params); i++) {
+        param = av_dict_get(opts, opencl_platform_params[i].కీలకం,
+                            ఖాళీ, 0);
+        ఒకవేళ (!param)
+            కొనసాగు;
 
         str = opencl_get_platform_string(platform_id,
                                          opencl_platform_params[i].name);
-        if (!str) {
+        ఒకవేళ (!str) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query %s "
                    "of platform \"%s\".\n",
-                   opencl_platform_params[i].key, platform_name);
-            return AVERROR_UNKNOWN;
+                   opencl_platform_params[i].కీలకం, platform_name);
+            తిరిగి AVERROR_UNKNOWN;
         }
-        if (!av_stristr(str, param->value)) {
+        ఒకవేళ (!av_stristr(str, param->విలువ)) {
             av_log(hwdev, AV_LOG_DEBUG, "%s does not match (\"%s\").\n",
-                   param->key, str);
+                   param->కీలకం, str);
             ret = 1;
         }
         av_free(str);
     }
 
-    return ret;
+    తిరిగి ret;
 }
 
-static int opencl_enumerate_devices(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_enumerate_devices(AVHWDeviceContext *hwdev,
                                     cl_platform_id platform_id,
-                                    const char *platform_name,
+                                    స్థిరరాశి అక్షరం *platform_name,
                                     cl_uint *nb_devices,
                                     cl_device_id **devices,
-                                    void *context)
+                                    శూన్య *context)
 {
     cl_int cle;
 
     cle = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL,
-                         0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+                         0, ఖాళీ, nb_devices);
+    ఒకవేళ (cle == CL_DEVICE_NOT_దొరికింది) {
         av_log(hwdev, AV_LOG_DEBUG, "No devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        తిరిగి 0;
+    } లేకపోతే ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR(ENODEV);
+        తిరిగి AVERROR(ENODEV);
     }
     av_log(hwdev, AV_LOG_DEBUG, "%u OpenCL devices found on "
            "platform \"%s\".\n", *nb_devices, platform_name);
 
-    *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    *devices = av_malloc_array(*nb_devices, పరిమాణం(**devices));
+    ఒకవేళ (!*devices)
+        తిరిగి AVERROR(ENOMEM);
 
     cle = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL,
-                         *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+                         *nb_devices, *devices, ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR(ENODEV);
+        తిరిగి AVERROR(ENODEV);
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int opencl_filter_device(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_filter_device(AVHWDeviceContext *hwdev,
                                 cl_device_id device_id,
-                                const char *device_name,
-                                void *context)
+                                స్థిరరాశి అక్షరం *device_name,
+                                శూన్య *context)
 {
     AVDictionary *opts = context;
-    const AVDictionaryEntry *param;
-    char *str;
-    int i, ret = 0;
+    స్థిరరాశి AVDictionary_నమోదు *param;
+    అక్షరం *str;
+    పూర్ణాంకం i, ret = 0;
 
-    param = av_dict_get(opts, "device_type", NULL, 0);
-    if (param) {
-        cl_device_type match_type = 0, device_type;
+    param = av_dict_get(opts, "device_type", ఖాళీ, 0);
+    ఒకవేళ (param) {
+        cl_device_type సరిపోలిక_type = 0, device_type;
         cl_int cle;
 
-        for (i = 0; i < FF_ARRAY_ELEMS(opencl_device_types); i++) {
-            if (!strcmp(opencl_device_types[i].key, param->value)) {
-                match_type = opencl_device_types[i].type;
-                break;
+        కొరకు (i = 0; i < FF_ARRAY_ELEMS(opencl_device_types); i++) {
+            ఒకవేళ (!strcmp(opencl_device_types[i].కీలకం, param->విలువ)) {
+                సరిపోలిక_type = opencl_device_types[i].type;
+                ఆపు;
             }
         }
-        if (!match_type) {
+        ఒకవేళ (!సరిపోలిక_type) {
             av_log(hwdev, AV_LOG_ERROR, "Unknown device type %s.\n",
-                   param->value);
-            return AVERROR(EINVAL);
+                   param->విలువ);
+            తిరిగి AVERROR(EINVAL);
         }
 
         cle = clGetDeviceInfo(device_id, CL_DEVICE_TYPE,
-                              sizeof(device_type), &device_type, NULL);
-        if (cle != CL_SUCCESS) {
+                              పరిమాణం(device_type), &device_type, ఖాళీ);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query device type "
                    "of device \"%s\".\n", device_name);
-            return AVERROR_UNKNOWN;
+            తిరిగి AVERROR_UNKNOWN;
         }
 
-        if (!(device_type & match_type)) {
+        ఒకవేళ (!(device_type & సరిపోలిక_type)) {
             av_log(hwdev, AV_LOG_DEBUG, "device_type does not match.\n");
-            return 1;
+            తిరిగి 1;
         }
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(opencl_device_params); i++) {
-        param = av_dict_get(opts, opencl_device_params[i].key,
-                            NULL, 0);
-        if (!param)
-            continue;
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(opencl_device_params); i++) {
+        param = av_dict_get(opts, opencl_device_params[i].కీలకం,
+                            ఖాళీ, 0);
+        ఒకవేళ (!param)
+            కొనసాగు;
 
         str = opencl_get_device_string(device_id,
                                        opencl_device_params[i].name);
-        if (!str) {
+        ఒకవేళ (!str) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to query %s "
                    "of device \"%s\".\n",
-                   opencl_device_params[i].key, device_name);
-            return AVERROR_UNKNOWN;
+                   opencl_device_params[i].కీలకం, device_name);
+            తిరిగి AVERROR_UNKNOWN;
         }
-        if (!av_stristr(str, param->value)) {
+        ఒకవేళ (!av_stristr(str, param->విలువ)) {
             av_log(hwdev, AV_LOG_DEBUG, "%s does not match (\"%s\").\n",
-                   param->key, str);
+                   param->కీలకం, str);
             ret = 1;
         }
         av_free(str);
     }
 
-    return ret;
+    తిరిగి ret;
 }
 
-typedef struct OpenCLDeviceSelector {
-    int platform_index;
-    int device_index;
-    void *context;
-    int (*enumerate_platforms)(AVHWDeviceContext *hwdev,
+రకనిర్వచనం నిర్మాణం OpenCLDeviceSelector {
+    పూర్ణాంకం platform_సూచీ;
+    పూర్ణాంకం device_సూచీ;
+    శూన్య *context;
+    పూర్ణాంకం (*enumerate_platforms)(AVHWDeviceContext *hwdev,
                                cl_uint *nb_platforms,
                                cl_platform_id **platforms,
-                               void *context);
-    int (*filter_platform)    (AVHWDeviceContext *hwdev,
+                               శూన్య *context);
+    పూర్ణాంకం (*filter_platform)    (AVHWDeviceContext *hwdev,
                                cl_platform_id platform_id,
-                               const char *platform_name,
-                               void *context);
-    int (*enumerate_devices)  (AVHWDeviceContext *hwdev,
+                               స్థిరరాశి అక్షరం *platform_name,
+                               శూన్య *context);
+    పూర్ణాంకం (*enumerate_devices)  (AVHWDeviceContext *hwdev,
                                cl_platform_id platform_id,
-                               const char *platform_name,
+                               స్థిరరాశి అక్షరం *platform_name,
                                cl_uint *nb_devices,
                                cl_device_id **devices,
-                               void *context);
-    int (*filter_device)      (AVHWDeviceContext *hwdev,
+                               శూన్య *context);
+    పూర్ణాంకం (*filter_device)      (AVHWDeviceContext *hwdev,
                                cl_device_id device_id,
-                               const char *device_name,
-                               void *context);
+                               స్థిరరాశి అక్షరం *device_name,
+                               శూన్య *context);
 } OpenCLDeviceSelector;
 
-static int opencl_device_create_internal(AVHWDeviceContext *hwdev,
-                                         const OpenCLDeviceSelector *selector,
+స్థిర పూర్ణాంకం opencl_device_create_అంతర్గత(AVHWDeviceContext *hwdev,
+                                         స్థిరరాశి OpenCLDeviceSelector *selector,
                                          cl_context_properties *props)
 {
     cl_uint      nb_platforms;
-    cl_platform_id *platforms = NULL;
+    cl_platform_id *platforms = ఖాళీ;
     cl_platform_id  platform_id;
     cl_uint      nb_devices;
-    cl_device_id   *devices = NULL;
+    cl_device_id   *devices = ఖాళీ;
     AVOpenCLDeviceContext *hwctx = hwdev->hwctx;
     cl_int cle;
     cl_context_properties default_props[3];
-    char *platform_name_src = NULL,
-         *device_name_src   = NULL;
-    int err, found, p, d;
+    అక్షరం *platform_name_src = ఖాళీ,
+         *device_name_src   = ఖాళీ;
+    పూర్ణాంకం err, దొరికింది, p, d;
 
     av_assert0(selector->enumerate_platforms &&
                selector->enumerate_devices);
 
     err = selector->enumerate_platforms(hwdev, &nb_platforms, &platforms,
                                         selector->context);
-    if (err)
-        return err;
+    ఒకవేళ (err)
+        తిరిగి err;
 
-    found = 0;
-    for (p = 0; p < nb_platforms; p++) {
-        const char *platform_name;
+    దొరికింది = 0;
+    కొరకు (p = 0; p < nb_platforms; p++) {
+        స్థిరరాశి అక్షరం *platform_name;
 
-        if (selector->platform_index >= 0 &&
-            selector->platform_index != p)
-            continue;
+        ఒకవేళ (selector->platform_సూచీ >= 0 &&
+            selector->platform_సూచీ != p)
+            కొనసాగు;
 
         av_freep(&platform_name_src);
         platform_name_src = opencl_get_platform_string(platforms[p],
                                                            CL_PLATFORM_NAME);
-        if (platform_name_src)
+        ఒకవేళ (platform_name_src)
             platform_name = platform_name_src;
-        else
+        లేకపోతే
             platform_name = "Unknown Platform";
 
-        if (selector->filter_platform) {
+        ఒకవేళ (selector->filter_platform) {
             err = selector->filter_platform(hwdev, platforms[p],
                                             platform_name,
                                             selector->context);
-            if (err < 0)
-                goto fail;
-            if (err > 0)
-                continue;
+            ఒకవేళ (err < 0)
+                వెళ్ళు fail;
+            ఒకవేళ (err > 0)
+                కొనసాగు;
         }
 
         err = selector->enumerate_devices(hwdev, platforms[p], platform_name,
                                           &nb_devices, &devices,
                                           selector->context);
-        if (err < 0)
-            continue;
+        ఒకవేళ (err < 0)
+            కొనసాగు;
 
-        for (d = 0; d < nb_devices; d++) {
-            const char *device_name;
+        కొరకు (d = 0; d < nb_devices; d++) {
+            స్థిరరాశి అక్షరం *device_name;
 
-            if (selector->device_index >= 0 &&
-                selector->device_index != d)
-                continue;
+            ఒకవేళ (selector->device_సూచీ >= 0 &&
+                selector->device_సూచీ != d)
+                కొనసాగు;
 
             av_freep(&device_name_src);
             device_name_src = opencl_get_device_string(devices[d],
                                                            CL_DEVICE_NAME);
-            if (device_name_src)
+            ఒకవేళ (device_name_src)
                 device_name = device_name_src;
-            else
+            లేకపోతే
                 device_name = "Unknown Device";
 
-            if (selector->filter_device) {
+            ఒకవేళ (selector->filter_device) {
                 err = selector->filter_device(hwdev, devices[d],
                                               device_name,
                                               selector->context);
-                if (err < 0)
-                    goto fail;
-                if (err > 0)
-                    continue;
+                ఒకవేళ (err < 0)
+                    వెళ్ళు fail;
+                ఒకవేళ (err > 0)
+                    కొనసాగు;
             }
 
             av_log(hwdev, AV_LOG_VERBOSE, "%d.%d: %s / %s\n", p, d,
                    platform_name, device_name);
 
-            ++found;
+            ++దొరికింది;
             platform_id      = platforms[p];
             hwctx->device_id = devices[d];
         }
@@ -597,37 +597,37 @@ static int opencl_device_create_internal(AVHWDeviceContext *hwdev,
         av_freep(&devices);
     }
 
-    if (found == 0) {
+    ఒకవేళ (దొరికింది == 0) {
         av_log(hwdev, AV_LOG_ERROR, "No matching devices found.\n");
         err = AVERROR(ENODEV);
-        goto fail;
+        వెళ్ళు fail;
     }
-    if (found > 1) {
+    ఒకవేళ (దొరికింది > 1) {
         av_log(hwdev, AV_LOG_ERROR, "More than one matching device found.\n");
         err = AVERROR(ENODEV);
-        goto fail;
+        వెళ్ళు fail;
     }
 
-    if (!props) {
+    ఒకవేళ (!props) {
         props = default_props;
         default_props[0] = CL_CONTEXT_PLATFORM;
         default_props[1] = (intptr_t)platform_id;
         default_props[2] = 0;
-    } else {
-        if (props[0] == CL_CONTEXT_PLATFORM && props[1] == 0)
+    } లేకపోతే {
+        ఒకవేళ (props[0] == CL_CONTEXT_PLATFORM && props[1] == 0)
             props[1] = (intptr_t)platform_id;
     }
 
     hwctx->context = clCreateContext(props, 1, &hwctx->device_id,
                                      &opencl_error_callback, hwdev, &cle);
-    if (!hwctx->context) {
+    ఒకవేళ (!hwctx->context) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to create OpenCL context: "
                "%d.\n", cle);
         err = AVERROR(ENODEV);
-        goto fail;
+        వెళ్ళు fail;
     }
 
-    hwdev->free = &opencl_device_free;
+    hwdev->విడుదల = &opencl_device_free;
 
     err = 0;
 fail:
@@ -635,11 +635,11 @@ fail:
     av_freep(&device_name_src);
     av_freep(&platforms);
     av_freep(&devices);
-    return err;
+    తిరిగి err;
 }
 
-static int opencl_device_create(AVHWDeviceContext *hwdev, const char *device,
-                                AVDictionary *opts, int flags)
+స్థిర పూర్ణాంకం opencl_device_create(AVHWDeviceContext *hwdev, స్థిరరాశి అక్షరం *device,
+                                AVDictionary *opts, పూర్ణాంకం flags)
 {
     OpenCLDeviceSelector selector = {
         .context = opts,
@@ -649,206 +649,206 @@ static int opencl_device_create(AVHWDeviceContext *hwdev, const char *device,
         .filter_device       = &opencl_filter_device,
     };
 
-    if (device && device[0]) {
+    ఒకవేళ (device && device[0]) {
         // Match one or both indices for platform and device.
-        int d = -1, p = -1, ret;
-        if (device[0] == '.')
-            ret = sscanf(device, ".%d", &d);
-        else
-            ret = sscanf(device, "%d.%d", &p, &d);
-        if (ret < 1) {
+        పూర్ణాంకం d = -1, p = -1, ret;
+        ఒకవేళ (device[0] == '.')
+            ret = అక్షరశ్రేణి_చదువు(device, ".%d", &d);
+        లేకపోతే
+            ret = అక్షరశ్రేణి_చదువు(device, "%d.%d", &p, &d);
+        ఒకవేళ (ret < 1) {
             av_log(hwdev, AV_LOG_ERROR, "Invalid OpenCL platform/device "
                    "index specification \"%s\".\n", device);
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
-        selector.platform_index = p;
-        selector.device_index   = d;
-    } else {
-        selector.platform_index = -1;
-        selector.device_index   = -1;
+        selector.platform_సూచీ = p;
+        selector.device_సూచీ   = d;
+    } లేకపోతే {
+        selector.platform_సూచీ = -1;
+        selector.device_సూచీ   = -1;
     }
 
-    return opencl_device_create_internal(hwdev, &selector, NULL);
+    తిరిగి opencl_device_create_అంతర్గత(hwdev, &selector, ఖాళీ);
 }
 
-static int opencl_device_init(AVHWDeviceContext *hwdev)
+స్థిర పూర్ణాంకం opencl_device_init(AVHWDeviceContext *hwdev)
 {
     OpenCLDeviceContext    *priv = hwdev->hwctx;
     AVOpenCLDeviceContext *hwctx = &priv->p;
     cl_int cle;
 
-    if (hwctx->command_queue) {
-        cle = clRetainCommandQueue(hwctx->command_queue);
-        if (cle != CL_SUCCESS) {
+    ఒకవేళ (hwctx->command_వరుస) {
+        cle = cl_Retain_Command_వరుస(hwctx->command_వరుస);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to retain external "
                    "command queue: %d.\n", cle);
-            return AVERROR(EIO);
+            తిరిగి AVERROR(EIO);
         }
-        priv->command_queue = hwctx->command_queue;
-    } else {
-        priv->command_queue = clCreateCommandQueue(hwctx->context,
+        priv->command_వరుస = hwctx->command_వరుస;
+    } లేకపోతే {
+        priv->command_వరుస = cl_Create_Command_వరుస(hwctx->context,
                                                    hwctx->device_id,
                                                    0, &cle);
-        if (!priv->command_queue) {
+        ఒకవేళ (!priv->command_వరుస) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to create internal "
                    "command queue: %d.\n", cle);
-            return AVERROR(EIO);
+            తిరిగి AVERROR(EIO);
         }
     }
 
     cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_PLATFORM,
-                          sizeof(priv->platform_id), &priv->platform_id,
-                          NULL);
-    if (cle != CL_SUCCESS) {
+                          పరిమాణం(priv->platform_id), &priv->platform_id,
+                          ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to determine the OpenCL "
                "platform containing the device.\n");
-        return AVERROR(EIO);
+        తిరిగి AVERROR(EIO);
     }
 
-#define CL_FUNC(name, desc) do {                                \
-        if (fail)                                               \
-            break;                                              \
-        priv->name = clGetExtensionFunctionAddressForPlatform(  \
+#నిర్వచించు CL_FUNC(name, desc) చేయి {                                \
+        ఒకవేళ (fail)                                               \
+            ఆపు;                                              \
+        priv->name = cl_Get_Extension_Function_చిరునామా_For_Platform(  \
             priv->platform_id, #name);                          \
-        if (!priv->name) {                                      \
+        ఒకవేళ (!priv->name) {                                      \
             av_log(hwdev, AV_LOG_VERBOSE,                       \
                    desc " function not found (%s).\n", #name);  \
             fail = 1;                                           \
-        } else {                                                \
+        } లేకపోతే {                                                \
             av_log(hwdev, AV_LOG_VERBOSE,                       \
                    desc " function found (%s).\n", #name);      \
         }                                                       \
-    } while (0)
+    } అయితే (0)
 
-#if HAVE_OPENCL_DRM_BEIGNET
+#ఒకవేళ HAVE_OPENCL_DRM_BEIGNET
     {
-        int fail = 0;
+        పూర్ణాంకం fail = 0;
 
         CL_FUNC(clCreateImageFromFdINTEL,
                 "Beignet DRM to OpenCL image mapping");
 
-        if (fail) {
+        ఒకవేళ (fail) {
             av_log(hwdev, AV_LOG_WARNING, "Beignet DRM to OpenCL "
                    "mapping not usable.\n");
             priv->beignet_drm_mapping_usable = 0;
-        } else {
+        } లేకపోతే {
             priv->beignet_drm_mapping_usable = 1;
         }
     }
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#ఒకవేళ HAVE_OPENCL_VAAPI_INTEL_MEDIA
     {
-        size_t props_size;
-        cl_context_properties *props = NULL;
+        size_t props_కొలత;
+        cl_context_properties *props = ఖాళీ;
         VADisplay va_display;
-        const char *va_ext = "cl_intel_va_api_media_sharing";
-        int i, fail = 0;
+        స్థిరరాశి అక్షరం *va_ext = "cl_intel_va_api_media_sharing";
+        పూర్ణాంకం i, fail = 0;
 
-        if (!opencl_check_extension(hwdev, va_ext)) {
+        ఒకవేళ (!opencl_check_extension(hwdev, va_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for QSV to OpenCL mapping.\n", va_ext);
-            goto no_qsv;
+            వెళ్ళు no_qsv;
         }
 
         cle = clGetContextInfo(hwctx->context, CL_CONTEXT_PROPERTIES,
-                               0, NULL, &props_size);
-        if (cle != CL_SUCCESS) {
+                               0, ఖాళీ, &props_కొలత);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_VERBOSE, "Failed to get context "
                    "properties: %d.\n", cle);
-            goto no_qsv;
+            వెళ్ళు no_qsv;
         }
-        if (props_size == 0) {
+        ఒకవేళ (props_కొలత == 0) {
             av_log(hwdev, AV_LOG_VERBOSE, "Media sharing must be "
                    "enabled on context creation to use QSV to "
                    "OpenCL mapping.\n");
-            goto no_qsv;
+            వెళ్ళు no_qsv;
         }
 
-        props = av_malloc(props_size);
-        if (!props)
-            return AVERROR(ENOMEM);
+        props = av_malloc(props_కొలత);
+        ఒకవేళ (!props)
+            తిరిగి AVERROR(ENOMEM);
 
         cle = clGetContextInfo(hwctx->context, CL_CONTEXT_PROPERTIES,
-                               props_size, props, NULL);
-        if (cle != CL_SUCCESS) {
+                               props_కొలత, props, ఖాళీ);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_VERBOSE, "Failed to get context "
                    "properties: %d.\n", cle);
-            goto no_qsv;
+            వెళ్ళు no_qsv;
         }
 
-        va_display = NULL;
-        for (i = 0; i < (props_size / sizeof(*props) - 1); i++) {
-            if (props[i] == CL_CONTEXT_VA_API_DISPLAY_INTEL) {
+        va_display = ఖాళీ;
+        కొరకు (i = 0; i < (props_కొలత / పరిమాణం(*props) - 1); i++) {
+            ఒకవేళ (props[i] == CL_CONTEXT_VA_API_DISPLAY_INTEL) {
                 va_display = (VADisplay)(intptr_t)props[i+1];
-                break;
+                ఆపు;
             }
         }
-        if (!va_display) {
+        ఒకవేళ (!va_display) {
             av_log(hwdev, AV_LOG_VERBOSE, "Media sharing must be "
                    "enabled on context creation to use QSV to "
                    "OpenCL mapping.\n");
-            goto no_qsv;
+            వెళ్ళు no_qsv;
         }
-        if (!vaDisplayIsValid(va_display)) {
+        ఒకవేళ (!vaDisplayIsValid(va_display)) {
             av_log(hwdev, AV_LOG_VERBOSE, "A valid VADisplay is "
                    "required on context creation to use QSV to "
                    "OpenCL mapping.\n");
-            goto no_qsv;
+            వెళ్ళు no_qsv;
         }
 
         CL_FUNC(clCreateFromVA_APIMediaSurfaceINTEL,
                 "Intel QSV to OpenCL mapping");
-        CL_FUNC(clEnqueueAcquireVA_APIMediaSurfacesINTEL,
+        CL_FUNC(cl_వరుసలో_చేర్చు_Acquire_VA_APIMedia_Surfaces_INTEL,
                 "Intel QSV in OpenCL acquire");
-        CL_FUNC(clEnqueueReleaseVA_APIMediaSurfacesINTEL,
+        CL_FUNC(cl_వరుసలో_చేర్చు_Release_VA_APIMedia_Surfaces_INTEL,
                 "Intel QSV in OpenCL release");
 
-        if (fail) {
+        ఒకవేళ (fail) {
         no_qsv:
             av_log(hwdev, AV_LOG_WARNING, "QSV to OpenCL mapping "
                    "not usable.\n");
             priv->qsv_mapping_usable = 0;
-        } else {
+        } లేకపోతే {
             priv->qsv_mapping_usable = 1;
         }
         av_free(props);
     }
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DXVA2
+#ఒకవేళ HAVE_OPENCL_DXVA2
     {
-        int fail = 0;
+        పూర్ణాంకం fail = 0;
 
         CL_FUNC(clCreateFromDX9MediaSurfaceKHR,
                 "DXVA2 to OpenCL mapping");
-        CL_FUNC(clEnqueueAcquireDX9MediaSurfacesKHR,
+        CL_FUNC(cl_వరుసలో_చేర్చు_Acquire_DX9_Media_Surfaces_KHR,
                 "DXVA2 in OpenCL acquire");
-        CL_FUNC(clEnqueueReleaseDX9MediaSurfacesKHR,
+        CL_FUNC(cl_వరుసలో_చేర్చు_Release_DX9_Media_Surfaces_KHR,
                 "DXVA2 in OpenCL release");
 
-        if (fail) {
+        ఒకవేళ (fail) {
             av_log(hwdev, AV_LOG_WARNING, "DXVA2 to OpenCL mapping "
                    "not usable.\n");
             priv->dxva2_mapping_usable = 0;
-        } else {
+        } లేకపోతే {
             priv->dx9_media_adapter_type = CL_ADAPTER_D3D9EX_KHR;
             priv->dxva2_mapping_usable = 1;
         }
     }
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_D3D11
+#ఒకవేళ HAVE_OPENCL_D3D11
     {
-        const char *d3d11_ext = "cl_khr_d3d11_sharing";
-        const char *nv12_ext  = "cl_intel_d3d11_nv12_media_sharing";
-        int fail = 0;
+        స్థిరరాశి అక్షరం *d3d11_ext = "cl_khr_d3d11_sharing";
+        స్థిరరాశి అక్షరం *nv12_ext  = "cl_intel_d3d11_nv12_media_sharing";
+        పూర్ణాంకం fail = 0;
 
-        if (!opencl_check_extension(hwdev, d3d11_ext)) {
+        ఒకవేళ (!opencl_check_extension(hwdev, d3d11_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for D3D11 to OpenCL mapping.\n", d3d11_ext);
             fail = 1;
-        } else if (!opencl_check_extension(hwdev, nv12_ext)) {
+        } లేకపోతే ఒకవేళ (!opencl_check_extension(hwdev, nv12_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension may be "
                    "required for D3D11 to OpenCL mapping.\n", nv12_ext);
             // Not fatal.
@@ -856,34 +856,34 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
 
         CL_FUNC(clCreateFromD3D11Texture2DKHR,
                 "D3D11 to OpenCL mapping");
-        CL_FUNC(clEnqueueAcquireD3D11ObjectsKHR,
+        CL_FUNC(cl_వరుసలో_చేర్చు_Acquire_D3_D11_Objects_KHR,
                 "D3D11 in OpenCL acquire");
-        CL_FUNC(clEnqueueReleaseD3D11ObjectsKHR,
+        CL_FUNC(cl_వరుసలో_చేర్చు_Release_D3_D11_Objects_KHR,
                 "D3D11 in OpenCL release");
 
-        if (fail) {
+        ఒకవేళ (fail) {
             av_log(hwdev, AV_LOG_WARNING, "D3D11 to OpenCL mapping "
                    "not usable.\n");
             priv->d3d11_mapping_usable = 0;
-        } else {
+        } లేకపోతే {
             priv->d3d11_mapping_usable = 1;
         }
     }
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DRM_ARM
+#ఒకవేళ HAVE_OPENCL_DRM_ARM
     {
-        const char *drm_arm_ext = "cl_arm_import_memory";
-        const char *image_ext   = "cl_khr_image2d_from_buffer";
-        int fail = 0;
+        స్థిరరాశి అక్షరం *drm_arm_ext = "cl_arm_import_memory";
+        స్థిరరాశి అక్షరం *image_ext   = "cl_khr_image2d_from_buffer";
+        పూర్ణాంకం fail = 0;
 
-        if (!opencl_check_extension(hwdev, drm_arm_ext)) {
+        ఒకవేళ (!opencl_check_extension(hwdev, drm_arm_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for DRM to OpenCL mapping on ARM.\n",
                    drm_arm_ext);
             fail = 1;
         }
-        if (!opencl_check_extension(hwdev, image_ext)) {
+        ఒకవేళ (!opencl_check_extension(hwdev, image_ext)) {
             av_log(hwdev, AV_LOG_VERBOSE, "The %s extension is "
                    "required for DRM to OpenCL mapping on ARM.\n",
                    image_ext);
@@ -892,61 +892,61 @@ static int opencl_device_init(AVHWDeviceContext *hwdev)
 
         // clImportMemoryARM() is linked statically.
 
-        if (fail) {
+        ఒకవేళ (fail) {
             av_log(hwdev, AV_LOG_WARNING, "DRM to OpenCL mapping on ARM "
                    "not usable.\n");
             priv->drm_arm_mapping_usable = 0;
-        } else {
+        } లేకపోతే {
             priv->drm_arm_mapping_usable = 1;
         }
     }
-#endif
+#అయితే_ముగింపు
 
-#undef CL_FUNC
+#నిర్వచనం_రద్దు CL_FUNC
 
-    return 0;
+    తిరిగి 0;
 }
 
-static void opencl_device_uninit(AVHWDeviceContext *hwdev)
+స్థిర శూన్య opencl_device_uninit(AVHWDeviceContext *hwdev)
 {
     OpenCLDeviceContext *priv = hwdev->hwctx;
     cl_int cle;
 
-    if (priv->command_queue) {
-        cle = clReleaseCommandQueue(priv->command_queue);
-        if (cle != CL_SUCCESS) {
+    ఒకవేళ (priv->command_వరుస) {
+        cle = cl_Release_Command_వరుస(priv->command_వరుస);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwdev, AV_LOG_ERROR, "Failed to release internal "
                    "command queue reference: %d.\n", cle);
         }
-        priv->command_queue = NULL;
+        priv->command_వరుస = ఖాళీ;
     }
 }
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-static int opencl_filter_intel_media_vaapi_platform(AVHWDeviceContext *hwdev,
+#ఒకవేళ HAVE_OPENCL_VAAPI_INTEL_MEDIA
+స్థిర పూర్ణాంకం opencl_filter_intel_media_vaapi_platform(AVHWDeviceContext *hwdev,
                                                     cl_platform_id platform_id,
-                                                    const char *platform_name,
-                                                    void *context)
+                                                    స్థిరరాశి అక్షరం *platform_name,
+                                                    శూన్య *context)
 {
     // This doesn't exist as a platform extension, so just test whether
     // the function we will use for device enumeration exists.
 
-    if (!clGetExtensionFunctionAddressForPlatform(platform_id,
+    ఒకవేళ (!cl_Get_Extension_Function_చిరునామా_For_Platform(platform_id,
             "clGetDeviceIDsFromVA_APIMediaAdapterINTEL")) {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not export the "
                "VAAPI device enumeration function.\n", platform_name);
-        return 1;
-    } else {
-        return 0;
+        తిరిగి 1;
+    } లేకపోతే {
+        తిరిగి 0;
     }
 }
 
-static int opencl_enumerate_intel_media_vaapi_devices(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_enumerate_intel_media_vaapi_devices(AVHWDeviceContext *hwdev,
                                                       cl_platform_id platform_id,
-                                                      const char *platform_name,
+                                                      స్థిరరాశి అక్షరం *platform_name,
                                                       cl_uint *nb_devices,
                                                       cl_device_id **devices,
-                                                      void *context)
+                                                      శూన్య *context)
 {
     VADisplay va_display = context;
     clGetDeviceIDsFromVA_APIMediaAdapterINTEL_fn
@@ -954,85 +954,85 @@ static int opencl_enumerate_intel_media_vaapi_devices(AVHWDeviceContext *hwdev,
     cl_int cle;
 
     clGetDeviceIDsFromVA_APIMediaAdapterINTEL =
-        clGetExtensionFunctionAddressForPlatform(platform_id,
+        cl_Get_Extension_Function_చిరునామా_For_Platform(platform_id,
             "clGetDeviceIDsFromVA_APIMediaAdapterINTEL");
-    if (!clGetDeviceIDsFromVA_APIMediaAdapterINTEL) {
+    ఒకవేళ (!clGetDeviceIDsFromVA_APIMediaAdapterINTEL) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get address of "
                "clGetDeviceIDsFromVA_APIMediaAdapterINTEL().\n");
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
     cle = clGetDeviceIDsFromVA_APIMediaAdapterINTEL(
         platform_id, CL_VA_API_DISPLAY_INTEL, va_display,
-        CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, 0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+        CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, 0, ఖాళీ, nb_devices);
+    ఒకవేళ (cle == CL_DEVICE_NOT_దొరికింది) {
         av_log(hwdev, AV_LOG_DEBUG, "No VAAPI-supporting devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        తిరిగి 0;
+    } లేకపోతే ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
-    *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    *devices = av_malloc_array(*nb_devices, పరిమాణం(**devices));
+    ఒకవేళ (!*devices)
+        తిరిగి AVERROR(ENOMEM);
 
     cle = clGetDeviceIDsFromVA_APIMediaAdapterINTEL(
         platform_id, CL_VA_API_DISPLAY_INTEL, va_display,
-        CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+        CL_PREFERRED_DEVICES_FOR_VA_API_INTEL, *nb_devices, *devices, ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of VAAPI-supporting "
                "devices on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int opencl_filter_intel_media_vaapi_device(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_filter_intel_media_vaapi_device(AVHWDeviceContext *hwdev,
                                                   cl_device_id device_id,
-                                                  const char *device_name,
-                                                  void *context)
+                                                  స్థిరరాశి అక్షరం *device_name,
+                                                  శూన్య *context)
 {
-    const char *va_ext = "cl_intel_va_api_media_sharing";
+    స్థిరరాశి అక్షరం *va_ext = "cl_intel_va_api_media_sharing";
 
-    if (opencl_check_device_extension(device_id, va_ext)) {
-        return 0;
-    } else {
+    ఒకవేళ (opencl_check_device_extension(device_id, va_ext)) {
+        తిరిగి 0;
+    } లేకపోతే {
         av_log(hwdev, AV_LOG_DEBUG, "Device %s does not support the "
                "%s extension.\n", device_name, va_ext);
-        return 1;
+        తిరిగి 1;
     }
 }
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DXVA2
-static int opencl_filter_dxva2_platform(AVHWDeviceContext *hwdev,
+#ఒకవేళ HAVE_OPENCL_DXVA2
+స్థిర పూర్ణాంకం opencl_filter_dxva2_platform(AVHWDeviceContext *hwdev,
                                         cl_platform_id platform_id,
-                                        const char *platform_name,
-                                        void *context)
+                                        స్థిరరాశి అక్షరం *platform_name,
+                                        శూన్య *context)
 {
-    const char *dx9_ext = "cl_khr_dx9_media_sharing";
+    స్థిరరాశి అక్షరం *dx9_ext = "cl_khr_dx9_media_sharing";
 
-    if (opencl_check_platform_extension(platform_id, dx9_ext)) {
-        return 0;
-    } else {
+    ఒకవేళ (opencl_check_platform_extension(platform_id, dx9_ext)) {
+        తిరిగి 0;
+    } లేకపోతే {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not support the "
                "%s extension.\n", platform_name, dx9_ext);
-        return 1;
+        తిరిగి 1;
     }
 }
 
-static int opencl_enumerate_dxva2_devices(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_enumerate_dxva2_devices(AVHWDeviceContext *hwdev,
                                           cl_platform_id platform_id,
-                                          const char *platform_name,
+                                          స్థిరరాశి అక్షరం *platform_name,
                                           cl_uint *nb_devices,
                                           cl_device_id **devices,
-                                          void *context)
+                                          శూన్య *context)
 {
     IDirect3DDevice9 *device = context;
     clGetDeviceIDsFromDX9MediaAdapterKHR_fn
@@ -1041,220 +1041,220 @@ static int opencl_enumerate_dxva2_devices(AVHWDeviceContext *hwdev,
     cl_int cle;
 
     clGetDeviceIDsFromDX9MediaAdapterKHR =
-        clGetExtensionFunctionAddressForPlatform(platform_id,
+        cl_Get_Extension_Function_చిరునామా_For_Platform(platform_id,
             "clGetDeviceIDsFromDX9MediaAdapterKHR");
-    if (!clGetDeviceIDsFromDX9MediaAdapterKHR) {
+    ఒకవేళ (!clGetDeviceIDsFromDX9MediaAdapterKHR) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get address of "
                "clGetDeviceIDsFromDX9MediaAdapterKHR().\n");
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
     cle = clGetDeviceIDsFromDX9MediaAdapterKHR(
-        platform_id, 1, &media_adapter_type, (void**)&device,
+        platform_id, 1, &media_adapter_type, (శూన్య**)&device,
         CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
-        0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+        0, ఖాళీ, nb_devices);
+    ఒకవేళ (cle == CL_DEVICE_NOT_దొరికింది) {
         av_log(hwdev, AV_LOG_DEBUG, "No DXVA2-supporting devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        తిరిగి 0;
+    } లేకపోతే ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
-    *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    *devices = av_malloc_array(*nb_devices, పరిమాణం(**devices));
+    ఒకవేళ (!*devices)
+        తిరిగి AVERROR(ENOMEM);
 
     cle = clGetDeviceIDsFromDX9MediaAdapterKHR(
-        platform_id, 1, &media_adapter_type, (void**)&device,
+        platform_id, 1, &media_adapter_type, (శూన్య**)&device,
         CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
-        *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+        *nb_devices, *devices, ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of DXVA2-supporting "
                "devices on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
-    return 0;
+    తిరిగి 0;
 }
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_D3D11
-static int opencl_filter_d3d11_platform(AVHWDeviceContext *hwdev,
+#ఒకవేళ HAVE_OPENCL_D3D11
+స్థిర పూర్ణాంకం opencl_filter_d3d11_platform(AVHWDeviceContext *hwdev,
                                         cl_platform_id platform_id,
-                                        const char *platform_name,
-                                        void *context)
+                                        స్థిరరాశి అక్షరం *platform_name,
+                                        శూన్య *context)
 {
-    const char *d3d11_ext = "cl_khr_d3d11_sharing";
+    స్థిరరాశి అక్షరం *d3d11_ext = "cl_khr_d3d11_sharing";
 
-    if (opencl_check_platform_extension(platform_id, d3d11_ext)) {
-        return 0;
-    } else {
+    ఒకవేళ (opencl_check_platform_extension(platform_id, d3d11_ext)) {
+        తిరిగి 0;
+    } లేకపోతే {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not support the "
                "%s extension.\n", platform_name, d3d11_ext);
-        return 1;
+        తిరిగి 1;
     }
 }
 
-static int opencl_enumerate_d3d11_devices(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_enumerate_d3d11_devices(AVHWDeviceContext *hwdev,
                                           cl_platform_id platform_id,
-                                          const char *platform_name,
+                                          స్థిరరాశి అక్షరం *platform_name,
                                           cl_uint *nb_devices,
                                           cl_device_id **devices,
-                                          void *context)
+                                          శూన్య *context)
 {
     ID3D11Device *device = context;
     clGetDeviceIDsFromD3D11KHR_fn clGetDeviceIDsFromD3D11KHR;
     cl_int cle;
 
     clGetDeviceIDsFromD3D11KHR =
-        clGetExtensionFunctionAddressForPlatform(platform_id,
+        cl_Get_Extension_Function_చిరునామా_For_Platform(platform_id,
             "clGetDeviceIDsFromD3D11KHR");
-    if (!clGetDeviceIDsFromD3D11KHR) {
+    ఒకవేళ (!clGetDeviceIDsFromD3D11KHR) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get address of "
                "clGetDeviceIDsFromD3D11KHR().\n");
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
     cle = clGetDeviceIDsFromD3D11KHR(platform_id,
                                      CL_D3D11_DEVICE_KHR, device,
                                      CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
-                                     0, NULL, nb_devices);
-    if (cle == CL_DEVICE_NOT_FOUND) {
+                                     0, ఖాళీ, nb_devices);
+    ఒకవేళ (cle == CL_DEVICE_NOT_దొరికింది) {
         av_log(hwdev, AV_LOG_DEBUG, "No D3D11-supporting devices found "
                "on platform \"%s\".\n", platform_name);
         *nb_devices = 0;
-        return 0;
-    } else if (cle != CL_SUCCESS) {
+        తిరిగి 0;
+    } లేకపోతే ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get number of devices "
                "on platform \"%s\": %d.\n", platform_name, cle);
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
-    *devices = av_malloc_array(*nb_devices, sizeof(**devices));
-    if (!*devices)
-        return AVERROR(ENOMEM);
+    *devices = av_malloc_array(*nb_devices, పరిమాణం(**devices));
+    ఒకవేళ (!*devices)
+        తిరిగి AVERROR(ENOMEM);
 
     cle = clGetDeviceIDsFromD3D11KHR(platform_id,
                                      CL_D3D11_DEVICE_KHR, device,
                                      CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
-                                     *nb_devices, *devices, NULL);
-    if (cle != CL_SUCCESS) {
+                                     *nb_devices, *devices, ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get list of D3D11-supporting "
                "devices on platform \"%s\": %d.\n", platform_name, cle);
         av_freep(devices);
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
 
-    return 0;
+    తిరిగి 0;
 }
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
-static int opencl_filter_gpu_device(AVHWDeviceContext *hwdev,
+#ఒకవేళ HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
+స్థిర పూర్ణాంకం opencl_filter_gpu_device(AVHWDeviceContext *hwdev,
                                     cl_device_id device_id,
-                                    const char *device_name,
-                                    void *context)
+                                    స్థిరరాశి అక్షరం *device_name,
+                                    శూన్య *context)
 {
     cl_device_type device_type;
     cl_int cle;
 
     cle = clGetDeviceInfo(device_id, CL_DEVICE_TYPE,
-                          sizeof(device_type), &device_type, NULL);
-    if (cle != CL_SUCCESS) {
+                          పరిమాణం(device_type), &device_type, ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query device type "
                "of device \"%s\".\n", device_name);
-        return AVERROR_UNKNOWN;
+        తిరిగి AVERROR_UNKNOWN;
     }
-    if (!(device_type & CL_DEVICE_TYPE_GPU)) {
+    ఒకవేళ (!(device_type & CL_DEVICE_TYPE_GPU)) {
         av_log(hwdev, AV_LOG_DEBUG, "Device %s skipped (not GPU).\n",
                device_name);
-        return 1;
+        తిరిగి 1;
     }
 
-    return 0;
+    తిరిగి 0;
 }
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DRM_ARM
-static int opencl_filter_drm_arm_platform(AVHWDeviceContext *hwdev,
+#ఒకవేళ HAVE_OPENCL_DRM_ARM
+స్థిర పూర్ణాంకం opencl_filter_drm_arm_platform(AVHWDeviceContext *hwdev,
                                           cl_platform_id platform_id,
-                                          const char *platform_name,
-                                          void *context)
+                                          స్థిరరాశి అక్షరం *platform_name,
+                                          శూన్య *context)
 {
-    const char *drm_arm_ext = "cl_arm_import_memory";
+    స్థిరరాశి అక్షరం *drm_arm_ext = "cl_arm_import_memory";
 
-    if (opencl_check_platform_extension(platform_id, drm_arm_ext)) {
-        return 0;
-    } else {
+    ఒకవేళ (opencl_check_platform_extension(platform_id, drm_arm_ext)) {
+        తిరిగి 0;
+    } లేకపోతే {
         av_log(hwdev, AV_LOG_DEBUG, "Platform %s does not support the "
                "%s extension.\n", platform_name, drm_arm_ext);
-        return 1;
+        తిరిగి 1;
     }
 }
 
-static int opencl_filter_drm_arm_device(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_filter_drm_arm_device(AVHWDeviceContext *hwdev,
                                         cl_device_id device_id,
-                                        const char *device_name,
-                                        void *context)
+                                        స్థిరరాశి అక్షరం *device_name,
+                                        శూన్య *context)
 {
-    const char *drm_arm_ext = "cl_arm_import_memory";
+    స్థిరరాశి అక్షరం *drm_arm_ext = "cl_arm_import_memory";
 
-    if (opencl_check_device_extension(device_id, drm_arm_ext)) {
-        return 0;
-    } else {
+    ఒకవేళ (opencl_check_device_extension(device_id, drm_arm_ext)) {
+        తిరిగి 0;
+    } లేకపోతే {
         av_log(hwdev, AV_LOG_DEBUG, "Device %s does not support the "
                "%s extension.\n", device_name, drm_arm_ext);
-        return 1;
+        తిరిగి 1;
     }
 }
-#endif
+#అయితే_ముగింపు
 
-static int opencl_device_derive(AVHWDeviceContext *hwdev,
+స్థిర పూర్ణాంకం opencl_device_derive(AVHWDeviceContext *hwdev,
                                 AVHWDeviceContext *src_ctx, AVDictionary *opts,
-                                int flags)
+                                పూర్ణాంకం flags)
 {
-    int err;
-    switch (src_ctx->type) {
+    పూర్ణాంకం err;
+    ఎంపిక (src_ctx->type) {
 
-#if HAVE_OPENCL_DRM_BEIGNET
-    case AV_HWDEVICE_TYPE_DRM:
-    case AV_HWDEVICE_TYPE_VAAPI:
+#ఒకవేళ HAVE_OPENCL_DRM_BEIGNET
+    స్థితి AV_HWDEVICE_TYPE_DRM:
+    స్థితి AV_HWDEVICE_TYPE_VAAPI:
         {
             // Surface mapping works via DRM PRIME fds with no special
             // initialisation required in advance.  This just finds the
             // Beignet ICD by name.
-            AVDictionary *selector_opts = NULL;
+            AVDictionary *selector_opts = ఖాళీ;
 
-            err = av_dict_set(&selector_opts, "platform_vendor", "Intel", 0);
-            if (err >= 0)
-                err = av_dict_set(&selector_opts, "platform_version", "beignet", 0);
-            if (err >= 0) {
+            err = av_dict_సమితి(&selector_opts, "platform_vendor", "Intel", 0);
+            ఒకవేళ (err >= 0)
+                err = av_dict_సమితి(&selector_opts, "platform_version", "beignet", 0);
+            ఒకవేళ (err >= 0) {
                 OpenCLDeviceSelector selector = {
-                    .platform_index      = -1,
-                    .device_index        = 0,
+                    .platform_సూచీ      = -1,
+                    .device_సూచీ        = 0,
                     .context             = selector_opts,
                     .enumerate_platforms = &opencl_enumerate_platforms,
                     .filter_platform     = &opencl_filter_platform,
                     .enumerate_devices   = &opencl_enumerate_devices,
-                    .filter_device       = NULL,
+                    .filter_device       = ఖాళీ,
                 };
-                err = opencl_device_create_internal(hwdev, &selector, NULL);
+                err = opencl_device_create_అంతర్గత(hwdev, &selector, ఖాళీ);
             }
             av_dict_free(&selector_opts);
         }
-        break;
-#endif
+        ఆపు;
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#ఒకవేళ HAVE_OPENCL_VAAPI_INTEL_MEDIA
         // The generic code automatically attempts to derive from all
         // ancestors of the given device, so we can ignore QSV devices here
         // and just consider the inner VAAPI device it was derived from.
-    case AV_HWDEVICE_TYPE_VAAPI:
+    స్థితి AV_HWDEVICE_TYPE_VAAPI:
         {
             AVVAAPIDeviceContext *src_hwctx = src_ctx->hwctx;
             cl_context_properties props[7] = {
@@ -1267,8 +1267,8 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
                 0,
             };
             OpenCLDeviceSelector selector = {
-                .platform_index      = -1,
-                .device_index        = -1,
+                .platform_సూచీ      = -1,
+                .device_సూచీ        = -1,
                 .context             = src_hwctx->display,
                 .enumerate_platforms = &opencl_enumerate_platforms,
                 .filter_platform     = &opencl_filter_intel_media_vaapi_platform,
@@ -1276,13 +1276,13 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
                 .filter_device       = &opencl_filter_intel_media_vaapi_device,
             };
 
-            err = opencl_device_create_internal(hwdev, &selector, props);
+            err = opencl_device_create_అంతర్గత(hwdev, &selector, props);
         }
-        break;
-#endif
+        ఆపు;
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+#ఒకవేళ HAVE_OPENCL_DXVA2
+    స్థితి AV_HWDEVICE_TYPE_DXVA2:
         {
             AVDXVA2DeviceContext *src_hwctx = src_ctx->hwctx;
             IDirect3DDevice9 *device;
@@ -1291,17 +1291,17 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
 
             hr = IDirect3DDeviceManager9_OpenDeviceHandle(src_hwctx->devmgr,
                                                           &device_handle);
-            if (FAILED(hr)) {
+            ఒకవేళ (FAILED(hr)) {
                 av_log(hwdev, AV_LOG_ERROR, "Failed to open device handle "
-                       "for Direct3D9 device: %lx.\n", (unsigned long)hr);
+                       "for Direct3D9 device: %lx.\n", (గుర్తులేని దీర్ఘ)hr);
                 err = AVERROR_UNKNOWN;
-                break;
+                ఆపు;
             }
 
-            hr = IDirect3DDeviceManager9_LockDevice(src_hwctx->devmgr,
+            hr = IDirect3_DDevice_Manager9_తాళం_Device(src_hwctx->devmgr,
                                                     device_handle,
                                                     &device, FALSE);
-            if (SUCCEEDED(hr)) {
+            ఒకవేళ (SUCCEEDED(hr)) {
                 cl_context_properties props[5] = {
                     CL_CONTEXT_PLATFORM,
                     0,
@@ -1310,8 +1310,8 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
                     0,
                 };
                 OpenCLDeviceSelector selector = {
-                    .platform_index      = -1,
-                    .device_index        = -1,
+                    .platform_సూచీ      = -1,
+                    .device_సూచీ        = -1,
                     .context             = device,
                     .enumerate_platforms = &opencl_enumerate_platforms,
                     .filter_platform     = &opencl_filter_dxva2_platform,
@@ -1319,24 +1319,24 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
                     .filter_device       = &opencl_filter_gpu_device,
                 };
 
-                err = opencl_device_create_internal(hwdev, &selector, props);
+                err = opencl_device_create_అంతర్గత(hwdev, &selector, props);
 
                 IDirect3DDeviceManager9_UnlockDevice(src_hwctx->devmgr,
                                                      device_handle, FALSE);
-            } else {
+            } లేకపోతే {
                 av_log(hwdev, AV_LOG_ERROR, "Failed to lock device handle "
-                       "for Direct3D9 device: %lx.\n", (unsigned long)hr);
+                       "for Direct3D9 device: %lx.\n", (గుర్తులేని దీర్ఘ)hr);
                 err = AVERROR_UNKNOWN;
             }
 
             IDirect3DDeviceManager9_CloseDeviceHandle(src_hwctx->devmgr,
                                                       device_handle);
         }
-        break;
-#endif
+        ఆపు;
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_D3D11
-    case AV_HWDEVICE_TYPE_D3D11VA:
+#ఒకవేళ HAVE_OPENCL_D3D11
+    స్థితి AV_HWDEVICE_TYPE_D3D11VA:
         {
             AVD3D11VADeviceContext *src_hwctx = src_ctx->hwctx;
             cl_context_properties props[5] = {
@@ -1347,8 +1347,8 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
                 0,
             };
             OpenCLDeviceSelector selector = {
-                .platform_index      = -1,
-                .device_index        = -1,
+                .platform_సూచీ      = -1,
+                .device_సూచీ        = -1,
                 .context             = src_hwctx->device,
                 .enumerate_platforms = &opencl_enumerate_platforms,
                 .filter_platform     = &opencl_filter_d3d11_platform,
@@ -1356,289 +1356,289 @@ static int opencl_device_derive(AVHWDeviceContext *hwdev,
                 .filter_device       = &opencl_filter_gpu_device,
             };
 
-            err = opencl_device_create_internal(hwdev, &selector, props);
+            err = opencl_device_create_అంతర్గత(hwdev, &selector, props);
         }
-        break;
-#endif
+        ఆపు;
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DRM_ARM
-    case AV_HWDEVICE_TYPE_DRM:
+#ఒకవేళ HAVE_OPENCL_DRM_ARM
+    స్థితి AV_HWDEVICE_TYPE_DRM:
         {
             OpenCLDeviceSelector selector = {
-                .platform_index      = -1,
-                .device_index        = -1,
-                .context             = NULL,
+                .platform_సూచీ      = -1,
+                .device_సూచీ        = -1,
+                .context             = ఖాళీ,
                 .enumerate_platforms = &opencl_enumerate_platforms,
                 .filter_platform     = &opencl_filter_drm_arm_platform,
                 .enumerate_devices   = &opencl_enumerate_devices,
                 .filter_device       = &opencl_filter_drm_arm_device,
             };
 
-            err = opencl_device_create_internal(hwdev, &selector, NULL);
+            err = opencl_device_create_అంతర్గత(hwdev, &selector, ఖాళీ);
         }
-        break;
-#endif
+        ఆపు;
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_VIDEOTOOLBOX
-    case AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
-        err = opencl_device_create(hwdev, NULL, NULL, 0);
-        break;
-#endif
+#ఒకవేళ HAVE_OPENCL_VIDEOTOOLBOX
+    స్థితి AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
+        err = opencl_device_create(hwdev, ఖాళీ, ఖాళీ, 0);
+        ఆపు;
+#అయితే_ముగింపు
 
-    default:
+    అప్రమేయ:
         err = AVERROR(ENOSYS);
-        break;
+        ఆపు;
     }
 
-    return err;
+    తిరిగి err;
 }
 
-static int opencl_get_plane_format(enum AVPixelFormat pixfmt,
-                                   int plane, int width, int height,
+స్థిర పూర్ణాంకం opencl_get_plane_format(గణన AVPixelFormat pixfmt,
+                                   పూర్ణాంకం plane, పూర్ణాంకం వెడల్పు, పూర్ణాంకం ఎత్తు,
                                    cl_image_format *image_format,
                                    cl_image_desc *image_desc)
 {
-    const AVPixFmtDescriptor *desc;
-    const AVComponentDescriptor *comp;
-    int channels = 0, order = 0, depth = 0, step = 0;
-    int wsub, hsub, alpha;
-    int c;
+    స్థిరరాశి AVPixFmtDescriptor *desc;
+    స్థిరరాశి AVComponentDescriptor *comp;
+    పూర్ణాంకం channels = 0, క్రమం = 0, లోతు = 0, అడుగు = 0;
+    పూర్ణాంకం wsub, hsub, alpha;
+    పూర్ణాంకం c;
 
-    if (plane >= AV_NUM_DATA_POINTERS)
-        return AVERROR(ENOENT);
+    ఒకవేళ (plane >= AV_అంకె_దత్తాంశం_సూచికలు)
+        తిరిగి AVERROR(ENOENT);
 
     desc = av_pix_fmt_desc_get(pixfmt);
 
     // Only normal images are allowed.
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM |
+    ఒకవేళ (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM |
                        AV_PIX_FMT_FLAG_HWACCEL   |
                        AV_PIX_FMT_FLAG_PAL))
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
 
     wsub = 1 << desc->log2_chroma_w;
     hsub = 1 << desc->log2_chroma_h;
     // Subsampled components must be exact.
-    if (width & wsub - 1 || height & hsub - 1)
-        return AVERROR(EINVAL);
+    ఒకవేళ (వెడల్పు & wsub - 1 || ఎత్తు & hsub - 1)
+        తిరిగి AVERROR(EINVAL);
 
-    for (c = 0; c < desc->nb_components; c++) {
+    కొరకు (c = 0; c < desc->nb_components; c++) {
         comp = &desc->comp[c];
-        if (comp->plane != plane)
-            continue;
+        ఒకవేళ (comp->plane != plane)
+            కొనసాగు;
         // The step size must be a power of two.
-        if (comp->step != 1 && comp->step != 2 &&
-            comp->step != 4 && comp->step != 8)
-            return AVERROR(EINVAL);
+        ఒకవేళ (comp->అడుగు != 1 && comp->అడుగు != 2 &&
+            comp->అడుగు != 4 && comp->అడుగు != 8)
+            తిరిగి AVERROR(EINVAL);
         // The bits in each component must be packed in the
         // most-significant-bits of the relevant bytes.
-        if (comp->shift + comp->depth != 8 &&
-            comp->shift + comp->depth != 16 &&
-            comp->shift + comp->depth != 32)
-            return AVERROR(EINVAL);
+        ఒకవేళ (comp->జరుపు + comp->లోతు != 8 &&
+            comp->జరుపు + comp->లోతు != 16 &&
+            comp->జరుపు + comp->లోతు != 32)
+            తిరిగి AVERROR(EINVAL);
         // The depth must not vary between components.
-        if (depth && comp->depth != depth)
-            return AVERROR(EINVAL);
+        ఒకవేళ (లోతు && comp->లోతు != లోతు)
+            తిరిగి AVERROR(EINVAL);
         // If a single data element crosses multiple bytes then
         // it must match the native endianness.
-        if (comp->depth > 8 &&
+        ఒకవేళ (comp->లోతు > 8 &&
             HAVE_BIGENDIAN == !(desc->flags & AV_PIX_FMT_FLAG_BE))
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         // A single data element must not contain multiple samples
         // from the same component.
-        if (step && comp->step != step)
-            return AVERROR(EINVAL);
+        ఒకవేళ (అడుగు && comp->అడుగు != అడుగు)
+            తిరిగి AVERROR(EINVAL);
 
-        depth = comp->depth;
-        order = order * 10 + comp->offset / ((depth + 7) / 8) + 1;
-        step  = comp->step;
+        లోతు = comp->లోతు;
+        క్రమం = క్రమం * 10 + comp->స్థానభ్రంశం / ((లోతు + 7) / 8) + 1;
+        అడుగు  = comp->అడుగు;
         alpha = (desc->flags & AV_PIX_FMT_FLAG_ALPHA &&
                  c == desc->nb_components - 1);
         ++channels;
     }
-    if (channels == 0)
-        return AVERROR(ENOENT);
+    ఒకవేళ (channels == 0)
+        తిరిగి AVERROR(ENOENT);
 
-    memset(image_format, 0, sizeof(*image_format));
-    memset(image_desc,   0, sizeof(*image_desc));
+    memset(image_format, 0, పరిమాణం(*image_format));
+    memset(image_desc,   0, పరిమాణం(*image_desc));
     image_desc->image_type = CL_MEM_OBJECT_IMAGE2D;
 
-    if (plane == 0 || alpha) {
-        image_desc->image_width     = width;
-        image_desc->image_height    = height;
-        image_desc->image_row_pitch = step * width;
-    } else {
-        image_desc->image_width     = width  / wsub;
-        image_desc->image_height    = height / hsub;
-        image_desc->image_row_pitch = step * width / wsub;
+    ఒకవేళ (plane == 0 || alpha) {
+        image_desc->image_వెడల్పు     = వెడల్పు;
+        image_desc->image_ఎత్తు    = ఎత్తు;
+        image_desc->image_అడ్డువరుస_pitch = అడుగు * వెడల్పు;
+    } లేకపోతే {
+        image_desc->image_వెడల్పు     = వెడల్పు  / wsub;
+        image_desc->image_ఎత్తు    = ఎత్తు / hsub;
+        image_desc->image_అడ్డువరుస_pitch = అడుగు * వెడల్పు / wsub;
     }
 
-    if (depth <= 8) {
-        image_format->image_channel_data_type = CL_UNORM_INT8;
-    } else {
-        if (depth <= 16)
-            image_format->image_channel_data_type = CL_UNORM_INT16;
-        else if (depth == 32)
-            image_format->image_channel_data_type = CL_FLOAT;
-        else
-            return AVERROR(EINVAL);
+    ఒకవేళ (లోతు <= 8) {
+        image_format->image_channel_దత్తాంశం_type = CL_UNORM_INT8;
+    } లేకపోతే {
+        ఒకవేళ (లోతు <= 16)
+            image_format->image_channel_దత్తాంశం_type = CL_UNORM_INT16;
+        లేకపోతే ఒకవేళ (లోతు == 32)
+            image_format->image_channel_దత్తాంశం_type = CL_FLOAT;
+        లేకపోతే
+            తిరిగి AVERROR(EINVAL);
     }
 
-#define CHANNEL_ORDER(order, type) \
-    case order: image_format->image_channel_order = type; break;
-    switch (order) {
-        CHANNEL_ORDER(1,    CL_R);
-        CHANNEL_ORDER(12,   CL_RG);
-        CHANNEL_ORDER(1234, CL_RGBA);
-        CHANNEL_ORDER(2341, CL_ARGB);
-        CHANNEL_ORDER(3214, CL_BGRA);
-#ifdef CL_ABGR
-        CHANNEL_ORDER(4321, CL_ABGR);
-#endif
-    default:
-        return AVERROR(EINVAL);
+#నిర్వచించు CHANNEL_క్రమం(క్రమం, type) \
+    స్థితి క్రమం: image_format->image_channel_క్రమం = type; ఆపు;
+    ఎంపిక (క్రమం) {
+        CHANNEL_క్రమం(1,    CL_R);
+        CHANNEL_క్రమం(12,   CL_RG);
+        CHANNEL_క్రమం(1234, CL_RGBA);
+        CHANNEL_క్రమం(2341, CL_ARGB);
+        CHANNEL_క్రమం(3214, CL_BGRA);
+#నిర్వచితమైతే CL_ABGR
+        CHANNEL_క్రమం(4321, CL_ABGR);
+#అయితే_ముగింపు
+    అప్రమేయ:
+        తిరిగి AVERROR(EINVAL);
     }
-#undef CHANNEL_ORDER
+#నిర్వచనం_రద్దు CHANNEL_క్రమం
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int opencl_frames_get_constraints(AVHWDeviceContext *hwdev,
-                                         const void *hwconfig,
+స్థిర పూర్ణాంకం opencl_చట్రాలు_get_constraints(AVHWDeviceContext *hwdev,
+                                         స్థిరరాశి శూన్య *hwconfig,
                                          AVHWFramesConstraints *constraints)
 {
     AVOpenCLDeviceContext *hwctx = hwdev->hwctx;
     cl_uint nb_image_formats;
-    cl_image_format *image_formats = NULL;
+    cl_image_format *image_formats = ఖాళీ;
     cl_int cle;
-    enum AVPixelFormat pix_fmt;
-    int err, pix_fmts_found;
-    size_t max_width, max_height;
+    గణన AVPixelFormat pix_fmt;
+    పూర్ణాంకం err, pix_fmts_దొరికింది;
+    size_t max_వెడల్పు, max_ఎత్తు;
 
-    cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_IMAGE2D_MAX_WIDTH,
-                          sizeof(max_width), &max_width, NULL);
-    if (cle != CL_SUCCESS) {
+    cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_IMAGE2_D_MAX_వెడల్పు,
+                          పరిమాణం(max_వెడల్పు), &max_వెడల్పు, ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query maximum "
                "supported image width: %d.\n", cle);
-    } else {
-        constraints->max_width = max_width;
+    } లేకపోతే {
+        constraints->max_వెడల్పు = max_వెడల్పు;
     }
-    cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_IMAGE2D_MAX_HEIGHT,
-                          sizeof(max_height), &max_height, NULL);
-    if (cle != CL_SUCCESS) {
+    cle = clGetDeviceInfo(hwctx->device_id, CL_DEVICE_IMAGE2_D_MAX_ఎత్తు,
+                          పరిమాణం(max_ఎత్తు), &max_ఎత్తు, ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query maximum "
                "supported image height: %d.\n", cle);
-    } else {
-        constraints->max_height = max_height;
+    } లేకపోతే {
+        constraints->max_ఎత్తు = max_ఎత్తు;
     }
     av_log(hwdev, AV_LOG_DEBUG, "Maximum supported image size %dx%d.\n",
-           constraints->max_width, constraints->max_height);
+           constraints->max_వెడల్పు, constraints->max_ఎత్తు);
 
     cle = clGetSupportedImageFormats(hwctx->context,
                                      CL_MEM_READ_WRITE,
                                      CL_MEM_OBJECT_IMAGE2D,
-                                     0, NULL, &nb_image_formats);
-    if (cle != CL_SUCCESS) {
+                                     0, ఖాళీ, &nb_image_formats);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query supported "
                "image formats: %d.\n", cle);
         err = AVERROR(ENOSYS);
-        goto fail;
+        వెళ్ళు fail;
     }
-    if (nb_image_formats == 0) {
+    ఒకవేళ (nb_image_formats == 0) {
         av_log(hwdev, AV_LOG_ERROR, "No image support in OpenCL "
                "driver (zero supported image formats).\n");
         err = AVERROR(ENOSYS);
-        goto fail;
+        వెళ్ళు fail;
     }
 
     image_formats =
-        av_malloc_array(nb_image_formats, sizeof(*image_formats));
-    if (!image_formats) {
+        av_malloc_array(nb_image_formats, పరిమాణం(*image_formats));
+    ఒకవేళ (!image_formats) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        వెళ్ళు fail;
     }
 
     cle = clGetSupportedImageFormats(hwctx->context,
                                      CL_MEM_READ_WRITE,
                                      CL_MEM_OBJECT_IMAGE2D,
                                      nb_image_formats,
-                                     image_formats, NULL);
-    if (cle != CL_SUCCESS) {
+                                     image_formats, ఖాళీ);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to query supported "
                "image formats: %d.\n", cle);
         err = AVERROR(ENOSYS);
-        goto fail;
+        వెళ్ళు fail;
     }
 
-    pix_fmts_found = 0;
-    for (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++) {
+    pix_fmts_దొరికింది = 0;
+    కొరకు (pix_fmt = 0; pix_fmt < AV_PIX_FMT_NB; pix_fmt++) {
         cl_image_format image_format;
         cl_image_desc   image_desc;
-        int plane, i;
+        పూర్ణాంకం plane, i;
 
-        for (plane = 0;; plane++) {
+        కొరకు (plane = 0;; plane++) {
             err = opencl_get_plane_format(pix_fmt, plane, 0, 0,
                                           &image_format,
                                           &image_desc);
-            if (err < 0)
-                break;
+            ఒకవేళ (err < 0)
+                ఆపు;
 
-            for (i = 0; i < nb_image_formats; i++) {
-                if (image_formats[i].image_channel_order ==
-                    image_format.image_channel_order &&
-                    image_formats[i].image_channel_data_type ==
-                    image_format.image_channel_data_type)
-                    break;
+            కొరకు (i = 0; i < nb_image_formats; i++) {
+                ఒకవేళ (image_formats[i].image_channel_క్రమం ==
+                    image_format.image_channel_క్రమం &&
+                    image_formats[i].image_channel_దత్తాంశం_type ==
+                    image_format.image_channel_దత్తాంశం_type)
+                    ఆపు;
             }
-            if (i == nb_image_formats) {
+            ఒకవేళ (i == nb_image_formats) {
                 err = AVERROR(EINVAL);
-                break;
+                ఆపు;
             }
         }
-        if (err != AVERROR(ENOENT))
-            continue;
+        ఒకవేళ (err != AVERROR(ENOENT))
+            కొనసాగు;
 
         av_log(hwdev, AV_LOG_DEBUG, "Format %s supported.\n",
                av_get_pix_fmt_name(pix_fmt));
 
         err = av_reallocp_array(&constraints->valid_sw_formats,
-                                pix_fmts_found + 2,
-                                sizeof(*constraints->valid_sw_formats));
-        if (err < 0)
-            goto fail;
-        constraints->valid_sw_formats[pix_fmts_found] = pix_fmt;
-        constraints->valid_sw_formats[pix_fmts_found + 1] =
+                                pix_fmts_దొరికింది + 2,
+                                పరిమాణం(*constraints->valid_sw_formats));
+        ఒకవేళ (err < 0)
+            వెళ్ళు fail;
+        constraints->valid_sw_formats[pix_fmts_దొరికింది] = pix_fmt;
+        constraints->valid_sw_formats[pix_fmts_దొరికింది + 1] =
             AV_PIX_FMT_NONE;
-        ++pix_fmts_found;
+        ++pix_fmts_దొరికింది;
     }
 
     av_freep(&image_formats);
 
     constraints->valid_hw_formats =
-        av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats) {
+        av_malloc_array(2, పరిమాణం(*constraints->valid_hw_formats));
+    ఒకవేళ (!constraints->valid_hw_formats) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        వెళ్ళు fail;
     }
     constraints->valid_hw_formats[0] = AV_PIX_FMT_OPENCL;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    తిరిగి 0;
 
 fail:
     av_freep(&image_formats);
-    return err;
+    తిరిగి err;
 }
 
-static void opencl_pool_free(void *opaque, uint8_t *data)
+స్థిర శూన్య opencl_pool_free(శూన్య *opaque, uint8_t *దత్తాంశం)
 {
     AVHWFramesContext       *hwfc = opaque;
-    AVOpenCLFrameDescriptor *desc = (AVOpenCLFrameDescriptor*)data;
+    AVOpenCLFrameDescriptor *desc = (AVOpenCLFrameDescriptor*)దత్తాంశం;
     cl_int cle;
-    int p;
+    పూర్ణాంకం p;
 
-    for (p = 0; p < desc->nb_planes; p++) {
+    కొరకు (p = 0; p < desc->nb_planes; p++) {
         cle = clReleaseMemObject(desc->planes[p]);
-        if (cle != CL_SUCCESS) {
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to release plane %d: "
                    "%d.\n", p, cle);
         }
@@ -1647,7 +1647,7 @@ static void opencl_pool_free(void *opaque, uint8_t *data)
     av_free(desc);
 }
 
-static AVBufferRef *opencl_pool_alloc(void *opaque, size_t size)
+స్థిర AVBufferRef *opencl_pool_alloc(శూన్య *opaque, size_t కొలత)
 {
     AVHWFramesContext      *hwfc = opaque;
     AVOpenCLDeviceContext *hwctx = hwfc->device_ctx->hwctx;
@@ -1656,32 +1656,32 @@ static AVBufferRef *opencl_pool_alloc(void *opaque, size_t size)
     cl_mem image;
     cl_image_format image_format;
     cl_image_desc   image_desc;
-    int err, p;
+    పూర్ణాంకం err, p;
     AVBufferRef *ref;
 
-    desc = av_mallocz(sizeof(*desc));
-    if (!desc)
-        return NULL;
+    desc = av_mallocz(పరిమాణం(*desc));
+    ఒకవేళ (!desc)
+        తిరిగి ఖాళీ;
 
-    for (p = 0;; p++) {
+    కొరకు (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
-                                      hwfc->width, hwfc->height,
+                                      hwfc->వెడల్పు, hwfc->ఎత్తు,
                                       &image_format, &image_desc);
-        if (err == AVERROR(ENOENT))
-            break;
-        if (err < 0)
-            goto fail;
+        ఒకవేళ (err == AVERROR(ENOENT))
+            ఆపు;
+        ఒకవేళ (err < 0)
+            వెళ్ళు fail;
 
         // For generic image objects, the pitch is determined by the
         // implementation.
-        image_desc.image_row_pitch = 0;
+        image_desc.image_అడ్డువరుస_pitch = 0;
 
         image = clCreateImage(hwctx->context, CL_MEM_READ_WRITE,
-                              &image_format, &image_desc, NULL, &cle);
-        if (!image) {
+                              &image_format, &image_desc, ఖాళీ, &cle);
+        ఒకవేళ (!image) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to create image for "
                    "plane %d: %d.\n", p, cle);
-            goto fail;
+            వెళ్ళు fail;
         }
 
         desc->planes[p] = image;
@@ -1689,147 +1689,147 @@ static AVBufferRef *opencl_pool_alloc(void *opaque, size_t size)
 
     desc->nb_planes = p;
 
-    ref = av_buffer_create((uint8_t*)desc, sizeof(*desc),
+    ref = av_బఫరు_create((uint8_t*)desc, పరిమాణం(*desc),
                            &opencl_pool_free, hwfc, 0);
-    if (!ref)
-        goto fail;
+    ఒకవేళ (!ref)
+        వెళ్ళు fail;
 
-    return ref;
+    తిరిగి ref;
 
 fail:
-    for (p = 0; desc->planes[p]; p++)
+    కొరకు (p = 0; desc->planes[p]; p++)
         clReleaseMemObject(desc->planes[p]);
     av_free(desc);
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
-static int opencl_frames_init_command_queue(AVHWFramesContext *hwfc)
+స్థిర పూర్ణాంకం opencl_చట్రాలు_init_command_వరుస(AVHWFramesContext *hwfc)
 {
     OpenCLFramesContext    *priv = hwfc->hwctx;
     AVOpenCLFramesContext *hwctx = &priv->p;
     OpenCLDeviceContext *devpriv = hwfc->device_ctx->hwctx;
     cl_int cle;
 
-    priv->command_queue = hwctx->command_queue ? hwctx->command_queue
-                                               : devpriv->command_queue;
-    cle = clRetainCommandQueue(priv->command_queue);
-    if (cle != CL_SUCCESS) {
+    priv->command_వరుస = hwctx->command_వరుస ? hwctx->command_వరుస
+                                               : devpriv->command_వరుస;
+    cle = cl_Retain_Command_వరుస(priv->command_వరుస);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to retain frame "
                "command queue: %d.\n", cle);
-        return AVERROR(EIO);
+        తిరిగి AVERROR(EIO);
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int opencl_frames_init(AVHWFramesContext *hwfc)
+స్థిర పూర్ణాంకం opencl_చట్రాలు_init(AVHWFramesContext *hwfc)
 {
-    if (!hwfc->pool) {
-        ffhwframesctx(hwfc)->pool_internal =
-            av_buffer_pool_init2(sizeof(cl_mem), hwfc,
-                                 &opencl_pool_alloc, NULL);
-        if (!ffhwframesctx(hwfc)->pool_internal)
-            return AVERROR(ENOMEM);
+    ఒకవేళ (!hwfc->pool) {
+        ffhwframesctx(hwfc)->pool_అంతర్గత =
+            av_బఫరు_pool_init2(పరిమాణం(cl_mem), hwfc,
+                                 &opencl_pool_alloc, ఖాళీ);
+        ఒకవేళ (!ffhwframesctx(hwfc)->pool_అంతర్గత)
+            తిరిగి AVERROR(ENOMEM);
     }
 
-    return opencl_frames_init_command_queue(hwfc);
+    తిరిగి opencl_చట్రాలు_init_command_వరుస(hwfc);
 }
 
-static void opencl_frames_uninit(AVHWFramesContext *hwfc)
+స్థిర శూన్య opencl_చట్రాలు_uninit(AVHWFramesContext *hwfc)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_int cle;
 
-#if HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
-    int i, p;
-    for (i = 0; i < priv->nb_mapped_frames; i++) {
-        AVOpenCLFrameDescriptor *desc = &priv->mapped_frames[i];
-        for (p = 0; p < desc->nb_planes; p++) {
+#ఒకవేళ HAVE_OPENCL_DXVA2 || HAVE_OPENCL_D3D11
+    పూర్ణాంకం i, p;
+    కొరకు (i = 0; i < priv->nb_mapped_చట్రాలు; i++) {
+        AVOpenCLFrameDescriptor *desc = &priv->mapped_చట్రాలు[i];
+        కొరకు (p = 0; p < desc->nb_planes; p++) {
             cle = clReleaseMemObject(desc->planes[p]);
-            if (cle != CL_SUCCESS) {
+            ఒకవేళ (cle != CL_SUCCESS) {
                 av_log(hwfc, AV_LOG_ERROR, "Failed to release mapped "
                        "frame object (frame %d plane %d): %d.\n",
                        i, p, cle);
             }
         }
     }
-    av_freep(&priv->mapped_frames);
-#endif
+    av_freep(&priv->mapped_చట్రాలు);
+#అయితే_ముగింపు
 
-    if (priv->command_queue) {
-        cle = clReleaseCommandQueue(priv->command_queue);
-        if (cle != CL_SUCCESS) {
+    ఒకవేళ (priv->command_వరుస) {
+        cle = cl_Release_Command_వరుస(priv->command_వరుస);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to release frame "
                    "command queue: %d.\n", cle);
         }
-        priv->command_queue = NULL;
+        priv->command_వరుస = ఖాళీ;
     }
 }
 
-static int opencl_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+స్థిర పూర్ణాంకం opencl_get_బఫరు(AVHWFramesContext *hwfc, AVFrame *చట్రం)
 {
     AVOpenCLFrameDescriptor *desc;
-    int p;
+    పూర్ణాంకం p;
 
-    frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    చట్రం->buf[0] = av_బఫరు_pool_get(hwfc->pool);
+    ఒకవేళ (!చట్రం->buf[0])
+        తిరిగి AVERROR(ENOMEM);
 
-    desc = (AVOpenCLFrameDescriptor*)frame->buf[0]->data;
+    desc = (AVOpenCLFrameDescriptor*)చట్రం->buf[0]->దత్తాంశం;
 
-    for (p = 0; p < desc->nb_planes; p++)
-        frame->data[p] = (uint8_t*)desc->planes[p];
+    కొరకు (p = 0; p < desc->nb_planes; p++)
+        చట్రం->దత్తాంశం[p] = (uint8_t*)desc->planes[p];
 
-    frame->format  = AV_PIX_FMT_OPENCL;
-    frame->width   = hwfc->width;
-    frame->height  = hwfc->height;
+    చట్రం->format  = AV_PIX_FMT_OPENCL;
+    చట్రం->వెడల్పు   = hwfc->వెడల్పు;
+    చట్రం->ఎత్తు  = hwfc->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int opencl_transfer_get_formats(AVHWFramesContext *hwfc,
-                                       enum AVHWFrameTransferDirection dir,
-                                       enum AVPixelFormat **formats)
+స్థిర పూర్ణాంకం opencl_transfer_get_formats(AVHWFramesContext *hwfc,
+                                       గణన AVHWFrameTransferDirection dir,
+                                       గణన AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    గణన AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, పరిమాణం(*fmts));
+    ఒకవేళ (!fmts)
+        తిరిగి AVERROR(ENOMEM);
 
     fmts[0] = hwfc->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
-    return 0;
+    తిరిగి 0;
 }
 
-static int opencl_wait_events(AVHWFramesContext *hwfc,
-                              cl_event *events, int nb_events)
+స్థిర పూర్ణాంకం opencl_wait_events(AVHWFramesContext *hwfc,
+                              cl_event *events, పూర్ణాంకం nb_events)
 {
     cl_int cle;
-    int i;
+    పూర్ణాంకం i;
 
     cle = clWaitForEvents(nb_events, events);
-    if (cle != CL_SUCCESS) {
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to wait for event "
                "completion: %d.\n", cle);
-        return AVERROR(EIO);
+        తిరిగి AVERROR(EIO);
     }
 
-    for (i = 0; i < nb_events; i++) {
+    కొరకు (i = 0; i < nb_events; i++) {
         cle = clReleaseEvent(events[i]);
-        if (cle != CL_SUCCESS) {
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to release "
                    "event: %d.\n", cle);
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
-                                     AVFrame *dst, const AVFrame *src)
+స్థిర పూర్ణాంకం opencl_transfer_దత్తాంశం_from(AVHWFramesContext *hwfc,
+                                     AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_image_format image_format;
@@ -1837,54 +1837,54 @@ static int opencl_transfer_data_from(AVHWFramesContext *hwfc,
     cl_int cle;
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
-    cl_event events[AV_NUM_DATA_POINTERS];
-    int err, p;
+    cl_event events[AV_అంకె_దత్తాంశం_సూచికలు];
+    పూర్ణాంకం err, p;
 
-    if (dst->format != hwfc->sw_format)
-        return AVERROR(EINVAL);
+    ఒకవేళ (dst->format != hwfc->sw_format)
+        తిరిగి AVERROR(EINVAL);
 
-    for (p = 0;; p++) {
+    కొరకు (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
-                                      src->width, src->height,
+                                      src->వెడల్పు, src->ఎత్తు,
                                       &image_format, &image_desc);
-        if (err < 0) {
-            if (err == AVERROR(ENOENT))
+        ఒకవేళ (err < 0) {
+            ఒకవేళ (err == AVERROR(ENOENT))
                 err = 0;
-            break;
+            ఆపు;
         }
 
-        if (!dst->data[p]) {
+        ఒకవేళ (!dst->దత్తాంశం[p]) {
             av_log(hwfc, AV_LOG_ERROR, "Plane %d missing on "
                    "destination frame for transfer.\n", p);
             err = AVERROR(EINVAL);
-            break;
+            ఆపు;
         }
 
-        region[0] = image_desc.image_width;
-        region[1] = image_desc.image_height;
+        region[0] = image_desc.image_వెడల్పు;
+        region[1] = image_desc.image_ఎత్తు;
         region[2] = 1;
 
-        cle = clEnqueueReadImage(priv->command_queue,
-                                 (cl_mem)src->data[p],
+        cle = cl_వరుసలో_చేర్చు_Read_Image(priv->command_వరుస,
+                                 (cl_mem)src->దత్తాంశం[p],
                                  CL_FALSE, origin, region,
                                  dst->linesize[p], 0,
-                                 dst->data[p],
-                                 0, NULL, &events[p]);
-        if (cle != CL_SUCCESS) {
+                                 dst->దత్తాంశం[p],
+                                 0, ఖాళీ, &events[p]);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to enqueue read of "
                    "OpenCL image plane %d: %d.\n", p, cle);
             err = AVERROR(EIO);
-            break;
+            ఆపు;
         }
     }
 
     opencl_wait_events(hwfc, events, p);
 
-    return err;
+    తిరిగి err;
 }
 
-static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
-                                   AVFrame *dst, const AVFrame *src)
+స్థిర పూర్ణాంకం opencl_transfer_దత్తాంశం_గమ్యం(AVHWFramesContext *hwfc,
+                                   AVFrame *dst, స్థిరరాశి AVFrame *src)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_image_format image_format;
@@ -1892,77 +1892,77 @@ static int opencl_transfer_data_to(AVHWFramesContext *hwfc,
     cl_int cle;
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
-    cl_event events[AV_NUM_DATA_POINTERS];
-    int err, p;
+    cl_event events[AV_అంకె_దత్తాంశం_సూచికలు];
+    పూర్ణాంకం err, p;
 
-    if (src->format != hwfc->sw_format)
-        return AVERROR(EINVAL);
+    ఒకవేళ (src->format != hwfc->sw_format)
+        తిరిగి AVERROR(EINVAL);
 
-    for (p = 0;; p++) {
+    కొరకు (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
-                                      src->width, src->height,
+                                      src->వెడల్పు, src->ఎత్తు,
                                       &image_format, &image_desc);
-        if (err < 0) {
-            if (err == AVERROR(ENOENT))
+        ఒకవేళ (err < 0) {
+            ఒకవేళ (err == AVERROR(ENOENT))
                 err = 0;
-            break;
+            ఆపు;
         }
 
-        if (!src->data[p]) {
+        ఒకవేళ (!src->దత్తాంశం[p]) {
             av_log(hwfc, AV_LOG_ERROR, "Plane %d missing on "
                    "source frame for transfer.\n", p);
             err = AVERROR(EINVAL);
-            break;
+            ఆపు;
         }
 
-        region[0] = image_desc.image_width;
-        region[1] = image_desc.image_height;
+        region[0] = image_desc.image_వెడల్పు;
+        region[1] = image_desc.image_ఎత్తు;
         region[2] = 1;
 
-        cle = clEnqueueWriteImage(priv->command_queue,
-                                  (cl_mem)dst->data[p],
+        cle = cl_వరుసలో_చేర్చు_Write_Image(priv->command_వరుస,
+                                  (cl_mem)dst->దత్తాంశం[p],
                                   CL_FALSE, origin, region,
                                   src->linesize[p], 0,
-                                  src->data[p],
-                                  0, NULL, &events[p]);
-        if (cle != CL_SUCCESS) {
+                                  src->దత్తాంశం[p],
+                                  0, ఖాళీ, &events[p]);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to enqueue write of "
                    "OpenCL image plane %d: %d.\n", p, cle);
             err = AVERROR(EIO);
-            break;
+            ఆపు;
         }
     }
 
     opencl_wait_events(hwfc, events, p);
 
-    return err;
+    తిరిగి err;
 }
 
-typedef struct OpenCLMapping {
+రకనిర్వచనం నిర్మాణం OpenCLMapping {
     // The mapped addresses for each plane.
     // The destination frame is not available when we unmap, so these
     // need to be stored separately.
-    void *address[AV_NUM_DATA_POINTERS];
+    శూన్య *చిరునామా[AV_అంకె_దత్తాంశం_సూచికలు];
 } OpenCLMapping;
 
-static void opencl_unmap_frame(AVHWFramesContext *hwfc,
+స్థిర శూన్య opencl_unmap_చట్రం(AVHWFramesContext *hwfc,
                                HWMapDescriptor *hwmap)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     OpenCLMapping *map = hwmap->priv;
-    cl_event events[AV_NUM_DATA_POINTERS];
-    int p, e;
+    cl_event events[AV_అంకె_దత్తాంశం_సూచికలు];
+    పూర్ణాంకం p, e;
     cl_int cle;
 
-    for (p = e = 0; p < FF_ARRAY_ELEMS(map->address); p++) {
-        if (!map->address[p])
-            break;
+    కొరకు (p = e = 0; p < FF_ARRAY_ELEMS(map->చిరునామా); p++) {
+        ఒకవేళ (!map->చిరునామా[p])
+            ఆపు;
 
-        cle = clEnqueueUnmapMemObject(priv->command_queue,
-                                      (cl_mem)hwmap->source->data[p],
-                                      map->address[p],
-                                      0, NULL, &events[e]);
-        if (cle != CL_SUCCESS) {
+        cle = cl_వరుసలో_చేర్చు_Unmap_Mem_Object(priv->command_వరుస,
+                                      (cl_mem)hwmap->ఆధారం->దత్తాంశం[p],
+                                      map->చిరునామా[p],
+                                      0, ఖాళీ, &events[e]);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to unmap OpenCL "
                    "image plane %d: %d.\n", p, cle);
         }
@@ -1974,8 +1974,8 @@ static void opencl_unmap_frame(AVHWFramesContext *hwfc,
     av_free(map);
 }
 
-static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
-                            const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం opencl_map_చట్రం(AVHWFramesContext *hwfc, AVFrame *dst,
+                            స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
     OpenCLFramesContext *priv = hwfc->hwctx;
     cl_map_flags map_flags;
@@ -1985,110 +1985,110 @@ static int opencl_map_frame(AVHWFramesContext *hwfc, AVFrame *dst,
     OpenCLMapping *map;
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3];
-    size_t row_pitch;
-    cl_event events[AV_NUM_DATA_POINTERS];
-    int err, p;
+    size_t అడ్డువరుస_pitch;
+    cl_event events[AV_అంకె_దత్తాంశం_సూచికలు];
+    పూర్ణాంకం err, p;
 
     av_assert0(hwfc->sw_format == dst->format);
 
-    if (flags & AV_HWFRAME_MAP_OVERWRITE &&
+    ఒకవేళ (flags & AV_HWFRAME_MAP_OVERWRITE &&
         !(flags & AV_HWFRAME_MAP_READ)) {
         // This is mutually exclusive with the read/write flags, so
         // there is no way to map with read here.
         map_flags = CL_MAP_WRITE_INVALIDATE_REGION;
-    } else {
+    } లేకపోతే {
         map_flags = 0;
-        if (flags & AV_HWFRAME_MAP_READ)
+        ఒకవేళ (flags & AV_HWFRAME_MAP_READ)
             map_flags |= CL_MAP_READ;
-        if (flags & AV_HWFRAME_MAP_WRITE)
+        ఒకవేళ (flags & AV_HWFRAME_MAP_WRITE)
             map_flags |= CL_MAP_WRITE;
     }
 
-    map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_mallocz(పరిమాణం(*map));
+    ఒకవేళ (!map)
+        తిరిగి AVERROR(ENOMEM);
 
-    for (p = 0;; p++) {
+    కొరకు (p = 0;; p++) {
         err = opencl_get_plane_format(hwfc->sw_format, p,
-                                      src->width, src->height,
+                                      src->వెడల్పు, src->ఎత్తు,
                                       &image_format, &image_desc);
-        if (err == AVERROR(ENOENT))
-            break;
-        if (err < 0)
-            goto fail;
+        ఒకవేళ (err == AVERROR(ENOENT))
+            ఆపు;
+        ఒకవేళ (err < 0)
+            వెళ్ళు fail;
 
-        region[0] = image_desc.image_width;
-        region[1] = image_desc.image_height;
+        region[0] = image_desc.image_వెడల్పు;
+        region[1] = image_desc.image_ఎత్తు;
         region[2] = 1;
 
-        map->address[p] =
-            clEnqueueMapImage(priv->command_queue,
-                              (cl_mem)src->data[p],
+        map->చిరునామా[p] =
+            cl_వరుసలో_చేర్చు_Map_Image(priv->command_వరుస,
+                              (cl_mem)src->దత్తాంశం[p],
                               CL_FALSE, map_flags, origin, region,
-                              &row_pitch, NULL, 0, NULL,
+                              &అడ్డువరుస_pitch, ఖాళీ, 0, ఖాళీ,
                               &events[p], &cle);
-        if (!map->address[p]) {
+        ఒకవేళ (!map->చిరునామా[p]) {
             av_log(hwfc, AV_LOG_ERROR, "Failed to map OpenCL "
                    "image plane %d: %d.\n", p, cle);
             err = AVERROR(EIO);
-            goto fail;
+            వెళ్ళు fail;
         }
 
-        dst->data[p] = map->address[p];
-        dst->linesize[p] = row_pitch;
+        dst->దత్తాంశం[p] = map->చిరునామా[p];
+        dst->linesize[p] = అడ్డువరుస_pitch;
 
         av_log(hwfc, AV_LOG_DEBUG, "Map plane %d (%p -> %p).\n",
-               p, src->data[p], dst->data[p]);
+               p, src->దత్తాంశం[p], dst->దత్తాంశం[p]);
     }
 
     err = opencl_wait_events(hwfc, events, p);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
-                                &opencl_unmap_frame, map);
-    if (err < 0)
-        goto fail;
+    err = ff_hwframe_map_create(src->hw_చట్రాలు_ctx, dst, src,
+                                &opencl_unmap_చట్రం, map);
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    dst->width  = src->width;
-    dst->height = src->height;
+    dst->వెడల్పు  = src->వెడల్పు;
+    dst->ఎత్తు = src->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    for (p = 0; p < AV_NUM_DATA_POINTERS; p++) {
-        if (!map->address[p])
-            break;
-        clEnqueueUnmapMemObject(priv->command_queue,
-                                (cl_mem)src->data[p],
-                                map->address[p],
-                                0, NULL, &events[p]);
+    కొరకు (p = 0; p < AV_అంకె_దత్తాంశం_సూచికలు; p++) {
+        ఒకవేళ (!map->చిరునామా[p])
+            ఆపు;
+        cl_వరుసలో_చేర్చు_Unmap_Mem_Object(priv->command_వరుస,
+                                (cl_mem)src->దత్తాంశం[p],
+                                map->చిరునామా[p],
+                                0, ఖాళీ, &events[p]);
     }
-    if (p > 0)
+    ఒకవేళ (p > 0)
         opencl_wait_events(hwfc, events, p);
     av_freep(&map);
-    return err;
+    తిరిగి err;
 }
 
-#if HAVE_OPENCL_DRM_BEIGNET
+#ఒకవేళ HAVE_OPENCL_DRM_BEIGNET
 
-typedef struct DRMBeignetToOpenCLMapping {
-    AVFrame              *drm_frame;
+రకనిర్వచనం నిర్మాణం DRMBeignet_గమ్యం_Open_CLMapping {
+    AVFrame              *drm_చట్రం;
     AVDRMFrameDescriptor *drm_desc;
 
-    AVOpenCLFrameDescriptor frame;
-} DRMBeignetToOpenCLMapping;
+    AVOpenCLFrameDescriptor చట్రం;
+} DRMBeignet_గమ్యం_Open_CLMapping;
 
-static void opencl_unmap_from_drm_beignet(AVHWFramesContext *dst_fc,
+స్థిర శూన్య opencl_unmap_from_drm_beignet(AVHWFramesContext *dst_fc,
                                           HWMapDescriptor *hwmap)
 {
-    DRMBeignetToOpenCLMapping *mapping = hwmap->priv;
+    DRMBeignet_గమ్యం_Open_CLMapping *mapping = hwmap->priv;
     cl_int cle;
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < mapping->frame.nb_planes; i++) {
-        cle = clReleaseMemObject(mapping->frame.planes[i]);
-        if (cle != CL_SUCCESS) {
+    కొరకు (i = 0; i < mapping->చట్రం.nb_planes; i++) {
+        cle = clReleaseMemObject(mapping->చట్రం.planes[i]);
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to release CL image "
                    "of plane %d of DRM frame: %d.\n", i, cle);
         }
@@ -2097,163 +2097,163 @@ static void opencl_unmap_from_drm_beignet(AVHWFramesContext *dst_fc,
     av_free(mapping);
 }
 
-static int opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
-                                       AVFrame *dst, const AVFrame *src,
-                                       int flags)
+స్థిర పూర్ణాంకం opencl_map_from_drm_beignet(AVHWFramesContext *dst_fc,
+                                       AVFrame *dst, స్థిరరాశి AVFrame *src,
+                                       పూర్ణాంకం flags)
 {
     OpenCLDeviceContext    *priv = dst_fc->device_ctx->hwctx;
     AVOpenCLDeviceContext *hwctx = &priv->p;
-    DRMBeignetToOpenCLMapping *mapping;
-    const AVDRMFrameDescriptor *desc;
+    DRMBeignet_గమ్యం_Open_CLMapping *mapping;
+    స్థిరరాశి AVDRMFrameDescriptor *desc;
     cl_int cle;
-    int err, i, j, p;
+    పూర్ణాంకం err, i, j, p;
 
-    desc = (const AVDRMFrameDescriptor*)src->data[0];
+    desc = (స్థిరరాశి AVDRMFrameDescriptor*)src->దత్తాంశం[0];
 
-    mapping = av_mallocz(sizeof(*mapping));
-    if (!mapping)
-        return AVERROR(ENOMEM);
+    mapping = av_mallocz(పరిమాణం(*mapping));
+    ఒకవేళ (!mapping)
+        తిరిగి AVERROR(ENOMEM);
 
     p = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        const AVDRMLayerDescriptor *layer = &desc->layers[i];
-        for (j = 0; j < layer->nb_planes; j++) {
-            const AVDRMPlaneDescriptor *plane = &layer->planes[j];
-            const AVDRMObjectDescriptor *object =
-                &desc->objects[plane->object_index];
+    కొరకు (i = 0; i < desc->nb_layers; i++) {
+        స్థిరరాశి AVDRMLayerDescriptor *layer = &desc->layers[i];
+        కొరకు (j = 0; j < layer->nb_planes; j++) {
+            స్థిరరాశి AVDRMPlaneDescriptor *plane = &layer->planes[j];
+            స్థిరరాశి AVDRMObjectDescriptor *object =
+                &desc->objects[plane->object_సూచీ];
 
             cl_import_image_info_intel image_info = {
                 .fd        = object->fd,
-                .size      = object->size,
+                .కొలత      = object->కొలత,
                 .type      = CL_MEM_OBJECT_IMAGE2D,
-                .offset    = plane->offset,
-                .row_pitch = plane->pitch,
+                .స్థానభ్రంశం    = plane->స్థానభ్రంశం,
+                .అడ్డువరుస_pitch = plane->pitch,
             };
             cl_image_desc image_desc;
 
             err = opencl_get_plane_format(dst_fc->sw_format, p,
-                                          src->width, src->height,
+                                          src->వెడల్పు, src->ఎత్తు,
                                           &image_info.fmt,
                                           &image_desc);
-            if (err < 0) {
+            ఒకవేళ (err < 0) {
                 av_log(dst_fc, AV_LOG_ERROR, "DRM frame layer %d "
                        "plane %d is not representable in OpenCL: %d.\n",
                        i, j, err);
-                goto fail;
+                వెళ్ళు fail;
             }
-            image_info.width  = image_desc.image_width;
-            image_info.height = image_desc.image_height;
+            image_info.వెడల్పు  = image_desc.image_వెడల్పు;
+            image_info.ఎత్తు = image_desc.image_ఎత్తు;
 
-            mapping->frame.planes[p] =
+            mapping->చట్రం.planes[p] =
                 priv->clCreateImageFromFdINTEL(hwctx->context,
                                                &image_info, &cle);
-            if (!mapping->frame.planes[p]) {
+            ఒకవేళ (!mapping->చట్రం.planes[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL image "
                        "from layer %d plane %d of DRM frame: %d.\n",
                        i, j, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                వెళ్ళు fail;
             }
 
-            dst->data[p] = (uint8_t*)mapping->frame.planes[p];
-            mapping->frame.nb_planes = ++p;
+            dst->దత్తాంశం[p] = (uint8_t*)mapping->చట్రం.planes[p];
+            mapping->చట్రం.nb_planes = ++p;
         }
     }
 
-    err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
+    err = ff_hwframe_map_create(dst->hw_చట్రాలు_ctx, dst, src,
                                 &opencl_unmap_from_drm_beignet,
                                 mapping);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    dst->width  = src->width;
-    dst->height = src->height;
+    dst->వెడల్పు  = src->వెడల్పు;
+    dst->ఎత్తు = src->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    for (p = 0; p < mapping->frame.nb_planes; p++) {
-        if (mapping->frame.planes[p])
-            clReleaseMemObject(mapping->frame.planes[p]);
+    కొరకు (p = 0; p < mapping->చట్రం.nb_planes; p++) {
+        ఒకవేళ (mapping->చట్రం.planes[p])
+            clReleaseMemObject(mapping->చట్రం.planes[p]);
     }
     av_free(mapping);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->దత్తాంశం, 0, పరిమాణం(dst->దత్తాంశం));
+    తిరిగి err;
 }
 
-#if HAVE_OPENCL_VAAPI_BEIGNET
+#ఒకవేళ HAVE_OPENCL_VAAPI_BEIGNET
 
-static int opencl_map_from_vaapi(AVHWFramesContext *dst_fc,
-                                 AVFrame *dst, const AVFrame *src,
-                                 int flags)
+స్థిర పూర్ణాంకం opencl_map_from_vaapi(AVHWFramesContext *dst_fc,
+                                 AVFrame *dst, స్థిరరాశి AVFrame *src,
+                                 పూర్ణాంకం flags)
 {
     AVFrame *tmp;
-    int err;
+    పూర్ణాంకం err;
 
-    tmp = av_frame_alloc();
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    tmp = av_చట్రం_alloc();
+    ఒకవేళ (!tmp)
+        తిరిగి AVERROR(ENOMEM);
 
-    tmp->format = AV_PIX_FMT_DRM_PRIME;
+    tmp->format = AV_PIX_FMT_DRM_ప్రధానసంఖ్య;
 
     err = av_hwframe_map(tmp, src, flags);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
     err = opencl_map_from_drm_beignet(dst_fc, dst, tmp, flags);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
     err = ff_hwframe_map_replace(dst, src);
 
 fail:
-    av_frame_free(&tmp);
-    return err;
+    av_చట్రం_free(&tmp);
+    తిరిగి err;
 }
 
-#endif /* HAVE_OPENCL_VAAPI_BEIGNET */
-#endif /* HAVE_OPENCL_DRM_BEIGNET */
+#అయితే_ముగింపు /* HAVE_OPENCL_VAAPI_BEIGNET */
+#అయితే_ముగింపు /* HAVE_OPENCL_DRM_BEIGNET */
 
-static inline cl_mem_flags opencl_mem_flags_for_mapping(int map_flags)
+స్థిర అంతఃవరుస cl_mem_flags opencl_mem_flags_for_mapping(పూర్ణాంకం map_flags)
 {
-    if ((map_flags & AV_HWFRAME_MAP_READ) &&
+    ఒకవేళ ((map_flags & AV_HWFRAME_MAP_READ) &&
         (map_flags & AV_HWFRAME_MAP_WRITE))
-        return CL_MEM_READ_WRITE;
-    else if (map_flags & AV_HWFRAME_MAP_READ)
-        return CL_MEM_READ_ONLY;
-    else if (map_flags & AV_HWFRAME_MAP_WRITE)
-        return CL_MEM_WRITE_ONLY;
-    else
-        return 0;
+        తిరిగి CL_MEM_READ_WRITE;
+    లేకపోతే ఒకవేళ (map_flags & AV_HWFRAME_MAP_READ)
+        తిరిగి CL_MEM_READ_ONLY;
+    లేకపోతే ఒకవేళ (map_flags & AV_HWFRAME_MAP_WRITE)
+        తిరిగి CL_MEM_WRITE_ONLY;
+    లేకపోతే
+        తిరిగి 0;
 }
 
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
+#ఒకవేళ HAVE_OPENCL_VAAPI_INTEL_MEDIA
 
-static void opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
+స్థిర శూన్య opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
                                   HWMapDescriptor *hwmap)
 {
     AVOpenCLFrameDescriptor    *desc = hwmap->priv;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
-    OpenCLFramesContext *frames_priv = dst_fc->hwctx;
+    OpenCLFramesContext *చట్రాలు_priv = dst_fc->hwctx;
     cl_event event;
     cl_int cle;
-    int p;
+    పూర్ణాంకం p;
 
     av_log(dst_fc, AV_LOG_DEBUG, "Unmap QSV/VAAPI surface from OpenCL.\n");
 
-    cle = device_priv->clEnqueueReleaseVA_APIMediaSurfacesINTEL(
-        frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    cle = device_priv->cl_వరుసలో_చేర్చు_Release_VA_APIMedia_Surfaces_INTEL(
+        చట్రాలు_priv->command_వరుస, desc->nb_planes, desc->planes,
+        0, ఖాళీ, &event);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to release surface "
                "handles: %d.\n", cle);
     }
 
     opencl_wait_events(dst_fc, &event, 1);
 
-    for (p = 0; p < desc->nb_planes; p++) {
+    కొరకు (p = 0; p < desc->nb_planes; p++) {
         cle = clReleaseMemObject(desc->planes[p]);
-        if (cle != CL_SUCCESS) {
+        ఒకవేళ (cle != CL_SUCCESS) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to release CL "
                    "image of plane %d of QSV/VAAPI surface: %d\n",
                    p, cle);
@@ -2263,284 +2263,284 @@ static void opencl_unmap_from_qsv(AVHWFramesContext *dst_fc,
     av_free(desc);
 }
 
-static int opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
-                               const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం opencl_map_from_qsv(AVHWFramesContext *dst_fc, AVFrame *dst,
+                               స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
     AVHWFramesContext *src_fc =
-        (AVHWFramesContext*)src->hw_frames_ctx->data;
+        (AVHWFramesContext*)src->hw_చట్రాలు_ctx->దత్తాంశం;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
     AVOpenCLDeviceContext   *dst_dev = &device_priv->p;
-    OpenCLFramesContext *frames_priv = dst_fc->hwctx;
+    OpenCLFramesContext *చట్రాలు_priv = dst_fc->hwctx;
     AVOpenCLFrameDescriptor *desc;
     VASurfaceID va_surface;
     cl_mem_flags cl_flags;
     cl_event event;
     cl_int cle;
-    int err, p;
+    పూర్ణాంకం err, p;
 
-#if CONFIG_LIBMFX
-    if (src->format == AV_PIX_FMT_QSV) {
-        void *base_handle;
-        mfxFrameSurface1 *mfx_surface = (mfxFrameSurface1*)src->data[3];
-        err = ff_qsv_get_surface_base_handle(mfx_surface,
+#ఒకవేళ CONFIG_LIBMFX
+    ఒకవేళ (src->format == AV_PIX_FMT_QSV) {
+        శూన్య *పునాది_handle;
+        mfx_చట్రం_Surface1 *mfx_surface = (mfx_చట్రం_Surface1*)src->దత్తాంశం[3];
+        err = ff_qsv_get_surface_పునాది_handle(mfx_surface,
                                              AV_HWDEVICE_TYPE_VAAPI,
-                                             &base_handle);
-        if (err < 0)
-            return err;
-        va_surface = *(VASurfaceID *)base_handle;
-    } else
-#endif
-        if (src->format == AV_PIX_FMT_VAAPI) {
-        va_surface = (VASurfaceID)(uintptr_t)src->data[3];
-    } else {
-        return AVERROR(ENOSYS);
+                                             &పునాది_handle);
+        ఒకవేళ (err < 0)
+            తిరిగి err;
+        va_surface = *(VASurfaceID *)పునాది_handle;
+    } లేకపోతే
+#అయితే_ముగింపు
+        ఒకవేళ (src->format == AV_PIX_FMT_VAAPI) {
+        va_surface = (VASurfaceID)(uintptr_t)src->దత్తాంశం[3];
+    } లేకపోతే {
+        తిరిగి AVERROR(ENOSYS);
     }
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!cl_flags)
+        తిరిగి AVERROR(EINVAL);
 
     av_log(src_fc, AV_LOG_DEBUG, "Map QSV/VAAPI surface %#x to "
            "OpenCL.\n", va_surface);
 
-    desc = av_mallocz(sizeof(*desc));
-    if (!desc)
-        return AVERROR(ENOMEM);
+    desc = av_mallocz(పరిమాణం(*desc));
+    ఒకవేళ (!desc)
+        తిరిగి AVERROR(ENOMEM);
 
     // The cl_intel_va_api_media_sharing extension only supports NV12
     // surfaces, so for now there are always exactly two planes.
     desc->nb_planes = 2;
 
-    for (p = 0; p < desc->nb_planes; p++) {
+    కొరకు (p = 0; p < desc->nb_planes; p++) {
         desc->planes[p] =
             device_priv->clCreateFromVA_APIMediaSurfaceINTEL(
                 dst_dev->context, cl_flags, &va_surface, p, &cle);
-        if (!desc->planes[p]) {
+        ఒకవేళ (!desc->planes[p]) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL "
                    "image from plane %d of QSV/VAAPI surface "
                    "%#x: %d.\n", p, va_surface, cle);
             err = AVERROR(EIO);
-            goto fail;
+            వెళ్ళు fail;
         }
 
-        dst->data[p] = (uint8_t*)desc->planes[p];
+        dst->దత్తాంశం[p] = (uint8_t*)desc->planes[p];
     }
 
-    cle = device_priv->clEnqueueAcquireVA_APIMediaSurfacesINTEL(
-        frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    cle = device_priv->cl_వరుసలో_చేర్చు_Acquire_VA_APIMedia_Surfaces_INTEL(
+        చట్రాలు_priv->command_వరుస, desc->nb_planes, desc->planes,
+        0, ఖాళీ, &event);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to acquire surface "
                "handles: %d.\n", cle);
         err = AVERROR(EIO);
-        goto fail;
+        వెళ్ళు fail;
     }
 
     err = opencl_wait_events(dst_fc, &event, 1);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
+    err = ff_hwframe_map_create(dst->hw_చట్రాలు_ctx, dst, src,
                                 &opencl_unmap_from_qsv, desc);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    dst->width  = src->width;
-    dst->height = src->height;
+    dst->వెడల్పు  = src->వెడల్పు;
+    dst->ఎత్తు = src->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    for (p = 0; p < desc->nb_planes; p++)
-        if (desc->planes[p])
+    కొరకు (p = 0; p < desc->nb_planes; p++)
+        ఒకవేళ (desc->planes[p])
             clReleaseMemObject(desc->planes[p]);
     av_freep(&desc);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->దత్తాంశం, 0, పరిమాణం(dst->దత్తాంశం));
+    తిరిగి err;
 }
 
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DXVA2
+#ఒకవేళ HAVE_OPENCL_DXVA2
 
-static void opencl_unmap_from_dxva2(AVHWFramesContext *dst_fc,
+స్థిర శూన్య opencl_unmap_from_dxva2(AVHWFramesContext *dst_fc,
                                     HWMapDescriptor *hwmap)
 {
     AVOpenCLFrameDescriptor    *desc = hwmap->priv;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
-    OpenCLFramesContext *frames_priv = dst_fc->hwctx;
+    OpenCLFramesContext *చట్రాలు_priv = dst_fc->hwctx;
     cl_event event;
     cl_int cle;
 
     av_log(dst_fc, AV_LOG_DEBUG, "Unmap DXVA2 surface from OpenCL.\n");
 
-    cle = device_priv->clEnqueueReleaseDX9MediaSurfacesKHR(
-        frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    cle = device_priv->cl_వరుసలో_చేర్చు_Release_DX9_Media_Surfaces_KHR(
+        చట్రాలు_priv->command_వరుస, desc->nb_planes, desc->planes,
+        0, ఖాళీ, &event);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to release surface "
                "handle: %d.\n", cle);
-        return;
+        తిరిగి;
     }
 
     opencl_wait_events(dst_fc, &event, 1);
 }
 
-static int opencl_map_from_dxva2(AVHWFramesContext *dst_fc, AVFrame *dst,
-                                 const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం opencl_map_from_dxva2(AVHWFramesContext *dst_fc, AVFrame *dst,
+                                 స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
     AVHWFramesContext *src_fc =
-        (AVHWFramesContext*)src->hw_frames_ctx->data;
-    AVDXVA2FramesContext  *src_hwctx = src_fc->hwctx;
+        (AVHWFramesContext*)src->hw_చట్రాలు_ctx->దత్తాంశం;
+    AVDXVA2_చట్రాలు_Context  *src_hwctx = src_fc->hwctx;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
-    OpenCLFramesContext *frames_priv = dst_fc->hwctx;
+    OpenCLFramesContext *చట్రాలు_priv = dst_fc->hwctx;
     AVOpenCLFrameDescriptor *desc;
     cl_event event;
     cl_int cle;
-    int err, i;
+    పూర్ణాంకం err, i;
 
     av_log(dst_fc, AV_LOG_DEBUG, "Map DXVA2 surface %p to "
-           "OpenCL.\n", src->data[3]);
+           "OpenCL.\n", src->దత్తాంశం[3]);
 
-    for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-        if (src_hwctx->surfaces[i] == (IDirect3DSurface9*)src->data[3])
-            break;
+    కొరకు (i = 0; i < src_hwctx->nb_surfaces; i++) {
+        ఒకవేళ (src_hwctx->surfaces[i] == (IDirect3DSurface9*)src->దత్తాంశం[3])
+            ఆపు;
     }
-    if (i >= src_hwctx->nb_surfaces) {
+    ఒకవేళ (i >= src_hwctx->nb_surfaces) {
         av_log(dst_fc, AV_LOG_ERROR, "Trying to map from a surface which "
                "is not in the mapped frames context.\n");
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    desc = &frames_priv->mapped_frames[i];
+    desc = &చట్రాలు_priv->mapped_చట్రాలు[i];
 
-    cle = device_priv->clEnqueueAcquireDX9MediaSurfacesKHR(
-        frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    cle = device_priv->cl_వరుసలో_చేర్చు_Acquire_DX9_Media_Surfaces_KHR(
+        చట్రాలు_priv->command_వరుస, desc->nb_planes, desc->planes,
+        0, ఖాళీ, &event);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to acquire surface "
                "handle: %d.\n", cle);
-        return AVERROR(EIO);
+        తిరిగి AVERROR(EIO);
     }
 
     err = opencl_wait_events(dst_fc, &event, 1);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    for (i = 0; i < desc->nb_planes; i++)
-        dst->data[i] = (uint8_t*)desc->planes[i];
+    కొరకు (i = 0; i < desc->nb_planes; i++)
+        dst->దత్తాంశం[i] = (uint8_t*)desc->planes[i];
 
-    err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
+    err = ff_hwframe_map_create(dst->hw_చట్రాలు_ctx, dst, src,
                                 &opencl_unmap_from_dxva2, desc);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    dst->width  = src->width;
-    dst->height = src->height;
+    dst->వెడల్పు  = src->వెడల్పు;
+    dst->ఎత్తు = src->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    cle = device_priv->clEnqueueReleaseDX9MediaSurfacesKHR(
-        frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle == CL_SUCCESS)
+    cle = device_priv->cl_వరుసలో_చేర్చు_Release_DX9_Media_Surfaces_KHR(
+        చట్రాలు_priv->command_వరుస, desc->nb_planes, desc->planes,
+        0, ఖాళీ, &event);
+    ఒకవేళ (cle == CL_SUCCESS)
         opencl_wait_events(dst_fc, &event, 1);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->దత్తాంశం, 0, పరిమాణం(dst->దత్తాంశం));
+    తిరిగి err;
 }
 
-static int opencl_frames_derive_from_dxva2(AVHWFramesContext *dst_fc,
-                                           AVHWFramesContext *src_fc, int flags)
+స్థిర పూర్ణాంకం opencl_చట్రాలు_derive_from_dxva2(AVHWFramesContext *dst_fc,
+                                           AVHWFramesContext *src_fc, పూర్ణాంకం flags)
 {
-    AVDXVA2FramesContext  *src_hwctx = src_fc->hwctx;
+    AVDXVA2_చట్రాలు_Context  *src_hwctx = src_fc->hwctx;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
     AVOpenCLDeviceContext   *dst_dev = &device_priv->p;
-    OpenCLFramesContext *frames_priv = dst_fc->hwctx;
+    OpenCLFramesContext *చట్రాలు_priv = dst_fc->hwctx;
     cl_mem_flags cl_flags;
     cl_int cle;
-    int err, i, p, nb_planes;
+    పూర్ణాంకం err, i, p, nb_planes;
 
-    if (src_fc->sw_format != AV_PIX_FMT_NV12) {
+    ఒకవేళ (src_fc->sw_format != AV_PIX_FMT_NV12) {
         av_log(dst_fc, AV_LOG_ERROR, "Only NV12 textures are supported "
                "for DXVA2 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
     nb_planes = 2;
 
-    if (src_fc->initial_pool_size == 0) {
+    ఒకవేళ (src_fc->initial_pool_కొలత == 0) {
         av_log(dst_fc, AV_LOG_ERROR, "Only fixed-size pools are supported "
                "for DXVA2 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!cl_flags)
+        తిరిగి AVERROR(EINVAL);
 
-    frames_priv->nb_mapped_frames = src_hwctx->nb_surfaces;
+    చట్రాలు_priv->nb_mapped_చట్రాలు = src_hwctx->nb_surfaces;
 
-    frames_priv->mapped_frames =
-        av_calloc(frames_priv->nb_mapped_frames,
-                  sizeof(*frames_priv->mapped_frames));
-    if (!frames_priv->mapped_frames)
-        return AVERROR(ENOMEM);
+    చట్రాలు_priv->mapped_చట్రాలు =
+        av_calloc(చట్రాలు_priv->nb_mapped_చట్రాలు,
+                  పరిమాణం(*చట్రాలు_priv->mapped_చట్రాలు));
+    ఒకవేళ (!చట్రాలు_priv->mapped_చట్రాలు)
+        తిరిగి AVERROR(ENOMEM);
 
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
-        AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
+    కొరకు (i = 0; i < చట్రాలు_priv->nb_mapped_చట్రాలు; i++) {
+        AVOpenCLFrameDescriptor *desc = &చట్రాలు_priv->mapped_చట్రాలు[i];
         cl_dx9_surface_info_khr surface_info = {
             .resource      = src_hwctx->surfaces[i],
-            .shared_handle = NULL,
+            .shared_handle = ఖాళీ,
         };
         desc->nb_planes = nb_planes;
-        for (p = 0; p < nb_planes; p++) {
+        కొరకు (p = 0; p < nb_planes; p++) {
             desc->planes[p] =
                 device_priv->clCreateFromDX9MediaSurfaceKHR(
                     dst_dev->context, cl_flags,
                     device_priv->dx9_media_adapter_type,
                     &surface_info, p, &cle);
-            if (!desc->planes[p]) {
+            ఒకవేళ (!desc->planes[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL "
                        "image from plane %d of DXVA2 surface %d: %d.\n",
                        p, i, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                వెళ్ళు fail;
             }
         }
     }
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
-        AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
-        for (p = 0; p < desc->nb_planes; p++) {
-            if (desc->planes[p])
+    కొరకు (i = 0; i < చట్రాలు_priv->nb_mapped_చట్రాలు; i++) {
+        AVOpenCLFrameDescriptor *desc = &చట్రాలు_priv->mapped_చట్రాలు[i];
+        కొరకు (p = 0; p < desc->nb_planes; p++) {
+            ఒకవేళ (desc->planes[p])
                 clReleaseMemObject(desc->planes[p]);
         }
     }
-    av_freep(&frames_priv->mapped_frames);
-    frames_priv->nb_mapped_frames = 0;
-    return err;
+    av_freep(&చట్రాలు_priv->mapped_చట్రాలు);
+    చట్రాలు_priv->nb_mapped_చట్రాలు = 0;
+    తిరిగి err;
 }
 
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_D3D11
+#ఒకవేళ HAVE_OPENCL_D3D11
 
-static void opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
+స్థిర శూన్య opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
                                     HWMapDescriptor *hwmap)
 {
     AVOpenCLFrameDescriptor    *desc = hwmap->priv;
     OpenCLDeviceContext *device_priv = dst_fc->device_ctx->hwctx;
-    OpenCLFramesContext *frames_priv = dst_fc->hwctx;
+    OpenCLFramesContext *చట్రాలు_priv = dst_fc->hwctx;
     cl_event event;
     cl_int cle;
 
-    cle = device_priv->clEnqueueReleaseD3D11ObjectsKHR(
-        frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    cle = device_priv->cl_వరుసలో_చేర్చు_Release_D3_D11_Objects_KHR(
+        చట్రాలు_priv->command_వరుస, desc->nb_planes, desc->planes,
+        0, ఖాళీ, &event);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to release surface "
                "handle: %d.\n", cle);
     }
@@ -2548,194 +2548,194 @@ static void opencl_unmap_from_d3d11(AVHWFramesContext *dst_fc,
     opencl_wait_events(dst_fc, &event, 1);
 }
 
-static int opencl_map_from_d3d11(AVHWFramesContext *dst_fc, AVFrame *dst,
-                                 const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం opencl_map_from_d3d11(AVHWFramesContext *dst_fc, AVFrame *dst,
+                                 స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
     OpenCLDeviceContext  *device_priv = dst_fc->device_ctx->hwctx;
-    OpenCLFramesContext  *frames_priv = dst_fc->hwctx;
+    OpenCLFramesContext  *చట్రాలు_priv = dst_fc->hwctx;
     AVOpenCLFrameDescriptor *desc;
     cl_event event;
     cl_int cle;
-    int err, index, i;
+    పూర్ణాంకం err, సూచీ, i;
 
-    index = (intptr_t)src->data[1];
-    if (index >= frames_priv->nb_mapped_frames) {
+    సూచీ = (intptr_t)src->దత్తాంశం[1];
+    ఒకవేళ (సూచీ >= చట్రాలు_priv->nb_mapped_చట్రాలు) {
         av_log(dst_fc, AV_LOG_ERROR, "Texture array index out of range for "
-               "mapping: %d >= %d.\n", index, frames_priv->nb_mapped_frames);
-        return AVERROR(EINVAL);
+               "mapping: %d >= %d.\n", సూచీ, చట్రాలు_priv->nb_mapped_చట్రాలు);
+        తిరిగి AVERROR(EINVAL);
     }
 
     av_log(dst_fc, AV_LOG_DEBUG, "Map D3D11 texture %d to OpenCL.\n",
-           index);
+           సూచీ);
 
-    desc = &frames_priv->mapped_frames[index];
+    desc = &చట్రాలు_priv->mapped_చట్రాలు[సూచీ];
 
-    cle = device_priv->clEnqueueAcquireD3D11ObjectsKHR(
-        frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle != CL_SUCCESS) {
+    cle = device_priv->cl_వరుసలో_చేర్చు_Acquire_D3_D11_Objects_KHR(
+        చట్రాలు_priv->command_వరుస, desc->nb_planes, desc->planes,
+        0, ఖాళీ, &event);
+    ఒకవేళ (cle != CL_SUCCESS) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to acquire surface "
                "handle: %d.\n", cle);
-        return AVERROR(EIO);
+        తిరిగి AVERROR(EIO);
     }
 
     err = opencl_wait_events(dst_fc, &event, 1);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    for (i = 0; i < desc->nb_planes; i++)
-        dst->data[i] = (uint8_t*)desc->planes[i];
+    కొరకు (i = 0; i < desc->nb_planes; i++)
+        dst->దత్తాంశం[i] = (uint8_t*)desc->planes[i];
 
-    err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
+    err = ff_hwframe_map_create(dst->hw_చట్రాలు_ctx, dst, src,
                                 &opencl_unmap_from_d3d11, desc);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    dst->width  = src->width;
-    dst->height = src->height;
+    dst->వెడల్పు  = src->వెడల్పు;
+    dst->ఎత్తు = src->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    cle = device_priv->clEnqueueReleaseD3D11ObjectsKHR(
-        frames_priv->command_queue, desc->nb_planes, desc->planes,
-        0, NULL, &event);
-    if (cle == CL_SUCCESS)
+    cle = device_priv->cl_వరుసలో_చేర్చు_Release_D3_D11_Objects_KHR(
+        చట్రాలు_priv->command_వరుస, desc->nb_planes, desc->planes,
+        0, ఖాళీ, &event);
+    ఒకవేళ (cle == CL_SUCCESS)
         opencl_wait_events(dst_fc, &event, 1);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->దత్తాంశం, 0, పరిమాణం(dst->దత్తాంశం));
+    తిరిగి err;
 }
 
-static int opencl_frames_derive_from_d3d11(AVHWFramesContext *dst_fc,
-                                           AVHWFramesContext *src_fc, int flags)
+స్థిర పూర్ణాంకం opencl_చట్రాలు_derive_from_d3d11(AVHWFramesContext *dst_fc,
+                                           AVHWFramesContext *src_fc, పూర్ణాంకం flags)
 {
     AVD3D11VAFramesContext *src_hwctx = src_fc->hwctx;
     OpenCLDeviceContext  *device_priv = dst_fc->device_ctx->hwctx;
     AVOpenCLDeviceContext    *dst_dev = &device_priv->p;
-    OpenCLFramesContext  *frames_priv = dst_fc->hwctx;
+    OpenCLFramesContext  *చట్రాలు_priv = dst_fc->hwctx;
     cl_mem_flags cl_flags;
     cl_int cle;
-    int err, i, p, nb_planes;
+    పూర్ణాంకం err, i, p, nb_planes;
 
-    if (src_fc->sw_format != AV_PIX_FMT_NV12) {
+    ఒకవేళ (src_fc->sw_format != AV_PIX_FMT_NV12) {
         av_log(dst_fc, AV_LOG_ERROR, "Only NV12 textures are supported "
                "for D3D11 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
     nb_planes = 2;
 
-    if (src_fc->initial_pool_size == 0) {
+    ఒకవేళ (src_fc->initial_pool_కొలత == 0) {
         av_log(dst_fc, AV_LOG_ERROR, "Only fixed-size pools are supported "
                "for D3D11 to OpenCL mapping.\n");
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!cl_flags)
+        తిరిగి AVERROR(EINVAL);
 
-    frames_priv->nb_mapped_frames = src_fc->initial_pool_size;
+    చట్రాలు_priv->nb_mapped_చట్రాలు = src_fc->initial_pool_కొలత;
 
-    frames_priv->mapped_frames =
-        av_calloc(frames_priv->nb_mapped_frames,
-                  sizeof(*frames_priv->mapped_frames));
-    if (!frames_priv->mapped_frames)
-        return AVERROR(ENOMEM);
+    చట్రాలు_priv->mapped_చట్రాలు =
+        av_calloc(చట్రాలు_priv->nb_mapped_చట్రాలు,
+                  పరిమాణం(*చట్రాలు_priv->mapped_చట్రాలు));
+    ఒకవేళ (!చట్రాలు_priv->mapped_చట్రాలు)
+        తిరిగి AVERROR(ENOMEM);
 
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
-        AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
+    కొరకు (i = 0; i < చట్రాలు_priv->nb_mapped_చట్రాలు; i++) {
+        AVOpenCLFrameDescriptor *desc = &చట్రాలు_priv->mapped_చట్రాలు[i];
         desc->nb_planes = nb_planes;
-        for (p = 0; p < nb_planes; p++) {
+        కొరకు (p = 0; p < nb_planes; p++) {
             UINT subresource = 2 * i + p;
 
             desc->planes[p] =
                 device_priv->clCreateFromD3D11Texture2DKHR(
                     dst_dev->context, cl_flags, src_hwctx->texture,
                     subresource, &cle);
-            if (!desc->planes[p]) {
+            ఒకవేళ (!desc->planes[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL "
                        "image from plane %d of D3D texture "
                        "index %d (subresource %u): %d.\n",
-                       p, i, (unsigned int)subresource, cle);
+                       p, i, (గుర్తులేని పూర్ణాంకం)subresource, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                వెళ్ళు fail;
             }
         }
     }
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    for (i = 0; i < frames_priv->nb_mapped_frames; i++) {
-        AVOpenCLFrameDescriptor *desc = &frames_priv->mapped_frames[i];
-        for (p = 0; p < desc->nb_planes; p++) {
-            if (desc->planes[p])
+    కొరకు (i = 0; i < చట్రాలు_priv->nb_mapped_చట్రాలు; i++) {
+        AVOpenCLFrameDescriptor *desc = &చట్రాలు_priv->mapped_చట్రాలు[i];
+        కొరకు (p = 0; p < desc->nb_planes; p++) {
+            ఒకవేళ (desc->planes[p])
                 clReleaseMemObject(desc->planes[p]);
         }
     }
-    av_freep(&frames_priv->mapped_frames);
-    frames_priv->nb_mapped_frames = 0;
-    return err;
+    av_freep(&చట్రాలు_priv->mapped_చట్రాలు);
+    చట్రాలు_priv->nb_mapped_చట్రాలు = 0;
+    తిరిగి err;
 }
 
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_DRM_ARM
+#ఒకవేళ HAVE_OPENCL_DRM_ARM
 
-typedef struct DRMARMtoOpenCLMapping {
-    int nb_objects;
+రకనిర్వచనం నిర్మాణం DRMARMtoOpenCLMapping {
+    పూర్ణాంకం nb_objects;
     cl_mem object_buffers[AV_DRM_MAX_PLANES];
-    int nb_planes;
+    పూర్ణాంకం nb_planes;
     cl_mem plane_images[AV_DRM_MAX_PLANES];
 } DRMARMtoOpenCLMapping;
 
-static void opencl_unmap_from_drm_arm(AVHWFramesContext *dst_fc,
+స్థిర శూన్య opencl_unmap_from_drm_arm(AVHWFramesContext *dst_fc,
                                       HWMapDescriptor *hwmap)
 {
     DRMARMtoOpenCLMapping *mapping = hwmap->priv;
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < mapping->nb_planes; i++)
+    కొరకు (i = 0; i < mapping->nb_planes; i++)
         clReleaseMemObject(mapping->plane_images[i]);
 
-    for (i = 0; i < mapping->nb_objects; i++)
+    కొరకు (i = 0; i < mapping->nb_objects; i++)
         clReleaseMemObject(mapping->object_buffers[i]);
 
     av_free(mapping);
 }
 
-static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
-                                   const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
+                                   స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
     AVHWFramesContext *src_fc =
-        (AVHWFramesContext*)src->hw_frames_ctx->data;
+        (AVHWFramesContext*)src->hw_చట్రాలు_ctx->దత్తాంశం;
     AVOpenCLDeviceContext *dst_dev = dst_fc->device_ctx->hwctx;
-    const AVDRMFrameDescriptor *desc;
-    DRMARMtoOpenCLMapping *mapping = NULL;
+    స్థిరరాశి AVDRMFrameDescriptor *desc;
+    DRMARMtoOpenCLMapping *mapping = ఖాళీ;
     cl_mem_flags cl_flags;
-    const cl_import_properties_arm props[3] = {
+    స్థిరరాశి cl_import_properties_arm props[3] = {
         CL_IMPORT_TYPE_ARM, CL_IMPORT_TYPE_DMA_BUF_ARM, 0,
     };
     cl_int cle;
-    int err, i, j;
+    పూర్ణాంకం err, i, j;
 
-    desc = (const AVDRMFrameDescriptor*)src->data[0];
+    desc = (స్థిరరాశి AVDRMFrameDescriptor*)src->దత్తాంశం[0];
 
     cl_flags = opencl_mem_flags_for_mapping(flags);
-    if (!cl_flags)
-        return AVERROR(EINVAL);
+    ఒకవేళ (!cl_flags)
+        తిరిగి AVERROR(EINVAL);
 
-    mapping = av_mallocz(sizeof(*mapping));
-    if (!mapping)
-        return AVERROR(ENOMEM);
+    mapping = av_mallocz(పరిమాణం(*mapping));
+    ఒకవేళ (!mapping)
+        తిరిగి AVERROR(ENOMEM);
 
     mapping->nb_objects = desc->nb_objects;
-    for (i = 0; i < desc->nb_objects; i++) {
-        int fd = desc->objects[i].fd;
+    కొరకు (i = 0; i < desc->nb_objects; i++) {
+        పూర్ణాంకం fd = desc->objects[i].fd;
 
         av_log(dst_fc, AV_LOG_DEBUG, "Map DRM PRIME fd %d to OpenCL.\n", fd);
 
-        if (desc->objects[i].format_modifier) {
+        ఒకవేళ (desc->objects[i].format_modifier) {
             av_log(dst_fc, AV_LOG_DEBUG, "Warning: object %d fd %d has "
                    "nonzero format modifier %"PRId64", result may not "
                    "be as expected.\n", i, fd,
@@ -2743,131 +2743,131 @@ static int opencl_map_from_drm_arm(AVHWFramesContext *dst_fc, AVFrame *dst,
         }
 
         mapping->object_buffers[i] =
-            clImportMemoryARM(dst_dev->context, cl_flags, props,
-                              &fd, desc->objects[i].size, &cle);
-        if (!mapping->object_buffers[i]) {
+            cl_Import_జ్ఞాపకం_ARM(dst_dev->context, cl_flags, props,
+                              &fd, desc->objects[i].కొలత, &cle);
+        ఒకవేళ (!mapping->object_buffers[i]) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to create CL buffer "
                    "from object %d (fd %d, size %zu) of DRM frame: %d.\n",
-                   i, fd, desc->objects[i].size, cle);
+                   i, fd, desc->objects[i].కొలత, cle);
             err = AVERROR(EIO);
-            goto fail;
+            వెళ్ళు fail;
         }
     }
 
     mapping->nb_planes = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        const AVDRMLayerDescriptor *layer = &desc->layers[i];
+    కొరకు (i = 0; i < desc->nb_layers; i++) {
+        స్థిరరాశి AVDRMLayerDescriptor *layer = &desc->layers[i];
 
-        for (j = 0; j < layer->nb_planes; j++) {
-            const AVDRMPlaneDescriptor *plane = &layer->planes[j];
-            cl_mem plane_buffer;
+        కొరకు (j = 0; j < layer->nb_planes; j++) {
+            స్థిరరాశి AVDRMPlaneDescriptor *plane = &layer->planes[j];
+            cl_mem plane_బఫరు;
             cl_image_format image_format;
             cl_image_desc   image_desc;
-            cl_buffer_region region;
-            int p = mapping->nb_planes;
+            cl_బఫరు_region region;
+            పూర్ణాంకం p = mapping->nb_planes;
 
             err = opencl_get_plane_format(src_fc->sw_format, p,
-                                          src_fc->width, src_fc->height,
+                                          src_fc->వెడల్పు, src_fc->ఎత్తు,
                                           &image_format, &image_desc);
-            if (err < 0) {
+            ఒకవేళ (err < 0) {
                 av_log(dst_fc, AV_LOG_ERROR, "Invalid plane %d (DRM "
                        "layer %d plane %d): %d.\n", p, i, j, err);
-                goto fail;
+                వెళ్ళు fail;
             }
 
-            region.origin = plane->offset;
-            region.size   = image_desc.image_row_pitch *
-                            image_desc.image_height;
+            region.origin = plane->స్థానభ్రంశం;
+            region.కొలత   = image_desc.image_అడ్డువరుస_pitch *
+                            image_desc.image_ఎత్తు;
 
-            plane_buffer =
-                clCreateSubBuffer(mapping->object_buffers[plane->object_index],
+            plane_బఫరు =
+                cl_Create_Sub_బఫరు(mapping->object_buffers[plane->object_సూచీ],
                                   cl_flags,
-                                  CL_BUFFER_CREATE_TYPE_REGION,
+                                  CL_బఫరు_CREATE_TYPE_REGION,
                                   &region, &cle);
-            if (!plane_buffer) {
+            ఒకవేళ (!plane_బఫరు) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create sub-buffer "
                        "for plane %d: %d.\n", p, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                వెళ్ళు fail;
             }
 
-            image_desc.buffer = plane_buffer;
+            image_desc.బఫరు = plane_బఫరు;
 
             mapping->plane_images[p] =
                 clCreateImage(dst_dev->context, cl_flags,
-                              &image_format, &image_desc, NULL, &cle);
+                              &image_format, &image_desc, ఖాళీ, &cle);
 
             // Unreference the sub-buffer immediately - we don't need it
             // directly and a reference is held by the image.
-            clReleaseMemObject(plane_buffer);
+            clReleaseMemObject(plane_బఫరు);
 
-            if (!mapping->plane_images[p]) {
+            ఒకవేళ (!mapping->plane_images[p]) {
                 av_log(dst_fc, AV_LOG_ERROR, "Failed to create image "
                        "for plane %d: %d.\n", p, cle);
                 err = AVERROR(EIO);
-                goto fail;
+                వెళ్ళు fail;
             }
 
             ++mapping->nb_planes;
         }
     }
 
-    for (i = 0; i < mapping->nb_planes; i++)
-        dst->data[i] = (uint8_t*)mapping->plane_images[i];
+    కొరకు (i = 0; i < mapping->nb_planes; i++)
+        dst->దత్తాంశం[i] = (uint8_t*)mapping->plane_images[i];
 
-    err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
+    err = ff_hwframe_map_create(dst->hw_చట్రాలు_ctx, dst, src,
                                 &opencl_unmap_from_drm_arm, mapping);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    dst->width  = src->width;
-    dst->height = src->height;
+    dst->వెడల్పు  = src->వెడల్పు;
+    dst->ఎత్తు = src->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    for (i = 0; i < mapping->nb_planes; i++) {
+    కొరకు (i = 0; i < mapping->nb_planes; i++) {
         clReleaseMemObject(mapping->plane_images[i]);
     }
-    for (i = 0; i < mapping->nb_objects; i++) {
-        if (mapping->object_buffers[i])
+    కొరకు (i = 0; i < mapping->nb_objects; i++) {
+        ఒకవేళ (mapping->object_buffers[i])
             clReleaseMemObject(mapping->object_buffers[i]);
     }
     av_free(mapping);
-    memset(dst->data, 0, sizeof(dst->data));
-    return err;
+    memset(dst->దత్తాంశం, 0, పరిమాణం(dst->దత్తాంశం));
+    తిరిగి err;
 }
 
-#endif
+#అయితే_ముగింపు
 
-#if HAVE_OPENCL_VIDEOTOOLBOX
+#ఒకవేళ HAVE_OPENCL_VIDEOTOOLBOX
 
-static void opencl_unmap_from_vt(AVHWFramesContext *hwfc,
+స్థిర శూన్య opencl_unmap_from_vt(AVHWFramesContext *hwfc,
                                  HWMapDescriptor *hwmap)
 {
     uint8_t *desc = hwmap->priv;
     opencl_pool_free(hwfc, desc);
 }
 
-static int opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
-                              const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
+                              స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
-    CVPixelBufferRef pixbuf = (CVPixelBufferRef) src->data[3];
-    IOSurfaceRef io_surface_ref = CVPixelBufferGetIOSurface(pixbuf);
+    CVPixel_బఫరు_Ref pixbuf = (CVPixel_బఫరు_Ref) src->దత్తాంశం[3];
+    IOSurfaceRef io_surface_ref = CVPixel_బఫరు_Get_IOSurface(pixbuf);
     cl_int err = 0;
-    AVOpenCLFrameDescriptor *desc = NULL;
+    AVOpenCLFrameDescriptor *desc = ఖాళీ;
     AVOpenCLDeviceContext *dst_dev = dst_fc->device_ctx->hwctx;
 
-    if (!io_surface_ref) {
+    ఒకవేళ (!io_surface_ref) {
         av_log(dst_fc, AV_LOG_ERROR, "Failed to get IOSurfaceRef\n");
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    desc = av_mallocz(sizeof(*desc));
-    if (!desc)
-        return AVERROR(ENOMEM);
+    desc = av_mallocz(పరిమాణం(*desc));
+    ఒకవేళ (!desc)
+        తిరిగి AVERROR(ENOMEM);
 
-    for (int p = 0;; p++) {
+    కొరకు (పూర్ణాంకం p = 0;; p++) {
         cl_image_format image_format;
         cl_image_desc image_desc;
         cl_iosurface_properties_APPLE props[] = {
@@ -2877,197 +2877,197 @@ static int opencl_map_from_vt(AVHWFramesContext *dst_fc, AVFrame *dst,
         };
 
         err = opencl_get_plane_format(dst_fc->sw_format, p,
-                                      src->width, src->height,
+                                      src->వెడల్పు, src->ఎత్తు,
                                       &image_format, &image_desc);
-        if (err == AVERROR(ENOENT))
-            break;
-        if (err < 0)
-            goto fail;
+        ఒకవేళ (err == AVERROR(ENOENT))
+            ఆపు;
+        ఒకవేళ (err < 0)
+            వెళ్ళు fail;
 
         desc->planes[p] = clCreateImageFromIOSurfaceWithPropertiesAPPLE(dst_dev->context,
                                                     opencl_mem_flags_for_mapping(flags),
                                                     &image_format, &image_desc,
                                                     props, &err);
-        if (!desc->planes[p]) {
+        ఒకవేళ (!desc->planes[p]) {
             av_log(dst_fc, AV_LOG_ERROR, "Failed to create image from IOSurfaceRef\n");
             err = AVERROR(EIO);
-            goto fail;
+            వెళ్ళు fail;
         }
         desc->nb_planes++;
     }
 
-    for (int i = 0; i < desc->nb_planes; i++)
-        dst->data[i] = (uint8_t *) desc->planes[i];
+    కొరకు (పూర్ణాంకం i = 0; i < desc->nb_planes; i++)
+        dst->దత్తాంశం[i] = (uint8_t *) desc->planes[i];
 
-    err = ff_hwframe_map_create(dst->hw_frames_ctx, dst, src,
+    err = ff_hwframe_map_create(dst->hw_చట్రాలు_ctx, dst, src,
                                 opencl_unmap_from_vt, desc);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
-    dst->width = src->width;
-    dst->height = src->height;
+    dst->వెడల్పు = src->వెడల్పు;
+    dst->ఎత్తు = src->ఎత్తు;
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    for (int i = 0; i < desc->nb_planes; i++)
+    కొరకు (పూర్ణాంకం i = 0; i < desc->nb_planes; i++)
         clReleaseMemObject(desc->planes[i]);
     av_freep(&desc);
-    return err;
+    తిరిగి err;
 }
 
-#endif
+#అయితే_ముగింపు
 
-static int opencl_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                           const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం opencl_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                           స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
     av_assert0(src->format == AV_PIX_FMT_OPENCL);
-    if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
-    return opencl_map_frame(hwfc, dst, src, flags);
+    ఒకవేళ (hwfc->sw_format != dst->format)
+        తిరిగి AVERROR(ENOSYS);
+    తిరిగి opencl_map_చట్రం(hwfc, dst, src, flags);
 }
 
-static int opencl_map_to(AVHWFramesContext *hwfc, AVFrame *dst,
-                         const AVFrame *src, int flags)
+స్థిర పూర్ణాంకం opencl_map_గమ్యం(AVHWFramesContext *hwfc, AVFrame *dst,
+                         స్థిరరాశి AVFrame *src, పూర్ణాంకం flags)
 {
-    av_unused OpenCLDeviceContext *priv = hwfc->device_ctx->hwctx;
+    av_వాడని OpenCLDeviceContext *priv = hwfc->device_ctx->hwctx;
     av_assert0(dst->format == AV_PIX_FMT_OPENCL);
-    switch (src->format) {
-#if HAVE_OPENCL_DRM_BEIGNET
-    case AV_PIX_FMT_DRM_PRIME:
-        if (priv->beignet_drm_mapping_usable)
-            return opencl_map_from_drm_beignet(hwfc, dst, src, flags);
-        break;
-#endif
-#if HAVE_OPENCL_VAAPI_BEIGNET
-    case AV_PIX_FMT_VAAPI:
-        if (priv->beignet_drm_mapping_usable)
-            return opencl_map_from_vaapi(hwfc, dst, src, flags);
-        break;
-#endif
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-    case AV_PIX_FMT_QSV:
-    case AV_PIX_FMT_VAAPI:
-        if (priv->qsv_mapping_usable)
-            return opencl_map_from_qsv(hwfc, dst, src, flags);
-        break;
-#endif
-#if HAVE_OPENCL_DXVA2
-    case AV_PIX_FMT_DXVA2_VLD:
-        if (priv->dxva2_mapping_usable)
-            return opencl_map_from_dxva2(hwfc, dst, src, flags);
-        break;
-#endif
-#if HAVE_OPENCL_D3D11
-    case AV_PIX_FMT_D3D11:
-        if (priv->d3d11_mapping_usable)
-            return opencl_map_from_d3d11(hwfc, dst, src, flags);
-        break;
-#endif
-#if HAVE_OPENCL_DRM_ARM
-    case AV_PIX_FMT_DRM_PRIME:
-        if (priv->drm_arm_mapping_usable)
-            return opencl_map_from_drm_arm(hwfc, dst, src, flags);
-        break;
-#endif
-#if HAVE_OPENCL_VIDEOTOOLBOX
-    case AV_PIX_FMT_VIDEOTOOLBOX:
-        return opencl_map_from_vt(hwfc, dst, src, flags);
-#endif
+    ఎంపిక (src->format) {
+#ఒకవేళ HAVE_OPENCL_DRM_BEIGNET
+    స్థితి AV_PIX_FMT_DRM_ప్రధానసంఖ్య:
+        ఒకవేళ (priv->beignet_drm_mapping_usable)
+            తిరిగి opencl_map_from_drm_beignet(hwfc, dst, src, flags);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_VAAPI_BEIGNET
+    స్థితి AV_PIX_FMT_VAAPI:
+        ఒకవేళ (priv->beignet_drm_mapping_usable)
+            తిరిగి opencl_map_from_vaapi(hwfc, dst, src, flags);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_VAAPI_INTEL_MEDIA
+    స్థితి AV_PIX_FMT_QSV:
+    స్థితి AV_PIX_FMT_VAAPI:
+        ఒకవేళ (priv->qsv_mapping_usable)
+            తిరిగి opencl_map_from_qsv(hwfc, dst, src, flags);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_DXVA2
+    స్థితి AV_PIX_FMT_DXVA2_VLD:
+        ఒకవేళ (priv->dxva2_mapping_usable)
+            తిరిగి opencl_map_from_dxva2(hwfc, dst, src, flags);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_D3D11
+    స్థితి AV_PIX_FMT_D3D11:
+        ఒకవేళ (priv->d3d11_mapping_usable)
+            తిరిగి opencl_map_from_d3d11(hwfc, dst, src, flags);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_DRM_ARM
+    స్థితి AV_PIX_FMT_DRM_ప్రధానసంఖ్య:
+        ఒకవేళ (priv->drm_arm_mapping_usable)
+            తిరిగి opencl_map_from_drm_arm(hwfc, dst, src, flags);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_VIDEOTOOLBOX
+    స్థితి AV_PIX_FMT_VIDEOTOOLBOX:
+        తిరిగి opencl_map_from_vt(hwfc, dst, src, flags);
+#అయితే_ముగింపు
     }
-    return AVERROR(ENOSYS);
+    తిరిగి AVERROR(ENOSYS);
 }
 
-static int opencl_frames_derive_to(AVHWFramesContext *dst_fc,
-                                   AVHWFramesContext *src_fc, int flags)
+స్థిర పూర్ణాంకం opencl_చట్రాలు_derive_గమ్యం(AVHWFramesContext *dst_fc,
+                                   AVHWFramesContext *src_fc, పూర్ణాంకం flags)
 {
-    av_unused OpenCLDeviceContext *priv = dst_fc->device_ctx->hwctx;
-    switch (src_fc->device_ctx->type) {
-#if HAVE_OPENCL_DRM_BEIGNET
-    case AV_HWDEVICE_TYPE_DRM:
-        if (!priv->beignet_drm_mapping_usable)
-            return AVERROR(ENOSYS);
-        break;
-#endif
-#if HAVE_OPENCL_VAAPI_BEIGNET
-    case AV_HWDEVICE_TYPE_VAAPI:
-        if (!priv->beignet_drm_mapping_usable)
-            return AVERROR(ENOSYS);
-        break;
-#endif
-#if HAVE_OPENCL_VAAPI_INTEL_MEDIA
-    case AV_HWDEVICE_TYPE_QSV:
-    case AV_HWDEVICE_TYPE_VAAPI:
-        if (!priv->qsv_mapping_usable)
-            return AVERROR(ENOSYS);
-        break;
-#endif
-#if HAVE_OPENCL_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
-        if (!priv->dxva2_mapping_usable)
-            return AVERROR(ENOSYS);
+    av_వాడని OpenCLDeviceContext *priv = dst_fc->device_ctx->hwctx;
+    ఎంపిక (src_fc->device_ctx->type) {
+#ఒకవేళ HAVE_OPENCL_DRM_BEIGNET
+    స్థితి AV_HWDEVICE_TYPE_DRM:
+        ఒకవేళ (!priv->beignet_drm_mapping_usable)
+            తిరిగి AVERROR(ENOSYS);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_VAAPI_BEIGNET
+    స్థితి AV_HWDEVICE_TYPE_VAAPI:
+        ఒకవేళ (!priv->beignet_drm_mapping_usable)
+            తిరిగి AVERROR(ENOSYS);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_VAAPI_INTEL_MEDIA
+    స్థితి AV_HWDEVICE_TYPE_QSV:
+    స్థితి AV_HWDEVICE_TYPE_VAAPI:
+        ఒకవేళ (!priv->qsv_mapping_usable)
+            తిరిగి AVERROR(ENOSYS);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_DXVA2
+    స్థితి AV_HWDEVICE_TYPE_DXVA2:
+        ఒకవేళ (!priv->dxva2_mapping_usable)
+            తిరిగి AVERROR(ENOSYS);
         {
-            int err;
-            err = opencl_frames_derive_from_dxva2(dst_fc, src_fc, flags);
-            if (err < 0)
-                return err;
+            పూర్ణాంకం err;
+            err = opencl_చట్రాలు_derive_from_dxva2(dst_fc, src_fc, flags);
+            ఒకవేళ (err < 0)
+                తిరిగి err;
         }
-        break;
-#endif
-#if HAVE_OPENCL_D3D11
-    case AV_HWDEVICE_TYPE_D3D11VA:
-        if (!priv->d3d11_mapping_usable)
-            return AVERROR(ENOSYS);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_D3D11
+    స్థితి AV_HWDEVICE_TYPE_D3D11VA:
+        ఒకవేళ (!priv->d3d11_mapping_usable)
+            తిరిగి AVERROR(ENOSYS);
         {
-            int err;
-            err = opencl_frames_derive_from_d3d11(dst_fc, src_fc, flags);
-            if (err < 0)
-                return err;
+            పూర్ణాంకం err;
+            err = opencl_చట్రాలు_derive_from_d3d11(dst_fc, src_fc, flags);
+            ఒకవేళ (err < 0)
+                తిరిగి err;
         }
-        break;
-#endif
-#if HAVE_OPENCL_DRM_ARM
-    case AV_HWDEVICE_TYPE_DRM:
-        if (!priv->drm_arm_mapping_usable)
-            return AVERROR(ENOSYS);
-        break;
-#endif
-#if HAVE_OPENCL_VIDEOTOOLBOX
-    case AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
-        break;
-#endif
-    default:
-        return AVERROR(ENOSYS);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_DRM_ARM
+    స్థితి AV_HWDEVICE_TYPE_DRM:
+        ఒకవేళ (!priv->drm_arm_mapping_usable)
+            తిరిగి AVERROR(ENOSYS);
+        ఆపు;
+#అయితే_ముగింపు
+#ఒకవేళ HAVE_OPENCL_VIDEOTOOLBOX
+    స్థితి AV_HWDEVICE_TYPE_VIDEOTOOLBOX:
+        ఆపు;
+#అయితే_ముగింపు
+    అప్రమేయ:
+        తిరిగి AVERROR(ENOSYS);
     }
-    return opencl_frames_init_command_queue(dst_fc);
+    తిరిగి opencl_చట్రాలు_init_command_వరుస(dst_fc);
 }
 
-const HWContextType ff_hwcontext_type_opencl = {
+స్థిరరాశి HWContextType ff_hwcontext_type_opencl = {
     .type                   = AV_HWDEVICE_TYPE_OPENCL,
     .name                   = "OpenCL",
 
-    .device_hwctx_size      = sizeof(OpenCLDeviceContext),
-    .frames_hwctx_size      = sizeof(OpenCLFramesContext),
+    .device_hwctx_కొలత      = పరిమాణం(OpenCLDeviceContext),
+    .చట్రాలు_hwctx_కొలత      = పరిమాణం(OpenCLFramesContext),
 
     .device_create          = &opencl_device_create,
     .device_derive          = &opencl_device_derive,
     .device_init            = &opencl_device_init,
     .device_uninit          = &opencl_device_uninit,
 
-    .frames_get_constraints = &opencl_frames_get_constraints,
-    .frames_init            = &opencl_frames_init,
-    .frames_uninit          = &opencl_frames_uninit,
-    .frames_get_buffer      = &opencl_get_buffer,
+    .చట్రాలు_get_constraints = &opencl_చట్రాలు_get_constraints,
+    .చట్రాలు_init            = &opencl_చట్రాలు_init,
+    .చట్రాలు_uninit          = &opencl_చట్రాలు_uninit,
+    .చట్రాలు_get_బఫరు      = &opencl_get_బఫరు,
 
     .transfer_get_formats   = &opencl_transfer_get_formats,
-    .transfer_data_to       = &opencl_transfer_data_to,
-    .transfer_data_from     = &opencl_transfer_data_from,
+    .transfer_దత్తాంశం_గమ్యం       = &opencl_transfer_దత్తాంశం_గమ్యం,
+    .transfer_దత్తాంశం_from     = &opencl_transfer_దత్తాంశం_from,
 
     .map_from               = &opencl_map_from,
-    .map_to                 = &opencl_map_to,
-    .frames_derive_to       = &opencl_frames_derive_to,
+    .map_గమ్యం                 = &opencl_map_గమ్యం,
+    .చట్రాలు_derive_గమ్యం       = &opencl_చట్రాలు_derive_గమ్యం,
 
-    .pix_fmts = (const enum AVPixelFormat[]) {
+    .pix_fmts = (స్థిరరాశి గణన AVPixelFormat[]) {
         AV_PIX_FMT_OPENCL,
         AV_PIX_FMT_NONE
     },

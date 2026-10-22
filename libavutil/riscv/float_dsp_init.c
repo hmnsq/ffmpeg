@@ -18,60 +18,60 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/float_dsp.h"
 
-void ff_vector_fmul_rvv(float *dst, const float *src0, const float *src1,
-                         int len);
-void ff_vector_fmac_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_window_rvv(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
-void ff_vector_fmul_add_rvv(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
-void ff_vector_fmul_reverse_rvv(float *dst, const float *src0,
-                                 const float *src1, int len);
-void ff_butterflies_float_rvv(float *v1, float *v2, int len);
-float ff_scalarproduct_float_rvv(const float *v1, const float *v2, int len);
+శూన్య ff_సదిశ_fmul_rvv(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1,
+                         పూర్ణాంకం len);
+శూన్య ff_సదిశ_fmac_scalar_rvv(దశాంశం *dst, స్థిరరాశి దశాంశం *src, దశాంశం mul,
+                                పూర్ణాంకం len);
+శూన్య ff_సదిశ_fmul_scalar_rvv(దశాంశం *dst, స్థిరరాశి దశాంశం *src, దశాంశం mul,
+                                పూర్ణాంకం len);
+శూన్య ff_సదిశ_fmul_కిటికీ_rvv(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                స్థిరరాశి దశాంశం *src1, స్థిరరాశి దశాంశం *win, పూర్ణాంకం len);
+శూన్య ff_సదిశ_fmul_కూడు_rvv(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1,
+                             స్థిరరాశి దశాంశం *src2, పూర్ణాంకం len);
+శూన్య ff_సదిశ_fmul_తిరగేయి_rvv(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                 స్థిరరాశి దశాంశం *src1, పూర్ణాంకం len);
+శూన్య ff_butterflies_float_rvv(దశాంశం *v1, దశాంశం *v2, పూర్ణాంకం len);
+దశాంశం ff_scalarproduct_float_rvv(స్థిరరాశి దశాంశం *v1, స్థిరరాశి దశాంశం *v2, పూర్ణాంకం len);
 
-void ff_vector_dmul_rvv(double *dst, const double *src0, const double *src1,
-                         int len);
-void ff_vector_dmac_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-void ff_vector_dmul_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-double ff_scalarproduct_double_rvv(const double *v1, const double *v2,
+శూన్య ff_సదిశ_dmul_rvv(ద్విగుణ *dst, స్థిరరాశి ద్విగుణ *src0, స్థిరరాశి ద్విగుణ *src1,
+                         పూర్ణాంకం len);
+శూన్య ff_సదిశ_dmac_scalar_rvv(ద్విగుణ *dst, స్థిరరాశి ద్విగుణ *src, ద్విగుణ mul,
+                                పూర్ణాంకం len);
+శూన్య ff_సదిశ_dmul_scalar_rvv(ద్విగుణ *dst, స్థిరరాశి ద్విగుణ *src, ద్విగుణ mul,
+                                పూర్ణాంకం len);
+ద్విగుణ ff_scalarproduct_double_rvv(స్థిరరాశి ద్విగుణ *v1, స్థిరరాశి ద్విగుణ *v2,
                                    size_t len);
 
-av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
+av_cold శూన్య ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ఒకవేళ HAVE_RVV
+    పూర్ణాంకం flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVB) {
-        if (flags & AV_CPU_FLAG_RVV_F32) {
-            fdsp->vector_fmul = ff_vector_fmul_rvv;
-            fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_rvv;
-            fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_rvv;
-            fdsp->vector_fmul_window = ff_vector_fmul_window_rvv;
-            fdsp->vector_fmul_add = ff_vector_fmul_add_rvv;
-            fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_rvv;
+    ఒకవేళ (flags & AV_CPU_FLAG_RVB) {
+        ఒకవేళ (flags & AV_CPU_FLAG_RVV_F32) {
+            fdsp->సదిశ_fmul = ff_సదిశ_fmul_rvv;
+            fdsp->సదిశ_fmac_scalar = ff_సదిశ_fmac_scalar_rvv;
+            fdsp->సదిశ_fmul_scalar = ff_సదిశ_fmul_scalar_rvv;
+            fdsp->సదిశ_fmul_కిటికీ = ff_సదిశ_fmul_కిటికీ_rvv;
+            fdsp->సదిశ_fmul_కూడు = ff_సదిశ_fmul_కూడు_rvv;
+            fdsp->సదిశ_fmul_తిరగేయి = ff_సదిశ_fmul_తిరగేయి_rvv;
             fdsp->butterflies_float = ff_butterflies_float_rvv;
             fdsp->scalarproduct_float = ff_scalarproduct_float_rvv;
         }
 
-        if (flags & AV_CPU_FLAG_RVV_F64) {
-            fdsp->vector_dmul = ff_vector_dmul_rvv;
-            fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_rvv;
-            fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_rvv;
+        ఒకవేళ (flags & AV_CPU_FLAG_RVV_F64) {
+            fdsp->సదిశ_dmul = ff_సదిశ_dmul_rvv;
+            fdsp->సదిశ_dmac_scalar = ff_సదిశ_dmac_scalar_rvv;
+            fdsp->సదిశ_dmul_scalar = ff_సదిశ_dmul_scalar_rvv;
             fdsp->scalarproduct_double = ff_scalarproduct_double_rvv;
         }
     }
-#endif
+#అయితే_ముగింపు
 }

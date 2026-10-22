@@ -16,58 +16,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "detection_bbox.h"
-#include "mem.h"
+#అన్తర్భావ "detection_bbox.h"
+#అన్తర్భావ "mem.h"
 
-AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size)
+AVDetection_BBox_శీర్షిక *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *బహిర్గతం_కొలత)
 {
-    size_t size;
-    struct BBoxContext {
-        AVDetectionBBoxHeader header;
+    size_t కొలత;
+    నిర్మాణం BBoxContext {
+        AVDetection_BBox_శీర్షిక శీర్షిక;
         AVDetectionBBox boxes;
     };
-    const size_t bboxes_offset = offsetof(struct BBoxContext, boxes);
-    const size_t bbox_size = sizeof(AVDetectionBBox);
-    AVDetectionBBoxHeader *header;
+    స్థిరరాశి size_t bboxes_స్థానభ్రంశం = offsetof(నిర్మాణం BBoxContext, boxes);
+    స్థిరరాశి size_t bbox_కొలత = పరిమాణం(AVDetectionBBox);
+    AVDetection_BBox_శీర్షిక *శీర్షిక;
 
-    size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
-    size += bbox_size * nb_bboxes;
+    కొలత = bboxes_స్థానభ్రంశం;
+    ఒకవేళ (nb_bboxes > (SIZE_MAX - కొలత) / bbox_కొలత)
+        తిరిగి ఖాళీ;
+    కొలత += bbox_కొలత * nb_bboxes;
 
-    header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    శీర్షిక = av_mallocz(కొలత);
+    ఒకవేళ (!శీర్షిక)
+        తిరిగి ఖాళీ;
 
-    header->nb_bboxes     = nb_bboxes;
-    header->bbox_size     = bbox_size;
-    header->bboxes_offset = bboxes_offset;
+    శీర్షిక->nb_bboxes     = nb_bboxes;
+    శీర్షిక->bbox_కొలత     = bbox_కొలత;
+    శీర్షిక->bboxes_స్థానభ్రంశం = bboxes_స్థానభ్రంశం;
 
-    if (out_size)
-        *out_size = size;
+    ఒకవేళ (బహిర్గతం_కొలత)
+        *బహిర్గతం_కొలత = కొలత;
 
-    return header;
+    తిరిగి శీర్షిక;
 }
 
-AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
+AVDetection_BBox_శీర్షిక *av_detection_bbox_create_side_దత్తాంశం(AVFrame *చట్రం, uint32_t nb_bboxes)
 {
     AVBufferRef         *buf;
-    AVDetectionBBoxHeader *header;
-    size_t size;
+    AVDetection_BBox_శీర్షిక *శీర్షిక;
+    size_t కొలత;
 
-    header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
-        av_freep(&header);
-        return NULL;
+    శీర్షిక = av_detection_bbox_alloc(nb_bboxes, &కొలత);
+    ఒకవేళ (!శీర్షిక)
+        తిరిగి ఖాళీ;
+    buf = av_బఫరు_create((uint8_t *)శీర్షిక, కొలత, ఖాళీ, ఖాళీ, 0);
+    ఒకవేళ (!buf) {
+        av_freep(&శీర్షిక);
+        తిరిగి ఖాళీ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    ఒకవేళ (!av_చట్రం_new_side_దత్తాంశం_from_buf(చట్రం, AV_చట్రం_దత్తాంశం_DETECTION_BBOXES, buf)) {
+        av_బఫరు_unref(&buf);
+        తిరిగి ఖాళీ;
     }
 
-    return header;
+    తిరిగి శీర్షిక;
 }

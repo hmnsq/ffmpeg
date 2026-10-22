@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_REPLAYGAIN_H
-#define AVUTIL_REPLAYGAIN_H
+#నిర్వచితం_కాకపోతే AVUTIL_REPLAYGAIN_H
+#నిర్వచించు AVUTIL_REPLAYGAIN_H
 
-#include <stdint.h>
+#అన్తర్భావ <stdint.h>
 
 /**
  * ReplayGain information (see
  * http://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification).
  * The size of this struct is a part of the public ABI.
  */
-typedef struct AVReplayGain {
+రకనిర్వచనం నిర్మాణం AVReplayGain {
     /**
      * Track replay gain in microbels (divide by 100000 to get the value in dB).
      * Should be set to INT32_MIN when unknown.
@@ -47,4 +47,4 @@ typedef struct AVReplayGain {
     uint32_t album_peak;
 } AVReplayGain;
 
-#endif /* AVUTIL_REPLAYGAIN_H */
+#అయితే_ముగింపు /* AVUTIL_REPLAYGAIN_H */

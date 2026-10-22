@@ -18,203 +18,203 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#అన్తర్భావ "config.h"
 
-#include <stdbool.h>
+#అన్తర్భావ <stdbool.h>
 
-#include "mem.h"
-#include "thread.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "thread.h"
 
-#include "executor.h"
+#అన్తర్భావ "executor.h"
 
-#if !HAVE_THREADS
+#ఒకవేళ !HAVE_దారాలు
 
-#define ExecutorThread  char
+#నిర్వచించు ExecutorThread  అక్షరం
 
-#define executor_thread_create(t, a, s, ar)      0
-#define executor_thread_join(t, r)               do {} while(0)
+#నిర్వచించు executor_thread_create(t, a, s, ar)      0
+#నిర్వచించు executor_thread_join(t, r)               చేయి {} అయితే(0)
 
-#else
+#లేకపోతే
 
-#define ExecutorThread  pthread_t
+#నిర్వచించు ExecutorThread  pthread_t
 
-#define executor_thread_create(t, a, s, ar)      pthread_create(t, a, s, ar)
-#define executor_thread_join(t, r)               pthread_join(t, r)
+#నిర్వచించు executor_thread_create(t, a, s, ar)      pthread_create(t, a, s, ar)
+#నిర్వచించు executor_thread_join(t, r)               pthread_join(t, r)
 
-#endif //!HAVE_THREADS
+#అయితే_ముగింపు //!HAVE_THREADS
 
-typedef struct ThreadInfo {
+రకనిర్వచనం నిర్మాణం ThreadInfo {
     AVExecutor *e;
     ExecutorThread thread;
 } ThreadInfo;
 
-struct AVExecutor {
+నిర్మాణం AVExecutor {
     AVTaskCallbacks cb;
-    int thread_count;
+    పూర్ణాంకం thread_లెక్క;
     bool recursive;
 
-    ThreadInfo *threads;
+    ThreadInfo *దారాలు;
     uint8_t *local_contexts;
 
-    AVMutex lock;
+    AVMutex తాళం_2;
     AVCond cond;
-    int die;
+    పూర్ణాంకం die;
 
     AVTask *tasks;
 };
 
-static AVTask* remove_task(AVTask **prev, AVTask *t)
+స్థిర AVTask* remove_task(AVTask **prev, AVTask *t)
 {
-    *prev  = t->next;
-    t->next = NULL;
-    return t;
+    *prev  = t->తదుపరి;
+    t->తదుపరి = ఖాళీ;
+    తిరిగి t;
 }
 
-static void add_task(AVTask **prev, AVTask *t)
+స్థిర శూన్య కూడు_task(AVTask **prev, AVTask *t)
 {
-    t->next = *prev;
+    t->తదుపరి = *prev;
     *prev   = t;
 }
 
-static int run_one_task(AVExecutor *e, void *lc)
+స్థిర పూర్ణాంకం నిరంతరం_one_task(AVExecutor *e, శూన్య *lc)
 {
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    for (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_data); prev = &(*prev)->next)
+    కొరకు (prev = &e->tasks; *prev && !cb->ready(*prev, cb->user_దత్తాంశం); prev = &(*prev)->తదుపరి)
         /* nothing */;
-    if (*prev) {
+    ఒకవేళ (*prev) {
         AVTask *t = remove_task(prev, *prev);
-        if (e->thread_count > 0)
-            ff_mutex_unlock(&e->lock);
-        cb->run(t, lc, cb->user_data);
-        if (e->thread_count > 0)
-            ff_mutex_lock(&e->lock);
-        return 1;
+        ఒకవేళ (e->thread_లెక్క > 0)
+            ff_mutex_unlock(&e->తాళం_2);
+        cb->నిరంతరం(t, lc, cb->user_దత్తాంశం);
+        ఒకవేళ (e->thread_లెక్క > 0)
+            ff_mutex_తాళం(&e->తాళం_2);
+        తిరిగి 1;
     }
-    return 0;
+    తిరిగి 0;
 }
 
-#if HAVE_THREADS
-static void *executor_worker_task(void *data)
+#ఒకవేళ HAVE_దారాలు
+స్థిర శూన్య *executor_కార్మికుడు_task(శూన్య *దత్తాంశం)
 {
-    ThreadInfo *ti = (ThreadInfo*)data;
+    ThreadInfo *ti = (ThreadInfo*)దత్తాంశం;
     AVExecutor *e  = ti->e;
-    void *lc       = e->local_contexts + (ti - e->threads) * e->cb.local_context_size;
+    శూన్య *lc       = e->local_contexts + (ti - e->దారాలు) * e->cb.local_context_కొలత;
 
-    ff_mutex_lock(&e->lock);
-    while (1) {
-        if (e->die) break;
+    ff_mutex_తాళం(&e->తాళం_2);
+    అయితే (1) {
+        ఒకవేళ (e->die) ఆపు;
 
-        if (!run_one_task(e, lc)) {
+        ఒకవేళ (!నిరంతరం_one_task(e, lc)) {
             //no task in one loop
-            ff_cond_wait(&e->cond, &e->lock);
+            ff_cond_wait(&e->cond, &e->తాళం_2);
         }
     }
-    ff_mutex_unlock(&e->lock);
-    return NULL;
+    ff_mutex_unlock(&e->తాళం_2);
+    తిరిగి ఖాళీ;
 }
-#endif
+#అయితే_ముగింపు
 
-static void executor_free(AVExecutor *e, const int has_lock, const int has_cond)
+స్థిర శూన్య executor_free(AVExecutor *e, స్థిరరాశి పూర్ణాంకం has_తాళం, స్థిరరాశి పూర్ణాంకం has_cond)
 {
-    if (e->thread_count) {
+    ఒకవేళ (e->thread_లెక్క) {
         //signal die
-        ff_mutex_lock(&e->lock);
+        ff_mutex_తాళం(&e->తాళం_2);
         e->die = 1;
-        ff_cond_broadcast(&e->cond);
-        ff_mutex_unlock(&e->lock);
+        ff_cond_ప్రసారం(&e->cond);
+        ff_mutex_unlock(&e->తాళం_2);
 
-        for (int i = 0; i < e->thread_count; i++)
-            executor_thread_join(e->threads[i].thread, NULL);
+        కొరకు (పూర్ణాంకం i = 0; i < e->thread_లెక్క; i++)
+            executor_thread_join(e->దారాలు[i].thread, ఖాళీ);
     }
-    if (has_cond)
+    ఒకవేళ (has_cond)
         ff_cond_destroy(&e->cond);
-    if (has_lock)
-        ff_mutex_destroy(&e->lock);
+    ఒకవేళ (has_తాళం)
+        ff_mutex_destroy(&e->తాళం_2);
 
-    av_free(e->threads);
+    av_free(e->దారాలు);
     av_free(e->local_contexts);
 
     av_free(e);
 }
 
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *cb, int thread_count)
+AVExecutor* av_executor_alloc(స్థిరరాశి AVTaskCallbacks *cb, పూర్ణాంకం thread_లెక్క)
 {
     AVExecutor *e;
-    int has_lock = 0, has_cond = 0;
-    if (!cb || !cb->user_data || !cb->ready || !cb->run || !cb->priority_higher)
-        return NULL;
+    పూర్ణాంకం has_తాళం = 0, has_cond = 0;
+    ఒకవేళ (!cb || !cb->user_దత్తాంశం || !cb->ready || !cb->నిరంతరం || !cb->ప్రాధాన్యత_higher)
+        తిరిగి ఖాళీ;
 
-    e = av_mallocz(sizeof(*e));
-    if (!e)
-        return NULL;
+    e = av_mallocz(పరిమాణం(*e));
+    ఒకవేళ (!e)
+        తిరిగి ఖాళీ;
     e->cb = *cb;
 
-    e->local_contexts = av_calloc(FFMAX(thread_count, 1), e->cb.local_context_size);
-    if (!e->local_contexts)
-        goto free_executor;
+    e->local_contexts = av_calloc(FFMAX(thread_లెక్క, 1), e->cb.local_context_కొలత);
+    ఒకవేళ (!e->local_contexts)
+        వెళ్ళు free_executor;
 
-    e->threads = av_calloc(FFMAX(thread_count, 1), sizeof(*e->threads));
-    if (!e->threads)
-        goto free_executor;
+    e->దారాలు = av_calloc(FFMAX(thread_లెక్క, 1), పరిమాణం(*e->దారాలు));
+    ఒకవేళ (!e->దారాలు)
+        వెళ్ళు free_executor;
 
-    if (!thread_count)
-        return e;
+    ఒకవేళ (!thread_లెక్క)
+        తిరిగి e;
 
-    has_lock = !ff_mutex_init(&e->lock, NULL);
-    has_cond = !ff_cond_init(&e->cond, NULL);
+    has_తాళం = !ff_mutex_init(&e->తాళం_2, ఖాళీ);
+    has_cond = !ff_cond_init(&e->cond, ఖాళీ);
 
-    if (!has_lock || !has_cond)
-        goto free_executor;
+    ఒకవేళ (!has_తాళం || !has_cond)
+        వెళ్ళు free_executor;
 
-    for (/* nothing */; e->thread_count < thread_count; e->thread_count++) {
-        ThreadInfo *ti = e->threads + e->thread_count;
+    కొరకు (/* nothing */; e->thread_లెక్క < thread_లెక్క; e->thread_లెక్క++) {
+        ThreadInfo *ti = e->దారాలు + e->thread_లెక్క;
         ti->e = e;
-        if (executor_thread_create(&ti->thread, NULL, executor_worker_task, ti))
-            goto free_executor;
+        ఒకవేళ (executor_thread_create(&ti->thread, ఖాళీ, executor_కార్మికుడు_task, ti))
+            వెళ్ళు free_executor;
     }
-    return e;
+    తిరిగి e;
 
 free_executor:
-    executor_free(e, has_lock, has_cond);
-    return NULL;
+    executor_free(e, has_తాళం, has_cond);
+    తిరిగి ఖాళీ;
 }
 
-void av_executor_free(AVExecutor **executor)
+శూన్య av_executor_free(AVExecutor **executor)
 {
-    int thread_count;
+    పూర్ణాంకం thread_లెక్క;
 
-    if (!executor || !*executor)
-        return;
-    thread_count = (*executor)->thread_count;
-    executor_free(*executor, thread_count, thread_count);
-    *executor = NULL;
+    ఒకవేళ (!executor || !*executor)
+        తిరిగి;
+    thread_లెక్క = (*executor)->thread_లెక్క;
+    executor_free(*executor, thread_లెక్క, thread_లెక్క);
+    *executor = ఖాళీ;
 }
 
-void av_executor_execute(AVExecutor *e, AVTask *t)
+శూన్య av_executor_execute(AVExecutor *e, AVTask *t)
 {
     AVTaskCallbacks *cb = &e->cb;
     AVTask **prev;
 
-    if (e->thread_count)
-        ff_mutex_lock(&e->lock);
-    if (t) {
-        for (prev = &e->tasks; *prev && cb->priority_higher(*prev, t); prev = &(*prev)->next)
+    ఒకవేళ (e->thread_లెక్క)
+        ff_mutex_తాళం(&e->తాళం_2);
+    ఒకవేళ (t) {
+        కొరకు (prev = &e->tasks; *prev && cb->ప్రాధాన్యత_higher(*prev, t); prev = &(*prev)->తదుపరి)
             /* nothing */;
-        add_task(prev, t);
+        కూడు_task(prev, t);
     }
-    if (e->thread_count) {
+    ఒకవేళ (e->thread_లెక్క) {
         ff_cond_signal(&e->cond);
-        ff_mutex_unlock(&e->lock);
+        ff_mutex_unlock(&e->తాళం_2);
     }
 
-    if (!e->thread_count || !HAVE_THREADS) {
-        if (e->recursive)
-            return;
+    ఒకవేళ (!e->thread_లెక్క || !HAVE_దారాలు) {
+        ఒకవేళ (e->recursive)
+            తిరిగి;
         e->recursive = true;
         // We are running in a single-threaded environment, so we must handle all tasks ourselves
-        while (run_one_task(e, e->local_contexts))
+        అయితే (నిరంతరం_one_task(e, e->local_contexts))
             /* nothing */;
         e->recursive = false;
     }

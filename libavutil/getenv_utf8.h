@@ -16,71 +16,71 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_GETENV_UTF8_H
-#define AVUTIL_GETENV_UTF8_H
+#నిర్వచితం_కాకపోతే AVUTIL_GETENV_UTF8_H
+#నిర్వచించు AVUTIL_GETENV_UTF8_H
 
-#include <stdlib.h>
+#అన్తర్భావ <stdlib.h>
 
-#include "config.h"
-#include "mem.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#ఒకవేళ HAVE_GETENV && defined(_WIN32)
 
-#include "libavutil/wchar_filename.h"
+#అన్తర్భావ "libavutil/wchar_filename.h"
 
-static inline char *getenv_utf8(const char *varname)
+స్థిర అంతఃవరుస అక్షరం *getenv_utf8(స్థిరరాశి అక్షరం *varname)
 {
     wchar_t *varname_w, *var_w;
-    char *var;
+    అక్షరం *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    ఒకవేళ (utf8towchar(varname, &varname_w))
+        తిరిగి ఖాళీ;
+    ఒకవేళ (!varname_w)
+        తిరిగి ఖాళీ;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    ఒకవేళ (!var_w)
+        తిరిగి ఖాళీ;
+    ఒకవేళ (wchartoutf8(var_w, &var))
+        తిరిగి ఖాళీ;
 
-    return var;
+    తిరిగి var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
 }
 
-static inline void freeenv_utf8(char *var)
+స్థిర అంతఃవరుస శూన్య freeenv_utf8(అక్షరం *var)
 {
     av_free(var);
 }
 
-static inline char *getenv_dup(const char *varname)
+స్థిర అంతఃవరుస అక్షరం *getenv_dup(స్థిరరాశి అక్షరం *varname)
 {
-    return getenv_utf8(varname);
+    తిరిగి getenv_utf8(varname);
 }
 
-#else
+#లేకపోతే
 
-static inline char *getenv_utf8(const char *varname)
+స్థిర అంతఃవరుస అక్షరం *getenv_utf8(స్థిరరాశి అక్షరం *varname)
 {
-    return getenv(varname);
+    తిరిగి getenv(varname);
 }
 
-static inline void freeenv_utf8(char *var)
+స్థిర అంతఃవరుస శూన్య freeenv_utf8(అక్షరం *var)
 {
 }
 
-static inline char *getenv_dup(const char *varname)
+స్థిర అంతఃవరుస అక్షరం *getenv_dup(స్థిరరాశి అక్షరం *varname)
 {
-    char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    అక్షరం *var = getenv(varname);
+    ఒకవేళ (!var)
+        తిరిగి ఖాళీ;
+    తిరిగి av_strdup(var);
 }
 
-#endif // HAVE_GETENV && defined(_WIN32)
+#అయితే_ముగింపు // HAVE_GETENV && defined(_WIN32)
 
-#endif // AVUTIL_GETENV_UTF8_H
+#అయితే_ముగింపు // AVUTIL_GETENV_UTF8_H

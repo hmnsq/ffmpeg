@@ -16,21 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "timestamp.h"
+#అన్తర్భావ "timestamp.h"
 
-char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb)
+అక్షరం *av_ts_make_సమయం_string2(అక్షరం *buf, int64_t ts, AVRational tb)
 {
-    if (ts == AV_NOPTS_VALUE) {
-        snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    } else {
-        double val = av_q2d(tb) * ts;
-        double log = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
-        int precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
-        int last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
-        last = FFMIN(last, AV_TS_MAX_STRING_SIZE - 1) - 1;
-        for (; last && buf[last] == '0'; last--);
-        for (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
-        buf[last + 1] = '\0';
+    ఒకవేళ (ts == AV_NOPTS_విలువ) {
+        snprintf(buf, AV_TS_MAX_STRING_కొలత, "NOPTS");
+    } లేకపోతే {
+        ద్విగుణ val = av_q2d(tb) * ts;
+        ద్విగుణ సంవర్గమానం = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
+        పూర్ణాంకం precision = (isfinite(సంవర్గమానం) && సంవర్గమానం < 0) ? -సంవర్గమానం + 5 : 6;
+        పూర్ణాంకం చివరి = snprintf(buf, AV_TS_MAX_STRING_కొలత, "%.*f", precision, val);
+        చివరి = FFMIN(చివరి, AV_TS_MAX_STRING_కొలత - 1) - 1;
+        కొరకు (; చివరి && buf[చివరి] == '0'; చివరి--);
+        కొరకు (; చివరి && buf[చివరి] != 'f' && (buf[చివరి] < '0' || buf[0] > '9'); చివరి--);
+        buf[చివరి + 1] = '\0';
     }
-    return buf;
+    తిరిగి buf;
 }

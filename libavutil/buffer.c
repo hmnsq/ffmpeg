@@ -16,299 +16,299 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include <stdint.h>
-#include <string.h>
+#అన్తర్భావ <stdatomic.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <string.h>
 
-#include "avassert.h"
-#include "buffer_internal.h"
-#include "common.h"
-#include "mem.h"
-#include "sanitizer.h"
-#include "thread.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "buffer_internal.h"
+#అన్తర్భావ "common.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "sanitizer.h"
+#అన్తర్భావ "thread.h"
 
-static AVBufferRef *buffer_create(AVBuffer *buf, uint8_t *data, size_t size,
-                                  void (*free)(void *opaque, uint8_t *data),
-                                  void *opaque, int flags)
+స్థిర AVBufferRef *బఫరు_create(AVBuffer *buf, uint8_t *దత్తాంశం, size_t కొలత,
+                                  శూన్య (*విడుదల)(శూన్య *opaque, uint8_t *దత్తాంశం),
+                                  శూన్య *opaque, పూర్ణాంకం flags)
 {
-    AVBufferRef *ref = NULL;
+    AVBufferRef *ref = ఖాళీ;
 
-    buf->data     = data;
-    buf->size     = size;
-    buf->free     = free ? free : av_buffer_default_free;
+    buf->దత్తాంశం     = దత్తాంశం;
+    buf->కొలత     = కొలత;
+    buf->విడుదల     = విడుదల ? విడుదల : av_బఫరు_default_free;
     buf->opaque   = opaque;
 
     atomic_init(&buf->refcount, 1);
 
     buf->flags = flags;
 
-    ref = av_mallocz(sizeof(*ref));
-    if (!ref)
-        return NULL;
+    ref = av_mallocz(పరిమాణం(*ref));
+    ఒకవేళ (!ref)
+        తిరిగి ఖాళీ;
 
-    ref->buffer = buf;
-    ref->data   = data;
-    ref->size   = size;
+    ref->బఫరు = buf;
+    ref->దత్తాంశం   = దత్తాంశం;
+    ref->కొలత   = కొలత;
 
-    return ref;
+    తిరిగి ref;
 }
 
-AVBufferRef *av_buffer_create(uint8_t *data, size_t size,
-                              void (*free)(void *opaque, uint8_t *data),
-                              void *opaque, int flags)
+AVBufferRef *av_బఫరు_create(uint8_t *దత్తాంశం, size_t కొలత,
+                              శూన్య (*విడుదల)(శూన్య *opaque, uint8_t *దత్తాంశం),
+                              శూన్య *opaque, పూర్ణాంకం flags)
 {
     AVBufferRef *ret;
-    AVBuffer *buf = av_mallocz(sizeof(*buf));
-    if (!buf)
-        return NULL;
+    AVBuffer *buf = av_mallocz(పరిమాణం(*buf));
+    ఒకవేళ (!buf)
+        తిరిగి ఖాళీ;
 
-    ret = buffer_create(buf, data, size, free, opaque, flags);
-    if (!ret) {
+    ret = బఫరు_create(buf, దత్తాంశం, కొలత, విడుదల, opaque, flags);
+    ఒకవేళ (!ret) {
         av_free(buf);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
-    return ret;
+    తిరిగి ret;
 }
 
-void av_buffer_default_free(void *opaque, uint8_t *data)
+శూన్య av_బఫరు_default_free(శూన్య *opaque, uint8_t *దత్తాంశం)
 {
-    av_free(data);
+    av_free(దత్తాంశం);
 }
 
-AVBufferRef *av_buffer_alloc(size_t size)
+AVBufferRef *av_బఫరు_alloc(size_t కొలత)
 {
-    AVBufferRef *ret = NULL;
-    uint8_t    *data = NULL;
+    AVBufferRef *ret = ఖాళీ;
+    uint8_t    *దత్తాంశం = ఖాళీ;
 
-    data = av_malloc(size);
-    if (!data)
-        return NULL;
+    దత్తాంశం = av_malloc(కొలత);
+    ఒకవేళ (!దత్తాంశం)
+        తిరిగి ఖాళీ;
 
-    ret = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-    if (!ret)
-        av_freep(&data);
+    ret = av_బఫరు_create(దత్తాంశం, కొలత, av_బఫరు_default_free, ఖాళీ, 0);
+    ఒకవేళ (!ret)
+        av_freep(&దత్తాంశం);
 
-    return ret;
+    తిరిగి ret;
 }
 
-AVBufferRef *av_buffer_allocz(size_t size)
+AVBufferRef *av_బఫరు_allocz(size_t కొలత)
 {
-    AVBufferRef *ret = av_buffer_alloc(size);
-    if (!ret)
-        return NULL;
+    AVBufferRef *ret = av_బఫరు_alloc(కొలత);
+    ఒకవేళ (!ret)
+        తిరిగి ఖాళీ;
 
-    memset(ret->data, 0, size);
-    return ret;
+    memset(ret->దత్తాంశం, 0, కొలత);
+    తిరిగి ret;
 }
 
-AVBufferRef *av_buffer_ref(const AVBufferRef *buf)
+AVBufferRef *av_బఫరు_ref(స్థిరరాశి AVBufferRef *buf)
 {
-    AVBufferRef *ret = av_mallocz(sizeof(*ret));
+    AVBufferRef *ret = av_mallocz(పరిమాణం(*ret));
 
-    if (!ret)
-        return NULL;
+    ఒకవేళ (!ret)
+        తిరిగి ఖాళీ;
 
     *ret = *buf;
 
-    atomic_fetch_add_explicit(&buf->buffer->refcount, 1, memory_order_relaxed);
+    atomic_fetch_add_explicit(&buf->బఫరు->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    తిరిగి ret;
 }
 
-static void buffer_replace(AVBufferRef **dst, AVBufferRef **src)
+స్థిర శూన్య బఫరు_replace(AVBufferRef **dst, AVBufferRef **src)
 {
     AVBuffer *b;
 
-    b = (*dst)->buffer;
+    b = (*dst)->బఫరు;
 
-    if (src) {
+    ఒకవేళ (src) {
         **dst = **src;
         av_freep(src);
-    } else
+    } లేకపోతే
         av_freep(dst);
 
-    if (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
+    ఒకవేళ (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
         /* b->free below might already free the structure containing *b,
          * so we have to read the flag now to avoid use-after-free. */
-        int free_avbuffer = !(b->flags_internal & BUFFER_FLAG_NO_FREE);
-        b->free(b->opaque, b->data);
-        if (free_avbuffer)
+        పూర్ణాంకం free_avbuffer = !(b->flags_అంతర్గత & బఫరు_FLAG_NO_FREE);
+        b->విడుదల(b->opaque, b->దత్తాంశం);
+        ఒకవేళ (free_avbuffer)
             av_free(b);
     }
 }
 
-void av_buffer_unref(AVBufferRef **buf)
+శూన్య av_బఫరు_unref(AVBufferRef **buf)
 {
-    if (!buf || !*buf)
-        return;
+    ఒకవేళ (!buf || !*buf)
+        తిరిగి;
 
-    buffer_replace(buf, NULL);
+    బఫరు_replace(buf, ఖాళీ);
 }
 
-int av_buffer_is_writable(const AVBufferRef *buf)
+పూర్ణాంకం av_బఫరు_is_writable(స్థిరరాశి AVBufferRef *buf)
 {
-    if (buf->buffer->flags & AV_BUFFER_FLAG_READONLY)
-        return 0;
+    ఒకవేళ (buf->బఫరు->flags & AV_బఫరు_FLAG_READONLY)
+        తిరిగి 0;
 
-    return atomic_load(&buf->buffer->refcount) == 1;
+    తిరిగి atomic_load(&buf->బఫరు->refcount) == 1;
 }
 
-void *av_buffer_get_opaque(const AVBufferRef *buf)
+శూన్య *av_బఫరు_get_opaque(స్థిరరాశి AVBufferRef *buf)
 {
-    return buf->buffer->opaque;
+    తిరిగి buf->బఫరు->opaque;
 }
 
-int av_buffer_get_ref_count(const AVBufferRef *buf)
+పూర్ణాంకం av_బఫరు_get_ref_లెక్క(స్థిరరాశి AVBufferRef *buf)
 {
-    return atomic_load(&buf->buffer->refcount);
+    తిరిగి atomic_load(&buf->బఫరు->refcount);
 }
 
-int av_buffer_make_writable(AVBufferRef **pbuf)
+పూర్ణాంకం av_బఫరు_make_writable(AVBufferRef **pbuf)
 {
     AVBufferRef *newbuf, *buf = *pbuf;
 
-    if (av_buffer_is_writable(buf))
-        return 0;
+    ఒకవేళ (av_బఫరు_is_writable(buf))
+        తిరిగి 0;
 
-    newbuf = av_buffer_alloc(buf->size);
-    if (!newbuf)
-        return AVERROR(ENOMEM);
+    newbuf = av_బఫరు_alloc(buf->కొలత);
+    ఒకవేళ (!newbuf)
+        తిరిగి AVERROR(ENOMEM);
 
-    memcpy(newbuf->data, buf->data, buf->size);
+    జ్ఞాపకం_నకలు(newbuf->దత్తాంశం, buf->దత్తాంశం, buf->కొలత);
 
-    buffer_replace(pbuf, &newbuf);
+    బఫరు_replace(pbuf, &newbuf);
 
-    return 0;
+    తిరిగి 0;
 }
 
-int av_buffer_realloc(AVBufferRef **pbuf, size_t size)
+పూర్ణాంకం av_బఫరు_realloc(AVBufferRef **pbuf, size_t కొలత)
 {
     AVBufferRef *buf = *pbuf;
     uint8_t *tmp;
-    int ret;
+    పూర్ణాంకం ret;
 
-    if (!buf) {
+    ఒకవేళ (!buf) {
         /* allocate a new buffer with av_realloc(), so it will be reallocatable
          * later */
-        uint8_t *data = av_realloc(NULL, size);
-        if (!data)
-            return AVERROR(ENOMEM);
+        uint8_t *దత్తాంశం = av_realloc(ఖాళీ, కొలత);
+        ఒకవేళ (!దత్తాంశం)
+            తిరిగి AVERROR(ENOMEM);
 
-        buf = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-        if (!buf) {
-            av_freep(&data);
-            return AVERROR(ENOMEM);
+        buf = av_బఫరు_create(దత్తాంశం, కొలత, av_బఫరు_default_free, ఖాళీ, 0);
+        ఒకవేళ (!buf) {
+            av_freep(&దత్తాంశం);
+            తిరిగి AVERROR(ENOMEM);
         }
 
-        buf->buffer->flags_internal |= BUFFER_FLAG_REALLOCATABLE;
+        buf->బఫరు->flags_అంతర్గత |= బఫరు_FLAG_REALLOCATABLE;
         *pbuf = buf;
 
-        return 0;
-    } else if (buf->size == size)
-        return 0;
+        తిరిగి 0;
+    } లేకపోతే ఒకవేళ (buf->కొలత == కొలత)
+        తిరిగి 0;
 
-    if (!(buf->buffer->flags_internal & BUFFER_FLAG_REALLOCATABLE) ||
-        !av_buffer_is_writable(buf) || buf->data != buf->buffer->data) {
+    ఒకవేళ (!(buf->బఫరు->flags_అంతర్గత & బఫరు_FLAG_REALLOCATABLE) ||
+        !av_బఫరు_is_writable(buf) || buf->దత్తాంశం != buf->బఫరు->దత్తాంశం) {
         /* cannot realloc, allocate a new reallocable buffer and copy data */
-        AVBufferRef *new = NULL;
+        AVBufferRef *new = ఖాళీ;
 
-        ret = av_buffer_realloc(&new, size);
-        if (ret < 0)
-            return ret;
+        ret = av_బఫరు_realloc(&new, కొలత);
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
 
-        memcpy(new->data, buf->data, FFMIN(size, buf->size));
+        జ్ఞాపకం_నకలు(new->దత్తాంశం, buf->దత్తాంశం, FFMIN(కొలత, buf->కొలత));
 
-        buffer_replace(pbuf, &new);
-        return 0;
+        బఫరు_replace(pbuf, &new);
+        తిరిగి 0;
     }
 
-    tmp = av_realloc(buf->buffer->data, size);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    tmp = av_realloc(buf->బఫరు->దత్తాంశం, కొలత);
+    ఒకవేళ (!tmp)
+        తిరిగి AVERROR(ENOMEM);
 
-    buf->buffer->data = buf->data = tmp;
-    buf->buffer->size = buf->size = size;
-    return 0;
+    buf->బఫరు->దత్తాంశం = buf->దత్తాంశం = tmp;
+    buf->బఫరు->కొలత = buf->కొలత = కొలత;
+    తిరిగి 0;
 }
 
-int av_buffer_replace(AVBufferRef **pdst, const AVBufferRef *src)
+పూర్ణాంకం av_బఫరు_replace(AVBufferRef **pdst, స్థిరరాశి AVBufferRef *src)
 {
     AVBufferRef *dst = *pdst;
     AVBufferRef *tmp;
 
-    if (!src) {
-        av_buffer_unref(pdst);
-        return 0;
+    ఒకవేళ (!src) {
+        av_బఫరు_unref(pdst);
+        తిరిగి 0;
     }
 
-    if (dst && dst->buffer == src->buffer) {
+    ఒకవేళ (dst && dst->బఫరు == src->బఫరు) {
         /* make sure the data pointers match */
-        dst->data = src->data;
-        dst->size = src->size;
-        return 0;
+        dst->దత్తాంశం = src->దత్తాంశం;
+        dst->కొలత = src->కొలత;
+        తిరిగి 0;
     }
 
-    tmp = av_buffer_ref(src);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    tmp = av_బఫరు_ref(src);
+    ఒకవేళ (!tmp)
+        తిరిగి AVERROR(ENOMEM);
 
-    av_buffer_unref(pdst);
+    av_బఫరు_unref(pdst);
     *pdst = tmp;
-    return 0;
+    తిరిగి 0;
 }
 
-AVBufferPool *av_buffer_pool_init2(size_t size, void *opaque,
-                                   AVBufferRef* (*alloc)(void *opaque, size_t size),
-                                   void (*pool_free)(void *opaque))
+AVBufferPool *av_బఫరు_pool_init2(size_t కొలత, శూన్య *opaque,
+                                   AVBufferRef* (*alloc)(శూన్య *opaque, size_t కొలత),
+                                   శూన్య (*pool_free)(శూన్య *opaque))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(పరిమాణం(*pool));
+    ఒకవేళ (!pool)
+        తిరిగి ఖాళీ;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    ఒకవేళ (ff_mutex_init(&pool->mutex, ఖాళీ)) {
         av_free(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    pool->size      = size;
+    pool->కొలత      = కొలత;
     pool->opaque    = opaque;
     pool->alloc2    = alloc;
-    pool->alloc     = av_buffer_alloc; // fallback
+    pool->alloc     = av_బఫరు_alloc; // fallback
     pool->pool_free = pool_free;
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    తిరిగి pool;
 }
 
-AVBufferPool *av_buffer_pool_init(size_t size, AVBufferRef* (*alloc)(size_t size))
+AVBufferPool *av_బఫరు_pool_init(size_t కొలత, AVBufferRef* (*alloc)(size_t కొలత))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(పరిమాణం(*pool));
+    ఒకవేళ (!pool)
+        తిరిగి ఖాళీ;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    ఒకవేళ (ff_mutex_init(&pool->mutex, ఖాళీ)) {
         av_free(pool);
-        return NULL;
+        తిరిగి ఖాళీ;
     }
 
-    pool->size     = size;
-    pool->alloc    = alloc ? alloc : av_buffer_alloc;
+    pool->కొలత     = కొలత;
+    pool->alloc    = alloc ? alloc : av_బఫరు_alloc;
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    తిరిగి pool;
 }
 
-static void buffer_pool_flush(AVBufferPool *pool)
+స్థిర శూన్య బఫరు_pool_flush(AVBufferPool *pool)
 {
-    while (pool->pool) {
-        BufferPoolEntry *buf = pool->pool;
-        pool->pool = buf->next;
+    అయితే (pool->pool) {
+        బఫరు_Pool_నమోదు *buf = pool->pool;
+        pool->pool = buf->తదుపరి;
 
-        if (buf->free == av_buffer_default_free)
-            FF_ASAN_UNPOISON(buf->data, pool->size);
-        buf->free(buf->opaque, buf->data);
+        ఒకవేళ (buf->విడుదల == av_బఫరు_default_free)
+            FF_ASAN_UNPOISON(buf->దత్తాంశం, pool->కొలత);
+        buf->విడుదల(buf->opaque, buf->దత్తాంశం);
         av_freep(&buf);
     }
 }
@@ -317,120 +317,120 @@ static void buffer_pool_flush(AVBufferPool *pool)
  * This function gets called when the pool has been uninited and
  * all the buffers returned to it.
  */
-static void buffer_pool_free(AVBufferPool *pool)
+స్థిర శూన్య బఫరు_pool_free(AVBufferPool *pool)
 {
-    buffer_pool_flush(pool);
+    బఫరు_pool_flush(pool);
     ff_mutex_destroy(&pool->mutex);
 
-    if (pool->pool_free)
+    ఒకవేళ (pool->pool_free)
         pool->pool_free(pool->opaque);
 
     av_freep(&pool);
 }
 
-void av_buffer_pool_uninit(AVBufferPool **ppool)
+శూన్య av_బఫరు_pool_uninit(AVBufferPool **ppool)
 {
     AVBufferPool *pool;
 
-    if (!ppool || !*ppool)
-        return;
+    ఒకవేళ (!ppool || !*ppool)
+        తిరిగి;
     pool   = *ppool;
-    *ppool = NULL;
+    *ppool = ఖాళీ;
 
-    ff_mutex_lock(&pool->mutex);
-    buffer_pool_flush(pool);
+    ff_mutex_తాళం(&pool->mutex);
+    బఫరు_pool_flush(pool);
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
-        buffer_pool_free(pool);
+    ఒకవేళ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+        బఫరు_pool_free(pool);
 }
 
-static void pool_release_buffer(void *opaque, uint8_t *data)
+స్థిర శూన్య pool_release_బఫరు(శూన్య *opaque, uint8_t *దత్తాంశం)
 {
-    BufferPoolEntry *buf = opaque;
+    బఫరు_Pool_నమోదు *buf = opaque;
     AVBufferPool *pool = buf->pool;
 
-    if (buf->free == av_buffer_default_free)
-        FF_ASAN_POISON(buf->data, pool->size);
+    ఒకవేళ (buf->విడుదల == av_బఫరు_default_free)
+        FF_ASAN_POISON(buf->దత్తాంశం, pool->కొలత);
 
-    ff_mutex_lock(&pool->mutex);
-    buf->next = pool->pool;
+    ff_mutex_తాళం(&pool->mutex);
+    buf->తదుపరి = pool->pool;
     pool->pool = buf;
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
-        buffer_pool_free(pool);
+    ఒకవేళ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+        బఫరు_pool_free(pool);
 }
 
 /* allocate a new buffer and override its free() callback so that
  * it is returned to the pool on free */
-static AVBufferRef *pool_alloc_buffer(AVBufferPool *pool)
+స్థిర AVBufferRef *pool_alloc_బఫరు(AVBufferPool *pool)
 {
-    BufferPoolEntry *buf;
+    బఫరు_Pool_నమోదు *buf;
     AVBufferRef     *ret;
 
     av_assert0(pool->alloc || pool->alloc2);
 
-    ret = pool->alloc2 ? pool->alloc2(pool->opaque, pool->size) :
-                         pool->alloc(pool->size);
-    if (!ret)
-        return NULL;
+    ret = pool->alloc2 ? pool->alloc2(pool->opaque, pool->కొలత) :
+                         pool->alloc(pool->కొలత);
+    ఒకవేళ (!ret)
+        తిరిగి ఖాళీ;
 
-    buf = av_mallocz(sizeof(*buf));
-    if (!buf) {
-        av_buffer_unref(&ret);
-        return NULL;
+    buf = av_mallocz(పరిమాణం(*buf));
+    ఒకవేళ (!buf) {
+        av_బఫరు_unref(&ret);
+        తిరిగి ఖాళీ;
     }
 
-    buf->data   = ret->buffer->data;
-    buf->opaque = ret->buffer->opaque;
-    buf->free   = ret->buffer->free;
+    buf->దత్తాంశం   = ret->బఫరు->దత్తాంశం;
+    buf->opaque = ret->బఫరు->opaque;
+    buf->విడుదల   = ret->బఫరు->విడుదల;
     buf->pool   = pool;
 
-    ret->buffer->opaque = buf;
-    ret->buffer->free   = pool_release_buffer;
+    ret->బఫరు->opaque = buf;
+    ret->బఫరు->విడుదల   = pool_release_బఫరు;
 
-    return ret;
+    తిరిగి ret;
 }
 
-AVBufferRef *av_buffer_pool_get(AVBufferPool *pool)
+AVBufferRef *av_బఫరు_pool_get(AVBufferPool *pool)
 {
     AVBufferRef *ret;
-    BufferPoolEntry *buf;
+    బఫరు_Pool_నమోదు *buf;
 
-    ff_mutex_lock(&pool->mutex);
+    ff_mutex_తాళం(&pool->mutex);
     buf = pool->pool;
-    if (buf) {
-        memset(&buf->buffer, 0, sizeof(buf->buffer));
-        ret = buffer_create(&buf->buffer, buf->data, pool->size,
-                            pool_release_buffer, buf, 0);
-        if (ret) {
-            pool->pool = buf->next;
-            buf->next = NULL;
-            buf->buffer.flags_internal |= BUFFER_FLAG_NO_FREE;
-            if (buf->free == av_buffer_default_free) {
-                FF_ASAN_UNPOISON(buf->data, pool->size);
+    ఒకవేళ (buf) {
+        memset(&buf->బఫరు, 0, పరిమాణం(buf->బఫరు));
+        ret = బఫరు_create(&buf->బఫరు, buf->దత్తాంశం, pool->కొలత,
+                            pool_release_బఫరు, buf, 0);
+        ఒకవేళ (ret) {
+            pool->pool = buf->తదుపరి;
+            buf->తదుపరి = ఖాళీ;
+            buf->బఫరు.flags_అంతర్గత |= బఫరు_FLAG_NO_FREE;
+            ఒకవేళ (buf->విడుదల == av_బఫరు_default_free) {
+                FF_ASAN_UNPOISON(buf->దత్తాంశం, pool->కొలత);
                 /* A pool that zeroes its buffers may be relied upon for never
                  * written regions staying zero, so only mark a reused buffer
                  * undefined when nothing was ever promised about its contents. */
-                if (!pool->alloc2 && pool->alloc == av_buffer_alloc)
-                    FF_MEM_UNDEFINED(buf->data, pool->size);
+                ఒకవేళ (!pool->alloc2 && pool->alloc == av_బఫరు_alloc)
+                    FF_MEM_UNDEFINED(buf->దత్తాంశం, pool->కొలత);
             }
         }
-    } else {
-        ret = pool_alloc_buffer(pool);
+    } లేకపోతే {
+        ret = pool_alloc_బఫరు(pool);
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (ret)
+    ఒకవేళ (ret)
         atomic_fetch_add_explicit(&pool->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    తిరిగి ret;
 }
 
-void *av_buffer_pool_buffer_get_opaque(const AVBufferRef *ref)
+శూన్య *av_బఫరు_pool_బఫరు_get_opaque(స్థిరరాశి AVBufferRef *ref)
 {
-    BufferPoolEntry *buf = ref->buffer->opaque;
+    బఫరు_Pool_నమోదు *buf = ref->బఫరు->opaque;
     av_assert0(buf);
-    return buf->opaque;
+    తిరిగి buf->opaque;
 }

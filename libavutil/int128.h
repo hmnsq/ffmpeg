@@ -25,33 +25,33 @@
  * @author Niklas Haas
  */
 
-#ifndef AVUTIL_INT128_H
-#define AVUTIL_INT128_H
+#నిర్వచితం_కాకపోతే AVUTIL_INT128_H
+#నిర్వచించు AVUTIL_INT128_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include <limits.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <limits.h>
 
-#include "config.h"
-#include "integer.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "integer.h"
 
-#if HAVE_INT128
-#define AV_INT128_NATIVE 1
-typedef unsigned __int128 av_uint128;
-typedef          __int128 av_int128;
-#elif defined(BITINT_MAXWIDTH) && BITINT_MAXWIDTH >= 128
-#define AV_INT128_NATIVE 1
-typedef unsigned _BitInt(128) av_uint128;
-typedef          _BitInt(128) av_int128;
-#elif AV_INTEGER_SIZE >= 8
-#define AV_INT128_NATIVE 0
-typedef AVInteger av_uint128;
-typedef AVInteger av_int128;
-#else
-#error "128-bit integer type not available"
-#endif
+#ఒకవేళ HAVE_INT128
+#నిర్వచించు AV_INT128_NATIVE 1
+రకనిర్వచనం గుర్తులేని __int128 av_uint128;
+రకనిర్వచనం          __int128 av_int128;
+#లేదావేళ defined(BITINT_MAXWIDTH) && BITINT_MAXWIDTH >= 128
+#నిర్వచించు AV_INT128_NATIVE 1
+రకనిర్వచనం గుర్తులేని బిట్టు_Int(128) av_uint128;
+రకనిర్వచనం          బిట్టు_Int(128) av_int128;
+#లేదావేళ AV_INTEGER_కొలత >= 8
+#నిర్వచించు AV_INT128_NATIVE 0
+రకనిర్వచనం AVInteger av_uint128;
+రకనిర్వచనం AVInteger av_int128;
+#లేకపోతే
+#దోషం "128-bit integer type not available"
+#అయితే_ముగింపు
 
-#if AV_INT128_NATIVE
+#ఒకవేళ AV_INT128_NATIVE
 #  define av_add128(a, b)   ((a) + (b))
 #  define av_sub128(a, b)   ((a) - (b))
 #  define av_mul128(a, b)   ((a) * (b))
@@ -67,8 +67,8 @@ typedef AVInteger av_int128;
 #  define av_from128i(a)    ((int64_t) (a))
 #  define av_from128u(a)    ((uint64_t) (a))
 #  define av_test128(a)     (!!(a))
-#else
-#  define av_add128(a, b)   av_add_i(a, b)
+#లేకపోతే
+#  define av_add128(a, b)   av_కూడు_i(a, b)
 #  define av_sub128(a, b)   av_sub_i(a, b)
 #  define av_mul128(a, b)   av_mul_i(a, b)
 #  define av_div128(a, b)   av_div_i(a, b)
@@ -76,17 +76,17 @@ typedef AVInteger av_int128;
 #  define av_min128(a, b)   (av_cmp_i(a, b) > 0 ? (b) : (a))
 #  define av_max128(a, b)   (av_cmp_i(a, b) > 0 ? (a) : (b))
 #  define av_eq128(a, b)    (av_cmp_i(a, b) == 0)
-#  define av_mod128(a, b)   av_mod_i(NULL, a, b)
+#  define av_mod128(a, b)   av_mod_i(ఖాళీ, a, b)
 #  define av_shr128(a, b)   av_shr_i(a, b)
 #  define av_to128i(a)      av_int2i(a)
 #  define av_from128i(a)    av_i2int(a)
 #  define av_from128u(a)    ((uint64_t) av_i2int(a))
 #  define av_test128(a)     (!av_eq128(a, av_to128u(0)))
 
-static av_always_inline av_uint128 av_to128u(uint64_t a)
+స్థిర av_always_inline av_uint128 av_to128u(uint64_t a)
 {
-    return (AVInteger) {{ a, a >> 16, a >> 32, a >> 48 }};
+    తిరిగి (AVInteger) {{ a, a >> 16, a >> 32, a >> 48 }};
 }
-#endif
+#అయితే_ముగింపు
 
-#endif /* AVUTIL_INT128_H */
+#అయితే_ముగింపు /* AVUTIL_INT128_H */

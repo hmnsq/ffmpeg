@@ -19,150 +19,150 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "mem.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "attributes.h"
+#అన్తర్భావ "float_dsp.h"
+#అన్తర్భావ "mem.h"
 
-static void vector_fmul_c(float *dst, const float *src0, const float *src1,
-                          int len)
+స్థిర శూన్య సదిశ_fmul_c(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1,
+                          పూర్ణాంకం len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_dmul_c(double *dst, const double *src0, const double *src1,
-                          int len)
+స్థిర శూన్య సదిశ_dmul_c(ద్విగుణ *dst, స్థిరరాశి ద్విగుణ *src0, స్థిరరాశి ద్విగుణ *src1,
+                          పూర్ణాంకం len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_fmac_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+స్థిర శూన్య సదిశ_fmac_scalar_c(దశాంశం *dst, స్థిరరాశి దశాంశం *src, దశాంశం mul,
+                                 పూర్ణాంకం len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_dmac_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+స్థిర శూన్య సదిశ_dmac_scalar_c(ద్విగుణ *dst, స్థిరరాశి ద్విగుణ *src, ద్విగుణ mul,
+                                 పూర్ణాంకం len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+స్థిర శూన్య సదిశ_fmul_scalar_c(దశాంశం *dst, స్థిరరాశి దశాంశం *src, దశాంశం mul,
+                                 పూర్ణాంకం len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_dmul_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+స్థిర శూన్య సదిశ_dmul_scalar_c(ద్విగుణ *dst, స్థిరరాశి ద్విగుణ *src, ద్విగుణ mul,
+                                 పూర్ణాంకం len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_fmul_window_c(float *dst, const float *src0,
-                                 const float *src1, const float *win, int len)
+స్థిర శూన్య సదిశ_fmul_కిటికీ_c(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                 స్థిరరాశి దశాంశం *src1, స్థిరరాశి దశాంశం *win, పూర్ణాంకం len)
 {
-    int i, j;
+    పూర్ణాంకం i, j;
 
     dst  += len;
     win  += len;
     src0 += len;
 
-    for (i = -len, j = len - 1; i < 0; i++, j--) {
-        float s0 = src0[i];
-        float s1 = src1[j];
-        float wi = win[i];
-        float wj = win[j];
+    కొరకు (i = -len, j = len - 1; i < 0; i++, j--) {
+        దశాంశం s0 = src0[i];
+        దశాంశం s1 = src1[j];
+        దశాంశం wi = win[i];
+        దశాంశం wj = win[j];
         dst[i] = s0 * wj - s1 * wi;
         dst[j] = s0 * wi + s1 * wj;
     }
 }
 
-static void vector_fmul_add_c(float *dst, const float *src0, const float *src1,
-                              const float *src2, int len){
-    int i;
+స్థిర శూన్య సదిశ_fmul_కూడు_c(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1,
+                              స్థిరరాశి దశాంశం *src2, పూర్ణాంకం len){
+    పూర్ణాంకం i;
 
-    for (i = 0; i < len; i++)
+    కొరకు (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i] + src2[i];
 }
 
-static void vector_fmul_reverse_c(float *dst, const float *src0,
-                                  const float *src1, int len)
+స్థిర శూన్య సదిశ_fmul_తిరగేయి_c(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                  స్థిరరాశి దశాంశం *src1, పూర్ణాంకం len)
 {
-    int i;
+    పూర్ణాంకం i;
 
     src1 += len-1;
-    for (i = 0; i < len; i++)
+    కొరకు (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[-i];
 }
 
-static void butterflies_float_c(float *restrict v1, float *restrict v2,
-                                int len)
+స్థిర శూన్య butterflies_float_c(దశాంశం *పరిమిత v1, దశాంశం *పరిమిత v2,
+                                పూర్ణాంకం len)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    for (i = 0; i < len; i++) {
-        float t = v1[i] - v2[i];
+    కొరకు (i = 0; i < len; i++) {
+        దశాంశం t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+ద్విగుణ ff_scalarproduct_double_c(స్థిరరాశి ద్విగుణ *v1, స్థిరరాశి ద్విగుణ *v2,
                                  size_t len)
 {
-    double p = 0.0;
+    ద్విగుణ p = 0.0;
 
-    for (size_t i = 0; i < len; i++)
+    కొరకు (size_t i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    తిరిగి p;
 }
 
-av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
+av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(పూర్ణాంకం బిట్టు_exact)
 {
-    AVFloatDSPContext *fdsp = av_mallocz(sizeof(AVFloatDSPContext));
-    if (!fdsp)
-        return NULL;
+    AVFloatDSPContext *fdsp = av_mallocz(పరిమాణం(AVFloatDSPContext));
+    ఒకవేళ (!fdsp)
+        తిరిగి ఖాళీ;
 
-    fdsp->vector_fmul = vector_fmul_c;
-    fdsp->vector_dmul = vector_dmul_c;
-    fdsp->vector_fmac_scalar = vector_fmac_scalar_c;
-    fdsp->vector_fmul_scalar = vector_fmul_scalar_c;
-    fdsp->vector_dmac_scalar = vector_dmac_scalar_c;
-    fdsp->vector_dmul_scalar = vector_dmul_scalar_c;
-    fdsp->vector_fmul_window = vector_fmul_window_c;
-    fdsp->vector_fmul_add = vector_fmul_add_c;
-    fdsp->vector_fmul_reverse = vector_fmul_reverse_c;
+    fdsp->సదిశ_fmul = సదిశ_fmul_c;
+    fdsp->సదిశ_dmul = సదిశ_dmul_c;
+    fdsp->సదిశ_fmac_scalar = సదిశ_fmac_scalar_c;
+    fdsp->సదిశ_fmul_scalar = సదిశ_fmul_scalar_c;
+    fdsp->సదిశ_dmac_scalar = సదిశ_dmac_scalar_c;
+    fdsp->సదిశ_dmul_scalar = సదిశ_dmul_scalar_c;
+    fdsp->సదిశ_fmul_కిటికీ = సదిశ_fmul_కిటికీ_c;
+    fdsp->సదిశ_fmul_కూడు = సదిశ_fmul_కూడు_c;
+    fdsp->సదిశ_fmul_తిరగేయి = సదిశ_fmul_తిరగేయి_c;
     fdsp->butterflies_float = butterflies_float_c;
     fdsp->scalarproduct_float = ff_scalarproduct_float_c;
     fdsp->scalarproduct_double = ff_scalarproduct_double_c;
 
-#if ARCH_AARCH64
+#ఒకవేళ ARCH_AARCH64
     ff_float_dsp_init_aarch64(fdsp);
-#elif ARCH_ARM
+#లేదావేళ ARCH_ARM
     ff_float_dsp_init_arm(fdsp);
-#elif ARCH_PPC
-    ff_float_dsp_init_ppc(fdsp, bit_exact);
-#elif ARCH_RISCV
+#లేదావేళ ARCH_PPC
+    ff_float_dsp_init_ppc(fdsp, బిట్టు_exact);
+#లేదావేళ ARCH_RISCV
     ff_float_dsp_init_riscv(fdsp);
-#elif ARCH_X86 && HAVE_X86ASM
+#లేదావేళ ARCH_X86 && HAVE_X86ASM
     ff_float_dsp_init_x86(fdsp);
-#elif ARCH_MIPS
+#లేదావేళ ARCH_MIPS
     ff_float_dsp_init_mips(fdsp);
-#endif
-    return fdsp;
+#అయితే_ముగింపు
+    తిరిగి fdsp;
 }

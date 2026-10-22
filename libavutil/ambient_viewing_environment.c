@@ -18,43 +18,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ambient_viewing_environment.h"
-#include "mem.h"
+#అన్తర్భావ "ambient_viewing_environment.h"
+#అన్తర్భావ "mem.h"
 
-static void get_defaults(AVAmbientViewingEnvironment *env)
+స్థిర శూన్య get_defaults(AVAmbientViewingEnvironment *env)
 {
     env->ambient_illuminance =
     env->ambient_light_x     =
     env->ambient_light_y     = (AVRational) { 0, 1 };
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *కొలత)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(పరిమాణం(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    ఒకవేళ (కొలత)
+        *కొలత = env ? పరిమాణం(*env) : 0;
 
-    if (!env)
-        return NULL;
+    ఒకవేళ (!env)
+        తిరిగి ఖాళీ;
 
     get_defaults(env);
 
-    return env;
+    తిరిగి env;
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_దత్తాంశం(AVFrame *చట్రం)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame,
-                               AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_దత్తాంశం *side_దత్తాంశం =
+        av_చట్రం_new_side_దత్తాంశం(చట్రం,
+                               AV_చట్రం_దత్తాంశం_AMBIENT_VIEWING_ENVIRONMENT,
+                               పరిమాణం(AVAmbientViewingEnvironment));
+    ఒకవేళ (!side_దత్తాంశం)
+        తిరిగి ఖాళీ;
 
-    memset(side_data->data, 0, side_data->size);
-    get_defaults((AVAmbientViewingEnvironment *)side_data->data);
+    memset(side_దత్తాంశం->దత్తాంశం, 0, side_దత్తాంశం->కొలత);
+    get_defaults((AVAmbientViewingEnvironment *)side_దత్తాంశం->దత్తాంశం);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    తిరిగి (AVAmbientViewingEnvironment *)side_దత్తాంశం->దత్తాంశం;
 }

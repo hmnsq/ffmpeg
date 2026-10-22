@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BASE64_INTERNAL_H
-#define AVUTIL_BASE64_INTERNAL_H
+#నిర్వచితం_కాకపోతే AVUTIL_BASE64_అంతర్గత_H
+#నిర్వచించు AVUTIL_BASE64_అంతర్గత_H
 
-#include <stdint.h>
-#include "intreadwrite.h"
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ "intreadwrite.h"
 
 /*****************************************************************************
 * b64_encode: Stolen from VLC's http.c.
@@ -30,37 +30,37 @@
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-static inline char *ff_base64_encode_c(char *out, const uint8_t *in, int in_size, const char *b64)
+స్థిర అంతఃవరుస అక్షరం *ff_base64_encode_c(అక్షరం *బహిర్గతం, స్థిరరాశి uint8_t *లోపల, పూర్ణాంకం లోపల_కొలత, స్థిరరాశి అక్షరం *b64)
 {
-    char *ret, *dst;
-    unsigned i_bits = 0;
-    int i_shift = 0;
-    int bytes_remaining = in_size;
+    అక్షరం *ret, *dst;
+    గుర్తులేని i_బిట్లు = 0;
+    పూర్ణాంకం i_జరుపు = 0;
+    పూర్ణాంకం బైట్లు_మిగిలిన = లోపల_కొలత;
 
-    ret = dst = out;
-    while (bytes_remaining > 3) {
-        i_bits = AV_RB32(in);
-        in += 3; bytes_remaining -= 3;
-        *dst++ = b64[ i_bits>>26        ];
-        *dst++ = b64[(i_bits>>20) & 0x3F];
-        *dst++ = b64[(i_bits>>14) & 0x3F];
-        *dst++ = b64[(i_bits>>8 ) & 0x3F];
+    ret = dst = బహిర్గతం;
+    అయితే (బైట్లు_మిగిలిన > 3) {
+        i_బిట్లు = AV_RB32(లోపల);
+        లోపల += 3; బైట్లు_మిగిలిన -= 3;
+        *dst++ = b64[ i_బిట్లు>>26        ];
+        *dst++ = b64[(i_బిట్లు>>20) & 0x3F];
+        *dst++ = b64[(i_బిట్లు>>14) & 0x3F];
+        *dst++ = b64[(i_బిట్లు>>8 ) & 0x3F];
     }
-    i_bits = 0;
-    while (bytes_remaining) {
-        i_bits = (i_bits << 8) + *in++;
-        bytes_remaining--;
-        i_shift += 8;
+    i_బిట్లు = 0;
+    అయితే (బైట్లు_మిగిలిన) {
+        i_బిట్లు = (i_బిట్లు << 8) + *లోపల++;
+        బైట్లు_మిగిలిన--;
+        i_జరుపు += 8;
     }
-    while (i_shift > 0) {
-        *dst++ = b64[(i_bits << 6 >> i_shift) & 0x3f];
-        i_shift -= 6;
+    అయితే (i_జరుపు > 0) {
+        *dst++ = b64[(i_బిట్లు << 6 >> i_జరుపు) & 0x3f];
+        i_జరుపు -= 6;
     }
-    while ((dst - ret) & 3)
+    అయితే ((dst - ret) & 3)
         *dst++ = '=';
     *dst = '\0';
 
-    return ret;
+    తిరిగి ret;
 }
 
-#endif /* AVUTIL_BASE64_INTERNAL_H */
+#అయితే_ముగింపు /* AVUTIL_BASE64_INTERNAL_H */

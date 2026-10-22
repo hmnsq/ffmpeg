@@ -18,83 +18,83 @@
 
 // LCOV_EXCL_START
 
-#include "libavutil/timer.h"
+#అన్తర్భావ "libavutil/timer.h"
 
-#include <stdint.h>
-#include <stdio.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/base64.h"
+#అన్తర్భావ "libavutil/common.h"
+#అన్తర్భావ "libavutil/base64.h"
 
-#define MAX_DATA_SIZE    1024
-#define MAX_ENCODED_SIZE 2048
+#నిర్వచించు MAX_దత్తాంశం_కొలత    1024
+#నిర్వచించు MAX_ENCODED_కొలత 2048
 
-static int test_encode_decode(const uint8_t *data, unsigned int data_size,
-                              const char *encoded_ref)
+స్థిర పూర్ణాంకం test_encode_decode(స్థిరరాశి uint8_t *దత్తాంశం, గుర్తులేని పూర్ణాంకం దత్తాంశం_కొలత,
+                              స్థిరరాశి అక్షరం *encoded_ref)
 {
-    char  encoded[MAX_ENCODED_SIZE];
-    uint8_t data2[MAX_DATA_SIZE];
-    int data2_size, max_data2_size = MAX_DATA_SIZE;
+    అక్షరం  encoded[MAX_ENCODED_కొలత];
+    uint8_t data2[MAX_దత్తాంశం_కొలత];
+    పూర్ణాంకం data2_కొలత, max_data2_కొలత = MAX_దత్తాంశం_కొలత;
 
-    if (!av_base64_encode(encoded, MAX_ENCODED_SIZE, data, data_size)) {
-        printf("Failed: cannot encode the input data\n");
-        return 1;
+    ఒకవేళ (!av_base64_encode(encoded, MAX_ENCODED_కొలత, దత్తాంశం, దత్తాంశం_కొలత)) {
+        రాయి("Failed: cannot encode the input data\n");
+        తిరిగి 1;
     }
-    if (encoded_ref && strcmp(encoded, encoded_ref)) {
-        printf("Failed: encoded string differs from reference\n"
+    ఒకవేళ (encoded_ref && strcmp(encoded, encoded_ref)) {
+        రాయి("Failed: encoded string differs from reference\n"
                "Encoded:\n%s\nReference:\n%s\n", encoded, encoded_ref);
-        return 1;
+        తిరిగి 1;
     }
 
-    if ((data2_size = av_base64_decode(data2, encoded, max_data2_size)) != data_size) {
-        printf("Failed: cannot decode the encoded string\n"
+    ఒకవేళ ((data2_కొలత = av_base64_decode(data2, encoded, max_data2_కొలత)) != దత్తాంశం_కొలత) {
+        రాయి("Failed: cannot decode the encoded string\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        తిరిగి 1;
     }
-    if ((data2_size = av_base64_decode(data2, encoded, data_size)) != data_size) {
-        printf("Failed: cannot decode with minimal buffer\n"
+    ఒకవేళ ((data2_కొలత = av_base64_decode(data2, encoded, దత్తాంశం_కొలత)) != దత్తాంశం_కొలత) {
+        రాయి("Failed: cannot decode with minimal buffer\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        తిరిగి 1;
     }
-    if (memcmp(data2, data, data_size)) {
-        printf("Failed: encoded/decoded data differs from original data\n");
-        return 1;
+    ఒకవేళ (memcmp(data2, దత్తాంశం, దత్తాంశం_కొలత)) {
+        రాయి("Failed: encoded/decoded data differs from original data\n");
+        తిరిగి 1;
     }
-    if (av_base64_decode(NULL, encoded, 0) != 0) {
-        printf("Failed: decode to NULL buffer\n");
-        return 1;
+    ఒకవేళ (av_base64_decode(ఖాళీ, encoded, 0) != 0) {
+        రాయి("Failed: decode to NULL buffer\n");
+        తిరిగి 1;
     }
-    if (data_size > 0 && (data2_size = av_base64_decode(data2, encoded, data_size - 1)) != data_size - 1) {
-        printf("Failed: out of array write\n"
+    ఒకవేళ (దత్తాంశం_కొలత > 0 && (data2_కొలత = av_base64_decode(data2, encoded, దత్తాంశం_కొలత - 1)) != దత్తాంశం_కొలత - 1) {
+        రాయి("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        తిరిగి 1;
     }
-    if (data_size > 1 && (data2_size = av_base64_decode(data2, encoded, data_size - 2)) != data_size - 2) {
-        printf("Failed: out of array write\n"
+    ఒకవేళ (దత్తాంశం_కొలత > 1 && (data2_కొలత = av_base64_decode(data2, encoded, దత్తాంశం_కొలత - 2)) != దత్తాంశం_కొలత - 2) {
+        రాయి("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        తిరిగి 1;
     }
-    if (strlen(encoded)) {
-        char *end = strchr(encoded, '=');
-        if (!end)
-            end = encoded + strlen(encoded) - 1;
-        *end = '%';
-        if (av_base64_decode(NULL, encoded, 0) >= 0) {
-            printf("Failed: error detection\n");
-            return 1;
+    ఒకవేళ (అక్షరశ్రేణి_పొడవు(encoded)) {
+        అక్షరం *చివర = strchr(encoded, '=');
+        ఒకవేళ (!చివర)
+            చివర = encoded + అక్షరశ్రేణి_పొడవు(encoded) - 1;
+        *చివర = '%';
+        ఒకవేళ (av_base64_decode(ఖాళీ, encoded, 0) >= 0) {
+            రాయి("Failed: error detection\n");
+            తిరిగి 1;
         }
     }
 
-    printf("Passed!\n");
-    return 0;
+    రాయి("Passed!\n");
+    తిరిగి 0;
 }
 
-int main(int argc, char ** argv)
+పూర్ణాంకం ప్రధాన(పూర్ణాంకం argc, అక్షరం ** argv)
 {
-    int i, error_count = 0;
-    struct test {
-        const uint8_t *data;
-        const char *encoded_ref;
+    పూర్ణాంకం i, error_లెక్క = 0;
+    నిర్మాణం test {
+        స్థిరరాశి uint8_t *దత్తాంశం;
+        స్థిరరాశి అక్షరం *encoded_ref;
     } tests[] = {
         { "",        ""},
         { "1",       "MQ=="},
@@ -105,36 +105,36 @@ int main(int argc, char ** argv)
         { "666666",  "NjY2NjY2"},
         { "abc:def", "YWJjOmRlZg=="},
     };
-    char in[1024], out[2048];
+    అక్షరం లోపల[1024], బహిర్గతం[2048];
 
-    printf("Encoding/decoding tests\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
-        error_count += test_encode_decode(tests[i].data, strlen(tests[i].data), tests[i].encoded_ref);
+    రాయి("Encoding/decoding tests\n");
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
+        error_లెక్క += test_encode_decode(tests[i].దత్తాంశం, అక్షరశ్రేణి_పొడవు(tests[i].దత్తాంశం), tests[i].encoded_ref);
 
-    if (argc>1 && !strcmp(argv[1], "-t")) {
-        memset(in, 123, sizeof(in));
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_encode(out, sizeof(out), in, sizeof(in));
+    ఒకవేళ (argc>1 && !strcmp(argv[1], "-t")) {
+        memset(లోపల, 123, పరిమాణం(లోపల));
+        కొరకు(i=0; i<10000; i++){
+            ప్రారంభం_TIMER
+            av_base64_encode(బహిర్గతం, పరిమాణం(బహిర్గతం), లోపల, పరిమాణం(లోపల));
             STOP_TIMER("encode")
         }
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_decode(in, out, sizeof(in));
+        కొరకు(i=0; i<10000; i++){
+            ప్రారంభం_TIMER
+            av_base64_decode(లోపల, బహిర్గతం, పరిమాణం(లోపల));
             STOP_TIMER("decode")
         }
 
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_decode(NULL, out, 0);
+        కొరకు(i=0; i<10000; i++){
+            ప్రారంభం_TIMER
+            av_base64_decode(ఖాళీ, బహిర్గతం, 0);
             STOP_TIMER("syntax check")
         }
     }
 
-    if (error_count)
-        printf("Error Count: %d.\n", error_count);
+    ఒకవేళ (error_లెక్క)
+        రాయి("Error Count: %d.\n", error_లెక్క);
 
-    return !!error_count;
+    తిరిగి !!error_లెక్క;
 }
 
 // LCOV_EXCL_STOP

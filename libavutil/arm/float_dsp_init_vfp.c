@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/attributes.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
-#include "float_dsp_arm.h"
+#అన్తర్భావ "libavutil/attributes.h"
+#అన్తర్భావ "libavutil/float_dsp.h"
+#అన్తర్భావ "cpu.h"
+#అన్తర్భావ "float_dsp_arm.h"
 
-void ff_vector_fmul_vfp(float *dst, const float *src0, const float *src1,
-                        int len);
+శూన్య ff_సదిశ_fmul_vfp(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1,
+                        పూర్ణాంకం len);
 
-void ff_vector_fmul_window_vfp(float *dst, const float *src0,
-                               const float *src1, const float *win, int len);
+శూన్య ff_సదిశ_fmul_కిటికీ_vfp(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                               స్థిరరాశి దశాంశం *src1, స్థిరరాశి దశాంశం *win, పూర్ణాంకం len);
 
-void ff_vector_fmul_reverse_vfp(float *dst, const float *src0,
-                                const float *src1, int len);
+శూన్య ff_సదిశ_fmul_తిరగేయి_vfp(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                స్థిరరాశి దశాంశం *src1, పూర్ణాంకం len);
 
-void ff_butterflies_float_vfp(float *restrict v1, float *restrict v2, int len);
+శూన్య ff_butterflies_float_vfp(దశాంశం *పరిమిత v1, దశాంశం *పరిమిత v2, పూర్ణాంకం len);
 
-av_cold void ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, int cpu_flags)
+av_cold శూన్య ff_float_dsp_init_vfp(AVFloatDSPContext *fdsp, పూర్ణాంకం cpu_flags)
 {
-    if (have_vfp_vm(cpu_flags)) {
-        fdsp->vector_fmul = ff_vector_fmul_vfp;
-        fdsp->vector_fmul_window = ff_vector_fmul_window_vfp;
+    ఒకవేళ (have_vfp_vm(cpu_flags)) {
+        fdsp->సదిశ_fmul = ff_సదిశ_fmul_vfp;
+        fdsp->సదిశ_fmul_కిటికీ = ff_సదిశ_fmul_కిటికీ_vfp;
     }
-    fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_vfp;
-    if (have_vfp_vm(cpu_flags))
+    fdsp->సదిశ_fmul_తిరగేయి = ff_సదిశ_fmul_తిరగేయి_vfp;
+    ఒకవేళ (have_vfp_vm(cpu_flags))
         fdsp->butterflies_float = ff_butterflies_float_vfp;
 }

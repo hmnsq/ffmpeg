@@ -16,23 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ARM_CPU_H
-#define AVUTIL_ARM_CPU_H
+#నిర్వచితం_కాకపోతే AVUTIL_ARM_CPU_H
+#నిర్వచించు AVUTIL_ARM_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#అన్తర్భావ "libavutil/cpu.h"
+#అన్తర్భావ "libavutil/cpu_internal.h"
 
-#define have_armv5te(flags) CPUEXT(flags, ARMV5TE)
-#define have_armv6(flags)   CPUEXT(flags, ARMV6)
-#define have_armv6t2(flags) CPUEXT(flags, ARMV6T2)
-#define have_vfp(flags)     CPUEXT(flags, VFP)
-#define have_vfpv3(flags)   CPUEXT(flags, VFPV3)
-#define have_neon(flags)    CPUEXT(flags, NEON)
-#define have_setend(flags)  CPUEXT(flags, SETEND)
+#నిర్వచించు have_armv5te(flags) CPUEXT(flags, ARMV5TE)
+#నిర్వచించు have_armv6(flags)   CPUEXT(flags, ARMV6)
+#నిర్వచించు have_armv6t2(flags) CPUEXT(flags, ARMV6T2)
+#నిర్వచించు have_vfp(flags)     CPUEXT(flags, VFP)
+#నిర్వచించు have_vfpv3(flags)   CPUEXT(flags, VFPV3)
+#నిర్వచించు have_neon(flags)    CPUEXT(flags, NEON)
+#నిర్వచించు have_setend(flags)  CPUEXT(flags, SETEND)
 
 /* some functions use the VFPv2 vector mode which is deprecated in ARMv7-A
  * and might trap on such CPU depending on the OS configuration */
-#define have_vfp_vm(flags)                                              \
+#నిర్వచించు have_vfp_vm(flags)                                              \
     (HAVE_VFP && ((flags) & AV_CPU_FLAG_VFP_VM))
 
-#endif /* AVUTIL_ARM_CPU_H */
+#అయితే_ముగింపు /* AVUTIL_ARM_CPU_H */

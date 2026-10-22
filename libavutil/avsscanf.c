@@ -21,101 +21,101 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <errno.h>
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <float.h>
+#అన్తర్భావ <errno.h>
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <math.h>
+#అన్తర్భావ <stdarg.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdint.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <string.h>
+#అన్తర్భావ <float.h>
 
-#include "avstring.h"
+#అన్తర్భావ "avstring.h"
 
-typedef struct FFFILE {
-    size_t buf_size;
-    unsigned char *buf;
-    unsigned char *rpos, *rend;
-    unsigned char *shend;
+రకనిర్వచనం నిర్మాణం FFFILE {
+    size_t buf_కొలత;
+    గుర్తులేని అక్షరం *buf;
+    గుర్తులేని అక్షరం *rpos, *rend;
+    గుర్తులేని అక్షరం *shend;
     ptrdiff_t shlim, shcnt;
-    void *cookie;
-    size_t (*read)(struct FFFILE *, unsigned char *, size_t);
+    శూన్య *cookie;
+    size_t (*పఠ)(నిర్మాణం FFFILE *, గుర్తులేని అక్షరం *, size_t);
 } FFFILE;
 
-#define SIZE_hh -2
-#define SIZE_h  -1
-#define SIZE_def 0
-#define SIZE_l   1
-#define SIZE_L   2
-#define SIZE_ll  3
+#నిర్వచించు కొలత_hh -2
+#నిర్వచించు కొలత_h  -1
+#నిర్వచించు కొలత_def 0
+#నిర్వచించు కొలత_l   1
+#నిర్వచించు కొలత_L   2
+#నిర్వచించు కొలత_ll  3
 
-#define shcnt(f) ((f)->shcnt + ((f)->rpos - (f)->buf))
+#నిర్వచించు shcnt(f) ((f)->shcnt + ((f)->rpos - (f)->buf))
 
-static int fftoread(FFFILE *f)
+స్థిర పూర్ణాంకం fftoread(FFFILE *f)
 {
-    f->rpos = f->rend = f->buf + f->buf_size;
-    return 0;
+    f->rpos = f->rend = f->buf + f->buf_కొలత;
+    తిరిగి 0;
 }
 
-static size_t ffstring_read(FFFILE *f, unsigned char *buf, size_t len)
+స్థిర size_t ffstring_read(FFFILE *f, గుర్తులేని అక్షరం *buf, size_t len)
 {
-    char *src = f->cookie;
+    అక్షరం *src = f->cookie;
     size_t k = len+256;
-    char *end = memchr(src, 0, k);
+    అక్షరం *చివర = memchr(src, 0, k);
 
-    if (end) k = end-src;
-    if (k < len) len = k;
-    memcpy(buf, src, len);
-    f->rpos = (void *)(src+len);
-    f->rend = (void *)(src+k);
+    ఒకవేళ (చివర) k = చివర-src;
+    ఒకవేళ (k < len) len = k;
+    జ్ఞాపకం_నకలు(buf, src, len);
+    f->rpos = (శూన్య *)(src+len);
+    f->rend = (శూన్య *)(src+k);
     f->cookie = src+k;
 
-    return len;
+    తిరిగి len;
 }
 
-static int ffuflow(FFFILE *f)
+స్థిర పూర్ణాంకం ffuflow(FFFILE *f)
 {
-    unsigned char c;
-    if (!fftoread(f) && f->read(f, &c, 1)==1) return c;
-    return EOF;
+    గుర్తులేని అక్షరం c;
+    ఒకవేళ (!fftoread(f) && f->పఠ(f, &c, 1)==1) తిరిగి c;
+    తిరిగి EOF;
 }
 
-static void ffshlim(FFFILE *f, ptrdiff_t lim)
+స్థిర శూన్య ffshlim(FFFILE *f, ptrdiff_t lim)
 {
     f->shlim = lim;
     f->shcnt = f->buf - f->rpos;
     /* If lim is nonzero, rend must be a valid pointer. */
-    if (lim && f->rend - f->rpos > lim)
+    ఒకవేళ (lim && f->rend - f->rpos > lim)
         f->shend = f->rpos + lim;
-    else
+    లేకపోతే
         f->shend = f->rend;
 }
 
-static int ffshgetc(FFFILE *f)
+స్థిర పూర్ణాంకం ffshgetc(FFFILE *f)
 {
-    int c;
+    పూర్ణాంకం c;
     ptrdiff_t cnt = shcnt(f);
-    if (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
+    ఒకవేళ (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
         f->shcnt = f->buf - f->rpos + cnt;
         f->shend = 0;
-        return EOF;
+        తిరిగి EOF;
     }
     cnt++;
-    if (f->shlim && f->rend - f->rpos > f->shlim - cnt)
+    ఒకవేళ (f->shlim && f->rend - f->rpos > f->shlim - cnt)
         f->shend = f->rpos + (f->shlim - cnt);
-    else
+    లేకపోతే
         f->shend = f->rend;
     f->shcnt = f->buf - f->rpos + cnt;
-    if (f->rpos[-1] != c) f->rpos[-1] = c;
-    return c;
+    ఒకవేళ (f->rpos[-1] != c) f->rpos[-1] = c;
+    తిరిగి c;
 }
 
-#define shlim(f, lim) ffshlim((f), (lim))
-#define shgetc(f) (((f)->rpos < (f)->shend) ? *(f)->rpos++ : ffshgetc(f))
-#define shunget(f) ((f)->shend ? (void)(f)->rpos-- : (void)0)
+#నిర్వచించు shlim(f, lim) ffshlim((f), (lim))
+#నిర్వచించు shgetc(f) (((f)->rpos < (f)->shend) ? *(f)->rpos++ : ffshgetc(f))
+#నిర్వచించు shunget(f) ((f)->shend ? (శూన్య)(f)->rpos-- : (శూన్య)0)
 
-static const unsigned char table[] = { -1,
+స్థిర స్థిరరాశి గుర్తులేని అక్షరం పట్టిక[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -134,207 +134,207 @@ static const unsigned char table[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 };
 
-static unsigned long long ffintscan(FFFILE *f, unsigned base, int pok, unsigned long long lim)
+స్థిర గుర్తులేని దీర్ఘ దీర్ఘ ffintscan(FFFILE *f, గుర్తులేని పునాది_2, పూర్ణాంకం pok, గుర్తులేని దీర్ఘ దీర్ఘ lim)
 {
-    const unsigned char *val = table+1;
-    int c, neg=0;
-    unsigned x;
-    unsigned long long y;
-    if (base > 36 || base == 1) {
+    స్థిరరాశి గుర్తులేని అక్షరం *val = పట్టిక+1;
+    పూర్ణాంకం c, neg=0;
+    గుర్తులేని x;
+    గుర్తులేని దీర్ఘ దీర్ఘ y;
+    ఒకవేళ (పునాది_2 > 36 || పునాది_2 == 1) {
         errno = EINVAL;
-        return 0;
+        తిరిగి 0;
     }
-    while (av_isspace((c=shgetc(f))));
-    if (c=='+' || c=='-') {
+    అయితే (av_isspace((c=shgetc(f))));
+    ఒకవేళ (c=='+' || c=='-') {
         neg = -(c=='-');
         c = shgetc(f);
     }
-    if ((base == 0 || base == 16) && c=='0') {
+    ఒకవేళ ((పునాది_2 == 0 || పునాది_2 == 16) && c=='0') {
         c = shgetc(f);
-        if ((c|32)=='x') {
+        ఒకవేళ ((c|32)=='x') {
             c = shgetc(f);
-            if (val[c]>=16) {
+            ఒకవేళ (val[c]>=16) {
                 shunget(f);
-                if (pok) shunget(f);
-                else shlim(f, 0);
-                return 0;
+                ఒకవేళ (pok) shunget(f);
+                లేకపోతే shlim(f, 0);
+                తిరిగి 0;
             }
-            base = 16;
-        } else if (base == 0) {
-            base = 8;
+            పునాది_2 = 16;
+        } లేకపోతే ఒకవేళ (పునాది_2 == 0) {
+            పునాది_2 = 8;
         }
-    } else {
-        if (base == 0) base = 10;
-        if (val[c] >= base) {
+    } లేకపోతే {
+        ఒకవేళ (పునాది_2 == 0) పునాది_2 = 10;
+        ఒకవేళ (val[c] >= పునాది_2) {
             shunget(f);
             shlim(f, 0);
             errno = EINVAL;
-            return 0;
+            తిరిగి 0;
         }
     }
-    if (base == 10) {
-        for (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
+    ఒకవేళ (పునాది_2 == 10) {
+        కొరకు (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
             x = x*10 + (c-'0');
-        for (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
+        కొరకు (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
             y = y*10 + (c-'0');
-        if (c-'0'>=10U) goto done;
-    } else if (!(base & base-1)) {
-        int bs = "\0\1\2\4\7\3\6\5"[(0x17*base)>>5&7];
-        for (x=0; val[c]<base && x<=UINT_MAX/32; c=shgetc(f))
+        ఒకవేళ (c-'0'>=10U) వెళ్ళు పూర్తి;
+    } లేకపోతే ఒకవేళ (!(పునాది_2 & పునాది_2-1)) {
+        పూర్ణాంకం bs = "\0\1\2\4\7\3\6\5"[(0x17*పునాది_2)>>5&7];
+        కొరకు (x=0; val[c]<పునాది_2 && x<=UINT_MAX/32; c=shgetc(f))
             x = x<<bs | val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX>>bs; c=shgetc(f))
+        కొరకు (y=x; val[c]<పునాది_2 && y<=ULLONG_MAX>>bs; c=shgetc(f))
             y = y<<bs | val[c];
-    } else {
-        for (x=0; val[c]<base && x<=UINT_MAX/36-1; c=shgetc(f))
-            x = x*base + val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX/base && base*y<=ULLONG_MAX-val[c]; c=shgetc(f))
-            y = y*base + val[c];
+    } లేకపోతే {
+        కొరకు (x=0; val[c]<పునాది_2 && x<=UINT_MAX/36-1; c=shgetc(f))
+            x = x*పునాది_2 + val[c];
+        కొరకు (y=x; val[c]<పునాది_2 && y<=ULLONG_MAX/పునాది_2 && పునాది_2*y<=ULLONG_MAX-val[c]; c=shgetc(f))
+            y = y*పునాది_2 + val[c];
     }
-    if (val[c]<base) {
-        for (; val[c]<base; c=shgetc(f));
+    ఒకవేళ (val[c]<పునాది_2) {
+        కొరకు (; val[c]<పునాది_2; c=shgetc(f));
         errno = ERANGE;
         y = lim;
-        if (lim&1) neg = 0;
+        ఒకవేళ (lim&1) neg = 0;
     }
-done:
+పూర్తి:
     shunget(f);
-    if (y>=lim) {
-        if (!(lim&1) && !neg) {
+    ఒకవేళ (y>=lim) {
+        ఒకవేళ (!(lim&1) && !neg) {
             errno = ERANGE;
-            return lim-1;
-        } else if (y>lim) {
+            తిరిగి lim-1;
+        } లేకపోతే ఒకవేళ (y>lim) {
             errno = ERANGE;
-            return lim;
+            తిరిగి lim;
         }
     }
-    return (y^neg)-neg;
+    తిరిగి (y^neg)-neg;
 }
 
-static long long scanexp(FFFILE *f, int pok)
+స్థిర దీర్ఘ దీర్ఘ scanexp(FFFILE *f, పూర్ణాంకం pok)
 {
-    int c;
-    int x;
-    long long y;
-    int neg = 0;
+    పూర్ణాంకం c;
+    పూర్ణాంకం x;
+    దీర్ఘ దీర్ఘ y;
+    పూర్ణాంకం neg = 0;
 
     c = shgetc(f);
-    if (c=='+' || c=='-') {
+    ఒకవేళ (c=='+' || c=='-') {
         neg = (c=='-');
         c = shgetc(f);
-        if (c-'0'>=10U && pok) shunget(f);
+        ఒకవేళ (c-'0'>=10U && pok) shunget(f);
     }
-    if (c-'0'>=10U) {
+    ఒకవేళ (c-'0'>=10U) {
         shunget(f);
-        return LLONG_MIN;
+        తిరిగి LLONG_MIN;
     }
-    for (x=0; c-'0'<10U && x<INT_MAX/10; c = shgetc(f))
+    కొరకు (x=0; c-'0'<10U && x<గరిష్ఠ_పూర్ణాంకం/10; c = shgetc(f))
         x = 10*x + (c-'0');
-    for (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
+    కొరకు (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
         y = 10*y + (c-'0');
-    for (; c-'0'<10U; c = shgetc(f));
+    కొరకు (; c-'0'<10U; c = shgetc(f));
     shunget(f);
-    return neg ? -y : y;
+    తిరిగి neg ? -y : y;
 }
 
-#define LD_B1B_DIG 2
-#define LD_B1B_MAX 9007199, 254740991
-#define KMAX 128
-#define MASK (KMAX-1)
+#నిర్వచించు LD_B1B_DIG 2
+#నిర్వచించు LD_B1B_MAX 9007199, 254740991
+#నిర్వచించు KMAX 128
+#నిర్వచించు ముసుగు (KMAX-1)
 
-static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
+స్థిర ద్విగుణ decfloat(FFFILE *f, పూర్ణాంకం c, పూర్ణాంకం బిట్లు, పూర్ణాంకం emin, పూర్ణాంకం sign, పూర్ణాంకం pok)
 {
     uint32_t x[KMAX];
-    static const uint32_t th[] = { LD_B1B_MAX };
-    int i, j, k, a, z;
-    long long lrp=0, dc=0;
-    long long e10=0;
-    int lnz = 0;
-    int gotdig = 0, gotrad = 0;
-    int rp;
-    int e2;
-    int emax = -emin-bits+3;
-    int denormal = 0;
-    double y;
-    double frac=0;
-    double bias=0;
-    static const int p10s[] = { 10, 100, 1000, 10000,
+    స్థిర స్థిరరాశి uint32_t th[] = { LD_B1B_MAX };
+    పూర్ణాంకం i, j, k, a, z;
+    దీర్ఘ దీర్ఘ lrp=0, dc=0;
+    దీర్ఘ దీర్ఘ e10=0;
+    పూర్ణాంకం lnz = 0;
+    పూర్ణాంకం gotdig = 0, gotrad = 0;
+    పూర్ణాంకం rp;
+    పూర్ణాంకం e2;
+    పూర్ణాంకం emax = -emin-బిట్లు+3;
+    పూర్ణాంకం denormal = 0;
+    ద్విగుణ y;
+    ద్విగుణ frac=0;
+    ద్విగుణ bias=0;
+    స్థిర స్థిరరాశి పూర్ణాంకం p10s[] = { 10, 100, 1000, 10000,
         100000, 1000000, 10000000, 100000000 };
 
     j=0;
     k=0;
 
     /* Don't let leading zeros consume buffer space */
-    for (; c=='0'; c = shgetc(f)) gotdig=1;
-    if (c=='.') {
+    కొరకు (; c=='0'; c = shgetc(f)) gotdig=1;
+    ఒకవేళ (c=='.') {
         gotrad = 1;
-        for (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
+        కొరకు (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
     }
 
     x[0] = 0;
-    for (; c-'0'<10U || c=='.'; c = shgetc(f)) {
-        if (c == '.') {
-            if (gotrad) break;
+    కొరకు (; c-'0'<10U || c=='.'; c = shgetc(f)) {
+        ఒకవేళ (c == '.') {
+            ఒకవేళ (gotrad) ఆపు;
             gotrad = 1;
             lrp = dc;
-        } else if (k < KMAX-3) {
+        } లేకపోతే ఒకవేళ (k < KMAX-3) {
             dc++;
-            if (c!='0') lnz = dc;
-            if (j) x[k] = x[k]*10 + c-'0';
-            else x[k] = c-'0';
-            if (++j==9) {
+            ఒకవేళ (c!='0') lnz = dc;
+            ఒకవేళ (j) x[k] = x[k]*10 + c-'0';
+            లేకపోతే x[k] = c-'0';
+            ఒకవేళ (++j==9) {
                 k++;
                 j=0;
             }
             gotdig=1;
-        } else {
+        } లేకపోతే {
             dc++;
-            if (c!='0') {
+            ఒకవేళ (c!='0') {
                 lnz = (KMAX-4)*9;
                 x[KMAX-4] |= 1;
             }
         }
     }
-    if (!gotrad) lrp=dc;
+    ఒకవేళ (!gotrad) lrp=dc;
 
-    if (gotdig && (c|32)=='e') {
+    ఒకవేళ (gotdig && (c|32)=='e') {
         e10 = scanexp(f, pok);
-        if (e10 == LLONG_MIN) {
-            if (pok) {
+        ఒకవేళ (e10 == LLONG_MIN) {
+            ఒకవేళ (pok) {
                 shunget(f);
-            } else {
+            } లేకపోతే {
                 shlim(f, 0);
-                return 0;
+                తిరిగి 0;
             }
             e10 = 0;
         }
         lrp += e10;
-    } else if (c>=0) {
+    } లేకపోతే ఒకవేళ (c>=0) {
         shunget(f);
     }
-    if (!gotdig) {
+    ఒకవేళ (!gotdig) {
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        తిరిగి 0;
     }
 
     /* Handle zero specially to avoid nasty special cases later */
-    if (!x[0]) return sign * 0.0;
+    ఒకవేళ (!x[0]) తిరిగి sign * 0.0;
 
     /* Optimize small integers (w/no exponent) and over/under-flow */
-    if (lrp==dc && dc<10 && (bits>30 || x[0]>>bits==0))
-        return sign * (double)x[0];
-    if (lrp > -emin/2) {
+    ఒకవేళ (lrp==dc && dc<10 && (బిట్లు>30 || x[0]>>బిట్లు==0))
+        తిరిగి sign * (ద్విగుణ)x[0];
+    ఒకవేళ (lrp > -emin/2) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        తిరిగి sign * DBL_MAX * DBL_MAX;
     }
-    if (lrp < emin-2*DBL_MANT_DIG) {
+    ఒకవేళ (lrp < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        తిరిగి sign * DBL_MIN * DBL_MIN;
     }
 
     /* Align incomplete final B1B digit */
-    if (j) {
-        for (; j<9; j++) x[k]*=10;
+    ఒకవేళ (j) {
+        కొరకు (; j<9; j++) x[k]*=10;
         k++;
         j=0;
     }
@@ -345,514 +345,514 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     rp = lrp;
 
     /* Optimize small to mid-size integers (even in exp. notation) */
-    if (lnz<9 && lnz<=rp && rp < 18) {
-        int bitlim;
-        if (rp == 9) return sign * (double)x[0];
-        if (rp < 9) return sign * (double)x[0] / p10s[8-rp];
-        bitlim = bits-3*(int)(rp-9);
-        if (bitlim>30 || x[0]>>bitlim==0)
-            return sign * (double)x[0] * p10s[rp-10];
+    ఒకవేళ (lnz<9 && lnz<=rp && rp < 18) {
+        పూర్ణాంకం bitlim;
+        ఒకవేళ (rp == 9) తిరిగి sign * (ద్విగుణ)x[0];
+        ఒకవేళ (rp < 9) తిరిగి sign * (ద్విగుణ)x[0] / p10s[8-rp];
+        bitlim = బిట్లు-3*(పూర్ణాంకం)(rp-9);
+        ఒకవేళ (bitlim>30 || x[0]>>bitlim==0)
+            తిరిగి sign * (ద్విగుణ)x[0] * p10s[rp-10];
     }
 
     /* Drop trailing zeros */
-    for (; !x[z-1]; z--);
+    కొరకు (; !x[z-1]; z--);
 
     /* Align radix point to B1B digit boundary */
-    if (rp % 9) {
-        int rpm9 = rp>=0 ? rp%9 : rp%9+9;
-        int p10 = p10s[8-rpm9];
-        uint32_t carry = 0;
-        for (k=a; k!=z; k++) {
+    ఒకవేళ (rp % 9) {
+        పూర్ణాంకం rpm9 = rp>=0 ? rp%9 : rp%9+9;
+        పూర్ణాంకం p10 = p10s[8-rpm9];
+        uint32_t వాహకం = 0;
+        కొరకు (k=a; k!=z; k++) {
             uint32_t tmp = x[k] % p10;
-            x[k] = x[k]/p10 + carry;
-            carry = 1000000000/p10 * tmp;
-            if (k==a && !x[k]) {
-                a = (a+1 & MASK);
+            x[k] = x[k]/p10 + వాహకం;
+            వాహకం = 1000000000/p10 * tmp;
+            ఒకవేళ (k==a && !x[k]) {
+                a = (a+1 & ముసుగు);
                 rp -= 9;
             }
         }
-        if (carry) x[z++] = carry;
+        ఒకవేళ (వాహకం) x[z++] = వాహకం;
         rp += 9-rpm9;
     }
 
     /* Upscale until desired number of bits are left of radix point */
-    while (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
-        uint32_t carry = 0;
+    అయితే (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
+        uint32_t వాహకం = 0;
         e2 -= 29;
-        for (k=(z-1 & MASK); ; k=(k-1 & MASK)) {
-            uint64_t tmp = ((uint64_t)x[k] << 29) + carry;
-            if (tmp > 1000000000) {
-                carry = tmp / 1000000000;
+        కొరకు (k=(z-1 & ముసుగు); ; k=(k-1 & ముసుగు)) {
+            uint64_t tmp = ((uint64_t)x[k] << 29) + వాహకం;
+            ఒకవేళ (tmp > 1000000000) {
+                వాహకం = tmp / 1000000000;
                 x[k] = tmp % 1000000000;
-            } else {
-                carry = 0;
+            } లేకపోతే {
+                వాహకం = 0;
                 x[k] = tmp;
             }
-            if (k==(z-1 & MASK) && k!=a && !x[k]) z = k;
-            if (k==a) break;
+            ఒకవేళ (k==(z-1 & ముసుగు) && k!=a && !x[k]) z = k;
+            ఒకవేళ (k==a) ఆపు;
         }
-        if (carry) {
+        ఒకవేళ (వాహకం) {
             rp += 9;
-            a = (a-1 & MASK);
-            if (a == z) {
-                z = (z-1 & MASK);
-                x[z-1 & MASK] |= x[z];
+            a = (a-1 & ముసుగు);
+            ఒకవేళ (a == z) {
+                z = (z-1 & ముసుగు);
+                x[z-1 & ముసుగు] |= x[z];
             }
-            x[a] = carry;
+            x[a] = వాహకం;
         }
     }
 
     /* Downscale until exactly number of bits are left of radix point */
-    for (;;) {
-        uint32_t carry = 0;
-        int sh = 1;
-        for (i=0; i<LD_B1B_DIG; i++) {
-            k = (a+i & MASK);
-            if (k == z || x[k] < th[i]) {
+    కొరకు (;;) {
+        uint32_t వాహకం = 0;
+        పూర్ణాంకం sh = 1;
+        కొరకు (i=0; i<LD_B1B_DIG; i++) {
+            k = (a+i & ముసుగు);
+            ఒకవేళ (k == z || x[k] < th[i]) {
                 i=LD_B1B_DIG;
-                break;
+                ఆపు;
             }
-            if (x[a+i & MASK] > th[i]) break;
+            ఒకవేళ (x[a+i & ముసుగు] > th[i]) ఆపు;
         }
-        if (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) break;
+        ఒకవేళ (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) ఆపు;
         /* FIXME: find a way to compute optimal sh */
-        if (rp > 9+9*LD_B1B_DIG) sh = 9;
+        ఒకవేళ (rp > 9+9*LD_B1B_DIG) sh = 9;
         e2 += sh;
-        for (k=a; k!=z; k=(k+1 & MASK)) {
+        కొరకు (k=a; k!=z; k=(k+1 & ముసుగు)) {
             uint32_t tmp = x[k] & (1<<sh)-1;
-            x[k] = (x[k]>>sh) + carry;
-            carry = (1000000000>>sh) * tmp;
-            if (k==a && !x[k]) {
-                a = (a+1 & MASK);
+            x[k] = (x[k]>>sh) + వాహకం;
+            వాహకం = (1000000000>>sh) * tmp;
+            ఒకవేళ (k==a && !x[k]) {
+                a = (a+1 & ముసుగు);
                 i--;
                 rp -= 9;
             }
         }
-        if (carry) {
-            if ((z+1 & MASK) != a) {
-                x[z] = carry;
-                z = (z+1 & MASK);
-            } else x[z-1 & MASK] |= 1;
+        ఒకవేళ (వాహకం) {
+            ఒకవేళ ((z+1 & ముసుగు) != a) {
+                x[z] = వాహకం;
+                z = (z+1 & ముసుగు);
+            } లేకపోతే x[z-1 & ముసుగు] |= 1;
         }
     }
 
     /* Assemble desired bits into floating point variable */
-    for (y=i=0; i<LD_B1B_DIG; i++) {
-        if ((a+i & MASK)==z) x[(z=(z+1 & MASK))-1 & MASK] = 0;
-        y = 1000000000.0L * y + x[a+i & MASK];
+    కొరకు (y=i=0; i<LD_B1B_DIG; i++) {
+        ఒకవేళ ((a+i & ముసుగు)==z) x[(z=(z+1 & ముసుగు))-1 & ముసుగు] = 0;
+        y = 1000000000.0L * y + x[a+i & ముసుగు];
     }
 
     y *= sign;
 
     /* Limit precision for denormal results */
-    if (bits > DBL_MANT_DIG+e2-emin) {
-        bits = DBL_MANT_DIG+e2-emin;
-        if (bits<0) bits=0;
+    ఒకవేళ (బిట్లు > DBL_MANT_DIG+e2-emin) {
+        బిట్లు = DBL_MANT_DIG+e2-emin;
+        ఒకవేళ (బిట్లు<0) బిట్లు=0;
         denormal = 1;
     }
 
     /* Calculate bias term to force rounding, move out lower bits */
-    if (bits < DBL_MANT_DIG) {
-        bias = copysign(scalbn(1, 2*DBL_MANT_DIG-bits-1), y);
-        frac = fmod(y, scalbn(1, DBL_MANT_DIG-bits));
+    ఒకవేళ (బిట్లు < DBL_MANT_DIG) {
+        bias = copysign(scalbn(1, 2*DBL_MANT_DIG-బిట్లు-1), y);
+        frac = fmod(y, scalbn(1, DBL_MANT_DIG-బిట్లు));
         y -= frac;
         y += bias;
     }
 
     /* Process tail of decimal input so it can affect rounding */
-    if ((a+i & MASK) != z) {
-        uint32_t t = x[a+i & MASK];
-        if (t < 500000000 && (t || (a+i+1 & MASK) != z))
+    ఒకవేళ ((a+i & ముసుగు) != z) {
+        uint32_t t = x[a+i & ముసుగు];
+        ఒకవేళ (t < 500000000 && (t || (a+i+1 & ముసుగు) != z))
             frac += 0.25*sign;
-        else if (t > 500000000)
+        లేకపోతే ఒకవేళ (t > 500000000)
             frac += 0.75*sign;
-        else if (t == 500000000) {
-            if ((a+i+1 & MASK) == z)
+        లేకపోతే ఒకవేళ (t == 500000000) {
+            ఒకవేళ ((a+i+1 & ముసుగు) == z)
                 frac += 0.5*sign;
-            else
+            లేకపోతే
                 frac += 0.75*sign;
         }
-        if (DBL_MANT_DIG-bits >= 2 && !fmod(frac, 1))
+        ఒకవేళ (DBL_MANT_DIG-బిట్లు >= 2 && !fmod(frac, 1))
             frac++;
     }
 
     y += frac;
     y -= bias;
 
-    if ((e2+DBL_MANT_DIG & INT_MAX) > emax-5) {
-        if (fabs(y) >= pow(2, DBL_MANT_DIG)) {
-            if (denormal && bits==DBL_MANT_DIG+e2-emin)
+    ఒకవేళ ((e2+DBL_MANT_DIG & గరిష్ఠ_పూర్ణాంకం) > emax-5) {
+        ఒకవేళ (fabs(y) >= ఘాతం(2, DBL_MANT_DIG)) {
+            ఒకవేళ (denormal && బిట్లు==DBL_MANT_DIG+e2-emin)
                 denormal = 0;
             y *= 0.5;
             e2++;
         }
-        if (e2+DBL_MANT_DIG>emax || (denormal && frac))
+        ఒకవేళ (e2+DBL_MANT_DIG>emax || (denormal && frac))
             errno = ERANGE;
     }
 
-    return scalbn(y, e2);
+    తిరిగి scalbn(y, e2);
 }
 
-static double hexfloat(FFFILE *f, int bits, int emin, int sign, int pok)
+స్థిర ద్విగుణ hexfloat(FFFILE *f, పూర్ణాంకం బిట్లు, పూర్ణాంకం emin, పూర్ణాంకం sign, పూర్ణాంకం pok)
 {
     uint32_t x = 0;
-    double y = 0;
-    double scale = 1;
-    double bias = 0;
-    int gottail = 0, gotrad = 0, gotdig = 0;
-    long long rp = 0;
-    long long dc = 0;
-    long long e2 = 0;
-    int d;
-    int c;
+    ద్విగుణ y = 0;
+    ద్విగుణ scale = 1;
+    ద్విగుణ bias = 0;
+    పూర్ణాంకం gottail = 0, gotrad = 0, gotdig = 0;
+    దీర్ఘ దీర్ఘ rp = 0;
+    దీర్ఘ దీర్ఘ dc = 0;
+    దీర్ఘ దీర్ఘ e2 = 0;
+    పూర్ణాంకం d;
+    పూర్ణాంకం c;
 
     c = shgetc(f);
 
     /* Skip leading zeros */
-    for (; c=='0'; c = shgetc(f))
+    కొరకు (; c=='0'; c = shgetc(f))
         gotdig = 1;
 
-    if (c=='.') {
+    ఒకవేళ (c=='.') {
         gotrad = 1;
         c = shgetc(f);
         /* Count zeros after the radix point before significand */
-        for (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
+        కొరకు (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
     }
 
-    for (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
-        if (c=='.') {
-            if (gotrad) break;
+    కొరకు (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
+        ఒకవేళ (c=='.') {
+            ఒకవేళ (gotrad) ఆపు;
             rp = dc;
             gotrad = 1;
-        } else {
+        } లేకపోతే {
             gotdig = 1;
-            if (c > '9') d = (c|32)+10-'a';
-            else d = c-'0';
-            if (dc<8) {
+            ఒకవేళ (c > '9') d = (c|32)+10-'a';
+            లేకపోతే d = c-'0';
+            ఒకవేళ (dc<8) {
                 x = x*16 + d;
-            } else if (dc < DBL_MANT_DIG/4+1) {
+            } లేకపోతే ఒకవేళ (dc < DBL_MANT_DIG/4+1) {
                 y += d*(scale/=16);
-            } else if (d && !gottail) {
+            } లేకపోతే ఒకవేళ (d && !gottail) {
                 y += 0.5*scale;
                 gottail = 1;
             }
             dc++;
         }
     }
-    if (!gotdig) {
+    ఒకవేళ (!gotdig) {
         shunget(f);
-        if (pok) {
+        ఒకవేళ (pok) {
             shunget(f);
-            if (gotrad) shunget(f);
-        } else {
+            ఒకవేళ (gotrad) shunget(f);
+        } లేకపోతే {
             shlim(f, 0);
         }
-        return sign * 0.0;
+        తిరిగి sign * 0.0;
     }
-    if (!gotrad) rp = dc;
-    while (dc<8) x *= 16, dc++;
-    if ((c|32)=='p') {
+    ఒకవేళ (!gotrad) rp = dc;
+    అయితే (dc<8) x *= 16, dc++;
+    ఒకవేళ ((c|32)=='p') {
         e2 = scanexp(f, pok);
-        if (e2 == LLONG_MIN) {
-            if (pok) {
+        ఒకవేళ (e2 == LLONG_MIN) {
+            ఒకవేళ (pok) {
                 shunget(f);
-            } else {
+            } లేకపోతే {
                 shlim(f, 0);
-                return 0;
+                తిరిగి 0;
             }
             e2 = 0;
         }
-    } else {
+    } లేకపోతే {
         shunget(f);
     }
     e2 += 4*rp - 32;
 
-    if (!x) return sign * 0.0;
-    if (e2 > -emin) {
+    ఒకవేళ (!x) తిరిగి sign * 0.0;
+    ఒకవేళ (e2 > -emin) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        తిరిగి sign * DBL_MAX * DBL_MAX;
     }
-    if (e2 < emin-2*DBL_MANT_DIG) {
+    ఒకవేళ (e2 < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        తిరిగి sign * DBL_MIN * DBL_MIN;
     }
 
-    while (x < 0x80000000) {
-        if (y>=0.5) {
+    అయితే (x < 0x80000000) {
+        ఒకవేళ (y>=0.5) {
             x += x + 1;
             y += y - 1;
-        } else {
+        } లేకపోతే {
             x += x;
             y += y;
         }
         e2--;
     }
 
-    if (bits > 32+e2-emin) {
-        bits = 32+e2-emin;
-        if (bits<0) bits=0;
+    ఒకవేళ (బిట్లు > 32+e2-emin) {
+        బిట్లు = 32+e2-emin;
+        ఒకవేళ (బిట్లు<0) బిట్లు=0;
     }
 
-    if (bits < DBL_MANT_DIG)
-        bias = copysign(scalbn(1, 32+DBL_MANT_DIG-bits-1), sign);
+    ఒకవేళ (బిట్లు < DBL_MANT_DIG)
+        bias = copysign(scalbn(1, 32+DBL_MANT_DIG-బిట్లు-1), sign);
 
-    if (bits<32 && y && !(x&1)) x++, y=0;
+    ఒకవేళ (బిట్లు<32 && y && !(x&1)) x++, y=0;
 
-    y = bias + sign*(double)x + sign*y;
+    y = bias + sign*(ద్విగుణ)x + sign*y;
     y -= bias;
 
-    if (!y) errno = ERANGE;
+    ఒకవేళ (!y) errno = ERANGE;
 
-    return scalbn(y, e2);
+    తిరిగి scalbn(y, e2);
 }
 
-static double fffloatscan(FFFILE *f, int prec, int pok)
+స్థిర ద్విగుణ fffloatscan(FFFILE *f, పూర్ణాంకం prec, పూర్ణాంకం pok)
 {
-    int sign = 1;
+    పూర్ణాంకం sign = 1;
     size_t i;
-    int bits;
-    int emin;
-    int c;
+    పూర్ణాంకం బిట్లు;
+    పూర్ణాంకం emin;
+    పూర్ణాంకం c;
 
-    switch (prec) {
-    case 0:
-        bits = FLT_MANT_DIG;
-        emin = FLT_MIN_EXP-bits;
-        break;
-    case 1:
-        bits = DBL_MANT_DIG;
-        emin = DBL_MIN_EXP-bits;
-        break;
-    case 2:
-        bits = DBL_MANT_DIG;
-        emin = DBL_MIN_EXP-bits;
-        break;
-    default:
-        return 0;
+    ఎంపిక (prec) {
+    స్థితి 0:
+        బిట్లు = FLT_MANT_DIG;
+        emin = FLT_MIN_EXP-బిట్లు;
+        ఆపు;
+    స్థితి 1:
+        బిట్లు = DBL_MANT_DIG;
+        emin = DBL_MIN_EXP-బిట్లు;
+        ఆపు;
+    స్థితి 2:
+        బిట్లు = DBL_MANT_DIG;
+        emin = DBL_MIN_EXP-బిట్లు;
+        ఆపు;
+    అప్రమేయ:
+        తిరిగి 0;
     }
 
-    while (av_isspace((c = shgetc(f))));
+    అయితే (av_isspace((c = shgetc(f))));
 
-    if (c=='+' || c=='-') {
+    ఒకవేళ (c=='+' || c=='-') {
         sign -= 2*(c=='-');
         c = shgetc(f);
     }
 
-    for (i=0; i<8 && (c|32)=="infinity"[i]; i++)
-        if (i<7) c = shgetc(f);
-    if (i==3 || i==8 || (i>3 && pok)) {
-        if (i!=8) {
+    కొరకు (i=0; i<8 && (c|32)=="infinity"[i]; i++)
+        ఒకవేళ (i<7) c = shgetc(f);
+    ఒకవేళ (i==3 || i==8 || (i>3 && pok)) {
+        ఒకవేళ (i!=8) {
             shunget(f);
-            if (pok) for (; i>3; i--) shunget(f);
+            ఒకవేళ (pok) కొరకు (; i>3; i--) shunget(f);
         }
-        return sign * INFINITY;
+        తిరిగి sign * INFINITY;
     }
-    if (!i) for (i=0; i<3 && (c|32)=="nan"[i]; i++)
-        if (i<2) c = shgetc(f);
-    if (i==3) {
-        if (shgetc(f) != '(') {
+    ఒకవేళ (!i) కొరకు (i=0; i<3 && (c|32)=="nan"[i]; i++)
+        ఒకవేళ (i<2) c = shgetc(f);
+    ఒకవేళ (i==3) {
+        ఒకవేళ (shgetc(f) != '(') {
             shunget(f);
-            return NAN;
+            తిరిగి NAN;
         }
-        for (i=1; ; i++) {
+        కొరకు (i=1; ; i++) {
             c = shgetc(f);
-            if (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
-                continue;
-            if (c==')') return NAN;
+            ఒకవేళ (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
+                కొనసాగు;
+            ఒకవేళ (c==')') తిరిగి NAN;
             shunget(f);
-            if (!pok) {
+            ఒకవేళ (!pok) {
                 errno = EINVAL;
                 shlim(f, 0);
-                return 0;
+                తిరిగి 0;
             }
-            while (i--) shunget(f);
-            return NAN;
+            అయితే (i--) shunget(f);
+            తిరిగి NAN;
         }
     }
 
-    if (i) {
+    ఒకవేళ (i) {
         shunget(f);
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        తిరిగి 0;
     }
 
-    if (c=='0') {
+    ఒకవేళ (c=='0') {
         c = shgetc(f);
-        if ((c|32) == 'x')
-            return hexfloat(f, bits, emin, sign, pok);
+        ఒకవేళ ((c|32) == 'x')
+            తిరిగి hexfloat(f, బిట్లు, emin, sign, pok);
         shunget(f);
         c = '0';
     }
 
-    return decfloat(f, c, bits, emin, sign, pok);
+    తిరిగి decfloat(f, c, బిట్లు, emin, sign, pok);
 }
 
-static void *arg_n(va_list ap, unsigned int n)
+స్థిర శూన్య *arg_n(va_list ap, గుర్తులేని పూర్ణాంకం n)
 {
-    void *p;
-    unsigned int i;
+    శూన్య *p;
+    గుర్తులేని పూర్ణాంకం i;
     va_list ap2;
     va_copy(ap2, ap);
-    for (i=n; i>1; i--) va_arg(ap2, void *);
-    p = va_arg(ap2, void *);
+    కొరకు (i=n; i>1; i--) va_arg(ap2, శూన్య *);
+    p = va_arg(ap2, శూన్య *);
     va_end(ap2);
-    return p;
+    తిరిగి p;
 }
 
-static void store_int(void *dest, int size, unsigned long long i)
+స్థిర శూన్య store_int(శూన్య *dest, పూర్ణాంకం కొలత, గుర్తులేని దీర్ఘ దీర్ఘ i)
 {
-    if (!dest) return;
-    switch (size) {
-    case SIZE_hh:
-        *(char *)dest = i;
-        break;
-    case SIZE_h:
-        *(short *)dest = i;
-        break;
-    case SIZE_def:
-        *(int *)dest = i;
-        break;
-    case SIZE_l:
-        *(long *)dest = i;
-        break;
-    case SIZE_ll:
-        *(long long *)dest = i;
-        break;
+    ఒకవేళ (!dest) తిరిగి;
+    ఎంపిక (కొలత) {
+    స్థితి కొలత_hh:
+        *(అక్షరం *)dest = i;
+        ఆపు;
+    స్థితి కొలత_h:
+        *(పొట్టి *)dest = i;
+        ఆపు;
+    స్థితి కొలత_def:
+        *(పూర్ణాంకం *)dest = i;
+        ఆపు;
+    స్థితి కొలత_l:
+        *(దీర్ఘ *)dest = i;
+        ఆపు;
+    స్థితి కొలత_ll:
+        *(దీర్ఘ దీర్ఘ *)dest = i;
+        ఆపు;
     }
 }
 
-static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
+స్థిర పూర్ణాంకం ff_vfscanf(FFFILE *f, స్థిరరాశి అక్షరం *fmt, va_list ap)
 {
-    int width;
-    int size;
-    int base;
-    const unsigned char *p;
-    int c, t;
-    char *s;
-    void *dest=NULL;
-    int invert;
-    int matches=0;
-    unsigned long long x;
-    double y;
+    పూర్ణాంకం వెడల్పు;
+    పూర్ణాంకం కొలత;
+    పూర్ణాంకం పునాది_2;
+    స్థిరరాశి గుర్తులేని అక్షరం *p;
+    పూర్ణాంకం c, t;
+    అక్షరం *s;
+    శూన్య *dest=ఖాళీ;
+    పూర్ణాంకం invert;
+    పూర్ణాంకం matches=0;
+    గుర్తులేని దీర్ఘ దీర్ఘ x;
+    ద్విగుణ y;
     ptrdiff_t pos = 0;
-    unsigned char scanset[257];
+    గుర్తులేని అక్షరం scanset[257];
     size_t i;
 
-    for (p=(const unsigned char *)fmt; *p; p++) {
+    కొరకు (p=(స్థిరరాశి గుర్తులేని అక్షరం *)fmt; *p; p++) {
 
-        if (av_isspace(*p)) {
-            while (av_isspace(p[1])) p++;
+        ఒకవేళ (av_isspace(*p)) {
+            అయితే (av_isspace(p[1])) p++;
             shlim(f, 0);
-            while (av_isspace(shgetc(f)));
+            అయితే (av_isspace(shgetc(f)));
             shunget(f);
             pos += shcnt(f);
-            continue;
+            కొనసాగు;
         }
-        if (*p != '%' || p[1] == '%') {
+        ఒకవేళ (*p != '%' || p[1] == '%') {
             shlim(f, 0);
-            if (*p == '%') {
+            ఒకవేళ (*p == '%') {
                 p++;
-                while (av_isspace((c=shgetc(f))));
-            } else {
+                అయితే (av_isspace((c=shgetc(f))));
+            } లేకపోతే {
                 c = shgetc(f);
             }
-            if (c!=*p) {
+            ఒకవేళ (c!=*p) {
                 shunget(f);
-                if (c<0) goto input_fail;
-                goto match_fail;
+                ఒకవేళ (c<0) వెళ్ళు ఆదానం_fail;
+                వెళ్ళు సరిపోలిక_fail;
             }
             pos += shcnt(f);
-            continue;
+            కొనసాగు;
         }
 
         p++;
-        if (*p=='*') {
+        ఒకవేళ (*p=='*') {
             dest = 0; p++;
-        } else if (av_isdigit(*p) && p[1]=='$') {
+        } లేకపోతే ఒకవేళ (av_isdigit(*p) && p[1]=='$') {
             dest = arg_n(ap, *p-'0'); p+=2;
-        } else {
-            dest = va_arg(ap, void *);
+        } లేకపోతే {
+            dest = va_arg(ap, శూన్య *);
         }
 
-        for (width=0; av_isdigit(*p); p++) {
-            width = 10*width + *p - '0';
+        కొరకు (వెడల్పు=0; av_isdigit(*p); p++) {
+            వెడల్పు = 10*వెడల్పు + *p - '0';
         }
 
-        if (*p=='m') {
+        ఒకవేళ (*p=='m') {
             s = 0;
             p++;
         }
 
-        size = SIZE_def;
-        switch (*p++) {
-        case 'h':
-            if (*p == 'h') p++, size = SIZE_hh;
-            else size = SIZE_h;
-            break;
-        case 'l':
-            if (*p == 'l') p++, size = SIZE_ll;
-            else size = SIZE_l;
-            break;
-        case 'j':
-            size = SIZE_ll;
-            break;
-        case 'z':
-        case 't':
-            size = SIZE_l;
-            break;
-        case 'L':
-            size = SIZE_L;
-            break;
-        case 'd': case 'i': case 'o': case 'u': case 'x':
-        case 'a': case 'e': case 'f': case 'g':
-        case 'A': case 'E': case 'F': case 'G': case 'X':
-        case 's': case 'c': case '[':
-        case 'S': case 'C':
-        case 'p': case 'n':
+        కొలత = కొలత_def;
+        ఎంపిక (*p++) {
+        స్థితి 'h':
+            ఒకవేళ (*p == 'h') p++, కొలత = కొలత_hh;
+            లేకపోతే కొలత = కొలత_h;
+            ఆపు;
+        స్థితి 'l':
+            ఒకవేళ (*p == 'l') p++, కొలత = కొలత_ll;
+            లేకపోతే కొలత = కొలత_l;
+            ఆపు;
+        స్థితి 'j':
+            కొలత = కొలత_ll;
+            ఆపు;
+        స్థితి 'z':
+        స్థితి 't':
+            కొలత = కొలత_l;
+            ఆపు;
+        స్థితి 'L':
+            కొలత = కొలత_L;
+            ఆపు;
+        స్థితి 'd': స్థితి 'i': స్థితి 'o': స్థితి 'u': స్థితి 'x':
+        స్థితి 'a': స్థితి 'e': స్థితి 'f': స్థితి 'g':
+        స్థితి 'A': స్థితి 'E': స్థితి 'F': స్థితి 'G': స్థితి 'X':
+        స్థితి 's': స్థితి 'c': స్థితి '[':
+        స్థితి 'S': స్థితి 'C':
+        స్థితి 'p': స్థితి 'n':
             p--;
-            break;
-        default:
-            goto fmt_fail;
+            ఆపు;
+        అప్రమేయ:
+            వెళ్ళు fmt_fail;
         }
 
         t = *p;
 
         /* C or S */
-        if ((t&0x2f) == 3) {
+        ఒకవేళ ((t&0x2f) == 3) {
             t |= 32;
-            size = SIZE_l;
+            కొలత = కొలత_l;
         }
 
-        switch (t) {
-            case 'c':
-                if (width < 1) width = 1;
-                break;
-            case '[':
-                break;
-            case 'n':
-                store_int(dest, size, pos);
+        ఎంపిక (t) {
+            స్థితి 'c':
+                ఒకవేళ (వెడల్పు < 1) వెడల్పు = 1;
+                ఆపు;
+            స్థితి '[':
+                ఆపు;
+            స్థితి 'n':
+                store_int(dest, కొలత, pos);
                 /* do not increment match count, etc! */
-                continue;
-            default:
+                కొనసాగు;
+            అప్రమేయ:
                 shlim(f, 0);
-                while (av_isspace(shgetc(f)));
+                అయితే (av_isspace(shgetc(f)));
                 shunget(f);
                 pos += shcnt(f);
         }
 
-        shlim(f, width);
-        if (shgetc(f) < 0) goto input_fail;
+        shlim(f, వెడల్పు);
+        ఒకవేళ (shgetc(f) < 0) వెళ్ళు ఆదానం_fail;
         shunget(f);
 
-        switch (t) {
-            case 's':
-            case 'c':
-            case '[':
-                if (t == 'c' || t == 's') {
-                    memset(scanset, -1, sizeof scanset);
+        ఎంపిక (t) {
+            స్థితి 's':
+            స్థితి 'c':
+            స్థితి '[':
+                ఒకవేళ (t == 'c' || t == 's') {
+                    memset(scanset, -1, పరిమాణం scanset);
                     scanset[0] = 0;
-                    if (t == 's') {
+                    ఒకవేళ (t == 's') {
                         scanset[1 + '\t'] = 0;
                         scanset[1 + '\n'] = 0;
                         scanset[1 + '\v'] = 0;
@@ -860,110 +860,110 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
                         scanset[1 + '\r'] = 0;
                         scanset[1 + ' ' ] = 0;
                     }
-                } else {
-                    if (*++p == '^') p++, invert = 1;
-                    else invert = 0;
-                    memset(scanset, invert, sizeof scanset);
+                } లేకపోతే {
+                    ఒకవేళ (*++p == '^') p++, invert = 1;
+                    లేకపోతే invert = 0;
+                    memset(scanset, invert, పరిమాణం scanset);
                     scanset[0] = 0;
-                    if (*p == '-') p++, scanset[1+'-'] = 1-invert;
-                    else if (*p == ']') p++, scanset[1+']'] = 1-invert;
-                    for (; *p != ']'; p++) {
-                        if (!*p) goto fmt_fail;
-                        if (*p=='-' && p[1] && p[1] != ']')
-                            for (c=p++[-1]; c<*p; c++)
+                    ఒకవేళ (*p == '-') p++, scanset[1+'-'] = 1-invert;
+                    లేకపోతే ఒకవేళ (*p == ']') p++, scanset[1+']'] = 1-invert;
+                    కొరకు (; *p != ']'; p++) {
+                        ఒకవేళ (!*p) వెళ్ళు fmt_fail;
+                        ఒకవేళ (*p=='-' && p[1] && p[1] != ']')
+                            కొరకు (c=p++[-1]; c<*p; c++)
                                 scanset[1+c] = 1-invert;
                         scanset[1+*p] = 1-invert;
                     }
                 }
                 s = 0;
                 i = 0;
-                if ((s = dest)) {
-                    while (scanset[(c=shgetc(f))+1])
+                ఒకవేళ ((s = dest)) {
+                    అయితే (scanset[(c=shgetc(f))+1])
                         s[i++] = c;
-                } else {
-                    while (scanset[(c=shgetc(f))+1]);
+                } లేకపోతే {
+                    అయితే (scanset[(c=shgetc(f))+1]);
                 }
                 shunget(f);
-                if (!shcnt(f)) goto match_fail;
-                if (t == 'c' && shcnt(f) != width) goto match_fail;
-                if (t != 'c') {
-                    if (s) s[i] = 0;
+                ఒకవేళ (!shcnt(f)) వెళ్ళు సరిపోలిక_fail;
+                ఒకవేళ (t == 'c' && shcnt(f) != వెడల్పు) వెళ్ళు సరిపోలిక_fail;
+                ఒకవేళ (t != 'c') {
+                    ఒకవేళ (s) s[i] = 0;
                 }
-                break;
-            case 'p':
-            case 'X':
-            case 'x':
-                base = 16;
-                goto int_common;
-            case 'o':
-                base = 8;
-                goto int_common;
-            case 'd':
-            case 'u':
-                base = 10;
-                goto int_common;
-            case 'i':
-                base = 0;
+                ఆపు;
+            స్థితి 'p':
+            స్థితి 'X':
+            స్థితి 'x':
+                పునాది_2 = 16;
+                వెళ్ళు int_common;
+            స్థితి 'o':
+                పునాది_2 = 8;
+                వెళ్ళు int_common;
+            స్థితి 'd':
+            స్థితి 'u':
+                పునాది_2 = 10;
+                వెళ్ళు int_common;
+            స్థితి 'i':
+                పునాది_2 = 0;
 int_common:
-                x = ffintscan(f, base, 0, ULLONG_MAX);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (t=='p' && dest)
-                    *(void **)dest = (void *)(uintptr_t)x;
-                else
-                    store_int(dest, size, x);
-                break;
-            case 'a': case 'A':
-            case 'e': case 'E':
-            case 'f': case 'F':
-            case 'g': case 'G':
-                y = fffloatscan(f, size, 0);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (dest) {
-                    switch (size) {
-                    case SIZE_def:
-                        *(float *)dest = y;
-                        break;
-                    case SIZE_l:
-                        *(double *)dest = y;
-                        break;
-                    case SIZE_L:
-                        *(double *)dest = y;
-                        break;
+                x = ffintscan(f, పునాది_2, 0, ULLONG_MAX);
+                ఒకవేళ (!shcnt(f))
+                    వెళ్ళు సరిపోలిక_fail;
+                ఒకవేళ (t=='p' && dest)
+                    *(శూన్య **)dest = (శూన్య *)(uintptr_t)x;
+                లేకపోతే
+                    store_int(dest, కొలత, x);
+                ఆపు;
+            స్థితి 'a': స్థితి 'A':
+            స్థితి 'e': స్థితి 'E':
+            స్థితి 'f': స్థితి 'F':
+            స్థితి 'g': స్థితి 'G':
+                y = fffloatscan(f, కొలత, 0);
+                ఒకవేళ (!shcnt(f))
+                    వెళ్ళు సరిపోలిక_fail;
+                ఒకవేళ (dest) {
+                    ఎంపిక (కొలత) {
+                    స్థితి కొలత_def:
+                        *(దశాంశం *)dest = y;
+                        ఆపు;
+                    స్థితి కొలత_l:
+                        *(ద్విగుణ *)dest = y;
+                        ఆపు;
+                    స్థితి కొలత_L:
+                        *(ద్విగుణ *)dest = y;
+                        ఆపు;
                     }
                 }
-                break;
+                ఆపు;
         }
 
         pos += shcnt(f);
-        if (dest) matches++;
+        ఒకవేళ (dest) matches++;
     }
-    if (0) {
+    ఒకవేళ (0) {
 fmt_fail:
-input_fail:
-        if (!matches) matches--;
+ఆదానం_fail:
+        ఒకవేళ (!matches) matches--;
     }
-match_fail:
-    return matches;
+సరిపోలిక_fail:
+    తిరిగి matches;
 }
 
-static int ff_vsscanf(const char *s, const char *fmt, va_list ap)
+స్థిర పూర్ణాంకం ff_vsscanf(స్థిరరాశి అక్షరం *s, స్థిరరాశి అక్షరం *fmt, va_list ap)
 {
     FFFILE f = {
-        .buf = (void *)s, .cookie = (void *)s,
-        .read = ffstring_read,
+        .buf = (శూన్య *)s, .cookie = (శూన్య *)s,
+        .పఠ = ffstring_read,
     };
 
-    return ff_vfscanf(&f, fmt, ap);
+    తిరిగి ff_vfscanf(&f, fmt, ap);
 }
 
-int av_sscanf(const char *string, const char *format, ...)
+పూర్ణాంకం av_sscanf(స్థిరరాశి అక్షరం *string, స్థిరరాశి అక్షరం *format, ...)
 {
-    int ret;
+    పూర్ణాంకం ret;
     va_list ap;
     va_start(ap, format);
     ret = ff_vsscanf(string, format, ap);
     va_end(ap);
-    return ret;
+    తిరిగి ret;
 }

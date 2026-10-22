@@ -18,21 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_FLOAT_DSP_VSX_H
-#define AVUTIL_PPC_FLOAT_DSP_VSX_H
+#నిర్వచితం_కాకపోతే AVUTIL_PPC_FLOAT_DSP_VSX_H
+#నిర్వచించు AVUTIL_PPC_FLOAT_DSP_VSX_H
 
-void ff_vector_fmul_vsx(float *dst, const float *src0,
-                        const float *src1, int len);
+శూన్య ff_సదిశ_fmul_vsx(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                        స్థిరరాశి దశాంశం *src1, పూర్ణాంకం len);
 
-void ff_vector_fmul_window_vsx(float *dst, const float *src0,
-                               const float *src1, const float *win,
-                               int len);
+శూన్య ff_సదిశ_fmul_కిటికీ_vsx(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                               స్థిరరాశి దశాంశం *src1, స్థిరరాశి దశాంశం *win,
+                               పూర్ణాంకం len);
 
-void ff_vector_fmul_add_vsx(float *dst, const float *src0,
-                            const float *src1, const float *src2,
-                            int len);
+శూన్య ff_సదిశ_fmul_కూడు_vsx(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                            స్థిరరాశి దశాంశం *src1, స్థిరరాశి దశాంశం *src2,
+                            పూర్ణాంకం len);
 
-void ff_vector_fmul_reverse_vsx(float *dst, const float *src0,
-                                const float *src1, int len);
+శూన్య ff_సదిశ_fmul_తిరగేయి_vsx(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                స్థిరరాశి దశాంశం *src1, పూర్ణాంకం len);
 
-#endif /* AVUTIL_PPC_FLOAT_DSP_VSX_H */
+#అయితే_ముగింపు /* AVUTIL_PPC_FLOAT_DSP_VSX_H */

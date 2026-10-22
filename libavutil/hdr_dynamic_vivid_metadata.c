@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "hdr_dynamic_vivid_metadata.h"
-#include "mem.h"
+#అన్తర్భావ "hdr_dynamic_vivid_metadata.h"
+#అన్తర్భావ "mem.h"
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *కొలత)
 {
-    AVDynamicHDRVivid *hdr_vivid = av_mallocz(sizeof(AVDynamicHDRVivid));
+    AVDynamicHDRVivid *hdr_vivid = av_mallocz(పరిమాణం(AVDynamicHDRVivid));
 
-    if (size)
-        *size = hdr_vivid ? sizeof(*hdr_vivid) : 0;
+    ఒకవేళ (కొలత)
+        *కొలత = hdr_vivid ? పరిమాణం(*hdr_vivid) : 0;
 
-    return hdr_vivid;
+    తిరిగి hdr_vivid;
 }
 
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame)
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_దత్తాంశం(AVFrame *చట్రం)
 {
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
-                                                        sizeof(AVDynamicHDRVivid));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_దత్తాంశం *side_దత్తాంశం = av_చట్రం_new_side_దత్తాంశం(చట్రం,
+                                                        AV_చట్రం_దత్తాంశం_DYNAMIC_HDR_VIVID,
+                                                        పరిమాణం(AVDynamicHDRVivid));
+    ఒకవేళ (!side_దత్తాంశం)
+        తిరిగి ఖాళీ;
 
-    memset(side_data->data, 0, sizeof(AVDynamicHDRVivid));
+    memset(side_దత్తాంశం->దత్తాంశం, 0, పరిమాణం(AVDynamicHDRVivid));
 
-    return (AVDynamicHDRVivid *)side_data->data;
+    తిరిగి (AVDynamicHDRVivid *)side_దత్తాంశం->దత్తాంశం;
 }

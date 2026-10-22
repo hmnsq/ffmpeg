@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#అన్తర్భావ <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/mem.h"
-#include "libavutil/avstring.h"
+#అన్తర్భావ "libavutil/common.h"
+#అన్తర్భావ "libavutil/mem.h"
+#అన్తర్భావ "libavutil/avstring.h"
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
-    int i;
-    char *fullpath, *ptr;
-    static const char * const strings[] = {
+    పూర్ణాంకం i;
+    అక్షరం *fullpath, *ptr;
+    స్థిర స్థిరరాశి అక్షరం * స్థిరరాశి అక్షరశ్రేణులు[] = {
         "''",
         "",
         ":",
@@ -54,53 +54,53 @@ int main(void)
         "'\\fo\\o:': blahblah",
         "\\'fo\\o\\:':  foo  '  :blahblah"
     };
-    const char *haystack = "Education consists mainly in what we have unlearned.";
-    const char * const needle[] = {"learned.", "unlearned.", "Unlearned"};
+    స్థిరరాశి అక్షరం *haystack = "Education consists mainly in what we have unlearned.";
+    స్థిరరాశి అక్షరం * స్థిరరాశి needle[] = {"learned.", "unlearned.", "Unlearned"};
 
-    printf("Testing av_get_token()\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(strings); i++) {
-        const char *p = strings[i];
-        char *q;
-        printf("|%s|", p);
+    రాయి("Testing av_get_token()\n");
+    కొరకు (i = 0; i < FF_ARRAY_ELEMS(అక్షరశ్రేణులు); i++) {
+        స్థిరరాశి అక్షరం *p = అక్షరశ్రేణులు[i];
+        అక్షరం *q;
+        రాయి("|%s|", p);
         q = av_get_token(&p, ":");
-        printf(" -> |%s|", q);
-        printf(" + |%s|\n", p);
+        రాయి(" -> |%s|", q);
+        రాయి(" + |%s|\n", p);
         av_free(q);
     }
 
-    printf("Testing av_append_path_component()\n");
-    #define TEST_APPEND_PATH_COMPONENT(path, component, expected) \
-        fullpath = av_append_path_component((path), (component)); \
-        printf("%s = %s\n", fullpath ? fullpath : "(null)", expected); \
+    రాయి("Testing av_append_path_component()\n");
+    #నిర్వచించు TEST_APPEND_మార్గం_COMPONENT(మార్గం, component, expected) \
+        fullpath = av_append_మార్గం_component((మార్గం), (component)); \
+        రాయి("%s = %s\n", fullpath ? fullpath : "(null)", expected); \
         av_free(fullpath);
-    TEST_APPEND_PATH_COMPONENT(NULL, NULL, "(null)")
-    TEST_APPEND_PATH_COMPONENT("path", NULL, "path");
-    TEST_APPEND_PATH_COMPONENT(NULL, "comp", "comp");
-    TEST_APPEND_PATH_COMPONENT("path", "comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path/", "comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path", "/comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path/", "/comp", "path/comp");
-    TEST_APPEND_PATH_COMPONENT("path/path2/", "/comp/comp2", "path/path2/comp/comp2");
+    TEST_APPEND_మార్గం_COMPONENT(ఖాళీ, ఖాళీ, "(null)")
+    TEST_APPEND_మార్గం_COMPONENT("path", ఖాళీ, "path");
+    TEST_APPEND_మార్గం_COMPONENT(ఖాళీ, "comp", "comp");
+    TEST_APPEND_మార్గం_COMPONENT("path", "comp", "path/comp");
+    TEST_APPEND_మార్గం_COMPONENT("path/", "comp", "path/comp");
+    TEST_APPEND_మార్గం_COMPONENT("path", "/comp", "path/comp");
+    TEST_APPEND_మార్గం_COMPONENT("path/", "/comp", "path/comp");
+    TEST_APPEND_మార్గం_COMPONENT("path/path2/", "/comp/comp2", "path/path2/comp/comp2");
 
     /*Testing av_strnstr()*/
-    #define TEST_STRNSTR(haystack, needle, hay_length, expected) \
-        ptr = av_strnstr(haystack, needle, hay_length); \
-        if (ptr != expected){ \
-            printf("expected: %p, received %p\n", expected, ptr); \
+    #నిర్వచించు TEST_STRNSTR(haystack, needle, hay_నిడివి, expected) \
+        ptr = av_strnstr(haystack, needle, hay_నిడివి); \
+        ఒకవేళ (ptr != expected){ \
+            రాయి("expected: %p, received %p\n", expected, ptr); \
         }
-    TEST_STRNSTR(haystack, needle [0], strlen(haystack), haystack+44);
-    TEST_STRNSTR(haystack, needle [1], strlen(haystack), haystack+42);
-    TEST_STRNSTR(haystack, needle [2], strlen(haystack), NULL       );
-    TEST_STRNSTR(haystack, strings[1], strlen(haystack), haystack   );
+    TEST_STRNSTR(haystack, needle [0], అక్షరశ్రేణి_పొడవు(haystack), haystack+44);
+    TEST_STRNSTR(haystack, needle [1], అక్షరశ్రేణి_పొడవు(haystack), haystack+42);
+    TEST_STRNSTR(haystack, needle [2], అక్షరశ్రేణి_పొడవు(haystack), ఖాళీ       );
+    TEST_STRNSTR(haystack, అక్షరశ్రేణులు[1], అక్షరశ్రేణి_పొడవు(haystack), haystack   );
 
     /*Testing av_strireplace()*/
-    #define TEST_STRIREPLACE(haystack, needle, expected) \
+    #నిర్వచించు TEST_STRIREPLACE(haystack, needle, expected) \
         ptr = av_strireplace(haystack, needle, "instead"); \
-        if (ptr == NULL) { \
-            printf("error, received null pointer!\n"); \
-        } else { \
-            if (strcmp(ptr, expected) != 0) \
-                printf( "expected: %s, received: %s\n", expected, ptr); \
+        ఒకవేళ (ptr == ఖాళీ) { \
+            రాయి("error, received null pointer!\n"); \
+        } లేకపోతే { \
+            ఒకవేళ (strcmp(ptr, expected) != 0) \
+                రాయి( "expected: %s, received: %s\n", expected, ptr); \
             av_free(ptr); \
         }
 
@@ -109,5 +109,5 @@ int main(void)
     TEST_STRIREPLACE(haystack, needle [2], "Education consists mainly in what we have instead.");
     TEST_STRIREPLACE(haystack, needle [1], "Education consists mainly in what we have instead");
 
-    return 0;
+    తిరిగి 0;
 }

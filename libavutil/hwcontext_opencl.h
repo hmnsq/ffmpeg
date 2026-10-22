@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_OPENCL_H
-#define AVUTIL_HWCONTEXT_OPENCL_H
+#నిర్వచితం_కాకపోతే AVUTIL_HWCONTEXT_OPENCL_H
+#నిర్వచించు AVUTIL_HWCONTEXT_OPENCL_H
 
-#ifdef __APPLE__
-#include <OpenCL/cl.h>
-#else
-#include <CL/cl.h>
-#endif
+#నిర్వచితమైతే __APPLE__
+#అన్తర్భావ <OpenCL/cl.h>
+#లేకపోతే
+#అన్తర్భావ <CL/cl.h>
+#అయితే_ముగింపు
 
-#include "frame.h"
+#అన్తర్భావ "frame.h"
 
 /**
  * @file
@@ -44,15 +44,15 @@
  * with the data pointer pointing at an object of this type describing the
  * planes of the frame.
  */
-typedef struct AVOpenCLFrameDescriptor {
+రకనిర్వచనం నిర్మాణం AVOpenCLFrameDescriptor {
     /**
      * Number of planes in the frame.
      */
-    int nb_planes;
+    పూర్ణాంకం nb_planes;
     /**
      * OpenCL image2d objects for each plane of the frame.
      */
-    cl_mem planes[AV_NUM_DATA_POINTERS];
+    cl_mem planes[AV_అంకె_దత్తాంశం_సూచికలు];
 } AVOpenCLFrameDescriptor;
 
 /**
@@ -60,7 +60,7 @@ typedef struct AVOpenCLFrameDescriptor {
  *
  * Allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVOpenCLDeviceContext {
+రకనిర్వచనం నిర్మాణం AVOpenCLDeviceContext {
     /**
      * The primary device ID of the device.  If multiple OpenCL devices
      * are associated with the context then this is the one which will
@@ -78,7 +78,7 @@ typedef struct AVOpenCLDeviceContext {
      * initialised by the user, a default queue will be created on the
      * primary device.
      */
-    cl_command_queue command_queue;
+    cl_command_వరుస command_వరుస;
 } AVOpenCLDeviceContext;
 
 /**
@@ -86,7 +86,7 @@ typedef struct AVOpenCLDeviceContext {
  *
  * Allocated as AVHWFramesContext.hwctx.
  */
-typedef struct AVOpenCLFramesContext {
+రకనిర్వచనం నిర్మాణం AVOpenCLFramesContext {
     /**
      * The command queue used for internal asynchronous operations on this
      * device (av_hwframe_transfer_data(), av_hwframe_map()).
@@ -94,7 +94,7 @@ typedef struct AVOpenCLFramesContext {
      * If this is not set, the command queue from the associated device is
      * used instead.
      */
-    cl_command_queue command_queue;
+    cl_command_వరుస command_వరుస;
 } AVOpenCLFramesContext;
 
-#endif /* AVUTIL_HWCONTEXT_OPENCL_H */
+#అయితే_ముగింపు /* AVUTIL_HWCONTEXT_OPENCL_H */

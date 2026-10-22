@@ -51,30 +51,30 @@
  * Reference: libavutil/float_dsp.c
  */
 
-#include "config.h"
-#include "libavutil/float_dsp.h"
-#include "libavutil/mips/asmdefs.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "libavutil/float_dsp.h"
+#అన్తర్భావ "libavutil/mips/asmdefs.h"
 
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
-static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
-                             int len)
+#ఒకవేళ HAVE_INLINE_ASM && HAVE_MIPSFPU
+#ఒకవేళ !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+స్థిర శూన్య సదిశ_fmul_mips(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1,
+                             పూర్ణాంకం len)
 {
-    int i;
+    పూర్ణాంకం i;
 
-    if (len & 3) {
-        for (i = 0; i < len; i++)
+    ఒకవేళ (len & 3) {
+        కొరకు (i = 0; i < len; i++)
             dst[i] = src0[i] * src1[i];
-    } else {
-        float *d     = (float *)dst;
-        float *d_end = d + len;
-        float *s0    = (float *)src0;
-        float *s1    = (float *)src1;
+    } లేకపోతే {
+        దశాంశం *d     = (దశాంశం *)dst;
+        దశాంశం *d_చివర = d + len;
+        దశాంశం *s0    = (దశాంశం *)src0;
+        దశాంశం *s1    = (దశాంశం *)src1;
 
-        float src0_0, src0_1, src0_2, src0_3;
-        float src1_0, src1_1, src1_2, src1_3;
+        దశాంశం src0_0, src0_1, src0_2, src0_3;
+        దశాంశం src1_0, src1_1, src1_2, src1_3;
 
-        __asm__ volatile (
+        __asm__ అస్థిర (
             "1:                                         \n\t"
             "lwc1   %[src0_0],  0(%[s0])                \n\t"
             "lwc1   %[src1_0],  0(%[s1])                \n\t"
@@ -102,21 +102,21 @@ static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
               [src1_0]"=&f"(src1_0), [src1_1]"=&f"(src1_1),
               [src1_2]"=&f"(src1_2), [src1_3]"=&f"(src1_3),
               [d]"+r"(d), [s0]"+r"(s0), [s1]"+r"(s1)
-            : [d_end]"r"(d_end)
+            : [d_చివర]"r"(d_చివర)
             : "memory"
         );
     }
 }
 
-static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
-                                 int len)
+స్థిర శూన్య సదిశ_fmul_scalar_mips(దశాంశం *dst, స్థిరరాశి దశాంశం *src, దశాంశం mul,
+                                 పూర్ణాంకం len)
 {
-    float temp0, temp1, temp2, temp3;
-    float *local_src = (float*)src;
-    float *end = local_src + len;
+    దశాంశం temp0, temp1, temp2, temp3;
+    దశాంశం *local_src = (దశాంశం*)src;
+    దశాంశం *చివర = local_src + len;
 
     /* loop unrolled 4 times */
-    __asm__ volatile(
+    __asm__ అస్థిర(
         ".set    push                             \n\t"
         ".set    noreorder                        \n\t"
     "1:                                           \n\t"
@@ -140,30 +140,30 @@ static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
         : [temp0]"=&f"(temp0), [temp1]"=&f"(temp1),
           [temp2]"=&f"(temp2), [temp3]"=&f"(temp3),
           [dst]"+r"(dst), [src]"+r"(local_src)
-        : [end]"r"(end), [mul]"f"(mul)
+        : [చివర]"r"(చివర), [mul]"f"(mul)
         : "memory"
     );
 }
 
-static void vector_fmul_window_mips(float *dst, const float *src0,
-                                    const float *src1, const float *win, int len)
+స్థిర శూన్య సదిశ_fmul_కిటికీ_mips(దశాంశం *dst, స్థిరరాశి దశాంశం *src0,
+                                    స్థిరరాశి దశాంశం *src1, స్థిరరాశి దశాంశం *win, పూర్ణాంకం len)
 {
-    float * dst_j, *win_j, *src0_i, *src1_j, *dst_i, *win_i;
-    float temp, temp1, temp2, temp3;
-    float s0, s01, s1, s11;
-    float wi, wi1, wi2, wi3;
-    float wj, wj1, wj2, wj3;
-    const float * lp_end = win + len;
+    దశాంశం * dst_j, *win_j, *src0_i, *src1_j, *dst_i, *win_i;
+    దశాంశం తాత్కాలిక, temp1, temp2, temp3;
+    దశాంశం s0, s01, s1, s11;
+    దశాంశం wi, wi1, wi2, wi3;
+    దశాంశం wj, wj1, wj2, wj3;
+    స్థిరరాశి దశాంశం * lp_చివర = win + len;
 
-    win_i  = (float *)win;
-    win_j  = (float *)(win + 2 * len -1);
-    src1_j = (float *)(src1 + len - 1);
-    src0_i = (float *)src0;
-    dst_i  = (float *)dst;
-    dst_j  = (float *)(dst + 2 * len -1);
+    win_i  = (దశాంశం *)win;
+    win_j  = (దశాంశం *)(win + 2 * len -1);
+    src1_j = (దశాంశం *)(src1 + len - 1);
+    src0_i = (దశాంశం *)src0;
+    dst_i  = (దశాంశం *)dst;
+    dst_j  = (దశాంశం *)(dst + 2 * len -1);
 
     /* loop unrolled 4 times */
-    __asm__ volatile (
+    __asm__ అస్థిర (
         "1:"
         "lwc1    %[s1],     0(%[src1_j])                \n\t"
         "lwc1    %[wi],     0(%[win_i])                 \n\t"
@@ -212,29 +212,29 @@ static void vector_fmul_window_mips(float *dst, const float *src0,
         PTR_ADDIU "%[dst_i],16                          \n\t"
         PTR_ADDIU "%[dst_j],-16                         \n\t"
         "bne     %[win_i], %[lp_end], 1b                \n\t"
-        : [temp]"=&f"(temp), [temp1]"=&f"(temp1), [temp2]"=&f"(temp2),
+        : [తాత్కాలిక]"=&f"(తాత్కాలిక), [temp1]"=&f"(temp1), [temp2]"=&f"(temp2),
           [temp3]"=&f"(temp3), [src0_i]"+r"(src0_i), [win_i]"+r"(win_i),
           [src1_j]"+r"(src1_j), [win_j]"+r"(win_j), [dst_i]"+r"(dst_i),
           [dst_j]"+r"(dst_j), [s0] "=&f"(s0), [s01]"=&f"(s01), [s1] "=&f"(s1),
           [s11]"=&f"(s11), [wi] "=&f"(wi), [wj] "=&f"(wj), [wi2]"=&f"(wi2),
           [wj2]"=&f"(wj2), [wi3]"=&f"(wi3), [wj3]"=&f"(wj3), [wi1]"=&f"(wi1),
           [wj1]"=&f"(wj1)
-        : [lp_end]"r"(lp_end)
+        : [lp_చివర]"r"(lp_చివర)
         : "memory"
     );
 }
 
-static void butterflies_float_mips(float *restrict v1, float *restrict v2,
-                                int len)
+స్థిర శూన్య butterflies_float_mips(దశాంశం *పరిమిత v1, దశాంశం *పరిమిత v2,
+                                పూర్ణాంకం len)
 {
-    float temp0, temp1, temp2, temp3, temp4;
-    float temp5, temp6, temp7, temp8, temp9;
-    float temp10, temp11, temp12, temp13, temp14, temp15;
-    int pom;
+    దశాంశం temp0, temp1, temp2, temp3, temp4;
+    దశాంశం temp5, temp6, temp7, temp8, temp9;
+    దశాంశం temp10, temp11, temp12, temp13, temp14, temp15;
+    పూర్ణాంకం pom;
     pom = (len >> 2)-1;
 
     /* loop unrolled 4 times */
-    __asm__ volatile (
+    __asm__ అస్థిర (
         "lwc1     %[temp0],    0(%[v1])                 \n\t"
         "lwc1     %[temp1],    4(%[v1])                 \n\t"
         "lwc1     %[temp2],    8(%[v1])                 \n\t"
@@ -302,15 +302,15 @@ static void butterflies_float_mips(float *restrict v1, float *restrict v2,
     );
 }
 
-static void vector_fmul_reverse_mips(float *dst, const float *src0, const float *src1, int len){
-    int i;
-    float temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
+స్థిర శూన్య సదిశ_fmul_తిరగేయి_mips(దశాంశం *dst, స్థిరరాశి దశాంశం *src0, స్థిరరాశి దశాంశం *src1, పూర్ణాంకం len){
+    పూర్ణాంకం i;
+    దశాంశం temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
     src1 += len-1;
 
-    for(i=0; i<(len>>2); i++)
+    కొరకు(i=0; i<(len>>2); i++)
     {
         /* loop unrolled 4 times */
-        __asm__ volatile(
+        __asm__ అస్థిర(
             "lwc1      %[temp0],     0(%[src0])                 \n\t"
             "lwc1      %[temp1],     0(%[src1])                 \n\t"
             "lwc1      %[temp2],     4(%[src0])                 \n\t"
@@ -340,17 +340,17 @@ static void vector_fmul_reverse_mips(float *dst, const float *src0, const float 
         );
     }
 }
-#endif /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
-#endif /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
+#అయితే_ముగింపు /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
+#అయితే_ముగింపు /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
 
-void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp) {
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
-    fdsp->vector_fmul = vector_fmul_mips;
-    fdsp->vector_fmul_scalar  = vector_fmul_scalar_mips;
-    fdsp->vector_fmul_window = vector_fmul_window_mips;
+శూన్య ff_float_dsp_init_mips(AVFloatDSPContext *fdsp) {
+#ఒకవేళ HAVE_INLINE_ASM && HAVE_MIPSFPU
+#ఒకవేళ !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+    fdsp->సదిశ_fmul = సదిశ_fmul_mips;
+    fdsp->సదిశ_fmul_scalar  = సదిశ_fmul_scalar_mips;
+    fdsp->సదిశ_fmul_కిటికీ = సదిశ_fmul_కిటికీ_mips;
     fdsp->butterflies_float = butterflies_float_mips;
-    fdsp->vector_fmul_reverse = vector_fmul_reverse_mips;
-#endif /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
-#endif /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
+    fdsp->సదిశ_fmul_తిరగేయి = సదిశ_fmul_తిరగేయి_mips;
+#అయితే_ముగింపు /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
+#అయితే_ముగింపు /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
 }

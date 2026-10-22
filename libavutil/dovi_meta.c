@@ -18,58 +18,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#అన్తర్భావ <string.h>
 
-#include "dovi_meta.h"
-#include "mem.h"
+#అన్తర్భావ "dovi_meta.h"
+#అన్తర్భావ "mem.h"
 
-AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
+AVDOVIDecoder_Configuration_రికార్డు *av_dovi_alloc(size_t *కొలత)
 {
-    AVDOVIDecoderConfigurationRecord *dovi =
-        av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
+    AVDOVIDecoder_Configuration_రికార్డు *dovi =
+        av_mallocz(పరిమాణం(AVDOVIDecoder_Configuration_రికార్డు));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    ఒకవేళ (కొలత)
+        *కొలత = dovi ? పరిమాణం(*dovi) : 0;
 
-    return dovi;
+    తిరిగి dovi;
 }
 
-typedef struct AVDOVIMetadataInternal {
+రకనిర్వచనం నిర్మాణం AVDOVIMetadata_అంతర్గత {
     AVDOVIMetadata metadata;
-    AVDOVIRpuDataHeader header;
+    AVDOVIRpu_దత్తాంశం_శీర్షిక శీర్షిక;
     AVDOVIDataMapping mapping;
     AVDOVIColorMetadata color;
-    AVDOVIDmData ext_blocks[AV_DOVI_MAX_EXT_BLOCKS];
-} AVDOVIMetadataInternal;
+    AVDOVIDm_దత్తాంశం ext_ఖండాలు[AV_DOVI_MAX_EXT_ఖండాలు];
+} AVDOVIMetadata_అంతర్గత;
 
-AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
+AVDOVIMetadata *av_dovi_metadata_alloc(size_t *కొలత)
 {
-    AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
+    AVDOVIMetadata_అంతర్గత *dovi = av_mallocz(పరిమాణం(AVDOVIMetadata_అంతర్గత));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    ఒకవేళ (కొలత)
+        *కొలత = dovi ? పరిమాణం(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    ఒకవేళ (!dovi)
+        తిరిగి ఖాళీ;
 
-    dovi->metadata = (struct AVDOVIMetadata) {
-        .header_offset      = offsetof(AVDOVIMetadataInternal, header),
-        .mapping_offset     = offsetof(AVDOVIMetadataInternal, mapping),
-        .color_offset       = offsetof(AVDOVIMetadataInternal, color),
-        .ext_block_offset   = offsetof(AVDOVIMetadataInternal, ext_blocks),
-        .ext_block_size     = sizeof(AVDOVIDmData),
+    dovi->metadata = (నిర్మాణం AVDOVIMetadata) {
+        .శీర్షిక_స్థానభ్రంశం      = offsetof(AVDOVIMetadata_అంతర్గత, శీర్షిక),
+        .mapping_స్థానభ్రంశం     = offsetof(AVDOVIMetadata_అంతర్గత, mapping),
+        .color_స్థానభ్రంశం       = offsetof(AVDOVIMetadata_అంతర్గత, color),
+        .ext_ఖండం_స్థానభ్రంశం   = offsetof(AVDOVIMetadata_అంతర్గత, ext_ఖండాలు),
+        .ext_ఖండం_కొలత     = పరిమాణం(AVDOVIDm_దత్తాంశం),
     };
 
-    return &dovi->metadata;
+    తిరిగి &dovi->metadata;
 }
 
-AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
+AVDOVIDm_దత్తాంశం *av_dovi_కనుగొను_level(స్థిరరాశి AVDOVIMetadata *దత్తాంశం, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
-        AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+    కొరకు (పూర్ణాంకం i = 0; i < దత్తాంశం->అంకె_ext_ఖండాలు; i++) {
+        AVDOVIDm_దత్తాంశం *ext = av_dovi_get_ext(దత్తాంశం, i);
+        ఒకవేళ (ext->level == level)
+            తిరిగి ext;
     }
 
-    return NULL;
+    తిరిగి ఖాళీ;
 }

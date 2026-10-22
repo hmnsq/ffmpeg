@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_VULKAN_H
-#define AVUTIL_HWCONTEXT_VULKAN_H
+#నిర్వచితం_కాకపోతే AVUTIL_HWCONTEXT_VULKAN_H
+#నిర్వచించు AVUTIL_HWCONTEXT_VULKAN_H
 
-#if defined(_WIN32) && !defined(VK_USE_PLATFORM_WIN32_KHR)
-#define VK_USE_PLATFORM_WIN32_KHR
-#endif
-#include <vulkan/vulkan.h>
+#ఒకవేళ defined(_WIN32) && !defined(VK_USE_PLATFORM_WIN32_KHR)
+#నిర్వచించు VK_USE_PLATFORM_WIN32_KHR
+#అయితే_ముగింపు
+#అన్తర్భావ <vulkan/vulkan.h>
 
-#include "pixfmt.h"
-#include "frame.h"
-#include "hwcontext.h"
+#అన్తర్భావ "pixfmt.h"
+#అన్తర్భావ "frame.h"
+#అన్తర్భావ "hwcontext.h"
 
-typedef struct AVVkFrame AVVkFrame;
+రకనిర్వచనం నిర్మాణం AVVk_చట్రం AVVk_చట్రం;
 
-typedef struct AVVulkanDeviceQueueFamily {
+రకనిర్వచనం నిర్మాణం AVVulkan_Device_వరుస_Family {
     /* Queue family index */
-    int idx;
+    పూర్ణాంకం idx;
     /* Number of queues in the queue family in use */
-    int num;
+    పూర్ణాంకం అంకె;
     /* Queue family capabilities. Must be non-zero.
      * Flags may be removed to indicate the queue family may not be used
      * for a given purpose. */
-    VkQueueFlagBits flags;
+    Vk_వరుస_Flag_బిట్లు flags;
     /* Vulkan implementations are allowed to list multiple video queues
      * which differ in what they can encode or decode. */
-    VkVideoCodecOperationFlagBitsKHR video_caps;
-} AVVulkanDeviceQueueFamily;
+    Vk_Video_Codec_Operation_Flag_బిట్లు_KHR video_caps;
+} AVVulkan_Device_వరుస_Family;
 
 /**
  * @file
@@ -56,11 +56,11 @@ typedef struct AVVulkanDeviceQueueFamily {
  * Main Vulkan context, allocated as AVHWDeviceContext.hwctx.
  * All of these can be set before init to change what the context uses
  */
-typedef struct AVVulkanDeviceContext {
+రకనిర్వచనం నిర్మాణం AVVulkanDeviceContext {
     /**
      * Custom memory allocator, else NULL
      */
-    const VkAllocationCallbacks *alloc;
+    స్థిరరాశి Vk_కేటాయింపు_Callbacks *alloc;
 
     /**
      * Pointer to a vkGetInstanceProcAddr loading function.
@@ -100,8 +100,8 @@ typedef struct AVVulkanDeviceContext {
      * av_vk_get_optional_instance_extensions() can be used to enumerate extensions
      * that FFmpeg may use if enabled.
      */
-    const char * const *enabled_inst_extensions;
-    int nb_enabled_inst_extensions;
+    స్థిరరాశి అక్షరం * స్థిరరాశి *enabled_inst_extensions;
+    పూర్ణాంకం nb_enabled_inst_extensions;
 
     /**
      * Enabled device extensions. By default, VK_KHR_external_memory_fd,
@@ -113,10 +113,10 @@ typedef struct AVVulkanDeviceContext {
      * av_vk_get_optional_device_extensions() can be used to enumerate extensions
      * that FFmpeg may use if enabled.
      */
-    const char * const *enabled_dev_extensions;
-    int nb_enabled_dev_extensions;
+    స్థిరరాశి అక్షరం * స్థిరరాశి *enabled_dev_extensions;
+    పూర్ణాంకం nb_enabled_dev_extensions;
 
-#if FF_API_VULKAN_SYNC_QUEUES
+#ఒకవేళ FF_API_VULKAN_SYNC_QUEUES
     /**
      * Locks a queue, preventing other threads from submitting any command
      * buffers to this queue.
@@ -126,7 +126,7 @@ typedef struct AVVulkanDeviceContext {
      * Deprecated: use VK_KHR_internally_synchronized_queues.
      */
     attribute_deprecated
-    void (*lock_queue)(struct AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
+    శూన్య (*తాళం_వరుస)(నిర్మాణం AVHWDeviceContext *ctx, uint32_t వరుస_family, uint32_t సూచీ);
 
     /**
      * Similar to lock_queue(), unlocks a queue. Must only be called after locking.
@@ -134,8 +134,8 @@ typedef struct AVVulkanDeviceContext {
      * Deprecated: use VK_KHR_internally_synchronized_queues.
      */
     attribute_deprecated
-    void (*unlock_queue)(struct AVHWDeviceContext *ctx, uint32_t queue_family, uint32_t index);
-#endif
+    శూన్య (*unlock_వరుస)(నిర్మాణం AVHWDeviceContext *ctx, uint32_t వరుస_family, uint32_t సూచీ);
+#అయితే_ముగింపు
 
     /**
      * Queue families used. Must be preferentially ordered. List may contain
@@ -145,30 +145,30 @@ typedef struct AVVulkanDeviceContext {
      * (queue_family_(tx/comp/encode/decode)_index) must also be included in
      * this list until they're removed after deprecation.
      */
-    AVVulkanDeviceQueueFamily qf[64];
-    int nb_qf;
+    AVVulkan_Device_వరుస_Family qf[64];
+    పూర్ణాంకం nb_qf;
 
     /* Queue creation flags, for vkGetDeviceQueue2. */
-    VkDeviceQueueCreateFlags queue_flags;
+    Vk_Device_వరుస_Create_Flags వరుస_flags;
 } AVVulkanDeviceContext;
 
 /**
  * Defines the behaviour of frame allocation.
  */
-typedef enum AVVkFrameFlags {
+రకనిర్వచనం గణన AVVk_చట్రం_Flags {
     /* Unless this flag is set, autodetected flags will be OR'd based on the
      * device and tiling during av_hwframe_ctx_init(). */
-    AV_VK_FRAME_FLAG_NONE              = (1ULL << 0),
+    AV_VK_చట్రం_FLAG_NONE              = (1ULL << 0),
 
     /* Disables multiplane images.
      * This is required to export/import images from CUDA. */
-    AV_VK_FRAME_FLAG_DISABLE_MULTIPLANE = (1ULL << 2),
-} AVVkFrameFlags;
+    AV_VK_చట్రం_FLAG_DISABLE_MULTIPLANE = (1ULL << 2),
+} AVVk_చట్రం_Flags;
 
 /**
  * Allocated as AVHWFramesContext.hwctx, used to set pool-specific options
  */
-typedef struct AVVulkanFramesContext {
+రకనిర్వచనం నిర్మాణం AVVulkan_చట్రాలు_Context {
     /**
      * Controls the tiling of allocated frames.
      * If left as VK_IMAGE_TILING_OPTIMAL (0), will use optimal tiling.
@@ -188,7 +188,7 @@ typedef struct AVVulkanFramesContext {
      * - VK_IMAGE_USAGE_TRANSFER_SRC_BIT
      * - VK_IMAGE_USAGE_TRANSFER_DST_BIT
      */
-    VkImageUsageFlagBits usage;
+    Vk_Image_Usage_Flag_బిట్లు usage;
 
     /**
      * Extension data for image creation.
@@ -199,7 +199,7 @@ typedef struct AVVulkanFramesContext {
      * which will be freed automatically on uninit(), so users must only free
      * any structures they've allocated themselves.
      */
-    void *create_pnext;
+    శూన్య *create_pnext;
 
     /**
      * Extension data for memory allocation. Must have as many entries as
@@ -208,14 +208,14 @@ typedef struct AVVulkanFramesContext {
      * to make all pool images exportable to other APIs if the necessary
      * extensions are present in enabled_dev_extensions.
      */
-    void *alloc_pnext[AV_NUM_DATA_POINTERS];
+    శూన్య *alloc_pnext[AV_అంకె_దత్తాంశం_సూచికలు];
 
     /**
      * A combination of AVVkFrameFlags. Unless AV_VK_FRAME_FLAG_NONE is set,
      * autodetected flags will be OR'd based on the device and tiling during
      * av_hwframe_ctx_init().
      */
-    AVVkFrameFlags flags;
+    AVVk_చట్రం_Flags flags;
 
     /**
      * Flags to set during image creation. If unset, defaults to
@@ -229,12 +229,12 @@ typedef struct AVVulkanFramesContext {
      * There are at most two compatible formats for a frame - a multiplane
      * format, and a single-plane multi-image format.
      */
-    VkFormat format[AV_NUM_DATA_POINTERS];
+    VkFormat format[AV_అంకె_దత్తాంశం_సూచికలు];
 
     /**
      * Number of layers each image will have.
      */
-    int nb_layers;
+    పూర్ణాంకం nb_layers;
 
     /**
      * Locks a frame, preventing other threads from changing frame properties.
@@ -244,13 +244,13 @@ typedef struct AVVulkanFramesContext {
      *
      * If unset, will be set to lavu-internal functions that utilize a mutex.
      */
-    void (*lock_frame)(struct AVHWFramesContext *fc, AVVkFrame *vkf);
+    శూన్య (*తాళం_చట్రం)(నిర్మాణం AVHWFramesContext *fc, AVVk_చట్రం *vkf);
 
     /**
      * Similar to lock_frame(), unlocks a frame. Must only be called after locking.
      */
-    void (*unlock_frame)(struct AVHWFramesContext *fc, AVVkFrame *vkf);
-} AVVulkanFramesContext;
+    శూన్య (*unlock_చట్రం)(నిర్మాణం AVHWFramesContext *fc, AVVk_చట్రం *vkf);
+} AVVulkan_చట్రాలు_Context;
 
 /*
  * Frame structure.
@@ -258,12 +258,12 @@ typedef struct AVVulkanFramesContext {
  * @note the size of this structure is not part of the ABI, to allocate
  * you must use @av_vk_frame_alloc().
  */
-struct AVVkFrame {
+నిర్మాణం AVVk_చట్రం {
     /**
      * Vulkan images to which the memory is bound to.
      * May be one for multiplane formats, or multiple.
      */
-    VkImage img[AV_NUM_DATA_POINTERS];
+    VkImage img[AV_అంకె_దత్తాంశం_సూచికలు];
 
     /**
      * Tiling for the frame.
@@ -276,19 +276,19 @@ struct AVVkFrame {
      * In case of having multiple VkImages, but one memory, the offset field
      * will indicate the bound offset for each image.
      */
-    VkDeviceMemory mem[AV_NUM_DATA_POINTERS];
-    size_t size[AV_NUM_DATA_POINTERS];
+    Vk_Device_జ్ఞాపకం mem[AV_అంకె_దత్తాంశం_సూచికలు];
+    size_t కొలత[AV_అంకె_దత్తాంశం_సూచికలు];
 
     /**
      * OR'd flags for all memory allocated
      */
-    VkMemoryPropertyFlagBits flags;
+    Vk_జ్ఞాపకం_Property_Flag_బిట్లు flags;
 
     /**
      * Updated after every barrier. One per VkImage.
      */
-    VkAccessFlagBits2 access[AV_NUM_DATA_POINTERS];
-    VkImageLayout layout[AV_NUM_DATA_POINTERS];
+    VkAccessFlagBits2 access[AV_అంకె_దత్తాంశం_సూచికలు];
+    VkImageLayout layout[AV_అంకె_దత్తాంశం_సూచికలు];
 
     /**
      * Synchronization timeline semaphores, one for each VkImage.
@@ -296,7 +296,7 @@ struct AVVkFrame {
      * the value in sem_value, and must be signalled at every submission,
      * using an incremented value.
      */
-    VkSemaphore sem[AV_NUM_DATA_POINTERS];
+    VkSemaphore sem[AV_అంకె_దత్తాంశం_సూచికలు];
 
     /**
      * Up to date semaphore value at which each image becomes accessible.
@@ -304,52 +304,52 @@ struct AVVkFrame {
      * Clients must wait on this value when submitting a command queue,
      * and increment it when signalling.
      */
-    uint64_t sem_value[AV_NUM_DATA_POINTERS];
+    uint64_t sem_విలువ[AV_అంకె_దత్తాంశం_సూచికలు];
 
     /**
      * Describes the binding offset of each image to the VkDeviceMemory.
      * One per VkImage.
      */
-    ptrdiff_t offset[AV_NUM_DATA_POINTERS];
+    ptrdiff_t స్థానభ్రంశం[AV_అంకె_దత్తాంశం_సూచికలు];
 
     /**
      * Queue family of the images. Must be VK_QUEUE_FAMILY_IGNORED if
      * the image was allocated with the CONCURRENT concurrency option.
      * One per VkImage.
      */
-    uint32_t queue_family[AV_NUM_DATA_POINTERS];
+    uint32_t వరుస_family[AV_అంకె_దత్తాంశం_సూచికలు];
 
     /**
      * Internal data. Not to be accessed by users in any way.
      */
-    struct AVVkFrameInternal *internal;
+    నిర్మాణం AVVk_చట్రం_అంతర్గత *అంతర్గత;
 };
 
 /**
  * Allocates a single AVVkFrame and initializes everything as 0.
  * @note Must be freed via av_free()
  */
-AVVkFrame *av_vk_frame_alloc(void);
+AVVk_చట్రం *av_vk_చట్రం_alloc(శూన్య);
 
 /**
  * Returns the optimal per-plane Vulkan format for a given sw_format,
  * one for each plane.
  * Returns NULL on unsupported formats.
  */
-const VkFormat *av_vkfmt_from_pixfmt(enum AVPixelFormat p);
+స్థిరరాశి VkFormat *av_vkfmt_from_pixfmt(గణన AVPixelFormat p);
 
 /**
  * Returns an array of optional Vulkan instance extensions that FFmpeg
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_instance_extensions(int *count);
+స్థిరరాశి అక్షరం **av_vk_get_optional_instance_extensions(పూర్ణాంకం *లెక్క);
 
 /**
  * Returns an array of optional Vulkan device extensions that FFmpeg
  * may use if enabled.
  * @note Must be freed via av_free()
  */
-const char **av_vk_get_optional_device_extensions(int *count);
+స్థిరరాశి అక్షరం **av_vk_get_optional_device_extensions(పూర్ణాంకం *లెక్క);
 
-#endif /* AVUTIL_HWCONTEXT_VULKAN_H */
+#అయితే_ముగింపు /* AVUTIL_HWCONTEXT_VULKAN_H */

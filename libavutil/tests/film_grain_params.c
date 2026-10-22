@@ -16,228 +16,228 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#అన్తర్భావ <stdio.h>
 
-#include "libavutil/film_grain_params.h"
-#include "libavutil/mem.h"
+#అన్తర్భావ "libavutil/film_grain_params.h"
+#అన్తర్భావ "libavutil/mem.h"
 
-static AVFrame *create_frame(enum AVPixelFormat format, int width, int height)
+స్థిర AVFrame *create_చట్రం(గణన AVPixelFormat format, పూర్ణాంకం వెడల్పు, పూర్ణాంకం ఎత్తు)
 {
-    AVFrame *frame = av_frame_alloc();
-    if (!frame)
-        return NULL;
-    frame->format = format;
-    frame->width  = width;
-    frame->height = height;
-    return frame;
+    AVFrame *చట్రం = av_చట్రం_alloc();
+    ఒకవేళ (!చట్రం)
+        తిరిగి ఖాళీ;
+    చట్రం->format = format;
+    చట్రం->వెడల్పు  = వెడల్పు;
+    చట్రం->ఎత్తు = ఎత్తు;
+    తిరిగి చట్రం;
 }
 
-static AVFilmGrainParams *add_grain(AVFrame *frame,
-                                     enum AVFilmGrainParamsType type,
-                                     int width, int height,
-                                     int sub_x, int sub_y,
-                                     int bd_luma, int bd_chroma)
+స్థిర AVFilmGrainParams *కూడు_grain(AVFrame *చట్రం,
+                                     గణన AVFilmGrainParamsType type,
+                                     పూర్ణాంకం వెడల్పు, పూర్ణాంకం ఎత్తు,
+                                     పూర్ణాంకం sub_x, పూర్ణాంకం sub_y,
+                                     పూర్ణాంకం bd_luma, పూర్ణాంకం bd_chroma)
 {
-    AVFilmGrainParams *fgp = av_film_grain_params_create_side_data(frame);
-    if (!fgp)
-        return NULL;
+    AVFilmGrainParams *fgp = av_film_grain_params_create_side_దత్తాంశం(చట్రం);
+    ఒకవేళ (!fgp)
+        తిరిగి ఖాళీ;
     fgp->type             = type;
-    fgp->width            = width;
-    fgp->height           = height;
+    fgp->వెడల్పు            = వెడల్పు;
+    fgp->ఎత్తు           = ఎత్తు;
     fgp->subsampling_x    = sub_x;
     fgp->subsampling_y    = sub_y;
-    fgp->bit_depth_luma   = bd_luma;
-    fgp->bit_depth_chroma = bd_chroma;
-    return fgp;
+    fgp->బిట్టు_లోతు_luma   = bd_luma;
+    fgp->బిట్టు_లోతు_chroma = bd_chroma;
+    తిరిగి fgp;
 }
 
-int main(void)
+పూర్ణాంకం ప్రధాన(శూన్య)
 {
     AVFilmGrainParams *fgp;
-    const AVFilmGrainParams *sel;
-    AVFrame *frame;
-    size_t size;
+    స్థిరరాశి AVFilmGrainParams *sel;
+    AVFrame *చట్రం;
+    size_t కొలత;
 
-    printf("Testing av_film_grain_params_alloc()\n");
+    రాయి("Testing av_film_grain_params_alloc()\n");
 
-    fgp = av_film_grain_params_alloc(&size);
-    printf("alloc with size: %s\n", (fgp && size > 0) ? "OK" : "FAIL");
+    fgp = av_film_grain_params_alloc(&కొలత);
+    రాయి("alloc with size: %s\n", (fgp && కొలత > 0) ? "OK" : "FAIL");
     av_free(fgp);
 
-    fgp = av_film_grain_params_alloc(NULL);
-    printf("alloc without size: %s\n", fgp ? "OK" : "FAIL");
+    fgp = av_film_grain_params_alloc(ఖాళీ);
+    రాయి("alloc without size: %s\n", fgp ? "OK" : "FAIL");
     av_free(fgp);
 
-    printf("\nTesting av_film_grain_params_create_side_data()\n");
+    రాయి("\nTesting av_film_grain_params_create_side_data()\n");
 
-    frame = av_frame_alloc();
-    fgp = av_film_grain_params_create_side_data(frame);
-    if (fgp)
-        printf("create: OK\ndefaults: range=%d pri=%d trc=%d space=%d\n",
+    చట్రం = av_చట్రం_alloc();
+    fgp = av_film_grain_params_create_side_దత్తాంశం(చట్రం);
+    ఒకవేళ (fgp)
+        రాయి("create: OK\ndefaults: range=%d pri=%d trc=%d space=%d\n",
                fgp->color_range, fgp->color_primaries,
                fgp->color_trc, fgp->color_space);
-    else
-        printf("create: FAIL\n");
-    av_frame_free(&frame);
+    లేకపోతే
+        రాయి("create: FAIL\n");
+    av_చట్రం_free(&చట్రం);
 
-    printf("\nTesting av_film_grain_params_select()\n");
+    రాయి("\nTesting av_film_grain_params_select()\n");
 
     /* invalid format */
-    frame = av_frame_alloc();
-    frame->format = -1;
-    sel = av_film_grain_params_select(frame);
-    printf("invalid format: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    చట్రం = av_చట్రం_alloc();
+    చట్రం->format = -1;
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("invalid format: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* no side data */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    sel = av_film_grain_params_select(frame);
-    printf("no side data: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("no side data: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* NONE type - skipped */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_NONE, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("NONE type: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_NONE, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("NONE type: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* AV1 exact subsampling match (YUV420P: sub 1,1) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("AV1 match: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("AV1 match: %s\n", sel ? "OK" : "FAIL");
+    av_చట్రం_free(&చట్రం);
 
     /* AV1 subsampling mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 0, 0, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("AV1 sub mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 0, 0, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("AV1 sub mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* H274 exact match */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("H274 match: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("H274 match: %s\n", sel ? "OK" : "FAIL");
+    av_చట్రం_free(&చట్రం);
 
     /* H274 lower subsampling OK (grain sub 0,0 < YUV420P sub 1,1) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 0, 0, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("H274 lower sub: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 0, 0, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("H274 lower sub: %s\n", sel ? "OK" : "FAIL");
+    av_చట్రం_free(&చట్రం);
 
     /* H274 higher subsampling FAIL (grain sub 1,1 > YUV444P sub 0,0) */
-    frame = create_frame(AV_PIX_FMT_YUV444P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("H274 higher sub: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV444P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_H274, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("H274 higher sub: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* width too large */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 3840, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("width too large: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 3840, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("width too large: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* height too large */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 2160, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("height too large: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 2160, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("height too large: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* width/height = 0 (unspecified) - passes */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("size unspecified: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("size unspecified: %s\n", sel ? "OK" : "FAIL");
+    av_చట్రం_free(&చట్రం);
 
     /* bit_depth_luma mismatch (grain=10, YUV420P=8) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 10, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("bd_luma mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 10, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("bd_luma mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* bit_depth_chroma mismatch (grain=10, YUV420P=8) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 10);
-    sel = av_film_grain_params_select(frame);
-    printf("bd_chroma mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 10);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("bd_chroma mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* bit_depth = 0 (unspecified) - passes */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("bd unspecified: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("bd unspecified: %s\n", sel ? "OK" : "FAIL");
+    av_చట్రం_free(&చట్రం);
 
     /* bit_depth exact match (grain=8, YUV420P=8) */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 8, 8);
-    sel = av_film_grain_params_select(frame);
-    printf("bd exact match: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 8, 8);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("bd exact match: %s\n", sel ? "OK" : "FAIL");
+    av_చట్రం_free(&చట్రం);
 
     /* color_range mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    frame->color_range = AVCOL_RANGE_MPEG;
-    fgp = add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    చట్రం->color_range = AVCOL_RANGE_MPEG;
+    fgp = కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
     fgp->color_range = AVCOL_RANGE_JPEG;
-    sel = av_film_grain_params_select(frame);
-    printf("color_range mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("color_range mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* color_primaries mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    frame->color_primaries = AVCOL_PRI_BT709;
-    fgp = add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    చట్రం->color_primaries = AVCOL_PRI_BT709;
+    fgp = కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
     fgp->color_primaries = AVCOL_PRI_BT470M;
-    sel = av_film_grain_params_select(frame);
-    printf("color_primaries mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("color_primaries mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* color_trc mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    frame->color_trc = AVCOL_TRC_BT709;
-    fgp = add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    చట్రం->color_trc = AVCOL_TRC_BT709;
+    fgp = కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
     fgp->color_trc = AVCOL_TRC_GAMMA22;
-    sel = av_film_grain_params_select(frame);
-    printf("color_trc mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("color_trc mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* color_space mismatch */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    frame->colorspace = AVCOL_SPC_BT709;
-    fgp = add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    చట్రం->colorspace = AVCOL_SPC_BT709;
+    fgp = కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
     fgp->color_space = AVCOL_SPC_BT470BG;
-    sel = av_film_grain_params_select(frame);
-    printf("color_space mismatch: %s\n", sel ? "FAIL" : "NULL");
-    av_frame_free(&frame);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("color_space mismatch: %s\n", sel ? "FAIL" : "NULL");
+    av_చట్రం_free(&చట్రం);
 
     /* color properties UNSPECIFIED - passes */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("color unspecified: %s\n", sel ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 0, 0, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("color unspecified: %s\n", sel ? "OK" : "FAIL");
+    av_చట్రం_free(&చట్రం);
 
     /* multiple entries - best selection by size */
-    frame = create_frame(AV_PIX_FMT_YUV420P, 1920, 1080);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 640,  480,  1, 1, 0, 0);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 1280, 720,  1, 1, 0, 0);
-    add_grain(frame, AV_FILM_GRAIN_PARAMS_AV1, 1000, 1080, 1, 1, 0, 0);
-    sel = av_film_grain_params_select(frame);
-    printf("best selection: width=%d height=%d\n",
-           sel ? sel->width : -1, sel ? sel->height : -1);
-    av_frame_free(&frame);
+    చట్రం = create_చట్రం(AV_PIX_FMT_YUV420P, 1920, 1080);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 640,  480,  1, 1, 0, 0);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 1280, 720,  1, 1, 0, 0);
+    కూడు_grain(చట్రం, AV_FILM_GRAIN_PARAMS_AV1, 1000, 1080, 1, 1, 0, 0);
+    sel = av_film_grain_params_select(చట్రం);
+    రాయి("best selection: width=%d height=%d\n",
+           sel ? sel->వెడల్పు : -1, sel ? sel->ఎత్తు : -1);
+    av_చట్రం_free(&చట్రం);
 
-    return 0;
+    తిరిగి 0;
 }

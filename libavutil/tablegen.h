@@ -21,35 +21,35 @@
  * Compatibility libm for table generation files
  */
 
-#ifndef AVUTIL_TABLEGEN_H
-#define AVUTIL_TABLEGEN_H
+#నిర్వచితం_కాకపోతే AVUTIL_TABLEGEN_H
+#నిర్వచించు AVUTIL_TABLEGEN_H
 
-#include <math.h>
+#అన్తర్భావ <math.h>
 
 // we lack some functions on all host platforms, and we don't care about
 // performance and/or strict ISO C semantics as it's performed at build time
-static inline double ff_cbrt(double x)
+స్థిర అంతఃవరుస ద్విగుణ ff_cbrt(ద్విగుణ x)
 {
-    return x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
+    తిరిగి x < 0 ? -ఘాతం(-x, 1.0 / 3.0) : ఘాతం(x, 1.0 / 3.0);
 }
-#define cbrt ff_cbrt
+#నిర్వచించు cbrt ff_cbrt
 
-static inline double ff_rint(double x)
+స్థిర అంతఃవరుస ద్విగుణ ff_rint(ద్విగుణ x)
 {
-    return x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
+    తిరిగి x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
 }
-#define rint ff_rint
+#నిర్వచించు rint ff_rint
 
-static inline long long ff_llrint(double x)
+స్థిర అంతఃవరుస దీర్ఘ దీర్ఘ ff_llrint(ద్విగుణ x)
 {
-    return rint(x);
+    తిరిగి rint(x);
 }
-#define llrint ff_llrint
+#నిర్వచించు llrint ff_llrint
 
-static inline long ff_lrint(double x)
+స్థిర అంతఃవరుస దీర్ఘ ff_lrint(ద్విగుణ x)
 {
-    return rint(x);
+    తిరిగి rint(x);
 }
-#define lrint ff_lrint
+#నిర్వచించు lrint ff_lrint
 
-#endif /* AVUTIL_TABLEGEN_H */
+#అయితే_ముగింపు /* AVUTIL_TABLEGEN_H */

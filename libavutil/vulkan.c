@@ -18,42 +18,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "avassert.h"
-#include "mem.h"
-#include "random_seed.h"
-#include "refstruct.h"
+#అన్తర్భావ "config.h"
+#అన్తర్భావ "avassert.h"
+#అన్తర్భావ "mem.h"
+#అన్తర్భావ "random_seed.h"
+#అన్తర్భావ "refstruct.h"
 
-#include "vulkan.h"
-#include "libavutil/vulkan_loader.h"
+#అన్తర్భావ "vulkan.h"
+#అన్తర్భావ "libavutil/vulkan_loader.h"
 
-#if CONFIG_SHADER_COMPRESSION
-#include "libavutil/zlib_utils.h"
-#endif
+#ఒకవేళ CONFIG_SHADER_COMPRESSION
+#అన్తర్భావ "libavutil/zlib_utils.h"
+#అయితే_ముగింపు
 
-const VkComponentMapping ff_comp_identity_map = {
-    .r = VK_COMPONENT_SWIZZLE_IDENTITY,
-    .g = VK_COMPONENT_SWIZZLE_IDENTITY,
-    .b = VK_COMPONENT_SWIZZLE_IDENTITY,
-    .a = VK_COMPONENT_SWIZZLE_IDENTITY,
+స్థిరరాశి VkComponentMapping ff_comp_తటస్థం_map = {
+    .r = VK_COMPONENT_SWIZZLE_తటస్థం,
+    .g = VK_COMPONENT_SWIZZLE_తటస్థం,
+    .b = VK_COMPONENT_SWIZZLE_తటస్థం,
+    .a = VK_COMPONENT_SWIZZLE_తటస్థం,
 };
 
 /* Converts return values to strings */
-const char *ff_vk_ret2str(VkResult res)
+స్థిరరాశి అక్షరం *ff_vk_ret2str(Vk_ఫలితం res)
 {
-#define CASE(VAL) case VAL: return #VAL
-    switch (res) {
+#నిర్వచించు CASE(VAL) స్థితి VAL: తిరిగి #VAL
+    ఎంపిక (res) {
     CASE(VK_SUCCESS);
     CASE(VK_NOT_READY);
     CASE(VK_TIMEOUT);
-    CASE(VK_EVENT_SET);
+    CASE(VK_EVENT_సమితి);
     CASE(VK_EVENT_RESET);
     CASE(VK_INCOMPLETE);
-    CASE(VK_ERROR_OUT_OF_HOST_MEMORY);
-    CASE(VK_ERROR_OUT_OF_DEVICE_MEMORY);
+    CASE(VK_ERROR_బహిర్గతం_యొక్క_HOST_జ్ఞాపకం);
+    CASE(VK_ERROR_బహిర్గతం_యొక్క_DEVICE_జ్ఞాపకం);
     CASE(VK_ERROR_INITIALIZATION_FAILED);
-    CASE(VK_ERROR_DEVICE_LOST);
-    CASE(VK_ERROR_MEMORY_MAP_FAILED);
+    CASE(VK_ERROR_DEVICE_కోల్పోయిన);
+    CASE(VK_ERROR_జ్ఞాపకం_MAP_FAILED);
     CASE(VK_ERROR_LAYER_NOT_PRESENT);
     CASE(VK_ERROR_EXTENSION_NOT_PRESENT);
     CASE(VK_ERROR_FEATURE_NOT_PRESENT);
@@ -62,15 +62,15 @@ const char *ff_vk_ret2str(VkResult res)
     CASE(VK_ERROR_FORMAT_NOT_SUPPORTED);
     CASE(VK_ERROR_FRAGMENTED_POOL);
     CASE(VK_ERROR_UNKNOWN);
-    CASE(VK_ERROR_OUT_OF_POOL_MEMORY);
+    CASE(VK_ERROR_బహిర్గతం_యొక్క_POOL_జ్ఞాపకం);
     CASE(VK_ERROR_INVALID_EXTERNAL_HANDLE);
     CASE(VK_ERROR_FRAGMENTATION);
-    CASE(VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS);
+    CASE(VK_ERROR_INVALID_OPAQUE_CAPTURE_చిరునామా);
     CASE(VK_PIPELINE_COMPILE_REQUIRED);
-    CASE(VK_ERROR_SURFACE_LOST_KHR);
-    CASE(VK_ERROR_NATIVE_WINDOW_IN_USE_KHR);
+    CASE(VK_ERROR_SURFACE_కోల్పోయిన_KHR);
+    CASE(VK_ERROR_NATIVE_కిటికీ_లోపల_USE_KHR);
     CASE(VK_SUBOPTIMAL_KHR);
-    CASE(VK_ERROR_OUT_OF_DATE_KHR);
+    CASE(VK_ERROR_బహిర్గతం_యొక్క_DATE_KHR);
     CASE(VK_ERROR_INCOMPATIBLE_DISPLAY_KHR);
     CASE(VK_ERROR_VALIDATION_FAILED_EXT);
     CASE(VK_ERROR_INVALID_SHADER_NV);
@@ -78,77 +78,77 @@ const char *ff_vk_ret2str(VkResult res)
     CASE(VK_ERROR_VIDEO_PROFILE_OPERATION_NOT_SUPPORTED_KHR);
     CASE(VK_ERROR_VIDEO_PROFILE_FORMAT_NOT_SUPPORTED_KHR);
     CASE(VK_ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR);
-    CASE(VK_ERROR_VIDEO_STD_VERSION_NOT_SUPPORTED_KHR);
+    CASE(VK_ERROR_VIDEO_STD_సంస్కరణ_NOT_SUPPORTED_KHR);
     CASE(VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT);
     CASE(VK_ERROR_NOT_PERMITTED_KHR);
-    CASE(VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT);
+    CASE(VK_ERROR_నిండిన_SCREEN_EXCLUSIVE_బహుళకం_కోల్పోయిన_EXT);
     CASE(VK_THREAD_IDLE_KHR);
-    CASE(VK_THREAD_DONE_KHR);
+    CASE(VK_THREAD_పూర్తి_KHR);
     CASE(VK_OPERATION_DEFERRED_KHR);
     CASE(VK_OPERATION_NOT_DEFERRED_KHR);
-    default: return "Unknown error";
+    అప్రమేయ: తిరిగి "Unknown error";
     }
-#undef CASE
+#నిర్వచనం_రద్దు CASE
 }
 
 /* Malitia pura, Khronos */
-#define FN_MAP_TO(dst_t, dst_name, src_t, src_name)                                 \
-    dst_t ff_vk_map_ ##src_name## _to_ ##dst_name(src_t src) \
+#నిర్వచించు FN_MAP_గమ్యం(dst_t, dst_name, src_t, src_name)                                 \
+    dst_t ff_vk_map_ ##src_name## గమ్యం_2 ##dst_name(src_t src) \
     {                                                                   \
         dst_t dst = 0x0;                                                \
-        MAP_TO(VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT,                   \
-               VK_IMAGE_USAGE_SAMPLED_BIT);                             \
-        MAP_TO(VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT,                    \
-               VK_IMAGE_USAGE_TRANSFER_SRC_BIT);                        \
-        MAP_TO(VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT,                    \
-               VK_IMAGE_USAGE_TRANSFER_DST_BIT);                        \
-        MAP_TO(VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT,                   \
-               VK_IMAGE_USAGE_STORAGE_BIT);                             \
-        MAP_TO(VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT,                \
-               VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);                    \
-        MAP_TO(VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR,         \
-               VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR);                \
-        MAP_TO(VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR,            \
-               VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR);                \
-        MAP_TO(VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR,            \
-               VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR);                \
-        MAP_TO(VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR,          \
-               VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR);                \
-        MAP_TO(VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT,         \
-               VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT);                   \
-        return dst;                                                     \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_బిట్టు,                   \
+               VK_IMAGE_USAGE_SAMPLED_బిట్టు);                             \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_TRANSFER_SRC_బిట్టు,                    \
+               VK_IMAGE_USAGE_TRANSFER_SRC_బిట్టు);                        \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_TRANSFER_DST_బిట్టు,                    \
+               VK_IMAGE_USAGE_TRANSFER_DST_బిట్టు);                        \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_STORAGE_IMAGE_బిట్టు,                   \
+               VK_IMAGE_USAGE_STORAGE_బిట్టు);                             \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_బిట్టు,                \
+               VK_IMAGE_USAGE_COLOR_ATTACHMENT_బిట్టు);                    \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_బిట్టు_KHR,         \
+               VK_IMAGE_USAGE_VIDEO_DECODE_DST_బిట్టు_KHR);                \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_బిట్టు_KHR,            \
+               VK_IMAGE_USAGE_VIDEO_DECODE_DPB_బిట్టు_KHR);                \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_బిట్టు_KHR,            \
+               VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_బిట్టు_KHR);                \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_VIDEO_ENCODE_ఆదానం_బిట్టు_KHR,          \
+               VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_బిట్టు_KHR);                \
+        MAP_గమ్యం(VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_బిట్టు_EXT,         \
+               VK_IMAGE_USAGE_HOST_TRANSFER_బిట్టు_EXT);                   \
+        తిరిగి dst;                                                     \
     }
 
-#define MAP_TO(flag1, flag2) if (src & flag2) dst |= flag1;
-FN_MAP_TO(VkFormatFeatureFlagBits2, feats, VkImageUsageFlags, usage)
-#undef MAP_TO
-#define MAP_TO(flag1, flag2) if (src & flag1) dst |= flag2;
-FN_MAP_TO(VkImageUsageFlags, usage, VkFormatFeatureFlagBits2, feats)
-#undef MAP_TO
-#undef FN_MAP_TO
+#నిర్వచించు MAP_గమ్యం(flag1, flag2) ఒకవేళ (src & flag2) dst |= flag1;
+FN_MAP_గమ్యం(VkFormatFeatureFlagBits2, feats, VkImageUsageFlags, usage)
+#నిర్వచనం_రద్దు MAP_గమ్యం
+#నిర్వచించు MAP_గమ్యం(flag1, flag2) ఒకవేళ (src & flag1) dst |= flag2;
+FN_MAP_గమ్యం(VkImageUsageFlags, usage, VkFormatFeatureFlagBits2, feats)
+#నిర్వచనం_రద్దు MAP_గమ్యం
+#నిర్వచనం_రద్దు FN_MAP_గమ్యం
 
-static void load_enabled_qfs(FFVulkanContext *s)
+స్థిర శూన్య ఎక్కించు_enabled_qfs(FFVulkanContext *s)
 {
     s->nb_qfs = 0;
-    for (int i = 0; i < s->hwctx->nb_qf; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < s->hwctx->nb_qf; i++) {
         /* Skip duplicates */
-        int skip = 0;
-        for (int j = 0; j < s->nb_qfs; j++) {
-            if (s->qfs[j] == s->hwctx->qf[i].idx) {
+        పూర్ణాంకం skip = 0;
+        కొరకు (పూర్ణాంకం j = 0; j < s->nb_qfs; j++) {
+            ఒకవేళ (s->qfs[j] == s->hwctx->qf[i].idx) {
                 skip = 1;
-                break;
+                ఆపు;
             }
         }
-        if (skip)
-            continue;
+        ఒకవేళ (skip)
+            కొనసాగు;
 
         s->qfs[s->nb_qfs++] = s->hwctx->qf[i].idx;
     }
 }
 
-static void reset_imageviews(AVRefStructOpaque unused, void *obj);
+స్థిర శూన్య reset_imageviews(AVRefStructOpaque వాడని, శూన్య *obj);
 
-int ff_vk_load_props(FFVulkanContext *s)
+పూర్ణాంకం ff_vk_ఎక్కించు_props(FFVulkanContext *s)
 {
     FFVulkanFunctions *vk = &s->vkfn;
 
@@ -161,23 +161,23 @@ int ff_vk_load_props(FFVulkanContext *s)
     FF_VK_STRUCT_EXT(s, &s->props, &s->driver_props, FF_VK_EXT_NO_FLAG,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES);
     FF_VK_STRUCT_EXT(s, &s->props, &s->subgroup_props, FF_VK_EXT_NO_FLAG,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES);
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_కొలత_CONTROL_PROPERTIES);
 
-    FF_VK_STRUCT_EXT(s, &s->props, &s->push_desc_props, FF_VK_EXT_PUSH_DESCRIPTOR,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR);
-    FF_VK_STRUCT_EXT(s, &s->props, &s->hprops, FF_VK_EXT_EXTERNAL_HOST_MEMORY,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT);
-    FF_VK_STRUCT_EXT(s, &s->props, &s->coop_matrix_props, FF_VK_EXT_COOP_MATRIX,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR);
+    FF_VK_STRUCT_EXT(s, &s->props, &s->నెట్టు_desc_props, FF_VK_EXT_నెట్టు_DESCRIPTOR,
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_నెట్టు_DESCRIPTOR_PROPERTIES_KHR);
+    FF_VK_STRUCT_EXT(s, &s->props, &s->hprops, FF_VK_EXT_EXTERNAL_HOST_జ్ఞాపకం,
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_జ్ఞాపకం_HOST_PROPERTIES_EXT);
+    FF_VK_STRUCT_EXT(s, &s->props, &s->coop_మాతృక_props, FF_VK_EXT_COOP_మాతృక,
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_మాతృక_PROPERTIES_KHR);
     FF_VK_STRUCT_EXT(s, &s->props, &s->optical_flow_props, FF_VK_EXT_OPTICAL_FLOW,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPTICAL_FLOW_PROPERTIES_NV);
     FF_VK_STRUCT_EXT(s, &s->props, &s->host_image_props, FF_VK_EXT_HOST_IMAGE_COPY,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT);
 
-#ifdef VK_EXT_shader_long_vector
-    FF_VK_STRUCT_EXT(s, &s->props, &s->long_vector_props, FF_VK_EXT_LONG_VECTOR,
-                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT);
-#endif
+#నిర్వచితమైతే VK_EXT_shader_long_సదిశ
+    FF_VK_STRUCT_EXT(s, &s->props, &s->long_సదిశ_props, FF_VK_EXT_LONG_సదిశ,
+                     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_సదిశ_PROPERTIES_EXT);
+#అయితే_ముగింపు
 
     s->feats = (VkPhysicalDeviceFeatures2) {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
@@ -187,178 +187,178 @@ int ff_vk_load_props(FFVulkanContext *s)
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES);
     FF_VK_STRUCT_EXT(s, &s->feats, &s->atomic_float_feats, FF_VK_EXT_ATOMIC_FLOAT,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT);
-#ifdef VK_KHR_unified_image_layouts
+#నిర్వచితమైతే VK_KHR_unified_image_layouts
     FF_VK_STRUCT_EXT(s, &s->feats, &s->unified_layout_feats, FF_VK_EXT_UNIFIED_IMAGE_LAYOUTS,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR);
-#endif
-#ifdef VK_KHR_maintenance11
+#అయితే_ముగింపు
+#నిర్వచితమైతే VK_KHR_maintenance11
     FF_VK_STRUCT_EXT(s, &s->feats, &s->maintenance_11_feats, FF_VK_EXT_MAINTENANCE_11,
                      VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR);
-#endif
+#అయితే_ముగింపు
 
-    if (!s->imageviews_pool) {
-        s->imageviews_pool = av_refstruct_pool_alloc_ext(sizeof(FFVkImageViews), 0,
-                                                         NULL, NULL, reset_imageviews,
-                                                         NULL, NULL);
-        if (!s->imageviews_pool)
-            return AVERROR(ENOMEM);
+    ఒకవేళ (!s->imageviews_pool) {
+        s->imageviews_pool = av_refstruct_pool_alloc_ext(పరిమాణం(FFVkImageViews), 0,
+                                                         ఖాళీ, ఖాళీ, reset_imageviews,
+                                                         ఖాళీ, ఖాళీ);
+        ఒకవేళ (!s->imageviews_pool)
+            తిరిగి AVERROR(ENOMEM);
     }
 
     /* Try allocating 1024 layouts */
-    s->host_image_copy_layouts = av_malloc(sizeof(*s->host_image_copy_layouts)*1024);
+    s->host_image_copy_layouts = av_malloc(పరిమాణం(*s->host_image_copy_layouts)*1024);
     s->host_image_props.pCopySrcLayouts = s->host_image_copy_layouts;
-    s->host_image_props.copySrcLayoutCount = 512;
+    s->host_image_props.copy_Src_Layout_లెక్క = 512;
     s->host_image_props.pCopyDstLayouts = s->host_image_copy_layouts + 512;
-    s->host_image_props.copyDstLayoutCount = 512;
+    s->host_image_props.copy_Dst_Layout_లెక్క = 512;
 
     vk->GetPhysicalDeviceProperties2(s->hwctx->phys_dev, &s->props);
 
     /* Check if we had enough memory for all layouts */
-    if (s->host_image_props.copySrcLayoutCount == 512 ||
-        s->host_image_props.copyDstLayoutCount == 512) {
+    ఒకవేళ (s->host_image_props.copy_Src_Layout_లెక్క == 512 ||
+        s->host_image_props.copy_Dst_Layout_లెక్క == 512) {
         VkImageLayout *new_array;
-        size_t new_size;
+        size_t new_కొలత;
         s->host_image_props.pCopySrcLayouts =
-        s->host_image_props.pCopyDstLayouts = NULL;
-        s->host_image_props.copySrcLayoutCount =
-        s->host_image_props.copyDstLayoutCount = 0;
+        s->host_image_props.pCopyDstLayouts = ఖాళీ;
+        s->host_image_props.copy_Src_Layout_లెక్క =
+        s->host_image_props.copy_Dst_Layout_లెక్క = 0;
         vk->GetPhysicalDeviceProperties2(s->hwctx->phys_dev, &s->props);
 
-        new_size = s->host_image_props.copySrcLayoutCount +
-                   s->host_image_props.copyDstLayoutCount;
-        new_size *= sizeof(*s->host_image_copy_layouts);
-        new_array = av_realloc(s->host_image_copy_layouts, new_size);
-        if (!new_array)
-            return AVERROR(ENOMEM);
+        new_కొలత = s->host_image_props.copy_Src_Layout_లెక్క +
+                   s->host_image_props.copy_Dst_Layout_లెక్క;
+        new_కొలత *= పరిమాణం(*s->host_image_copy_layouts);
+        new_array = av_realloc(s->host_image_copy_layouts, new_కొలత);
+        ఒకవేళ (!new_array)
+            తిరిగి AVERROR(ENOMEM);
 
         s->host_image_copy_layouts = new_array;
         s->host_image_props.pCopySrcLayouts = new_array;
-        s->host_image_props.pCopyDstLayouts = new_array + s->host_image_props.copySrcLayoutCount;
+        s->host_image_props.pCopyDstLayouts = new_array + s->host_image_props.copy_Src_Layout_లెక్క;
         vk->GetPhysicalDeviceProperties2(s->hwctx->phys_dev, &s->props);
     }
 
-    vk->GetPhysicalDeviceMemoryProperties(s->hwctx->phys_dev, &s->mprops);
+    vk->Get_Physical_Device_జ్ఞాపకం_Properties(s->hwctx->phys_dev, &s->mprops);
     vk->GetPhysicalDeviceFeatures2(s->hwctx->phys_dev, &s->feats);
 
-    for (int i = 0; i < s->mprops.memoryTypeCount; i++)
-        s->host_cached_flag |= s->mprops.memoryTypes[i].propertyFlags &
-                               VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
+    కొరకు (పూర్ణాంకం i = 0; i < s->mprops.జ్ఞాపకం_Type_లెక్క; i++)
+        s->host_cached_flag |= s->mprops.జ్ఞాపకం_Types[i].propertyFlags &
+                               VK_జ్ఞాపకం_PROPERTY_HOST_CACHED_బిట్టు;
 
-    load_enabled_qfs(s);
+    ఎక్కించు_enabled_qfs(s);
 
-    if (s->qf_props)
-        return 0;
+    ఒకవేళ (s->qf_props)
+        తిరిగి 0;
 
-    vk->GetPhysicalDeviceQueueFamilyProperties2(s->hwctx->phys_dev, &s->tot_nb_qfs, NULL);
+    vk->Get_Physical_Device_వరుస_Family_Properties2(s->hwctx->phys_dev, &s->tot_nb_qfs, ఖాళీ);
 
-    s->qf_props = av_calloc(s->tot_nb_qfs, sizeof(*s->qf_props));
-    if (!s->qf_props)
-        return AVERROR(ENOMEM);
+    s->qf_props = av_calloc(s->tot_nb_qfs, పరిమాణం(*s->qf_props));
+    ఒకవేళ (!s->qf_props)
+        తిరిగి AVERROR(ENOMEM);
 
-    s->query_props = av_calloc(s->tot_nb_qfs, sizeof(*s->query_props));
-    if (!s->qf_props) {
+    s->query_props = av_calloc(s->tot_nb_qfs, పరిమాణం(*s->query_props));
+    ఒకవేళ (!s->qf_props) {
         av_freep(&s->qf_props);
-        return AVERROR(ENOMEM);
+        తిరిగి AVERROR(ENOMEM);
     }
 
-    s->video_props = av_calloc(s->tot_nb_qfs, sizeof(*s->video_props));
-    if (!s->video_props) {
+    s->video_props = av_calloc(s->tot_nb_qfs, పరిమాణం(*s->video_props));
+    ఒకవేళ (!s->video_props) {
         av_freep(&s->qf_props);
         av_freep(&s->query_props);
-        return AVERROR(ENOMEM);
+        తిరిగి AVERROR(ENOMEM);
     }
 
-#ifdef VK_KHR_maintenance9
-    s->ownership_props = av_calloc(s->tot_nb_qfs, sizeof(*s->ownership_props));
-    if (!s->ownership_props) {
+#నిర్వచితమైతే VK_KHR_maintenance9
+    s->ownership_props = av_calloc(s->tot_nb_qfs, పరిమాణం(*s->ownership_props));
+    ఒకవేళ (!s->ownership_props) {
         av_freep(&s->qf_props);
         av_freep(&s->query_props);
         av_freep(&s->video_props);
-        return AVERROR(ENOMEM);
+        తిరిగి AVERROR(ENOMEM);
     }
-#endif
+#అయితే_ముగింపు
 
-    for (uint32_t i = 0; i < s->tot_nb_qfs; i++) {
-        s->qf_props[i] = (VkQueueFamilyProperties2) {
-            .sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2,
+    కొరకు (uint32_t i = 0; i < s->tot_nb_qfs; i++) {
+        s->qf_props[i] = (Vk_వరుస_Family_Properties2) {
+            .sType = VK_STRUCTURE_TYPE_వరుస_FAMILY_PROPERTIES_2,
         };
 
-        FF_VK_STRUCT_EXT(s, &s->qf_props[i], &s->query_props[i], FF_VK_EXT_VIDEO_QUEUE,
-                         VK_STRUCTURE_TYPE_QUEUE_FAMILY_QUERY_RESULT_STATUS_PROPERTIES_KHR);
-        FF_VK_STRUCT_EXT(s, &s->qf_props[i], &s->video_props[i], FF_VK_EXT_VIDEO_QUEUE,
-                         VK_STRUCTURE_TYPE_QUEUE_FAMILY_VIDEO_PROPERTIES_KHR);
-#ifdef VK_KHR_maintenance9
+        FF_VK_STRUCT_EXT(s, &s->qf_props[i], &s->query_props[i], FF_VK_EXT_VIDEO_వరుస,
+                         VK_STRUCTURE_TYPE_వరుస_FAMILY_QUERY_ఫలితం_స్థితి_PROPERTIES_KHR);
+        FF_VK_STRUCT_EXT(s, &s->qf_props[i], &s->video_props[i], FF_VK_EXT_VIDEO_వరుస,
+                         VK_STRUCTURE_TYPE_వరుస_FAMILY_VIDEO_PROPERTIES_KHR);
+#నిర్వచితమైతే VK_KHR_maintenance9
         FF_VK_STRUCT_EXT(s, &s->qf_props[i], &s->ownership_props[i], FF_VK_EXT_MAINTENANCE_9,
-                         VK_STRUCTURE_TYPE_QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR);
-#endif
+                         VK_STRUCTURE_TYPE_వరుస_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR);
+#అయితే_ముగింపు
     }
 
-    vk->GetPhysicalDeviceQueueFamilyProperties2(s->hwctx->phys_dev, &s->tot_nb_qfs, s->qf_props);
+    vk->Get_Physical_Device_వరుస_Family_Properties2(s->hwctx->phys_dev, &s->tot_nb_qfs, s->qf_props);
 
-    if (s->extensions & FF_VK_EXT_COOP_MATRIX) {
-        vk->GetPhysicalDeviceCooperativeMatrixPropertiesKHR(s->hwctx->phys_dev,
-                                                            &s->coop_mat_props_nb, NULL);
+    ఒకవేళ (s->extensions & FF_VK_EXT_COOP_మాతృక) {
+        vk->Get_Physical_Device_Cooperative_మాతృక_Properties_KHR(s->hwctx->phys_dev,
+                                                            &s->coop_mat_props_nb, ఖాళీ);
 
-        if (s->coop_mat_props_nb) {
+        ఒకవేళ (s->coop_mat_props_nb) {
             s->coop_mat_props = av_malloc_array(s->coop_mat_props_nb,
-                                                sizeof(VkCooperativeMatrixPropertiesKHR));
-            for (int i = 0; i < s->coop_mat_props_nb; i++) {
-                s->coop_mat_props[i] = (VkCooperativeMatrixPropertiesKHR) {
-                    .sType = VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR,
+                                                పరిమాణం(Vk_Cooperative_మాతృక_Properties_KHR));
+            కొరకు (పూర్ణాంకం i = 0; i < s->coop_mat_props_nb; i++) {
+                s->coop_mat_props[i] = (Vk_Cooperative_మాతృక_Properties_KHR) {
+                    .sType = VK_STRUCTURE_TYPE_COOPERATIVE_మాతృక_PROPERTIES_KHR,
                 };
             }
 
-            vk->GetPhysicalDeviceCooperativeMatrixPropertiesKHR(s->hwctx->phys_dev,
+            vk->Get_Physical_Device_Cooperative_మాతృక_Properties_KHR(s->hwctx->phys_dev,
                                                                 &s->coop_mat_props_nb,
                                                                 s->coop_mat_props);
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-AVVulkanDeviceQueueFamily *ff_vk_qf_find(FFVulkanContext *s,
-                                         VkQueueFlagBits dev_family,
-                                         VkVideoCodecOperationFlagBitsKHR vid_ops)
+AVVulkan_Device_వరుస_Family *ff_vk_qf_కనుగొను(FFVulkanContext *s,
+                                         Vk_వరుస_Flag_బిట్లు dev_family,
+                                         Vk_Video_Codec_Operation_Flag_బిట్లు_KHR vid_ops)
 {
-    for (int i = 0; i < s->hwctx->nb_qf; i++) {
-        if ((s->hwctx->qf[i].flags & dev_family) &&
+    కొరకు (పూర్ణాంకం i = 0; i < s->hwctx->nb_qf; i++) {
+        ఒకవేళ ((s->hwctx->qf[i].flags & dev_family) &&
             (s->hwctx->qf[i].video_caps & vid_ops) == vid_ops) {
-            return &s->hwctx->qf[i];
+            తిరిగి &s->hwctx->qf[i];
         }
     }
-    return NULL;
+    తిరిగి ఖాళీ;
 }
 
-static void exec_discard_deps(FFVulkanContext *s, FFVkExecContext *e);
+స్థిర శూన్య exec_discard_deps(FFVulkanContext *s, FFVkExecContext *e);
 
-void ff_vk_exec_pool_free(FFVulkanContext *s, FFVkExecPool *pool)
+శూన్య ff_vk_exec_pool_free(FFVulkanContext *s, FFVkExecPool *pool)
 {
     FFVulkanFunctions *vk = &s->vkfn;
 
-    for (int i = 0; i < pool->pool_size; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < pool->pool_కొలత; i++) {
         FFVkExecContext *e = &pool->contexts[i];
 
-        if (e->sem) {
+        ఒకవేళ (e->sem) {
             VkSemaphoreWaitInfo sem_wait_info = {
                 .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
-                .semaphoreCount = 1,
+                .semaphore_లెక్క = 1,
                 .pSemaphores = &e->sem,
-                .pValues = &e->sem_value,
+                .p_విలువలు = &e->sem_విలువ,
             };
             vk->WaitSemaphores(s->hwctx->act_dev, &sem_wait_info, UINT64_MAX);
             vk->DestroySemaphore(s->hwctx->act_dev, e->sem, s->hwctx->alloc);
         }
 
         exec_discard_deps(s, e);
-        pthread_mutex_destroy(&e->lock);
+        pthread_mutex_destroy(&e->తాళం_2);
     }
 
     /* Free shader-specific data */
-    for (int i = 0; i < pool->nb_reg_shd; i++) {
-        FFVulkanShaderData *sd = &pool->reg_shd[i];
+    కొరకు (పూర్ణాంకం i = 0; i < pool->nb_reg_shd; i++) {
+        FFVulkan_Shader_దత్తాంశం *sd = &pool->reg_shd[i];
 
-        if (sd->desc_pool)
+        ఒకవేళ (sd->desc_pool)
             vk->DestroyDescriptorPool(s->hwctx->act_dev, sd->desc_pool,
                                       s->hwctx->alloc);
 
@@ -366,184 +366,184 @@ void ff_vk_exec_pool_free(FFVulkanContext *s, FFVkExecPool *pool)
     }
     pool->nb_reg_shd = 0;
 
-    for (int i = 0; i < pool->pool_size; i++) {
-        if (pool->cmd_buf_pools[i])
+    కొరకు (పూర్ణాంకం i = 0; i < pool->pool_కొలత; i++) {
+        ఒకవేళ (pool->cmd_buf_pools[i])
             vk->FreeCommandBuffers(s->hwctx->act_dev, pool->cmd_buf_pools[i],
                                    1, &pool->cmd_bufs[i]);
 
-        if (pool->cmd_buf_pools[i])
+        ఒకవేళ (pool->cmd_buf_pools[i])
             vk->DestroyCommandPool(s->hwctx->act_dev, pool->cmd_buf_pools[i], s->hwctx->alloc);
     }
-    if (pool->query_pool)
+    ఒకవేళ (pool->query_pool)
         vk->DestroyQueryPool(s->hwctx->act_dev, pool->query_pool, s->hwctx->alloc);
 
-    av_free(pool->query_data);
+    av_free(pool->query_దత్తాంశం);
     av_free(pool->cmd_buf_pools);
     av_free(pool->cmd_bufs);
     av_free(pool->contexts);
-    pool->pool_size = 0;
+    pool->pool_కొలత = 0;
 }
 
 /* Per-family, per-library queue selection phases; each library links its own
  * copy, and pools which benefit from spreading are created by the same one */
-static atomic_uint exec_pool_phase[FF_ARRAY_ELEMS(((AVVulkanDeviceContext *)NULL)->qf)];
-static AVOnce exec_pool_phase_seeded = AV_ONCE_INIT;
+స్థిర atomic_uint exec_pool_phase[FF_ARRAY_ELEMS(((AVVulkanDeviceContext *)ఖాళీ)->qf)];
+స్థిర AVOnce exec_pool_phase_seeded = AV_ONCE_INIT;
 
-static void exec_pool_phase_seed(void)
+స్థిర శూన్య exec_pool_phase_విత్తనం(శూన్య)
 {
-    uint32_t seed = av_get_random_seed();
-    for (int i = 0; i < FF_ARRAY_ELEMS(exec_pool_phase); i++)
-        atomic_store_explicit(&exec_pool_phase[i], seed, memory_order_relaxed);
+    uint32_t విత్తనం = av_get_random_విత్తనం();
+    కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(exec_pool_phase); i++)
+        atomic_store_explicit(&exec_pool_phase[i], విత్తనం, memory_order_relaxed);
 }
 
-int ff_vk_exec_pool_init(FFVulkanContext *s, AVVulkanDeviceQueueFamily *qf,
-                         FFVkExecPool *pool, int nb_contexts,
-                         int nb_queries, VkQueryType query_type, int query_64bit,
-                         const void *query_create_pnext)
+పూర్ణాంకం ff_vk_exec_pool_init(FFVulkanContext *s, AVVulkan_Device_వరుస_Family *qf,
+                         FFVkExecPool *pool, పూర్ణాంకం nb_contexts,
+                         పూర్ణాంకం nb_queries, VkQueryType query_type, పూర్ణాంకం query_64bit,
+                         స్థిరరాశి శూన్య *query_create_pnext)
 {
-    int err;
-    VkResult ret;
+    పూర్ణాంకం err;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
 
     VkCommandPoolCreateInfo cqueue_create;
-    VkCommandBufferAllocateInfo cbuf_create;
+    Vk_Command_బఫరు_Allocate_Info cbuf_create;
 
-    const VkQueryPoolVideoEncodeFeedbackCreateInfoKHR *ef = NULL;
+    స్థిరరాశి VkQueryPoolVideoEncodeFeedbackCreateInfoKHR *ef = ఖాళీ;
 
     atomic_init(&pool->idx, 0);
 
-    if (query_type == VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR) {
-        ef = ff_vk_find_struct(query_create_pnext,
+    ఒకవేళ (query_type == VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR) {
+        ef = ff_vk_కనుగొను_struct(query_create_pnext,
                                VK_STRUCTURE_TYPE_QUERY_POOL_VIDEO_ENCODE_FEEDBACK_CREATE_INFO_KHR);
-        if (!ef)
-            return AVERROR(EINVAL);
+        ఒకవేళ (!ef)
+            తిరిగి AVERROR(EINVAL);
     }
 
     /* Allocate space for command buffer pools */
-    pool->cmd_buf_pools = av_malloc(nb_contexts*sizeof(*pool->cmd_buf_pools));
-    if (!pool->cmd_buf_pools) {
+    pool->cmd_buf_pools = av_malloc(nb_contexts*పరిమాణం(*pool->cmd_buf_pools));
+    ఒకవేళ (!pool->cmd_buf_pools) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        వెళ్ళు fail;
     }
 
     /* Allocate space for command buffers */
-    pool->cmd_bufs = av_malloc(nb_contexts*sizeof(*pool->cmd_bufs));
-    if (!pool->cmd_bufs) {
+    pool->cmd_bufs = av_malloc(nb_contexts*పరిమాణం(*pool->cmd_bufs));
+    ఒకవేళ (!pool->cmd_bufs) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        వెళ్ళు fail;
     }
 
-    for (int i = 0; i < nb_contexts; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < nb_contexts; i++) {
         /* Create command pool */
         cqueue_create = (VkCommandPoolCreateInfo) {
             .sType              = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-            .flags              = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT |
-                                  VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-            .queueFamilyIndex   = qf->idx,
+            .flags              = VK_COMMAND_POOL_CREATE_TRANSIENT_బిట్టు |
+                                  VK_COMMAND_POOL_CREATE_RESET_COMMAND_బఫరు_బిట్టు,
+            .వరుస_Family_సూచీ   = qf->idx,
         };
 
         ret = vk->CreateCommandPool(s->hwctx->act_dev, &cqueue_create,
                                     s->hwctx->alloc, &pool->cmd_buf_pools[i]);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Command pool creation failure: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            వెళ్ళు fail;
         }
 
         /* Allocate command buffer */
-        cbuf_create = (VkCommandBufferAllocateInfo) {
-            .sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-            .level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        cbuf_create = (Vk_Command_బఫరు_Allocate_Info) {
+            .sType              = VK_STRUCTURE_TYPE_COMMAND_బఫరు_ALLOCATE_INFO,
+            .level              = VK_COMMAND_బఫరు_LEVEL_PRIMARY,
             .commandPool        = pool->cmd_buf_pools[i],
-            .commandBufferCount = 1,
+            .command_బఫరు_లెక్క = 1,
         };
         ret = vk->AllocateCommandBuffers(s->hwctx->act_dev, &cbuf_create,
                                          &pool->cmd_bufs[i]);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Command buffer alloc failure: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            వెళ్ళు fail;
         }
     }
 
     /* Query pool */
-    if (nb_queries) {
+    ఒకవేళ (nb_queries) {
         VkQueryPoolCreateInfo query_pool_info = {
             .sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO,
-            .pNext = query_create_pnext,
+            .p_తదుపరి = query_create_pnext,
             .queryType = query_type,
-            .queryCount = nb_queries*nb_contexts,
+            .query_లెక్క = nb_queries*nb_contexts,
         };
         ret = vk->CreateQueryPool(s->hwctx->act_dev, &query_pool_info,
                                   s->hwctx->alloc, &pool->query_pool);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Query pool alloc failure: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            వెళ్ళు fail;
         }
 
         pool->nb_queries = nb_queries;
-        pool->query_status_stride = 1 + 1; /* One result, one status by default */
+        pool->query_స్థితి_stride = 1 + 1; /* One result, one status by default */
         pool->query_results = nb_queries;
         pool->query_statuses = nb_queries;
 
         /* Video encode queries produce two results per query */
-        if (query_type == VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR) {
-            int nb_results = av_popcount(ef->encodeFeedbackFlags);
-            pool->query_status_stride = nb_results + 1;
+        ఒకవేళ (query_type == VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR) {
+            పూర్ణాంకం nb_results = av_popcount(ef->encodeFeedbackFlags);
+            pool->query_స్థితి_stride = nb_results + 1;
             pool->query_results *= nb_results;
-        } else if (query_type == VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR) {
-            pool->query_status_stride = 1;
+        } లేకపోతే ఒకవేళ (query_type == VK_QUERY_TYPE_ఫలితం_స్థితి_ONLY_KHR) {
+            pool->query_స్థితి_stride = 1;
             pool->query_results = 0;
         }
 
-        pool->qd_size = (pool->query_results + pool->query_statuses)*(query_64bit ? 8 : 4);
+        pool->qd_కొలత = (pool->query_results + pool->query_statuses)*(query_64bit ? 8 : 4);
 
         /* Allocate space for the query data */
-        pool->query_data = av_calloc(nb_contexts, pool->qd_size);
-        if (!pool->query_data) {
+        pool->query_దత్తాంశం = av_calloc(nb_contexts, pool->qd_కొలత);
+        ఒకవేళ (!pool->query_దత్తాంశం) {
             err = AVERROR(ENOMEM);
-            goto fail;
+            వెళ్ళు fail;
         }
     }
 
     /* Allocate space for the contexts */
-    pool->contexts = av_calloc(nb_contexts, sizeof(*pool->contexts));
-    if (!pool->contexts) {
+    pool->contexts = av_calloc(nb_contexts, పరిమాణం(*pool->contexts));
+    ఒకవేళ (!pool->contexts) {
         err = AVERROR(ENOMEM);
-        goto fail;
+        వెళ్ళు fail;
     }
 
-    pool->pool_size = nb_contexts;
+    pool->pool_కొలత = nb_contexts;
 
-    for (int i = 0; i < pool->pool_size; i++)
-        pthread_mutex_init(&pool->contexts[i].lock, NULL);
+    కొరకు (పూర్ణాంకం i = 0; i < pool->pool_కొలత; i++)
+        pthread_mutex_init(&pool->contexts[i].తాళం_2, ఖాళీ);
 
-#ifdef VK_KHR_internally_synchronized_queues
+#నిర్వచితమైతే VK_KHR_internally_synchronized_queues
     /* Check if the extension and its flag are actually enabled */
-    int internal_queue_sync = 0;
-    if (s->extensions & FF_VK_EXT_INTERNAL_QUEUE_SYNC) {
-        const VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR *iqs;
-        iqs = ff_vk_find_struct(s->hwctx->device_features.pNext,
+    పూర్ణాంకం అంతర్గత_వరుస_sync = 0;
+    ఒకవేళ (s->extensions & FF_VK_EXT_అంతర్గత_వరుస_SYNC) {
+        స్థిరరాశి VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR *iqs;
+        iqs = ff_vk_కనుగొను_struct(s->hwctx->device_features.p_తదుపరి,
                                 VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR);
-        internal_queue_sync = iqs && iqs->internallySynchronizedQueues;
+        అంతర్గత_వరుస_sync = iqs && iqs->internallySynchronizedQueues;
     }
-#endif
+#అయితే_ముగింపు
 
     /* Video pools are pinned to the phase-picked queue (sessions order their
      * execution anyway); all other pools rotate starting from it, so pools
      * advancing in lockstep do not collide. */
     av_assert1(qf->idx < FF_ARRAY_ELEMS(exec_pool_phase));
-    ff_thread_once(&exec_pool_phase_seeded, exec_pool_phase_seed);
+    ff_thread_once(&exec_pool_phase_seeded, exec_pool_phase_విత్తనం);
     uint32_t phase = atomic_fetch_add(&exec_pool_phase[qf->idx], 1);
-    int pin_queue = qf->flags & (VK_QUEUE_VIDEO_DECODE_BIT_KHR |
-                                 VK_QUEUE_VIDEO_ENCODE_BIT_KHR);
+    పూర్ణాంకం pin_వరుస = qf->flags & (VK_వరుస_VIDEO_DECODE_బిట్టు_KHR |
+                                 VK_వరుస_VIDEO_ENCODE_బిట్టు_KHR);
 
     /* Init contexts */
-    for (int i = 0; i < pool->pool_size; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < pool->pool_కొలత; i++) {
         FFVkExecContext *e = &pool->contexts[i];
         VkSemaphoreTypeCreateInfo sem_type = {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
@@ -551,76 +551,76 @@ int ff_vk_exec_pool_init(FFVulkanContext *s, AVVulkanDeviceQueueFamily *qf,
         };
         VkSemaphoreCreateInfo sem_create = {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-            .pNext = &sem_type,
+            .p_తదుపరి = &sem_type,
         };
 
         /* Timeline semaphore carrying the busy state */
         ret = vk->CreateSemaphore(s->hwctx->act_dev, &sem_create, s->hwctx->alloc,
                                   &e->sem);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Failed to create submission semaphore: %s\n",
                    ff_vk_ret2str(ret));
-            return AVERROR_EXTERNAL;
+            తిరిగి AVERROR_EXTERNAL;
         }
 
         e->idx = i;
-        e->parent = pool;
+        e->మాతృ = pool;
 
         /* Query data */
-        e->query_data = ((uint8_t *)pool->query_data) + pool->qd_size*i;
+        e->query_దత్తాంశం = ((uint8_t *)pool->query_దత్తాంశం) + pool->qd_కొలత*i;
         e->query_idx = nb_queries*i;
 
         /* Command buffer */
         e->buf = pool->cmd_bufs[i];
 
         /* Queue index distribution */
-        e->qi = pin_queue ? phase % qf->num : (i + phase) % qf->num;
+        e->qi = pin_వరుస ? phase % qf->అంకె : (i + phase) % qf->అంకె;
         e->qf = qf->idx;
-        VkDeviceQueueInfo2 qinfo = {
-            .sType            = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,
-#ifdef VK_KHR_internally_synchronized_queues
-            .flags            = internal_queue_sync ?
-                                VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR : 0,
-#endif
-            .queueFamilyIndex = qf->idx,
-            .queueIndex       = e->qi,
+        Vk_Device_వరుస_Info2 qinfo = {
+            .sType            = VK_STRUCTURE_TYPE_DEVICE_వరుస_INFO_2,
+#నిర్వచితమైతే VK_KHR_internally_synchronized_queues
+            .flags            = అంతర్గత_వరుస_sync ?
+                                VK_DEVICE_వరుస_CREATE_INTERNALLY_SYNCHRONIZED_బిట్టు_KHR : 0,
+#అయితే_ముగింపు
+            .వరుస_Family_సూచీ = qf->idx,
+            .వరుస_సూచీ       = e->qi,
         };
-        vk->GetDeviceQueue2(s->hwctx->act_dev, &qinfo, &e->queue);
+        vk->GetDeviceQueue2(s->hwctx->act_dev, &qinfo, &e->వరుస);
     }
 
-    return 0;
+    తిరిగి 0;
 
 fail:
     ff_vk_exec_pool_free(s, pool);
-    return err;
+    తిరిగి err;
 }
 
-VkResult ff_vk_exec_get_query(FFVulkanContext *s, FFVkExecContext *e,
-                              void **data, VkQueryResultFlagBits flags)
+Vk_ఫలితం ff_vk_exec_get_query(FFVulkanContext *s, FFVkExecContext *e,
+                              శూన్య **దత్తాంశం, Vk_Query_ఫలితం_Flag_బిట్లు flags)
 {
     FFVulkanFunctions *vk = &s->vkfn;
-    const FFVkExecPool *pool = e->parent;
-    VkQueryResultFlags qf = flags & ~(VK_QUERY_RESULT_64_BIT |
-                                      VK_QUERY_RESULT_WITH_STATUS_BIT_KHR);
+    స్థిరరాశి FFVkExecPool *pool = e->మాతృ;
+    Vk_Query_ఫలితం_Flags qf = flags & ~(VK_QUERY_ఫలితం_64_బిట్టు |
+                                      VK_QUERY_ఫలితం_WITH_స్థితి_బిట్టు_KHR);
 
-    if (!e->query_data) {
+    ఒకవేళ (!e->query_దత్తాంశం) {
         av_log(s, AV_LOG_ERROR, "Requested a query with a NULL query_data pointer!\n");
-        return VK_INCOMPLETE;
+        తిరిగి VK_INCOMPLETE;
     }
 
     qf |= pool->query_64bit ?
-          VK_QUERY_RESULT_64_BIT : 0x0;
+          VK_QUERY_ఫలితం_64_బిట్టు : 0x0;
     qf |= pool->query_statuses ?
-          VK_QUERY_RESULT_WITH_STATUS_BIT_KHR : 0x0;
+          VK_QUERY_ఫలితం_WITH_స్థితి_బిట్టు_KHR : 0x0;
 
-    if (data)
-        *data = e->query_data;
+    ఒకవేళ (దత్తాంశం)
+        *దత్తాంశం = e->query_దత్తాంశం;
 
-    return vk->GetQueryPoolResults(s->hwctx->act_dev, pool->query_pool,
+    తిరిగి vk->GetQueryPoolResults(s->hwctx->act_dev, pool->query_pool,
                                    e->query_idx,
                                    pool->nb_queries,
-                                   pool->qd_size, e->query_data,
-                                   pool->qd_size, qf);
+                                   pool->qd_కొలత, e->query_దత్తాంశం,
+                                   pool->qd_కొలత, qf);
 }
 
 FFVkExecContext *ff_vk_exec_get(FFVulkanContext *s, FFVkExecPool *pool)
@@ -628,57 +628,57 @@ FFVkExecContext *ff_vk_exec_get(FFVulkanContext *s, FFVkExecPool *pool)
     FFVulkanFunctions *vk = &s->vkfn;
 
     /* Release the dependencies of every completed context, rather than leaving them held until reuse */
-    for (int i = 0; i < pool->pool_size; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < pool->pool_కొలత; i++) {
         uint64_t sem_val;
         FFVkExecContext *e = &pool->contexts[i];
-        if (pthread_mutex_trylock(&e->lock))
-            continue; /* In use by a recording or submitting thread */
+        ఒకవేళ (pthread_mutex_trylock(&e->తాళం_2))
+            కొనసాగు; /* In use by a recording or submitting thread */
         /* Busy contexts (counter below sem_value) are claimed or executing:
          * their dependency lists are off-limits */
-        if (vk->GetSemaphoreCounterValue(s->hwctx->act_dev, e->sem, &sem_val) == VK_SUCCESS &&
-            sem_val >= e->sem_value &&
+        ఒకవేళ (vk->Get_Semaphore_Counter_విలువ(s->hwctx->act_dev, e->sem, &sem_val) == VK_SUCCESS &&
+            sem_val >= e->sem_విలువ &&
             (e->nb_buf_deps || e->nb_refstruct_deps || e->nb_obj_deps ||
-             e->nb_frame_deps || e->nb_sw_frame_deps))
+             e->nb_చట్రం_deps || e->nb_sw_చట్రం_deps))
             exec_discard_deps(s, e);
-        pthread_mutex_unlock(&e->lock);
+        pthread_mutex_unlock(&e->తాళం_2);
     }
 
-    return &pool->contexts[atomic_fetch_add(&pool->idx, 1) % pool->pool_size];
+    తిరిగి &pool->contexts[atomic_fetch_add(&pool->idx, 1) % pool->pool_కొలత];
 }
 
-void ff_vk_exec_wait(FFVulkanContext *s, FFVkExecContext *e)
+శూన్య ff_vk_exec_wait(FFVulkanContext *s, FFVkExecContext *e)
 {
     FFVulkanFunctions *vk = &s->vkfn;
     VkSemaphoreWaitInfo sem_wait_info = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
-        .semaphoreCount = 1,
+        .semaphore_లెక్క = 1,
         .pSemaphores = &e->sem,
-        .pValues = &e->sem_value,
+        .p_విలువలు = &e->sem_విలువ,
     };
-    pthread_mutex_lock(&e->lock);
+    pthread_mutex_తాళం(&e->తాళం_2);
     vk->WaitSemaphores(s->hwctx->act_dev, &sem_wait_info, UINT64_MAX);
     exec_discard_deps(s, e);
-    pthread_mutex_unlock(&e->lock);
+    pthread_mutex_unlock(&e->తాళం_2);
 }
 
-int ff_vk_exec_start(FFVulkanContext *s, FFVkExecContext *e)
+పూర్ణాంకం ff_vk_exec_ప్రారంభం(FFVulkanContext *s, FFVkExecContext *e)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
-    const FFVkExecPool *pool = e->parent;
+    స్థిరరాశి FFVkExecPool *pool = e->మాతృ;
 
-    VkCommandBufferBeginInfo cmd_start = {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-        .flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
+    Vk_Command_బఫరు_Begin_Info cmd_ప్రారంభం = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_బఫరు_BEGIN_INFO,
+        .flags = VK_COMMAND_బఫరు_USAGE_ONE_సమయం_SUBMIT_బిట్టు,
     };
     VkSemaphoreWaitInfo sem_wait_info = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
-        .semaphoreCount = 1,
+        .semaphore_లెక్క = 1,
         .pSemaphores = &e->sem,
-        .pValues = &e->sem_value,
+        .p_విలువలు = &e->sem_విలువ,
     };
 
-    pthread_mutex_lock(&e->lock);
+    pthread_mutex_తాళం(&e->తాళం_2);
 
     /* Wait out the context's previous execution */
     vk->WaitSemaphores(s->hwctx->act_dev, &sem_wait_info, UINT64_MAX);
@@ -686,147 +686,147 @@ int ff_vk_exec_start(FFVulkanContext *s, FFVkExecContext *e)
     /* Discard queue dependencies */
     exec_discard_deps(s, e);
 
-    ret = vk->BeginCommandBuffer(e->buf, &cmd_start);
-    if (ret != VK_SUCCESS) {
+    ret = vk->Begin_Command_బఫరు(e->buf, &cmd_ప్రారంభం);
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Failed to start command recoding: %s\n",
                ff_vk_ret2str(ret));
-        pthread_mutex_unlock(&e->lock);
-        return AVERROR_EXTERNAL;
+        pthread_mutex_unlock(&e->తాళం_2);
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    if (pool->nb_queries)
+    ఒకవేళ (pool->nb_queries)
         vk->CmdResetQueryPool(e->buf, pool->query_pool,
                               e->query_idx, pool->nb_queries);
 
     /* Claim: the semaphore stays below this value until submission completes
      * or the recording is discarded, keeping every other user away */
-    e->sem_value++;
+    e->sem_విలువ++;
     e->sem_sig[e->sem_sig_cnt++] = (VkSemaphoreSubmitInfo) {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
         .semaphore = e->sem,
-        .value = e->sem_value,
-        .stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+        .విలువ = e->sem_విలువ,
+        .stage_ముసుగు = VK_PIPELINE_STAGE_2_ALL_COMMANDS_బిట్టు,
     };
 
-    pthread_mutex_unlock(&e->lock);
+    pthread_mutex_unlock(&e->తాళం_2);
 
-    return 0;
+    తిరిగి 0;
 }
 
-static void exec_discard_deps(FFVulkanContext *s, FFVkExecContext *e)
+స్థిర శూన్య exec_discard_deps(FFVulkanContext *s, FFVkExecContext *e)
 {
     FFVulkanFunctions *vk = &s->vkfn;
 
-    for (int j = 0; j < e->nb_buf_deps; j++)
-        av_buffer_unref(&e->buf_deps[j]);
+    కొరకు (పూర్ణాంకం j = 0; j < e->nb_buf_deps; j++)
+        av_బఫరు_unref(&e->buf_deps[j]);
     e->nb_buf_deps = 0;
 
-    for (int j = 0; j < e->nb_refstruct_deps; j++)
+    కొరకు (పూర్ణాంకం j = 0; j < e->nb_refstruct_deps; j++)
         av_refstruct_unref(&e->refstruct_deps[j]);
     e->nb_refstruct_deps = 0;
 
-    for (int j = 0; j < e->nb_obj_deps; j++) {
+    కొరకు (పూర్ణాంకం j = 0; j < e->nb_obj_deps; j++) {
         FFVkExecObjDep *od = &e->obj_deps[j];
-        switch (od->type) {
-        case VK_OBJECT_TYPE_IMAGE_VIEW:
+        ఎంపిక (od->type) {
+        స్థితి VK_OBJECT_TYPE_IMAGE_VIEW:
             vk->DestroyImageView(s->hwctx->act_dev,
                                  (VkImageView)od->obj, s->hwctx->alloc);
-            break;
-        case VK_OBJECT_TYPE_SEMAPHORE:
+            ఆపు;
+        స్థితి VK_OBJECT_TYPE_SEMAPHORE:
             vk->DestroySemaphore(s->hwctx->act_dev,
                                  (VkSemaphore)od->obj, s->hwctx->alloc);
-            break;
-        default:
+            ఆపు;
+        అప్రమేయ:
             av_assert1(0);
         }
     }
     e->nb_obj_deps = 0;
 
-    for (int j = 0; j < e->nb_sw_frame_deps; j++)
-        av_frame_free(&e->sw_frame_deps[j]);
-    e->nb_sw_frame_deps = 0;
+    కొరకు (పూర్ణాంకం j = 0; j < e->nb_sw_చట్రం_deps; j++)
+        av_చట్రం_free(&e->sw_చట్రం_deps[j]);
+    e->nb_sw_చట్రం_deps = 0;
 
-    for (int j = 0; j < e->nb_frame_deps; j++) {
-        AVFrame *f = e->frame_deps[j];
-        if (e->frame_locked[j]) {
-            AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-            AVVulkanFramesContext *vkfc = hwfc->hwctx;
-            AVVkFrame *vkf = (AVVkFrame *)f->data[0];
-            vkfc->unlock_frame(hwfc, vkf);
-            e->frame_locked[j] = 0;
+    కొరకు (పూర్ణాంకం j = 0; j < e->nb_చట్రం_deps; j++) {
+        AVFrame *f = e->చట్రం_deps[j];
+        ఒకవేళ (e->చట్రం_locked[j]) {
+            AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_చట్రాలు_ctx->దత్తాంశం;
+            AVVulkan_చట్రాలు_Context *vkfc = hwfc->hwctx;
+            AVVk_చట్రం *vkf = (AVVk_చట్రం *)f->దత్తాంశం[0];
+            vkfc->unlock_చట్రం(hwfc, vkf);
+            e->చట్రం_locked[j] = 0;
         }
-        e->frame_update[j] = 0;
+        e->చట్రం_update[j] = 0;
     }
-    e->nb_frame_deps = 0;
+    e->nb_చట్రం_deps = 0;
 
     e->sem_wait_cnt = 0;
     e->sem_sig_cnt = 0;
     e->sem_sig_val_dst_cnt = 0;
 }
 
-void ff_vk_exec_discard(FFVulkanContext *s, FFVkExecContext *e)
+శూన్య ff_vk_exec_discard(FFVulkanContext *s, FFVkExecContext *e)
 {
     FFVulkanFunctions *vk = &s->vkfn;
     VkSemaphoreSignalInfo sig_info = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO,
         .semaphore = e->sem,
-        .value = e->sem_value,
+        .విలువ = e->sem_విలువ,
     };
 
     /* An abandoned recording is exclusively the claimer's: free everything
      * without the mutex, and un-claim last by signalling the burnt generation */
     exec_discard_deps(s, e);
-    vk->ResetCommandBuffer(e->buf, 0);
+    vk->Reset_Command_బఫరు(e->buf, 0);
     vk->SignalSemaphore(s->hwctx->act_dev, &sig_info);
 }
 
-void ff_vk_exec_add_dep_refstruct(FFVulkanContext *s, FFVkExecContext *e,
-                                  void *obj)
+శూన్య ff_vk_exec_కూడు_dep_refstruct(FFVulkanContext *s, FFVkExecContext *e,
+                                  శూన్య *obj)
 {
     av_assert1(e->nb_refstruct_deps < FF_VK_EXEC_MAX_BUF_DEPS);
     e->refstruct_deps[e->nb_refstruct_deps++] = av_refstruct_ref(obj);
 }
 
-void ff_vk_exec_move_dep_refstruct(FFVulkanContext *s, FFVkExecContext *e,
-                                   void *obj)
+శూన్య ff_vk_exec_move_dep_refstruct(FFVulkanContext *s, FFVkExecContext *e,
+                                   శూన్య *obj)
 {
-    void **ptr = obj;
+    శూన్య **ptr = obj;
 
     av_assert1(e->nb_refstruct_deps < FF_VK_EXEC_MAX_BUF_DEPS);
 
-    for (int i = 0; i < e->nb_refstruct_deps; i++) {
-        if (e->refstruct_deps[i] == *ptr) {
+    కొరకు (పూర్ణాంకం i = 0; i < e->nb_refstruct_deps; i++) {
+        ఒకవేళ (e->refstruct_deps[i] == *ptr) {
             av_refstruct_unref(obj);
-            return;
+            తిరిగి;
         }
     }
 
     e->refstruct_deps[e->nb_refstruct_deps++] = *ptr;
-    *ptr = NULL;
+    *ptr = ఖాళీ;
 }
 
-void ff_vk_exec_add_dep_obj(FFVulkanContext *s, FFVkExecContext *e,
+శూన్య ff_vk_exec_కూడు_dep_obj(FFVulkanContext *s, FFVkExecContext *e,
                             VkObjectType type, uint64_t obj)
 {
     av_assert1(e->nb_obj_deps < FF_VK_EXEC_MAX_BUF_DEPS);
     e->obj_deps[e->nb_obj_deps++] = (FFVkExecObjDep) { obj, type };
 }
 
-int ff_vk_exec_add_dep_sw_frame(FFVulkanContext *s, FFVkExecContext *e,
+పూర్ణాంకం ff_vk_exec_కూడు_dep_sw_చట్రం(FFVulkanContext *s, FFVkExecContext *e,
                                 AVFrame *f)
 {
-    av_assert1(e->nb_sw_frame_deps < FF_VK_EXEC_MAX_SW_FRAME_DEPS);
+    av_assert1(e->nb_sw_చట్రం_deps < FF_VK_EXEC_MAX_SW_చట్రం_DEPS);
 
-    e->sw_frame_deps[e->nb_sw_frame_deps] = av_frame_clone(f);
-    if (!e->sw_frame_deps[e->nb_sw_frame_deps])
-        return AVERROR(ENOMEM);
+    e->sw_చట్రం_deps[e->nb_sw_చట్రం_deps] = av_చట్రం_clone(f);
+    ఒకవేళ (!e->sw_చట్రం_deps[e->nb_sw_చట్రం_deps])
+        తిరిగి AVERROR(ENOMEM);
 
-    e->nb_sw_frame_deps++;
+    e->nb_sw_చట్రం_deps++;
 
-    return 0;
+    తిరిగి 0;
 }
 
-void ff_vk_exec_add_dep_wait_sem(FFVulkanContext *s, FFVkExecContext *e,
+శూన్య ff_vk_exec_కూడు_dep_wait_sem(FFVulkanContext *s, FFVkExecContext *e,
                                  VkSemaphore sem, uint64_t val,
                                  VkPipelineStageFlagBits2 stage)
 {
@@ -835,12 +835,12 @@ void ff_vk_exec_add_dep_wait_sem(FFVulkanContext *s, FFVkExecContext *e,
     e->sem_wait[e->sem_wait_cnt++] = (VkSemaphoreSubmitInfo) {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
         .semaphore = sem,
-        .value = val,
-        .stageMask = stage,
+        .విలువ = val,
+        .stage_ముసుగు = stage,
     };
 }
 
-void ff_vk_exec_add_dep_signal_sem(FFVulkanContext *s, FFVkExecContext *e,
+శూన్య ff_vk_exec_కూడు_dep_signal_sem(FFVulkanContext *s, FFVkExecContext *e,
                                    VkSemaphore sem, uint64_t val,
                                    VkPipelineStageFlagBits2 stage)
 {
@@ -849,303 +849,303 @@ void ff_vk_exec_add_dep_signal_sem(FFVulkanContext *s, FFVkExecContext *e,
     e->sem_sig[e->sem_sig_cnt++] = (VkSemaphoreSubmitInfo) {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
         .semaphore = sem,
-        .value = val,
-        .stageMask = stage,
+        .విలువ = val,
+        .stage_ముసుగు = stage,
     };
 }
 
-void ff_vk_exec_add_dep_bool_sem(FFVulkanContext *s, FFVkExecContext *e,
-                                 VkSemaphore *sem, int nb,
+శూన్య ff_vk_exec_కూడు_dep_bool_sem(FFVulkanContext *s, FFVkExecContext *e,
+                                 VkSemaphore *sem, పూర్ణాంకం nb,
                                  VkPipelineStageFlagBits2 stage,
-                                 int wait)
+                                 పూర్ణాంకం wait)
 {
     /* Do not transfer ownership if we're signalling a binary semaphore,
      * since we're probably exporting it. */
-    if (!wait) {
+    ఒకవేళ (!wait) {
         av_assert1((e->sem_sig_cnt + nb) <= FF_VK_EXEC_MAX_SEM_OPS);
-        for (int i = 0; i < nb; i++) {
+        కొరకు (పూర్ణాంకం i = 0; i < nb; i++) {
             e->sem_sig[e->sem_sig_cnt++] = (VkSemaphoreSubmitInfo) {
                 .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
                 .semaphore = sem[i],
-                .stageMask = stage,
+                .stage_ముసుగు = stage,
             };
         }
 
-        return;
+        తిరిగి;
     }
 
     /* Ownership of each semaphore passes to the execution */
-    for (int i = 0; i < nb; i++) {
-        ff_vk_exec_add_dep_obj(s, e, VK_OBJECT_TYPE_SEMAPHORE,
+    కొరకు (పూర్ణాంకం i = 0; i < nb; i++) {
+        ff_vk_exec_కూడు_dep_obj(s, e, VK_OBJECT_TYPE_SEMAPHORE,
                                (uint64_t)sem[i]);
-        ff_vk_exec_add_dep_wait_sem(s, e, sem[i], 0, stage);
+        ff_vk_exec_కూడు_dep_wait_sem(s, e, sem[i], 0, stage);
     }
 }
 
-int ff_vk_exec_add_dep_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
+పూర్ణాంకం ff_vk_exec_కూడు_dep_చట్రం(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
                              VkPipelineStageFlagBits2 wait_stage,
                              VkPipelineStageFlagBits2 signal_stage)
 {
-    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-    AVVulkanFramesContext *vkfc = hwfc->hwctx;
-    AVVkFrame *vkf = (AVVkFrame *)f->data[0];
-    int nb_images = ff_vk_count_images(vkf);
+    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_చట్రాలు_ctx->దత్తాంశం;
+    AVVulkan_చట్రాలు_Context *vkfc = hwfc->hwctx;
+    AVVk_చట్రం *vkf = (AVVk_చట్రం *)f->దత్తాంశం[0];
+    పూర్ణాంకం nb_images = ff_vk_లెక్క_images(vkf);
 
     /* Don't add duplicates */
-    for (int i = 0; i < e->nb_frame_deps; i++)
-        if (e->frame_deps[i]->data[0] == f->data[0])
-            return 1;
+    కొరకు (పూర్ణాంకం i = 0; i < e->nb_చట్రం_deps; i++)
+        ఒకవేళ (e->చట్రం_deps[i]->దత్తాంశం[0] == f->దత్తాంశం[0])
+            తిరిగి 1;
 
-    av_assert1(e->nb_frame_deps < FF_VK_EXEC_MAX_FRAME_DEPS);
+    av_assert1(e->nb_చట్రం_deps < FF_VK_EXEC_MAX_చట్రం_DEPS);
     av_assert1((e->sem_wait_cnt + nb_images) <= FF_VK_EXEC_MAX_SEM_OPS);
     av_assert1((e->sem_sig_cnt + nb_images) <= FF_VK_EXEC_MAX_SEM_OPS);
 
     /* prepare_frame in hwcontext_vulkan.c uses the regular frame management
      * code but has no frame yet, and it doesn't need to actually store a ref
      * to the frame. */
-    if (f->buf[0]) {
+    ఒకవేళ (f->buf[0]) {
         av_assert1(e->nb_buf_deps < FF_VK_EXEC_MAX_BUF_DEPS);
-        e->buf_deps[e->nb_buf_deps] = av_buffer_ref(f->buf[0]);
-        if (!e->buf_deps[e->nb_buf_deps])
-            return AVERROR(ENOMEM);
+        e->buf_deps[e->nb_buf_deps] = av_బఫరు_ref(f->buf[0]);
+        ఒకవేళ (!e->buf_deps[e->nb_buf_deps])
+            తిరిగి AVERROR(ENOMEM);
         e->nb_buf_deps++;
     }
 
-    e->frame_deps[e->nb_frame_deps] = f;
+    e->చట్రం_deps[e->nb_చట్రం_deps] = f;
 
-    vkfc->lock_frame(hwfc, vkf);
-    e->frame_locked[e->nb_frame_deps] = 1;
-    e->frame_update[e->nb_frame_deps] = 0;
-    e->nb_frame_deps++;
+    vkfc->తాళం_చట్రం(hwfc, vkf);
+    e->చట్రం_locked[e->nb_చట్రం_deps] = 1;
+    e->చట్రం_update[e->nb_చట్రం_deps] = 0;
+    e->nb_చట్రం_deps++;
 
-    for (int i = 0; i < nb_images; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < nb_images; i++) {
         e->sem_wait[e->sem_wait_cnt++] = (VkSemaphoreSubmitInfo) {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
             .semaphore = vkf->sem[i],
-            .value = vkf->sem_value[i],
-            .stageMask = wait_stage,
+            .విలువ = vkf->sem_విలువ[i],
+            .stage_ముసుగు = wait_stage,
         };
 
         e->sem_sig[e->sem_sig_cnt++] = (VkSemaphoreSubmitInfo) {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
             .semaphore = vkf->sem[i],
-            .value = vkf->sem_value[i] + 1,
-            .stageMask = signal_stage,
+            .విలువ = vkf->sem_విలువ[i] + 1,
+            .stage_ముసుగు = signal_stage,
         };
 
-        e->sem_sig_val_dst[e->sem_sig_val_dst_cnt] = &vkf->sem_value[i];
+        e->sem_sig_val_dst[e->sem_sig_val_dst_cnt] = &vkf->sem_విలువ[i];
         e->sem_sig_val_dst_cnt++;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-void ff_vk_exec_update_frame(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
-                             VkImageMemoryBarrier2 *bar, uint32_t *nb_img_bar)
+శూన్య ff_vk_exec_update_చట్రం(FFVulkanContext *s, FFVkExecContext *e, AVFrame *f,
+                             Vk_Image_జ్ఞాపకం_Barrier2 *bar, uint32_t *nb_img_bar)
 {
-    int i;
-    for (i = 0; i < e->nb_frame_deps; i++)
-        if (e->frame_deps[i]->data[0] == f->data[0])
-            break;
-    av_assert0(i < e->nb_frame_deps);
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < e->nb_చట్రం_deps; i++)
+        ఒకవేళ (e->చట్రం_deps[i]->దత్తాంశం[0] == f->దత్తాంశం[0])
+            ఆపు;
+    av_assert0(i < e->nb_చట్రం_deps);
 
     /* Don't update duplicates */
-    if (nb_img_bar && !e->frame_update[i])
+    ఒకవేళ (nb_img_bar && !e->చట్రం_update[i])
         (*nb_img_bar)++;
 
-    e->queue_family_dst[i] = bar->dstQueueFamilyIndex;
-    e->access_dst[i] = bar->dstAccessMask;
+    e->వరుస_family_dst[i] = bar->dst_వరుస_Family_సూచీ;
+    e->access_dst[i] = bar->dst_Access_ముసుగు;
     e->layout_dst[i] = bar->newLayout;
-    e->frame_update[i] = 1;
+    e->చట్రం_update[i] = 1;
 }
 
-int ff_vk_exec_mirror_sem_value(FFVulkanContext *s, FFVkExecContext *e,
+పూర్ణాంకం ff_vk_exec_mirror_sem_విలువ(FFVulkanContext *s, FFVkExecContext *e,
                                 VkSemaphore *dst, uint64_t *dst_val,
                                 AVFrame *f)
 {
-    AVVkFrame *vkf = (AVVkFrame *)f->data[0];
+    AVVk_చట్రం *vkf = (AVVk_చట్రం *)f->దత్తాంశం[0];
 
     /* Reject unknown frames */
-    int i;
-    for (i = 0; i < e->nb_frame_deps; i++)
-        if (e->frame_deps[i]->data[0] == f->data[0])
-            break;
-    if (i == e->nb_frame_deps)
-        return AVERROR(EINVAL);
+    పూర్ణాంకం i;
+    కొరకు (i = 0; i < e->nb_చట్రం_deps; i++)
+        ఒకవేళ (e->చట్రం_deps[i]->దత్తాంశం[0] == f->దత్తాంశం[0])
+            ఆపు;
+    ఒకవేళ (i == e->nb_చట్రం_deps)
+        తిరిగి AVERROR(EINVAL);
 
     av_assert1(e->sem_sig_val_dst_cnt < FF_VK_EXEC_MAX_SEM_OPS);
 
     *dst     = vkf->sem[0];
-    *dst_val = vkf->sem_value[0];
+    *dst_val = vkf->sem_విలువ[0];
 
     e->sem_sig_val_dst[e->sem_sig_val_dst_cnt] = dst_val;
     e->sem_sig_val_dst_cnt++;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int ff_vk_exec_submit(FFVulkanContext *s, FFVkExecContext *e)
+పూర్ణాంకం ff_vk_exec_submit(FFVulkanContext *s, FFVkExecContext *e)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
-    VkCommandBufferSubmitInfo cmd_buf_info = (VkCommandBufferSubmitInfo) {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
-        .commandBuffer = e->buf,
+    Vk_Command_బఫరు_Submit_Info cmd_buf_info = (Vk_Command_బఫరు_Submit_Info) {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_బఫరు_SUBMIT_INFO,
+        .command_బఫరు = e->buf,
     };
     VkSubmitInfo2 submit_info = (VkSubmitInfo2) {
         .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
-        .pCommandBufferInfos = &cmd_buf_info,
-        .commandBufferInfoCount = 1,
+        .p_Command_బఫరు_Infos = &cmd_buf_info,
+        .command_బఫరు_Info_లెక్క = 1,
         .pWaitSemaphoreInfos = e->sem_wait,
-        .waitSemaphoreInfoCount = e->sem_wait_cnt,
+        .wait_Semaphore_Info_లెక్క = e->sem_wait_cnt,
         .pSignalSemaphoreInfos = e->sem_sig,
-        .signalSemaphoreInfoCount = e->sem_sig_cnt,
+        .signal_Semaphore_Info_లెక్క = e->sem_sig_cnt,
     };
 
-    ret = vk->EndCommandBuffer(e->buf);
-    if (ret != VK_SUCCESS) {
+    ret = vk->చివర_Command_బఫరు(e->buf);
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Unable to finish command buffer: %s\n",
                ff_vk_ret2str(ret));
         ff_vk_exec_discard(s, e);
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-#if FF_API_VULKAN_SYNC_QUEUES
+#ఒకవేళ FF_API_VULKAN_SYNC_QUEUES
 FF_DISABLE_DEPRECATION_WARNINGS
-    s->hwctx->lock_queue(s->device, e->qf, e->qi);
+    s->hwctx->తాళం_వరుస(s->device, e->qf, e->qi);
 FF_ENABLE_DEPRECATION_WARNINGS
-#endif
-    ret = vk->QueueSubmit2(e->queue, 1, &submit_info, VK_NULL_HANDLE);
-#if FF_API_VULKAN_SYNC_QUEUES
+#అయితే_ముగింపు
+    ret = vk->వరుస_Submit2(e->వరుస, 1, &submit_info, VK_NULL_HANDLE);
+#ఒకవేళ FF_API_VULKAN_SYNC_QUEUES
 FF_DISABLE_DEPRECATION_WARNINGS
-    s->hwctx->unlock_queue(s->device, e->qf, e->qi);
+    s->hwctx->unlock_వరుస(s->device, e->qf, e->qi);
 FF_ENABLE_DEPRECATION_WARNINGS
-#endif
+#అయితే_ముగింపు
 
-    if (ret != VK_SUCCESS) {
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Unable to submit command buffer: %s\n",
                ff_vk_ret2str(ret));
         /* This also un-claims the context by signalling its semaphore */
         ff_vk_exec_discard(s, e);
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    for (int i = 0; i < e->sem_sig_val_dst_cnt; i++)
+    కొరకు (పూర్ణాంకం i = 0; i < e->sem_sig_val_dst_cnt; i++)
         *e->sem_sig_val_dst[i] += 1;
 
     /* Unlock all frames */
-    for (int j = 0; j < e->nb_frame_deps; j++) {
-        if (e->frame_locked[j]) {
-            AVFrame *f = e->frame_deps[j];
-            AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-            AVVulkanFramesContext *vkfc = hwfc->hwctx;
-            AVVkFrame *vkf = (AVVkFrame *)f->data[0];
+    కొరకు (పూర్ణాంకం j = 0; j < e->nb_చట్రం_deps; j++) {
+        ఒకవేళ (e->చట్రం_locked[j]) {
+            AVFrame *f = e->చట్రం_deps[j];
+            AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_చట్రాలు_ctx->దత్తాంశం;
+            AVVulkan_చట్రాలు_Context *vkfc = hwfc->hwctx;
+            AVVk_చట్రం *vkf = (AVVk_చట్రం *)f->దత్తాంశం[0];
 
-            if (e->frame_update[j]) {
-                int nb_images = ff_vk_count_images(vkf);
-                for (int i = 0; i < nb_images; i++) {
+            ఒకవేళ (e->చట్రం_update[j]) {
+                పూర్ణాంకం nb_images = ff_vk_లెక్క_images(vkf);
+                కొరకు (పూర్ణాంకం i = 0; i < nb_images; i++) {
                     vkf->layout[i] = e->layout_dst[j];
                     vkf->access[i] = e->access_dst[j];
-                    vkf->queue_family[i] = e->queue_family_dst[j];
+                    vkf->వరుస_family[i] = e->వరుస_family_dst[j];
                 }
             }
-            vkfc->unlock_frame(hwfc, vkf);
-            e->frame_locked[j] = 0;
+            vkfc->unlock_చట్రం(hwfc, vkf);
+            e->చట్రం_locked[j] = 0;
         }
     }
 
     e->had_submission = 1;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int ff_vk_alloc_mem(FFVulkanContext *s, VkMemoryRequirements *req,
-                    VkMemoryPropertyFlagBits req_flags, void *alloc_extension,
-                    VkMemoryPropertyFlagBits *mem_flags, VkDeviceMemory *mem)
+పూర్ణాంకం ff_vk_alloc_mem(FFVulkanContext *s, Vk_జ్ఞాపకం_Requirements *req,
+                    Vk_జ్ఞాపకం_Property_Flag_బిట్లు req_flags, శూన్య *alloc_extension,
+                    Vk_జ్ఞాపకం_Property_Flag_బిట్లు *mem_flags, Vk_Device_జ్ఞాపకం *mem)
 {
-    VkResult ret;
-    int index = -1;
+    Vk_ఫలితం ret;
+    పూర్ణాంకం సూచీ = -1;
     FFVulkanFunctions *vk = &s->vkfn;
 
-    VkMemoryAllocateInfo alloc_info = {
-        .sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-        .pNext           = alloc_extension,
+    Vk_జ్ఞాపకం_Allocate_Info alloc_info = {
+        .sType           = VK_STRUCTURE_TYPE_జ్ఞాపకం_ALLOCATE_INFO,
+        .p_తదుపరి           = alloc_extension,
     };
 
-    alloc_info.allocationSize = req->size;
+    alloc_info.కేటాయింపు_కొలత = req->కొలత;
 
     /* The vulkan spec requires memory types to be sorted in the "optimal"
      * order, so the first matching type we find will be the best/fastest one */
-    for (int i = 0; i < s->mprops.memoryTypeCount; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < s->mprops.జ్ఞాపకం_Type_లెక్క; i++) {
         /* The memory type must be supported by the requirements (bitfield) */
-        if (!(req->memoryTypeBits & (1 << i)))
-            continue;
+        ఒకవేళ (!(req->జ్ఞాపకం_Type_బిట్లు & (1 << i)))
+            కొనసాగు;
 
         /* The memory type flags must include our properties */
-        if ((req_flags != UINT32_MAX) &&
-            ((s->mprops.memoryTypes[i].propertyFlags & req_flags) != req_flags))
-            continue;
+        ఒకవేళ ((req_flags != UINT32_MAX) &&
+            ((s->mprops.జ్ఞాపకం_Types[i].propertyFlags & req_flags) != req_flags))
+            కొనసాగు;
 
         /* Found a suitable memory type */
-        index = i;
-        break;
+        సూచీ = i;
+        ఆపు;
     }
 
-    if (index < 0) {
+    ఒకవేళ (సూచీ < 0) {
         av_log(s, AV_LOG_ERROR, "No memory type found for flags 0x%x\n",
                req_flags);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
-    alloc_info.memoryTypeIndex = index;
+    alloc_info.జ్ఞాపకం_Type_సూచీ = సూచీ;
 
-    ret = vk->AllocateMemory(s->hwctx->act_dev, &alloc_info,
+    ret = vk->Allocate_జ్ఞాపకం(s->hwctx->act_dev, &alloc_info,
                              s->hwctx->alloc, mem);
-    if (ret != VK_SUCCESS)
-        return AVERROR(ENOMEM);
+    ఒకవేళ (ret != VK_SUCCESS)
+        తిరిగి AVERROR(ENOMEM);
 
-    if (mem_flags)
-        *mem_flags |= s->mprops.memoryTypes[index].propertyFlags;
+    ఒకవేళ (mem_flags)
+        *mem_flags |= s->mprops.జ్ఞాపకం_Types[సూచీ].propertyFlags;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int ff_vk_image_create(FFVulkanContext *s, VkImage *img, VkDeviceMemory *mem,
-                       int width, int height, VkFormat format, int nb_layers,
+పూర్ణాంకం ff_vk_image_create(FFVulkanContext *s, VkImage *img, Vk_Device_జ్ఞాపకం *mem,
+                       పూర్ణాంకం వెడల్పు, పూర్ణాంకం ఎత్తు, VkFormat format, పూర్ణాంకం nb_layers,
                        VkImageTiling tiling, VkImageUsageFlags usage,
-                       VkImageCreateFlags flags, void *create_pnext)
+                       VkImageCreateFlags flags, శూన్య *create_pnext)
 {
-    int err;
-    VkResult ret;
+    పూర్ణాంకం err;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
-    VkMemoryPropertyFlagBits mem_flags;
+    Vk_జ్ఞాపకం_Property_Flag_బిట్లు mem_flags;
 
     VkImageCreateInfo create_info = {
         .sType         = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-        .pNext         = create_pnext,
+        .p_తదుపరి         = create_pnext,
         .flags         = flags,
         .imageType     = VK_IMAGE_TYPE_2D,
         .format        = format,
-        .extent        = { width, height, 1 },
-        .mipLevels     = 1,
+        .extent        = { వెడల్పు, ఎత్తు, 1 },
+        .mip_స్థాయిలు     = 1,
         .arrayLayers   = nb_layers,
         .tiling        = tiling,
         .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
         .usage         = usage,
-        .samples       = VK_SAMPLE_COUNT_1_BIT,
-        .sharingMode   = VK_SHARING_MODE_EXCLUSIVE,
+        .samples       = VK_SAMPLE_లెక్క_1_బిట్టు,
+        .sharing_బహుళకం   = VK_SHARING_బహుళకం_EXCLUSIVE,
     };
-    VkMemoryDedicatedAllocateInfo ded_alloc = {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
+    Vk_జ్ఞాపకం_Dedicated_Allocate_Info ded_alloc = {
+        .sType = VK_STRUCTURE_TYPE_జ్ఞాపకం_DEDICATED_ALLOCATE_INFO,
     };
-    VkMemoryRequirements2 req = {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
+    Vk_జ్ఞాపకం_Requirements2 req = {
+        .sType = VK_STRUCTURE_TYPE_జ్ఞాపకం_REQUIREMENTS_2,
     };
-    VkImageMemoryRequirementsInfo2 req_desc = {
-        .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+    Vk_Image_జ్ఞాపకం_Requirements_Info2 req_desc = {
+        .sType = VK_STRUCTURE_TYPE_IMAGE_జ్ఞాపకం_REQUIREMENTS_INFO_2,
     };
-    VkBindImageMemoryInfo bind_info = {
-        .sType = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO,
+    Vk_Bind_Image_జ్ఞాపకం_Info bind_info = {
+        .sType = VK_STRUCTURE_TYPE_BIND_IMAGE_జ్ఞాపకం_INFO,
     };
 
     *img = VK_NULL_HANDLE;
@@ -1153,508 +1153,508 @@ int ff_vk_image_create(FFVulkanContext *s, VkImage *img, VkDeviceMemory *mem,
 
     ret = vk->CreateImage(s->hwctx->act_dev, &create_info,
                           s->hwctx->alloc, img);
-    if (ret != VK_SUCCESS) {
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Image creation failure: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
     req_desc.image = *img;
-    vk->GetImageMemoryRequirements2(s->hwctx->act_dev, &req_desc, &req);
+    vk->Get_Image_జ్ఞాపకం_Requirements2(s->hwctx->act_dev, &req_desc, &req);
 
     /* Never shared with another image, so always dedicated */
     ded_alloc.image = *img;
-    err = ff_vk_alloc_mem(s, &req.memoryRequirements,
-                          VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+    err = ff_vk_alloc_mem(s, &req.జ్ఞాపకం_Requirements,
+                          VK_జ్ఞాపకం_PROPERTY_DEVICE_LOCAL_బిట్టు,
                           &ded_alloc, &mem_flags, mem);
-    if (err < 0)
-        goto fail;
+    ఒకవేళ (err < 0)
+        వెళ్ళు fail;
 
     bind_info.image  = *img;
-    bind_info.memory = *mem;
+    bind_info.జ్ఞాపకం = *mem;
     ret = vk->BindImageMemory2(s->hwctx->act_dev, 1, &bind_info);
-    if (ret != VK_SUCCESS) {
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Failed to bind image memory: %s\n",
                ff_vk_ret2str(ret));
         err = AVERROR_EXTERNAL;
-        goto fail;
+        వెళ్ళు fail;
     }
 
-    return 0;
+    తిరిగి 0;
 
 fail:
     ff_vk_image_free(s, img, mem);
-    return err;
+    తిరిగి err;
 }
 
-void ff_vk_image_free(FFVulkanContext *s, VkImage *img, VkDeviceMemory *mem)
+శూన్య ff_vk_image_free(FFVulkanContext *s, VkImage *img, Vk_Device_జ్ఞాపకం *mem)
 {
     FFVulkanFunctions *vk = &s->vkfn;
 
-    if (*img) {
+    ఒకవేళ (*img) {
         vk->DestroyImage(s->hwctx->act_dev, *img, s->hwctx->alloc);
         *img = VK_NULL_HANDLE;
     }
-    if (*mem) {
-        vk->FreeMemory(s->hwctx->act_dev, *mem, s->hwctx->alloc);
+    ఒకవేళ (*mem) {
+        vk->Free_జ్ఞాపకం(s->hwctx->act_dev, *mem, s->hwctx->alloc);
         *mem = VK_NULL_HANDLE;
     }
 }
 
-int ff_vk_create_buf(FFVulkanContext *s, FFVkBuffer *buf, size_t size,
-                     void *pNext, void *alloc_pNext,
-                     VkBufferUsageFlags usage, VkMemoryPropertyFlagBits flags)
+పూర్ణాంకం ff_vk_create_buf(FFVulkanContext *s, FFVk_బఫరు *buf, size_t కొలత,
+                     శూన్య *p_తదుపరి, శూన్య *alloc_p_తదుపరి,
+                     Vk_బఫరు_Usage_Flags usage, Vk_జ్ఞాపకం_Property_Flag_బిట్లు flags)
 {
-    int err;
-    VkResult ret;
-    int use_ded_mem;
+    పూర్ణాంకం err;
+    Vk_ఫలితం ret;
+    పూర్ణాంకం use_ded_mem;
     FFVulkanFunctions *vk = &s->vkfn;
 
-    VkBufferCreateInfo buf_spawn = {
-        .sType       = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-        .pNext       = pNext,
+    Vk_బఫరు_Create_Info buf_spawn = {
+        .sType       = VK_STRUCTURE_TYPE_బఫరు_CREATE_INFO,
+        .p_తదుపరి       = p_తదుపరి,
         .usage       = usage,
-        .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
-        .size        = flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT ?
-                       FFALIGN(size, s->props.properties.limits.minMemoryMapAlignment) :
-                       size,
+        .sharing_బహుళకం = VK_SHARING_బహుళకం_EXCLUSIVE,
+        .కొలత        = flags & VK_జ్ఞాపకం_PROPERTY_HOST_VISIBLE_బిట్టు ?
+                       FFALIGN(కొలత, s->props.properties.limits.min_జ్ఞాపకం_Map_Alignment) :
+                       కొలత,
     };
 
-    VkMemoryAllocateFlagsInfo alloc_flags = {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO,
-        .flags = VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+    Vk_జ్ఞాపకం_Allocate_Flags_Info alloc_flags = {
+        .sType = VK_STRUCTURE_TYPE_జ్ఞాపకం_ALLOCATE_FLAGS_INFO,
+        .flags = VK_జ్ఞాపకం_ALLOCATE_DEVICE_చిరునామా_బిట్టు,
     };
-    VkBufferMemoryRequirementsInfo2 req_desc = {
-        .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2,
+    Vk_బఫరు_జ్ఞాపకం_Requirements_Info2 req_desc = {
+        .sType = VK_STRUCTURE_TYPE_బఫరు_జ్ఞాపకం_REQUIREMENTS_INFO_2,
     };
-    VkMemoryDedicatedAllocateInfo ded_alloc = {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
-        .pNext = alloc_pNext,
+    Vk_జ్ఞాపకం_Dedicated_Allocate_Info ded_alloc = {
+        .sType = VK_STRUCTURE_TYPE_జ్ఞాపకం_DEDICATED_ALLOCATE_INFO,
+        .p_తదుపరి = alloc_p_తదుపరి,
     };
-    VkMemoryDedicatedRequirements ded_req = {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS,
+    Vk_జ్ఞాపకం_Dedicated_Requirements ded_req = {
+        .sType = VK_STRUCTURE_TYPE_జ్ఞాపకం_DEDICATED_REQUIREMENTS,
     };
-    VkMemoryRequirements2 req = {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
-        .pNext = &ded_req,
+    Vk_జ్ఞాపకం_Requirements2 req = {
+        .sType = VK_STRUCTURE_TYPE_జ్ఞాపకం_REQUIREMENTS_2,
+        .p_తదుపరి = &ded_req,
     };
 
     av_log(s, AV_LOG_DEBUG, "Creating a buffer of %zu bytes, "
                             "usage: 0x%x, flags: 0x%x\n",
-           size, usage, flags);
+           కొలత, usage, flags);
 
-    ret = vk->CreateBuffer(s->hwctx->act_dev, &buf_spawn, s->hwctx->alloc, &buf->buf);
-    if (ret != VK_SUCCESS) {
+    ret = vk->Create_బఫరు(s->hwctx->act_dev, &buf_spawn, s->hwctx->alloc, &buf->buf);
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Failed to create buffer: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    req_desc.buffer = buf->buf;
+    req_desc.బఫరు = buf->buf;
 
-    vk->GetBufferMemoryRequirements2(s->hwctx->act_dev, &req_desc, &req);
+    vk->Get_బఫరు_జ్ఞాపకం_Requirements2(s->hwctx->act_dev, &req_desc, &req);
 
     /* In case the implementation prefers/requires dedicated allocation */
-    use_ded_mem = ded_req.prefersDedicatedAllocation |
-                  ded_req.requiresDedicatedAllocation;
-    if (use_ded_mem) {
-        ded_alloc.buffer = buf->buf;
-        ded_alloc.pNext = alloc_pNext;
-        alloc_pNext = &ded_alloc;
+    use_ded_mem = ded_req.prefers_Dedicated_కేటాయింపు |
+                  ded_req.requires_Dedicated_కేటాయింపు;
+    ఒకవేళ (use_ded_mem) {
+        ded_alloc.బఫరు = buf->buf;
+        ded_alloc.p_తదుపరి = alloc_p_తదుపరి;
+        alloc_p_తదుపరి = &ded_alloc;
     }
 
-    if (usage & VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
-        alloc_flags.pNext = alloc_pNext;
-        alloc_pNext = &alloc_flags;
+    ఒకవేళ (usage & VK_బఫరు_USAGE_SHADER_DEVICE_చిరునామా_బిట్టు) {
+        alloc_flags.p_తదుపరి = alloc_p_తదుపరి;
+        alloc_p_తదుపరి = &alloc_flags;
     }
 
-    err = ff_vk_alloc_mem(s, &req.memoryRequirements, flags, alloc_pNext,
+    err = ff_vk_alloc_mem(s, &req.జ్ఞాపకం_Requirements, flags, alloc_p_తదుపరి,
                           &buf->flags, &buf->mem);
-    if (err)
-        return err;
+    ఒకవేళ (err)
+        తిరిగి err;
 
-    ret = vk->BindBufferMemory(s->hwctx->act_dev, buf->buf, buf->mem, 0);
-    if (ret != VK_SUCCESS) {
+    ret = vk->Bind_బఫరు_జ్ఞాపకం(s->hwctx->act_dev, buf->buf, buf->mem, 0);
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Failed to bind memory to buffer: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    if (usage & VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
-        VkBufferDeviceAddressInfo address_info = {
-            .sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
-            .buffer = buf->buf,
+    ఒకవేళ (usage & VK_బఫరు_USAGE_SHADER_DEVICE_చిరునామా_బిట్టు) {
+        Vk_బఫరు_Device_చిరునామా_Info చిరునామా_info = {
+            .sType = VK_STRUCTURE_TYPE_బఫరు_DEVICE_చిరునామా_INFO,
+            .బఫరు = buf->buf,
         };
-        buf->address = vk->GetBufferDeviceAddress(s->hwctx->act_dev, &address_info);
+        buf->చిరునామా = vk->Get_బఫరు_Device_చిరునామా(s->hwctx->act_dev, &చిరునామా_info);
     }
 
-    buf->size = size;
+    buf->కొలత = కొలత;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int ff_vk_map_buffers(FFVulkanContext *s, FFVkBuffer **buf, uint8_t *mem[],
-                      int nb_buffers, int invalidate)
+పూర్ణాంకం ff_vk_map_buffers(FFVulkanContext *s, FFVk_బఫరు **buf, uint8_t *mem[],
+                      పూర్ణాంకం nb_buffers, పూర్ణాంకం invalidate)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
-    VkMappedMemoryRange inval_list[64];
-    int inval_count = 0;
+    Vk_Mapped_జ్ఞాపకం_Range inval_list[64];
+    పూర్ణాంకం inval_లెక్క = 0;
 
-    for (int i = 0; i < nb_buffers; i++) {
-        void *dst;
-        ret = vk->MapMemory(s->hwctx->act_dev, buf[i]->mem, 0,
-                            VK_WHOLE_SIZE, 0, &dst);
-        if (ret != VK_SUCCESS) {
+    కొరకు (పూర్ణాంకం i = 0; i < nb_buffers; i++) {
+        శూన్య *dst;
+        ret = vk->Map_జ్ఞాపకం(s->hwctx->act_dev, buf[i]->mem, 0,
+                            VK_సంపూర్ణ_కొలత, 0, &dst);
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Failed to map buffer memory: %s\n",
                    ff_vk_ret2str(ret));
-            return AVERROR_EXTERNAL;
+            తిరిగి AVERROR_EXTERNAL;
         }
         buf[i]->mapped_mem = dst;
-        if (mem)
+        ఒకవేళ (mem)
             mem[i] = dst;
     }
 
-    if (!invalidate)
-        return 0;
+    ఒకవేళ (!invalidate)
+        తిరిగి 0;
 
-    for (int i = 0; i < nb_buffers; i++) {
-        const VkMappedMemoryRange ival_buf = {
-            .sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
-            .memory = buf[i]->mem,
-            .size   = VK_WHOLE_SIZE,
+    కొరకు (పూర్ణాంకం i = 0; i < nb_buffers; i++) {
+        స్థిరరాశి Vk_Mapped_జ్ఞాపకం_Range ival_buf = {
+            .sType  = VK_STRUCTURE_TYPE_MAPPED_జ్ఞాపకం_RANGE,
+            .జ్ఞాపకం = buf[i]->mem,
+            .కొలత   = VK_సంపూర్ణ_కొలత,
         };
-        if (buf[i]->flags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
-            continue;
-        inval_list[inval_count++] = ival_buf;
+        ఒకవేళ (buf[i]->flags & VK_జ్ఞాపకం_PROPERTY_HOST_COHERENT_బిట్టు)
+            కొనసాగు;
+        inval_list[inval_లెక్క++] = ival_buf;
     }
 
-    if (inval_count) {
-        ret = vk->InvalidateMappedMemoryRanges(s->hwctx->act_dev, inval_count,
+    ఒకవేళ (inval_లెక్క) {
+        ret = vk->Invalidate_Mapped_జ్ఞాపకం_Ranges(s->hwctx->act_dev, inval_లెక్క,
                                                inval_list);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Failed to invalidate memory: %s\n",
                    ff_vk_ret2str(ret));
-            return AVERROR_EXTERNAL;
+            తిరిగి AVERROR_EXTERNAL;
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-int ff_vk_flush_buffer(FFVulkanContext *s, FFVkBuffer *buf,
-                       VkDeviceSize offset, VkDeviceSize mem_size,
-                       int flush)
+పూర్ణాంకం ff_vk_flush_బఫరు(FFVulkanContext *s, FFVk_బఫరు *buf,
+                       Vk_Device_కొలత స్థానభ్రంశం, Vk_Device_కొలత mem_కొలత,
+                       పూర్ణాంకం flush)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
 
-    if (buf->flags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
-        return 0;
+    ఒకవేళ (buf->flags & VK_జ్ఞాపకం_PROPERTY_HOST_COHERENT_బిట్టు)
+        తిరిగి 0;
 
-    const VkMappedMemoryRange flush_data = {
-        .sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
-        .memory = buf->mem,
-        .offset = offset,
-        .size   = mem_size,
+    స్థిరరాశి Vk_Mapped_జ్ఞాపకం_Range flush_దత్తాంశం = {
+        .sType  = VK_STRUCTURE_TYPE_MAPPED_జ్ఞాపకం_RANGE,
+        .జ్ఞాపకం = buf->mem,
+        .స్థానభ్రంశం = స్థానభ్రంశం,
+        .కొలత   = mem_కొలత,
     };
 
-    if (flush)
-        ret = vk->FlushMappedMemoryRanges(s->hwctx->act_dev, 1, &flush_data);
-    else
-        ret = vk->InvalidateMappedMemoryRanges(s->hwctx->act_dev, 1, &flush_data);
+    ఒకవేళ (flush)
+        ret = vk->Flush_Mapped_జ్ఞాపకం_Ranges(s->hwctx->act_dev, 1, &flush_దత్తాంశం);
+    లేకపోతే
+        ret = vk->Invalidate_Mapped_జ్ఞాపకం_Ranges(s->hwctx->act_dev, 1, &flush_దత్తాంశం);
 
-    if (ret != VK_SUCCESS) {
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Failed to flush memory: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-int ff_vk_unmap_buffers(FFVulkanContext *s, FFVkBuffer **buf, int nb_buffers,
-                        int flush)
+పూర్ణాంకం ff_vk_unmap_buffers(FFVulkanContext *s, FFVk_బఫరు **buf, పూర్ణాంకం nb_buffers,
+                        పూర్ణాంకం flush)
 {
-    int err = 0;
-    VkResult ret;
+    పూర్ణాంకం err = 0;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
-    VkMappedMemoryRange flush_list[64];
-    int flush_count = 0;
+    Vk_Mapped_జ్ఞాపకం_Range flush_list[64];
+    పూర్ణాంకం flush_లెక్క = 0;
 
-    if (flush) {
-        for (int i = 0; i < nb_buffers; i++) {
-            const VkMappedMemoryRange flush_buf = {
-                .sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
-                .memory = buf[i]->mem,
-                .size   = VK_WHOLE_SIZE,
+    ఒకవేళ (flush) {
+        కొరకు (పూర్ణాంకం i = 0; i < nb_buffers; i++) {
+            స్థిరరాశి Vk_Mapped_జ్ఞాపకం_Range flush_buf = {
+                .sType  = VK_STRUCTURE_TYPE_MAPPED_జ్ఞాపకం_RANGE,
+                .జ్ఞాపకం = buf[i]->mem,
+                .కొలత   = VK_సంపూర్ణ_కొలత,
             };
 
             av_assert0(!buf[i]->host_ref);
-            if (buf[i]->flags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
-                continue;
-            flush_list[flush_count++] = flush_buf;
+            ఒకవేళ (buf[i]->flags & VK_జ్ఞాపకం_PROPERTY_HOST_COHERENT_బిట్టు)
+                కొనసాగు;
+            flush_list[flush_లెక్క++] = flush_buf;
         }
     }
 
-    if (flush_count) {
-        ret = vk->FlushMappedMemoryRanges(s->hwctx->act_dev, flush_count,
+    ఒకవేళ (flush_లెక్క) {
+        ret = vk->Flush_Mapped_జ్ఞాపకం_Ranges(s->hwctx->act_dev, flush_లెక్క,
                                           flush_list);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Failed to flush memory: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL; /* We still want to try to unmap them */
         }
     }
 
-    for (int i = 0; i < nb_buffers; i++) {
-        vk->UnmapMemory(s->hwctx->act_dev, buf[i]->mem);
-        buf[i]->mapped_mem = NULL;
+    కొరకు (పూర్ణాంకం i = 0; i < nb_buffers; i++) {
+        vk->Unmap_జ్ఞాపకం(s->hwctx->act_dev, buf[i]->mem);
+        buf[i]->mapped_mem = ఖాళీ;
     }
 
-    return err;
+    తిరిగి err;
 }
 
-void ff_vk_free_buf(FFVulkanContext *s, FFVkBuffer *buf)
+శూన్య ff_vk_free_buf(FFVulkanContext *s, FFVk_బఫరు *buf)
 {
     FFVulkanFunctions *vk = &s->vkfn;
 
-    if (!buf || !s->hwctx)
-        return;
+    ఒకవేళ (!buf || !s->hwctx)
+        తిరిగి;
 
-    if (buf->mapped_mem && !buf->host_ref)
-        ff_vk_unmap_buffer(s, buf, 0);
-    if (buf->buf != VK_NULL_HANDLE)
-        vk->DestroyBuffer(s->hwctx->act_dev, buf->buf, s->hwctx->alloc);
-    if (buf->mem != VK_NULL_HANDLE)
-        vk->FreeMemory(s->hwctx->act_dev, buf->mem, s->hwctx->alloc);
-    if (buf->host_ref)
-        av_buffer_unref(&buf->host_ref);
+    ఒకవేళ (buf->mapped_mem && !buf->host_ref)
+        ff_vk_unmap_బఫరు(s, buf, 0);
+    ఒకవేళ (buf->buf != VK_NULL_HANDLE)
+        vk->Destroy_బఫరు(s->hwctx->act_dev, buf->buf, s->hwctx->alloc);
+    ఒకవేళ (buf->mem != VK_NULL_HANDLE)
+        vk->Free_జ్ఞాపకం(s->hwctx->act_dev, buf->mem, s->hwctx->alloc);
+    ఒకవేళ (buf->host_ref)
+        av_బఫరు_unref(&buf->host_ref);
 
     buf->buf = VK_NULL_HANDLE;
     buf->mem = VK_NULL_HANDLE;
-    buf->mapped_mem = NULL;
+    buf->mapped_mem = ఖాళీ;
 }
 
-static void pooled_buf_free(AVRefStructOpaque opaque, void *obj)
+స్థిర శూన్య pooled_buf_free(AVRefStructOpaque opaque, శూన్య *obj)
 {
     ff_vk_free_buf(opaque.nc, obj);
 }
 
-int ff_vk_get_pooled_buffer(FFVulkanContext *ctx, AVRefStructPool **buf_pool,
-                            FFVkBuffer **buf, VkBufferUsageFlags usage,
-                            void *create_pNext, size_t size,
-                            VkMemoryPropertyFlagBits mem_props)
+పూర్ణాంకం ff_vk_get_pooled_బఫరు(FFVulkanContext *ctx, AVRefStructPool **buf_pool,
+                            FFVk_బఫరు **buf, Vk_బఫరు_Usage_Flags usage,
+                            శూన్య *create_p_తదుపరి, size_t కొలత,
+                            Vk_జ్ఞాపకం_Property_Flag_బిట్లు mem_props)
 {
-    int err;
-    FFVkBuffer *data;
+    పూర్ణాంకం err;
+    FFVk_బఫరు *దత్తాంశం;
 
-    if (!(*buf_pool)) {
-        *buf_pool = av_refstruct_pool_alloc_ext(sizeof(FFVkBuffer), 0, ctx,
-                                                NULL, NULL, pooled_buf_free,
-                                                NULL);
-        if (!(*buf_pool))
-            return AVERROR(ENOMEM);
+    ఒకవేళ (!(*buf_pool)) {
+        *buf_pool = av_refstruct_pool_alloc_ext(పరిమాణం(FFVk_బఫరు), 0, ctx,
+                                                ఖాళీ, ఖాళీ, pooled_buf_free,
+                                                ఖాళీ);
+        ఒకవేళ (!(*buf_pool))
+            తిరిగి AVERROR(ENOMEM);
     }
 
-    *buf = data = av_refstruct_pool_get(*buf_pool);
-    if (!data)
-        return AVERROR(ENOMEM);
+    *buf = దత్తాంశం = av_refstruct_pool_get(*buf_pool);
+    ఒకవేళ (!దత్తాంశం)
+        తిరిగి AVERROR(ENOMEM);
 
-    if (data->size >= size)
-        return 0;
+    ఒకవేళ (దత్తాంశం->కొలత >= కొలత)
+        తిరిగి 0;
 
-    ff_vk_free_buf(ctx, data);
-    memset(data, 0, sizeof(*data));
+    ff_vk_free_buf(ctx, దత్తాంశం);
+    memset(దత్తాంశం, 0, పరిమాణం(*దత్తాంశం));
 
-    err = ff_vk_create_buf(ctx, data, size,
-                           create_pNext, NULL, usage,
+    err = ff_vk_create_buf(ctx, దత్తాంశం, కొలత,
+                           create_p_తదుపరి, ఖాళీ, usage,
                            mem_props);
-    if (err < 0) {
+    ఒకవేళ (err < 0) {
         av_refstruct_unref(buf);
-        return err;
+        తిరిగి err;
     }
 
-    if (mem_props & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
-        err = ff_vk_map_buffer(ctx, data, &data->mapped_mem, 0);
-        if (err < 0) {
+    ఒకవేళ (mem_props & VK_జ్ఞాపకం_PROPERTY_HOST_VISIBLE_బిట్టు) {
+        err = ff_vk_map_బఫరు(ctx, దత్తాంశం, &దత్తాంశం->mapped_mem, 0);
+        ఒకవేళ (err < 0) {
             av_refstruct_unref(buf);
-            return err;
+            తిరిగి err;
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int create_mapped_buffer(FFVulkanContext *s,
-                                FFVkBuffer *vkb, VkBufferUsageFlags usage,
-                                size_t size,
-                                VkExternalMemoryBufferCreateInfo *create_desc,
-                                VkImportMemoryHostPointerInfoEXT *import_desc,
-                                VkMemoryHostPointerPropertiesEXT props)
+స్థిర పూర్ణాంకం create_mapped_బఫరు(FFVulkanContext *s,
+                                FFVk_బఫరు *vkb, Vk_బఫరు_Usage_Flags usage,
+                                size_t కొలత,
+                                Vk_External_జ్ఞాపకం_బఫరు_Create_Info *create_desc,
+                                Vk_Import_జ్ఞాపకం_Host_సూచిక_Info_EXT *import_desc,
+                                Vk_జ్ఞాపకం_Host_సూచిక_Properties_EXT props)
 {
-    int err;
-    VkResult ret;
+    పూర్ణాంకం err;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
 
-    VkBufferCreateInfo buf_spawn = {
-        .sType       = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-        .pNext       = create_desc,
+    Vk_బఫరు_Create_Info buf_spawn = {
+        .sType       = VK_STRUCTURE_TYPE_బఫరు_CREATE_INFO,
+        .p_తదుపరి       = create_desc,
         .usage       = usage,
-        .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
-        .size        = size,
+        .sharing_బహుళకం = VK_SHARING_బహుళకం_EXCLUSIVE,
+        .కొలత        = కొలత,
     };
-    VkMemoryRequirements req = {
-        .size           = size,
-        .alignment      = s->hprops.minImportedHostPointerAlignment,
-        .memoryTypeBits = props.memoryTypeBits,
+    Vk_జ్ఞాపకం_Requirements req = {
+        .కొలత           = కొలత,
+        .alignment      = s->hprops.min_Imported_Host_సూచిక_Alignment,
+        .జ్ఞాపకం_Type_బిట్లు = props.జ్ఞాపకం_Type_బిట్లు,
     };
 
     err = ff_vk_alloc_mem(s, &req,
-                          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+                          VK_జ్ఞాపకం_PROPERTY_HOST_VISIBLE_బిట్టు,
                           import_desc, &vkb->flags, &vkb->mem);
-    if (err < 0)
-        return err;
+    ఒకవేళ (err < 0)
+        తిరిగి err;
 
-    ret = vk->CreateBuffer(s->hwctx->act_dev, &buf_spawn, s->hwctx->alloc, &vkb->buf);
-    if (ret != VK_SUCCESS) {
-        vk->FreeMemory(s->hwctx->act_dev, vkb->mem, s->hwctx->alloc);
-        return AVERROR_EXTERNAL;
+    ret = vk->Create_బఫరు(s->hwctx->act_dev, &buf_spawn, s->hwctx->alloc, &vkb->buf);
+    ఒకవేళ (ret != VK_SUCCESS) {
+        vk->Free_జ్ఞాపకం(s->hwctx->act_dev, vkb->mem, s->hwctx->alloc);
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    ret = vk->BindBufferMemory(s->hwctx->act_dev, vkb->buf, vkb->mem, 0);
-    if (ret != VK_SUCCESS) {
-        vk->FreeMemory(s->hwctx->act_dev, vkb->mem, s->hwctx->alloc);
-        vk->DestroyBuffer(s->hwctx->act_dev, vkb->buf, s->hwctx->alloc);
-        return AVERROR_EXTERNAL;
+    ret = vk->Bind_బఫరు_జ్ఞాపకం(s->hwctx->act_dev, vkb->buf, vkb->mem, 0);
+    ఒకవేళ (ret != VK_SUCCESS) {
+        vk->Free_జ్ఞాపకం(s->hwctx->act_dev, vkb->mem, s->hwctx->alloc);
+        vk->Destroy_బఫరు(s->hwctx->act_dev, vkb->buf, s->hwctx->alloc);
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static void host_map_free(AVRefStructOpaque opaque, void *obj)
+స్థిర శూన్య host_map_free(AVRefStructOpaque opaque, శూన్య *obj)
 {
     ff_vk_free_buf(opaque.nc, obj);
 }
 
-int ff_vk_host_map_buffer(FFVulkanContext *s, FFVkBuffer **dst,
-                          uint8_t *src_data, VkDeviceSize size,
-                          const AVBufferRef *src_buf,
-                          VkBufferUsageFlags usage)
+పూర్ణాంకం ff_vk_host_map_బఫరు(FFVulkanContext *s, FFVk_బఫరు **dst,
+                          uint8_t *src_దత్తాంశం, Vk_Device_కొలత కొలత,
+                          స్థిరరాశి AVBufferRef *src_buf,
+                          Vk_బఫరు_Usage_Flags usage)
 {
-    int err;
-    VkResult ret;
+    పూర్ణాంకం err;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
 
-    VkExternalMemoryBufferCreateInfo create_desc = {
-        .sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO,
-        .handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT,
+    Vk_External_జ్ఞాపకం_బఫరు_Create_Info create_desc = {
+        .sType = VK_STRUCTURE_TYPE_EXTERNAL_జ్ఞాపకం_బఫరు_CREATE_INFO,
+        .handleTypes = VK_EXTERNAL_జ్ఞాపకం_HANDLE_TYPE_HOST_కేటాయింపు_బిట్టు_EXT,
     };
-    VkMemoryAllocateFlagsInfo alloc_flags = {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO,
-        .flags = VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+    Vk_జ్ఞాపకం_Allocate_Flags_Info alloc_flags = {
+        .sType = VK_STRUCTURE_TYPE_జ్ఞాపకం_ALLOCATE_FLAGS_INFO,
+        .flags = VK_జ్ఞాపకం_ALLOCATE_DEVICE_చిరునామా_బిట్టు,
     };
-    VkImportMemoryHostPointerInfoEXT import_desc = {
-        .sType = VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT,
-        .handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT,
-        .pNext = usage & VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT ? &alloc_flags : NULL,
+    Vk_Import_జ్ఞాపకం_Host_సూచిక_Info_EXT import_desc = {
+        .sType = VK_STRUCTURE_TYPE_IMPORT_జ్ఞాపకం_HOST_సూచిక_INFO_EXT,
+        .handleType = VK_EXTERNAL_జ్ఞాపకం_HANDLE_TYPE_HOST_కేటాయింపు_బిట్టు_EXT,
+        .p_తదుపరి = usage & VK_బఫరు_USAGE_SHADER_DEVICE_చిరునామా_బిట్టు ? &alloc_flags : ఖాళీ,
     };
-    VkMemoryHostPointerPropertiesEXT props;
+    Vk_జ్ఞాపకం_Host_సూచిక_Properties_EXT props;
 
     AVBufferRef *ref;
-    FFVkBuffer *vkb;
+    FFVk_బఫరు *vkb;
     size_t offs;
-    size_t buffer_size;
+    size_t బఫరు_కొలత;
 
-    *dst = NULL;
+    *dst = ఖాళీ;
 
     /* Get the previous point at which mapping was possible and use it */
-    offs = (uintptr_t)src_data % s->hprops.minImportedHostPointerAlignment;
-    import_desc.pHostPointer = src_data - offs;
+    offs = (uintptr_t)src_దత్తాంశం % s->hprops.min_Imported_Host_సూచిక_Alignment;
+    import_desc.p_Host_సూచిక = src_దత్తాంశం - offs;
 
-    props = (VkMemoryHostPointerPropertiesEXT) {
-        VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT,
+    props = (Vk_జ్ఞాపకం_Host_సూచిక_Properties_EXT) {
+        VK_STRUCTURE_TYPE_జ్ఞాపకం_HOST_సూచిక_PROPERTIES_EXT,
     };
-    ret = vk->GetMemoryHostPointerPropertiesEXT(s->hwctx->act_dev,
+    ret = vk->Get_జ్ఞాపకం_Host_సూచిక_Properties_EXT(s->hwctx->act_dev,
                                                 import_desc.handleType,
-                                                import_desc.pHostPointer,
+                                                import_desc.p_Host_సూచిక,
                                                 &props);
-    if (!(ret == VK_SUCCESS && props.memoryTypeBits))
-        return AVERROR(EINVAL);
+    ఒకవేళ (!(ret == VK_SUCCESS && props.జ్ఞాపకం_Type_బిట్లు))
+        తిరిగి AVERROR(EINVAL);
 
     /* Ref the source buffer */
-    ref = av_buffer_ref(src_buf);
-    if (!ref)
-        return AVERROR(ENOMEM);
+    ref = av_బఫరు_ref(src_buf);
+    ఒకవేళ (!ref)
+        తిరిగి AVERROR(ENOMEM);
 
     /* Add the offset at the start, which gets ignored. */
-    const VkDeviceSize src_avail = src_buf->size - (src_data - src_buf->data);
-    buffer_size = offs + FFMIN(size, src_avail);
-    buffer_size = FFALIGN(buffer_size, s->props.properties.limits.minMemoryMapAlignment);
-    buffer_size = FFALIGN(buffer_size, s->hprops.minImportedHostPointerAlignment);
+    స్థిరరాశి Vk_Device_కొలత src_avail = src_buf->కొలత - (src_దత్తాంశం - src_buf->దత్తాంశం);
+    బఫరు_కొలత = offs + FFMIN(కొలత, src_avail);
+    బఫరు_కొలత = FFALIGN(బఫరు_కొలత, s->props.properties.limits.min_జ్ఞాపకం_Map_Alignment);
+    బఫరు_కొలత = FFALIGN(బఫరు_కొలత, s->hprops.min_Imported_Host_సూచిక_Alignment);
 
     /* Create a buffer struct */
-    vkb = av_refstruct_alloc_ext(sizeof(*vkb), 0, s, host_map_free);
-    if (!vkb) {
-        av_buffer_unref(&ref);
-        return AVERROR(ENOMEM);
+    vkb = av_refstruct_alloc_ext(పరిమాణం(*vkb), 0, s, host_map_free);
+    ఒకవేళ (!vkb) {
+        av_బఫరు_unref(&ref);
+        తిరిగి AVERROR(ENOMEM);
     }
 
-    err = create_mapped_buffer(s, vkb, usage,
-                               buffer_size, &create_desc, &import_desc,
+    err = create_mapped_బఫరు(s, vkb, usage,
+                               బఫరు_కొలత, &create_desc, &import_desc,
                                props);
-    if (err < 0) {
-        av_buffer_unref(&ref);
+    ఒకవేళ (err < 0) {
+        av_బఫరు_unref(&ref);
         av_refstruct_unref(&vkb);
-        return err;
+        తిరిగి err;
     }
 
-    if (usage & VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
-        VkBufferDeviceAddressInfo address_info = {
-            .sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
-            .buffer = vkb->buf,
+    ఒకవేళ (usage & VK_బఫరు_USAGE_SHADER_DEVICE_చిరునామా_బిట్టు) {
+        Vk_బఫరు_Device_చిరునామా_Info చిరునామా_info = {
+            .sType = VK_STRUCTURE_TYPE_బఫరు_DEVICE_చిరునామా_INFO,
+            .బఫరు = vkb->buf,
         };
-        vkb->address = vk->GetBufferDeviceAddress(s->hwctx->act_dev, &address_info);
+        vkb->చిరునామా = vk->Get_బఫరు_Device_చిరునామా(s->hwctx->act_dev, &చిరునామా_info);
     }
 
     vkb->host_ref       = ref;
-    vkb->virtual_offset = offs;
-    vkb->address       += offs;
-    vkb->mapped_mem     = src_data;
-    vkb->size           = buffer_size - offs;
+    vkb->virtual_స్థానభ్రంశం = offs;
+    vkb->చిరునామా       += offs;
+    vkb->mapped_mem     = src_దత్తాంశం;
+    vkb->కొలత           = బఫరు_కొలత - offs;
 
     *dst = vkb;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int ff_vk_shader_add_push_const(FFVulkanShader *shd, int offset, int size,
-                                VkShaderStageFlagBits stage)
+పూర్ణాంకం ff_vk_shader_కూడు_నెట్టు_const(FFVulkanShader *shd, పూర్ణాంకం స్థానభ్రంశం, పూర్ణాంకం కొలత,
+                                Vk_Shader_Stage_Flag_బిట్లు stage)
 {
-    VkPushConstantRange *pc = &shd->push_consts[shd->push_consts_num++];
-    av_assert1(shd->push_consts_num < FF_VK_MAX_PUSH_CONSTS);
+    Vk_నెట్టు_Constant_Range *pc = &shd->నెట్టు_consts[shd->నెట్టు_consts_అంకె++];
+    av_assert1(shd->నెట్టు_consts_అంకె < FF_VK_MAX_నెట్టు_CONSTS);
     pc->stageFlags = stage;
-    pc->offset = offset;
-    pc->size = size;
-    return 0;
+    pc->స్థానభ్రంశం = స్థానభ్రంశం;
+    pc->కొలత = కొలత;
+    తిరిగి 0;
 }
 
-int ff_vk_init_sampler(FFVulkanContext *s, VkSampler *sampler,
-                       int unnorm_coords, VkFilter filt)
+పూర్ణాంకం ff_vk_init_sampler(FFVulkanContext *s, VkSampler *sampler,
+                       పూర్ణాంకం unnorm_coords, VkFilter filt)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
 
     VkSamplerCreateInfo sampler_info = {
         .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
         .magFilter = filt,
         .minFilter = sampler_info.magFilter,
-        .mipmapMode = (unnorm_coords || filt == VK_FILTER_NEAREST) ?
-                      VK_SAMPLER_MIPMAP_MODE_NEAREST :
-                      VK_SAMPLER_MIPMAP_MODE_LINEAR,
-        .addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-        .addressModeV = sampler_info.addressModeU,
-        .addressModeW = sampler_info.addressModeU,
+        .mipmap_బహుళకం = (unnorm_coords || filt == VK_FILTER_సమీప) ?
+                      VK_SAMPLER_MIPMAP_బహుళకం_సమీప :
+                      VK_SAMPLER_MIPMAP_బహుళకం_రేఖీయ,
+        .చిరునామా_బహుళకం_U = VK_SAMPLER_చిరునామా_బహుళకం_CLAMP_గమ్యం_అంచు,
+        .చిరునామా_బహుళకం_V = sampler_info.చిరునామా_బహుళకం_U,
+        .చిరునామా_బహుళకం_W = sampler_info.చిరునామా_బహుళకం_U,
         .anisotropyEnable = VK_FALSE,
         .compareOp = VK_COMPARE_OP_NEVER,
         .borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
@@ -1663,35 +1663,35 @@ int ff_vk_init_sampler(FFVulkanContext *s, VkSampler *sampler,
 
     ret = vk->CreateSampler(s->hwctx->act_dev, &sampler_info,
                             s->hwctx->alloc, sampler);
-    if (ret != VK_SUCCESS) {
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Unable to init sampler: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-VkImageAspectFlags ff_vk_aspect_flag(AVFrame *f, int p)
+VkImageAspectFlags ff_vk_aspect_flag(AVFrame *f, పూర్ణాంకం p)
 {
-    AVVkFrame *vkf = (AVVkFrame *)f->data[0];
-    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-    int nb_images = ff_vk_count_images(vkf);
-    int nb_planes = av_pix_fmt_count_planes(hwfc->sw_format);
+    AVVk_చట్రం *vkf = (AVVk_చట్రం *)f->దత్తాంశం[0];
+    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_చట్రాలు_ctx->దత్తాంశం;
+    పూర్ణాంకం nb_images = ff_vk_లెక్క_images(vkf);
+    పూర్ణాంకం nb_planes = av_pix_fmt_లెక్క_planes(hwfc->sw_format);
 
-    static const VkImageAspectFlags plane_aspect[] = { VK_IMAGE_ASPECT_PLANE_0_BIT,
-                                                       VK_IMAGE_ASPECT_PLANE_1_BIT,
-                                                       VK_IMAGE_ASPECT_PLANE_2_BIT, };
+    స్థిర స్థిరరాశి VkImageAspectFlags plane_aspect[] = { VK_IMAGE_ASPECT_PLANE_0_బిట్టు,
+                                                       VK_IMAGE_ASPECT_PLANE_1_బిట్టు,
+                                                       VK_IMAGE_ASPECT_PLANE_2_బిట్టు, };
 
-    if (ff_vk_mt_is_np_rgb(hwfc->sw_format) || (nb_planes == nb_images))
-        return VK_IMAGE_ASPECT_COLOR_BIT;
+    ఒకవేళ (ff_vk_mt_is_np_rgb(hwfc->sw_format) || (nb_planes == nb_images))
+        తిరిగి VK_IMAGE_ASPECT_COLOR_బిట్టు;
 
-    return plane_aspect[p];
+    తిరిగి plane_aspect[p];
 }
 
-int ff_vk_mt_is_np_rgb(enum AVPixelFormat pix_fmt)
+పూర్ణాంకం ff_vk_mt_is_np_rgb(గణన AVPixelFormat pix_fmt)
 {
-    if (pix_fmt == AV_PIX_FMT_ABGR   || pix_fmt == AV_PIX_FMT_BGRA   ||
+    ఒకవేళ (pix_fmt == AV_PIX_FMT_ABGR   || pix_fmt == AV_PIX_FMT_BGRA   ||
         pix_fmt == AV_PIX_FMT_RGBA   || pix_fmt == AV_PIX_FMT_RGB24  ||
         pix_fmt == AV_PIX_FMT_BGR24  || pix_fmt == AV_PIX_FMT_RGB48  ||
         pix_fmt == AV_PIX_FMT_RGBA64 || pix_fmt == AV_PIX_FMT_RGB565 ||
@@ -1709,308 +1709,308 @@ int ff_vk_mt_is_np_rgb(enum AVPixelFormat pix_fmt)
         pix_fmt == AV_PIX_FMT_RGBA128 || pix_fmt == AV_PIX_FMT_RGB96 ||
         pix_fmt == AV_PIX_FMT_XYZP12 ||
         pix_fmt == AV_PIX_FMT_GBRP || pix_fmt == AV_PIX_FMT_BAYER_RGGB16)
-        return 1;
-    return 0;
+        తిరిగి 1;
+    తిరిగి 0;
 }
 
-void ff_vk_set_perm(enum AVPixelFormat pix_fmt, int lut[4], int inv)
+శూన్య ff_vk_సమితి_perm(గణన AVPixelFormat pix_fmt, పూర్ణాంకం lut[4], పూర్ణాంకం inv)
 {
-    switch (pix_fmt) {
-    case AV_PIX_FMT_GBRP:
-    case AV_PIX_FMT_GBRAP:
-    case AV_PIX_FMT_GBRAP10:
-    case AV_PIX_FMT_GBRAP12:
-    case AV_PIX_FMT_GBRAP14:
-    case AV_PIX_FMT_GBRAP16:
-    case AV_PIX_FMT_GBRAPF16:
-    case AV_PIX_FMT_GBRP10:
-    case AV_PIX_FMT_GBRP12:
-    case AV_PIX_FMT_GBRP14:
-    case AV_PIX_FMT_GBRP16:
-    case AV_PIX_FMT_GBRPF16:
-    case AV_PIX_FMT_GBRPF32:
-    case AV_PIX_FMT_GBRAP32:
-    case AV_PIX_FMT_GBRAPF32:
+    ఎంపిక (pix_fmt) {
+    స్థితి AV_PIX_FMT_GBRP:
+    స్థితి AV_PIX_FMT_GBRAP:
+    స్థితి AV_PIX_FMT_GBRAP10:
+    స్థితి AV_PIX_FMT_GBRAP12:
+    స్థితి AV_PIX_FMT_GBRAP14:
+    స్థితి AV_PIX_FMT_GBRAP16:
+    స్థితి AV_PIX_FMT_GBRAPF16:
+    స్థితి AV_PIX_FMT_GBRP10:
+    స్థితి AV_PIX_FMT_GBRP12:
+    స్థితి AV_PIX_FMT_GBRP14:
+    స్థితి AV_PIX_FMT_GBRP16:
+    స్థితి AV_PIX_FMT_GBRPF16:
+    స్థితి AV_PIX_FMT_GBRPF32:
+    స్థితి AV_PIX_FMT_GBRAP32:
+    స్థితి AV_PIX_FMT_GBRAPF32:
         lut[0] = 1;
         lut[1] = 2;
         lut[2] = 0;
         lut[3] = 3;
-        break;
-    case AV_PIX_FMT_X2BGR10:
+        ఆపు;
+    స్థితి AV_PIX_FMT_X2BGR10:
         lut[0] = 0;
         lut[1] = 2;
         lut[2] = 1;
         lut[3] = 3;
-        break;
-    case AV_PIX_FMT_BGRA:
-    case AV_PIX_FMT_BGR0:
+        ఆపు;
+    స్థితి AV_PIX_FMT_BGRA:
+    స్థితి AV_PIX_FMT_BGR0:
         /* Stored in RGBA images, so reverse them */
         lut[0] = 2;
         lut[1] = 1;
         lut[2] = 0;
         lut[3] = 3;
-        break;
-    default:
+        ఆపు;
+    అప్రమేయ:
         lut[0] = 0;
         lut[1] = 1;
         lut[2] = 2;
         lut[3] = 3;
-        break;
+        ఆపు;
     }
 
-    if (inv) {
-        int lut_tmp[4] = { lut[0], lut[1], lut[2], lut[3] };
-        for (int i = 0; i < 4; i++)
+    ఒకవేళ (inv) {
+        పూర్ణాంకం lut_tmp[4] = { lut[0], lut[1], lut[2], lut[3] };
+        కొరకు (పూర్ణాంకం i = 0; i < 4; i++)
             lut[lut_tmp[i]] = i;
     }
 
-    return;
+    తిరిగి;
 }
 
-const char *ff_vk_shader_rep_fmt(enum AVPixelFormat pix_fmt,
-                                 enum FFVkShaderRepFormat rep_fmt)
+స్థిరరాశి అక్షరం *ff_vk_shader_rep_fmt(గణన AVPixelFormat pix_fmt,
+                                 గణన FFVkShaderRepFormat rep_fmt)
 {
-    switch (pix_fmt) {
-    case AV_PIX_FMT_RGBA:
-    case AV_PIX_FMT_BGRA:
-    case AV_PIX_FMT_RGB24:
-    case AV_PIX_FMT_BGR24:
-    case AV_PIX_FMT_BGR0:
-    case AV_PIX_FMT_RGB0:
-    case AV_PIX_FMT_RGB565:
-    case AV_PIX_FMT_BGR565:
-    case AV_PIX_FMT_UYVA:
-    case AV_PIX_FMT_YUYV422:
-    case AV_PIX_FMT_UYVY422: {
-        const char *rep_tab[] = {
+    ఎంపిక (pix_fmt) {
+    స్థితి AV_PIX_FMT_RGBA:
+    స్థితి AV_PIX_FMT_BGRA:
+    స్థితి AV_PIX_FMT_RGB24:
+    స్థితి AV_PIX_FMT_BGR24:
+    స్థితి AV_PIX_FMT_BGR0:
+    స్థితి AV_PIX_FMT_RGB0:
+    స్థితి AV_PIX_FMT_RGB565:
+    స్థితి AV_PIX_FMT_BGR565:
+    స్థితి AV_PIX_FMT_UYVA:
+    స్థితి AV_PIX_FMT_YUYV422:
+    స్థితి AV_PIX_FMT_UYVY422: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "rgba8ui",
             [FF_VK_REP_FLOAT] = "rgba8",
             [FF_VK_REP_INT] = "rgba8i",
             [FF_VK_REP_UINT] = "rgba8ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     }
-    case AV_PIX_FMT_X2RGB10:
-    case AV_PIX_FMT_X2BGR10:
-    case AV_PIX_FMT_Y210:
-    case AV_PIX_FMT_XV30: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_X2RGB10:
+    స్థితి AV_PIX_FMT_X2BGR10:
+    స్థితి AV_PIX_FMT_Y210:
+    స్థితి AV_PIX_FMT_XV30: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "rgb10_a2ui",
             [FF_VK_REP_FLOAT] = "rgb10_a2",
-            [FF_VK_REP_INT] = NULL,
+            [FF_VK_REP_INT] = ఖాళీ,
             [FF_VK_REP_UINT] = "rgb10_a2ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     }
-    case AV_PIX_FMT_RGB48:
-    case AV_PIX_FMT_RGBA64:
-    case AV_PIX_FMT_Y212:
-    case AV_PIX_FMT_Y216:
-    case AV_PIX_FMT_XV36:
-    case AV_PIX_FMT_XV48: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_RGB48:
+    స్థితి AV_PIX_FMT_RGBA64:
+    స్థితి AV_PIX_FMT_Y212:
+    స్థితి AV_PIX_FMT_Y216:
+    స్థితి AV_PIX_FMT_XV36:
+    స్థితి AV_PIX_FMT_XV48: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "rgba16ui",
             [FF_VK_REP_FLOAT] = "rgba16",
             [FF_VK_REP_INT] = "rgba16i",
             [FF_VK_REP_UINT] = "rgba16ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     }
-    case AV_PIX_FMT_RGBAF16: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_RGBAF16: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "rgba16f",
             [FF_VK_REP_FLOAT] = "rgba16f",
             [FF_VK_REP_INT] = "rgba32i",
             [FF_VK_REP_UINT] = "rgba16u",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     }
-    case AV_PIX_FMT_RGBF32:
-    case AV_PIX_FMT_RGBAF32: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_RGBF32:
+    స్థితి AV_PIX_FMT_RGBAF32: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "rgba32f",
             [FF_VK_REP_FLOAT] = "rgba32f",
             [FF_VK_REP_INT] = "rgba32i",
             [FF_VK_REP_UINT] = "rgba32ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     }
-    case AV_PIX_FMT_RGB96:
-    case AV_PIX_FMT_RGBA128: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_RGB96:
+    స్థితి AV_PIX_FMT_RGBA128: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "rgba32ui",
-            [FF_VK_REP_FLOAT] = NULL,
+            [FF_VK_REP_FLOAT] = ఖాళీ,
             [FF_VK_REP_INT] = "rgba32i",
             [FF_VK_REP_UINT] = "rgba32ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     }
-    case AV_PIX_FMT_GBRP:
-    case AV_PIX_FMT_GRAY8:
-    case AV_PIX_FMT_GBRAP:
-    case AV_PIX_FMT_YUV420P:
-    case AV_PIX_FMT_YUV422P:
-    case AV_PIX_FMT_YUV444P:
-    case AV_PIX_FMT_YUVA420P:
-    case AV_PIX_FMT_YUVA422P:
-    case AV_PIX_FMT_YUVA444P: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_GBRP:
+    స్థితి AV_PIX_FMT_GRAY8:
+    స్థితి AV_PIX_FMT_GBRAP:
+    స్థితి AV_PIX_FMT_YUV420P:
+    స్థితి AV_PIX_FMT_YUV422P:
+    స్థితి AV_PIX_FMT_YUV444P:
+    స్థితి AV_PIX_FMT_YUVA420P:
+    స్థితి AV_PIX_FMT_YUVA422P:
+    స్థితి AV_PIX_FMT_YUVA444P: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "r8ui",
             [FF_VK_REP_FLOAT] = "r8",
             [FF_VK_REP_INT] = "r8i",
             [FF_VK_REP_UINT] = "r8ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     };
-    case AV_PIX_FMT_GRAY10:
-    case AV_PIX_FMT_GRAY12:
-    case AV_PIX_FMT_GRAY14:
-    case AV_PIX_FMT_GRAY16:
-    case AV_PIX_FMT_GBRAP10:
-    case AV_PIX_FMT_GBRAP12:
-    case AV_PIX_FMT_GBRAP14:
-    case AV_PIX_FMT_GBRAP16:
-    case AV_PIX_FMT_GBRAPF16:
-    case AV_PIX_FMT_GBRP10:
-    case AV_PIX_FMT_GBRP12:
-    case AV_PIX_FMT_GBRP14:
-    case AV_PIX_FMT_GBRP16:
-    case AV_PIX_FMT_GBRPF16:
-    case AV_PIX_FMT_XYZP12:
-    case AV_PIX_FMT_YUV420P10:
-    case AV_PIX_FMT_YUV420P12:
-    case AV_PIX_FMT_YUV420P16:
-    case AV_PIX_FMT_YUV422P10:
-    case AV_PIX_FMT_YUV422P12:
-    case AV_PIX_FMT_YUV422P16:
-    case AV_PIX_FMT_YUV444P10:
-    case AV_PIX_FMT_YUV444P12:
-    case AV_PIX_FMT_YUV444P16:
-    case AV_PIX_FMT_YUVA420P10:
-    case AV_PIX_FMT_YUVA420P16:
-    case AV_PIX_FMT_YUVA422P10:
-    case AV_PIX_FMT_YUVA422P12:
-    case AV_PIX_FMT_YUVA422P16:
-    case AV_PIX_FMT_YUVA444P10:
-    case AV_PIX_FMT_YUVA444P12:
-    case AV_PIX_FMT_YUVA444P16:
-    case AV_PIX_FMT_BAYER_RGGB16: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_GRAY10:
+    స్థితి AV_PIX_FMT_GRAY12:
+    స్థితి AV_PIX_FMT_GRAY14:
+    స్థితి AV_PIX_FMT_GRAY16:
+    స్థితి AV_PIX_FMT_GBRAP10:
+    స్థితి AV_PIX_FMT_GBRAP12:
+    స్థితి AV_PIX_FMT_GBRAP14:
+    స్థితి AV_PIX_FMT_GBRAP16:
+    స్థితి AV_PIX_FMT_GBRAPF16:
+    స్థితి AV_PIX_FMT_GBRP10:
+    స్థితి AV_PIX_FMT_GBRP12:
+    స్థితి AV_PIX_FMT_GBRP14:
+    స్థితి AV_PIX_FMT_GBRP16:
+    స్థితి AV_PIX_FMT_GBRPF16:
+    స్థితి AV_PIX_FMT_XYZP12:
+    స్థితి AV_PIX_FMT_YUV420P10:
+    స్థితి AV_PIX_FMT_YUV420P12:
+    స్థితి AV_PIX_FMT_YUV420P16:
+    స్థితి AV_PIX_FMT_YUV422P10:
+    స్థితి AV_PIX_FMT_YUV422P12:
+    స్థితి AV_PIX_FMT_YUV422P16:
+    స్థితి AV_PIX_FMT_YUV444P10:
+    స్థితి AV_PIX_FMT_YUV444P12:
+    స్థితి AV_PIX_FMT_YUV444P16:
+    స్థితి AV_PIX_FMT_YUVA420P10:
+    స్థితి AV_PIX_FMT_YUVA420P16:
+    స్థితి AV_PIX_FMT_YUVA422P10:
+    స్థితి AV_PIX_FMT_YUVA422P12:
+    స్థితి AV_PIX_FMT_YUVA422P16:
+    స్థితి AV_PIX_FMT_YUVA444P10:
+    స్థితి AV_PIX_FMT_YUVA444P12:
+    స్థితి AV_PIX_FMT_YUVA444P16:
+    స్థితి AV_PIX_FMT_BAYER_RGGB16: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "r16ui",
             [FF_VK_REP_FLOAT] = "r16f",
             [FF_VK_REP_INT] = "r16i",
             [FF_VK_REP_UINT] = "r16ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     };
-    case AV_PIX_FMT_GRAY32:
-    case AV_PIX_FMT_GRAYF32:
-    case AV_PIX_FMT_GBRPF32:
-    case AV_PIX_FMT_GBRAPF32: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_GRAY32:
+    స్థితి AV_PIX_FMT_GRAYF32:
+    స్థితి AV_PIX_FMT_GBRPF32:
+    స్థితి AV_PIX_FMT_GBRAPF32: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "r32f",
             [FF_VK_REP_FLOAT] = "r32f",
             [FF_VK_REP_INT] = "r32i",
             [FF_VK_REP_UINT] = "r32ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     };
-    case AV_PIX_FMT_GBRAP32: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_GBRAP32: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "r32ui",
-            [FF_VK_REP_FLOAT] = NULL,
+            [FF_VK_REP_FLOAT] = ఖాళీ,
             [FF_VK_REP_INT] = "r32i",
             [FF_VK_REP_UINT] = "r32ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     };
-    case AV_PIX_FMT_NV12:
-    case AV_PIX_FMT_NV16:
-    case AV_PIX_FMT_NV24: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_NV12:
+    స్థితి AV_PIX_FMT_NV16:
+    స్థితి AV_PIX_FMT_NV24: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "rg8ui",
             [FF_VK_REP_FLOAT] = "rg8",
             [FF_VK_REP_INT] = "rg8i",
             [FF_VK_REP_UINT] = "rg8ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     };
-    case AV_PIX_FMT_P010:
-    case AV_PIX_FMT_P210:
-    case AV_PIX_FMT_P410: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_P010:
+    స్థితి AV_PIX_FMT_P210:
+    స్థితి AV_PIX_FMT_P410: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "rgb10_a2ui",
             [FF_VK_REP_FLOAT] = "rgb10_a2",
-            [FF_VK_REP_INT] = NULL,
+            [FF_VK_REP_INT] = ఖాళీ,
             [FF_VK_REP_UINT] = "rgb10_a2ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     };
-    case AV_PIX_FMT_P012:
-    case AV_PIX_FMT_P016:
-    case AV_PIX_FMT_P212:
-    case AV_PIX_FMT_P216:
-    case AV_PIX_FMT_P412:
-    case AV_PIX_FMT_P416: {
-        const char *rep_tab[] = {
+    స్థితి AV_PIX_FMT_P012:
+    స్థితి AV_PIX_FMT_P016:
+    స్థితి AV_PIX_FMT_P212:
+    స్థితి AV_PIX_FMT_P216:
+    స్థితి AV_PIX_FMT_P412:
+    స్థితి AV_PIX_FMT_P416: {
+        స్థిరరాశి అక్షరం *rep_tab[] = {
             [FF_VK_REP_NATIVE] = "rg16ui",
             [FF_VK_REP_FLOAT] = "rg16",
             [FF_VK_REP_INT] = "rg16i",
             [FF_VK_REP_UINT] = "rg16ui",
         };
-        return rep_tab[rep_fmt];
+        తిరిగి rep_tab[rep_fmt];
     };
-    default:
-        return "rgba32f";
+    అప్రమేయ:
+        తిరిగి "rgba32f";
     }
 }
 
-static void reset_imageviews(AVRefStructOpaque unused, void *obj)
+స్థిర శూన్య reset_imageviews(AVRefStructOpaque వాడని, శూన్య *obj)
 {
     FFVkImageViews *iv = obj;
 
-    for (int i = 0; i < iv->nb_views; i++) {
-        if (iv->views[i])
+    కొరకు (పూర్ణాంకం i = 0; i < iv->nb_views; i++) {
+        ఒకవేళ (iv->views[i])
             iv->destroy_image_view(iv->dev, iv->views[i], iv->alloc);
     }
 
-    memset(iv->views, 0, sizeof(iv->views));
+    memset(iv->views, 0, పరిమాణం(iv->views));
 }
 
-FFVkImageViews *ff_vk_imageviews_alloc(FFVulkanContext *s, int nb_views)
+FFVkImageViews *ff_vk_imageviews_alloc(FFVulkanContext *s, పూర్ణాంకం nb_views)
 {
     FFVulkanFunctions *vk = &s->vkfn;
     FFVkImageViews *iv;
 
-    av_assert1(nb_views <= AV_NUM_DATA_POINTERS);
+    av_assert1(nb_views <= AV_అంకె_దత్తాంశం_సూచికలు);
 
     iv = av_refstruct_pool_get(s->imageviews_pool);
-    if (!iv)
-        return NULL;
+    ఒకవేళ (!iv)
+        తిరిగి ఖాళీ;
 
     iv->nb_views           = nb_views;
     iv->dev                = s->hwctx->act_dev;
     iv->alloc              = s->hwctx->alloc;
     iv->destroy_image_view = vk->DestroyImageView;
 
-    return iv;
+    తిరిగి iv;
 }
 
-VkFormat ff_vk_map_fmt_to_rep(VkFormat fmt, enum FFVkShaderRepFormat rep_fmt)
+VkFormat ff_vk_map_fmt_గమ్యం_rep(VkFormat fmt, గణన FFVkShaderRepFormat rep_fmt)
 {
-#define REPS_FMT(fmt) \
+#నిర్వచించు REPS_FMT(fmt) \
     [FF_VK_REP_NATIVE] = fmt ## _UINT, \
     [FF_VK_REP_FLOAT]  = fmt ## _UNORM, \
     [FF_VK_REP_INT]    = fmt ## _SINT, \
     [FF_VK_REP_UINT]   = fmt ## _UINT,
 
-#define REPS_FMT_PACK(fmt, num) \
-    [FF_VK_REP_NATIVE] = fmt ## _UINT_PACK ## num, \
-    [FF_VK_REP_FLOAT]  = fmt ## _UNORM_PACK ## num, \
-    [FF_VK_REP_INT]    = fmt ## _SINT_PACK ## num, \
-    [FF_VK_REP_UINT]   = fmt ## _UINT_PACK ## num,
+#నిర్వచించు REPS_FMT_PACK(fmt, అంకె) \
+    [FF_VK_REP_NATIVE] = fmt ## _UINT_PACK ## అంకె, \
+    [FF_VK_REP_FLOAT]  = fmt ## _UNORM_PACK ## అంకె, \
+    [FF_VK_REP_INT]    = fmt ## _SINT_PACK ## అంకె, \
+    [FF_VK_REP_UINT]   = fmt ## _UINT_PACK ## అంకె,
 
-    const VkFormat fmts_map[][4] = {
+    స్థిరరాశి VkFormat fmts_map[][4] = {
         { REPS_FMT_PACK(VK_FORMAT_A2B10G10R10, 32) },
         { REPS_FMT_PACK(VK_FORMAT_A2R10G10B10, 32) },
         {
@@ -2078,294 +2078,294 @@ VkFormat ff_vk_map_fmt_to_rep(VkFormat fmt, enum FFVkShaderRepFormat rep_fmt)
             VK_FORMAT_R16_UINT,
         },
     };
-#undef REPS_FMT_PACK
-#undef REPS_FMT
+#నిర్వచనం_రద్దు REPS_FMT_PACK
+#నిర్వచనం_రద్దు REPS_FMT
 
-    if (fmt == VK_FORMAT_UNDEFINED)
-        return VK_FORMAT_UNDEFINED;
+    ఒకవేళ (fmt == VK_FORMAT_UNDEFINED)
+        తిరిగి VK_FORMAT_UNDEFINED;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(fmts_map); i++) {
-        if (fmts_map[i][FF_VK_REP_NATIVE] == fmt ||
+    కొరకు (పూర్ణాంకం i = 0; i < FF_ARRAY_ELEMS(fmts_map); i++) {
+        ఒకవేళ (fmts_map[i][FF_VK_REP_NATIVE] == fmt ||
             fmts_map[i][FF_VK_REP_FLOAT] == fmt ||
             fmts_map[i][FF_VK_REP_INT] == fmt ||
             fmts_map[i][FF_VK_REP_UINT] == fmt)
-            return fmts_map[i][rep_fmt];
+            తిరిగి fmts_map[i][rep_fmt];
     }
 
-    return VK_FORMAT_UNDEFINED;
+    తిరిగి VK_FORMAT_UNDEFINED;
 }
 
-int ff_vk_create_imageview(FFVulkanContext *s,
+పూర్ణాంకం ff_vk_create_imageview(FFVulkanContext *s,
                            VkImageView *img_view, VkImageAspectFlags *aspect,
-                           AVFrame *f, int plane, enum FFVkShaderRepFormat rep_fmt)
+                           AVFrame *f, పూర్ణాంకం plane, గణన FFVkShaderRepFormat rep_fmt)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
-    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-    AVVulkanFramesContext *vkfc = hwfc->hwctx;
-    const VkFormat *rep_fmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
-    AVVkFrame *vkf = (AVVkFrame *)f->data[0];
-    const int nb_images = ff_vk_count_images(vkf);
+    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_చట్రాలు_ctx->దత్తాంశం;
+    AVVulkan_చట్రాలు_Context *vkfc = hwfc->hwctx;
+    స్థిరరాశి VkFormat *rep_fmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
+    AVVk_చట్రం *vkf = (AVVk_చట్రం *)f->దత్తాంశం[0];
+    స్థిరరాశి పూర్ణాంకం nb_images = ff_vk_లెక్క_images(vkf);
 
     VkImageViewUsageCreateInfo view_usage_info = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
         .usage = vkfc->usage &
-                 (~(VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR |
-                    VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR)),
+                 (~(VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_బిట్టు_KHR |
+                    VK_IMAGE_USAGE_VIDEO_DECODE_DST_బిట్టు_KHR)),
     };
     VkImageViewCreateInfo view_create_info = {
         .sType      = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-        .pNext      = &view_usage_info,
+        .p_తదుపరి      = &view_usage_info,
         .image      = vkf->img[FFMIN(plane, nb_images - 1)],
         .viewType   = VK_IMAGE_VIEW_TYPE_2D,
-        .format     = ff_vk_map_fmt_to_rep(rep_fmts[plane], rep_fmt),
-        .components = ff_comp_identity_map,
+        .format     = ff_vk_map_fmt_గమ్యం_rep(rep_fmts[plane], rep_fmt),
+        .components = ff_comp_తటస్థం_map,
         .subresourceRange = {
-            .aspectMask = ff_vk_aspect_flag(f, plane),
-            .levelCount = 1,
-            .layerCount = 1,
+            .aspect_ముసుగు = ff_vk_aspect_flag(f, plane),
+            .level_లెక్క = 1,
+            .layer_లెక్క = 1,
         },
     };
-    if (view_create_info.format == VK_FORMAT_UNDEFINED) {
+    ఒకవేళ (view_create_info.format == VK_FORMAT_UNDEFINED) {
         av_log(s, AV_LOG_ERROR, "Unable to find a compatible representation "
                                 "of format %i and mode %i\n",
                rep_fmts[plane], rep_fmt);
-        return AVERROR(EINVAL);
+        తిరిగి AVERROR(EINVAL);
     }
 
     ret = vk->CreateImageView(s->hwctx->act_dev, &view_create_info,
                               s->hwctx->alloc, img_view);
-    if (ret != VK_SUCCESS) {
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Failed to create imageview: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    *aspect = view_create_info.subresourceRange.aspectMask;
+    *aspect = view_create_info.subresourceRange.aspect_ముసుగు;
 
-    return 0;
+    తిరిగి 0;
 }
 
-int ff_vk_create_imageviews_fmt(FFVulkanContext *s, FFVkExecContext *e,
-                                VkImageView views[AV_NUM_DATA_POINTERS],
+పూర్ణాంకం ff_vk_create_imageviews_fmt(FFVulkanContext *s, FFVkExecContext *e,
+                                VkImageView views[AV_అంకె_దత్తాంశం_సూచికలు],
                                 AVFrame *f,
-                                const VkFormat fmts[AV_NUM_DATA_POINTERS])
+                                స్థిరరాశి VkFormat fmts[AV_అంకె_దత్తాంశం_సూచికలు])
 {
-    int err = 0;
-    VkResult ret;
+    పూర్ణాంకం err = 0;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
-    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-    AVVulkanFramesContext *vkfc = hwfc->hwctx;
-    AVVkFrame *vkf = (AVVkFrame *)f->data[0];
-    const int nb_images = ff_vk_count_images(vkf);
-    const int nb_planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    VkImageView tmp_views[AV_NUM_DATA_POINTERS] = { 0 };
+    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_చట్రాలు_ctx->దత్తాంశం;
+    AVVulkan_చట్రాలు_Context *vkfc = hwfc->hwctx;
+    AVVk_చట్రం *vkf = (AVVk_చట్రం *)f->దత్తాంశం[0];
+    స్థిరరాశి పూర్ణాంకం nb_images = ff_vk_లెక్క_images(vkf);
+    స్థిరరాశి పూర్ణాంకం nb_planes = av_pix_fmt_లెక్క_planes(hwfc->sw_format);
+    VkImageView tmp_views[AV_అంకె_దత్తాంశం_సూచికలు] = { 0 };
 
-    for (int i = 0; i < nb_planes; i++) {
+    కొరకు (పూర్ణాంకం i = 0; i < nb_planes; i++) {
         VkImageViewUsageCreateInfo view_usage_info = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
             .usage = vkfc->usage &
-                     (~(VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR |
-                        VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR)),
+                     (~(VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_బిట్టు_KHR |
+                        VK_IMAGE_USAGE_VIDEO_DECODE_DST_బిట్టు_KHR)),
         };
         VkImageViewCreateInfo view_create_info = {
             .sType      = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            .pNext      = &view_usage_info,
+            .p_తదుపరి      = &view_usage_info,
             .image      = vkf->img[FFMIN(i, nb_images - 1)],
             .viewType   = VK_IMAGE_VIEW_TYPE_2D,
             .format     = fmts[i],
-            .components = ff_comp_identity_map,
+            .components = ff_comp_తటస్థం_map,
             .subresourceRange = {
-                .aspectMask = ff_vk_aspect_flag(f, i),
-                .levelCount = 1,
-                .layerCount = 1,
+                .aspect_ముసుగు = ff_vk_aspect_flag(f, i),
+                .level_లెక్క = 1,
+                .layer_లెక్క = 1,
             },
         };
 
         ret = vk->CreateImageView(s->hwctx->act_dev, &view_create_info,
                                   s->hwctx->alloc, &tmp_views[i]);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Failed to create imageview: %s\n",
                    ff_vk_ret2str(ret));
             err = AVERROR_EXTERNAL;
-            goto fail;
+            వెళ్ళు fail;
         }
     }
 
     /* The execution context owns the views, destroying them on completion */
-    for (int i = 0; i < nb_planes; i++)
-        ff_vk_exec_add_dep_obj(s, e, VK_OBJECT_TYPE_IMAGE_VIEW,
+    కొరకు (పూర్ణాంకం i = 0; i < nb_planes; i++)
+        ff_vk_exec_కూడు_dep_obj(s, e, VK_OBJECT_TYPE_IMAGE_VIEW,
                                (uint64_t)tmp_views[i]);
 
-    memcpy(views, tmp_views, nb_planes*sizeof(*views));
+    జ్ఞాపకం_నకలు(views, tmp_views, nb_planes*పరిమాణం(*views));
 
-    return 0;
+    తిరిగి 0;
 
 fail:
-    for (int i = 0; i < nb_planes; i++)
-        if (tmp_views[i])
+    కొరకు (పూర్ణాంకం i = 0; i < nb_planes; i++)
+        ఒకవేళ (tmp_views[i])
             vk->DestroyImageView(s->hwctx->act_dev, tmp_views[i], s->hwctx->alloc);
-    return err;
+    తిరిగి err;
 }
 
-int ff_vk_create_imageviews(FFVulkanContext *s, FFVkExecContext *e,
-                            VkImageView views[AV_NUM_DATA_POINTERS],
-                            AVFrame *f, enum FFVkShaderRepFormat rep_fmt)
+పూర్ణాంకం ff_vk_create_imageviews(FFVulkanContext *s, FFVkExecContext *e,
+                            VkImageView views[AV_అంకె_దత్తాంశం_సూచికలు],
+                            AVFrame *f, గణన FFVkShaderRepFormat rep_fmt)
 {
-    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-    const VkFormat *rep_fmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
-    const int nb_planes = av_pix_fmt_count_planes(hwfc->sw_format);
-    VkFormat fmts[AV_NUM_DATA_POINTERS] = { 0 };
+    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_చట్రాలు_ctx->దత్తాంశం;
+    స్థిరరాశి VkFormat *rep_fmts = av_vkfmt_from_pixfmt(hwfc->sw_format);
+    స్థిరరాశి పూర్ణాంకం nb_planes = av_pix_fmt_లెక్క_planes(hwfc->sw_format);
+    VkFormat fmts[AV_అంకె_దత్తాంశం_సూచికలు] = { 0 };
 
-    for (int i = 0; i < nb_planes; i++) {
-        fmts[i] = ff_vk_map_fmt_to_rep(rep_fmts[i], rep_fmt);
-        if (fmts[i] == VK_FORMAT_UNDEFINED) {
+    కొరకు (పూర్ణాంకం i = 0; i < nb_planes; i++) {
+        fmts[i] = ff_vk_map_fmt_గమ్యం_rep(rep_fmts[i], rep_fmt);
+        ఒకవేళ (fmts[i] == VK_FORMAT_UNDEFINED) {
             av_log(s, AV_LOG_ERROR, "Unable to find a compatible representation "
                                     "of format %i and mode %i\n",
                    rep_fmts[i], rep_fmt);
-            return AVERROR(EINVAL);
+            తిరిగి AVERROR(EINVAL);
         }
     }
 
-    return ff_vk_create_imageviews_fmt(s, e, views, f, fmts);
+    తిరిగి ff_vk_create_imageviews_fmt(s, e, views, f, fmts);
 }
 
-void ff_vk_frame_barrier(FFVulkanContext *s, FFVkExecContext *e,
-                         AVFrame *pic, VkImageMemoryBarrier2 *bar, int *nb_bar,
+శూన్య ff_vk_చట్రం_barrier(FFVulkanContext *s, FFVkExecContext *e,
+                         AVFrame *pic, Vk_Image_జ్ఞాపకం_Barrier2 *bar, పూర్ణాంకం *nb_bar,
                          VkPipelineStageFlags2 src_stage,
                          VkPipelineStageFlags2 dst_stage,
                          VkAccessFlagBits2     new_access,
                          VkImageLayout         new_layout,
                          uint32_t              new_qf)
 {
-    int found = -1;
-    AVVkFrame *vkf = (AVVkFrame *)pic->data[0];
-    const int nb_images = ff_vk_count_images(vkf);
-    for (int i = 0; i < e->nb_frame_deps; i++)
-        if (e->frame_deps[i]->data[0] == pic->data[0]) {
-            if (e->frame_update[i])
-                found = i;
-            break;
+    పూర్ణాంకం దొరికింది = -1;
+    AVVk_చట్రం *vkf = (AVVk_చట్రం *)pic->దత్తాంశం[0];
+    స్థిరరాశి పూర్ణాంకం nb_images = ff_vk_లెక్క_images(vkf);
+    కొరకు (పూర్ణాంకం i = 0; i < e->nb_చట్రం_deps; i++)
+        ఒకవేళ (e->చట్రం_deps[i]->దత్తాంశం[0] == pic->దత్తాంశం[0]) {
+            ఒకవేళ (e->చట్రం_update[i])
+                దొరికింది = i;
+            ఆపు;
         }
 
     /* Earlier submissions are ordered by the frame's semaphore, which makes
      * their writes available and visible, so only accesses recorded in this
      * command buffer belong in the source scope. */
-    for (int i = 0; i < nb_images; i++) {
-        bar[*nb_bar] = (VkImageMemoryBarrier2) {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-            .pNext = NULL,
-            .srcStageMask = src_stage,
-            .dstStageMask = dst_stage,
-            .srcAccessMask = found >= 0 ? e->access_dst[found] : VK_ACCESS_2_NONE,
-            .dstAccessMask = new_access,
-            .oldLayout = found >= 0 ? e->layout_dst[found] : vkf->layout[0],
+    కొరకు (పూర్ణాంకం i = 0; i < nb_images; i++) {
+        bar[*nb_bar] = (Vk_Image_జ్ఞాపకం_Barrier2) {
+            .sType = VK_STRUCTURE_TYPE_IMAGE_జ్ఞాపకం_BARRIER_2,
+            .p_తదుపరి = ఖాళీ,
+            .src_Stage_ముసుగు = src_stage,
+            .dst_Stage_ముసుగు = dst_stage,
+            .src_Access_ముసుగు = దొరికింది >= 0 ? e->access_dst[దొరికింది] : VK_ACCESS_2_NONE,
+            .dst_Access_ముసుగు = new_access,
+            .oldLayout = దొరికింది >= 0 ? e->layout_dst[దొరికింది] : vkf->layout[0],
             .newLayout = new_layout,
-            .srcQueueFamilyIndex = found >= 0 ? e->queue_family_dst[found] : vkf->queue_family[0],
-            .dstQueueFamilyIndex = new_qf,
+            .src_వరుస_Family_సూచీ = దొరికింది >= 0 ? e->వరుస_family_dst[దొరికింది] : vkf->వరుస_family[0],
+            .dst_వరుస_Family_సూచీ = new_qf,
             .image = vkf->img[i],
             .subresourceRange = (VkImageSubresourceRange) {
-                .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                .layerCount = 1,
-                .levelCount = 1,
+                .aspect_ముసుగు = VK_IMAGE_ASPECT_COLOR_బిట్టు,
+                .layer_లెక్క = 1,
+                .level_లెక్క = 1,
             },
         };
         *nb_bar += 1;
     }
 
-    ff_vk_exec_update_frame(s, e, pic, &bar[*nb_bar - nb_images], NULL);
+    ff_vk_exec_update_చట్రం(s, e, pic, &bar[*nb_bar - nb_images], ఖాళీ);
 }
 
-int ff_vk_shader_load(FFVulkanShader *shd,
+పూర్ణాంకం ff_vk_shader_ఎక్కించు(FFVulkanShader *shd,
                       VkPipelineStageFlags stage, VkSpecializationInfo *spec,
-                      uint32_t wg_size[3], uint32_t required_subgroup_size)
+                      uint32_t wg_కొలత[3], uint32_t required_subgroup_కొలత)
 {
     shd->stage = stage;
     shd->precompiled = 1;
     shd->specialization_info = spec;
-    memcpy(shd->lg_size, wg_size, 3*sizeof(uint32_t));
+    జ్ఞాపకం_నకలు(shd->lg_కొలత, wg_కొలత, 3*పరిమాణం(uint32_t));
 
-    shd->subgroup_info = (VkPipelineShaderStageRequiredSubgroupSizeCreateInfo) {
-        .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO,
-        .requiredSubgroupSize = required_subgroup_size,
+    shd->subgroup_info = (Vk_Pipeline_Shader_Stage_Required_Subgroup_కొలత_Create_Info) {
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_కొలత_CREATE_INFO,
+        .required_Subgroup_కొలత = required_subgroup_కొలత,
     };
 
-    switch (shd->stage) {
-    case VK_SHADER_STAGE_ANY_HIT_BIT_KHR:
-    case VK_SHADER_STAGE_CALLABLE_BIT_KHR:
-    case VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR:
-    case VK_SHADER_STAGE_INTERSECTION_BIT_KHR:
-    case VK_SHADER_STAGE_MISS_BIT_KHR:
-    case VK_SHADER_STAGE_RAYGEN_BIT_KHR:
-        shd->bind_point = VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR;
-        break;
-    case VK_SHADER_STAGE_COMPUTE_BIT:
-        shd->bind_point = VK_PIPELINE_BIND_POINT_COMPUTE;
-        break;
-    default:
-        shd->bind_point = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        break;
+    ఎంపిక (shd->stage) {
+    స్థితి VK_SHADER_STAGE_ANY_తగిలింది_బిట్టు_KHR:
+    స్థితి VK_SHADER_STAGE_CALLABLE_బిట్టు_KHR:
+    స్థితి VK_SHADER_STAGE_CLOSEST_తగిలింది_బిట్టు_KHR:
+    స్థితి VK_SHADER_STAGE_INTERSECTION_బిట్టు_KHR:
+    స్థితి VK_SHADER_STAGE_తప్పిపోవు_బిట్టు_KHR:
+    స్థితి VK_SHADER_STAGE_RAYGEN_బిట్టు_KHR:
+        shd->bind_బిందువు = VK_PIPELINE_BIND_బిందువు_RAY_TRACING_KHR;
+        ఆపు;
+    స్థితి VK_SHADER_STAGE_COMPUTE_బిట్టు:
+        shd->bind_బిందువు = VK_PIPELINE_BIND_బిందువు_COMPUTE;
+        ఆపు;
+    అప్రమేయ:
+        shd->bind_బిందువు = VK_PIPELINE_BIND_బిందువు_GRAPHICS;
+        ఆపు;
     };
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int init_pipeline_layout(FFVulkanContext *s, FFVulkanShader *shd)
+స్థిర పూర్ణాంకం init_pipeline_layout(FFVulkanContext *s, FFVulkanShader *shd)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
     VkPipelineLayoutCreateInfo pipeline_layout_info;
 
     /* Finally create the pipeline layout */
     pipeline_layout_info = (VkPipelineLayoutCreateInfo) {
         .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-        .pSetLayouts            = shd->desc_layout,
-        .setLayoutCount         = shd->nb_descriptor_sets,
-        .pushConstantRangeCount = shd->push_consts_num,
-        .pPushConstantRanges    = shd->push_consts,
+        .p_సమితి_Layouts            = shd->desc_layout,
+        .సమితి_Layout_లెక్క         = shd->nb_descriptor_sets,
+        .నెట్టు_Constant_Range_లెక్క = shd->నెట్టు_consts_అంకె,
+        .p_నెట్టు_Constant_Ranges    = shd->నెట్టు_consts,
     };
 
     ret = vk->CreatePipelineLayout(s->hwctx->act_dev, &pipeline_layout_info,
                                    s->hwctx->alloc, &shd->pipeline_layout);
-    if (ret != VK_SUCCESS) {
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Unable to init pipeline layout: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int create_shader_module(FFVulkanContext *s, FFVulkanShader *shd,
+స్థిర పూర్ణాంకం create_shader_module(FFVulkanContext *s, FFVulkanShader *shd,
                                 VkShaderModule *mod,
-                                const uint8_t *spirv, size_t spirv_len)
+                                స్థిరరాశి uint8_t *spirv, size_t spirv_len)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
 
     VkShaderModuleCreateInfo shader_module_info = {
         .sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-        .pNext    = NULL,
+        .p_తదుపరి    = ఖాళీ,
         .flags    = 0x0,
-        .pCode    = (void *)spirv,
-        .codeSize = spirv_len,
+        .p_సంకేతం    = (శూన్య *)spirv,
+        .సంకేతం_కొలత = spirv_len,
     };
 
     ret = vk->CreateShaderModule(s->hwctx->act_dev, &shader_module_info,
                                  s->hwctx->alloc, mod);
-    if (ret != VK_SUCCESS) {
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Error creating shader module: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int init_compute_pipeline(FFVulkanContext *s, FFVulkanShader *shd,
-                                 VkShaderModule mod, const char *entrypoint)
+స్థిర పూర్ణాంకం init_compute_pipeline(FFVulkanContext *s, FFVulkanShader *shd,
+                                 VkShaderModule mod, స్థిరరాశి అక్షరం *entrypoint)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
 
     VkComputePipelineCreateInfo pipeline_create_info = {
@@ -2374,11 +2374,11 @@ static int init_compute_pipeline(FFVulkanContext *s, FFVulkanShader *shd,
         .layout = shd->pipeline_layout,
         .stage = (VkPipelineShaderStageCreateInfo) {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-            .pNext = shd->subgroup_info.requiredSubgroupSize ?
-                     &shd->subgroup_info : NULL,
+            .p_తదుపరి = shd->subgroup_info.required_Subgroup_కొలత ?
+                     &shd->subgroup_info : ఖాళీ,
             .pName = entrypoint,
-            .flags = shd->subgroup_info.requiredSubgroupSize ?
-                     VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT : 0x0,
+            .flags = shd->subgroup_info.required_Subgroup_కొలత ?
+                     VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_నిండిన_SUBGROUPS_బిట్టు : 0x0,
             .stage = shd->stage,
             .module = mod,
             .pSpecializationInfo = shd->specialization_info,
@@ -2388,478 +2388,478 @@ static int init_compute_pipeline(FFVulkanContext *s, FFVulkanShader *shd,
     ret = vk->CreateComputePipelines(s->hwctx->act_dev, VK_NULL_HANDLE, 1,
                                      &pipeline_create_info,
                                      s->hwctx->alloc, &shd->pipeline);
-    if (ret != VK_SUCCESS) {
+    ఒకవేళ (ret != VK_SUCCESS) {
         av_log(s, AV_LOG_ERROR, "Unable to init compute pipeline: %s\n",
                ff_vk_ret2str(ret));
-        return AVERROR_EXTERNAL;
+        తిరిగి AVERROR_EXTERNAL;
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static int init_descriptors(FFVulkanContext *s, FFVulkanShader *shd)
+స్థిర పూర్ణాంకం init_descriptors(FFVulkanContext *s, FFVulkanShader *shd)
 {
-    VkResult ret;
+    Vk_ఫలితం ret;
     FFVulkanFunctions *vk = &s->vkfn;
 
-    int has_singular = 0;
-    int max_descriptors = 0;
-    for (int i = 0; i < shd->nb_descriptor_sets; i++) {
-        max_descriptors = FFMAX(max_descriptors, shd->desc_set[i].nb_bindings);
-        if (shd->desc_set[i].singular)
+    పూర్ణాంకం has_singular = 0;
+    పూర్ణాంకం max_descriptors = 0;
+    కొరకు (పూర్ణాంకం i = 0; i < shd->nb_descriptor_sets; i++) {
+        max_descriptors = FFMAX(max_descriptors, shd->desc_సమితి[i].nb_bindings);
+        ఒకవేళ (shd->desc_సమితి[i].singular)
             has_singular = 1;
     }
-    shd->use_push = (s->extensions & FF_VK_EXT_PUSH_DESCRIPTOR) &&
-                    (max_descriptors <= s->push_desc_props.maxPushDescriptors) &&
+    shd->use_నెట్టు = (s->extensions & FF_VK_EXT_నెట్టు_DESCRIPTOR) &&
+                    (max_descriptors <= s->నెట్టు_desc_props.max_నెట్టు_Descriptors) &&
                     (shd->nb_descriptor_sets == 1) &&
                     (has_singular == 0);
 
-    for (int i = 0; i < shd->nb_descriptor_sets; i++) {
-        FFVulkanDescriptorSet *set = &shd->desc_set[i];
-        VkDescriptorSetLayoutCreateInfo desc_layout_create = {
-            .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-            .bindingCount = set->nb_bindings,
-            .pBindings = set->binding,
-            .flags = (shd->use_push) ?
-                     VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR :
+    కొరకు (పూర్ణాంకం i = 0; i < shd->nb_descriptor_sets; i++) {
+        FFVulkan_Descriptor_సమితి *సమితి = &shd->desc_సమితి[i];
+        Vk_Descriptor_సమితి_Layout_Create_Info desc_layout_create = {
+            .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_సమితి_LAYOUT_CREATE_INFO,
+            .binding_లెక్క = సమితి->nb_bindings,
+            .pBindings = సమితి->binding,
+            .flags = (shd->use_నెట్టు) ?
+                     VK_DESCRIPTOR_సమితి_LAYOUT_CREATE_నెట్టు_DESCRIPTOR_బిట్టు_KHR :
                      0x0,
         };
 
-        ret = vk->CreateDescriptorSetLayout(s->hwctx->act_dev,
+        ret = vk->Create_Descriptor_సమితి_Layout(s->hwctx->act_dev,
                                             &desc_layout_create,
                                             s->hwctx->alloc,
                                             &shd->desc_layout[i]);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Unable to create descriptor set layout: %s",
                    ff_vk_ret2str(ret));
-            return AVERROR_EXTERNAL;
+            తిరిగి AVERROR_EXTERNAL;
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-int ff_vk_shader_link(FFVulkanContext *s, FFVulkanShader *shd,
-                      const char *spirv, size_t spirv_len,
-                      const char *entrypoint)
+పూర్ణాంకం ff_vk_shader_link(FFVulkanContext *s, FFVulkanShader *shd,
+                      స్థిరరాశి అక్షరం *spirv, size_t spirv_len,
+                      స్థిరరాశి అక్షరం *entrypoint)
 {
-    int err;
+    పూర్ణాంకం err;
     FFVulkanFunctions *vk = &s->vkfn;
-    VkSpecializationMapEntry spec_entries[3];
+    Vk_Specialization_Map_నమోదు spec_entries[3];
     VkSpecializationInfo spec_info;
     VkShaderModule mod;
-    size_t input_size = spirv_len;
+    size_t ఆదానం_కొలత = spirv_len;
 
-    if (shd->precompiled) {
-        if (!shd->specialization_info) {
+    ఒకవేళ (shd->precompiled) {
+        ఒకవేళ (!shd->specialization_info) {
             spec_info = (VkSpecializationInfo) {
                 .pMapEntries = spec_entries,
-                .mapEntryCount = 0,
-                .pData = shd->lg_size,
-                .dataSize = 0,
+                .map_నమోదు_లెక్క = 0,
+                .p_దత్తాంశం = shd->lg_కొలత,
+                .దత్తాంశం_కొలత_2 = 0,
             };
             shd->specialization_info = &spec_info;
         }
 
-        VkSpecializationMapEntry *spe = (void *)shd->specialization_info->pMapEntries;
-        for (int i = 0; i < 3; i++) {
-            spe[shd->specialization_info->mapEntryCount++] = (VkSpecializationMapEntry) {
+        Vk_Specialization_Map_నమోదు *spe = (శూన్య *)shd->specialization_info->pMapEntries;
+        కొరకు (పూర్ణాంకం i = 0; i < 3; i++) {
+            spe[shd->specialization_info->map_నమోదు_లెక్క++] = (Vk_Specialization_Map_నమోదు) {
                 .constantID = 253 + i,
-                .offset = shd->specialization_info->dataSize + i*sizeof(uint32_t),
-                .size = sizeof(uint32_t),
+                .స్థానభ్రంశం = shd->specialization_info->దత్తాంశం_కొలత_2 + i*పరిమాణం(uint32_t),
+                .కొలత = పరిమాణం(uint32_t),
             };
         }
 
-        uint8_t *spd = (uint8_t *)shd->specialization_info->pData;
-        memcpy(&spd[shd->specialization_info->dataSize],
-               shd->lg_size, 3*sizeof(uint32_t));
-        shd->specialization_info->dataSize += 3*sizeof(uint32_t);
+        uint8_t *spd = (uint8_t *)shd->specialization_info->p_దత్తాంశం;
+        జ్ఞాపకం_నకలు(&spd[shd->specialization_info->దత్తాంశం_కొలత_2],
+               shd->lg_కొలత, 3*పరిమాణం(uint32_t));
+        shd->specialization_info->దత్తాంశం_కొలత_2 += 3*పరిమాణం(uint32_t);
 
-#if CONFIG_SHADER_COMPRESSION
-        uint8_t *out;
-        size_t out_len;
-        int ret = ff_zlib_expand(s, &out, &out_len, spirv, spirv_len);
-        if (ret < 0)
-            return ret;
-        spirv = out;
-        spirv_len = out_len;
-#endif
+#ఒకవేళ CONFIG_SHADER_COMPRESSION
+        uint8_t *బహిర్గతం;
+        size_t బహిర్గతం_len;
+        పూర్ణాంకం ret = ff_zlib_expand(s, &బహిర్గతం, &బహిర్గతం_len, spirv, spirv_len);
+        ఒకవేళ (ret < 0)
+            తిరిగి ret;
+        spirv = బహిర్గతం;
+        spirv_len = బహిర్గతం_len;
+#అయితే_ముగింపు
     }
 
     err = init_descriptors(s, shd);
-    if (err < 0)
-        goto end;
+    ఒకవేళ (err < 0)
+        వెళ్ళు చివర;
 
     err = init_pipeline_layout(s, shd);
-    if (err < 0)
-        goto end;
+    ఒకవేళ (err < 0)
+        వెళ్ళు చివర;
 
     err = create_shader_module(s, shd, &mod, spirv, spirv_len);
-    if (err < 0)
-        goto end;
+    ఒకవేళ (err < 0)
+        వెళ్ళు చివర;
 
-    switch (shd->bind_point) {
-    case VK_PIPELINE_BIND_POINT_COMPUTE:
+    ఎంపిక (shd->bind_బిందువు) {
+    స్థితి VK_PIPELINE_BIND_బిందువు_COMPUTE:
         err = init_compute_pipeline(s, shd, mod, entrypoint);
-        break;
-    default:
+        ఆపు;
+    అప్రమేయ:
         av_log(s, AV_LOG_ERROR, "Unsupported shader type: %i\n",
-               shd->bind_point);
+               shd->bind_బిందువు);
         err = AVERROR(EINVAL);
-        goto end;
-        break;
+        వెళ్ళు చివర;
+        ఆపు;
     };
 
     vk->DestroyShaderModule(s->hwctx->act_dev, mod, s->hwctx->alloc);
-    if (err < 0)
-        goto end;
+    ఒకవేళ (err < 0)
+        వెళ్ళు చివర;
 
-    if (shd->name)
+    ఒకవేళ (shd->name)
         av_log(s, AV_LOG_VERBOSE, "Shader %s linked, size:", shd->name);
-    else
+    లేకపోతే
         av_log(s, AV_LOG_VERBOSE, "Shader linked, size:");
 
-    if (input_size != spirv_len)
-        av_log(s, AV_LOG_VERBOSE, " %zu compressed,", input_size);
+    ఒకవేళ (ఆదానం_కొలత != spirv_len)
+        av_log(s, AV_LOG_VERBOSE, " %zu compressed,", ఆదానం_కొలత);
     av_log(s, AV_LOG_VERBOSE, " %zu SPIR-V\n", spirv_len);
 
-end:
-    if (shd->precompiled) {
-        shd->specialization_info->mapEntryCount -= 3;
-        shd->specialization_info->dataSize -= 3*sizeof(uint32_t);
+చివర:
+    ఒకవేళ (shd->precompiled) {
+        shd->specialization_info->map_నమోదు_లెక్క -= 3;
+        shd->specialization_info->దత్తాంశం_కొలత_2 -= 3*పరిమాణం(uint32_t);
     }
-#if CONFIG_SHADER_COMPRESSION
-    if (shd->precompiled)
-        av_free((void *)spirv);
-#endif
-    return err;
+#ఒకవేళ CONFIG_SHADER_COMPRESSION
+    ఒకవేళ (shd->precompiled)
+        av_free((శూన్య *)spirv);
+#అయితే_ముగింపు
+    తిరిగి err;
 }
 
-void ff_vk_shader_add_descriptor_set(FFVulkanContext *s, FFVulkanShader *shd,
-                                     const FFVulkanDescriptorSetBinding *desc, int nb,
-                                     int singular)
+శూన్య ff_vk_shader_కూడు_descriptor_సమితి(FFVulkanContext *s, FFVulkanShader *shd,
+                                     స్థిరరాశి FFVulkan_Descriptor_సమితి_Binding *desc, పూర్ణాంకం nb,
+                                     పూర్ణాంకం singular)
 {
-    FFVulkanDescriptorSet *set = &shd->desc_set[shd->nb_descriptor_sets++];
+    FFVulkan_Descriptor_సమితి *సమితి = &shd->desc_సమితి[shd->nb_descriptor_sets++];
     av_assert1(shd->nb_descriptor_sets < FF_VK_MAX_DESCRIPTOR_SETS);
     av_assert1(nb < FF_VK_MAX_DESCRIPTOR_BINDINGS);
 
-    for (int i = 0; i < nb; i++) {
-        set->binding[i].binding            = i;
-        set->binding[i].descriptorType     = desc[i].type;
-        set->binding[i].descriptorCount    = FFMAX(desc[i].elems, 1);
-        set->binding[i].stageFlags         = desc[i].stages;
-        set->binding[i].pImmutableSamplers = desc[i].samplers;
+    కొరకు (పూర్ణాంకం i = 0; i < nb; i++) {
+        సమితి->binding[i].binding            = i;
+        సమితి->binding[i].descriptorType     = desc[i].type;
+        సమితి->binding[i].descriptor_లెక్క    = FFMAX(desc[i].elems, 1);
+        సమితి->binding[i].stageFlags         = desc[i].stages;
+        సమితి->binding[i].pImmutableSamplers = desc[i].samplers;
     }
 
-    for (int i = 0; i < nb; i++) {
-        int j;
-        for (j = 0; j < shd->nb_desc_pool_size; j++)
-            if (shd->desc_pool_size[j].type == desc[i].type)
-                break;
-        if (j >= shd->nb_desc_pool_size) {
-            shd->nb_desc_pool_size++;
-            av_assert1(shd->nb_desc_pool_size < FF_VK_MAX_DESCRIPTOR_TYPES);
+    కొరకు (పూర్ణాంకం i = 0; i < nb; i++) {
+        పూర్ణాంకం j;
+        కొరకు (j = 0; j < shd->nb_desc_pool_కొలత; j++)
+            ఒకవేళ (shd->desc_pool_కొలత[j].type == desc[i].type)
+                ఆపు;
+        ఒకవేళ (j >= shd->nb_desc_pool_కొలత) {
+            shd->nb_desc_pool_కొలత++;
+            av_assert1(shd->nb_desc_pool_కొలత < FF_VK_MAX_DESCRIPTOR_TYPES);
         }
 
-        shd->desc_pool_size[j].type             = desc[i].type;
-        shd->desc_pool_size[j].descriptorCount += FFMAX(desc[i].elems, 1);
+        shd->desc_pool_కొలత[j].type             = desc[i].type;
+        shd->desc_pool_కొలత[j].descriptor_లెక్క += FFMAX(desc[i].elems, 1);
     }
 
-    set->singular = singular;
-    set->nb_bindings = nb;
+    సమితి->singular = singular;
+    సమితి->nb_bindings = nb;
 }
 
-int ff_vk_shader_register_exec(FFVulkanContext *s, FFVkExecPool *pool,
+పూర్ణాంకం ff_vk_shader_రిజిస్టరు_exec(FFVulkanContext *s, FFVkExecPool *pool,
                                FFVulkanShader *shd)
 {
-    if (!shd->nb_descriptor_sets)
-        return 0;
+    ఒకవేళ (!shd->nb_descriptor_sets)
+        తిరిగి 0;
 
-    FFVulkanShaderData *sd = &pool->reg_shd[pool->nb_reg_shd++];
+    FFVulkan_Shader_దత్తాంశం *sd = &pool->reg_shd[pool->nb_reg_shd++];
     av_assert1(pool->nb_reg_shd < FF_VK_MAX_SHADERS);
 
     sd->shd = shd;
     sd->nb_descriptor_sets = shd->nb_descriptor_sets;
 
-    if (!shd->use_push) {
-        VkResult ret;
+    ఒకవేళ (!shd->use_నెట్టు) {
+        Vk_ఫలితం ret;
         FFVulkanFunctions *vk = &s->vkfn;
-        VkDescriptorSetLayout *tmp_layouts;
-        VkDescriptorSetAllocateInfo set_alloc_info;
+        Vk_Descriptor_సమితి_Layout *tmp_layouts;
+        Vk_Descriptor_సమితి_Allocate_Info సమితి_alloc_info;
         VkDescriptorPoolCreateInfo pool_create_info;
 
-        for (int i = 0; i < shd->nb_desc_pool_size; i++)
-            shd->desc_pool_size[i].descriptorCount *= pool->pool_size;
+        కొరకు (పూర్ణాంకం i = 0; i < shd->nb_desc_pool_కొలత; i++)
+            shd->desc_pool_కొలత[i].descriptor_లెక్క *= pool->pool_కొలత;
 
         pool_create_info = (VkDescriptorPoolCreateInfo) {
             .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
             .flags = 0,
-            .pPoolSizes = shd->desc_pool_size,
-            .poolSizeCount = shd->nb_desc_pool_size,
-            .maxSets = sd->nb_descriptor_sets*pool->pool_size,
+            .pPoolSizes = shd->desc_pool_కొలత,
+            .pool_కొలత_లెక్క = shd->nb_desc_pool_కొలత,
+            .maxSets = sd->nb_descriptor_sets*pool->pool_కొలత,
         };
 
         ret = vk->CreateDescriptorPool(s->hwctx->act_dev, &pool_create_info,
                                        s->hwctx->alloc, &sd->desc_pool);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Unable to create descriptor pool: %s\n",
                    ff_vk_ret2str(ret));
-            return AVERROR_EXTERNAL;
+            తిరిగి AVERROR_EXTERNAL;
         }
 
-        tmp_layouts = av_malloc_array(pool_create_info.maxSets, sizeof(*tmp_layouts));
-        if (!tmp_layouts)
-            return AVERROR(ENOMEM);
+        tmp_layouts = av_malloc_array(pool_create_info.maxSets, పరిమాణం(*tmp_layouts));
+        ఒకవేళ (!tmp_layouts)
+            తిరిగి AVERROR(ENOMEM);
 
         /* Colate each execution context's descriptor set layouts */
-        for (int i = 0; i < pool->pool_size; i++)
-            for (int j = 0; j < sd->nb_descriptor_sets; j++)
+        కొరకు (పూర్ణాంకం i = 0; i < pool->pool_కొలత; i++)
+            కొరకు (పూర్ణాంకం j = 0; j < sd->nb_descriptor_sets; j++)
                 tmp_layouts[i*sd->nb_descriptor_sets + j] = shd->desc_layout[j];
 
-        set_alloc_info = (VkDescriptorSetAllocateInfo) {
-            .sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+        సమితి_alloc_info = (Vk_Descriptor_సమితి_Allocate_Info) {
+            .sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_సమితి_ALLOCATE_INFO,
             .descriptorPool     = sd->desc_pool,
-            .pSetLayouts        = tmp_layouts,
-            .descriptorSetCount = pool_create_info.maxSets,
+            .p_సమితి_Layouts        = tmp_layouts,
+            .descriptor_సమితి_లెక్క = pool_create_info.maxSets,
         };
 
         sd->desc_sets = av_malloc_array(pool_create_info.maxSets,
-                                        sizeof(*tmp_layouts));
-        if (!sd->desc_sets) {
+                                        పరిమాణం(*tmp_layouts));
+        ఒకవేళ (!sd->desc_sets) {
             av_free(tmp_layouts);
-            return AVERROR(ENOMEM);
+            తిరిగి AVERROR(ENOMEM);
         }
-        ret = vk->AllocateDescriptorSets(s->hwctx->act_dev, &set_alloc_info,
+        ret = vk->AllocateDescriptorSets(s->hwctx->act_dev, &సమితి_alloc_info,
                                          sd->desc_sets);
         av_free(tmp_layouts);
-        if (ret != VK_SUCCESS) {
+        ఒకవేళ (ret != VK_SUCCESS) {
             av_log(s, AV_LOG_ERROR, "Unable to allocate descriptor set: %s\n",
                    ff_vk_ret2str(ret));
             av_freep(&sd->desc_sets);
-            return AVERROR_EXTERNAL;
+            తిరిగి AVERROR_EXTERNAL;
         }
     }
 
-    return 0;
+    తిరిగి 0;
 }
 
-static inline const FFVulkanShaderData *get_shd_data(FFVkExecContext *e,
-                                                     const FFVulkanShader *shd)
+స్థిర అంతఃవరుస స్థిరరాశి FFVulkan_Shader_దత్తాంశం *get_shd_దత్తాంశం(FFVkExecContext *e,
+                                                     స్థిరరాశి FFVulkanShader *shd)
 {
-    for (int i = 0; i < e->parent->nb_reg_shd; i++)
-        if (e->parent->reg_shd[i].shd == shd)
-            return &e->parent->reg_shd[i];
-    return NULL;
+    కొరకు (పూర్ణాంకం i = 0; i < e->మాతృ->nb_reg_shd; i++)
+        ఒకవేళ (e->మాతృ->reg_shd[i].shd == shd)
+            తిరిగి &e->మాతృ->reg_shd[i];
+    తిరిగి ఖాళీ;
 }
 
-static inline void update_set_pool_write(FFVulkanContext *s, FFVkExecContext *e,
-                                         FFVulkanShader *shd, int set,
-                                         VkWriteDescriptorSet *write_info)
+స్థిర అంతఃవరుస శూన్య update_సమితి_pool_write(FFVulkanContext *s, FFVkExecContext *e,
+                                         FFVulkanShader *shd, పూర్ణాంకం సమితి,
+                                         Vk_Write_Descriptor_సమితి *write_info)
 {
     FFVulkanFunctions *vk = &s->vkfn;
-    FFVulkanDescriptorSet *desc_set = &shd->desc_set[set];
-    const FFVulkanShaderData *sd = get_shd_data(e, shd);
+    FFVulkan_Descriptor_సమితి *desc_సమితి = &shd->desc_సమితి[సమితి];
+    స్థిరరాశి FFVulkan_Shader_దత్తాంశం *sd = get_shd_దత్తాంశం(e, shd);
 
-    if (desc_set->singular) {
-        for (int i = 0; i < e->parent->pool_size; i++) {
-            write_info->dstSet = sd->desc_sets[i*sd->nb_descriptor_sets + set];
-            vk->UpdateDescriptorSets(s->hwctx->act_dev, 1, write_info, 0, NULL);
+    ఒకవేళ (desc_సమితి->singular) {
+        కొరకు (పూర్ణాంకం i = 0; i < e->మాతృ->pool_కొలత; i++) {
+            write_info->dst_సమితి = sd->desc_sets[i*sd->nb_descriptor_sets + సమితి];
+            vk->UpdateDescriptorSets(s->hwctx->act_dev, 1, write_info, 0, ఖాళీ);
         }
-    } else {
-        if (shd->use_push) {
-            vk->CmdPushDescriptorSetKHR(e->buf,
-                                        shd->bind_point,
+    } లేకపోతే {
+        ఒకవేళ (shd->use_నెట్టు) {
+            vk->Cmd_నెట్టు_Descriptor_సమితి_KHR(e->buf,
+                                        shd->bind_బిందువు,
                                         shd->pipeline_layout,
-                                        set, 1,
+                                        సమితి, 1,
                                         write_info);
-        } else {
-            write_info->dstSet = sd->desc_sets[e->idx*sd->nb_descriptor_sets + set];
-            vk->UpdateDescriptorSets(s->hwctx->act_dev, 1, write_info, 0, NULL);
+        } లేకపోతే {
+            write_info->dst_సమితి = sd->desc_sets[e->idx*sd->nb_descriptor_sets + సమితి];
+            vk->UpdateDescriptorSets(s->hwctx->act_dev, 1, write_info, 0, ఖాళీ);
         }
     }
 }
 
-int ff_vk_shader_update_img(FFVulkanContext *s, FFVkExecContext *e,
-                            FFVulkanShader *shd, int set, int bind, int offs,
+పూర్ణాంకం ff_vk_shader_update_img(FFVulkanContext *s, FFVkExecContext *e,
+                            FFVulkanShader *shd, పూర్ణాంకం సమితి, పూర్ణాంకం bind, పూర్ణాంకం offs,
                             VkImageView view, VkImageLayout layout,
                             VkSampler sampler)
 {
-    FFVulkanDescriptorSet *desc_set = &shd->desc_set[set];
+    FFVulkan_Descriptor_సమితి *desc_సమితి = &shd->desc_సమితి[సమితి];
 
     VkDescriptorImageInfo desc_pool_write_info_img = {
         .sampler = sampler,
         .imageView = view,
         .imageLayout = layout,
     };
-    VkWriteDescriptorSet desc_pool_write_info = {
-        .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+    Vk_Write_Descriptor_సమితి desc_pool_write_info = {
+        .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_సమితి,
         .dstBinding = bind,
-        .descriptorCount = 1,
+        .descriptor_లెక్క = 1,
         .dstArrayElement = offs,
-        .descriptorType = desc_set->binding[bind].descriptorType,
+        .descriptorType = desc_సమితి->binding[bind].descriptorType,
         .pImageInfo = &desc_pool_write_info_img,
     };
-    update_set_pool_write(s, e, shd, set, &desc_pool_write_info);
+    update_సమితి_pool_write(s, e, shd, సమితి, &desc_pool_write_info);
 
-    return 0;
+    తిరిగి 0;
 }
 
-void ff_vk_shader_update_img_array(FFVulkanContext *s, FFVkExecContext *e,
+శూన్య ff_vk_shader_update_img_array(FFVulkanContext *s, FFVkExecContext *e,
                                    FFVulkanShader *shd, AVFrame *f,
-                                   VkImageView *views, int set, int binding,
+                                   VkImageView *views, పూర్ణాంకం సమితి, పూర్ణాంకం binding,
                                    VkImageLayout layout, VkSampler sampler)
 {
-    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_frames_ctx->data;
-    const int nb_planes = av_pix_fmt_count_planes(hwfc->sw_format);
+    AVHWFramesContext *hwfc = (AVHWFramesContext *)f->hw_చట్రాలు_ctx->దత్తాంశం;
+    స్థిరరాశి పూర్ణాంకం nb_planes = av_pix_fmt_లెక్క_planes(hwfc->sw_format);
 
-    for (int i = 0; i < nb_planes; i++)
-        ff_vk_shader_update_img(s, e, shd, set, binding, i,
+    కొరకు (పూర్ణాంకం i = 0; i < nb_planes; i++)
+        ff_vk_shader_update_img(s, e, shd, సమితి, binding, i,
                                 views[i], layout, sampler);
 }
 
-int ff_vk_shader_update_desc_buffer(FFVulkanContext *s, FFVkExecContext *e,
+పూర్ణాంకం ff_vk_shader_update_desc_బఫరు(FFVulkanContext *s, FFVkExecContext *e,
                                     FFVulkanShader *shd,
-                                    int set, int bind, int elem,
-                                    FFVkBuffer *buf, VkDeviceSize offset, VkDeviceSize len,
+                                    పూర్ణాంకం సమితి, పూర్ణాంకం bind, పూర్ణాంకం elem,
+                                    FFVk_బఫరు *buf, Vk_Device_కొలత స్థానభ్రంశం, Vk_Device_కొలత len,
                                     VkFormat fmt)
 {
-    FFVulkanDescriptorSet *desc_set = &shd->desc_set[set];
+    FFVulkan_Descriptor_సమితి *desc_సమితి = &shd->desc_సమితి[సమితి];
 
-    VkDescriptorBufferInfo desc_pool_write_info_buf = {
-        .buffer = buf->buf,
-        .offset = buf->virtual_offset + offset,
+    Vk_Descriptor_బఫరు_Info desc_pool_write_info_buf = {
+        .బఫరు = buf->buf,
+        .స్థానభ్రంశం = buf->virtual_స్థానభ్రంశం + స్థానభ్రంశం,
         .range = len,
     };
-    VkWriteDescriptorSet desc_pool_write_info = {
-        .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+    Vk_Write_Descriptor_సమితి desc_pool_write_info = {
+        .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_సమితి,
         .dstBinding = bind,
-        .descriptorCount = 1,
+        .descriptor_లెక్క = 1,
         .dstArrayElement = elem,
-        .descriptorType = desc_set->binding[bind].descriptorType,
-        .pBufferInfo = &desc_pool_write_info_buf,
+        .descriptorType = desc_సమితి->binding[bind].descriptorType,
+        .p_బఫరు_Info = &desc_pool_write_info_buf,
     };
-    update_set_pool_write(s, e, shd, set, &desc_pool_write_info);
+    update_సమితి_pool_write(s, e, shd, సమితి, &desc_pool_write_info);
 
-    return 0;
+    తిరిగి 0;
 }
 
-void ff_vk_shader_update_push_const(FFVulkanContext *s, FFVkExecContext *e,
+శూన్య ff_vk_shader_update_నెట్టు_const(FFVulkanContext *s, FFVkExecContext *e,
                                     FFVulkanShader *shd,
-                                    VkShaderStageFlagBits stage,
-                                    int offset, size_t size, void *src)
+                                    Vk_Shader_Stage_Flag_బిట్లు stage,
+                                    పూర్ణాంకం స్థానభ్రంశం, size_t కొలత, శూన్య *src)
 {
     FFVulkanFunctions *vk = &s->vkfn;
-    vk->CmdPushConstants(e->buf, shd->pipeline_layout,
-                         stage, offset, size, src);
+    vk->Cmd_నెట్టు_Constants(e->buf, shd->pipeline_layout,
+                         stage, స్థానభ్రంశం, కొలత, src);
 }
 
-void ff_vk_exec_bind_shader(FFVulkanContext *s, FFVkExecContext *e,
-                            const FFVulkanShader *shd)
+శూన్య ff_vk_exec_bind_shader(FFVulkanContext *s, FFVkExecContext *e,
+                            స్థిరరాశి FFVulkanShader *shd)
 {
     FFVulkanFunctions *vk = &s->vkfn;
-    const FFVulkanShaderData *sd = get_shd_data(e, shd);
+    స్థిరరాశి FFVulkan_Shader_దత్తాంశం *sd = get_shd_దత్తాంశం(e, shd);
 
-    vk->CmdBindPipeline(e->buf, shd->bind_point, shd->pipeline);
+    vk->CmdBindPipeline(e->buf, shd->bind_బిందువు, shd->pipeline);
 
-    if (sd && sd->nb_descriptor_sets) {
-        if (!shd->use_push) {
-            vk->CmdBindDescriptorSets(e->buf, shd->bind_point, shd->pipeline_layout,
+    ఒకవేళ (sd && sd->nb_descriptor_sets) {
+        ఒకవేళ (!shd->use_నెట్టు) {
+            vk->CmdBindDescriptorSets(e->buf, shd->bind_బిందువు, shd->pipeline_layout,
                                       0, sd->nb_descriptor_sets,
                                       &sd->desc_sets[e->idx*sd->nb_descriptor_sets],
-                                      0, NULL);
+                                      0, ఖాళీ);
         }
     }
 }
 
-void ff_vk_shader_free(FFVulkanContext *s, FFVulkanShader *shd)
+శూన్య ff_vk_shader_free(FFVulkanContext *s, FFVulkanShader *shd)
 {
     FFVulkanFunctions *vk = &s->vkfn;
 
-#if 0
-    if (shd->shader.module)
+#ఒకవేళ 0
+    ఒకవేళ (shd->shader.module)
         vk->DestroyShaderModule(s->hwctx->act_dev, shd->shader.module,
                                 s->hwctx->alloc);
-#endif
+#అయితే_ముగింపు
 
-    if (shd->pipeline)
+    ఒకవేళ (shd->pipeline)
         vk->DestroyPipeline(s->hwctx->act_dev, shd->pipeline, s->hwctx->alloc);
-    if (shd->pipeline_layout)
+    ఒకవేళ (shd->pipeline_layout)
         vk->DestroyPipelineLayout(s->hwctx->act_dev, shd->pipeline_layout,
                                   s->hwctx->alloc);
 
-    for (int i = 0; i < shd->nb_descriptor_sets; i++)
-        if (shd->desc_layout[i])
-            vk->DestroyDescriptorSetLayout(s->hwctx->act_dev, shd->desc_layout[i],
+    కొరకు (పూర్ణాంకం i = 0; i < shd->nb_descriptor_sets; i++)
+        ఒకవేళ (shd->desc_layout[i])
+            vk->Destroy_Descriptor_సమితి_Layout(s->hwctx->act_dev, shd->desc_layout[i],
                                            s->hwctx->alloc);
 }
 
-void ff_vk_uninit(FFVulkanContext *s)
+శూన్య ff_vk_uninit(FFVulkanContext *s)
 {
     av_freep(&s->query_props);
     av_freep(&s->qf_props);
     av_freep(&s->video_props);
-#ifdef VK_KHR_maintenance9
+#నిర్వచితమైతే VK_KHR_maintenance9
     av_freep(&s->ownership_props);
-#endif
+#అయితే_ముగింపు
     av_freep(&s->coop_mat_props);
     av_freep(&s->host_image_copy_layouts);
     av_refstruct_pool_uninit(&s->imageviews_pool);
 
-    av_buffer_unref(&s->device_ref);
-    av_buffer_unref(&s->frames_ref);
+    av_బఫరు_unref(&s->device_ref);
+    av_బఫరు_unref(&s->చట్రాలు_ref);
 }
 
-int ff_vk_init(FFVulkanContext *s, void *log_parent,
-               AVBufferRef *device_ref, AVBufferRef *frames_ref)
+పూర్ణాంకం ff_vk_init(FFVulkanContext *s, శూన్య *log_మాతృ,
+               AVBufferRef *device_ref, AVBufferRef *చట్రాలు_ref)
 {
-    int err;
+    పూర్ణాంకం err;
 
-    static const AVClass vulkan_context_class = {
+    స్థిర స్థిరరాశి AVClass vulkan_context_class = {
         .class_name       = "vk",
-        .version          = LIBAVUTIL_VERSION_INT,
-        .parent_log_context_offset = offsetof(FFVulkanContext, log_parent),
+        .సంస్కరణ          = LIBAVUTIL_సంస్కరణ_INT,
+        .మాతృ_log_context_స్థానభ్రంశం = offsetof(FFVulkanContext, log_మాతృ),
     };
 
-    memset(s, 0, sizeof(*s));
-    s->log_parent = log_parent;
+    memset(s, 0, పరిమాణం(*s));
+    s->log_మాతృ = log_మాతృ;
     s->class      = &vulkan_context_class;
 
-    if (frames_ref) {
-        s->frames_ref = av_buffer_ref(frames_ref);
-        if (!s->frames_ref)
-            return AVERROR(ENOMEM);
+    ఒకవేళ (చట్రాలు_ref) {
+        s->చట్రాలు_ref = av_బఫరు_ref(చట్రాలు_ref);
+        ఒకవేళ (!s->చట్రాలు_ref)
+            తిరిగి AVERROR(ENOMEM);
 
-        s->frames = (AVHWFramesContext *)s->frames_ref->data;
-        s->hwfc = s->frames->hwctx;
+        s->చట్రాలు = (AVHWFramesContext *)s->చట్రాలు_ref->దత్తాంశం;
+        s->hwfc = s->చట్రాలు->hwctx;
 
-        device_ref = s->frames->device_ref;
+        device_ref = s->చట్రాలు->device_ref;
     }
 
-    s->device_ref = av_buffer_ref(device_ref);
-    if (!s->device_ref) {
+    s->device_ref = av_బఫరు_ref(device_ref);
+    ఒకవేళ (!s->device_ref) {
         ff_vk_uninit(s);
-        return AVERROR(ENOMEM);
+        తిరిగి AVERROR(ENOMEM);
     }
 
-    s->device = (AVHWDeviceContext *)s->device_ref->data;
+    s->device = (AVHWDeviceContext *)s->device_ref->దత్తాంశం;
     s->hwctx = s->device->hwctx;
 
-    s->extensions = ff_vk_extensions_to_mask(s->hwctx->enabled_dev_extensions,
+    s->extensions = ff_vk_extensions_గమ్యం_ముసుగు(s->hwctx->enabled_dev_extensions,
                                              s->hwctx->nb_enabled_dev_extensions);
-    s->extensions |= ff_vk_extensions_to_mask(s->hwctx->enabled_inst_extensions,
+    s->extensions |= ff_vk_extensions_గమ్యం_ముసుగు(s->hwctx->enabled_inst_extensions,
                                               s->hwctx->nb_enabled_inst_extensions);
 
-    err = ff_vk_load_functions(s->device, &s->vkfn, s->extensions, 1, 1);
-    if (err < 0) {
+    err = ff_vk_ఎక్కించు_functions(s->device, &s->vkfn, s->extensions, 1, 1);
+    ఒకవేళ (err < 0) {
         ff_vk_uninit(s);
-        return err;
+        తిరిగి err;
     }
 
-    err = ff_vk_load_props(s);
-    if (err < 0) {
+    err = ff_vk_ఎక్కించు_props(s);
+    ఒకవేళ (err < 0) {
         ff_vk_uninit(s);
-        return err;
+        తిరిగి err;
     }
 
-    return 0;
+    తిరిగి 0;
 }
