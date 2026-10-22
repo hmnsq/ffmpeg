@@ -16,30 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "film_grain_params.h"
-#include "mem.h"
-#include "pixdesc.h"
+#شامل "film_grain_params.h"
+#شامل "mem.h"
+#شامل "pixdesc.h"
 
-AVFilmGrainParams *av_film_grain_params_alloc(size_t *size)
+AVFilmGrainParams *av_film_grain_params_alloc(size_t *سائز)
 {
-    AVFilmGrainParams *params = av_mallocz(sizeof(AVFilmGrainParams));
+    AVFilmGrainParams *params = av_mallocz(حجم(AVFilmGrainParams));
 
-    if (size)
-        *size = params ? sizeof(*params) : 0;
+    اگر (سائز)
+        *سائز = params ? حجم(*params) : 0;
 
-    return params;
+    واپس params;
 }
 
-AVFilmGrainParams *av_film_grain_params_create_side_data(AVFrame *frame)
+AVFilmGrainParams *av_film_grain_params_create_side_ڈیٹا(AVFrame *چوکھٹا)
 {
     AVFilmGrainParams *fgp;
-    AVFrameSideData *side_data = av_frame_new_side_data(frame,
-                                                        AV_FRAME_DATA_FILM_GRAIN_PARAMS,
-                                                        sizeof(AVFilmGrainParams));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ڈیٹا *side_ڈیٹا = av_چوکھٹا_new_side_ڈیٹا(چوکھٹا,
+                                                        AV_چوکھٹا_ڈیٹا_FILM_GRAIN_PARAMS,
+                                                        حجم(AVFilmGrainParams));
+    اگر (!side_ڈیٹا)
+        واپس تہی;
 
-    fgp = (AVFilmGrainParams *) side_data->data;
+    fgp = (AVFilmGrainParams *) side_ڈیٹا->ڈیٹا;
     *fgp = (AVFilmGrainParams) {
         .color_range     = AVCOL_RANGE_UNSPECIFIED,
         .color_primaries = AVCOL_PRI_UNSPECIFIED,
@@ -47,60 +47,60 @@ AVFilmGrainParams *av_film_grain_params_create_side_data(AVFrame *frame)
         .color_space     = AVCOL_SPC_UNSPECIFIED,
     };
 
-    return fgp;
+    واپس fgp;
 }
 
-const AVFilmGrainParams *av_film_grain_params_select(const AVFrame *frame)
+ثابت AVFilmGrainParams *av_film_grain_params_select(ثابت AVFrame *چوکھٹا)
 {
-    const AVFilmGrainParams *fgp, *best = NULL;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int bit_depth_luma, bit_depth_chroma;
-    if (!desc)
-        return NULL;
+    ثابت AVFilmGrainParams *fgp, *بہترین = تہی;
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(چوکھٹا->format);
+    صحیح ثنائی_ہندسہ_گہرائی_luma, ثنائی_ہندسہ_گہرائی_chroma;
+    اگر (!desc)
+        واپس تہی;
 
     /* There are no YUV formats with different bit depth per component,
      * so just check both against the first component for simplicity */
-    bit_depth_luma = bit_depth_chroma = desc->comp[0].depth;
+    ثنائی_ہندسہ_گہرائی_luma = ثنائی_ہندسہ_گہرائی_chroma = desc->comp[0].گہرائی;
 
-    for (int i = 0; i < frame->nb_side_data; i++) {
-        if (frame->side_data[i]->type != AV_FRAME_DATA_FILM_GRAIN_PARAMS)
-            continue;
-        fgp = (const AVFilmGrainParams*)frame->side_data[i]->data;
-        if (fgp->width  && fgp->width  > frame->width ||
-            fgp->height && fgp->height > frame->height)
-            continue;
+    برائے (صحیح i = 0; i < چوکھٹا->nb_side_ڈیٹا; i++) {
+        اگر (چوکھٹا->side_ڈیٹا[i]->type != AV_چوکھٹا_ڈیٹا_FILM_GRAIN_PARAMS)
+            جاری;
+        fgp = (ثابت AVFilmGrainParams*)چوکھٹا->side_ڈیٹا[i]->ڈیٹا;
+        اگر (fgp->چوڑائی  && fgp->چوڑائی  > چوکھٹا->چوڑائی ||
+            fgp->اونچائی && fgp->اونچائی > چوکھٹا->اونچائی)
+            جاری;
 
-#define CHECK(a, b, unspec)                                     \
-        if ((a) != (unspec) && (b) != (unspec) && (a) != (b))   \
-            continue
+#تعریف_کرو CHECK(a, b, unspec)                                     \
+        اگر ((a) != (unspec) && (b) != (unspec) && (a) != (b))   \
+            جاری
 
-        CHECK(fgp->bit_depth_luma,   bit_depth_luma,         0);
-        CHECK(fgp->bit_depth_chroma, bit_depth_chroma,       0);
-        CHECK(fgp->color_range,      frame->color_range,     AVCOL_RANGE_UNSPECIFIED);
-        CHECK(fgp->color_primaries,  frame->color_primaries, AVCOL_PRI_UNSPECIFIED);
-        CHECK(fgp->color_trc,        frame->color_trc,       AVCOL_TRC_UNSPECIFIED);
-        CHECK(fgp->color_space,      frame->colorspace,      AVCOL_SPC_UNSPECIFIED);
+        CHECK(fgp->ثنائی_ہندسہ_گہرائی_luma,   ثنائی_ہندسہ_گہرائی_luma,         0);
+        CHECK(fgp->ثنائی_ہندسہ_گہرائی_chroma, ثنائی_ہندسہ_گہرائی_chroma,       0);
+        CHECK(fgp->color_range,      چوکھٹا->color_range,     AVCOL_RANGE_UNSPECIFIED);
+        CHECK(fgp->color_primaries,  چوکھٹا->color_primaries, AVCOL_PRI_UNSPECIFIED);
+        CHECK(fgp->color_trc,        چوکھٹا->color_trc,       AVCOL_TRC_UNSPECIFIED);
+        CHECK(fgp->color_space,      چوکھٹا->colorspace,      AVCOL_SPC_UNSPECIFIED);
 
-        switch (fgp->type) {
-        case AV_FILM_GRAIN_PARAMS_NONE:
-            continue;
-        case AV_FILM_GRAIN_PARAMS_AV1:
+        انتخاب (fgp->type) {
+        حالت AV_FILM_GRAIN_PARAMS_NONE:
+            جاری;
+        حالت AV_FILM_GRAIN_PARAMS_AV1:
             /* AOM FGS needs an exact match for the chroma resolution */
-            if (fgp->subsampling_x != desc->log2_chroma_w ||
+            اگر (fgp->subsampling_x != desc->log2_chroma_w ||
                 fgp->subsampling_y != desc->log2_chroma_h)
-                continue;
-            break;
-        case AV_FILM_GRAIN_PARAMS_H274:
+                جاری;
+            توڑو;
+        حالت AV_FILM_GRAIN_PARAMS_H274:
             /* H.274 FGS can be adapted to any lower chroma resolution */
-            if (fgp->subsampling_x > desc->log2_chroma_w ||
+            اگر (fgp->subsampling_x > desc->log2_chroma_w ||
                 fgp->subsampling_y > desc->log2_chroma_h)
-                continue;
-            break;
+                جاری;
+            توڑو;
         }
 
-        if (!best || best->width < fgp->width || best->height < fgp->height)
-            best = fgp;
+        اگر (!بہترین || بہترین->چوڑائی < fgp->چوڑائی || بہترین->اونچائی < fgp->اونچائی)
+            بہترین = fgp;
     }
 
-    return best;
+    واپس بہترین;
 }

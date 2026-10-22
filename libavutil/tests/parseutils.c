@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define TEST
-#include "libavutil/parseutils.c"
+#تعریف_کرو TEST
+#شامل "libavutil/parseutils.c"
 
-#include <stdint.h>
-#include <stdio.h>
+#شامل <stdint.h>
+#شامل <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/log.h"
-#include "libavutil/rational.h"
+#شامل "libavutil/common.h"
+#شامل "libavutil/log.h"
+#شامل "libavutil/rational.h"
 
-static uint32_t randomv = MKTAG('L','A','V','U');
+ساکن uint32_t randomv = MKTAG('L','A','V','U');
 
-static uint32_t av_get_random_seed_deterministic(void)
+ساکن uint32_t av_get_random_بیج_deterministic(خالی)
 {
-    return randomv = randomv * 1664525 + 1013904223;
+    واپس randomv = randomv * 1664525 + 1013904223;
 }
 
-static void test_av_parse_video_rate(void)
+ساکن خالی test_av_parse_video_شرح(خالی)
 {
-    int i;
-    static const char *const rates[] = {
+    صحیح i;
+    ساکن ثابت حرف *ثابت rates[] = {
         "-inf",
         "inf",
         "nan",
@@ -64,20 +64,20 @@ static void test_av_parse_video_rate(void)
         " -21332.2324   ",
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
-        int ret;
+    برائے (i = 0; i < FF_ARRAY_ELEMS(rates); i++) {
+        صحیح ret;
         AVRational q = { 0, 0 };
-        ret = av_parse_video_rate(&q, rates[i]);
-        printf("'%s' -> %d/%d %s\n",
-               rates[i], q.num, q.den, ret ? "ERROR" : "OK");
+        ret = av_parse_video_شرح(&q, rates[i]);
+        لکھو("'%s' -> %d/%d %s\n",
+               rates[i], q.عدد, q.den, ret ? "ERROR" : "OK");
     }
 }
 
-static void test_av_parse_color(void)
+ساکن خالی test_av_parse_color(خالی)
 {
-    int i;
+    صحیح i;
     uint8_t rgba[4];
-    static const char *const color_names[] = {
+    ساکن ثابت حرف *ثابت color_نام[] = {
         "bikeshed",
         "RaNdOm",
         "foo",
@@ -116,23 +116,23 @@ static void test_av_parse_color(void)
         "red@-0.0",
     };
 
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_سیٹ_level(AV_LOG_DEBUG);
 
-    for (i = 0;  i < FF_ARRAY_ELEMS(color_names); i++) {
-        if (av_parse_color(rgba, color_names[i], -1, NULL) >= 0)
-            printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
-                   color_names[i], rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
-            printf("%s -> error\n", color_names[i]);
+    برائے (i = 0;  i < FF_ARRAY_ELEMS(color_نام); i++) {
+        اگر (av_parse_color(rgba, color_نام[i], -1, تہی) >= 0)
+            لکھو("%s -> R(%d) G(%d) B(%d) A(%d)\n",
+                   color_نام[i], rgba[0], rgba[1], rgba[2], rgba[3]);
+        ورنہ
+            لکھو("%s -> error\n", color_نام[i]);
     }
 }
 
-static void test_av_small_strptime(void)
+ساکن خالی test_av_small_strptime(خالی)
 {
-    int i;
-    struct tm tm = { 0 };
-    struct fmt_timespec_entry {
-        const char *fmt, *timespec;
+    صحیح i;
+    ساخت tm tm = { 0 };
+    ساخت fmt_timespec_اندراج {
+        ثابت حرف *fmt, *timespec;
     } fmt_timespec_entries[] = {
         { "%Y-%m-%d",                    "2012-12-21" },
         { "%Y - %m - %d",                "2012-12-21" },
@@ -147,30 +147,30 @@ static void test_av_small_strptime(void)
         { "  %Y - %B - %d %H : %M : %S", "   2012 - January -  21   20 : 12 : 21" },
     };
 
-    av_log_set_level(AV_LOG_DEBUG);
-    for (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
-        char *p;
-        struct fmt_timespec_entry *e = &fmt_timespec_entries[i];
-        printf("fmt:'%s' spec:'%s' -> ", e->fmt, e->timespec);
+    av_log_سیٹ_level(AV_LOG_DEBUG);
+    برائے (i = 0;  i < FF_ARRAY_ELEMS(fmt_timespec_entries); i++) {
+        حرف *p;
+        ساخت fmt_timespec_اندراج *e = &fmt_timespec_entries[i];
+        لکھو("fmt:'%s' spec:'%s' -> ", e->fmt, e->timespec);
         p = av_small_strptime(e->timespec, e->fmt, &tm);
-        if (p) {
-            printf("%04d-%02d-%2d %02d:%02d:%02d\n",
+        اگر (p) {
+            لکھو("%04d-%02d-%2d %02d:%02d:%02d\n",
                    1900+tm.tm_year, tm.tm_mon+1, tm.tm_mday,
                    tm.tm_hour, tm.tm_min, tm.tm_sec);
-        } else {
-            printf("error\n");
+        } ورنہ {
+            لکھو("error\n");
         }
     }
 }
 
-static void test_av_parse_time(void)
+ساکن خالی test_av_parse_وقت(خالی)
 {
-    int i;
+    صحیح i;
     int64_t tv;
     time_t tvi;
-    struct tm *tm;
-    static char tzstr[] = "TZ=CET-1";
-    static const char * const time_string[] = {
+    ساخت tm *tm;
+    ساکن حرف tzstr[] = "TZ=CET-1";
+    ساکن ثابت حرف * ثابت وقت_string[] = {
         "now",
         "12:35:46",
         "2000-12-20 0:02:47.5z",
@@ -179,7 +179,7 @@ static void test_av_parse_time(void)
         "2000-12-12 1:35:46+05:30",
         "2002-12-12 22:30:40-02",
     };
-    static const char * const duration_string[] = {
+    ساکن ثابت حرف * ثابت duration_string[] = {
         "2:34:56.79",
         "-1:23:45.67",
         "42.1729",
@@ -191,81 +191,81 @@ static void test_av_parse_time(void)
         "9223372036854775808us",
     };
 
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_سیٹ_level(AV_LOG_DEBUG);
     putenv(tzstr);
-    printf("(now is 2012-03-17 09:14:13.2 +0100, local time is UTC+1)\n");
-    for (i = 0;  i < FF_ARRAY_ELEMS(time_string); i++) {
-        printf("%-24s -> ", time_string[i]);
-        if (av_parse_time(&tv, time_string[i], 0)) {
-            printf("error\n");
-        } else {
+    لکھو("(now is 2012-03-17 09:14:13.2 +0100, local time is UTC+1)\n");
+    برائے (i = 0;  i < FF_ARRAY_ELEMS(وقت_string); i++) {
+        لکھو("%-24s -> ", وقت_string[i]);
+        اگر (av_parse_وقت(&tv, وقت_string[i], 0)) {
+            لکھو("error\n");
+        } ورنہ {
             tvi = tv / 1000000;
             tm = gmtime(&tvi);
-            printf("%14"PRIi64".%06d = %04d-%02d-%02dT%02d:%02d:%02dZ\n",
-                   tv / 1000000, (int)(tv % 1000000),
+            لکھو("%14"PRIi64".%06d = %04d-%02d-%02dT%02d:%02d:%02dZ\n",
+                   tv / 1000000, (صحیح)(tv % 1000000),
                    tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
                    tm->tm_hour, tm->tm_min, tm->tm_sec);
         }
     }
-    for (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
-        printf("%-24s -> ", duration_string[i]);
-        if (av_parse_time(&tv, duration_string[i], 1)) {
-            printf("error\n");
-        } else {
-            printf("%+21"PRIi64"\n", tv);
+    برائے (i = 0;  i < FF_ARRAY_ELEMS(duration_string); i++) {
+        لکھو("%-24s -> ", duration_string[i]);
+        اگر (av_parse_وقت(&tv, duration_string[i], 1)) {
+            لکھو("error\n");
+        } ورنہ {
+            لکھو("%+21"PRIi64"\n", tv);
         }
     }
 }
 
-static void test_av_get_known_color_name(void)
+ساکن خالی test_av_get_معلوم_color_name(خالی)
 {
-    int i;
-    const uint8_t *rgba;
-    const char *color;
+    صحیح i;
+    ثابت uint8_t *rgba;
+    ثابت حرف *color;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(color_table); ++i) {
-        color = av_get_known_color_name(i, &rgba);
-        if (color)
-            printf("%s -> R(%d) G(%d) B(%d) A(%d)\n",
+    برائے (i = 0; i < FF_ARRAY_ELEMS(color_جدول); ++i) {
+        color = av_get_معلوم_color_name(i, &rgba);
+        اگر (color)
+            لکھو("%s -> R(%d) G(%d) B(%d) A(%d)\n",
                     color, rgba[0], rgba[1], rgba[2], rgba[3]);
-        else
-            printf("Color ID: %d not found\n", i);
+        ورنہ
+            لکھو("Color ID: %d not found\n", i);
     }
 }
 
-static void test_av_find_info_tag(void)
+ساکن خالی test_av_ڈھونڈو_info_لیبل(خالی)
 {
-    static const char args[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
-    static const char *tags[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
-    char buff[16];
-    int i;
+    ساکن ثابت حرف دلائل[] = "?tag1=val1&tag2=val2&tag3=val3&tag41=value 41&tag42=random1";
+    ساکن ثابت حرف *لیبل_فہرست[] = {"tag1", "tag2", "tag3", "tag4", "tag41", "41", "random1"};
+    حرف buff[16];
+    صحیح i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(tags); ++i) {
-        if (av_find_info_tag(buff, sizeof(buff), tags[i], args))
-            printf("%d. %s found: %s\n", i, tags[i], buff);
-        else
-            printf("%d. %s not found\n", i, tags[i]);
+    برائے (i = 0; i < FF_ARRAY_ELEMS(لیبل_فہرست); ++i) {
+        اگر (av_ڈھونڈو_info_لیبل(buff, حجم(buff), لیبل_فہرست[i], دلائل))
+            لکھو("%d. %s found: %s\n", i, لیبل_فہرست[i], buff);
+        ورنہ
+            لکھو("%d. %s not found\n", i, لیبل_فہرست[i]);
     }
 }
 
-int main(void)
+صحیح مین(خالی)
 {
-    printf("Testing av_parse_video_rate()\n");
-    test_av_parse_video_rate();
+    لکھو("Testing av_parse_video_rate()\n");
+    test_av_parse_video_شرح();
 
-    printf("\nTesting av_parse_color()\n");
+    لکھو("\nTesting av_parse_color()\n");
     test_av_parse_color();
 
-    printf("\nTesting av_small_strptime()\n");
+    لکھو("\nTesting av_small_strptime()\n");
     test_av_small_strptime();
 
-    printf("\nTesting av_parse_time()\n");
-    test_av_parse_time();
+    لکھو("\nTesting av_parse_time()\n");
+    test_av_parse_وقت();
 
-    printf("\nTesting av_get_known_color_name()\n");
-    test_av_get_known_color_name();
+    لکھو("\nTesting av_get_known_color_name()\n");
+    test_av_get_معلوم_color_name();
 
-    printf("\nTesting av_find_info_tag()\n");
-    test_av_find_info_tag();
-    return 0;
+    لکھو("\nTesting av_find_info_tag()\n");
+    test_av_ڈھونڈو_info_لیبل();
+    واپس 0;
 }

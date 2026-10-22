@@ -18,90 +18,90 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#شامل "config.h"
 
-#include <stddef.h>
-#include <stdint.h>
-#include <time.h>
-#if HAVE_GETTIMEOFDAY
-#include <sys/time.h>
-#endif
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_WINDOWS_H
-#include <windows.h>
-#endif
+#شامل <stddef.h>
+#شامل <stdint.h>
+#شامل <time.h>
+#اگر HAVE_GETTIMEOFDAY
+#شامل <sys/time.h>
+#اگر_ختم
+#اگر HAVE_UNISTD_H
+#شامل <unistd.h>
+#اگر_ختم
+#اگر HAVE_WINDOWS_H
+#شامل <windows.h>
+#اگر_ختم
 
-#include "time.h"
-#include "error.h"
-#include "mathematics.h"
+#شامل "time.h"
+#شامل "error.h"
+#شامل "mathematics.h"
 
-int64_t av_gettime(void)
+int64_t av_gettime(خالی)
 {
-#if HAVE_GETTIMEOFDAY
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
-#elif HAVE_GETSYSTEMTIMEASFILETIME
+#اگر HAVE_GETTIMEOFDAY
+    ساخت timeval tv;
+    gettimeofday(&tv, تہی);
+    واپس (int64_t)tv.tv_sec * 1000000 + tv.tv_usec;
+#وگرنہ_اگر HAVE_GETSYSTEMTIMEASFILETIME
     FILETIME ft;
     int64_t t;
-    GetSystemTimeAsFileTime(&ft);
-    t = (int64_t)ft.dwHighDateTime << 32 | ft.dwLowDateTime;
-    return t / 10 - 11644473600000000; /* Jan 1, 1601 */
-#else
-    return -1;
-#endif
+    Get_System_وقت_As_File_وقت(&ft);
+    t = (int64_t)ft.dw_بلند_Date_وقت << 32 | ft.dw_کم_Date_وقت;
+    واپس t / 10 - 11644473600000000; /* Jan 1, 1601 */
+#ورنہ
+    واپس -1;
+#اگر_ختم
 }
 
-int64_t av_gettime_relative(void)
+int64_t av_gettime_relative(خالی)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
-#ifdef __APPLE__
-    if (&clock_gettime)
-#endif
+#اگر HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#اگر_تعریف_شدہ __APPLE__
+    اگر (&clock_gettime)
+#اگر_ختم
     {
-        struct timespec ts;
+        ساخت timespec ts;
         clock_gettime(CLOCK_MONOTONIC, &ts);
-        return (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
+        واپس (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
     }
-#elif defined(_WIN32)
+#وگرنہ_اگر defined(_WIN32)
     LARGE_INTEGER freq;
-    LARGE_INTEGER counter;
+    LARGE_INTEGER شمار_2;
     QueryPerformanceFrequency(&freq);
-    QueryPerformanceCounter(&counter);
-    return av_rescale(counter.QuadPart, 1000000, freq.QuadPart);
-#endif
-    return av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
+    Query_Performance_شمار(&شمار_2);
+    واپس av_rescale(شمار_2.QuadPart, 1000000, freq.QuadPart);
+#اگر_ختم
+    واپس av_gettime() + 42 * 60 * 60 * INT64_C(1000000);
 }
 
-int av_gettime_relative_is_monotonic(void)
+صحیح av_gettime_relative_is_monotonic(خالی)
 {
-#if HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
-#ifdef __APPLE__
-    if (!&clock_gettime)
-        return 0;
-#endif
-    return 1;
-#elif defined(_WIN32)
-    return 1;
-#else
-    return 0;
-#endif
+#اگر HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
+#اگر_تعریف_شدہ __APPLE__
+    اگر (!&clock_gettime)
+        واپس 0;
+#اگر_ختم
+    واپس 1;
+#وگرنہ_اگر defined(_WIN32)
+    واپس 1;
+#ورنہ
+    واپس 0;
+#اگر_ختم
 }
 
-int av_usleep(unsigned usec)
+صحیح av_usleep(غیرعلامتی usec)
 {
-#if HAVE_NANOSLEEP
-    struct timespec ts = { usec / 1000000, usec % 1000000 * 1000 };
-    while (nanosleep(&ts, &ts) < 0 && errno == EINTR);
-    return 0;
-#elif HAVE_USLEEP
-    return usleep(usec);
-#elif HAVE_SLEEP
+#اگر HAVE_NANOSLEEP
+    ساخت timespec ts = { usec / 1000000, usec % 1000000 * 1000 };
+    جب (nanosleep(&ts, &ts) < 0 && errno == EINTR);
+    واپس 0;
+#وگرنہ_اگر HAVE_USLEEP
+    واپس usleep(usec);
+#وگرنہ_اگر HAVE_SLEEP
     Sleep(usec / 1000);
-    return 0;
-#else
-    return AVERROR(ENOSYS);
-#endif
+    واپس 0;
+#ورنہ
+    واپس AVERROR(ENOSYS);
+#اگر_ختم
 }

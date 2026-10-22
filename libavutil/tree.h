@@ -24,10 +24,10 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_TREE_H
-#define AVUTIL_TREE_H
+#اگر_غیر_تعریف_شدہ AVUTIL_درخت_H
+#تعریف_کرو AVUTIL_درخت_H
 
-#include "attributes.h"
+#شامل "attributes.h"
 
 /**
  * @addtogroup lavu_tree AVTree
@@ -41,13 +41,13 @@
  */
 
 
-struct AVTreeNode;
-extern const int av_tree_node_size;
+ساخت AVTree_گرہ;
+خارجی ثابت صحیح av_درخت_گرہ_سائز;
 
 /**
  * Allocate an AVTreeNode.
  */
-struct AVTreeNode *av_tree_node_alloc(void);
+ساخت AVTree_گرہ *av_درخت_گرہ_alloc(خالی);
 
 /**
  * Find an element.
@@ -63,8 +63,8 @@ struct AVTreeNode *av_tree_node_alloc(void);
  * @return An element with cmp(key, elem) == 0 or NULL if no such element
  *         exists in the tree.
  */
-void *av_tree_find(const struct AVTreeNode *root, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2]);
+خالی *av_درخت_ڈھونڈو(ثابت ساخت AVTree_گرہ *جڑ, خالی *کلید,
+                   صحیح (*cmp)(ثابت خالی *کلید, ثابت خالی *b), خالی *اگلا[2]);
 
 /**
  * Insert or remove an element.
@@ -110,11 +110,11 @@ void *av_tree_find(const struct AVTreeNode *root, void *key,
  *         Which one it is depends on the tree state and the implementation. You
  *         should make no assumptions that it's one or the other in the code.
  */
-void *av_tree_insert(struct AVTreeNode **rootp, void *key,
-                     int (*cmp)(const void *key, const void *b),
-                     struct AVTreeNode **next);
+خالی *av_درخت_داخل_کرو(ساخت AVTree_گرہ **rootp, خالی *کلید,
+                     صحیح (*cmp)(ثابت خالی *کلید, ثابت خالی *b),
+                     ساخت AVTree_گرہ **اگلا);
 
-void av_tree_destroy(struct AVTreeNode *t);
+خالی av_درخت_destroy(ساخت AVTree_گرہ *t);
 
 /**
  * Apply enu(opaque, &elem) to all the elements in the tree in a given range.
@@ -126,12 +126,12 @@ void av_tree_destroy(struct AVTreeNode *t);
  * @note The cmp function should use the same ordering used to construct the
  *       tree.
  */
-void av_tree_enumerate(struct AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem));
+خالی av_درخت_enumerate(ساخت AVTree_گرہ *t, خالی *opaque,
+                       صحیح (*cmp)(خالی *opaque, خالی *elem),
+                       صحیح (*enu)(خالی *opaque, خالی *elem));
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_TREE_H */
+#اگر_ختم /* AVUTIL_TREE_H */

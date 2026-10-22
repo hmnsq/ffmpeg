@@ -16,21 +16,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_THREADMESSAGE_H
-#define AVUTIL_THREADMESSAGE_H
+#اگر_غیر_تعریف_شدہ AVUTIL_THREADMESSAGE_H
+#تعریف_کرو AVUTIL_THREADMESSAGE_H
 
-typedef struct AVThreadMessageQueue AVThreadMessageQueue;
+قسمتعریف ساخت AVThread_پیغام_قطار AVThread_پیغام_قطار;
 
-typedef enum AVThreadMessageFlags {
+قسمتعریف شمار AVThread_پیغام_Flags {
 
     /**
      * Perform non-blocking operation.
      * If this flag is set, send and recv operations are non-blocking and
      * return AVERROR(EAGAIN) immediately if they can not proceed.
      */
-    AV_THREAD_MESSAGE_NONBLOCK = 1,
+    AV_THREAD_پیغام_NONBLOCK = 1,
 
-} AVThreadMessageFlags;
+} AVThread_پیغام_Flags;
 
 /**
  * Allocate a new message queue.
@@ -41,30 +41,30 @@ typedef enum AVThreadMessageFlags {
  * @return  >=0 for success; <0 for error, in particular AVERROR(ENOSYS) if
  *          lavu was built without thread support
  */
-int av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
-                                  unsigned nelem,
-                                  unsigned elsize);
+صحیح av_thread_پیغام_قطار_alloc(AVThread_پیغام_قطار **mq,
+                                  غیرعلامتی nelem,
+                                  غیرعلامتی elsize);
 
 /**
  * Free a message queue.
  *
  * The message queue must no longer be in use by another thread.
  */
-void av_thread_message_queue_free(AVThreadMessageQueue **mq);
+خالی av_thread_پیغام_قطار_free(AVThread_پیغام_قطار **mq);
 
 /**
  * Send a message on the queue.
  */
-int av_thread_message_queue_send(AVThreadMessageQueue *mq,
-                                 void *msg,
-                                 unsigned flags);
+صحیح av_thread_پیغام_قطار_send(AVThread_پیغام_قطار *mq,
+                                 خالی *پیغام,
+                                 غیرعلامتی flags);
 
 /**
  * Receive a message from the queue.
  */
-int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
-                                 void *msg,
-                                 unsigned flags);
+صحیح av_thread_پیغام_قطار_recv(AVThread_پیغام_قطار *mq,
+                                 خالی *پیغام,
+                                 غیرعلامتی flags);
 
 /**
  * Set the sending error code.
@@ -74,8 +74,8 @@ int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
  * AVERROR(EAGAIN), can be used to cause the sending thread to stop or
  * suspend its operation.
  */
-void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
-                                          int err);
+خالی av_thread_پیغام_قطار_سیٹ_err_send(AVThread_پیغام_قطار *mq,
+                                          صحیح err);
 
 /**
  * Set the receiving error code.
@@ -85,15 +85,15 @@ void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
  * Conventional values, such as AVERROR_EOF or AVERROR(EAGAIN), can be used
  * to cause the receiving thread to stop or suspend its operation.
  */
-void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
-                                          int err);
+خالی av_thread_پیغام_قطار_سیٹ_err_recv(AVThread_پیغام_قطار *mq,
+                                          صحیح err);
 
 /**
  * Set the optional free message callback function which will be called if an
  * operation is removing messages from the queue.
  */
-void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
-                                           void (*free_func)(void *msg));
+خالی av_thread_پیغام_قطار_سیٹ_free_func(AVThread_پیغام_قطار *mq,
+                                           خالی (*free_func)(خالی *پیغام));
 
 /**
  * Return the current number of messages in the queue.
@@ -101,7 +101,7 @@ void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
  * @return the current number of messages or AVERROR(ENOSYS) if lavu was built
  *         without thread support
  */
-int av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq);
+صحیح av_thread_پیغام_قطار_nb_elems(AVThread_پیغام_قطار *mq);
 
 /**
  * Flush the message queue
@@ -110,6 +110,6 @@ int av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq);
  * except that it will be done in a single operation (no lock/unlock between
  * reads).
  */
-void av_thread_message_flush(AVThreadMessageQueue *mq);
+خالی av_thread_پیغام_flush(AVThread_پیغام_قطار *mq);
 
-#endif /* AVUTIL_THREADMESSAGE_H */
+#اگر_ختم /* AVUTIL_THREADMESSAGE_H */

@@ -24,12 +24,12 @@
  * principal component analysis (PCA)
  */
 
-#ifndef AVUTIL_PCA_H
-#define AVUTIL_PCA_H
+#اگر_غیر_تعریف_شدہ AVUTIL_PCA_H
+#تعریف_کرو AVUTIL_PCA_H
 
-struct PCA *ff_pca_init(int n);
-void ff_pca_free(struct PCA *pca);
-void ff_pca_add(struct PCA *pca, const double *v);
-int ff_pca(struct PCA *pca, double *eigenvector, double *eigenvalue);
+ساخت PCA *ff_pca_init(صحیح n);
+خالی ff_pca_free(ساخت PCA *pca);
+خالی ff_pca_جوڑو(ساخت PCA *pca, ثابت دوہرا *v);
+صحیح ff_pca(ساخت PCA *pca, دوہرا *eigenvector, دوہرا *eigenvalue);
 
-#endif /* AVUTIL_PCA_H */
+#اگر_ختم /* AVUTIL_PCA_H */

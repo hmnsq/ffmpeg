@@ -16,38 +16,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#شامل "config.h"
 
-#include <stdint.h>
-#include <string.h>
+#شامل <stdint.h>
+#شامل <string.h>
 
-#include <vdpau/vdpau.h>
+#شامل <vdpau/vdpau.h>
 
-#include "buffer.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_vdpau.h"
-#include "mem.h"
-#include "pixfmt.h"
-#include "pixdesc.h"
+#شامل "buffer.h"
+#شامل "common.h"
+#شامل "hwcontext.h"
+#شامل "hwcontext_internal.h"
+#شامل "hwcontext_vdpau.h"
+#شامل "mem.h"
+#شامل "pixfmt.h"
+#شامل "pixdesc.h"
 
-typedef struct VDPAUPixFmtMap {
+قسمتعریف ساخت VDPAUPixFmtMap {
     VdpYCbCrFormat vdpau_fmt;
-    enum AVPixelFormat pix_fmt;
+    شمار AVPixelFormat pix_fmt;
 } VDPAUPixFmtMap;
 
-static const VDPAUPixFmtMap pix_fmts_420[] = {
+ساکن ثابت VDPAUPixFmtMap pix_fmts_420[] = {
     { VDP_YCBCR_FORMAT_NV12, AV_PIX_FMT_NV12    },
     { VDP_YCBCR_FORMAT_YV12, AV_PIX_FMT_YUV420P },
-#ifdef VDP_YCBCR_FORMAT_P016
+#اگر_تعریف_شدہ VDP_YCBCR_FORMAT_P016
     { VDP_YCBCR_FORMAT_P016, AV_PIX_FMT_P016    },
     { VDP_YCBCR_FORMAT_P010, AV_PIX_FMT_P010    },
-#endif
+#اگر_ختم
     { 0,                     AV_PIX_FMT_NONE,   },
 };
 
-static const VDPAUPixFmtMap pix_fmts_422[] = {
+ساکن ثابت VDPAUPixFmtMap pix_fmts_422[] = {
     { VDP_YCBCR_FORMAT_NV12, AV_PIX_FMT_NV16    },
     { VDP_YCBCR_FORMAT_YV12, AV_PIX_FMT_YUV422P },
     { VDP_YCBCR_FORMAT_UYVY, AV_PIX_FMT_UYVY422 },
@@ -55,90 +55,90 @@ static const VDPAUPixFmtMap pix_fmts_422[] = {
     { 0,                     AV_PIX_FMT_NONE,   },
 };
 
-static const VDPAUPixFmtMap pix_fmts_444[] = {
-#ifdef VDP_YCBCR_FORMAT_Y_U_V_444
+ساکن ثابت VDPAUPixFmtMap pix_fmts_444[] = {
+#اگر_تعریف_شدہ VDP_YCBCR_FORMAT_Y_U_V_444
     { VDP_YCBCR_FORMAT_Y_U_V_444, AV_PIX_FMT_YUV444P },
-#endif
-#ifdef VDP_YCBCR_FORMAT_P016
+#اگر_ختم
+#اگر_تعریف_شدہ VDP_YCBCR_FORMAT_P016
     {VDP_YCBCR_FORMAT_Y_U_V_444_16, AV_PIX_FMT_YUV444P16},
-#endif
+#اگر_ختم
     { 0,                          AV_PIX_FMT_NONE,   },
 };
 
-static const struct {
+ساکن ثابت ساخت {
     VdpChromaType chroma_type;
-    enum AVPixelFormat frames_sw_format;
-    const VDPAUPixFmtMap *map;
+    شمار AVPixelFormat چوکھٹے_sw_format;
+    ثابت VDPAUPixFmtMap *map;
 } vdpau_pix_fmts[] = {
     { VDP_CHROMA_TYPE_420, AV_PIX_FMT_YUV420P, pix_fmts_420 },
     { VDP_CHROMA_TYPE_422, AV_PIX_FMT_YUV422P, pix_fmts_422 },
     { VDP_CHROMA_TYPE_444, AV_PIX_FMT_YUV444P, pix_fmts_444 },
-#ifdef VDP_YCBCR_FORMAT_P016
+#اگر_تعریف_شدہ VDP_YCBCR_FORMAT_P016
     { VDP_CHROMA_TYPE_420_16, AV_PIX_FMT_YUV420P10, pix_fmts_420 },
     { VDP_CHROMA_TYPE_420_16, AV_PIX_FMT_YUV420P12, pix_fmts_420 },
     { VDP_CHROMA_TYPE_422_16, AV_PIX_FMT_YUV422P10, pix_fmts_422 },
     { VDP_CHROMA_TYPE_444_16, AV_PIX_FMT_YUV444P10, pix_fmts_444 },
     { VDP_CHROMA_TYPE_444_16, AV_PIX_FMT_YUV444P12, pix_fmts_444 },
-#endif
+#اگر_ختم
 };
 
-typedef struct VDPAUDeviceContext {
+قسمتعریف ساخت VDPAUDeviceContext {
     /**
      * The public AVVDPAUDeviceContext. See hwcontext_vdpau.h for it.
      */
     AVVDPAUDeviceContext p;
 
-    VdpVideoSurfaceQueryGetPutBitsYCbCrCapabilities *get_transfer_caps;
-    VdpVideoSurfaceGetBitsYCbCr                     *get_data;
-    VdpVideoSurfacePutBitsYCbCr                     *put_data;
+    Vdp_Video_Surface_Query_Get_Put_بٹ_YCb_Cr_Capabilities *get_transfer_caps;
+    Vdp_Video_Surface_Get_بٹ_YCb_Cr                     *get_ڈیٹا;
+    Vdp_Video_Surface_Put_بٹ_YCb_Cr                     *put_ڈیٹا;
     VdpVideoSurfaceCreate                           *surf_create;
     VdpVideoSurfaceDestroy                          *surf_destroy;
 
-    enum AVPixelFormat *pix_fmts[FF_ARRAY_ELEMS(vdpau_pix_fmts)];
-    int              nb_pix_fmts[FF_ARRAY_ELEMS(vdpau_pix_fmts)];
+    شمار AVPixelFormat *pix_fmts[FF_ARRAY_ELEMS(vdpau_pix_fmts)];
+    صحیح              nb_pix_fmts[FF_ARRAY_ELEMS(vdpau_pix_fmts)];
 } VDPAUDeviceContext;
 
-typedef struct VDPAUFramesContext {
-    VdpVideoSurfaceGetBitsYCbCr *get_data;
-    VdpVideoSurfacePutBitsYCbCr *put_data;
+قسمتعریف ساخت VDPAUFramesContext {
+    Vdp_Video_Surface_Get_بٹ_YCb_Cr *get_ڈیٹا;
+    Vdp_Video_Surface_Put_بٹ_YCb_Cr *put_ڈیٹا;
     VdpChromaType chroma_type;
-    int chroma_idx;
+    صحیح chroma_idx;
 
-    const enum AVPixelFormat *pix_fmts;
-    int                       nb_pix_fmts;
+    ثابت شمار AVPixelFormat *pix_fmts;
+    صحیح                       nb_pix_fmts;
 } VDPAUFramesContext;
 
-static int count_pixfmts(const VDPAUPixFmtMap *map)
+ساکن صحیح گنتی_pixfmts(ثابت VDPAUPixFmtMap *map)
 {
-    int count = 0;
-    while (map->pix_fmt != AV_PIX_FMT_NONE) {
+    صحیح گنتی = 0;
+    جب (map->pix_fmt != AV_PIX_FMT_NONE) {
         map++;
-        count++;
+        گنتی++;
     }
-    return count;
+    واپس گنتی;
 }
 
-static int vdpau_init_pixmfts(AVHWDeviceContext *ctx)
+ساکن صحیح vdpau_init_pixmfts(AVHWDeviceContext *ctx)
 {
     VDPAUDeviceContext    *priv = ctx->hwctx;
     AVVDPAUDeviceContext *hwctx = &priv->p;
-    int i;
+    صحیح i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(priv->pix_fmts); i++) {
-        const VDPAUPixFmtMap *map = vdpau_pix_fmts[i].map;
-        int nb_pix_fmts;
+    برائے (i = 0; i < FF_ARRAY_ELEMS(priv->pix_fmts); i++) {
+        ثابت VDPAUPixFmtMap *map = vdpau_pix_fmts[i].map;
+        صحیح nb_pix_fmts;
 
-        nb_pix_fmts = count_pixfmts(map);
-        priv->pix_fmts[i] = av_malloc_array(nb_pix_fmts + 1, sizeof(*priv->pix_fmts[i]));
-        if (!priv->pix_fmts[i])
-            return AVERROR(ENOMEM);
+        nb_pix_fmts = گنتی_pixfmts(map);
+        priv->pix_fmts[i] = av_malloc_array(nb_pix_fmts + 1, حجم(*priv->pix_fmts[i]));
+        اگر (!priv->pix_fmts[i])
+            واپس AVERROR(ENOMEM);
 
         nb_pix_fmts = 0;
-        while (map->pix_fmt != AV_PIX_FMT_NONE) {
+        جب (map->pix_fmt != AV_PIX_FMT_NONE) {
             VdpBool supported;
-            VdpStatus err = priv->get_transfer_caps(hwctx->device, vdpau_pix_fmts[i].chroma_type,
+            Vdp_حالت err = priv->get_transfer_caps(hwctx->device, vdpau_pix_fmts[i].chroma_type,
                                                     map->vdpau_fmt, &supported);
-            if (err == VDP_STATUS_OK && supported)
+            اگر (err == VDP_حالت_OK && supported)
                 priv->pix_fmts[i][nb_pix_fmts++] = map->pix_fmt;
             map++;
         }
@@ -146,91 +146,91 @@ static int vdpau_init_pixmfts(AVHWDeviceContext *ctx)
         priv->nb_pix_fmts[i]             = nb_pix_fmts;
     }
 
-    return 0;
+    واپس 0;
 }
 
-#define GET_CALLBACK(id, result)                                                \
-do {                                                                            \
-    void *tmp;                                                                  \
-    err = hwctx->get_proc_address(hwctx->device, id, &tmp);                     \
-    if (err != VDP_STATUS_OK) {                                                 \
+#تعریف_کرو GET_CALLBACK(id, نتیجہ)                                                \
+کرو {                                                                            \
+    خالی *tmp;                                                                  \
+    err = hwctx->get_proc_پتہ(hwctx->device, id, &tmp);                     \
+    اگر (err != VDP_حالت_OK) {                                                 \
         av_log(ctx, AV_LOG_ERROR, "Error getting the " #id " callback.\n");     \
-        return AVERROR_UNKNOWN;                                                 \
+        واپس AVERROR_UNKNOWN;                                                 \
     }                                                                           \
-    result = tmp;                                                               \
-} while (0)
+    نتیجہ = tmp;                                                               \
+} جب (0)
 
-static int vdpau_device_init(AVHWDeviceContext *ctx)
+ساکن صحیح vdpau_device_init(AVHWDeviceContext *ctx)
 {
     VDPAUDeviceContext    *priv = ctx->hwctx;
     AVVDPAUDeviceContext *hwctx = &priv->p;
-    VdpStatus             err;
-    int                   ret;
+    Vdp_حالت             err;
+    صحیح                   ret;
 
-    GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_QUERY_GET_PUT_BITS_Y_CB_CR_CAPABILITIES,
+    GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_QUERY_GET_PUT_بٹ_Y_CB_CR_CAPABILITIES,
                  priv->get_transfer_caps);
-    GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_GET_BITS_Y_CB_CR, priv->get_data);
-    GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_PUT_BITS_Y_CB_CR, priv->put_data);
+    GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_GET_بٹ_Y_CB_CR, priv->get_ڈیٹا);
+    GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_PUT_بٹ_Y_CB_CR, priv->put_ڈیٹا);
     GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_CREATE,           priv->surf_create);
     GET_CALLBACK(VDP_FUNC_ID_VIDEO_SURFACE_DESTROY,          priv->surf_destroy);
 
     ret = vdpau_init_pixmfts(ctx);
-    if (ret < 0) {
+    اگر (ret < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error querying the supported pixel formats\n");
-        return ret;
+        واپس ret;
     }
 
-    return 0;
+    واپس 0;
 }
 
-static void vdpau_device_uninit(AVHWDeviceContext *ctx)
+ساکن خالی vdpau_device_uninit(AVHWDeviceContext *ctx)
 {
     VDPAUDeviceContext *priv = ctx->hwctx;
-    int i;
+    صحیح i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(priv->pix_fmts); i++)
+    برائے (i = 0; i < FF_ARRAY_ELEMS(priv->pix_fmts); i++)
         av_freep(&priv->pix_fmts[i]);
 }
 
-static int vdpau_frames_get_constraints(AVHWDeviceContext *ctx,
-                                        const void *hwconfig,
+ساکن صحیح vdpau_چوکھٹے_get_constraints(AVHWDeviceContext *ctx,
+                                        ثابت خالی *hwconfig,
                                         AVHWFramesConstraints *constraints)
 {
     VDPAUDeviceContext *priv  = ctx->hwctx;
-    int nb_sw_formats = 0;
-    int i;
+    صحیح nb_sw_formats = 0;
+    صحیح i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(vdpau_pix_fmts) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    حجم(*constraints->valid_sw_formats));
+    اگر (!constraints->valid_sw_formats)
+        واپس AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(vdpau_pix_fmts); i++) {
-        if (priv->nb_pix_fmts[i] > 1)
-            constraints->valid_sw_formats[nb_sw_formats++] = vdpau_pix_fmts[i].frames_sw_format;
+    برائے (i = 0; i < FF_ARRAY_ELEMS(vdpau_pix_fmts); i++) {
+        اگر (priv->nb_pix_fmts[i] > 1)
+            constraints->valid_sw_formats[nb_sw_formats++] = vdpau_pix_fmts[i].چوکھٹے_sw_format;
     }
     constraints->valid_sw_formats[nb_sw_formats] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, حجم(*constraints->valid_hw_formats));
+    اگر (!constraints->valid_hw_formats)
+        واپس AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_VDPAU;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    واپس 0;
 }
 
-static void vdpau_buffer_free(void *opaque, uint8_t *data)
+ساکن خالی vdpau_بفر_free(خالی *opaque, uint8_t *ڈیٹا)
 {
     AVHWFramesContext          *ctx = opaque;
     VDPAUDeviceContext *device_priv = ctx->device_ctx->hwctx;
-    VdpVideoSurface            surf = (VdpVideoSurface)(uintptr_t)data;
+    VdpVideoSurface            surf = (VdpVideoSurface)(uintptr_t)ڈیٹا;
 
     device_priv->surf_destroy(surf);
 }
 
-static AVBufferRef *vdpau_pool_alloc(void *opaque, size_t size)
+ساکن AVBufferRef *vdpau_pool_alloc(خالی *opaque, size_t سائز)
 {
     AVHWFramesContext             *ctx = opaque;
     VDPAUFramesContext           *priv = ctx->hwctx;
@@ -239,264 +239,264 @@ static AVBufferRef *vdpau_pool_alloc(void *opaque, size_t size)
 
     AVBufferRef *ret;
     VdpVideoSurface surf;
-    VdpStatus err;
+    Vdp_حالت err;
 
     err = device_priv->surf_create(device_hwctx->device, priv->chroma_type,
-                                   ctx->width, ctx->height, &surf);
-    if (err != VDP_STATUS_OK) {
+                                   ctx->چوڑائی, ctx->اونچائی, &surf);
+    اگر (err != VDP_حالت_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error allocating a VDPAU video surface\n");
-        return NULL;
+        واپس تہی;
     }
 
-    ret = av_buffer_create((uint8_t*)(uintptr_t)surf, sizeof(surf),
-                           vdpau_buffer_free, ctx, AV_BUFFER_FLAG_READONLY);
-    if (!ret) {
+    ret = av_بفر_create((uint8_t*)(uintptr_t)surf, حجم(surf),
+                           vdpau_بفر_free, ctx, AV_بفر_FLAG_READONLY);
+    اگر (!ret) {
         device_priv->surf_destroy(surf);
-        return NULL;
+        واپس تہی;
     }
 
-    return ret;
+    واپس ret;
 }
 
-static int vdpau_frames_init(AVHWFramesContext *ctx)
+ساکن صحیح vdpau_چوکھٹے_init(AVHWFramesContext *ctx)
 {
     VDPAUDeviceContext *device_priv = ctx->device_ctx->hwctx;
     VDPAUFramesContext        *priv = ctx->hwctx;
 
-    int i;
+    صحیح i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(vdpau_pix_fmts); i++) {
-        if (vdpau_pix_fmts[i].frames_sw_format == ctx->sw_format) {
+    برائے (i = 0; i < FF_ARRAY_ELEMS(vdpau_pix_fmts); i++) {
+        اگر (vdpau_pix_fmts[i].چوکھٹے_sw_format == ctx->sw_format) {
             priv->chroma_type = vdpau_pix_fmts[i].chroma_type;
             priv->chroma_idx  = i;
             priv->pix_fmts    = device_priv->pix_fmts[i];
             priv->nb_pix_fmts = device_priv->nb_pix_fmts[i];
-            break;
+            توڑو;
         }
     }
-    if (priv->nb_pix_fmts < 2) {
+    اگر (priv->nb_pix_fmts < 2) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported sw format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(ENOSYS);
+        واپس AVERROR(ENOSYS);
     }
 
-    if (!ctx->pool) {
-        ffhwframesctx(ctx)->pool_internal =
-            av_buffer_pool_init2(sizeof(VdpVideoSurface), ctx,
-                                 vdpau_pool_alloc, NULL);
-        if (!ffhwframesctx(ctx)->pool_internal)
-            return AVERROR(ENOMEM);
+    اگر (!ctx->pool) {
+        ffhwframesctx(ctx)->pool_اندرونی =
+            av_بفر_pool_init2(حجم(VdpVideoSurface), ctx,
+                                 vdpau_pool_alloc, تہی);
+        اگر (!ffhwframesctx(ctx)->pool_اندرونی)
+            واپس AVERROR(ENOMEM);
     }
 
-    priv->get_data = device_priv->get_data;
-    priv->put_data = device_priv->put_data;
+    priv->get_ڈیٹا = device_priv->get_ڈیٹا;
+    priv->put_ڈیٹا = device_priv->put_ڈیٹا;
 
-    return 0;
+    واپس 0;
 }
 
-static int vdpau_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ساکن صحیح vdpau_get_بفر(AVHWFramesContext *ctx, AVFrame *چوکھٹا)
 {
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    چوکھٹا->buf[0] = av_بفر_pool_get(ctx->pool);
+    اگر (!چوکھٹا->buf[0])
+        واپس AVERROR(ENOMEM);
 
-    frame->data[3] = frame->buf[0]->data;
-    frame->format  = AV_PIX_FMT_VDPAU;
-    frame->width   = ctx->width;
-    frame->height  = ctx->height;
+    چوکھٹا->ڈیٹا[3] = چوکھٹا->buf[0]->ڈیٹا;
+    چوکھٹا->format  = AV_PIX_FMT_VDPAU;
+    چوکھٹا->چوڑائی   = ctx->چوڑائی;
+    چوکھٹا->اونچائی  = ctx->اونچائی;
 
-    return 0;
+    واپس 0;
 }
 
-static int vdpau_transfer_get_formats(AVHWFramesContext *ctx,
-                                      enum AVHWFrameTransferDirection dir,
-                                      enum AVPixelFormat **formats)
+ساکن صحیح vdpau_transfer_get_formats(AVHWFramesContext *ctx,
+                                      شمار AVHWFrameTransferDirection dir,
+                                      شمار AVPixelFormat **formats)
 {
     VDPAUFramesContext *priv  = ctx->hwctx;
 
-    enum AVPixelFormat *fmts;
+    شمار AVPixelFormat *fmts;
 
-    if (priv->nb_pix_fmts == 1) {
+    اگر (priv->nb_pix_fmts == 1) {
         av_log(ctx, AV_LOG_ERROR,
                "No target formats are supported for this chroma type\n");
-        return AVERROR(ENOSYS);
+        واپس AVERROR(ENOSYS);
     }
 
-    fmts = av_malloc_array(priv->nb_pix_fmts, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(priv->nb_pix_fmts, حجم(*fmts));
+    اگر (!fmts)
+        واپس AVERROR(ENOMEM);
 
-    memcpy(fmts, priv->pix_fmts, sizeof(*fmts) * (priv->nb_pix_fmts));
+    حافظہ_نقل(fmts, priv->pix_fmts, حجم(*fmts) * (priv->nb_pix_fmts));
     *formats = fmts;
 
-    return 0;
+    واپس 0;
 }
 
-static int vdpau_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
-                                    const AVFrame *src)
+ساکن صحیح vdpau_transfer_ڈیٹا_from(AVHWFramesContext *ctx, AVFrame *dst,
+                                    ثابت AVFrame *src)
 {
     VDPAUFramesContext *priv = ctx->hwctx;
-    VdpVideoSurface     surf = (VdpVideoSurface)(uintptr_t)src->data[3];
+    VdpVideoSurface     surf = (VdpVideoSurface)(uintptr_t)src->ڈیٹا[3];
 
-    void *data[3];
+    خالی *ڈیٹا[3];
     uint32_t linesize[3];
 
-    const VDPAUPixFmtMap *map;
+    ثابت VDPAUPixFmtMap *map;
     VdpYCbCrFormat vdpau_format;
-    VdpStatus err;
-    int i;
+    Vdp_حالت err;
+    صحیح i;
 
-    for (i = 0; i< FF_ARRAY_ELEMS(data) && dst->data[i]; i++) {
-        data[i] = dst->data[i];
-        if (dst->linesize[i] < 0 || dst->linesize[i] > UINT32_MAX) {
+    برائے (i = 0; i< FF_ARRAY_ELEMS(ڈیٹا) && dst->ڈیٹا[i]; i++) {
+        ڈیٹا[i] = dst->ڈیٹا[i];
+        اگر (dst->linesize[i] < 0 || dst->linesize[i] > UINT32_MAX) {
             av_log(ctx, AV_LOG_ERROR,
                    "The linesize %d cannot be represented as uint32\n",
                    dst->linesize[i]);
-            return AVERROR(ERANGE);
+            واپس AVERROR(ERANGE);
         }
         linesize[i] = dst->linesize[i];
     }
 
     map = vdpau_pix_fmts[priv->chroma_idx].map;
-    for (i = 0; map[i].pix_fmt != AV_PIX_FMT_NONE; i++) {
-        if (map[i].pix_fmt == dst->format) {
+    برائے (i = 0; map[i].pix_fmt != AV_PIX_FMT_NONE; i++) {
+        اگر (map[i].pix_fmt == dst->format) {
             vdpau_format = map[i].vdpau_fmt;
-            break;
+            توڑو;
         }
     }
-    if (map[i].pix_fmt == AV_PIX_FMT_NONE) {
+    اگر (map[i].pix_fmt == AV_PIX_FMT_NONE) {
         av_log(ctx, AV_LOG_ERROR,
                "Unsupported target pixel format: %s\n",
                av_get_pix_fmt_name(dst->format));
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    if ((vdpau_format == VDP_YCBCR_FORMAT_YV12)
-#ifdef VDP_YCBCR_FORMAT_Y_U_V_444
+    اگر ((vdpau_format == VDP_YCBCR_FORMAT_YV12)
+#اگر_تعریف_شدہ VDP_YCBCR_FORMAT_Y_U_V_444
             || (vdpau_format == VDP_YCBCR_FORMAT_Y_U_V_444)
-#endif
-#ifdef VDP_YCBCR_FORMAT_P016
+#اگر_ختم
+#اگر_تعریف_شدہ VDP_YCBCR_FORMAT_P016
             || (vdpau_format == VDP_YCBCR_FORMAT_Y_U_V_444_16)
-#endif
+#اگر_ختم
             )
-        FFSWAP(void*, data[1], data[2]);
+        FFSWAP(خالی*, ڈیٹا[1], ڈیٹا[2]);
 
-    err = priv->get_data(surf, vdpau_format, data, linesize);
-    if (err != VDP_STATUS_OK) {
+    err = priv->get_ڈیٹا(surf, vdpau_format, ڈیٹا, linesize);
+    اگر (err != VDP_حالت_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error retrieving the data from a VDPAU surface\n");
-        return AVERROR_UNKNOWN;
+        واپس AVERROR_UNKNOWN;
     }
 
-    return 0;
+    واپس 0;
 }
 
-static int vdpau_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
-                                  const AVFrame *src)
+ساکن صحیح vdpau_transfer_ڈیٹا_مقصد(AVHWFramesContext *ctx, AVFrame *dst,
+                                  ثابت AVFrame *src)
 {
     VDPAUFramesContext *priv = ctx->hwctx;
-    VdpVideoSurface     surf = (VdpVideoSurface)(uintptr_t)dst->data[3];
+    VdpVideoSurface     surf = (VdpVideoSurface)(uintptr_t)dst->ڈیٹا[3];
 
-    const void *data[3];
+    ثابت خالی *ڈیٹا[3];
     uint32_t linesize[3];
 
-    const VDPAUPixFmtMap *map;
+    ثابت VDPAUPixFmtMap *map;
     VdpYCbCrFormat vdpau_format;
-    VdpStatus err;
-    int i;
+    Vdp_حالت err;
+    صحیح i;
 
-    for (i = 0; i< FF_ARRAY_ELEMS(data) && src->data[i]; i++) {
-        data[i] = src->data[i];
-        if (src->linesize[i] < 0 || src->linesize[i] > UINT32_MAX) {
+    برائے (i = 0; i< FF_ARRAY_ELEMS(ڈیٹا) && src->ڈیٹا[i]; i++) {
+        ڈیٹا[i] = src->ڈیٹا[i];
+        اگر (src->linesize[i] < 0 || src->linesize[i] > UINT32_MAX) {
             av_log(ctx, AV_LOG_ERROR,
                    "The linesize %d cannot be represented as uint32\n",
                    src->linesize[i]);
-            return AVERROR(ERANGE);
+            واپس AVERROR(ERANGE);
         }
         linesize[i] = src->linesize[i];
     }
 
     map = vdpau_pix_fmts[priv->chroma_idx].map;
-    for (i = 0; map[i].pix_fmt != AV_PIX_FMT_NONE; i++) {
-        if (map[i].pix_fmt == src->format) {
+    برائے (i = 0; map[i].pix_fmt != AV_PIX_FMT_NONE; i++) {
+        اگر (map[i].pix_fmt == src->format) {
             vdpau_format = map[i].vdpau_fmt;
-            break;
+            توڑو;
         }
     }
-    if (map[i].pix_fmt == AV_PIX_FMT_NONE) {
+    اگر (map[i].pix_fmt == AV_PIX_FMT_NONE) {
         av_log(ctx, AV_LOG_ERROR,
                "Unsupported source pixel format: %s\n",
                av_get_pix_fmt_name(src->format));
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    if ((vdpau_format == VDP_YCBCR_FORMAT_YV12)
-#ifdef VDP_YCBCR_FORMAT_Y_U_V_444
+    اگر ((vdpau_format == VDP_YCBCR_FORMAT_YV12)
+#اگر_تعریف_شدہ VDP_YCBCR_FORMAT_Y_U_V_444
             || (vdpau_format == VDP_YCBCR_FORMAT_Y_U_V_444)
-#endif
+#اگر_ختم
             )
-        FFSWAP(const void*, data[1], data[2]);
+        FFSWAP(ثابت خالی*, ڈیٹا[1], ڈیٹا[2]);
 
-    err = priv->put_data(surf, vdpau_format, data, linesize);
-    if (err != VDP_STATUS_OK) {
+    err = priv->put_ڈیٹا(surf, vdpau_format, ڈیٹا, linesize);
+    اگر (err != VDP_حالت_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error uploading the data to a VDPAU surface\n");
-        return AVERROR_UNKNOWN;
+        واپس AVERROR_UNKNOWN;
     }
 
-    return 0;
+    واپس 0;
 }
 
-#if HAVE_VDPAU_X11
-#include <vdpau/vdpau_x11.h>
-#include <X11/Xlib.h>
+#اگر HAVE_VDPAU_X11
+#شامل <vdpau/vdpau_x11.h>
+#شامل <X11/Xlib.h>
 
-typedef struct VDPAUDevicePriv {
+قسمتعریف ساخت VDPAUDevicePriv {
     VdpDeviceDestroy *device_destroy;
     Display *dpy;
 } VDPAUDevicePriv;
 
-static void vdpau_device_free(AVHWDeviceContext *ctx)
+ساکن خالی vdpau_device_free(AVHWDeviceContext *ctx)
 {
     AVVDPAUDeviceContext *hwctx = ctx->hwctx;
     VDPAUDevicePriv       *priv = ctx->user_opaque;
 
-    if (priv->device_destroy)
+    اگر (priv->device_destroy)
         priv->device_destroy(hwctx->device);
-    if (priv->dpy)
+    اگر (priv->dpy)
         XCloseDisplay(priv->dpy);
     av_freep(&priv);
 }
 
-static int vdpau_device_create(AVHWDeviceContext *ctx, const char *device,
-                               AVDictionary *opts, int flags)
+ساکن صحیح vdpau_device_create(AVHWDeviceContext *ctx, ثابت حرف *device,
+                               AVDictionary *opts, صحیح flags)
 {
     AVVDPAUDeviceContext *hwctx = ctx->hwctx;
 
     VDPAUDevicePriv *priv;
-    VdpStatus err;
+    Vdp_حالت err;
     VdpGetInformationString *get_information_string;
-    const char *display, *vendor;
+    ثابت حرف *display, *vendor;
 
-    priv = av_mallocz(sizeof(*priv));
-    if (!priv)
-        return AVERROR(ENOMEM);
+    priv = av_mallocz(حجم(*priv));
+    اگر (!priv)
+        واپس AVERROR(ENOMEM);
 
     ctx->user_opaque = priv;
-    ctx->free        = vdpau_device_free;
+    ctx->آزاد        = vdpau_device_free;
 
     priv->dpy = XOpenDisplay(device);
-    if (!priv->dpy) {
+    اگر (!priv->dpy) {
         av_log(ctx, AV_LOG_ERROR, "Cannot open the X11 display %s.\n",
                XDisplayName(device));
-        return AVERROR_UNKNOWN;
+        واپس AVERROR_UNKNOWN;
     }
     display = XDisplayString(priv->dpy);
 
     err = vdp_device_create_x11(priv->dpy, XDefaultScreen(priv->dpy),
-                                &hwctx->device, &hwctx->get_proc_address);
-    if (err != VDP_STATUS_OK) {
+                                &hwctx->device, &hwctx->get_proc_پتہ);
+    اگر (err != VDP_حالت_OK) {
         av_log(ctx, AV_LOG_ERROR, "VDPAU device creation on X11 display %s failed.\n",
                display);
-        return AVERROR_UNKNOWN;
+        واپس AVERROR_UNKNOWN;
     }
 
     GET_CALLBACK(VDP_FUNC_ID_GET_INFORMATION_STRING, get_information_string);
@@ -506,28 +506,28 @@ static int vdpau_device_create(AVHWDeviceContext *ctx, const char *device,
     av_log(ctx, AV_LOG_VERBOSE, "Successfully created a VDPAU device (%s) on "
            "X11 display %s\n", vendor, display);
 
-    return 0;
+    واپس 0;
 }
-#endif
+#اگر_ختم
 
-const HWContextType ff_hwcontext_type_vdpau = {
+ثابت HWContextType ff_hwcontext_type_vdpau = {
     .type                 = AV_HWDEVICE_TYPE_VDPAU,
     .name                 = "VDPAU",
 
-    .device_hwctx_size    = sizeof(VDPAUDeviceContext),
-    .frames_hwctx_size    = sizeof(VDPAUFramesContext),
+    .device_hwctx_سائز    = حجم(VDPAUDeviceContext),
+    .چوکھٹے_hwctx_سائز    = حجم(VDPAUFramesContext),
 
-#if HAVE_VDPAU_X11
+#اگر HAVE_VDPAU_X11
     .device_create        = vdpau_device_create,
-#endif
+#اگر_ختم
     .device_init          = vdpau_device_init,
     .device_uninit        = vdpau_device_uninit,
-    .frames_get_constraints = vdpau_frames_get_constraints,
-    .frames_init          = vdpau_frames_init,
-    .frames_get_buffer    = vdpau_get_buffer,
+    .چوکھٹے_get_constraints = vdpau_چوکھٹے_get_constraints,
+    .چوکھٹے_init          = vdpau_چوکھٹے_init,
+    .چوکھٹے_get_بفر    = vdpau_get_بفر,
     .transfer_get_formats = vdpau_transfer_get_formats,
-    .transfer_data_to     = vdpau_transfer_data_to,
-    .transfer_data_from   = vdpau_transfer_data_from,
+    .transfer_ڈیٹا_مقصد     = vdpau_transfer_ڈیٹا_مقصد,
+    .transfer_ڈیٹا_from   = vdpau_transfer_ڈیٹا_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]){ AV_PIX_FMT_VDPAU, AV_PIX_FMT_NONE },
+    .pix_fmts = (ثابت شمار AVPixelFormat[]){ AV_PIX_FMT_VDPAU, AV_PIX_FMT_NONE },
 };

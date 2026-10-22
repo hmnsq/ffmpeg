@@ -16,47 +16,47 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "gain_map.h"
-#include "mem.h"
-#include "libavcodec/bytestream.h"
+#شامل "gain_map.h"
+#شامل "mem.h"
+#شامل "libavcodec/bytestream.h"
 
-static void gain_map_params_default(AVGainMapParams *p)
+ساکن خالی gain_map_params_default(AVGainMapParams *p)
 {
     *p = (AVGainMapParams) {
-        .base_hdr_headroom      = { 0, 1 },
+        .بنیاد_hdr_headroom      = { 0, 1 },
         .alternate_hdr_headroom = { 0, 1 },
         .nb_channels = 1,
     };
 
     /* Pre-fill all three channels as a convenience */
-    for (int c = 0; c < 3; c++) {
-        p->channels[c] = (struct AVGainMapChannel) {
+    برائے (صحیح c = 0; c < 3; c++) {
+        p->channels[c] = (ساخت AVGainMapChannel) {
             .gain_map_min       = { 0, 1 },
             .gain_map_max       = { 0, 1 },
             .gamma              = { 1, 1 },
-            .base_offset        = { 1, 64 },
-            .alternate_offset   = { 1, 64 },
+            .بنیاد_انحراف        = { 1, 64 },
+            .alternate_انحراف   = { 1, 64 },
         };
     }
 }
 
-#define CHECK(cond) do { if (!(cond)) return AVERROR_INVALIDDATA; } while (0)
-#define CHECK_SIGNED(q)   CHECK((q).den > 0);
-#define CHECK_UNSIGNED(q) CHECK((q).num >= 0 && (q).den > 0);
+#تعریف_کرو CHECK(cond) کرو { اگر (!(cond)) واپس AVERROR_INVALIDDATA; } جب (0)
+#تعریف_کرو CHECK_SIGNED(q)   CHECK((q).den > 0);
+#تعریف_کرو CHECK_UNSIGNED(q) CHECK((q).عدد >= 0 && (q).den > 0);
 
-int av_gain_map_params_validate(const AVGainMapParams *p)
+صحیح av_gain_map_params_validate(ثابت AVGainMapParams *p)
 {
-    CHECK(0 <= p->version && p->version <= AV_ISO21496_VERSION);
+    CHECK(0 <= p->نسخہ && p->نسخہ <= AV_ISO21496_نسخہ);
     CHECK(p->nb_channels == 1 || p->nb_channels == 3);
-    CHECK_UNSIGNED(p->base_hdr_headroom);
+    CHECK_UNSIGNED(p->بنیاد_hdr_headroom);
     CHECK_UNSIGNED(p->alternate_hdr_headroom);
 
-    for (int c = 0; c < p->nb_channels; c++) {
-        const struct AVGainMapChannel *const ch = &p->channels[c];
+    برائے (صحیح c = 0; c < p->nb_channels; c++) {
+        ثابت ساخت AVGainMapChannel *ثابت ch = &p->channels[c];
         CHECK_SIGNED(ch->gain_map_min);
         CHECK_SIGNED(ch->gain_map_max);
         CHECK_UNSIGNED(ch->gamma);
-        CHECK(ch->gamma.num != 0);
+        CHECK(ch->gamma.عدد != 0);
         /**
          * Note: The ISO spec declares these as signed, but a negative value
          * makes no numeric sense and would result in infinities in the
@@ -65,68 +65,68 @@ int av_gain_map_params_validate(const AVGainMapParams *p)
          * requires them to be nonnegative as well, so this avoids an
          * inconsistency.
          */
-        CHECK_UNSIGNED(ch->base_offset);
-        CHECK_UNSIGNED(ch->alternate_offset);
+        CHECK_UNSIGNED(ch->بنیاد_انحراف);
+        CHECK_UNSIGNED(ch->alternate_انحراف);
         CHECK(av_cmp_q(ch->gain_map_min, ch->gain_map_max) <= 0);
     }
 
-    return 0;
+    واپس 0;
 }
 
-#define ISO21496_HEADER_SIZE 5
+#تعریف_کرو ISO21496_سرخی_سائز 5
 
-#define ISO21496_FLAG_MULTICHANNEL (1 << 7)
-#define ISO21496_FLAG_USE_BASE_CG  (1 << 6)
-#define ISO21496_FLAG_RESERVED     0x3f
+#تعریف_کرو ISO21496_FLAG_MULTICHANNEL (1 << 7)
+#تعریف_کرو ISO21496_FLAG_USE_بنیاد_CG  (1 << 6)
+#تعریف_کرو ISO21496_FLAG_RESERVED     0x3f
 
-static size_t iso21496_payload_size(int nb_channels)
+ساکن size_t iso21496_payload_سائز(صحیح nb_channels)
 {
-    return 4 * 4 + (size_t) nb_channels * 10 * 4;
+    واپس 4 * 4 + (size_t) nb_channels * 10 * 4;
 }
 
-static int make_q(int64_t num, uint32_t den, AVRational *out)
+ساکن صحیح make_q(int64_t عدد, uint32_t den, AVRational *برآمد)
 {
-    if (!den)
-        return AVERROR_INVALIDDATA;
+    اگر (!den)
+        واپس AVERROR_INVALIDDATA;
 
     /* Ensure the result fits in AVRational */
-    av_reduce(&out->num, &out->den, num, den, INT32_MAX);
-    return 0;
+    av_reduce(&برآمد->عدد, &برآمد->den, عدد, den, INT32_MAX);
+    واپس 0;
 }
 
-static int get_sq(GetByteContext *gb, AVRational *out)
+ساکن صحیح get_sq(GetByteContext *gb, AVRational *برآمد)
 {
-    int32_t  num = (int32_t) bytestream2_get_be32(gb);
+    int32_t  عدد = (int32_t) bytestream2_get_be32(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    واپس make_q(عدد, den, برآمد);
 }
 
-static int get_uq(GetByteContext *gb, AVRational *out)
+ساکن صحیح get_uq(GetByteContext *gb, AVRational *برآمد)
 {
-    uint32_t num = bytestream2_get_be32u(gb);
+    uint32_t عدد = bytestream2_get_be32u(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    واپس make_q(عدد, den, برآمد);
 }
 
-int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
-                                     const uint8_t *data, size_t size)
+صحیح av_gain_map_params_from_iso21496(AVGainMapParams *محدود p,
+                                     ثابت uint8_t *ڈیٹا, size_t سائز)
 {
-    int ret;
-    if (!p || !data)
-        return AVERROR(EINVAL);
+    صحیح ret;
+    اگر (!p || !ڈیٹا)
+        واپس AVERROR(EINVAL);
 
-    if (size < ISO21496_HEADER_SIZE || size > INT_MAX)
-        return AVERROR_INVALIDDATA;
+    اگر (سائز < ISO21496_سرخی_سائز || سائز > زیادہ_سے_زیادہ_عدد)
+        واپس AVERROR_INVALIDDATA;
 
     GetByteContext gb;
-    bytestream2_init(&gb, data, size);
+    bytestream2_init(&gb, ڈیٹا, سائز);
 
     /* Parse header */
-    const uint16_t minimum_version = bytestream2_get_be16(&gb);
-    const uint16_t writer_version  = bytestream2_get_be16(&gb);
-    if (minimum_version > AV_ISO21496_VERSION || writer_version < minimum_version)
-        return AVERROR_PATCHWELCOME;
-    const uint8_t flags = bytestream2_get_byte(&gb);
+    ثابت uint16_t minimum_نسخہ = bytestream2_get_be16(&gb);
+    ثابت uint16_t writer_نسخہ  = bytestream2_get_be16(&gb);
+    اگر (minimum_نسخہ > AV_ISO21496_نسخہ || writer_نسخہ < minimum_نسخہ)
+        واپس AVERROR_PATCHWELCOME;
+    ثابت uint8_t flags = bytestream2_get_byte(&gb);
 
     /**
      * While the spec does not require reserved bits to be 0, older versions
@@ -136,115 +136,115 @@ int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
      * additions to later revisions of the published spec, the validity of
      * ignoring which is already guarded by the `minimum_version` check.
      */
-    if (writer_version == 0 && (flags & ISO21496_FLAG_RESERVED))
-        return AVERROR_INVALIDDATA;
+    اگر (writer_نسخہ == 0 && (flags & ISO21496_FLAG_RESERVED))
+        واپس AVERROR_INVALIDDATA;
 
-    p->version              = AV_ISO21496_VERSION;
+    p->نسخہ              = AV_ISO21496_نسخہ;
     p->nb_channels          =   (flags & ISO21496_FLAG_MULTICHANNEL) ? 3 : 1;
-    p->use_base_color_space = !!(flags & ISO21496_FLAG_USE_BASE_CG);
+    p->use_بنیاد_color_space = !!(flags & ISO21496_FLAG_USE_بنیاد_CG);
 
     /* Parse payload */
-    if (bytestream2_get_bytes_left(&gb) < iso21496_payload_size(p->nb_channels))
-        return AVERROR_INVALIDDATA;
+    اگر (bytestream2_get_بائٹیں_بایاں(&gb) < iso21496_payload_سائز(p->nb_channels))
+        واپس AVERROR_INVALIDDATA;
 
-    if ((ret = get_uq(&gb, &p->base_hdr_headroom))      < 0 ||
+    اگر ((ret = get_uq(&gb, &p->بنیاد_hdr_headroom))      < 0 ||
         (ret = get_uq(&gb, &p->alternate_hdr_headroom)) < 0)
-        return ret;
+        واپس ret;
 
-    for (int c = 0; c < p->nb_channels; c++) {
-        struct AVGainMapChannel *const ch = &p->channels[c];
-        if ((ret = get_sq(&gb, &ch->gain_map_min))     < 0 ||
+    برائے (صحیح c = 0; c < p->nb_channels; c++) {
+        ساخت AVGainMapChannel *ثابت ch = &p->channels[c];
+        اگر ((ret = get_sq(&gb, &ch->gain_map_min))     < 0 ||
             (ret = get_sq(&gb, &ch->gain_map_max))     < 0 ||
             (ret = get_uq(&gb, &ch->gamma))            < 0 ||
-            (ret = get_sq(&gb, &ch->base_offset))      < 0 ||
-            (ret = get_sq(&gb, &ch->alternate_offset)) < 0)
-            return ret;
+            (ret = get_sq(&gb, &ch->بنیاد_انحراف))      < 0 ||
+            (ret = get_sq(&gb, &ch->alternate_انحراف)) < 0)
+            واپس ret;
     }
 
     /* nb_channels == 1 means every channel shares the same parameters */
-    for (int c = p->nb_channels; c < 3; c++)
+    برائے (صحیح c = p->nb_channels; c < 3; c++)
         p->channels[c] = p->channels[0];
 
-    return av_gain_map_params_validate(p);
+    واپس av_gain_map_params_validate(p);
 }
 
-static void put_q(PutByteContext *pb, AVRational q)
+ساکن خالی put_q(PutByteContext *pb, AVRational q)
 {
-    bytestream2_put_be32(pb, (unsigned) q.num);
-    bytestream2_put_be32(pb, (unsigned) q.den);
+    bytestream2_put_be32(pb, (غیرعلامتی) q.عدد);
+    bytestream2_put_be32(pb, (غیرعلامتی) q.den);
 }
 
-int av_gain_map_params_to_iso21496(const AVGainMapParams *p, uint8_t *buf)
+صحیح av_gain_map_params_مقصد_iso21496(ثابت AVGainMapParams *p, uint8_t *buf)
 {
-    if (!p || !buf)
-        return AVERROR(EINVAL);
+    اگر (!p || !buf)
+        واپس AVERROR(EINVAL);
 
     /* Ensures representability in the bitstream */
-    int ret = av_gain_map_params_validate(p);
-    if (ret < 0)
-        return ret;
+    صحیح ret = av_gain_map_params_validate(p);
+    اگر (ret < 0)
+        واپس ret;
 
     PutByteContext pb;
-    bytestream2_init_writer(&pb, buf, AV_GAIN_MAP_MAX_PAYLOAD_SIZE);
+    bytestream2_init_writer(&pb, buf, AV_GAIN_MAP_MAX_PAYLOAD_سائز);
 
-    int channels = av_gain_map_channels_identical(p) ? 1 : p->nb_channels;
+    صحیح channels = av_gain_map_channels_identical(p) ? 1 : p->nb_channels;
     uint8_t flags = 0;
-    if (channels == 3)
+    اگر (channels == 3)
         flags |= ISO21496_FLAG_MULTICHANNEL;
-    if (p->use_base_color_space)
-        flags |= ISO21496_FLAG_USE_BASE_CG;
+    اگر (p->use_بنیاد_color_space)
+        flags |= ISO21496_FLAG_USE_بنیاد_CG;
 
-    bytestream2_put_be16(&pb, p->version); /* minimum_version */
-    bytestream2_put_be16(&pb, p->version); /* writer_version */
+    bytestream2_put_be16(&pb, p->نسخہ); /* minimum_version */
+    bytestream2_put_be16(&pb, p->نسخہ); /* writer_version */
     bytestream2_put_byte(&pb, flags);
-    put_q(&pb, p->base_hdr_headroom);
+    put_q(&pb, p->بنیاد_hdr_headroom);
     put_q(&pb, p->alternate_hdr_headroom);
 
-    for (int c = 0; c < channels; c++) {
-        const struct AVGainMapChannel *const ch = &p->channels[c];
+    برائے (صحیح c = 0; c < channels; c++) {
+        ثابت ساخت AVGainMapChannel *ثابت ch = &p->channels[c];
         put_q(&pb, ch->gain_map_min);
         put_q(&pb, ch->gain_map_max);
         put_q(&pb, ch->gamma);
-        put_q(&pb, ch->base_offset);
-        put_q(&pb, ch->alternate_offset);
+        put_q(&pb, ch->بنیاد_انحراف);
+        put_q(&pb, ch->alternate_انحراف);
     }
 
-    return bytestream2_tell_p(&pb);
+    واپس bytestream2_tell_p(&pb);
 }
 
-int av_gain_map_channels_identical(const AVGainMapParams *p)
+صحیح av_gain_map_channels_identical(ثابت AVGainMapParams *p)
 {
-    static_assert(sizeof(p->channels[0]) == sizeof(int[2]) * 5,
+    static_assert(حجم(p->channels[0]) == حجم(صحیح[2]) * 5,
                   "AVGainMapChannel struct is tightly packed");
 
-    return !memcmp(&p->channels[0], &p->channels[1], sizeof(p->channels[0])) &&
-           !memcmp(&p->channels[0], &p->channels[2], sizeof(p->channels[0]));
+    واپس !memcmp(&p->channels[0], &p->channels[1], حجم(p->channels[0])) &&
+           !memcmp(&p->channels[0], &p->channels[2], حجم(p->channels[0]));
 }
 
-AVGainMapParams *av_gain_map_params_alloc(size_t *size)
+AVGainMapParams *av_gain_map_params_alloc(size_t *سائز)
 {
-    AVGainMapParams *p = av_malloc(sizeof(AVGainMapParams));
-    if (!p)
-        return NULL;
+    AVGainMapParams *p = av_malloc(حجم(AVGainMapParams));
+    اگر (!p)
+        واپس تہی;
 
     gain_map_params_default(p);
 
-    if (size)
-        *size = sizeof(*p);
+    اگر (سائز)
+        *سائز = حجم(*p);
 
-    return p;
+    واپس p;
 }
 
-AVGainMapParams *av_gain_map_params_create_side_data(AVFrameSideData ***fsd, int *nb_sd)
+AVGainMapParams *av_gain_map_params_create_side_ڈیٹا(AVFrame_Side_ڈیٹا ***fsd, صحیح *nb_sd)
 {
-    AVFrameSideData *sd;
-    sd = av_frame_side_data_new(fsd, nb_sd, AV_FRAME_DATA_GAIN_MAP_PARAMS,
-                                sizeof(AVGainMapParams),
-                                AV_FRAME_SIDE_DATA_FLAG_REPLACE);
-    if (!sd)
-        return NULL;
+    AVFrame_Side_ڈیٹا *sd;
+    sd = av_چوکھٹا_side_ڈیٹا_new(fsd, nb_sd, AV_چوکھٹا_ڈیٹا_GAIN_MAP_PARAMS,
+                                حجم(AVGainMapParams),
+                                AV_چوکھٹا_SIDE_ڈیٹا_FLAG_REPLACE);
+    اگر (!sd)
+        واپس تہی;
 
-    AVGainMapParams *const p = (AVGainMapParams *) sd->data;
+    AVGainMapParams *ثابت p = (AVGainMapParams *) sd->ڈیٹا;
     gain_map_params_default(p);
-    return p;
+    واپس p;
 }

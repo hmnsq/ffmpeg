@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_QSV_H
-#define AVUTIL_HWCONTEXT_QSV_H
+#اگر_غیر_تعریف_شدہ AVUTIL_HWCONTEXT_QSV_H
+#تعریف_کرو AVUTIL_HWCONTEXT_QSV_H
 
-#include <mfxvideo.h>
+#شامل <mfxvideo.h>
 
 /**
  * @file
@@ -32,7 +32,7 @@
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVQSVDeviceContext {
+قسمتعریف ساخت AVQSVDeviceContext {
     mfxSession session;
     /**
      * The mfxLoader handle used for mfxSession creation
@@ -44,19 +44,19 @@ typedef struct AVQSVDeviceContext {
      * cast to mfxLoader handle. Deallocating the AVHWDeviceContext will always
      * release this interface.
      */
-    void *loader;
+    خالی *loader;
 } AVQSVDeviceContext;
 
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVQSVFramesContext {
+قسمتعریف ساخت AVQSVFramesContext {
     /**
      * A pointer to a mfxFrameSurface1 struct
      *
      * It is available when nb_surfaces is non-zero.
      */
-    mfxFrameSurface1 *surfaces;
+    mfx_چوکھٹا_Surface1 *surfaces;
 
     /**
      * Number of frames in the pool
@@ -67,12 +67,12 @@ typedef struct AVQSVFramesContext {
      * Note only oneVPL GPU runtime 2.9+ can support dynamic frame pools
      * on d3d11va or vaapi
      */
-    int            nb_surfaces;
+    صحیح            nb_surfaces;
 
     /**
      * A combination of MFX_MEMTYPE_* describing the frame pool.
      */
-    int frame_type;
+    صحیح چوکھٹا_type;
 
     /**
      * A pointer to a mfxFrameInfo struct
@@ -80,7 +80,7 @@ typedef struct AVQSVFramesContext {
      * It is available when nb_surfaces is 0, all buffers allocated from the
      * pool have the same mfxFrameInfo.
      */
-    mfxFrameInfo *info;
+    mfx_چوکھٹا_Info *info;
 } AVQSVFramesContext;
 
-#endif /* AVUTIL_HWCONTEXT_QSV_H */
+#اگر_ختم /* AVUTIL_HWCONTEXT_QSV_H */

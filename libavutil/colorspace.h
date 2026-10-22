@@ -24,98 +24,98 @@
  * Various defines for YUV<->RGB conversion
  */
 
-#ifndef AVUTIL_COLORSPACE_H
-#define AVUTIL_COLORSPACE_H
+#اگر_غیر_تعریف_شدہ AVUTIL_COLORSPACE_H
+#تعریف_کرو AVUTIL_COLORSPACE_H
 
-#define SCALEBITS 10
-#define ONE_HALF  (1 << (SCALEBITS - 1))
-#define FIX(x)    ((int) ((x) * (1<<SCALEBITS) + 0.5))
+#تعریف_کرو SCALEBITS 10
+#تعریف_کرو ONE_HALF  (1 << (SCALEBITS - 1))
+#تعریف_کرو FIX(x)    ((صحیح) ((x) * (1<<SCALEBITS) + 0.5))
 
-#define YUV_TO_RGB1_CCIR(cb1, cr1)\
+#تعریف_کرو YUV_مقصد_RGB1_CCIR(cb1, cr1)\
 {\
     cb = (cb1) - 128;\
     cr = (cr1) - 128;\
-    r_add = FIX(1.40200*255.0/224.0) * cr + ONE_HALF;\
-    g_add = - FIX(0.34414*255.0/224.0) * cb - FIX(0.71414*255.0/224.0) * cr + \
+    r_جوڑو = FIX(1.40200*255.0/224.0) * cr + ONE_HALF;\
+    g_جوڑو = - FIX(0.34414*255.0/224.0) * cb - FIX(0.71414*255.0/224.0) * cr + \
             ONE_HALF;\
-    b_add = FIX(1.77200*255.0/224.0) * cb + ONE_HALF;\
+    b_جوڑو = FIX(1.77200*255.0/224.0) * cb + ONE_HALF;\
 }
 
-#define YUV_TO_RGB1_CCIR_BT709(cb1, cr1)                      \
+#تعریف_کرو YUV_مقصد_RGB1_CCIR_BT709(cb1, cr1)                      \
     {                                                         \
         cb    = (cb1) - 128;                                  \
         cr    = (cr1) - 128;                                  \
-        r_add = ONE_HALF + FIX(1.5747 * 255.0 / 224.0) * cr;  \
-        g_add = ONE_HALF - FIX(0.1873 * 255.0 / 224.0) * cb - \
+        r_جوڑو = ONE_HALF + FIX(1.5747 * 255.0 / 224.0) * cr;  \
+        g_جوڑو = ONE_HALF - FIX(0.1873 * 255.0 / 224.0) * cb - \
                            FIX(0.4682 * 255.0 / 224.0) * cr;  \
-        b_add = ONE_HALF + FIX(1.8556 * 255.0 / 224.0) * cb;  \
+        b_جوڑو = ONE_HALF + FIX(1.8556 * 255.0 / 224.0) * cb;  \
     }
 
 // To be used for the BT709 variant as well
-#define YUV_TO_RGB2_CCIR(r, g, b, y1)\
+#تعریف_کرو YUV_مقصد_RGB2_CCIR(r, g, b, y1)\
 {\
     y = ((y1) - 16) * FIX(255.0/219.0);\
-    r = cm[(y + r_add) >> SCALEBITS];\
-    g = cm[(y + g_add) >> SCALEBITS];\
-    b = cm[(y + b_add) >> SCALEBITS];\
+    r = cm[(y + r_جوڑو) >> SCALEBITS];\
+    g = cm[(y + g_جوڑو) >> SCALEBITS];\
+    b = cm[(y + b_جوڑو) >> SCALEBITS];\
 }
 
-#define YUV_TO_RGB1(cb1, cr1)\
+#تعریف_کرو YUV_مقصد_RGB1(cb1, cr1)\
 {\
     cb = (cb1) - 128;\
     cr = (cr1) - 128;\
-    r_add = FIX(1.40200) * cr + ONE_HALF;\
-    g_add = - FIX(0.34414) * cb - FIX(0.71414) * cr + ONE_HALF;\
-    b_add = FIX(1.77200) * cb + ONE_HALF;\
+    r_جوڑو = FIX(1.40200) * cr + ONE_HALF;\
+    g_جوڑو = - FIX(0.34414) * cb - FIX(0.71414) * cr + ONE_HALF;\
+    b_جوڑو = FIX(1.77200) * cb + ONE_HALF;\
 }
 
-#define YUV_TO_RGB2(r, g, b, y1)\
+#تعریف_کرو YUV_مقصد_RGB2(r, g, b, y1)\
 {\
     y = (y1) << SCALEBITS;\
-    r = cm[(y + r_add) >> SCALEBITS];\
-    g = cm[(y + g_add) >> SCALEBITS];\
-    b = cm[(y + b_add) >> SCALEBITS];\
+    r = cm[(y + r_جوڑو) >> SCALEBITS];\
+    g = cm[(y + g_جوڑو) >> SCALEBITS];\
+    b = cm[(y + b_جوڑو) >> SCALEBITS];\
 }
 
-#define Y_CCIR_TO_JPEG(y)\
+#تعریف_کرو Y_CCIR_مقصد_JPEG(y)\
  cm[((y) * FIX(255.0/219.0) + (ONE_HALF - 16 * FIX(255.0/219.0))) >> SCALEBITS]
 
-#define Y_JPEG_TO_CCIR(y)\
+#تعریف_کرو Y_JPEG_مقصد_CCIR(y)\
  (((y) * FIX(219.0/255.0) + (ONE_HALF + (16 << SCALEBITS))) >> SCALEBITS)
 
-#define C_CCIR_TO_JPEG(y)\
+#تعریف_کرو C_CCIR_مقصد_JPEG(y)\
  cm[(((y) - 128) * FIX(127.0/112.0) + (ONE_HALF + (128 << SCALEBITS))) >> SCALEBITS]
 
 /* NOTE: the clamp is really necessary! */
-static inline int C_JPEG_TO_CCIR(int y) {
+ساکن اندرونی صحیح C_JPEG_مقصد_CCIR(صحیح y) {
     y = (((y - 128) * FIX(112.0/127.0) + (ONE_HALF + (128 << SCALEBITS))) >> SCALEBITS);
-    if (y < 16)
+    اگر (y < 16)
         y = 16;
-    return y;
+    واپس y;
 }
 
 
-#define RGB_TO_Y_CCIR(r, g, b) \
+#تعریف_کرو RGB_مقصد_Y_CCIR(r, g, b) \
 ((FIX(0.29900*219.0/255.0) * (r) + FIX(0.58700*219.0/255.0) * (g) + \
   FIX(0.11400*219.0/255.0) * (b) + (ONE_HALF + (16 << SCALEBITS))) >> SCALEBITS)
 
-#define RGB_TO_U_CCIR(r1, g1, b1, shift)\
+#تعریف_کرو RGB_مقصد_U_CCIR(r1, g1, b1, سرکاؤ)\
 (((- FIX(0.16874*224.0/255.0) * r1 - FIX(0.33126*224.0/255.0) * g1 +         \
-     FIX(0.50000*224.0/255.0) * b1 + (ONE_HALF << shift) - 1) >> (SCALEBITS + shift)) + 128)
+     FIX(0.50000*224.0/255.0) * b1 + (ONE_HALF << سرکاؤ) - 1) >> (SCALEBITS + سرکاؤ)) + 128)
 
-#define RGB_TO_V_CCIR(r1, g1, b1, shift)\
+#تعریف_کرو RGB_مقصد_V_CCIR(r1, g1, b1, سرکاؤ)\
 (((FIX(0.50000*224.0/255.0) * r1 - FIX(0.41869*224.0/255.0) * g1 -           \
-   FIX(0.08131*224.0/255.0) * b1 + (ONE_HALF << shift) - 1) >> (SCALEBITS + shift)) + 128)
+   FIX(0.08131*224.0/255.0) * b1 + (ONE_HALF << سرکاؤ) - 1) >> (SCALEBITS + سرکاؤ)) + 128)
 
-#define RGB_TO_Y_JPEG(r, g, b) \
+#تعریف_کرو RGB_مقصد_Y_JPEG(r, g, b) \
 (FFMIN((FIX(0.29900) * (r) + FIX(0.58700) * (g) + \
   FIX(0.11400) * (b) + (ONE_HALF)) >> SCALEBITS, 255))
 
-#define RGB_TO_U_JPEG(r1, g1, b1)\
+#تعریف_کرو RGB_مقصد_U_JPEG(r1, g1, b1)\
 (((- FIX(0.16874) * r1 - FIX(0.33126) * g1 + \
      FIX(0.50000) * b1 + (ONE_HALF) - 1) >> (SCALEBITS)) + 128)
 
-#define RGB_TO_V_JPEG(r1, g1, b1)\
+#تعریف_کرو RGB_مقصد_V_JPEG(r1, g1, b1)\
 (((FIX(0.50000) * r1 - FIX(0.41869) * g1 - \
    FIX(0.08131) * b1 + (ONE_HALF) - 1) >> (SCALEBITS)) + 128)
 
@@ -123,28 +123,28 @@ static inline int C_JPEG_TO_CCIR(int y) {
 // Derived from ITU-R BT.709-6 (06/2015) Item 3.5
 // https://www.itu.int/rec/R-REC-BT.709-6-201506-I/en
 
-#define RGB_TO_Y_BT709(r, g, b) \
+#تعریف_کرو RGB_مقصد_Y_BT709(r, g, b) \
 ((FIX(0.21260*219.0/255.0) * (r) + FIX(0.71520*219.0/255.0) * (g) + \
   FIX(0.07220*219.0/255.0) * (b) + (ONE_HALF + (16 << SCALEBITS))) >> SCALEBITS)
 
-#define RGB_TO_U_BT709(r1, g1, b1, shift)\
+#تعریف_کرو RGB_مقصد_U_BT709(r1, g1, b1, سرکاؤ)\
 (((- FIX(0.11457*224.0/255.0) * r1 - FIX(0.38543*224.0/255.0) * g1 +         \
-     FIX(0.50000*224.0/255.0) * b1 + (ONE_HALF << shift) - 1) >> (SCALEBITS + shift)) + 128)
+     FIX(0.50000*224.0/255.0) * b1 + (ONE_HALF << سرکاؤ) - 1) >> (SCALEBITS + سرکاؤ)) + 128)
 
-#define RGB_TO_V_BT709(r1, g1, b1, shift)\
+#تعریف_کرو RGB_مقصد_V_BT709(r1, g1, b1, سرکاؤ)\
 (((FIX(0.50000*224.0/255.0) * r1 - FIX(0.45415*224.0/255.0) * g1 -           \
-   FIX(0.04585*224.0/255.0) * b1 + (ONE_HALF << shift) - 1) >> (SCALEBITS + shift)) + 128)
+   FIX(0.04585*224.0/255.0) * b1 + (ONE_HALF << سرکاؤ) - 1) >> (SCALEBITS + سرکاؤ)) + 128)
 
-#define RGB_TO_Y_BT709_FULL(r, g, b) \
+#تعریف_کرو RGB_مقصد_Y_BT709_بھرا(r, g, b) \
 (FFMIN((FIX(0.21260) * (r) + FIX(0.71520) * (g) + \
   FIX(0.07220) * (b) + (ONE_HALF)) >> SCALEBITS, 255))
 
-#define RGB_TO_U_BT709_FULL(r1, g1, b1)\
+#تعریف_کرو RGB_مقصد_U_BT709_بھرا(r1, g1, b1)\
 (((- FIX(0.11457) * r1 - FIX(0.38543) * g1 + \
      FIX(0.50000) * b1 + (ONE_HALF) - 1) >> (SCALEBITS)) + 128)
 
-#define RGB_TO_V_BT709_FULL(r1, g1, b1)\
+#تعریف_کرو RGB_مقصد_V_BT709_بھرا(r1, g1, b1)\
 (((FIX(0.50000) * r1 - FIX(0.45415) * g1 - \
    FIX(0.04585) * b1 + (ONE_HALF) - 1) >> (SCALEBITS)) + 128)
 
-#endif /* AVUTIL_COLORSPACE_H */
+#اگر_ختم /* AVUTIL_COLORSPACE_H */

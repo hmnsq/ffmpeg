@@ -16,602 +16,602 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "buffer.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_cuda_internal.h"
-#if CONFIG_VULKAN
-#include "hwcontext_vulkan.h"
-#endif
-#include "cuda_check.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "imgutils.h"
+#شامل "buffer.h"
+#شامل "common.h"
+#شامل "hwcontext.h"
+#شامل "hwcontext_internal.h"
+#شامل "hwcontext_cuda_internal.h"
+#اگر CONFIG_VULKAN
+#شامل "hwcontext_vulkan.h"
+#اگر_ختم
+#شامل "cuda_check.h"
+#شامل "mem.h"
+#شامل "pixdesc.h"
+#شامل "pixfmt.h"
+#شامل "imgutils.h"
 
-typedef struct CUDAFramesContext {
+قسمتعریف ساخت CUDAFramesContext {
     AVCUDAFramesContext p;
 
-    int shift_width, shift_height;
-    int tex_alignment;
+    صحیح سرکاؤ_چوڑائی, سرکاؤ_اونچائی;
+    صحیح tex_alignment;
 
-    int cuarray_num_surfaces_used;
+    صحیح cuarray_عدد_surfaces_مستعمل;
 } CUDAFramesContext;
 
-typedef struct CUDADeviceContext {
+قسمتعریف ساخت CUDADeviceContext {
     AVCUDADeviceContext p;
-    AVCUDADeviceContextInternal internal;
+    AVCUDADevice_Context_اندرونی اندرونی_2;
 } CUDADeviceContext;
 
 
 
-#define CHECK_CU(x) FF_CUDA_CHECK_DL(device_ctx, cu, x)
+#تعریف_کرو CHECK_CU(x) FF_CUDA_CHECK_DL(device_ctx, cu, x)
 
-static CUarray_format cuda_array_format_for_pix_fmt(enum AVPixelFormat fmt);
+ساکن CUarray_format cuda_array_format_for_pix_fmt(شمار AVPixelFormat fmt);
 
-static int cuda_frames_get_constraints(AVHWDeviceContext *ctx,
-                                       const void *hwconfig,
+ساکن صحیح cuda_چوکھٹے_get_constraints(AVHWDeviceContext *ctx,
+                                       ثابت خالی *hwconfig,
                                        AVHWFramesConstraints *constraints)
 {
-    const AVCUDAHWConfig *config = hwconfig;
-    enum AVPixelFormat req_fmt = config ? config->hw_format : AV_PIX_FMT_NONE;
-    int n = 0;
+    ثابت AVCUDAHWConfig *config = hwconfig;
+    شمار AVPixelFormat req_fmt = config ? config->hw_format : AV_PIX_FMT_NONE;
+    صحیح n = 0;
 
-    if (req_fmt == AV_PIX_FMT_CUDA || req_fmt == AV_PIX_FMT_CUARRAY) {
-        constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-        if (!constraints->valid_hw_formats)
-            return AVERROR(ENOMEM);
+    اگر (req_fmt == AV_PIX_FMT_CUDA || req_fmt == AV_PIX_FMT_CUARRAY) {
+        constraints->valid_hw_formats = av_malloc_array(2, حجم(*constraints->valid_hw_formats));
+        اگر (!constraints->valid_hw_formats)
+            واپس AVERROR(ENOMEM);
 
         constraints->valid_hw_formats[0] = req_fmt;
         constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
-    } else {
-        constraints->valid_hw_formats = av_malloc_array(2 + HAVE_FFNVCODEC_CUARRAY, sizeof(*constraints->valid_hw_formats));
-        if (!constraints->valid_hw_formats)
-            return AVERROR(ENOMEM);
+    } ورنہ {
+        constraints->valid_hw_formats = av_malloc_array(2 + HAVE_FFNVCODEC_CUARRAY, حجم(*constraints->valid_hw_formats));
+        اگر (!constraints->valid_hw_formats)
+            واپس AVERROR(ENOMEM);
 
         constraints->valid_hw_formats[0] = AV_PIX_FMT_CUDA;
-#if HAVE_FFNVCODEC_CUARRAY
+#اگر HAVE_FFNVCODEC_CUARRAY
         constraints->valid_hw_formats[1] = AV_PIX_FMT_CUARRAY;
         constraints->valid_hw_formats[2] = AV_PIX_FMT_NONE;
-#else
+#ورنہ
         constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
-#endif
+#اگر_ختم
     }
 
     constraints->valid_sw_formats = av_malloc_array(AV_PIX_FMT_NB + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    حجم(*constraints->valid_sw_formats));
+    اگر (!constraints->valid_sw_formats)
+        واپس AVERROR(ENOMEM);
 
     n = 0;
-    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
-        if (req_fmt == AV_PIX_FMT_CUARRAY) {
-            if (cuda_array_format_for_pix_fmt(i))
+    برائے (صحیح i = 0; i < AV_PIX_FMT_NB; i++) {
+        اگر (req_fmt == AV_PIX_FMT_CUARRAY) {
+            اگر (cuda_array_format_for_pix_fmt(i))
                 constraints->valid_sw_formats[n++] = i;
-        } else {
-            const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
+        } ورنہ {
+            ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(i);
             /* Palette formats carry their palette in a separate zero-linesize
              * data[1] plane that the transfer path does not handle, so exclude
              * them along with the hwaccel formats. */
-            if (desc && !(desc->flags & (AV_PIX_FMT_FLAG_HWACCEL | AV_PIX_FMT_FLAG_PAL)))
+            اگر (desc && !(desc->flags & (AV_PIX_FMT_FLAG_HWACCEL | AV_PIX_FMT_FLAG_PAL)))
                 constraints->valid_sw_formats[n++] = i;
         }
     }
-#if CONFIG_VULKAN
-    if (req_fmt != AV_PIX_FMT_CUARRAY)
+#اگر CONFIG_VULKAN
+    اگر (req_fmt != AV_PIX_FMT_CUARRAY)
         constraints->valid_sw_formats[n++] = AV_PIX_FMT_VULKAN;
-#endif
+#اگر_ختم
     constraints->valid_sw_formats[n] = AV_PIX_FMT_NONE;
 
-    return 0;
+    واپس 0;
 }
 
-static void cuda_buffer_free(void *opaque, uint8_t *data)
+ساکن خالی cuda_بفر_free(خالی *opaque, uint8_t *ڈیٹا)
 {
     AVHWFramesContext        *ctx = opaque;
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->اندرونی_2->cuda_dl;
 
     CUcontext dummy;
 
-    CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+    CHECK_CU(cu->cu_Ctx_ڈالو_Current(hwctx->cuda_ctx));
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-        AVCUDAArrayFrameDescriptor *desc = (AVCUDAArrayFrameDescriptor*)data;
+    اگر (ctx->format == AV_PIX_FMT_CUARRAY) {
+        AVCUDAArray_چوکھٹا_Descriptor *desc = (AVCUDAArray_چوکھٹا_Descriptor*)ڈیٹا;
         CHECK_CU(cu->cuArrayDestroy(desc->array));
         av_free(desc);
-    } else {
-        CHECK_CU(cu->cuMemFree((CUdeviceptr)data));
+    } ورنہ {
+        CHECK_CU(cu->cuMemFree((CUdeviceptr)ڈیٹا));
     }
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
 }
 
-static AVBufferRef *cuda_pool_alloc(void *opaque, size_t size)
+ساکن AVBufferRef *cuda_pool_alloc(خالی *opaque, size_t سائز)
 {
     AVHWFramesContext        *ctx = opaque;
     CUDAFramesContext       *priv = ctx->hwctx;
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->اندرونی_2->cuda_dl;
 
-    AVBufferRef *ret = NULL;
-    CUcontext dummy = NULL;
-    CUdeviceptr data;
-    int err;
+    AVBufferRef *ret = تہی;
+    CUcontext dummy = تہی;
+    CUdeviceptr ڈیٹا;
+    صحیح err;
 
-    err = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-    if (err < 0)
-        return NULL;
+    err = CHECK_CU(cu->cu_Ctx_ڈالو_Current(hwctx->cuda_ctx));
+    اگر (err < 0)
+        واپس تہی;
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-        AVCUDAArrayFrameDescriptor *desc = av_mallocz(sizeof(*desc));
-        if (!desc)
-            goto done;
+    اگر (ctx->format == AV_PIX_FMT_CUARRAY) {
+        AVCUDAArray_چوکھٹا_Descriptor *desc = av_mallocz(حجم(*desc));
+        اگر (!desc)
+            جاؤ مکمل;
 
-        if (priv->p.cuarray_num_surfaces > 0) {
-            if (priv->cuarray_num_surfaces_used >= priv->p.cuarray_num_surfaces) {
+        اگر (priv->p.cuarray_عدد_surfaces > 0) {
+            اگر (priv->cuarray_عدد_surfaces_مستعمل >= priv->p.cuarray_عدد_surfaces) {
                 av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
                 av_free(desc);
-                goto done;
+                جاؤ مکمل;
             }
-            desc->index = priv->cuarray_num_surfaces_used++;
-            desc->array = priv->p.cuarray_surfaces[desc->index];
-        } else {
+            desc->اشاریہ = priv->cuarray_عدد_surfaces_مستعمل++;
+            desc->array = priv->p.cuarray_surfaces[desc->اشاریہ];
+        } ورنہ {
             err = CHECK_CU(cu->cuArray3DCreate(&desc->array, &priv->p.cuarray_desc));
-            if (err < 0) {
+            اگر (err < 0) {
                 av_free(desc);
-                goto done;
+                جاؤ مکمل;
             }
         }
 
-        ret = av_buffer_create((uint8_t*)desc, sizeof(*desc), cuda_buffer_free, ctx, 0);
-        if (!ret) {
+        ret = av_بفر_create((uint8_t*)desc, حجم(*desc), cuda_بفر_free, ctx, 0);
+        اگر (!ret) {
             // It is okay (and necessary) to free a pool array here,
             // since cuarray_num_surfaces_used is already incremented.
             CHECK_CU(cu->cuArrayDestroy(desc->array));
             av_free(desc);
-            goto done;
+            جاؤ مکمل;
         }
 
-        goto done;
+        جاؤ مکمل;
     }
 
-    err = CHECK_CU(cu->cuMemAlloc(&data, size));
-    if (err < 0)
-        goto done;
+    err = CHECK_CU(cu->cuMemAlloc(&ڈیٹا, سائز));
+    اگر (err < 0)
+        جاؤ مکمل;
 
-    ret = av_buffer_create((uint8_t*)data, size, cuda_buffer_free, ctx, 0);
-    if (!ret) {
-        CHECK_CU(cu->cuMemFree(data));
-        goto done;
+    ret = av_بفر_create((uint8_t*)ڈیٹا, سائز, cuda_بفر_free, ctx, 0);
+    اگر (!ret) {
+        CHECK_CU(cu->cuMemFree(ڈیٹا));
+        جاؤ مکمل;
     }
 
     // Common exit: reached on both success (ret holds the buffer) and
     // failure (ret == NULL); restores the CUDA context and returns ret.
-done:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    return ret;
+مکمل:
+    CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
+    واپس ret;
 }
 
-#if HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
-static void cuda_transfer_buffer_free(void *opaque, uint8_t *data)
+#اگر HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
+ساکن خالی cuda_transfer_بفر_free(خالی *opaque, uint8_t *ڈیٹا)
 {
     AVHWDeviceContext *device_ctx = opaque;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->اندرونی_2->cuda_dl;
     CUcontext dummy;
 
-    CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-    CHECK_CU(cu->cuMemFreeHost(data));
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    CHECK_CU(cu->cu_Ctx_ڈالو_Current(hwctx->cuda_ctx));
+    CHECK_CU(cu->cuMemFreeHost(ڈیٹا));
+    CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
 }
 
 /* The device transfers directly to and from page-locked memory, other memory
  * goes through a buffer of the driver. */
-static AVBufferRef *cuda_transfer_buffer_alloc(void *device_ref, size_t size)
+ساکن AVBufferRef *cuda_transfer_بفر_alloc(خالی *device_ref, size_t سائز)
 {
-    AVHWDeviceContext *device_ctx = (AVHWDeviceContext *)((AVBufferRef *)device_ref)->data;
+    AVHWDeviceContext *device_ctx = (AVHWDeviceContext *)((AVBufferRef *)device_ref)->ڈیٹا;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
-    AVBufferRef *ret = NULL;
+    CudaFunctions             *cu = hwctx->اندرونی_2->cuda_dl;
+    AVBufferRef *ret = تہی;
     CUcontext dummy;
-    void *host;
+    خالی *host;
 
-    if (CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx)) < 0)
-        return av_buffer_alloc(size);
+    اگر (CHECK_CU(cu->cu_Ctx_ڈالو_Current(hwctx->cuda_ctx)) < 0)
+        واپس av_بفر_alloc(سائز);
 
-    if (CHECK_CU(cu->cuMemHostAlloc(&host, size, 0)) >= 0) {
-        ret = av_buffer_create(host, size, cuda_transfer_buffer_free, device_ctx, 0);
-        if (!ret)
+    اگر (CHECK_CU(cu->cuMemHostAlloc(&host, سائز, 0)) >= 0) {
+        ret = av_بفر_create(host, سائز, cuda_transfer_بفر_free, device_ctx, 0);
+        اگر (!ret)
             CHECK_CU(cu->cuMemFreeHost(host));
     }
 
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    return ret ? ret : av_buffer_alloc(size);
+    CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
+    واپس ret ? ret : av_بفر_alloc(سائز);
 }
-#endif
+#اگر_ختم
 
-static void cuda_frames_uninit(AVHWFramesContext *ctx)
+ساکن خالی cuda_چوکھٹے_uninit(AVHWFramesContext *ctx)
 {
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
     CUDAFramesContext       *priv = ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->اندرونی_2->cuda_dl;
 
-    if (priv->p.cuarray_surfaces) {
+    اگر (priv->p.cuarray_surfaces) {
         CUcontext dummy;
-        CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
+        CHECK_CU(cu->cu_Ctx_ڈالو_Current(hwctx->cuda_ctx));
 
         // Make sure we don't free surfaces that have been adopted by the pool already
-        for (int i = priv->cuarray_num_surfaces_used; i < priv->p.cuarray_num_surfaces; i++)
-            if (priv->p.cuarray_surfaces[i])
+        برائے (صحیح i = priv->cuarray_عدد_surfaces_مستعمل; i < priv->p.cuarray_عدد_surfaces; i++)
+            اگر (priv->p.cuarray_surfaces[i])
                 CHECK_CU(cu->cuArrayDestroy(priv->p.cuarray_surfaces[i]));
 
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
 
         av_freep(&priv->p.cuarray_surfaces);
-        priv->p.cuarray_num_surfaces = 0;
+        priv->p.cuarray_عدد_surfaces = 0;
     }
 }
 
-static CUarray_format cuda_array_format_for_pix_fmt(enum AVPixelFormat fmt)
+ساکن CUarray_format cuda_array_format_for_pix_fmt(شمار AVPixelFormat fmt)
 {
-    switch (fmt) {
-#if HAVE_FFNVCODEC_CUARRAY
-    case AV_PIX_FMT_NV12:      return CU_AD_FORMAT_NV12;
-    case AV_PIX_FMT_P010:
-    case AV_PIX_FMT_P012:
-    case AV_PIX_FMT_P016:      return CU_AD_FORMAT_P016;
-    case AV_PIX_FMT_NV16:      return CU_AD_FORMAT_NV16;
-    case AV_PIX_FMT_P210:
-    case AV_PIX_FMT_P212:
-    case AV_PIX_FMT_P216:      return CU_AD_FORMAT_P216;
-    case AV_PIX_FMT_NV24:      return CU_AD_FORMAT_YUV444_8BIT_SEMIPLANAR;
-    case AV_PIX_FMT_P410:
-    case AV_PIX_FMT_P412:
-    case AV_PIX_FMT_P416:      return CU_AD_FORMAT_YUV444_16BIT_SEMIPLANAR;
-    case AV_PIX_FMT_YUV420P:   return CU_AD_FORMAT_UINT8_PLANAR_420;
-    case AV_PIX_FMT_YUV422P:   return CU_AD_FORMAT_UINT8_PLANAR_422;
-    case AV_PIX_FMT_YUV444P:   return CU_AD_FORMAT_UINT8_PLANAR_444;
-    case AV_PIX_FMT_YUV420P10: return CU_AD_FORMAT_UINT16_PLANAR_420;
-    case AV_PIX_FMT_YUV422P10: return CU_AD_FORMAT_UINT16_PLANAR_422;
-    case AV_PIX_FMT_YUV444P10:
-    case AV_PIX_FMT_YUV444P10MSB:
-    case AV_PIX_FMT_YUV444P12MSB:
-    case AV_PIX_FMT_YUV444P16: return CU_AD_FORMAT_UINT16_PLANAR_444;
-    case AV_PIX_FMT_0RGB32:
-    case AV_PIX_FMT_0BGR32:
-    case AV_PIX_FMT_RGB32:
-    case AV_PIX_FMT_BGR32:     return CU_AD_FORMAT_UNSIGNED_INT8;
-#endif
-    default:                   return 0;
+    انتخاب (fmt) {
+#اگر HAVE_FFNVCODEC_CUARRAY
+    حالت AV_PIX_FMT_NV12:      واپس CU_AD_FORMAT_NV12;
+    حالت AV_PIX_FMT_P010:
+    حالت AV_PIX_FMT_P012:
+    حالت AV_PIX_FMT_P016:      واپس CU_AD_FORMAT_P016;
+    حالت AV_PIX_FMT_NV16:      واپس CU_AD_FORMAT_NV16;
+    حالت AV_PIX_FMT_P210:
+    حالت AV_PIX_FMT_P212:
+    حالت AV_PIX_FMT_P216:      واپس CU_AD_FORMAT_P216;
+    حالت AV_PIX_FMT_NV24:      واپس CU_AD_FORMAT_YUV444_8_ثنائی_ہندسہ_SEMIPLANAR;
+    حالت AV_PIX_FMT_P410:
+    حالت AV_PIX_FMT_P412:
+    حالت AV_PIX_FMT_P416:      واپس CU_AD_FORMAT_YUV444_16_ثنائی_ہندسہ_SEMIPLANAR;
+    حالت AV_PIX_FMT_YUV420P:   واپس CU_AD_FORMAT_UINT8_PLANAR_420;
+    حالت AV_PIX_FMT_YUV422P:   واپس CU_AD_FORMAT_UINT8_PLANAR_422;
+    حالت AV_PIX_FMT_YUV444P:   واپس CU_AD_FORMAT_UINT8_PLANAR_444;
+    حالت AV_PIX_FMT_YUV420P10: واپس CU_AD_FORMAT_UINT16_PLANAR_420;
+    حالت AV_PIX_FMT_YUV422P10: واپس CU_AD_FORMAT_UINT16_PLANAR_422;
+    حالت AV_PIX_FMT_YUV444P10:
+    حالت AV_PIX_FMT_YUV444P10MSB:
+    حالت AV_PIX_FMT_YUV444P12MSB:
+    حالت AV_PIX_FMT_YUV444P16: واپس CU_AD_FORMAT_UINT16_PLANAR_444;
+    حالت AV_PIX_FMT_0RGB32:
+    حالت AV_PIX_FMT_0BGR32:
+    حالت AV_PIX_FMT_RGB32:
+    حالت AV_PIX_FMT_BGR32:     واپس CU_AD_FORMAT_UNSIGNED_INT8;
+#اگر_ختم
+    طےشدہ:                   واپس 0;
     }
 }
 
-#if HAVE_FFNVCODEC_CUARRAY
-static unsigned int cuda_array_numchannels_for_pix_fmt(enum AVPixelFormat fmt)
+#اگر HAVE_FFNVCODEC_CUARRAY
+ساکن غیرعلامتی صحیح cuda_array_numchannels_for_pix_fmt(شمار AVPixelFormat fmt)
 {
-    switch (fmt) {
-    case AV_PIX_FMT_0RGB32:
-    case AV_PIX_FMT_0BGR32:
-    case AV_PIX_FMT_RGB32:
-    case AV_PIX_FMT_BGR32:     return 4;
-    default:                   return 3;
+    انتخاب (fmt) {
+    حالت AV_PIX_FMT_0RGB32:
+    حالت AV_PIX_FMT_0BGR32:
+    حالت AV_PIX_FMT_RGB32:
+    حالت AV_PIX_FMT_BGR32:     واپس 4;
+    طےشدہ:                   واپس 3;
     }
 }
-#endif
+#اگر_ختم
 
-static int cuda_frames_init(AVHWFramesContext *ctx)
+ساکن صحیح cuda_چوکھٹے_init(AVHWFramesContext *ctx)
 {
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
     CUDAFramesContext       *priv = ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(ctx->sw_format);
-    int err;
+    CudaFunctions             *cu = hwctx->اندرونی_2->cuda_dl;
+    ثابت AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(ctx->sw_format);
+    صحیح err;
 
-    if (!desc) {
+    اگر (!desc) {
         av_log(ctx, AV_LOG_ERROR, "Invalid pixel format\n");
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
     /* Palette formats keep their palette in a separate zero-linesize plane
      * that the transfer path does not copy, so they are not supported. */
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    اگر (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         av_log(ctx, AV_LOG_ERROR, "Palette formats are not supported\n");
-        return AVERROR(ENOSYS);
+        واپس AVERROR(ENOSYS);
     }
 
-#if HAVE_FFNVCODEC_CUARRAY
-    if (ctx->format == AV_PIX_FMT_CUARRAY && !cu->cuArrayGetPlane) {
+#اگر HAVE_FFNVCODEC_CUARRAY
+    اگر (ctx->format == AV_PIX_FMT_CUARRAY && !cu->cuArrayGetPlane) {
         av_log(ctx, AV_LOG_ERROR, "cuArrayGetPlane not available, update your driver\n");
-        return AVERROR(ENOSYS);
+        واپس AVERROR(ENOSYS);
     }
-#else
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
+#ورنہ
+    اگر (ctx->format == AV_PIX_FMT_CUARRAY) {
         av_log(ctx, AV_LOG_ERROR, "Missing support for cuarray frames. Rebuild with newer ffnvcodec headers.\n");
-        return AVERROR(ENOSYS);
+        واپس AVERROR(ENOSYS);
     }
-#endif
+#اگر_ختم
 
     err = CHECK_CU(cu->cuDeviceGetAttribute(&priv->tex_alignment,
                                             14 /* CU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT */,
-                                            hwctx->internal->cuda_device));
-    if (err < 0)
-        return err;
+                                            hwctx->اندرونی_2->cuda_device));
+    اگر (err < 0)
+        واپس err;
 
     av_log(ctx, AV_LOG_DEBUG, "CUDA texture alignment: %d\n", priv->tex_alignment);
 
     // YUV420P is a special case.
     // Since nvenc expects the U/V planes to have half the linesize of the Y plane
     // alignment has to be doubled to ensure the U/V planes still end up aligned.
-    if (ctx->sw_format == AV_PIX_FMT_YUV420P)
+    اگر (ctx->sw_format == AV_PIX_FMT_YUV420P)
         priv->tex_alignment *= 2;
 
-    av_pix_fmt_get_chroma_sub_sample(ctx->sw_format, &priv->shift_width, &priv->shift_height);
+    av_pix_fmt_get_chroma_sub_sample(ctx->sw_format, &priv->سرکاؤ_چوڑائی, &priv->سرکاؤ_اونچائی);
 
-#if HAVE_FFNVCODEC_CUARRAY
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-        if (!priv->p.cuarray_desc.Width)
-            priv->p.cuarray_desc.Width = ctx->width;
-        if (!priv->p.cuarray_desc.Height)
-            priv->p.cuarray_desc.Height = ctx->height;
-        if (!priv->p.cuarray_desc.NumChannels)
-            priv->p.cuarray_desc.NumChannels = cuda_array_numchannels_for_pix_fmt(ctx->sw_format);
+#اگر HAVE_FFNVCODEC_CUARRAY
+    اگر (ctx->format == AV_PIX_FMT_CUARRAY) {
+        اگر (!priv->p.cuarray_desc.چوڑائی_2)
+            priv->p.cuarray_desc.چوڑائی_2 = ctx->چوڑائی;
+        اگر (!priv->p.cuarray_desc.اونچائی_2)
+            priv->p.cuarray_desc.اونچائی_2 = ctx->اونچائی;
+        اگر (!priv->p.cuarray_desc.عدد_Channels)
+            priv->p.cuarray_desc.عدد_Channels = cuda_array_numchannels_for_pix_fmt(ctx->sw_format);
 
-        if (priv->p.cuarray_desc.Depth) {
+        اگر (priv->p.cuarray_desc.گہرائی_2) {
             av_log(ctx, AV_LOG_ERROR, "CUarrays with non-zero depth are not supported.\n");
-            return AVERROR(EINVAL);
+            واپس AVERROR(EINVAL);
         }
 
-        if (!priv->p.cuarray_desc.Format)
+        اگر (!priv->p.cuarray_desc.Format)
             priv->p.cuarray_desc.Format = cuda_array_format_for_pix_fmt(ctx->sw_format);
-        if (!priv->p.cuarray_desc.Format) {
+        اگر (!priv->p.cuarray_desc.Format) {
             av_log(ctx, AV_LOG_ERROR, "Invalid CUarray pixel format\n");
-            return AVERROR_BUG;
+            واپس AVERROR_BUG;
         }
 
         priv->p.cuarray_desc.Flags |= CUDA_ARRAY3D_SURFACE_LDST | CUDA_ARRAY3D_VIDEO_ENCODE_DECODE;
     }
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY && priv->p.cuarray_num_surfaces > 0) {
+    اگر (ctx->format == AV_PIX_FMT_CUARRAY && priv->p.cuarray_عدد_surfaces > 0) {
         CUcontext dummy;
 
-        priv->p.cuarray_surfaces = av_calloc(priv->p.cuarray_num_surfaces, sizeof(*priv->p.cuarray_surfaces));
-        if (!priv->p.cuarray_surfaces)
-            return AVERROR(ENOMEM);
+        priv->p.cuarray_surfaces = av_calloc(priv->p.cuarray_عدد_surfaces, حجم(*priv->p.cuarray_surfaces));
+        اگر (!priv->p.cuarray_surfaces)
+            واپس AVERROR(ENOMEM);
 
-        err = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-        if (err < 0) {
+        err = CHECK_CU(cu->cu_Ctx_ڈالو_Current(hwctx->cuda_ctx));
+        اگر (err < 0) {
             av_freep(&priv->p.cuarray_surfaces);
-            return err;
+            واپس err;
         }
 
-        for (int i = 0; i < priv->p.cuarray_num_surfaces; i++) {
+        برائے (صحیح i = 0; i < priv->p.cuarray_عدد_surfaces; i++) {
             err = CHECK_CU(cu->cuArray3DCreate(&priv->p.cuarray_surfaces[i], &priv->p.cuarray_desc));
-            if (err < 0) {
-                for (i = i - 1; i >= 0; i--)
+            اگر (err < 0) {
+                برائے (i = i - 1; i >= 0; i--)
                     CHECK_CU(cu->cuArrayDestroy(priv->p.cuarray_surfaces[i]));
-                CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+                CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
 
                 av_freep(&priv->p.cuarray_surfaces);
-                return err;
+                واپس err;
             }
         }
 
-        err = CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        if (err < 0)
-            goto fail;
+        err = CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
+        اگر (err < 0)
+            جاؤ fail;
 
         av_log(ctx, AV_LOG_DEBUG, "allocated %d CUarray surfaces (%zux%zu)\n",
-               priv->p.cuarray_num_surfaces, priv->p.cuarray_desc.Width, priv->p.cuarray_desc.Height);
+               priv->p.cuarray_عدد_surfaces, priv->p.cuarray_desc.چوڑائی_2, priv->p.cuarray_desc.اونچائی_2);
     }
-#endif
+#اگر_ختم
 
-    if (!ctx->pool) {
-        int size = av_image_get_buffer_size(ctx->sw_format, ctx->width, ctx->height, priv->tex_alignment);
-        if (size < 0) {
-            err = size;
-            goto fail;
+    اگر (!ctx->pool) {
+        صحیح سائز = av_image_get_بفر_سائز(ctx->sw_format, ctx->چوڑائی, ctx->اونچائی, priv->tex_alignment);
+        اگر (سائز < 0) {
+            err = سائز;
+            جاؤ fail;
         }
 
-        ffhwframesctx(ctx)->pool_internal =
-            av_buffer_pool_init2(size, ctx, cuda_pool_alloc, NULL);
-        if (!ffhwframesctx(ctx)->pool_internal) {
+        ffhwframesctx(ctx)->pool_اندرونی =
+            av_بفر_pool_init2(سائز, ctx, cuda_pool_alloc, تہی);
+        اگر (!ffhwframesctx(ctx)->pool_اندرونی) {
             err = AVERROR(ENOMEM);
-            goto fail;
+            جاؤ fail;
         }
     }
 
-    return 0;
+    واپس 0;
 
 fail:
-    cuda_frames_uninit(ctx);
-    return err;
+    cuda_چوکھٹے_uninit(ctx);
+    واپس err;
 }
 
-static int cuda_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ساکن صحیح cuda_get_بفر(AVHWFramesContext *ctx, AVFrame *چوکھٹا)
 {
     CUDAFramesContext       *priv = ctx->hwctx;
-#if HAVE_FFNVCODEC_CUARRAY
+#اگر HAVE_FFNVCODEC_CUARRAY
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->اندرونی_2->cuda_dl;
 
     CUcontext dummy;
-#endif
-    int res;
+#اگر_ختم
+    صحیح res;
 
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    چوکھٹا->buf[0] = av_بفر_pool_get(ctx->pool);
+    اگر (!چوکھٹا->buf[0])
+        واپس AVERROR(ENOMEM);
 
-    if (ctx->format == AV_PIX_FMT_CUARRAY) {
-#if HAVE_FFNVCODEC_CUARRAY
-        AVCUDAArrayFrameDescriptor *desc = (AVCUDAArrayFrameDescriptor*)frame->buf[0]->data;
-        if (!desc) {
-            frame->format = ctx->format;
-            frame->width  = ctx->width;
-            frame->height = ctx->height;
-            return 0;
+    اگر (ctx->format == AV_PIX_FMT_CUARRAY) {
+#اگر HAVE_FFNVCODEC_CUARRAY
+        AVCUDAArray_چوکھٹا_Descriptor *desc = (AVCUDAArray_چوکھٹا_Descriptor*)چوکھٹا->buf[0]->ڈیٹا;
+        اگر (!desc) {
+            چوکھٹا->format = ctx->format;
+            چوکھٹا->چوڑائی  = ctx->چوڑائی;
+            چوکھٹا->اونچائی = ctx->اونچائی;
+            واپس 0;
         }
-        frame->data[0] = (uint8_t*)desc->array;
-        frame->data[1] = (uint8_t*)desc->index;
+        چوکھٹا->ڈیٹا[0] = (uint8_t*)desc->array;
+        چوکھٹا->ڈیٹا[1] = (uint8_t*)desc->اشاریہ;
 
-        res = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-        if (res < 0)
-            return res;
+        res = CHECK_CU(cu->cu_Ctx_ڈالو_Current(hwctx->cuda_ctx));
+        اگر (res < 0)
+            واپس res;
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(frame->linesize); i++) {
+        برائے (صحیح i = 0; i < FF_ARRAY_ELEMS(چوکھٹا->linesize); i++) {
             CUDA_ARRAY3D_DESCRIPTOR plane_desc = { 0 };
             CUarray plane_array;
             CUresult arr_plane_res = cu->cuArrayGetPlane(&plane_array, desc->array, i);
 
-            if (arr_plane_res == CUDA_ERROR_INVALID_VALUE) {
-                if (i > 0)
-                    break;
+            اگر (arr_plane_res == CUDA_ERROR_INVALID_قدر) {
+                اگر (i > 0)
+                    توڑو;
                 /* Non-planar format (e.g. UNSIGNED_INT8 x4 for packed RGB):
                  * cuArrayGetPlane is unsupported, query the array directly. */
                 res = CHECK_CU(cu->cuArray3DGetDescriptor(&plane_desc, desc->array));
-                if (res < 0)
-                    goto fail;
-            } else if (arr_plane_res != CUDA_SUCCESS) {
+                اگر (res < 0)
+                    جاؤ fail;
+            } ورنہ اگر (arr_plane_res != CUDA_SUCCESS) {
                 res = CHECK_CU(arr_plane_res);
-                goto fail;
-            } else {
+                جاؤ fail;
+            } ورنہ {
                 res = CHECK_CU(cu->cuArray3DGetDescriptor(&plane_desc, plane_array));
-                if (res < 0)
-                    goto fail;
+                اگر (res < 0)
+                    جاؤ fail;
             }
 
-            int elem_size = ff_cuda_cuarray_elem_size(plane_desc.Format);
-            if (elem_size <= 0) {
+            صحیح elem_سائز = ff_cuda_cuarray_elem_سائز(plane_desc.Format);
+            اگر (elem_سائز <= 0) {
                 res = AVERROR_BUG;
-                goto fail;
+                جاؤ fail;
             }
 
-            frame->linesize[i] = plane_desc.Width * plane_desc.NumChannels * elem_size;
+            چوکھٹا->linesize[i] = plane_desc.چوڑائی_2 * plane_desc.عدد_Channels * elem_سائز;
 
-            if (arr_plane_res == CUDA_ERROR_INVALID_VALUE)
-                break;
+            اگر (arr_plane_res == CUDA_ERROR_INVALID_قدر)
+                توڑو;
         }
 
-        res = CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-        if (res < 0)
-            return res;
-#else
-        return AVERROR(ENOSYS);
-#endif
-    } else {
-        res = av_image_fill_arrays(frame->data, frame->linesize, frame->buf[0]->data,
-                                   ctx->sw_format, ctx->width, ctx->height, priv->tex_alignment);
-        if (res < 0)
-            return res;
+        res = CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
+        اگر (res < 0)
+            واپس res;
+#ورنہ
+        واپس AVERROR(ENOSYS);
+#اگر_ختم
+    } ورنہ {
+        res = av_image_fill_arrays(چوکھٹا->ڈیٹا, چوکھٹا->linesize, چوکھٹا->buf[0]->ڈیٹا,
+                                   ctx->sw_format, ctx->چوڑائی, ctx->اونچائی, priv->tex_alignment);
+        اگر (res < 0)
+            واپس res;
 
         // YUV420P is a special case.
         // Nvenc expects the U/V planes in swapped order from how ffmpeg expects them, also chroma is half-aligned
-        if (ctx->sw_format == AV_PIX_FMT_YUV420P) {
-            frame->linesize[1] = frame->linesize[2] = frame->linesize[0] / 2;
-            frame->data[2]     = frame->data[1];
-            frame->data[1]     = frame->data[2] + frame->linesize[2] * AV_CEIL_RSHIFT(ctx->height, 1);
+        اگر (ctx->sw_format == AV_PIX_FMT_YUV420P) {
+            چوکھٹا->linesize[1] = چوکھٹا->linesize[2] = چوکھٹا->linesize[0] / 2;
+            چوکھٹا->ڈیٹا[2]     = چوکھٹا->ڈیٹا[1];
+            چوکھٹا->ڈیٹا[1]     = چوکھٹا->ڈیٹا[2] + چوکھٹا->linesize[2] * AV_CEIL_RSHIFT(ctx->اونچائی, 1);
         }
     }
 
-    frame->format = ctx->format;
-    frame->width  = ctx->width;
-    frame->height = ctx->height;
+    چوکھٹا->format = ctx->format;
+    چوکھٹا->چوڑائی  = ctx->چوڑائی;
+    چوکھٹا->اونچائی = ctx->اونچائی;
 
-    return 0;
+    واپس 0;
 
-#if HAVE_FFNVCODEC_CUARRAY
+#اگر HAVE_FFNVCODEC_CUARRAY
 fail:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
-    return res;
-#endif
+    CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
+    واپس res;
+#اگر_ختم
 }
 
-static enum AVPixelFormat cuda_frame_hw_format(const AVFrame *frame)
+ساکن شمار AVPixelFormat cuda_چوکھٹا_hw_format(ثابت AVFrame *چوکھٹا)
 {
-    if (!frame->hw_frames_ctx)
-        return AV_PIX_FMT_NONE;
-    return ((AVHWFramesContext *)frame->hw_frames_ctx->data)->format;
+    اگر (!چوکھٹا->hw_چوکھٹے_ctx)
+        واپس AV_PIX_FMT_NONE;
+    واپس ((AVHWFramesContext *)چوکھٹا->hw_چوکھٹے_ctx->ڈیٹا)->format;
 }
 
-static int cuda_transfer_get_formats(AVHWFramesContext *ctx,
-                                     enum AVHWFrameTransferDirection dir,
-                                     enum AVPixelFormat **formats)
+ساکن صحیح cuda_transfer_get_formats(AVHWFramesContext *ctx,
+                                     شمار AVHWFrameTransferDirection dir,
+                                     شمار AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    شمار AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, حجم(*fmts));
+    اگر (!fmts)
+        واپس AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    واپس 0;
 }
 
-static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+ساکن صحیح cuda_transfer_ڈیٹا(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ثابت AVFrame *src)
 {
     CUDAFramesContext       *priv = ctx->hwctx;
     AVHWDeviceContext *device_ctx = ctx->device_ctx;
     AVCUDADeviceContext    *hwctx = device_ctx->hwctx;
-    CudaFunctions             *cu = hwctx->internal->cuda_dl;
+    CudaFunctions             *cu = hwctx->اندرونی_2->cuda_dl;
 
-    const AVFrame *sw_frame = src->hw_frames_ctx ? dst : src;
-    AVFrame *top_down = NULL, *bottom_up_dst = NULL;
+    ثابت AVFrame *sw_چوکھٹا = src->hw_چوکھٹے_ctx ? dst : src;
+    AVFrame *چوٹی_نیچے_کو = تہی, *bottom_اوپر_dst = تہی;
     CUcontext dummy;
-    int i, ret, copy_queued = 0, bottom_up = 0;
+    صحیح i, ret, copy_queued = 0, bottom_اوپر = 0;
 
     {
-        enum AVPixelFormat src_fmt = cuda_frame_hw_format(src);
-        enum AVPixelFormat dst_fmt = cuda_frame_hw_format(dst);
-        if ((src_fmt != AV_PIX_FMT_NONE &&
+        شمار AVPixelFormat src_fmt = cuda_چوکھٹا_hw_format(src);
+        شمار AVPixelFormat dst_fmt = cuda_چوکھٹا_hw_format(dst);
+        اگر ((src_fmt != AV_PIX_FMT_NONE &&
              src_fmt != AV_PIX_FMT_CUDA && src_fmt != AV_PIX_FMT_CUARRAY) ||
             (dst_fmt != AV_PIX_FMT_NONE &&
              dst_fmt != AV_PIX_FMT_CUDA && dst_fmt != AV_PIX_FMT_CUARRAY))
-            return AVERROR(ENOSYS);
+            واپس AVERROR(ENOSYS);
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(sw_frame->linesize); i++)
-        bottom_up |= sw_frame->linesize[i] < 0;
+    برائے (i = 0; i < FF_ARRAY_ELEMS(sw_چوکھٹا->linesize); i++)
+        bottom_اوپر |= sw_چوکھٹا->linesize[i] < 0;
 
     /* The device copies rows upwards through memory, so a bottom-up frame is
      * transferred through a top-down copy of it. */
-    if (bottom_up) {
-        top_down = av_frame_alloc();
-        if (!top_down)
-            return AVERROR(ENOMEM);
-        top_down->format = ctx->sw_format;
-        top_down->width  = ctx->width;
-        top_down->height = ctx->height;
-        ret = av_hwframe_get_transfer_buffer((src->hw_frames_ctx ? src : dst)->hw_frames_ctx,
-                                             top_down);
-        if (ret < 0)
-            goto free_top_down;
-        top_down->width  = src->width;
-        top_down->height = src->height;
-        if (sw_frame == src) {
-            av_image_copy2(top_down->data, top_down->linesize, src->data, src->linesize,
-                           ctx->sw_format, src->width, src->height);
-            src = top_down;
-        } else {
-            bottom_up_dst = dst;
-            dst           = top_down;
+    اگر (bottom_اوپر) {
+        چوٹی_نیچے_کو = av_چوکھٹا_alloc();
+        اگر (!چوٹی_نیچے_کو)
+            واپس AVERROR(ENOMEM);
+        چوٹی_نیچے_کو->format = ctx->sw_format;
+        چوٹی_نیچے_کو->چوڑائی  = ctx->چوڑائی;
+        چوٹی_نیچے_کو->اونچائی = ctx->اونچائی;
+        ret = av_hwframe_get_transfer_بفر((src->hw_چوکھٹے_ctx ? src : dst)->hw_چوکھٹے_ctx,
+                                             چوٹی_نیچے_کو);
+        اگر (ret < 0)
+            جاؤ free_چوٹی_نیچے_کو;
+        چوٹی_نیچے_کو->چوڑائی  = src->چوڑائی;
+        چوٹی_نیچے_کو->اونچائی = src->اونچائی;
+        اگر (sw_چوکھٹا == src) {
+            av_image_copy2(چوٹی_نیچے_کو->ڈیٹا, چوٹی_نیچے_کو->linesize, src->ڈیٹا, src->linesize,
+                           ctx->sw_format, src->چوڑائی, src->اونچائی);
+            src = چوٹی_نیچے_کو;
+        } ورنہ {
+            bottom_اوپر_dst = dst;
+            dst           = چوٹی_نیچے_کو;
         }
     }
 
-    ret = CHECK_CU(cu->cuCtxPushCurrent(hwctx->cuda_ctx));
-    if (ret < 0)
-        goto free_top_down;
+    ret = CHECK_CU(cu->cu_Ctx_ڈالو_Current(hwctx->cuda_ctx));
+    اگر (ret < 0)
+        جاؤ free_چوٹی_نیچے_کو;
 
     /*
      * Copy one plane per iteration, bounded by the AVFrame linesizes. src and
@@ -631,411 +631,411 @@ static int cuda_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
      *     generic cures != CUDA_SUCCESS branch) rather than silently copying a
      *     subset of the planes.
      */
-    for (i = 0; i < FF_ARRAY_ELEMS(src->data) && src->linesize[i]; i++) {
-        int src_is_nonplanar_cuarray = 0;
-        int dst_is_nonplanar_cuarray = 0;
+    برائے (i = 0; i < FF_ARRAY_ELEMS(src->ڈیٹا) && src->linesize[i]; i++) {
+        صحیح src_is_nonplanar_cuarray = 0;
+        صحیح dst_is_nonplanar_cuarray = 0;
 
-        int bytewidth = av_image_get_linesize(ctx->sw_format, src->width, i);
-        if (bytewidth < 0) {
+        صحیح bytewidth = av_image_get_linesize(ctx->sw_format, src->چوڑائی, i);
+        اگر (bytewidth < 0) {
             ret = bytewidth;
-            goto fail;
+            جاؤ fail;
         }
 
         CUDA_MEMCPY2D cpy = {
             .srcPitch      = src->linesize[i],
             .dstPitch      = dst->linesize[i],
-            .WidthInBytes  = bytewidth,
-            .Height        = AV_CEIL_RSHIFT(src->height, ((i == 0 || i == 3) ? 0 : priv->shift_height)),
+            .چوڑائی_اندر_بائٹیں  = bytewidth,
+            .اونچائی_2        = AV_CEIL_RSHIFT(src->اونچائی, ((i == 0 || i == 3) ? 0 : priv->سرکاؤ_اونچائی)),
         };
 
-        if (src->format == AV_PIX_FMT_CUDA) {
-            cpy.srcMemoryType = CU_MEMORYTYPE_DEVICE;
-            cpy.srcDevice     = (CUdeviceptr)src->data[i];
-        } else if (src->format == AV_PIX_FMT_CUARRAY) {
-#if HAVE_FFNVCODEC_CUARRAY
+        اگر (src->format == AV_PIX_FMT_CUDA) {
+            cpy.src_حافظہ_Type = CU_MEMORYTYPE_DEVICE;
+            cpy.srcDevice     = (CUdeviceptr)src->ڈیٹا[i];
+        } ورنہ اگر (src->format == AV_PIX_FMT_CUARRAY) {
+#اگر HAVE_FFNVCODEC_CUARRAY
             CUarray array;
-            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)src->data[0], i);
-            if (cures == CUDA_ERROR_INVALID_VALUE && i == 0) {
+            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)src->ڈیٹا[0], i);
+            اگر (cures == CUDA_ERROR_INVALID_قدر && i == 0) {
                 /* Not a multi-planar array (packed format): the whole array is
                  * the single plane. */
-                array = (CUarray)src->data[0];
+                array = (CUarray)src->ڈیٹا[0];
                 src_is_nonplanar_cuarray = 1;
-            } else if (cures != CUDA_SUCCESS) {
+            } ورنہ اگر (cures != CUDA_SUCCESS) {
                 ret = CHECK_CU(cures);
-                goto fail;
+                جاؤ fail;
             }
 
-            cpy.srcMemoryType = CU_MEMORYTYPE_ARRAY;
+            cpy.src_حافظہ_Type = CU_MEMORYTYPE_ARRAY;
             cpy.srcArray      = array;
-#else
+#ورنہ
             ret = AVERROR(ENOSYS);
-            goto exit;
-#endif
-        } else {
-            cpy.srcMemoryType = CU_MEMORYTYPE_HOST;
-            cpy.srcHost       = src->data[i];
+            جاؤ باہر_نکلو;
+#اگر_ختم
+        } ورنہ {
+            cpy.src_حافظہ_Type = CU_MEMORYTYPE_HOST;
+            cpy.srcHost       = src->ڈیٹا[i];
         }
 
-        if (dst->format == AV_PIX_FMT_CUDA) {
-            cpy.dstMemoryType = CU_MEMORYTYPE_DEVICE;
-            cpy.dstDevice     = (CUdeviceptr)dst->data[i];
-        } else if (dst->format == AV_PIX_FMT_CUARRAY) {
-#if HAVE_FFNVCODEC_CUARRAY
+        اگر (dst->format == AV_PIX_FMT_CUDA) {
+            cpy.dst_حافظہ_Type = CU_MEMORYTYPE_DEVICE;
+            cpy.dstDevice     = (CUdeviceptr)dst->ڈیٹا[i];
+        } ورنہ اگر (dst->format == AV_PIX_FMT_CUARRAY) {
+#اگر HAVE_FFNVCODEC_CUARRAY
             CUarray array;
-            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)dst->data[0], i);
-            if (cures == CUDA_ERROR_INVALID_VALUE && i == 0) {
+            CUresult cures = cu->cuArrayGetPlane(&array, (CUarray)dst->ڈیٹا[0], i);
+            اگر (cures == CUDA_ERROR_INVALID_قدر && i == 0) {
                 /* Not a multi-planar array (packed format): the whole array is
                  * the single plane. */
-                array = (CUarray)dst->data[0];
+                array = (CUarray)dst->ڈیٹا[0];
                 dst_is_nonplanar_cuarray = 1;
-            } else if (cures != CUDA_SUCCESS) {
+            } ورنہ اگر (cures != CUDA_SUCCESS) {
                 ret = CHECK_CU(cures);
-                goto fail;
+                جاؤ fail;
             }
 
-            cpy.dstMemoryType = CU_MEMORYTYPE_ARRAY;
+            cpy.dst_حافظہ_Type = CU_MEMORYTYPE_ARRAY;
             cpy.dstArray      = array;
-#else
+#ورنہ
             ret = AVERROR(ENOSYS);
-            goto exit;
-#endif
-        } else {
-            cpy.dstMemoryType = CU_MEMORYTYPE_HOST;
-            cpy.dstHost       = dst->data[i];
+            جاؤ باہر_نکلو;
+#اگر_ختم
+        } ورنہ {
+            cpy.dst_حافظہ_Type = CU_MEMORYTYPE_HOST;
+            cpy.dstHost       = dst->ڈیٹا[i];
         }
 
-        ret = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, hwctx->stream));
-        if (ret < 0)
-            goto fail;
+        ret = CHECK_CU(cu->cuMemcpy2DAsync(&cpy, hwctx->دھارا));
+        اگر (ret < 0)
+            جاؤ fail;
         copy_queued = 1;
 
-        if (src_is_nonplanar_cuarray || dst_is_nonplanar_cuarray)
-            break;
+        اگر (src_is_nonplanar_cuarray || dst_is_nonplanar_cuarray)
+            توڑو;
     }
 
     /* The caller may reuse host memory once the transfer returns. */
-    if (!src->hw_frames_ctx || !dst->hw_frames_ctx) {
-        ret = CHECK_CU(cu->cuStreamSynchronize(hwctx->stream));
-        if (ret < 0)
-            goto exit;
+    اگر (!src->hw_چوکھٹے_ctx || !dst->hw_چوکھٹے_ctx) {
+        ret = CHECK_CU(cu->cu_دھارا_Synchronize(hwctx->دھارا));
+        اگر (ret < 0)
+            جاؤ باہر_نکلو;
     }
 
 fail:
-    if (ret < 0 && copy_queued)
-        CHECK_CU(cu->cuStreamSynchronize(hwctx->stream));
-exit:
-    CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+    اگر (ret < 0 && copy_queued)
+        CHECK_CU(cu->cu_دھارا_Synchronize(hwctx->دھارا));
+باہر_نکلو:
+    CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
 
-    if (bottom_up_dst && ret >= 0)
-        av_image_copy2(bottom_up_dst->data, bottom_up_dst->linesize,
-                       top_down->data, top_down->linesize,
-                       ctx->sw_format, src->width, src->height);
-free_top_down:
-    av_frame_free(&top_down);
+    اگر (bottom_اوپر_dst && ret >= 0)
+        av_image_copy2(bottom_اوپر_dst->ڈیٹا, bottom_اوپر_dst->linesize,
+                       چوٹی_نیچے_کو->ڈیٹا, چوٹی_نیچے_کو->linesize,
+                       ctx->sw_format, src->چوڑائی, src->اونچائی);
+free_چوٹی_نیچے_کو:
+    av_چوکھٹا_free(&چوٹی_نیچے_کو);
 
-    return ret;
+    واپس ret;
 }
 
-static void cuda_device_uninit(AVHWDeviceContext *device_ctx)
+ساکن خالی cuda_device_uninit(AVHWDeviceContext *device_ctx)
 {
     CUDADeviceContext *hwctx = device_ctx->hwctx;
 
-    if (hwctx->p.internal) {
-        CudaFunctions *cu = hwctx->internal.cuda_dl;
+    اگر (hwctx->p.اندرونی_2) {
+        CudaFunctions *cu = hwctx->اندرونی_2.cuda_dl;
 
-        if (hwctx->internal.is_allocated && hwctx->p.cuda_ctx) {
-            if (hwctx->internal.flags & AV_CUDA_USE_PRIMARY_CONTEXT)
-                CHECK_CU(cu->cuDevicePrimaryCtxRelease(hwctx->internal.cuda_device));
-            else if (!(hwctx->internal.flags & AV_CUDA_USE_CURRENT_CONTEXT))
+        اگر (hwctx->اندرونی_2.is_allocated && hwctx->p.cuda_ctx) {
+            اگر (hwctx->اندرونی_2.flags & AV_CUDA_USE_PRIMARY_CONTEXT)
+                CHECK_CU(cu->cuDevicePrimaryCtxRelease(hwctx->اندرونی_2.cuda_device));
+            ورنہ اگر (!(hwctx->اندرونی_2.flags & AV_CUDA_USE_CURRENT_CONTEXT))
                 CHECK_CU(cu->cuCtxDestroy(hwctx->p.cuda_ctx));
 
-            hwctx->p.cuda_ctx = NULL;
+            hwctx->p.cuda_ctx = تہی;
         }
 
-        cuda_free_functions(&hwctx->internal.cuda_dl);
-        memset(&hwctx->internal, 0, sizeof(hwctx->internal));
-        hwctx->p.internal = NULL;
+        cuda_free_functions(&hwctx->اندرونی_2.cuda_dl);
+        memset(&hwctx->اندرونی_2, 0, حجم(hwctx->اندرونی_2));
+        hwctx->p.اندرونی_2 = تہی;
     }
 }
 
-static int cuda_device_init(AVHWDeviceContext *ctx)
+ساکن صحیح cuda_device_init(AVHWDeviceContext *ctx)
 {
     CUDADeviceContext *hwctx = ctx->hwctx;
-    int ret;
+    صحیح ret;
 
-    hwctx->p.internal = &hwctx->internal;
+    hwctx->p.اندرونی_2 = &hwctx->اندرونی_2;
 
-    if (!hwctx->internal.cuda_dl) {
-        ret = cuda_load_functions(&hwctx->internal.cuda_dl, ctx);
-        if (ret < 0) {
+    اگر (!hwctx->اندرونی_2.cuda_dl) {
+        ret = cuda_بھرو_functions(&hwctx->اندرونی_2.cuda_dl, ctx);
+        اگر (ret < 0) {
             av_log(ctx, AV_LOG_ERROR, "Could not dynamically load CUDA\n");
-            goto error;
+            جاؤ error;
         }
     }
 
-    return 0;
+    واپس 0;
 
 error:
     cuda_device_uninit(ctx);
-    return ret;
+    واپس ret;
 }
 
-static int cuda_context_init(AVHWDeviceContext *device_ctx, int flags) {
+ساکن صحیح cuda_context_init(AVHWDeviceContext *device_ctx, صحیح flags) {
     AVCUDADeviceContext *hwctx = device_ctx->hwctx;
     CudaFunctions *cu;
     CUcontext dummy;
-    int ret, dev_active = 0;
-    unsigned int dev_flags = 0;
+    صحیح ret, dev_فعال = 0;
+    غیرعلامتی صحیح dev_flags = 0;
 
-    const unsigned int desired_flags = CU_CTX_SCHED_BLOCKING_SYNC;
+    ثابت غیرعلامتی صحیح desired_flags = CU_CTX_SCHED_BLOCKING_SYNC;
 
-    cu = hwctx->internal->cuda_dl;
+    cu = hwctx->اندرونی_2->cuda_dl;
 
-    hwctx->internal->flags = flags;
+    hwctx->اندرونی_2->flags = flags;
 
-    if (flags & AV_CUDA_USE_PRIMARY_CONTEXT) {
-        ret = CHECK_CU(cu->cuDevicePrimaryCtxGetState(hwctx->internal->cuda_device,
-                       &dev_flags, &dev_active));
-        if (ret < 0)
-            return ret;
+    اگر (flags & AV_CUDA_USE_PRIMARY_CONTEXT) {
+        ret = CHECK_CU(cu->cuDevicePrimaryCtxGetState(hwctx->اندرونی_2->cuda_device,
+                       &dev_flags, &dev_فعال));
+        اگر (ret < 0)
+            واپس ret;
 
-        if (dev_active && dev_flags != desired_flags) {
+        اگر (dev_فعال && dev_flags != desired_flags) {
             av_log(device_ctx, AV_LOG_ERROR, "Primary context already active with incompatible flags.\n");
-            return AVERROR(ENOTSUP);
-        } else if (dev_flags != desired_flags) {
-            ret = CHECK_CU(cu->cuDevicePrimaryCtxSetFlags(hwctx->internal->cuda_device,
+            واپس AVERROR(ENOTSUP);
+        } ورنہ اگر (dev_flags != desired_flags) {
+            ret = CHECK_CU(cu->cu_Device_Primary_Ctx_سیٹ_Flags(hwctx->اندرونی_2->cuda_device,
                            desired_flags));
-            if (ret < 0)
-                return ret;
+            اگر (ret < 0)
+                واپس ret;
         }
 
         ret = CHECK_CU(cu->cuDevicePrimaryCtxRetain(&hwctx->cuda_ctx,
-                                                    hwctx->internal->cuda_device));
-        if (ret < 0)
-            return ret;
-    } else if (flags & AV_CUDA_USE_CURRENT_CONTEXT) {
+                                                    hwctx->اندرونی_2->cuda_device));
+        اگر (ret < 0)
+            واپس ret;
+    } ورنہ اگر (flags & AV_CUDA_USE_CURRENT_CONTEXT) {
         ret = CHECK_CU(cu->cuCtxGetCurrent(&hwctx->cuda_ctx));
-        if (ret < 0)
-            return ret;
+        اگر (ret < 0)
+            واپس ret;
         av_log(device_ctx, AV_LOG_INFO, "Using current CUDA context.\n");
-    } else {
+    } ورنہ {
         ret = CHECK_CU(cu->cuCtxCreate(&hwctx->cuda_ctx, desired_flags,
-                                       hwctx->internal->cuda_device));
-        if (ret < 0)
-            return ret;
+                                       hwctx->اندرونی_2->cuda_device));
+        اگر (ret < 0)
+            واپس ret;
 
-        CHECK_CU(cu->cuCtxPopCurrent(&dummy));
+        CHECK_CU(cu->cu_Ctx_نکالو_Current(&dummy));
     }
 
-    hwctx->internal->is_allocated = 1;
+    hwctx->اندرونی_2->is_allocated = 1;
 
     // Setting stream to NULL will make functions automatically use the default CUstream
-    hwctx->stream = NULL;
+    hwctx->دھارا = تہی;
 
-    return 0;
+    واپس 0;
 }
 
-static int cuda_flags_from_opts(AVHWDeviceContext *device_ctx,
-                                AVDictionary *opts, int *flags)
+ساکن صحیح cuda_flags_from_opts(AVHWDeviceContext *device_ctx,
+                                AVDictionary *opts, صحیح *flags)
 {
-    AVDictionaryEntry *primary_ctx_opt = av_dict_get(opts, "primary_ctx", NULL, 0);
-    AVDictionaryEntry *current_ctx_opt = av_dict_get(opts, "current_ctx", NULL, 0);
+    AVDictionary_اندراج *primary_ctx_opt = av_dict_get(opts, "primary_ctx", تہی, 0);
+    AVDictionary_اندراج *current_ctx_opt = av_dict_get(opts, "current_ctx", تہی, 0);
 
-    int use_primary_ctx = 0, use_current_ctx = 0;
-    if (primary_ctx_opt)
-        use_primary_ctx = strtol(primary_ctx_opt->value, NULL, 10);
+    صحیح use_primary_ctx = 0, use_current_ctx = 0;
+    اگر (primary_ctx_opt)
+        use_primary_ctx = strtol(primary_ctx_opt->قدر, تہی, 10);
 
-    if (current_ctx_opt)
-        use_current_ctx = strtol(current_ctx_opt->value, NULL, 10);
+    اگر (current_ctx_opt)
+        use_current_ctx = strtol(current_ctx_opt->قدر, تہی, 10);
 
-    if (use_primary_ctx && use_current_ctx) {
+    اگر (use_primary_ctx && use_current_ctx) {
         av_log(device_ctx, AV_LOG_ERROR, "Requested both primary and current CUDA context simultaneously.\n");
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    if (primary_ctx_opt && use_primary_ctx) {
+    اگر (primary_ctx_opt && use_primary_ctx) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Using CUDA primary device context\n");
         *flags |= AV_CUDA_USE_PRIMARY_CONTEXT;
-    } else if (primary_ctx_opt) {
+    } ورنہ اگر (primary_ctx_opt) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Disabling use of CUDA primary device context\n");
         *flags &= ~AV_CUDA_USE_PRIMARY_CONTEXT;
     }
 
-    if (current_ctx_opt && use_current_ctx) {
+    اگر (current_ctx_opt && use_current_ctx) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Using CUDA current device context\n");
         *flags |= AV_CUDA_USE_CURRENT_CONTEXT;
-    } else if (current_ctx_opt) {
+    } ورنہ اگر (current_ctx_opt) {
         av_log(device_ctx, AV_LOG_VERBOSE, "Disabling use of CUDA current device context\n");
         *flags &= ~AV_CUDA_USE_CURRENT_CONTEXT;
     }
 
-    return 0;
+    واپس 0;
 }
 
-static int cuda_device_create(AVHWDeviceContext *device_ctx,
-                              const char *device,
-                              AVDictionary *opts, int flags)
+ساکن صحیح cuda_device_create(AVHWDeviceContext *device_ctx,
+                              ثابت حرف *device,
+                              AVDictionary *opts, صحیح flags)
 {
     AVCUDADeviceContext *hwctx = device_ctx->hwctx;
     CudaFunctions *cu;
-    int ret, device_idx = 0;
+    صحیح ret, device_idx = 0;
 
     ret = cuda_flags_from_opts(device_ctx, opts, &flags);
-    if (ret < 0)
-        goto error;
+    اگر (ret < 0)
+        جاؤ error;
 
-    if (device)
-        device_idx = strtol(device, NULL, 0);
+    اگر (device)
+        device_idx = strtol(device, تہی, 0);
 
     ret = cuda_device_init(device_ctx);
-    if (ret < 0)
-        goto error;
+    اگر (ret < 0)
+        جاؤ error;
 
-    cu = hwctx->internal->cuda_dl;
+    cu = hwctx->اندرونی_2->cuda_dl;
 
     ret = CHECK_CU(cu->cuInit(0));
-    if (ret < 0)
-        goto error;
+    اگر (ret < 0)
+        جاؤ error;
 
-    ret = CHECK_CU(cu->cuDeviceGet(&hwctx->internal->cuda_device, device_idx));
-    if (ret < 0)
-        goto error;
+    ret = CHECK_CU(cu->cuDeviceGet(&hwctx->اندرونی_2->cuda_device, device_idx));
+    اگر (ret < 0)
+        جاؤ error;
 
     ret = cuda_context_init(device_ctx, flags);
-    if (ret < 0)
-        goto error;
+    اگر (ret < 0)
+        جاؤ error;
 
-    return 0;
+    واپس 0;
 
 error:
     cuda_device_uninit(device_ctx);
-    return ret;
+    واپس ret;
 }
 
-static int cuda_device_derive(AVHWDeviceContext *device_ctx,
+ساکن صحیح cuda_device_derive(AVHWDeviceContext *device_ctx,
                               AVHWDeviceContext *src_ctx, AVDictionary *opts,
-                              int flags) {
+                              صحیح flags) {
     AVCUDADeviceContext *hwctx = device_ctx->hwctx;
     CudaFunctions *cu;
-    const char *src_uuid = NULL;
-#if CONFIG_VULKAN
+    ثابت حرف *src_uuid = تہی;
+#اگر CONFIG_VULKAN
     VkPhysicalDeviceIDProperties vk_idp;
-#endif
-    int ret, i, device_count;
+#اگر_ختم
+    صحیح ret, i, device_گنتی;
 
     ret = cuda_flags_from_opts(device_ctx, opts, &flags);
-    if (ret < 0)
-        goto error;
+    اگر (ret < 0)
+        جاؤ error;
 
-#if CONFIG_VULKAN
+#اگر CONFIG_VULKAN
     vk_idp = (VkPhysicalDeviceIDProperties) {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES,
     };
-#endif
+#اگر_ختم
 
-    switch (src_ctx->type) {
-#if CONFIG_VULKAN
-#define TYPE PFN_vkGetPhysicalDeviceProperties2
-    case AV_HWDEVICE_TYPE_VULKAN: {
+    انتخاب (src_ctx->type) {
+#اگر CONFIG_VULKAN
+#تعریف_کرو TYPE PFN_vkGetPhysicalDeviceProperties2
+    حالت AV_HWDEVICE_TYPE_VULKAN: {
         AVVulkanDeviceContext *vkctx = src_ctx->hwctx;
         TYPE prop_fn = (TYPE)vkctx->get_proc_addr(vkctx->inst, "vkGetPhysicalDeviceProperties2");
         VkPhysicalDeviceProperties2 vk_dev_props = {
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
-            .pNext = &vk_idp,
+            .p_اگلا = &vk_idp,
         };
         prop_fn(vkctx->phys_dev, &vk_dev_props);
         src_uuid = vk_idp.deviceUUID;
-        break;
+        توڑو;
     }
-#undef TYPE
-#endif
-    default:
+#تعریف_منسوخ TYPE
+#اگر_ختم
+    طےشدہ:
         ret = AVERROR(ENOSYS);
-        goto error;
+        جاؤ error;
     }
 
-    if (!src_uuid) {
+    اگر (!src_uuid) {
         av_log(device_ctx, AV_LOG_ERROR,
                "Failed to get UUID of source device.\n");
         ret = AVERROR(EINVAL);
-        goto error;
+        جاؤ error;
     }
 
     ret = cuda_device_init(device_ctx);
-    if (ret < 0)
-        goto error;
+    اگر (ret < 0)
+        جاؤ error;
 
-    cu = hwctx->internal->cuda_dl;
+    cu = hwctx->اندرونی_2->cuda_dl;
 
     ret = CHECK_CU(cu->cuInit(0));
-    if (ret < 0)
-        goto error;
+    اگر (ret < 0)
+        جاؤ error;
 
-    ret = CHECK_CU(cu->cuDeviceGetCount(&device_count));
-    if (ret < 0)
-        goto error;
+    ret = CHECK_CU(cu->cu_Device_Get_گنتی(&device_گنتی));
+    اگر (ret < 0)
+        جاؤ error;
 
-    hwctx->internal->cuda_device = -1;
-    for (i = 0; i < device_count; i++) {
+    hwctx->اندرونی_2->cuda_device = -1;
+    برائے (i = 0; i < device_گنتی; i++) {
         CUdevice dev;
         CUuuid uuid;
 
         ret = CHECK_CU(cu->cuDeviceGet(&dev, i));
-        if (ret < 0)
-            goto error;
+        اگر (ret < 0)
+            جاؤ error;
 
         ret = CHECK_CU(cu->cuDeviceGetUuid(&uuid, dev));
-        if (ret < 0)
-            goto error;
+        اگر (ret < 0)
+            جاؤ error;
 
-        if (memcmp(src_uuid, uuid.bytes, sizeof (uuid.bytes)) == 0) {
-            hwctx->internal->cuda_device = dev;
-            break;
+        اگر (memcmp(src_uuid, uuid.بائٹیں, حجم (uuid.بائٹیں)) == 0) {
+            hwctx->اندرونی_2->cuda_device = dev;
+            توڑو;
         }
     }
 
-    if (hwctx->internal->cuda_device == -1) {
+    اگر (hwctx->اندرونی_2->cuda_device == -1) {
         av_log(device_ctx, AV_LOG_ERROR, "Could not derive CUDA device.\n");
         ret = AVERROR(ENODEV);
-        goto error;
+        جاؤ error;
     }
 
     ret = cuda_context_init(device_ctx, flags);
-    if (ret < 0)
-        goto error;
+    اگر (ret < 0)
+        جاؤ error;
 
-    return 0;
+    واپس 0;
 
 error:
     cuda_device_uninit(device_ctx);
-    return ret;
+    واپس ret;
 }
 
-const HWContextType ff_hwcontext_type_cuda = {
+ثابت HWContextType ff_hwcontext_type_cuda = {
     .type                 = AV_HWDEVICE_TYPE_CUDA,
     .name                 = "CUDA",
 
-    .device_hwctx_size    = sizeof(CUDADeviceContext),
-    .frames_hwctx_size    = sizeof(CUDAFramesContext),
+    .device_hwctx_سائز    = حجم(CUDADeviceContext),
+    .چوکھٹے_hwctx_سائز    = حجم(CUDAFramesContext),
 
     .device_create        = cuda_device_create,
     .device_derive        = cuda_device_derive,
     .device_init          = cuda_device_init,
     .device_uninit        = cuda_device_uninit,
-    .frames_get_constraints = cuda_frames_get_constraints,
-    .frames_init          = cuda_frames_init,
-    .frames_uninit        = cuda_frames_uninit,
-    .frames_get_buffer    = cuda_get_buffer,
+    .چوکھٹے_get_constraints = cuda_چوکھٹے_get_constraints,
+    .چوکھٹے_init          = cuda_چوکھٹے_init,
+    .چوکھٹے_uninit        = cuda_چوکھٹے_uninit,
+    .چوکھٹے_get_بفر    = cuda_get_بفر,
     .transfer_get_formats = cuda_transfer_get_formats,
-#if HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
-    .transfer_buffer_alloc = cuda_transfer_buffer_alloc,
-#endif
-    .transfer_data_to     = cuda_transfer_data,
-    .transfer_data_from   = cuda_transfer_data,
+#اگر HAVE_CUDAFUNCTIONS_CUMEMHOSTALLOC
+    .transfer_بفر_alloc = cuda_transfer_بفر_alloc,
+#اگر_ختم
+    .transfer_ڈیٹا_مقصد     = cuda_transfer_ڈیٹا,
+    .transfer_ڈیٹا_from   = cuda_transfer_ڈیٹا,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_CUDA,
-#if HAVE_FFNVCODEC_CUARRAY
+    .pix_fmts             = (ثابت شمار AVPixelFormat[]){ AV_PIX_FMT_CUDA,
+#اگر HAVE_FFNVCODEC_CUARRAY
                                                           AV_PIX_FMT_CUARRAY,
-#endif
+#اگر_ختم
                                                           AV_PIX_FMT_NONE },
 };

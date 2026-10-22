@@ -16,98 +16,98 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
+#شامل <stddef.h>
 
-#include "config.h"
-#include "pixelutils.h"
+#شامل "config.h"
+#شامل "pixelutils.h"
 
-#if CONFIG_PIXELUTILS
-#include <stdlib.h>
-#include <string.h>
+#اگر CONFIG_PIXELUTILS
+#شامل <stdlib.h>
+#شامل <string.h>
 
-#include "attributes.h"
-#include "macros.h"
+#شامل "attributes.h"
+#شامل "macros.h"
 
-#if ARCH_AARCH64 && HAVE_NEON
-#include "aarch64/pixelutils.h"
-#elif ARCH_ARM && HAVE_ARMV6
-#include "arm/pixelutils.h"
-#elif ARCH_MIPS && HAVE_MSA
-#include "mips/pixelutils.h"
-#elif ARCH_RISCV
-#include "riscv/pixelutils.h"
-#elif ARCH_X86 && HAVE_X86ASM
-#include "x86/pixelutils.h"
-#endif
+#اگر ARCH_AARCH64 && HAVE_NEON
+#شامل "aarch64/pixelutils.h"
+#وگرنہ_اگر ARCH_ARM && HAVE_ARMV6
+#شامل "arm/pixelutils.h"
+#وگرنہ_اگر ARCH_MIPS && HAVE_MSA
+#شامل "mips/pixelutils.h"
+#وگرنہ_اگر ARCH_RISCV
+#شامل "riscv/pixelutils.h"
+#وگرنہ_اگر ARCH_X86 && HAVE_X86ASM
+#شامل "x86/pixelutils.h"
+#اگر_ختم
 
-static av_always_inline int sad_wxh(const uint8_t *src1, ptrdiff_t stride1,
-                                    const uint8_t *src2, ptrdiff_t stride2,
-                                    int w, int h)
+ساکن av_always_inline صحیح sad_wxh(ثابت uint8_t *src1, ptrdiff_t stride1,
+                                    ثابت uint8_t *src2, ptrdiff_t stride2,
+                                    صحیح w, صحیح h)
 {
-    int x, y, sum = 0;
+    صحیح x, y, مجموع = 0;
 
-    for (y = 0; y < h; y++) {
-        for (x = 0; x < w; x++)
-            sum += abs(src1[x] - src2[x]);
+    برائے (y = 0; y < h; y++) {
+        برائے (x = 0; x < w; x++)
+            مجموع += مطلق_قدر(src1[x] - src2[x]);
         src1 += stride1;
         src2 += stride2;
     }
-    return sum;
+    واپس مجموع;
 }
 
-#define DECLARE_BLOCK_FUNCTIONS(size)                                               \
-static int block_sad_##size##x##size##_c(const uint8_t *src1, ptrdiff_t stride1,    \
-                                         const uint8_t *src2, ptrdiff_t stride2)    \
+#تعریف_کرو DECLARE_بلاک_FUNCTIONS(سائز)                                               \
+ساکن صحیح بلاک_sad##size##x##size##_c(ثابت uint8_t *src1, ptrdiff_t stride1,    \
+                                         ثابت uint8_t *src2, ptrdiff_t stride2)    \
 {                                                                                   \
-    return sad_wxh(src1, stride1, src2, stride2, size, size);                       \
+    واپس sad_wxh(src1, stride1, src2, stride2, سائز, سائز);                       \
 }
 
-DECLARE_BLOCK_FUNCTIONS(2)
-DECLARE_BLOCK_FUNCTIONS(4)
-DECLARE_BLOCK_FUNCTIONS(8)
-DECLARE_BLOCK_FUNCTIONS(16)
-DECLARE_BLOCK_FUNCTIONS(32)
+DECLARE_بلاک_FUNCTIONS(2)
+DECLARE_بلاک_FUNCTIONS(4)
+DECLARE_بلاک_FUNCTIONS(8)
+DECLARE_بلاک_FUNCTIONS(16)
+DECLARE_بلاک_FUNCTIONS(32)
 
-static const av_pixelutils_sad_fn sad_c[] = {
-    block_sad_2x2_c,
-    block_sad_4x4_c,
-    block_sad_8x8_c,
-    block_sad_16x16_c,
-    block_sad_32x32_c,
+ساکن ثابت av_pixelutils_sad_fn sad_c[] = {
+    بلاک_sad_2x2_c,
+    بلاک_sad_4x4_c,
+    بلاک_sad_8x8_c,
+    بلاک_sad_16x16_c,
+    بلاک_sad_32x32_c,
 };
-#else
-#include "log.h"
-#endif /* CONFIG_PIXELUTILS */
+#ورنہ
+#شامل "log.h"
+#اگر_ختم /* CONFIG_PIXELUTILS */
 
-av_pixelutils_sad_fn av_pixelutils_get_sad_fn(int w_bits, int h_bits, int aligned, void *log_ctx)
+av_pixelutils_sad_fn av_pixelutils_get_sad_fn(صحیح w_بٹ, صحیح h_بٹ, صحیح aligned, خالی *log_ctx)
 {
-#if !CONFIG_PIXELUTILS
+#اگر !CONFIG_PIXELUTILS
     av_log(log_ctx, AV_LOG_ERROR, "pixelutils support is required "
            "but libavutil is not compiled with it\n");
-    return NULL;
-#else
+    واپس تہی;
+#ورنہ
     av_pixelutils_sad_fn sad[FF_ARRAY_ELEMS(sad_c)];
 
-    memcpy(sad, sad_c, sizeof(sad));
+    حافظہ_نقل(sad, sad_c, حجم(sad));
 
-    if (w_bits < 1 || w_bits > FF_ARRAY_ELEMS(sad) ||
-        h_bits < 1 || h_bits > FF_ARRAY_ELEMS(sad))
-        return NULL;
-    if (w_bits != h_bits) // only squared sad for now
-        return NULL;
+    اگر (w_بٹ < 1 || w_بٹ > FF_ARRAY_ELEMS(sad) ||
+        h_بٹ < 1 || h_بٹ > FF_ARRAY_ELEMS(sad))
+        واپس تہی;
+    اگر (w_بٹ != h_بٹ) // only squared sad for now
+        واپس تہی;
 
-#if ARCH_AARCH64 && HAVE_NEON
+#اگر ARCH_AARCH64 && HAVE_NEON
     ff_pixelutils_sad_init_aarch64(sad, aligned);
-#elif ARCH_ARM
+#وگرنہ_اگر ARCH_ARM
     ff_pixelutils_sad_init_arm(sad, aligned);
-#elif ARCH_MIPS && HAVE_MSA
+#وگرنہ_اگر ARCH_MIPS && HAVE_MSA
     ff_pixelutils_sad_init_mips(sad, aligned);
-#elif ARCH_RISCV
+#وگرنہ_اگر ARCH_RISCV
     ff_pixelutils_init_riscv(sad, aligned);
-#elif ARCH_X86 && HAVE_X86ASM
+#وگرنہ_اگر ARCH_X86 && HAVE_X86ASM
     ff_pixelutils_sad_init_x86(sad, aligned);
-#endif
+#اگر_ختم
 
-    return sad[w_bits - 1];
-#endif
+    واپس sad[w_بٹ - 1];
+#اگر_ختم
 }

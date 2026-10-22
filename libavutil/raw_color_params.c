@@ -18,30 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "raw_color_params.h"
-#include "mem.h"
+#شامل "raw_color_params.h"
+#شامل "mem.h"
 
-AVRawColorParams *av_raw_color_params_alloc(size_t *size)
+AVRawColorParams *av_raw_color_params_alloc(size_t *سائز)
 {
-    AVRawColorParams *p = av_mallocz(sizeof(AVRawColorParams));
-    if (!p)
-        return NULL;
+    AVRawColorParams *p = av_mallocz(حجم(AVRawColorParams));
+    اگر (!p)
+        واپس تہی;
 
-    if (size)
-        *size = sizeof(*p);
+    اگر (سائز)
+        *سائز = حجم(*p);
 
-    return p;
+    واپس p;
 }
 
-AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
+AVRawColorParams *av_raw_color_params_create_side_ڈیٹا(AVFrame *چوکھٹا)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame, AV_FRAME_DATA_RAW_COLOR_PARAMS,
-                               sizeof(AVRawColorParams));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ڈیٹا *side_ڈیٹا =
+        av_چوکھٹا_new_side_ڈیٹا(چوکھٹا, AV_چوکھٹا_ڈیٹا_RAW_COLOR_PARAMS,
+                               حجم(AVRawColorParams));
+    اگر (!side_ڈیٹا)
+        واپس تہی;
 
-    memset(side_data->data, 0, side_data->size);
+    memset(side_ڈیٹا->ڈیٹا, 0, side_ڈیٹا->سائز);
 
-    return (AVRawColorParams *)side_data->data;
+    واپس (AVRawColorParams *)side_ڈیٹا->ڈیٹا;
 }

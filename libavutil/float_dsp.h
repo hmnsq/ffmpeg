@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FLOAT_DSP_H
-#define AVUTIL_FLOAT_DSP_H
+#اگر_غیر_تعریف_شدہ AVUTIL_FLOAT_DSP_H
+#تعریف_کرو AVUTIL_FLOAT_DSP_H
 
-#include <stddef.h>
+#شامل <stddef.h>
 
-typedef struct AVFloatDSPContext {
+قسمتعریف ساخت AVFloatDSPContext {
     /**
      * Calculate the entry wise product of two vectors of floats and store the result in
      * a vector of floats.
@@ -35,8 +35,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul)(float *dst, const float *src0, const float *src1,
-                        int len);
+    خالی (*سمتیہ_fmul)(اعشاری *dst, ثابت اعشاری *src0, ثابت اعشاری *src1,
+                        صحیح len);
 
     /**
      * Multiply a vector of floats by a scalar float and add to
@@ -51,8 +51,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 16
      */
-    void (*vector_fmac_scalar)(float *dst, const float *src, float mul,
-                               int len);
+    خالی (*سمتیہ_fmac_scalar)(اعشاری *dst, ثابت اعشاری *src, اعشاری mul,
+                               صحیح len);
 
     /**
      * Multiply a vector of doubles by a scalar double and add to
@@ -67,8 +67,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 16
      */
-    void (*vector_dmac_scalar)(double *dst, const double *src, double mul,
-                               int len);
+    خالی (*سمتیہ_dmac_scalar)(دوہرا *dst, ثابت دوہرا *src, دوہرا mul,
+                               صحیح len);
 
     /**
      * Multiply a vector of floats by a scalar float.  Source and
@@ -82,8 +82,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 4
      */
-    void (*vector_fmul_scalar)(float *dst, const float *src, float mul,
-                               int len);
+    خالی (*سمتیہ_fmul_scalar)(اعشاری *dst, ثابت اعشاری *src, اعشاری mul,
+                               صحیح len);
 
     /**
      * Multiply a vector of double by a scalar double.  Source and
@@ -97,8 +97,8 @@ typedef struct AVFloatDSPContext {
      * @param len length of vector
      *            constraints: multiple of 8
      */
-    void (*vector_dmul_scalar)(double *dst, const double *src, double mul,
-                               int len);
+    خالی (*سمتیہ_dmul_scalar)(دوہرا *dst, ثابت دوہرا *src, دوہرا mul,
+                               صحیح len);
 
     /**
      * Overlap/add with window function.
@@ -116,8 +116,8 @@ typedef struct AVFloatDSPContext {
      * @param len  length of vector
      *             constraints: multiple of 4
      */
-    void (*vector_fmul_window)(float *dst, const float *src0,
-                               const float *src1, const float *win, int len);
+    خالی (*سمتیہ_fmul_کھڑکی)(اعشاری *dst, ثابت اعشاری *src0,
+                               ثابت اعشاری *src1, ثابت اعشاری *win, صحیح len);
 
     /**
      * Calculate the entry wise product of two vectors of floats, add a third vector of
@@ -134,8 +134,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul_add)(float *dst, const float *src0, const float *src1,
-                            const float *src2, int len);
+    خالی (*سمتیہ_fmul_جوڑو)(اعشاری *dst, ثابت اعشاری *src0, ثابت اعشاری *src1,
+                            ثابت اعشاری *src2, صحیح len);
 
     /**
      * Calculate the entry wise product of two vectors of floats, and store the result
@@ -151,8 +151,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul_reverse)(float *dst, const float *src0,
-                                const float *src1, int len);
+    خالی (*سمتیہ_fmul_الٹ)(اعشاری *dst, ثابت اعشاری *src0,
+                                ثابت اعشاری *src1, صحیح len);
 
     /**
      * Calculate the sum and difference of two vectors of floats.
@@ -161,7 +161,7 @@ typedef struct AVFloatDSPContext {
      * @param v2  second input vector, difference output, 16-byte aligned
      * @param len length of vectors, multiple of 4
      */
-    void (*butterflies_float)(float *restrict v1, float *restrict v2, int len);
+    خالی (*butterflies_float)(اعشاری *محدود v1, اعشاری *محدود v2, صحیح len);
 
     /**
      * Calculate the scalar product of two vectors of floats.
@@ -172,7 +172,7 @@ typedef struct AVFloatDSPContext {
      *
      * @return sum of elementwise products
      */
-    float (*scalarproduct_float)(const float *v1, const float *v2, int len);
+    اعشاری (*scalarproduct_float)(ثابت اعشاری *v1, ثابت اعشاری *v2, صحیح len);
 
     /**
      * Calculate the entry wise product of two vectors of doubles and store the result in
@@ -187,8 +187,8 @@ typedef struct AVFloatDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_dmul)(double *dst, const double *src0, const double *src1,
-                        int len);
+    خالی (*سمتیہ_dmul)(دوہرا *dst, ثابت دوہرا *src0, ثابت دوہرا *src1,
+                        صحیح len);
 
     /**
      * Calculate the scalar product of two vectors of doubles.
@@ -202,7 +202,7 @@ typedef struct AVFloatDSPContext {
      *
      * @return inner product of the vectors
      */
-    double (*scalarproduct_double)(const double *v1, const double *v2,
+    دوہرا (*scalarproduct_double)(ثابت دوہرا *v1, ثابت دوہرا *v2,
                                    size_t len);
 } AVFloatDSPContext;
 
@@ -215,7 +215,7 @@ typedef struct AVFloatDSPContext {
  *
  * @return sum of elementwise products
  */
-float ff_scalarproduct_float_c(const float *v1, const float *v2, int len);
+اعشاری ff_scalarproduct_float_c(ثابت اعشاری *v1, ثابت اعشاری *v2, صحیح len);
 
 /**
  * Return the scalar product of two vectors of doubles.
@@ -226,21 +226,21 @@ float ff_scalarproduct_float_c(const float *v1, const float *v2, int len);
  *
  * @return inner product of the vectors
  */
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+دوہرا ff_scalarproduct_double_c(ثابت دوہرا *v1, ثابت دوہرا *v2,
                                  size_t len);
 
-void ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_arm(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, int strict);
-void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_x86(AVFloatDSPContext *fdsp);
-void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp);
+خالی ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp);
+خالی ff_float_dsp_init_arm(AVFloatDSPContext *fdsp);
+خالی ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, صحیح strict);
+خالی ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp);
+خالی ff_float_dsp_init_x86(AVFloatDSPContext *fdsp);
+خالی ff_float_dsp_init_mips(AVFloatDSPContext *fdsp);
 
 /**
  * Allocate a float DSP context.
  *
  * @param strict  setting to non-zero avoids using functions which may not be IEEE-754 compliant
  */
-AVFloatDSPContext *avpriv_float_dsp_alloc(int strict);
+AVFloatDSPContext *avpriv_float_dsp_alloc(صحیح strict);
 
-#endif /* AVUTIL_FLOAT_DSP_H */
+#اگر_ختم /* AVUTIL_FLOAT_DSP_H */

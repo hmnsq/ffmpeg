@@ -19,19 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_W64XMMTEST_H
-#define AVUTIL_X86_W64XMMTEST_H
+#اگر_غیر_تعریف_شدہ AVUTIL_X86_W64XMMTEST_H
+#تعریف_کرو AVUTIL_X86_W64XMMTEST_H
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#شامل <inttypes.h>
+#شامل <stdint.h>
+#شامل <stdlib.h>
+#شامل <stdarg.h>
+#شامل <string.h>
 
-#include "libavutil/bswap.h"
+#شامل "libavutil/bswap.h"
 
-#define storexmmregs(mem)               \
-    __asm__ volatile(                   \
+#تعریف_کرو storexmmregs(mem)               \
+    __asm__ متلون(                   \
         "movups %%xmm6 , 0x00(%0)\n\t"  \
         "movups %%xmm7 , 0x10(%0)\n\t"  \
         "movups %%xmm8 , 0x20(%0)\n\t"  \
@@ -44,18 +44,18 @@
         "movups %%xmm15, 0x90(%0)\n\t"  \
         :: "r"(mem) : "memory")
 
-#define testxmmclobbers(func, ctx, ...)                         \
+#تعریف_کرو testxmmclobbers(func, ctx, ...)                         \
     uint64_t xmm[2][10][2];                                     \
-    int ret;                                                    \
+    صحیح ret;                                                    \
     storexmmregs(xmm[0]);                                       \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storexmmregs(xmm[1]);                                       \
-    if (memcmp(xmm[0], xmm[1], sizeof(xmm[0]))) {               \
-        int i;                                                  \
+    اگر (memcmp(xmm[0], xmm[1], حجم(xmm[0]))) {               \
+        صحیح i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "XMM REGS CLOBBERED IN %s!\n", #func);           \
-        for (i = 0; i < 10; i ++)                               \
-            if (xmm[0][i][0] != xmm[1][i][0] ||                 \
+        برائے (i = 0; i < 10; i ++)                               \
+            اگر (xmm[0][i][0] != xmm[1][i][0] ||                 \
                 xmm[0][i][1] != xmm[1][i][1]) {                 \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "xmm%-2d = %016"PRIx64"%016"PRIx64"\n",  \
@@ -68,11 +68,11 @@
             }                                                   \
         abort();                                                \
     }                                                           \
-    return ret
+    واپس ret
 
-#define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+#تعریف_کرو wrap(func)      \
+صحیح __real_ ## func;    \
+صحیح __wrap_ ## func;    \
+صحیح __wrap_ ## func
 
-#endif /* AVUTIL_X86_W64XMMTEST_H */
+#اگر_ختم /* AVUTIL_X86_W64XMMTEST_H */

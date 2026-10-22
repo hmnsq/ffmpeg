@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#شامل <limits.h>
+#شامل <stdio.h>
 
-#include "libavutil/internal.h"
-#include "libavutil/lfg.h"
-#include "libavutil/lls.h"
-#include "libavutil/mem_internal.h"
+#شامل "libavutil/internal.h"
+#شامل "libavutil/lfg.h"
+#شامل "libavutil/lls.h"
+#شامل "libavutil/mem_internal.h"
 
 /* Values below the printed precision are rounding noise whose sign varies
  * between platforms, so print them as zero. */
-static double clean(double v)
+ساکن دوہرا clean(دوہرا v)
 {
-    return fabs(v) < 1e-9 ? 0.0 : v;
+    واپس fabs(v) < 1e-9 ? 0.0 : v;
 }
 
-int main(void)
+صحیح مین(خالی)
 {
     LLSModel m;
-    int i, order;
+    صحیح i, ترتیب;
     AVLFG lfg;
 
     av_lfg_init(&lfg, 1);
     avpriv_init_lls(&m, 3);
 
-    for (i = 0; i < 100; i++) {
-        LOCAL_ALIGNED(32, double, var, [4]);
-        double eval;
+    برائے (i = 0; i < 100; i++) {
+        LOCAL_ALIGNED(32, دوہرا, var, [4]);
+        دوہرا eval;
 
-        var[0] =         (av_lfg_get(&lfg) / (double) UINT_MAX - 0.5) * 2;
-        var[1] = var[0] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[2] = var[1] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[3] = var[2] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
+        var[0] =         (av_lfg_get(&lfg) / (دوہرا) UINT_MAX - 0.5) * 2;
+        var[1] = var[0] + av_lfg_get(&lfg) / (دوہرا) UINT_MAX - 0.5;
+        var[2] = var[1] + av_lfg_get(&lfg) / (دوہرا) UINT_MAX - 0.5;
+        var[3] = var[2] + av_lfg_get(&lfg) / (دوہرا) UINT_MAX - 0.5;
         m.update_lls(&m, var);
         avpriv_solve_lls(&m, 0.001, 0);
-        for (order = 0; order < 3; order++) {
-            eval = m.evaluate_lls(&m, var + 1, order);
-            printf("real:%9f order:%d pred:%9f var:%f coeffs:%f %9f %9f\n",
-                   var[0], order, eval,
-                   sqrt(FFMAX(m.variance[order], 0) / (i + 1)),
-                   clean(m.coeff[order][0]), clean(m.coeff[order][1]),
-                   clean(m.coeff[order][2]));
+        برائے (ترتیب = 0; ترتیب < 3; ترتیب++) {
+            eval = m.evaluate_lls(&m, var + 1, ترتیب);
+            لکھو("real:%9f order:%d pred:%9f var:%f coeffs:%f %9f %9f\n",
+                   var[0], ترتیب, eval,
+                   جذر(FFMAX(m.variance[ترتیب], 0) / (i + 1)),
+                   clean(m.coeff[ترتیب][0]), clean(m.coeff[ترتیب][1]),
+                   clean(m.coeff[ترتیب][2]));
         }
     }
-    return 0;
+    واپس 0;
 }

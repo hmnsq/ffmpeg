@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FILE_H
-#define AVUTIL_FILE_H
+#اگر_غیر_تعریف_شدہ AVUTIL_FILE_H
+#تعریف_کرو AVUTIL_FILE_H
 
-#include <stddef.h>
-#include <stdint.h>
+#شامل <stddef.h>
+#شامل <stdint.h>
 
-#include "attributes.h"
+#شامل "attributes.h"
 
 /**
  * @file
@@ -46,9 +46,9 @@
  * @return a non negative number in case of success, a negative value
  * corresponding to an AVERROR error code in case of failure
  */
-av_warn_unused_result
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx);
+av_warn_غیر_مستعمل_نتیجہ
+صحیح av_file_map(ثابت حرف *filename, uint8_t **bufptr, size_t *سائز,
+                صحیح log_انحراف, خالی *log_ctx);
 
 /**
  * Unmap or free the buffer bufptr created by av_file_map().
@@ -57,7 +57,7 @@ int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
  * @param size size in bytes of bufptr, must be the same as returned
  * by av_file_map()
  */
-void av_file_unmap(uint8_t *bufptr, size_t size);
+خالی av_file_unmap(uint8_t *bufptr, size_t سائز);
 
 /**
  * Map the beginning of an open file into memory for shared read and write
@@ -76,8 +76,8 @@ void av_file_unmap(uint8_t *bufptr, size_t size);
  * AVERROR error code in case of failure, AVERROR(ENOSYS) when the platform
  * has no shared file mappings
  */
-av_warn_unused_result
-int av_file_map_shared(int fd, size_t size, void **bufptr);
+av_warn_غیر_مستعمل_نتیجہ
+صحیح av_file_map_shared(صحیح fd, size_t سائز, خالی **bufptr);
 
 /**
  * Unmap the memory mapped by av_file_map_shared().
@@ -86,6 +86,6 @@ int av_file_map_shared(int fd, size_t size, void **bufptr);
  * @param size size in bytes of the mapping, must be the same as passed
  * to av_file_map_shared()
  */
-void av_file_unmap_shared(void *bufptr, size_t size);
+خالی av_file_unmap_shared(خالی *bufptr, size_t سائز);
 
-#endif /* AVUTIL_FILE_H */
+#اگر_ختم /* AVUTIL_FILE_H */

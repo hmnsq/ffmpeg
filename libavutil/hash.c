@@ -18,236 +18,236 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include "hash.h"
+#شامل <assert.h>
+#شامل <stddef.h>
+#شامل <stdint.h>
+#شامل <stdio.h>
+#شامل <string.h>
+#شامل "hash.h"
 
-#include "adler32.h"
-#include "crc.h"
-#include "md5.h"
-#include "murmur3.h"
-#include "ripemd.h"
-#include "sha.h"
-#include "sha512.h"
+#شامل "adler32.h"
+#شامل "crc.h"
+#شامل "md5.h"
+#شامل "murmur3.h"
+#شامل "ripemd.h"
+#شامل "sha.h"
+#شامل "sha512.h"
 
-#include "avstring.h"
-#include "base64.h"
-#include "error.h"
-#include "intreadwrite.h"
-#include "mem.h"
+#شامل "avstring.h"
+#شامل "base64.h"
+#شامل "error.h"
+#شامل "intreadwrite.h"
+#شامل "mem.h"
 
 // ENTRY(HASH_TYPE, HASH_NAME, HASH_SIZE)
-#define HASHES(ENTRY)                   \
-    ENTRY(MD5,        "MD5",        16) \
-    ENTRY(MURMUR3,    "murmur3",    16) \
-    ENTRY(RIPEMD128,  "RIPEMD128",  16) \
-    ENTRY(RIPEMD160,  "RIPEMD160",  20) \
-    ENTRY(RIPEMD256,  "RIPEMD256",  32) \
-    ENTRY(RIPEMD320,  "RIPEMD320",  40) \
-    ENTRY(SHA160,     "SHA160",     20) \
-    ENTRY(SHA224,     "SHA224",     28) \
-    ENTRY(SHA256,     "SHA256",     32) \
-    ENTRY(SHA512_224, "SHA512/224", 28) \
-    ENTRY(SHA512_256, "SHA512/256", 32) \
-    ENTRY(SHA384,     "SHA384",     48) \
-    ENTRY(SHA512,     "SHA512",     64) \
-    ENTRY(CRC32,      "CRC32",       4) \
-    ENTRY(ADLER32,    "adler32",     4) \
+#تعریف_کرو HASHES(اندراج_3)                   \
+    اندراج_3(MD5,        "MD5",        16) \
+    اندراج_3(MURMUR3,    "murmur3",    16) \
+    اندراج_3(RIPEMD128,  "RIPEMD128",  16) \
+    اندراج_3(RIPEMD160,  "RIPEMD160",  20) \
+    اندراج_3(RIPEMD256,  "RIPEMD256",  32) \
+    اندراج_3(RIPEMD320,  "RIPEMD320",  40) \
+    اندراج_3(SHA160,     "SHA160",     20) \
+    اندراج_3(SHA224,     "SHA224",     28) \
+    اندراج_3(SHA256,     "SHA256",     32) \
+    اندراج_3(SHA512_224, "SHA512/224", 28) \
+    اندراج_3(SHA512_256, "SHA512/256", 32) \
+    اندراج_3(SHA384,     "SHA384",     48) \
+    اندراج_3(SHA512,     "SHA512",     64) \
+    اندراج_3(چکری_جانچ_32,      "CRC32",       4) \
+    اندراج_3(ADLER32,    "adler32",     4) \
 
-enum hashtype {
-#define HASH_TYPE(TYPE, NAME, SIZE) TYPE,
+شمار hashtype {
+#تعریف_کرو HASH_TYPE(TYPE, NAME, سائز_2) TYPE,
     HASHES(HASH_TYPE)
-    NUM_HASHES
+    عدد_HASHES
 };
 
-typedef struct AVHashContext {
-    void *ctx;
-    enum hashtype type;
-    const AVCRC *crctab;
-    uint32_t crc;
+قسمتعریف ساخت AVHashContext {
+    خالی *ctx;
+    شمار hashtype type;
+    ثابت AVCRC *crctab;
+    uint32_t چکری_جانچ;
 } AVHashContext;
 
-#define HASH_MAX_SIZE(TYPE, NAME, SIZE) \
-    HASH_MAX_SIZE_BEFORE_ ## TYPE,      \
-    HASH_MAX_SIZE_UNTIL_ ## TYPE ## _MINUS_ONE = FFMAX(SIZE, HASH_MAX_SIZE_BEFORE_ ## TYPE) - 1,
-enum {
-    HASHES(HASH_MAX_SIZE)
-    MAX_HASH_SIZE
+#تعریف_کرو HASH_MAX_سائز(TYPE, NAME, سائز_2) \
+    HASH_MAX_سائز_BEFORE ## TYPE,      \
+    HASH_MAX_سائز_UNTIL ## TYPE ## _MINUS_ONE = FFMAX(سائز_2, HASH_MAX_سائز_BEFORE ## TYPE) - 1,
+شمار {
+    HASHES(HASH_MAX_سائز)
+    MAX_HASH_سائز
 };
-static_assert(AV_HASH_MAX_SIZE >= MAX_HASH_SIZE, "AV_HASH_MAX_SIZE needs to be updated!");
+static_assert(AV_HASH_MAX_سائز >= MAX_HASH_سائز, "AV_HASH_MAX_SIZE needs to be updated!");
 
-#define HASH_MAX_NAME_SIZE(TYPE, NAME, SIZE) \
-    HASH_MAX_NAME_SIZE_BEFORE_ ## TYPE,      \
-    HASH_MAX_NAME_SIZE_UNTIL_ ## TYPE ## _MINUS_ONE = FFMAX(sizeof(NAME), HASH_MAX_NAME_SIZE_BEFORE_ ## TYPE) - 1,
-enum {
-    HASHES(HASH_MAX_NAME_SIZE)
-    MAX_HASH_NAME_SIZE
+#تعریف_کرو HASH_MAX_NAME_سائز(TYPE, NAME, سائز_2) \
+    HASH_MAX_NAME_سائز_BEFORE ## TYPE,      \
+    HASH_MAX_NAME_سائز_UNTIL ## TYPE ## _MINUS_ONE = FFMAX(حجم(NAME), HASH_MAX_NAME_سائز_BEFORE ## TYPE) - 1,
+شمار {
+    HASHES(HASH_MAX_NAME_سائز)
+    MAX_HASH_NAME_سائز
 };
 
-static const struct {
-    const char name[MAX_HASH_NAME_SIZE];
-    int size;
+ساکن ثابت ساخت {
+    ثابت حرف name[MAX_HASH_NAME_سائز];
+    صحیح سائز;
 } hashdesc[] = {
-#define HASH_DESC(TYPE, NAME, SIZE) [TYPE] = { NAME, SIZE },
+#تعریف_کرو HASH_DESC(TYPE, NAME, سائز_2) [TYPE] = { NAME, سائز_2 },
     HASHES(HASH_DESC)
 };
 
-const char *av_hash_names(int i)
+ثابت حرف *av_hash_نام(صحیح i)
 {
-    if (i < 0 || i >= NUM_HASHES) return NULL;
-    return hashdesc[i].name;
+    اگر (i < 0 || i >= عدد_HASHES) واپس تہی;
+    واپس hashdesc[i].name;
 }
 
-const char *av_hash_get_name(const AVHashContext *ctx)
+ثابت حرف *av_hash_get_name(ثابت AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].name;
+    واپس hashdesc[ctx->type].name;
 }
 
-int av_hash_get_size(const AVHashContext *ctx)
+صحیح av_hash_get_سائز(ثابت AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].size;
+    واپس hashdesc[ctx->type].سائز;
 }
 
-int av_hash_alloc(AVHashContext **ctx, const char *name)
+صحیح av_hash_alloc(AVHashContext **ctx, ثابت حرف *name)
 {
     AVHashContext *res;
-    int i;
-    *ctx = NULL;
-    for (i = 0; i < NUM_HASHES; i++)
-        if (av_strcasecmp(name, hashdesc[i].name) == 0)
-            break;
-    if (i >= NUM_HASHES) return AVERROR(EINVAL);
-    res = av_mallocz(sizeof(*res));
-    if (!res) return AVERROR(ENOMEM);
+    صحیح i;
+    *ctx = تہی;
+    برائے (i = 0; i < عدد_HASHES; i++)
+        اگر (av_strcasecmp(name, hashdesc[i].name) == 0)
+            توڑو;
+    اگر (i >= عدد_HASHES) واپس AVERROR(EINVAL);
+    res = av_mallocz(حجم(*res));
+    اگر (!res) واپس AVERROR(ENOMEM);
     res->type = i;
-    switch (i) {
-    case MD5:     res->ctx = av_md5_alloc(); break;
-    case MURMUR3: res->ctx = av_murmur3_alloc(); break;
-    case RIPEMD128:
-    case RIPEMD160:
-    case RIPEMD256:
-    case RIPEMD320: res->ctx = av_ripemd_alloc(); break;
-    case SHA160:
-    case SHA224:
-    case SHA256:  res->ctx = av_sha_alloc(); break;
-    case SHA512_224:
-    case SHA512_256:
-    case SHA384:
-    case SHA512:  res->ctx = av_sha512_alloc(); break;
-    case CRC32:   res->crctab = av_crc_get_table(AV_CRC_32_IEEE_LE); break;
-    case ADLER32: break;
+    انتخاب (i) {
+    حالت MD5:     res->ctx = av_md5_alloc(); توڑو;
+    حالت MURMUR3: res->ctx = av_murmur3_alloc(); توڑو;
+    حالت RIPEMD128:
+    حالت RIPEMD160:
+    حالت RIPEMD256:
+    حالت RIPEMD320: res->ctx = av_ripemd_alloc(); توڑو;
+    حالت SHA160:
+    حالت SHA224:
+    حالت SHA256:  res->ctx = av_sha_alloc(); توڑو;
+    حالت SHA512_224:
+    حالت SHA512_256:
+    حالت SHA384:
+    حالت SHA512:  res->ctx = av_sha512_alloc(); توڑو;
+    حالت چکری_جانچ_32:   res->crctab = av_چکری_جانچ_get_جدول(AV_چکری_جانچ_32_IEEE_LE); توڑو;
+    حالت ADLER32: توڑو;
     }
-    if (i != ADLER32 && i != CRC32 && !res->ctx) {
+    اگر (i != ADLER32 && i != چکری_جانچ_32 && !res->ctx) {
         av_free(res);
-        return AVERROR(ENOMEM);
+        واپس AVERROR(ENOMEM);
     }
     *ctx = res;
-    return 0;
+    واپس 0;
 }
 
-void av_hash_init(AVHashContext *ctx)
+خالی av_hash_init(AVHashContext *ctx)
 {
-    switch (ctx->type) {
-    case MD5:     av_md5_init(ctx->ctx); break;
-    case MURMUR3: av_murmur3_init(ctx->ctx); break;
-    case RIPEMD128: av_ripemd_init(ctx->ctx, 128); break;
-    case RIPEMD160: av_ripemd_init(ctx->ctx, 160); break;
-    case RIPEMD256: av_ripemd_init(ctx->ctx, 256); break;
-    case RIPEMD320: av_ripemd_init(ctx->ctx, 320); break;
-    case SHA160:  av_sha_init(ctx->ctx, 160); break;
-    case SHA224:  av_sha_init(ctx->ctx, 224); break;
-    case SHA256:  av_sha_init(ctx->ctx, 256); break;
-    case SHA512_224:  av_sha512_init(ctx->ctx, 224); break;
-    case SHA512_256:  av_sha512_init(ctx->ctx, 256); break;
-    case SHA384:  av_sha512_init(ctx->ctx, 384); break;
-    case SHA512:  av_sha512_init(ctx->ctx, 512); break;
-    case CRC32:   ctx->crc = UINT32_MAX; break;
-    case ADLER32: ctx->crc = 1; break;
+    انتخاب (ctx->type) {
+    حالت MD5:     av_md5_init(ctx->ctx); توڑو;
+    حالت MURMUR3: av_murmur3_init(ctx->ctx); توڑو;
+    حالت RIPEMD128: av_ripemd_init(ctx->ctx, 128); توڑو;
+    حالت RIPEMD160: av_ripemd_init(ctx->ctx, 160); توڑو;
+    حالت RIPEMD256: av_ripemd_init(ctx->ctx, 256); توڑو;
+    حالت RIPEMD320: av_ripemd_init(ctx->ctx, 320); توڑو;
+    حالت SHA160:  av_sha_init(ctx->ctx, 160); توڑو;
+    حالت SHA224:  av_sha_init(ctx->ctx, 224); توڑو;
+    حالت SHA256:  av_sha_init(ctx->ctx, 256); توڑو;
+    حالت SHA512_224:  av_sha512_init(ctx->ctx, 224); توڑو;
+    حالت SHA512_256:  av_sha512_init(ctx->ctx, 256); توڑو;
+    حالت SHA384:  av_sha512_init(ctx->ctx, 384); توڑو;
+    حالت SHA512:  av_sha512_init(ctx->ctx, 512); توڑو;
+    حالت چکری_جانچ_32:   ctx->چکری_جانچ = UINT32_MAX; توڑو;
+    حالت ADLER32: ctx->چکری_جانچ = 1; توڑو;
     }
 }
 
-void av_hash_update(AVHashContext *ctx, const uint8_t *src, size_t len)
+خالی av_hash_update(AVHashContext *ctx, ثابت uint8_t *src, size_t len)
 {
-    switch (ctx->type) {
-    case MD5:     av_md5_update(ctx->ctx, src, len); break;
-    case MURMUR3: av_murmur3_update(ctx->ctx, src, len); break;
-    case RIPEMD128:
-    case RIPEMD160:
-    case RIPEMD256:
-    case RIPEMD320: av_ripemd_update(ctx->ctx, src, len); break;
-    case SHA160:
-    case SHA224:
-    case SHA256:  av_sha_update(ctx->ctx, src, len); break;
-    case SHA512_224:
-    case SHA512_256:
-    case SHA384:
-    case SHA512:  av_sha512_update(ctx->ctx, src, len); break;
-    case CRC32:   ctx->crc = av_crc(ctx->crctab, ctx->crc, src, len); break;
-    case ADLER32: ctx->crc = av_adler32_update(ctx->crc, src, len); break;
+    انتخاب (ctx->type) {
+    حالت MD5:     av_md5_update(ctx->ctx, src, len); توڑو;
+    حالت MURMUR3: av_murmur3_update(ctx->ctx, src, len); توڑو;
+    حالت RIPEMD128:
+    حالت RIPEMD160:
+    حالت RIPEMD256:
+    حالت RIPEMD320: av_ripemd_update(ctx->ctx, src, len); توڑو;
+    حالت SHA160:
+    حالت SHA224:
+    حالت SHA256:  av_sha_update(ctx->ctx, src, len); توڑو;
+    حالت SHA512_224:
+    حالت SHA512_256:
+    حالت SHA384:
+    حالت SHA512:  av_sha512_update(ctx->ctx, src, len); توڑو;
+    حالت چکری_جانچ_32:   ctx->چکری_جانچ = av_چکری_جانچ(ctx->crctab, ctx->چکری_جانچ, src, len); توڑو;
+    حالت ADLER32: ctx->چکری_جانچ = av_adler32_update(ctx->چکری_جانچ, src, len); توڑو;
     }
 }
 
-void av_hash_final(AVHashContext *ctx, uint8_t *dst)
+خالی av_hash_final(AVHashContext *ctx, uint8_t *dst)
 {
-    switch (ctx->type) {
-    case MD5:     av_md5_final(ctx->ctx, dst); break;
-    case MURMUR3: av_murmur3_final(ctx->ctx, dst); break;
-    case RIPEMD128:
-    case RIPEMD160:
-    case RIPEMD256:
-    case RIPEMD320: av_ripemd_final(ctx->ctx, dst); break;
-    case SHA160:
-    case SHA224:
-    case SHA256:  av_sha_final(ctx->ctx, dst); break;
-    case SHA512_224:
-    case SHA512_256:
-    case SHA384:
-    case SHA512:  av_sha512_final(ctx->ctx, dst); break;
-    case CRC32:   AV_WB32(dst, ctx->crc ^ UINT32_MAX); break;
-    case ADLER32: AV_WB32(dst, ctx->crc); break;
+    انتخاب (ctx->type) {
+    حالت MD5:     av_md5_final(ctx->ctx, dst); توڑو;
+    حالت MURMUR3: av_murmur3_final(ctx->ctx, dst); توڑو;
+    حالت RIPEMD128:
+    حالت RIPEMD160:
+    حالت RIPEMD256:
+    حالت RIPEMD320: av_ripemd_final(ctx->ctx, dst); توڑو;
+    حالت SHA160:
+    حالت SHA224:
+    حالت SHA256:  av_sha_final(ctx->ctx, dst); توڑو;
+    حالت SHA512_224:
+    حالت SHA512_256:
+    حالت SHA384:
+    حالت SHA512:  av_sha512_final(ctx->ctx, dst); توڑو;
+    حالت چکری_جانچ_32:   AV_WB32(dst, ctx->چکری_جانچ ^ UINT32_MAX); توڑو;
+    حالت ADLER32: AV_WB32(dst, ctx->چکری_جانچ); توڑو;
     }
 }
 
-void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size)
+خالی av_hash_final_bin(ساخت AVHashContext *ctx, uint8_t *dst, صحیح سائز)
 {
-    uint8_t buf[AV_HASH_MAX_SIZE];
-    unsigned rsize = av_hash_get_size(ctx);
+    uint8_t buf[AV_HASH_MAX_سائز];
+    غیرعلامتی rsize = av_hash_get_سائز(ctx);
 
     av_hash_final(ctx, buf);
-    memcpy(dst, buf, FFMIN(size, rsize));
-    if (size > rsize)
-        memset(dst + rsize, 0, size - rsize);
+    حافظہ_نقل(dst, buf, FFMIN(سائز, rsize));
+    اگر (سائز > rsize)
+        memset(dst + rsize, 0, سائز - rsize);
 }
 
-void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size)
+خالی av_hash_final_hex(ساخت AVHashContext *ctx, uint8_t *dst, صحیح سائز)
 {
-    uint8_t buf[AV_HASH_MAX_SIZE];
-    unsigned rsize = av_hash_get_size(ctx), i;
+    uint8_t buf[AV_HASH_MAX_سائز];
+    غیرعلامتی rsize = av_hash_get_سائز(ctx), i;
 
     av_hash_final(ctx, buf);
-    for (i = 0; i < FFMIN(rsize, size / 2); i++)
-        snprintf(dst + i * 2, size - i * 2, "%02x", buf[i]);
+    برائے (i = 0; i < FFMIN(rsize, سائز / 2); i++)
+        snprintf(dst + i * 2, سائز - i * 2, "%02x", buf[i]);
 }
 
-void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size)
+خالی av_hash_final_b64(ساخت AVHashContext *ctx, uint8_t *dst, صحیح سائز)
 {
-    uint8_t buf[AV_HASH_MAX_SIZE], b64[AV_BASE64_SIZE(AV_HASH_MAX_SIZE)];
-    unsigned rsize = av_hash_get_size(ctx), osize;
+    uint8_t buf[AV_HASH_MAX_سائز], b64[AV_BASE64_سائز(AV_HASH_MAX_سائز)];
+    غیرعلامتی rsize = av_hash_get_سائز(ctx), osize;
 
     av_hash_final(ctx, buf);
-    av_base64_encode(b64, sizeof(b64), buf, rsize);
-    osize = AV_BASE64_SIZE(rsize);
-    memcpy(dst, b64, FFMIN(osize, size));
-    if (size < osize)
-        dst[size - 1] = 0;
+    av_base64_encode(b64, حجم(b64), buf, rsize);
+    osize = AV_BASE64_سائز(rsize);
+    حافظہ_نقل(dst, b64, FFMIN(osize, سائز));
+    اگر (سائز < osize)
+        dst[سائز - 1] = 0;
 }
 
-void av_hash_freep(AVHashContext **ctx)
+خالی av_hash_freep(AVHashContext **ctx)
 {
-    if (*ctx)
+    اگر (*ctx)
         av_freep(&(*ctx)->ctx);
     av_freep(ctx);
 }

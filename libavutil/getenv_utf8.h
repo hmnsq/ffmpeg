@@ -16,71 +16,71 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_GETENV_UTF8_H
-#define AVUTIL_GETENV_UTF8_H
+#اگر_غیر_تعریف_شدہ AVUTIL_GETENV_UTF8_H
+#تعریف_کرو AVUTIL_GETENV_UTF8_H
 
-#include <stdlib.h>
+#شامل <stdlib.h>
 
-#include "config.h"
-#include "mem.h"
+#شامل "config.h"
+#شامل "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#اگر HAVE_GETENV && defined(_WIN32)
 
-#include "libavutil/wchar_filename.h"
+#شامل "libavutil/wchar_filename.h"
 
-static inline char *getenv_utf8(const char *varname)
+ساکن اندرونی حرف *getenv_utf8(ثابت حرف *varname)
 {
     wchar_t *varname_w, *var_w;
-    char *var;
+    حرف *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    اگر (utf8towchar(varname, &varname_w))
+        واپس تہی;
+    اگر (!varname_w)
+        واپس تہی;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    اگر (!var_w)
+        واپس تہی;
+    اگر (wchartoutf8(var_w, &var))
+        واپس تہی;
 
-    return var;
+    واپس var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
 }
 
-static inline void freeenv_utf8(char *var)
+ساکن اندرونی خالی freeenv_utf8(حرف *var)
 {
     av_free(var);
 }
 
-static inline char *getenv_dup(const char *varname)
+ساکن اندرونی حرف *getenv_dup(ثابت حرف *varname)
 {
-    return getenv_utf8(varname);
+    واپس getenv_utf8(varname);
 }
 
-#else
+#ورنہ
 
-static inline char *getenv_utf8(const char *varname)
+ساکن اندرونی حرف *getenv_utf8(ثابت حرف *varname)
 {
-    return getenv(varname);
+    واپس getenv(varname);
 }
 
-static inline void freeenv_utf8(char *var)
+ساکن اندرونی خالی freeenv_utf8(حرف *var)
 {
 }
 
-static inline char *getenv_dup(const char *varname)
+ساکن اندرونی حرف *getenv_dup(ثابت حرف *varname)
 {
-    char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    حرف *var = getenv(varname);
+    اگر (!var)
+        واپس تہی;
+    واپس av_strdup(var);
 }
 
-#endif // HAVE_GETENV && defined(_WIN32)
+#اگر_ختم // HAVE_GETENV && defined(_WIN32)
 
-#endif // AVUTIL_GETENV_UTF8_H
+#اگر_ختم // AVUTIL_GETENV_UTF8_H

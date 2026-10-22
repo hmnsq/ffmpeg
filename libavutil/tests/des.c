@@ -16,119 +16,119 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/mem_internal.h"
-#include "libavutil/timer.h"
+#شامل "libavutil/mem_internal.h"
+#شامل "libavutil/timer.h"
 
-#include "libavutil/des.c"
+#شامل "libavutil/des.c"
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#شامل <stdint.h>
+#شامل <stdio.h>
+#شامل <stdlib.h>
+#شامل <string.h>
 
-#include "libavutil/time.h"
+#شامل "libavutil/time.h"
 
-static uint64_t rand64(void)
+ساکن uint64_t rand64(خالی)
 {
     uint64_t r = rand();
     r = (r << 32) | rand();
-    return r;
+    واپس r;
 }
 
-static const uint8_t test_key[] = { 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0 };
-static const DECLARE_ALIGNED(8, uint8_t, plain)[] = { 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10 };
-static const DECLARE_ALIGNED(8, uint8_t, crypt_ref)[] = { 0x4a, 0xb6, 0x5b, 0x3d, 0x4b, 0x06, 0x15, 0x18 };
-static DECLARE_ALIGNED(8, uint8_t, tmp)[8];
-static DECLARE_ALIGNED(8, uint8_t, large_buffer)[10002][8];
-static const uint8_t cbc_key[] = {
+ساکن ثابت uint8_t test_کلید[] = { 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0 };
+ساکن ثابت DECLARE_ALIGNED(8, uint8_t, plain)[] = { 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10 };
+ساکن ثابت DECLARE_ALIGNED(8, uint8_t, crypt_ref)[] = { 0x4a, 0xb6, 0x5b, 0x3d, 0x4b, 0x06, 0x15, 0x18 };
+ساکن DECLARE_ALIGNED(8, uint8_t, tmp)[8];
+ساکن DECLARE_ALIGNED(8, uint8_t, large_بفر)[10002][8];
+ساکن ثابت uint8_t cbc_کلید[] = {
     0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef,
     0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01,
     0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23
 };
 
-static int run_test(int cbc, int decrypt)
+ساکن صحیح تسلسل_test(صحیح cbc, صحیح decrypt)
 {
     AVDES d;
-    int delay = cbc && !decrypt ? 2 : 1;
+    صحیح delay = cbc && !decrypt ? 2 : 1;
     uint64_t res;
-    AV_WB64(large_buffer[0], 0x4e6f772069732074ULL);
-    AV_WB64(large_buffer[1], 0x1234567890abcdefULL);
+    AV_WB64(large_بفر[0], 0x4e6f772069732074ULL);
+    AV_WB64(large_بفر[1], 0x1234567890abcdefULL);
     AV_WB64(tmp,             0x1234567890abcdefULL);
-    av_des_init(&d, cbc_key, 192, decrypt);
-    av_des_crypt(&d, large_buffer[delay], large_buffer[0], 10000, cbc ? tmp : NULL, decrypt);
-    res = AV_RB64(large_buffer[9999 + delay]);
-    if (cbc) {
-        if (decrypt)
-            return res == 0xc5cecf63ecec514cULL;
-        else
-            return res == 0xcb191f85d1ed8439ULL;
-    } else {
-        if (decrypt)
-            return res == 0x8325397644091a0aULL;
-        else
-            return res == 0xdd17e8b8b437d232ULL;
+    av_des_init(&d, cbc_کلید, 192, decrypt);
+    av_des_crypt(&d, large_بفر[delay], large_بفر[0], 10000, cbc ? tmp : تہی, decrypt);
+    res = AV_RB64(large_بفر[9999 + delay]);
+    اگر (cbc) {
+        اگر (decrypt)
+            واپس res == 0xc5cecf63ecec514cULL;
+        ورنہ
+            واپس res == 0xcb191f85d1ed8439ULL;
+    } ورنہ {
+        اگر (decrypt)
+            واپس res == 0x8325397644091a0aULL;
+        ورنہ
+            واپس res == 0xdd17e8b8b437d232ULL;
     }
 }
 
-union word_byte {
-    uint64_t word;
+اتحاد لفظ_byte {
+    uint64_t لفظ_4;
     uint8_t byte[8];
 };
 
-int main(void)
+صحیح مین(خالی)
 {
     AVDES d;
-    int i;
-    union word_byte key[3], data, ct;
+    صحیح i;
+    اتحاد لفظ_byte کلید[3], ڈیٹا, ct;
     uint64_t roundkeys[16];
     srand(av_gettime());
-    key[0].word = AV_RB64(test_key);
-    data.word   = AV_RB64(plain);
-    gen_roundkeys(roundkeys, key[0].word);
-    if (des_encdec(data.word, roundkeys, 0) != AV_RB64(crypt_ref)) {
-        printf("Test 1 failed\n");
-        return 1;
+    کلید[0].لفظ_4 = AV_RB64(test_کلید);
+    ڈیٹا.لفظ_4   = AV_RB64(plain);
+    gen_roundkeys(roundkeys, کلید[0].لفظ_4);
+    اگر (des_encdec(ڈیٹا.لفظ_4, roundkeys, 0) != AV_RB64(crypt_ref)) {
+        لکھو("Test 1 failed\n");
+        واپس 1;
     }
-    av_des_init(&d, test_key, 64, 0);
-    av_des_crypt(&d, tmp, plain, 1, NULL, 0);
-    if (memcmp(tmp, crypt_ref, sizeof(crypt_ref))) {
-        printf("Public API decryption failed\n");
-        return 1;
+    av_des_init(&d, test_کلید, 64, 0);
+    av_des_crypt(&d, tmp, plain, 1, تہی, 0);
+    اگر (memcmp(tmp, crypt_ref, حجم(crypt_ref))) {
+        لکھو("Public API decryption failed\n");
+        واپس 1;
     }
-    if (!run_test(0, 0) || !run_test(0, 1) || !run_test(1, 0) || !run_test(1, 1)) {
-        printf("Partial Monte-Carlo test failed\n");
-        return 1;
+    اگر (!تسلسل_test(0, 0) || !تسلسل_test(0, 1) || !تسلسل_test(1, 0) || !تسلسل_test(1, 1)) {
+        لکھو("Partial Monte-Carlo test failed\n");
+        واپس 1;
     }
-    for (i = 0; i < 1000; i++) {
-        key[0].word = rand64();
-        key[1].word = rand64();
-        key[2].word = rand64();
-        data.word   = rand64();
-        av_des_init(&d, key[0].byte, 192, 0);
-        av_des_crypt(&d, ct.byte, data.byte, 1, NULL, 0);
-        av_des_init(&d, key[0].byte, 192, 1);
-        av_des_crypt(&d, ct.byte, ct.byte, 1, NULL, 1);
-        if (ct.word != data.word) {
-            printf("Test 2 failed\n");
-            return 1;
+    برائے (i = 0; i < 1000; i++) {
+        کلید[0].لفظ_4 = rand64();
+        کلید[1].لفظ_4 = rand64();
+        کلید[2].لفظ_4 = rand64();
+        ڈیٹا.لفظ_4   = rand64();
+        av_des_init(&d, کلید[0].byte, 192, 0);
+        av_des_crypt(&d, ct.byte, ڈیٹا.byte, 1, تہی, 0);
+        av_des_init(&d, کلید[0].byte, 192, 1);
+        av_des_crypt(&d, ct.byte, ct.byte, 1, تہی, 1);
+        اگر (ct.لفظ_4 != ڈیٹا.لفظ_4) {
+            لکھو("Test 2 failed\n");
+            واپس 1;
         }
     }
-#ifdef GENTABLES
-    printf("static const uint32_t S_boxes_P_shuffle[8][64] = {\n");
-    for (i = 0; i < 8; i++) {
-        int j;
-        printf("    {");
-        for (j = 0; j < 64; j++) {
+#اگر_تعریف_شدہ GENTABLES
+    لکھو("static const uint32_t S_boxes_P_shuffle[8][64] = {\n");
+    برائے (i = 0; i < 8; i++) {
+        صحیح j;
+        لکھو("    {");
+        برائے (j = 0; j < 64; j++) {
             uint32_t v = S_boxes[i][j >> 1];
             v   = j & 1 ? v >> 4 : v & 0xf;
             v <<= 28 - 4 * i;
-            v   = shuffle(v, P_shuffle, sizeof(P_shuffle));
-            printf((j & 7) == 0 ? "\n    " : " ");
-            printf("0x%08X,", v);
+            v   = shuffle(v, P_shuffle, حجم(P_shuffle));
+            لکھو((j & 7) == 0 ? "\n    " : " ");
+            لکھو("0x%08X,", v);
         }
-        printf("\n    },\n");
+        لکھو("\n    },\n");
     }
-    printf("};\n");
-#endif
-    return 0;
+    لکھو("};\n");
+#اگر_ختم
+    واپس 0;
 }

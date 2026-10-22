@@ -18,47 +18,47 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#شامل <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/fixed_dsp.h"
+#شامل "config.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/fixed_dsp.h"
 
-void ff_vector_fmul_window_scaled_rvv(int16_t *dst, const int32_t *src0,
-                                      const int32_t *src1, const int32_t *win,
-                                      int len, uint8_t bits);
-void ff_vector_fmul_window_fixed_rvv(int32_t *dst, const int32_t *src0,
-                                     const int32_t *src1, const int32_t *win,
-                                     int len);
-void ff_vector_fmul_fixed_rvv(int *dst, const int *src0, const int *src1,
-                              int len);
-void ff_vector_fmul_reverse_fixed_rvv(int *dst, const int *src0,
-                                      const int *src1, int len);
-void ff_vector_fmul_add_fixed_rvv(int *dst, const int *src0, const int *src1,
-                                  const int *src2, int len);
-int ff_scalarproduct_fixed_rvv(const int *v1, const int *v2, int len);
-void ff_butterflies_fixed_rvv(int *v1, int *v2, int len);
+خالی ff_سمتیہ_fmul_کھڑکی_scaled_rvv(int16_t *dst, ثابت int32_t *src0,
+                                      ثابت int32_t *src1, ثابت int32_t *win,
+                                      صحیح len, uint8_t بٹ);
+خالی ff_سمتیہ_fmul_کھڑکی_fixed_rvv(int32_t *dst, ثابت int32_t *src0,
+                                     ثابت int32_t *src1, ثابت int32_t *win,
+                                     صحیح len);
+خالی ff_سمتیہ_fmul_fixed_rvv(صحیح *dst, ثابت صحیح *src0, ثابت صحیح *src1,
+                              صحیح len);
+خالی ff_سمتیہ_fmul_الٹ_fixed_rvv(صحیح *dst, ثابت صحیح *src0,
+                                      ثابت صحیح *src1, صحیح len);
+خالی ff_سمتیہ_fmul_جوڑو_fixed_rvv(صحیح *dst, ثابت صحیح *src0, ثابت صحیح *src1,
+                                  ثابت صحیح *src2, صحیح len);
+صحیح ff_scalarproduct_fixed_rvv(ثابت صحیح *v1, ثابت صحیح *v2, صحیح len);
+خالی ff_butterflies_fixed_rvv(صحیح *v1, صحیح *v2, صحیح len);
 
-av_cold void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
+av_cold خالی ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#اگر HAVE_RVV
+    صحیح flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
-        if (flags & AV_CPU_FLAG_RVV_I64) {
-            fdsp->vector_fmul_window_scaled = ff_vector_fmul_window_scaled_rvv;
-            fdsp->vector_fmul_window = ff_vector_fmul_window_fixed_rvv;
+    اگر ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
+        اگر (flags & AV_CPU_FLAG_RVV_I64) {
+            fdsp->سمتیہ_fmul_کھڑکی_scaled = ff_سمتیہ_fmul_کھڑکی_scaled_rvv;
+            fdsp->سمتیہ_fmul_کھڑکی = ff_سمتیہ_fmul_کھڑکی_fixed_rvv;
         }
 
-        fdsp->vector_fmul = ff_vector_fmul_fixed_rvv;
-        fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_fixed_rvv;
-        fdsp->vector_fmul_add = ff_vector_fmul_add_fixed_rvv;
+        fdsp->سمتیہ_fmul = ff_سمتیہ_fmul_fixed_rvv;
+        fdsp->سمتیہ_fmul_الٹ = ff_سمتیہ_fmul_الٹ_fixed_rvv;
+        fdsp->سمتیہ_fmul_جوڑو = ff_سمتیہ_fmul_جوڑو_fixed_rvv;
 
-        if (flags & AV_CPU_FLAG_RVV_I64)
+        اگر (flags & AV_CPU_FLAG_RVV_I64)
             fdsp->scalarproduct_fixed = ff_scalarproduct_fixed_rvv;
 
         fdsp->butterflies_fixed = ff_butterflies_fixed_rvv;
     }
-#endif
+#اگر_ختم
 }

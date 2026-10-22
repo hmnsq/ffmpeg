@@ -18,31 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "libavutil/ppc/cpu.h"
-#include "float_dsp_altivec.h"
-#include "float_dsp_vsx.h"
+#شامل "config.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/float_dsp.h"
+#شامل "libavutil/ppc/cpu.h"
+#شامل "float_dsp_altivec.h"
+#شامل "float_dsp_vsx.h"
 
-av_cold void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, int bit_exact)
+av_cold خالی ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, صحیح ثنائی_ہندسہ_exact)
 {
-    if (PPC_ALTIVEC(av_get_cpu_flags())) {
-        fdsp->vector_fmul = ff_vector_fmul_altivec;
-        fdsp->vector_fmul_add = ff_vector_fmul_add_altivec;
-        fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_altivec;
+    اگر (PPC_ALTIVEC(av_get_cpu_flags())) {
+        fdsp->سمتیہ_fmul = ff_سمتیہ_fmul_altivec;
+        fdsp->سمتیہ_fmul_جوڑو = ff_سمتیہ_fmul_جوڑو_altivec;
+        fdsp->سمتیہ_fmul_الٹ = ff_سمتیہ_fmul_الٹ_altivec;
 
-        if (!bit_exact) {
-            fdsp->vector_fmul_window = ff_vector_fmul_window_altivec;
+        اگر (!ثنائی_ہندسہ_exact) {
+            fdsp->سمتیہ_fmul_کھڑکی = ff_سمتیہ_fmul_کھڑکی_altivec;
         }
     }
 
     // The disabled function below are near identical to altivec and have
     // been disabled to reduce code duplication
-    if (PPC_VSX(av_get_cpu_flags())) {
+    اگر (PPC_VSX(av_get_cpu_flags())) {
 //         fdsp->vector_fmul = ff_vector_fmul_vsx;
-        fdsp->vector_fmul_add = ff_vector_fmul_add_vsx;
+        fdsp->سمتیہ_fmul_جوڑو = ff_سمتیہ_fmul_جوڑو_vsx;
 //         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_vsx;
 
 //         if (!bit_exact) {

@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BASE64_INTERNAL_H
-#define AVUTIL_BASE64_INTERNAL_H
+#اگر_غیر_تعریف_شدہ AVUTIL_BASE64_اندرونی_H
+#تعریف_کرو AVUTIL_BASE64_اندرونی_H
 
-#include <stdint.h>
-#include "intreadwrite.h"
+#شامل <stdint.h>
+#شامل "intreadwrite.h"
 
 /*****************************************************************************
 * b64_encode: Stolen from VLC's http.c.
@@ -30,37 +30,37 @@
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-static inline char *ff_base64_encode_c(char *out, const uint8_t *in, int in_size, const char *b64)
+ساکن اندرونی حرف *ff_base64_encode_c(حرف *برآمد, ثابت uint8_t *اندر, صحیح اندر_سائز, ثابت حرف *b64)
 {
-    char *ret, *dst;
-    unsigned i_bits = 0;
-    int i_shift = 0;
-    int bytes_remaining = in_size;
+    حرف *ret, *dst;
+    غیرعلامتی i_بٹ = 0;
+    صحیح i_سرکاؤ = 0;
+    صحیح بائٹیں_بقایا = اندر_سائز;
 
-    ret = dst = out;
-    while (bytes_remaining > 3) {
-        i_bits = AV_RB32(in);
-        in += 3; bytes_remaining -= 3;
-        *dst++ = b64[ i_bits>>26        ];
-        *dst++ = b64[(i_bits>>20) & 0x3F];
-        *dst++ = b64[(i_bits>>14) & 0x3F];
-        *dst++ = b64[(i_bits>>8 ) & 0x3F];
+    ret = dst = برآمد;
+    جب (بائٹیں_بقایا > 3) {
+        i_بٹ = AV_RB32(اندر);
+        اندر += 3; بائٹیں_بقایا -= 3;
+        *dst++ = b64[ i_بٹ>>26        ];
+        *dst++ = b64[(i_بٹ>>20) & 0x3F];
+        *dst++ = b64[(i_بٹ>>14) & 0x3F];
+        *dst++ = b64[(i_بٹ>>8 ) & 0x3F];
     }
-    i_bits = 0;
-    while (bytes_remaining) {
-        i_bits = (i_bits << 8) + *in++;
-        bytes_remaining--;
-        i_shift += 8;
+    i_بٹ = 0;
+    جب (بائٹیں_بقایا) {
+        i_بٹ = (i_بٹ << 8) + *اندر++;
+        بائٹیں_بقایا--;
+        i_سرکاؤ += 8;
     }
-    while (i_shift > 0) {
-        *dst++ = b64[(i_bits << 6 >> i_shift) & 0x3f];
-        i_shift -= 6;
+    جب (i_سرکاؤ > 0) {
+        *dst++ = b64[(i_بٹ << 6 >> i_سرکاؤ) & 0x3f];
+        i_سرکاؤ -= 6;
     }
-    while ((dst - ret) & 3)
+    جب ((dst - ret) & 3)
         *dst++ = '=';
     *dst = '\0';
 
-    return ret;
+    واپس ret;
 }
 
-#endif /* AVUTIL_BASE64_INTERNAL_H */
+#اگر_ختم /* AVUTIL_BASE64_INTERNAL_H */

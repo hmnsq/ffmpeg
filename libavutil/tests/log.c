@@ -19,54 +19,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/log.c"
+#شامل "libavutil/log.c"
 
-#include <string.h>
+#شامل <string.h>
 
-static int call_log_format_line2(const char *fmt, char *buffer, int buffer_size, ...)
+ساکن صحیح call_log_format_line2(ثابت حرف *fmt, حرف *بفر, صحیح بفر_سائز, ...)
 {
-    va_list args;
-    int ret;
-    int print_prefix=1;
-    va_start(args, buffer_size);
-    ret = av_log_format_line2(NULL, AV_LOG_INFO, fmt, args, buffer, buffer_size, &print_prefix);
-    va_end(args);
-    return ret;
+    va_list دلائل;
+    صحیح ret;
+    صحیح print_سابقہ=1;
+    va_start(دلائل, بفر_سائز);
+    ret = av_log_format_line2(تہی, AV_LOG_INFO, fmt, دلائل, بفر, بفر_سائز, &print_سابقہ);
+    va_end(دلائل);
+    واپس ret;
 }
 
-int main(int argc, char **argv)
+صحیح مین(صحیح argc, حرف **argv)
 {
-    int i;
-    av_log_set_level(AV_LOG_DEBUG);
+    صحیح i;
+    av_log_سیٹ_level(AV_LOG_DEBUG);
     check_color_terminal();
-    for (use_color=0; use_color<=256; use_color = 255*use_color+1) {
-        av_log(NULL, AV_LOG_FATAL, "use_color: %d\n", use_color);
-        for (i = AV_LOG_DEBUG; i>=AV_LOG_QUIET; i-=8) {
-            av_log(NULL, i, " %d", i);
-            av_log(NULL, AV_LOG_INFO, "e ");
-            av_log(NULL, i + 256*123, "C%d", i);
-            av_log(NULL, AV_LOG_INFO, "e");
+    برائے (use_color=0; use_color<=256; use_color = 255*use_color+1) {
+        av_log(تہی, AV_LOG_FATAL, "use_color: %d\n", use_color);
+        برائے (i = AV_LOG_DEBUG; i>=AV_LOG_QUIET; i-=8) {
+            av_log(تہی, i, " %d", i);
+            av_log(تہی, AV_LOG_INFO, "e ");
+            av_log(تہی, i + 256*123, "C%d", i);
+            av_log(تہی, AV_LOG_INFO, "e");
         }
-        av_log(NULL, AV_LOG_PANIC, "\n");
+        av_log(تہی, AV_LOG_PANIC, "\n");
     }
     {
-        int result;
-        char buffer[4];
-        result = call_log_format_line2("foo", NULL, 0);
-        if(result != 3) {
-            printf("Test NULL buffer failed.\n");
-            return 1;
+        صحیح نتیجہ;
+        حرف بفر[4];
+        نتیجہ = call_log_format_line2("foo", تہی, 0);
+        اگر(نتیجہ != 3) {
+            لکھو("Test NULL buffer failed.\n");
+            واپس 1;
         }
-        result = call_log_format_line2("foo", buffer, 2);
-        if(result != 3 || strncmp(buffer, "f", 2)) {
-            printf("Test buffer too small failed.\n");
-            return 1;
+        نتیجہ = call_log_format_line2("foo", بفر, 2);
+        اگر(نتیجہ != 3 || لڑی_موازنہ(بفر, "f", 2)) {
+            لکھو("Test buffer too small failed.\n");
+            واپس 1;
         }
-        result = call_log_format_line2("foo", buffer, 4);
-        if(result != 3 || strncmp(buffer, "foo", 4)) {
-            printf("Test buffer sufficiently big failed.\n");
-            return 1;
+        نتیجہ = call_log_format_line2("foo", بفر, 4);
+        اگر(نتیجہ != 3 || لڑی_موازنہ(بفر, "foo", 4)) {
+            لکھو("Test buffer sufficiently big failed.\n");
+            واپس 1;
         }
     }
-    return 0;
+    واپس 0;
 }

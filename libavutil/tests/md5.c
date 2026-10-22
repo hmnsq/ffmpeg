@@ -16,40 +16,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#شامل <stdint.h>
+#شامل <stdio.h>
 
-#include "libavutil/md5.h"
+#شامل "libavutil/md5.h"
 
-static void print_md5(uint8_t *md5)
+ساکن خالی print_md5(uint8_t *md5)
 {
-    int i;
-    for (i = 0; i < 16; i++)
-        printf("%02x", md5[i]);
-    printf("\n");
+    صحیح i;
+    برائے (i = 0; i < 16; i++)
+        لکھو("%02x", md5[i]);
+    لکھو("\n");
 }
 
-int main(void)
+صحیح مین(خالی)
 {
     uint8_t md5val[16];
-    int i;
+    صحیح i;
 
-    uint8_t in[1000];
+    uint8_t اندر[1000];
 
-    for (i = 0; i < 1000; i++)
-        in[i] = i * i;
-    av_md5_sum(md5val, in, 1000);
+    برائے (i = 0; i < 1000; i++)
+        اندر[i] = i * i;
+    av_md5_مجموع(md5val, اندر, 1000);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 63);
+    av_md5_مجموع(md5val, اندر, 63);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 64);
+    av_md5_مجموع(md5val, اندر, 64);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 65);
+    av_md5_مجموع(md5val, اندر, 65);
     print_md5(md5val);
-    for (i = 0; i < 1000; i++)
-        in[i] = i % 127;
-    av_md5_sum(md5val, in, 999);
+    برائے (i = 0; i < 1000; i++)
+        اندر[i] = i % 127;
+    av_md5_مجموع(md5val, اندر, 999);
     print_md5(md5val);
 
-    return 0;
+    واپس 0;
 }

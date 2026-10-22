@@ -18,44 +18,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
+#شامل <inttypes.h>
+#شامل <stdio.h>
 
-#include "libavutil/intreadwrite.h"
-#include "libavutil/mem.h"
-#include "libavutil/murmur3.h"
+#شامل "libavutil/intreadwrite.h"
+#شامل "libavutil/mem.h"
+#شامل "libavutil/murmur3.h"
 
-int main(void)
+صحیح مین(خالی)
 {
-    int i;
-    uint8_t hash_result[16] = {0};
-    struct AVMurMur3 *ctx = av_murmur3_alloc();
-#if 1
-    uint8_t in[256] = {0};
+    صحیح i;
+    uint8_t hash_نتیجہ[16] = {0};
+    ساخت AVMurMur3 *ctx = av_murmur3_alloc();
+#اگر 1
+    uint8_t اندر[256] = {0};
     uint8_t *hashes = av_mallocz(256 * 16);
-    for (i = 0; i < 256; i++)
+    برائے (i = 0; i < 256; i++)
     {
-        in[i] = i;
+        اندر[i] = i;
         av_murmur3_init_seeded(ctx, 256 - i);
         // Note: this actually tests hashing 0 bytes
-        av_murmur3_update(ctx, in, i);
+        av_murmur3_update(ctx, اندر, i);
         av_murmur3_final(ctx, hashes + 16 * i);
     }
     av_murmur3_init_seeded(ctx, 0);
     av_murmur3_update(ctx, hashes, 256 * 16);
-    av_murmur3_final(ctx, hash_result);
+    av_murmur3_final(ctx, hash_نتیجہ);
     av_free(hashes);
     av_freep(&ctx);
-    printf("result: 0x%"PRIx64" 0x%"PRIx64"\n", AV_RL64(hash_result), AV_RL64(hash_result + 8));
+    لکھو("result: 0x%"PRIx64" 0x%"PRIx64"\n", AV_RL64(hash_نتیجہ), AV_RL64(hash_نتیجہ + 8));
     // official reference value is 32 bit
-    return AV_RL32(hash_result) != 0x6384ba69;
-#else
-    uint8_t *in = av_mallocz(512*1024);
+    واپس AV_RL32(hash_نتیجہ) != 0x6384ba69;
+#ورنہ
+    uint8_t *اندر = av_mallocz(512*1024);
     av_murmur3_init(ctx);
-    for (i = 0; i < 40*1024; i++)
-        av_murmur3_update(ctx, in, 512*1024);
-    av_murmur3_final(ctx, hash_result);
-    av_free(in);
-    return hash_result[0];
-#endif
+    برائے (i = 0; i < 40*1024; i++)
+        av_murmur3_update(ctx, اندر, 512*1024);
+    av_murmur3_final(ctx, hash_نتیجہ);
+    av_free(اندر);
+    واپس hash_نتیجہ[0];
+#اگر_ختم
 }

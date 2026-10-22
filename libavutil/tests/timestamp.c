@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
+#شامل <inttypes.h>
+#شامل <stdio.h>
 
-#include "libavutil/avutil.h"
-#include "libavutil/macros.h"
-#include "libavutil/rational.h"
-#include "libavutil/timestamp.h"
+#شامل "libavutil/avutil.h"
+#شامل "libavutil/macros.h"
+#شامل "libavutil/rational.h"
+#شامل "libavutil/timestamp.h"
 
-int main(void)
+صحیح مین(خالی)
 {
-    char buf[AV_TS_MAX_STRING_SIZE];
-    static const struct { const char *label; int64_t ts; } ts_vals[] = {
-        { "NOPTS",       AV_NOPTS_VALUE  },
+    حرف buf[AV_TS_MAX_STRING_سائز];
+    ساکن ثابت ساخت { ثابت حرف *label; int64_t ts; } ts_vals[] = {
+        { "NOPTS",       AV_NOPTS_قدر  },
         { "0",           0               },
         { "90000",       90000           },
         { "-1",          -1              },
         { "INT64_MAX",   INT64_MAX       },
         { "INT64_MIN+1", INT64_MIN + 1   },
     };
-    static const struct { const char *label; int64_t ts; AVRational tb; } time_vals[] = {
-        { "NOPTS",             AV_NOPTS_VALUE, {1, 90000} },
+    ساکن ثابت ساخت { ثابت حرف *label; int64_t ts; AVRational tb; } وقت_vals[] = {
+        { "NOPTS",             AV_NOPTS_قدر, {1, 90000} },
         { "90000 at 1/90000",  90000,          {1, 90000} },
         { "0 at 1/1000",       0,              {1, 1000}  },
         { "48000 at 1/48000",  48000,          {1, 48000} },
@@ -45,31 +45,31 @@ int main(void)
     };
 
     /* av_ts_make_string */
-    printf("Testing av_ts_make_string()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(ts_vals); i++)
-        printf("%s: %s\n", ts_vals[i].label,
+    لکھو("Testing av_ts_make_string()\n");
+    برائے (صحیح i = 0; i < FF_ARRAY_ELEMS(ts_vals); i++)
+        لکھو("%s: %s\n", ts_vals[i].label,
                av_ts_make_string(buf, ts_vals[i].ts));
 
     /* av_ts2str macro */
-    printf("\nTesting av_ts2str()\n");
-    printf("NOPTS: %s\n", av_ts2str(AV_NOPTS_VALUE));
-    printf("48000: %s\n", av_ts2str(48000));
+    لکھو("\nTesting av_ts2str()\n");
+    لکھو("NOPTS: %s\n", av_ts2str(AV_NOPTS_قدر));
+    لکھو("48000: %s\n", av_ts2str(48000));
 
     /* av_ts_make_time_string2 */
-    printf("\nTesting av_ts_make_time_string2()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(time_vals); i++)
-        printf("%s: %s\n", time_vals[i].label,
-               av_ts_make_time_string2(buf, time_vals[i].ts, time_vals[i].tb));
+    لکھو("\nTesting av_ts_make_time_string2()\n");
+    برائے (صحیح i = 0; i < FF_ARRAY_ELEMS(وقت_vals); i++)
+        لکھو("%s: %s\n", وقت_vals[i].label,
+               av_ts_make_وقت_string2(buf, وقت_vals[i].ts, وقت_vals[i].tb));
 
     /* av_ts_make_time_string (AVRational pointer version) */
-    printf("\nTesting av_ts_make_time_string()\n");
+    لکھو("\nTesting av_ts_make_time_string()\n");
     {
         AVRational tb = {1, 1000};
-        printf("5000 at 1/1000: %s\n",
-               av_ts_make_time_string(buf, 5000, &tb));
-        printf("NOPTS: %s\n",
-               av_ts_make_time_string(buf, AV_NOPTS_VALUE, &tb));
+        لکھو("5000 at 1/1000: %s\n",
+               av_ts_make_وقت_string(buf, 5000, &tb));
+        لکھو("NOPTS: %s\n",
+               av_ts_make_وقت_string(buf, AV_NOPTS_قدر, &tb));
     }
 
-    return 0;
+    واپس 0;
 }

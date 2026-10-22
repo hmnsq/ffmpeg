@@ -25,171 +25,171 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#include "avassert.h"
-#include <limits.h>
+#شامل "avassert.h"
+#شامل <limits.h>
 
-#include "common.h"
-#include "mathematics.h"
-#include "rational.h"
+#شامل "common.h"
+#شامل "mathematics.h"
+#شامل "rational.h"
 
-int av_reduce(int *dst_num, int *dst_den,
-              int64_t num, int64_t den, int64_t max)
+صحیح av_reduce(صحیح *dst_عدد, صحیح *dst_den,
+              int64_t عدد, int64_t den, int64_t max)
 {
     AVRational a0 = { 0, 1 }, a1 = { 1, 0 };
-    int sign = (num < 0) ^ (den < 0);
-    int64_t gcd = av_gcd(FFABS(num), FFABS(den));
+    صحیح sign = (عدد < 0) ^ (den < 0);
+    int64_t عاد_اعظم = av_عاد_اعظم(FFABS(عدد), FFABS(den));
 
-    if (gcd) {
-        num = FFABS(num) / gcd;
-        den = FFABS(den) / gcd;
+    اگر (عاد_اعظم) {
+        عدد = FFABS(عدد) / عاد_اعظم;
+        den = FFABS(den) / عاد_اعظم;
     }
-    if (num <= max && den <= max) {
-        a1 = (AVRational) { num, den };
+    اگر (عدد <= max && den <= max) {
+        a1 = (AVRational) { عدد, den };
         den = 0;
     }
 
-    while (den) {
-        uint64_t x        = num / den;
-        int64_t next_den  = num - den * x;
-        int64_t a2n       = x * a1.num + a0.num;
+    جب (den) {
+        uint64_t x        = عدد / den;
+        int64_t اگلا_den  = عدد - den * x;
+        int64_t a2n       = x * a1.عدد + a0.عدد;
         int64_t a2d       = x * a1.den + a0.den;
 
-        if (a2n > max || a2d > max) {
-            if (a1.num) x =          (max - a0.num) / a1.num;
-            if (a1.den) x = FFMIN(x, (max - a0.den) / a1.den);
+        اگر (a2n > max || a2d > max) {
+            اگر (a1.عدد) x =          (max - a0.عدد) / a1.عدد;
+            اگر (a1.den) x = FFMIN(x, (max - a0.den) / a1.den);
 
-            if (den * (2 * x * a1.den + a0.den) > num * a1.den)
-                a1 = (AVRational) { x * a1.num + a0.num, x * a1.den + a0.den };
-            break;
+            اگر (den * (2 * x * a1.den + a0.den) > عدد * a1.den)
+                a1 = (AVRational) { x * a1.عدد + a0.عدد, x * a1.den + a0.den };
+            توڑو;
         }
 
         a0  = a1;
         a1  = (AVRational) { a2n, a2d };
-        num = den;
-        den = next_den;
+        عدد = den;
+        den = اگلا_den;
     }
-    av_assert2(av_gcd(a1.num, a1.den) <= 1U);
-    av_assert2(a1.num <= max && a1.den <= max);
+    av_assert2(av_عاد_اعظم(a1.عدد, a1.den) <= 1U);
+    av_assert2(a1.عدد <= max && a1.den <= max);
 
-    *dst_num = sign ? -a1.num : a1.num;
+    *dst_عدد = sign ? -a1.عدد : a1.عدد;
     *dst_den = a1.den;
 
-    return den == 0;
+    واپس den == 0;
 }
 
 AVRational av_mul_q(AVRational b, AVRational c)
 {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.num,
-               b.den * (int64_t) c.den, INT_MAX);
-    return b;
+    av_reduce(&b.عدد, &b.den,
+               b.عدد * (int64_t) c.عدد,
+               b.den * (int64_t) c.den, زیادہ_سے_زیادہ_عدد);
+    واپس b;
 }
 
 AVRational av_div_q(AVRational b, AVRational c)
 {
-    return av_mul_q(b, (AVRational) { c.den, c.num });
+    واپس av_mul_q(b, (AVRational) { c.den, c.عدد });
 }
 
-AVRational av_add_q(AVRational b, AVRational c) {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.den +
-               c.num * (int64_t) b.den,
-               b.den * (int64_t) c.den, INT_MAX);
-    return b;
+AVRational av_جوڑو_q(AVRational b, AVRational c) {
+    av_reduce(&b.عدد, &b.den,
+               b.عدد * (int64_t) c.den +
+               c.عدد * (int64_t) b.den,
+               b.den * (int64_t) c.den, زیادہ_سے_زیادہ_عدد);
+    واپس b;
 }
 
 AVRational av_sub_q(AVRational b, AVRational c)
 {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.den -
-               c.num * (int64_t) b.den,
-               b.den * (int64_t) c.den, INT_MAX);
-    return b;
+    av_reduce(&b.عدد, &b.den,
+               b.عدد * (int64_t) c.den -
+               c.عدد * (int64_t) b.den,
+               b.den * (int64_t) c.den, زیادہ_سے_زیادہ_عدد);
+    واپس b;
 }
 
-AVRational av_d2q(double d, int max)
+AVRational av_d2q(دوہرا d, صحیح max)
 {
     AVRational a;
-    int exponent;
+    صحیح exponent;
     int64_t den;
-    if (isnan(d))
-        return (AVRational) { 0,0 };
-    if (fabs(d) > INT_MAX + 3LL)
-        return (AVRational) { d < 0 ? -1 : 1, 0 };
+    اگر (isnan(d))
+        واپس (AVRational) { 0,0 };
+    اگر (fabs(d) > زیادہ_سے_زیادہ_عدد + 3LL)
+        واپس (AVRational) { d < 0 ? -1 : 1, 0 };
     frexp(d, &exponent);
     exponent = FFMAX(exponent-1, 0);
     den = 1LL << (62 - exponent);
     // (int64_t)rint() and llrint() do not work with gcc on ia64 and sparc64,
     // see Ticket2713 for affected gcc/glibc versions
-    av_reduce(&a.num, &a.den, floor(d * den + 0.5), den, max);
+    av_reduce(&a.عدد, &a.den, floor(d * den + 0.5), den, max);
 
-    return a;
+    واپس a;
 }
 
-int av_nearer_q(AVRational q, AVRational q1, AVRational q2)
+صحیح av_nearer_q(AVRational q, AVRational q1, AVRational q2)
 {
     /* n/d is q, a/b is the median between q1 and q2 */
-    int64_t a = q1.num * (int64_t)q2.den + q2.num * (int64_t)q1.den;
+    int64_t a = q1.عدد * (int64_t)q2.den + q2.عدد * (int64_t)q1.den;
     int64_t b = 2 * (int64_t)q1.den * q2.den;
 
     /* rnd_up(a*d/b) > n => a*d/b > n */
-    int64_t x_up = av_rescale_rnd(a, q.den, b, AV_ROUND_UP);
+    int64_t x_اوپر = av_rescale_rnd(a, q.den, b, AV_باری_اوپر);
 
     /* rnd_down(a*d/b) < n => a*d/b < n */
-    int64_t x_down = av_rescale_rnd(a, q.den, b, AV_ROUND_DOWN);
+    int64_t x_نیچے_کو = av_rescale_rnd(a, q.den, b, AV_باری_نیچے_کو);
 
-    return ((x_up > q.num) - (x_down < q.num)) * av_cmp_q(q2, q1);
+    واپس ((x_اوپر > q.عدد) - (x_نیچے_کو < q.عدد)) * av_cmp_q(q2, q1);
 }
 
-int av_find_nearest_q_idx(AVRational q, const AVRational* q_list)
+صحیح av_ڈھونڈو_قریب_ترین_q_idx(AVRational q, ثابت AVRational* q_list)
 {
-    int i, nearest_q_idx = 0;
-    for (i = 0; q_list[i].den; i++)
-        if (av_nearer_q(q, q_list[i], q_list[nearest_q_idx]) > 0)
-            nearest_q_idx = i;
+    صحیح i, قریب_ترین_q_idx = 0;
+    برائے (i = 0; q_list[i].den; i++)
+        اگر (av_nearer_q(q, q_list[i], q_list[قریب_ترین_q_idx]) > 0)
+            قریب_ترین_q_idx = i;
 
-    return nearest_q_idx;
+    واپس قریب_ترین_q_idx;
 }
 
 uint32_t av_q2intfloat(AVRational q) {
-    int64_t n, num = q.num, den = q.den;
-    int shift;
+    int64_t n, عدد = q.عدد, den = q.den;
+    صحیح سرکاؤ;
     uint32_t sign = 0;
 
-    if (den < 0) {
+    اگر (den < 0) {
         den = -den;
-        num = -num;
+        عدد = -عدد;
     }
-    if (num < 0) {
-        num = -num;
+    اگر (عدد < 0) {
+        عدد = -عدد;
         sign = 1U << 31;
     }
 
-    if (!num && !den) return 0xFFC00000;
-    if (!num) return 0;
-    if (!den) return sign | 0x7F800000;
+    اگر (!عدد && !den) واپس 0xFFC00000;
+    اگر (!عدد) واپس 0;
+    اگر (!den) واپس sign | 0x7F800000;
 
-    shift = 23 + av_log2(den) - av_log2(num);
-    if (shift >= 0) n = av_rescale(num, 1LL<<shift, den);
-    else            n = av_rescale(num, 1, den << -shift);
+    سرکاؤ = 23 + av_log2(den) - av_log2(عدد);
+    اگر (سرکاؤ >= 0) n = av_rescale(عدد, 1LL<<سرکاؤ, den);
+    ورنہ            n = av_rescale(عدد, 1, den << -سرکاؤ);
 
-    shift -= n >= (1<<24);
-    shift += n <  (1<<23);
+    سرکاؤ -= n >= (1<<24);
+    سرکاؤ += n <  (1<<23);
 
-    if (shift >= 0) n = av_rescale(num, 1LL<<shift, den);
-    else            n = av_rescale(num, 1, den << -shift);
+    اگر (سرکاؤ >= 0) n = av_rescale(عدد, 1LL<<سرکاؤ, den);
+    ورنہ            n = av_rescale(عدد, 1, den << -سرکاؤ);
 
     av_assert1(n <  (1<<24));
     av_assert1(n >= (1<<23));
 
-    return sign | (150-shift)<<23 | (n - (1<<23));
+    واپس sign | (150-سرکاؤ)<<23 | (n - (1<<23));
 }
 
-AVRational av_gcd_q(AVRational a, AVRational b, int max_den, AVRational def)
+AVRational av_عاد_اعظم_q(AVRational a, AVRational b, صحیح max_den, AVRational def)
 {
-    int64_t gcd, lcm;
+    int64_t عاد_اعظم, lcm;
 
-    gcd = av_gcd(a.den, b.den);
-    lcm = (a.den / gcd) * b.den;
-    return lcm < max_den ? av_make_q(av_gcd(a.num, b.num), lcm) : def;
+    عاد_اعظم = av_عاد_اعظم(a.den, b.den);
+    lcm = (a.den / عاد_اعظم) * b.den;
+    واپس lcm < max_den ? av_make_q(av_عاد_اعظم(a.عدد, b.عدد), lcm) : def;
 }

@@ -16,22 +16,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_EMMS_H
-#define AVUTIL_EMMS_H
+#اگر_غیر_تعریف_شدہ AVUTIL_EMMS_H
+#تعریف_کرو AVUTIL_EMMS_H
 
-#include <stdint.h>
-#include <stdlib.h>
+#شامل <stdint.h>
+#شامل <stdlib.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/log.h"
+#شامل "config.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/log.h"
 
-#if ARCH_X86
+#اگر ARCH_X86
 
-#if HAVE_MMX_INLINE
-#ifndef __MMX__
-#include "libavutil/cpu.h"
-#endif
+#اگر HAVE_MMX_INLINE
+#اگر_غیر_تعریف_شدہ __MMX__
+#شامل "libavutil/cpu.h"
+#اگر_ختم
 
 #   define emms_c emms_c
 /**
@@ -41,61 +41,61 @@
  * Note, *alloc() and *free() also use float code in some libc implementations
  * thus this also applies to them or any function using them.
  */
-static av_always_inline void emms_c(void)
+ساکن av_always_inline خالی emms_c(خالی)
 {
 /* Some inlined functions may also use mmx instructions regardless of
  * runtime cpuflags. With that in mind, we unconditionally empty the
  * mmx state if the target cpu chosen at configure time supports it.
  */
-#if !defined(__MMX__)
-    if(av_get_cpu_flags() & AV_CPU_FLAG_MMX)
-#endif
-        __asm__ volatile ("emms" ::: "memory");
+#اگر !defined(__MMX__)
+    اگر(av_get_cpu_flags() & AV_CPU_FLAG_MMX)
+#اگر_ختم
+        __asm__ متلون ("emms" ::: "memory");
 }
 
-static inline void ff_assert0_fpu(const char *file, int line_number)
+ساکن اندرونی خالی ff_assert0_fpu(ثابت حرف *file, صحیح سطر_نمبر)
 {
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ متلون (
         "fstenv %0 \n\t"
         : "+m" (state)
         :
         : "memory"
     );
-    if ((state[4] & 3) != 3) {
+    اگر ((state[4] & 3) != 3) {
         emms_c();
-        av_log(NULL, AV_LOG_PANIC,
+        av_log(تہی, AV_LOG_PANIC,
                "Invalid floating point state assertion "
                "triggered at line %u in file %s\n",
-               line_number, file);
+               سطر_نمبر, file);
         abort();
     }
 }
 
-#define ff_assert0_fpu() ff_assert0_fpu(__FILE__, __LINE__)
+#تعریف_کرو ff_assert0_fpu() ff_assert0_fpu(__FILE__, __LINE__)
 
-#elif HAVE_MMX && HAVE_MM_EMPTY
+#وگرنہ_اگر HAVE_MMX && HAVE_MM_خالی_خانے
 #   include <mmintrin.h>
-#   define emms_c _mm_empty
-#elif HAVE_MMX_EXTERNAL
-void ff_emms_asm(void);
+#   define emms_c mm_خالی_خانے
+#وگرنہ_اگر HAVE_MMX_EXTERNAL
+خالی ff_emms_asm(خالی);
 #   define emms_c ff_emms_asm
-#endif /* HAVE_MMX_INLINE */
+#اگر_ختم /* HAVE_MMX_INLINE */
 
-#endif /* ARCH_X86 */
+#اگر_ختم /* ARCH_X86 */
 
-#ifndef emms_c
-#   define emms_c() do {} while(0)
-#endif
+#اگر_غیر_تعریف_شدہ emms_c
+#   define emms_c() کرو {} جب(0)
+#اگر_ختم
 
-#ifndef ff_assert0_fpu
-#define ff_assert0_fpu() ((void)0)
-#endif
+#اگر_غیر_تعریف_شدہ ff_assert0_fpu
+#تعریف_کرو ff_assert0_fpu() ((خالی)0)
+#اگر_ختم
 
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 1
-#define ff_assert1_fpu() ff_assert0_fpu()
-#else
-#define ff_assert1_fpu() ((void)0)
-#endif
+#اگر defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 1
+#تعریف_کرو ff_assert1_fpu() ff_assert0_fpu()
+#ورنہ
+#تعریف_کرو ff_assert1_fpu() ((خالی)0)
+#اگر_ختم
 
-#endif /* AVUTIL_EMMS_H */
+#اگر_ختم /* AVUTIL_EMMS_H */

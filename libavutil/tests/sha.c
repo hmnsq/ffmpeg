@@ -16,60 +16,60 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#شامل <stdio.h>
 
-#include "libavutil/mem.h"
-#include "libavutil/sha.h"
+#شامل "libavutil/mem.h"
+#شامل "libavutil/sha.h"
 
-int main(void)
+صحیح مین(خالی)
 {
-    int i, j, k;
-    struct AVSHA *ctx;
-    unsigned char digest[32];
-    static const int lengths[3] = { 160, 224, 256 };
+    صحیح i, j, k;
+    ساخت AVSHA *ctx;
+    غیرعلامتی حرف digest[32];
+    ساکن ثابت صحیح lengths[3] = { 160, 224, 256 };
 
     ctx = av_sha_alloc();
-    if (!ctx)
-        return 1;
+    اگر (!ctx)
+        واپس 1;
 
-    for (j = 0; j < 3; j++) {
-        printf("Testing SHA-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+    برائے (j = 0; j < 3; j++) {
+        لکھو("Testing SHA-%d\n", lengths[j]);
+        برائے (k = 0; k < 3; k++) {
             av_sha_init(ctx, lengths[j]);
-            if (k == 0)
+            اگر (k == 0)
                 av_sha_update(ctx, "abc", 3);
-            else if (k == 1)
+            ورنہ اگر (k == 1)
                 av_sha_update(ctx, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 56);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            ورنہ
+                برائے (i = 0; i < 1000*1000; i++)
                     av_sha_update(ctx, "a", 1);
             av_sha_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
-                printf("%02X", digest[i]);
-            putchar('\n');
+            برائے (i = 0; i < lengths[j] >> 3; i++)
+                لکھو("%02X", digest[i]);
+            حرف_لکھو('\n');
         }
-        switch (j) {
-        case 0:
+        انتخاب (j) {
+        حالت 0:
             //test vectors (from FIPS PUB 180-1)
-            printf("A9993E36 4706816A BA3E2571 7850C26C 9CD0D89D\n"
+            لکھو("A9993E36 4706816A BA3E2571 7850C26C 9CD0D89D\n"
                    "84983E44 1C3BD26E BAAE4AA1 F95129E5 E54670F1\n"
                    "34AA973C D4C4DAA4 F61EEB2B DBAD2731 6534016F\n");
-            break;
-        case 1:
+            توڑو;
+        حالت 1:
             //test vectors (from FIPS PUB 180-2 Appendix A)
-            printf("23097d22 3405d822 8642a477 bda255b3 2aadbce4 bda0b3f7 e36c9da7\n"
+            لکھو("23097d22 3405d822 8642a477 bda255b3 2aadbce4 bda0b3f7 e36c9da7\n"
                    "75388b16 512776cc 5dba5da1 fd890150 b0c6455c b4f58b19 52522525\n"
                    "20794655 980c91d8 bbb4c1ea 97618a4b f03f4258 1948b2ee 4ee7ad67\n");
-            break;
-        case 2:
+            توڑو;
+        حالت 2:
             //test vectors (from FIPS PUB 180-2)
-            printf("ba7816bf 8f01cfea 414140de 5dae2223 b00361a3 96177a9c b410ff61 f20015ad\n"
+            لکھو("ba7816bf 8f01cfea 414140de 5dae2223 b00361a3 96177a9c b410ff61 f20015ad\n"
                    "248d6a61 d20638b8 e5c02693 0c3e6039 a33ce459 64ff2167 f6ecedd4 19db06c1\n"
                    "cdc76e5c 9914fb92 81a1c7e2 84d73e67 f1809a48 a497200e 046d39cc c7112cd0\n");
-            break;
+            توڑو;
         }
     }
     av_free(ctx);
 
-    return 0;
+    واپس 0;
 }

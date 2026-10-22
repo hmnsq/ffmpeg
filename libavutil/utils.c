@@ -16,79 +16,79 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "avutil.h"
-#include "avassert.h"
+#شامل "config.h"
+#شامل "avutil.h"
+#شامل "avassert.h"
 
 /**
  * @file
  * various utility functions
  */
 
-const char *av_get_media_type_string(enum AVMediaType media_type)
+ثابت حرف *av_get_media_type_string(شمار AVMediaType media_type)
 {
-    switch (media_type) {
-    case AVMEDIA_TYPE_VIDEO:      return "video";
-    case AVMEDIA_TYPE_AUDIO:      return "audio";
-    case AVMEDIA_TYPE_DATA:       return "data";
-    case AVMEDIA_TYPE_SUBTITLE:   return "subtitle";
-    case AVMEDIA_TYPE_ATTACHMENT: return "attachment";
-    default:                      return NULL;
+    انتخاب (media_type) {
+    حالت AVMEDIA_TYPE_VIDEO:      واپس "video";
+    حالت AVMEDIA_TYPE_AUDIO:      واپس "audio";
+    حالت AVMEDIA_TYPE_ڈیٹا:       واپس "data";
+    حالت AVMEDIA_TYPE_SUBTITLE:   واپس "subtitle";
+    حالت AVMEDIA_TYPE_ATTACHMENT: واپس "attachment";
+    طےشدہ:                      واپس تہی;
     }
 }
 
-char av_get_picture_type_char(enum AVPictureType pict_type)
+حرف av_get_picture_type_char(شمار AVPictureType pict_type)
 {
-    switch (pict_type) {
-    case AV_PICTURE_TYPE_I:  return 'I';
-    case AV_PICTURE_TYPE_P:  return 'P';
-    case AV_PICTURE_TYPE_B:  return 'B';
-    case AV_PICTURE_TYPE_S:  return 'S';
-    case AV_PICTURE_TYPE_SI: return 'i';
-    case AV_PICTURE_TYPE_SP: return 'p';
-    case AV_PICTURE_TYPE_BI: return 'b';
-    default:                 return '?';
+    انتخاب (pict_type) {
+    حالت AV_PICTURE_TYPE_I:  واپس 'I';
+    حالت AV_PICTURE_TYPE_P:  واپس 'P';
+    حالت AV_PICTURE_TYPE_B:  واپس 'B';
+    حالت AV_PICTURE_TYPE_S:  واپس 'S';
+    حالت AV_PICTURE_TYPE_SI: واپس 'i';
+    حالت AV_PICTURE_TYPE_SP: واپس 'p';
+    حالت AV_PICTURE_TYPE_BI: واپس 'b';
+    طےشدہ:                 واپس '?';
     }
 }
 
-char *av_fourcc_make_string(char *buf, uint32_t fourcc)
+حرف *av_fourcc_make_string(حرف *buf, uint32_t fourcc)
 {
-    int i;
-    char *orig_buf = buf;
-    size_t buf_size = AV_FOURCC_MAX_STRING_SIZE;
+    صحیح i;
+    حرف *orig_buf = buf;
+    size_t buf_سائز = AV_FOURCC_MAX_STRING_سائز;
 
-    for (i = 0; i < 4; i++) {
-        const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+    برائے (i = 0; i < 4; i++) {
+        ثابت صحیح c = fourcc & 0xff;
+        ثابت صحیح print_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
-        if (len < 0)
-            break;
+        ثابت صحیح len = snprintf(buf, buf_سائز, print_chr ? "%c" : "[%d]", c);
+        اگر (len < 0)
+            توڑو;
         buf += len;
-        buf_size = buf_size > len ? buf_size - len : 0;
+        buf_سائز = buf_سائز > len ? buf_سائز - len : 0;
         fourcc >>= 8;
     }
 
-    return orig_buf;
+    واپس orig_buf;
 }
 
-AVRational av_get_time_base_q(void)
+AVRational av_get_وقت_بنیاد_q(خالی)
 {
-    return (AVRational){1, AV_TIME_BASE};
+    واپس (AVRational){1, AV_وقت_بنیاد};
 }
-#if FF_API_ASSERT_FPU
-void av_assert0_fpu(void) {
-#if HAVE_MMX_INLINE
+#اگر FF_API_ASSERT_FPU
+خالی av_assert0_fpu(خالی) {
+#اگر HAVE_MMX_INLINE
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ متلون (
         "fstenv %0 \n\t"
         : "+m" (state)
         :
         : "memory"
     );
     av_assert0((state[4] & 3) == 3);
-#endif
+#اگر_ختم
 }
-#endif
+#اگر_ختم

@@ -18,295 +18,295 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#شامل <inttypes.h>
+#شامل <stdio.h>
+#شامل <string.h>
 
-#include "avassert.h"
-#include "avstring.h"
-#include "dict.h"
-#include "error.h"
-#include "mem.h"
-#include "bprint.h"
+#شامل "avassert.h"
+#شامل "avstring.h"
+#شامل "dict.h"
+#شامل "error.h"
+#شامل "mem.h"
+#شامل "bprint.h"
 
-struct AVDictionary {
-    int count;
-    AVDictionaryEntry *elems;
-    int duplicate_keys;
+ساخت AVDictionary {
+    صحیح گنتی;
+    AVDictionary_اندراج *elems;
+    صحیح duplicate_کلیدیں;
 };
 
-int av_dict_count(const AVDictionary *m)
+صحیح av_dict_گنتی(ثابت AVDictionary *m)
 {
-    return m ? m->count : 0;
+    واپس m ? m->گنتی : 0;
 }
 
-const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
-                                         const AVDictionaryEntry *prev)
+ثابت AVDictionary_اندراج *av_dict_iterate(ثابت AVDictionary *m,
+                                         ثابت AVDictionary_اندراج *پچھلا)
 {
-    int i = 0;
+    صحیح i = 0;
 
-    if (!m)
-        return NULL;
+    اگر (!m)
+        واپس تہی;
 
-    if (prev)
-        i = prev - m->elems + 1;
+    اگر (پچھلا)
+        i = پچھلا - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    اگر (i >= m->گنتی)
+        واپس تہی;
 
-    return &m->elems[i];
+    واپس &m->elems[i];
 }
 
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+AVDictionary_اندراج *av_dict_get(ثابت AVDictionary *m, ثابت حرف *کلید,
+                               ثابت AVDictionary_اندراج *پچھلا, صحیح flags)
 {
-    const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    ثابت AVDictionary_اندراج *اندراج_2 = پچھلا;
+    غیرعلامتی صحیح j;
 
-    if (!key)
-        return NULL;
+    اگر (!کلید)
+        واپس تہی;
 
-    while ((entry = av_dict_iterate(m, entry))) {
-        const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+    جب ((اندراج_2 = av_dict_iterate(m, اندراج_2))) {
+        ثابت حرف *s = اندراج_2->کلید;
+        اگر (flags & AV_DICT_مطابقت_CASE)
+            برائے (j = 0; s[j] == کلید[j] && کلید[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        ورنہ
+            برائے (j = 0; av_toupper(s[j]) == av_toupper(کلید[j]) && کلید[j]; j++)
                 ;
-        if (key[j])
-            continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
-            continue;
-        return (AVDictionaryEntry *)entry;
+        اگر (کلید[j])
+            جاری;
+        اگر (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+            جاری;
+        واپس (AVDictionary_اندراج *)اندراج_2;
     }
-    return NULL;
+    واپس تہی;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+صحیح av_dict_سیٹ(AVDictionary **pm, ثابت حرف *کلید, ثابت حرف *قدر,
+                صحیح flags)
 {
     AVDictionary *m = *pm;
-    AVDictionaryEntry *tag = NULL;
-    char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    AVDictionary_اندراج *لیبل = تہی;
+    حرف *copy_کلید = تہی, *copy_قدر = تہی;
+    صحیح err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
-        copy_value = (void *)value;
-    else if (value)
-        copy_value = av_strdup(value);
-    if (!key) {
+    اگر (flags & AV_DICT_DONT_STRDUP_VAL)
+        copy_قدر = (خالی *)قدر;
+    ورنہ اگر (قدر)
+        copy_قدر = av_strdup(قدر);
+    اگر (!کلید) {
         err = AVERROR(EINVAL);
-        goto err_out;
+        جاؤ err_برآمد;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
-        copy_key = (void *)key;
-    else
-        copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
-        goto enomem;
+    اگر (flags & AV_DICT_DONT_STRDUP_کلید)
+        copy_کلید = (خالی *)کلید;
+    ورنہ
+        copy_کلید = av_strdup(کلید);
+    اگر (!copy_کلید || (قدر && !copy_قدر))
+        جاؤ enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
-        tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
-                (value && tag->value && !strcmp(value, tag->value))) {
-                av_free(copy_key);
-                av_free(copy_value);
-                return 0;
+    اگر (!(flags & AV_DICT_MULTIKEY)) {
+        لیبل = av_dict_get(m, کلید, تہی, flags);
+    } ورنہ اگر (flags & AV_DICT_DEDUP) {
+        جب ((لیبل = av_dict_get(m, کلید, لیبل, flags))) {
+            اگر ((!قدر && !لیبل->قدر) ||
+                (قدر && لیبل->قدر && !strcmp(قدر, لیبل->قدر))) {
+                av_free(copy_کلید);
+                av_free(copy_قدر);
+                واپس 0;
             }
         }
     }
-    if (!m)
-        m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
-        goto enomem;
+    اگر (!m)
+        m = *pm = av_mallocz(حجم(*m));
+    اگر (!m)
+        جاؤ enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
-            av_free(copy_key);
-            av_free(copy_value);
-            return 0;
+    اگر (لیبل) {
+        اگر (flags & AV_DICT_DONT_OVERWRITE) {
+            av_free(copy_کلید);
+            av_free(copy_قدر);
+            واپس 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
-            size_t oldlen = strlen(tag->value);
-            size_t new_part_len = strlen(copy_value);
+        اگر (copy_قدر && flags & AV_DICT_APPEND) {
+            size_t oldlen = لڑی_لمبائی(لیبل->قدر);
+            size_t new_part_len = لڑی_لمبائی(copy_قدر);
             size_t len = oldlen + new_part_len + 1;
-            char *newval = av_realloc(tag->value, len);
-            if (!newval)
-                goto enomem;
-            memcpy(newval + oldlen, copy_value, new_part_len + 1);
-            av_freep(&copy_value);
-            copy_value = newval;
-        } else
-            av_free(tag->value);
-        av_free(tag->key);
-        *tag = m->elems[--m->count];
-    } else if (copy_value) {
-        AVDictionaryEntry *tmp = av_realloc_array(m->elems,
-                                                  m->count + 1, sizeof(*m->elems));
-        if (!tmp)
-            goto enomem;
+            حرف *newval = av_realloc(لیبل->قدر, len);
+            اگر (!newval)
+                جاؤ enomem;
+            حافظہ_نقل(newval + oldlen, copy_قدر, new_part_len + 1);
+            av_freep(&copy_قدر);
+            copy_قدر = newval;
+        } ورنہ
+            av_free(لیبل->قدر);
+        av_free(لیبل->کلید);
+        *لیبل = m->elems[--m->گنتی];
+    } ورنہ اگر (copy_قدر) {
+        AVDictionary_اندراج *tmp = av_realloc_array(m->elems,
+                                                  m->گنتی + 1, حجم(*m->elems));
+        اگر (!tmp)
+            جاؤ enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
-        m->elems[m->count].key = copy_key;
-        m->elems[m->count].value = copy_value;
-        m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
-            m->duplicate_keys = 1;
-    } else {
+    اگر (copy_قدر) {
+        m->elems[m->گنتی].کلید = copy_کلید;
+        m->elems[m->گنتی].قدر = copy_قدر;
+        m->گنتی++;
+        اگر (flags & (AV_DICT_مطابقت_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+            m->duplicate_کلیدیں = 1;
+    } ورنہ {
         err = 0;
-        goto end;
+        جاؤ انتہا;
     }
 
-    return 0;
+    واپس 0;
 
 enomem:
     err = AVERROR(ENOMEM);
-err_out:
-    av_free(copy_value);
-end:
-    if (m && !m->count) {
+err_برآمد:
+    av_free(copy_قدر);
+انتہا:
+    اگر (m && !m->گنتی) {
         av_freep(&m->elems);
         av_freep(pm);
     }
-    av_free(copy_key);
-    return err;
+    av_free(copy_کلید);
+    واپس err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+صحیح av_dict_سیٹ_int(AVDictionary **pm, ثابت حرف *کلید, int64_t قدر,
+                صحیح flags)
 {
-    char valuestr[22];
-    snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
+    حرف valuestr[22];
+    snprintf(valuestr, حجم(valuestr), "%"PRId64, قدر);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    واپس av_dict_سیٹ(pm, کلید, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+ساکن صحیح parse_کلید_قدر_pair(AVDictionary **pm, ثابت حرف **buf,
+                                ثابت حرف *کلید_val_sep, ثابت حرف *جوڑے_sep,
+                                صحیح flags)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val = NULL;
-    int ret;
+    حرف *کلید = av_get_token(buf, کلید_val_sep);
+    حرف *val = تہی;
+    صحیح ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    اگر (کلید && *کلید && strspn(*buf, کلید_val_sep)) {
         (*buf)++;
-        val = av_get_token(buf, pairs_sep);
+        val = av_get_token(buf, جوڑے_sep);
     }
 
-    if (key && *key && val && *val)
-        ret = av_dict_set(pm, key, val, flags);
-    else
+    اگر (کلید && *کلید && val && *val)
+        ret = av_dict_سیٹ(pm, کلید, val, flags);
+    ورنہ
         ret = AVERROR(EINVAL);
 
-    av_freep(&key);
+    av_freep(&کلید);
     av_freep(&val);
 
-    return ret;
+    واپس ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+صحیح av_dict_parse_string(AVDictionary **pm, ثابت حرف *str,
+                         ثابت حرف *کلید_val_sep, ثابت حرف *جوڑے_sep,
+                         صحیح flags)
 {
-    int ret;
+    صحیح ret;
 
-    if (!str)
-        return 0;
+    اگر (!str)
+        واپس 0;
 
     /* ignore STRDUP flags */
-    flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    flags &= ~(AV_DICT_DONT_STRDUP_کلید | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    جب (*str) {
+        اگر ((ret = parse_کلید_قدر_pair(pm, &str, کلید_val_sep, جوڑے_sep, flags)) < 0)
+            واپس ret;
 
-        if (*str)
+        اگر (*str)
             str++;
     }
 
-    return 0;
+    واپس 0;
 }
 
-void av_dict_free(AVDictionary **pm)
+خالی av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
-            av_freep(&m->elems[m->count].key);
-            av_freep(&m->elems[m->count].value);
+    اگر (m) {
+        جب (m->گنتی--) {
+            av_freep(&m->elems[m->گنتی].کلید);
+            av_freep(&m->elems[m->گنتی].قدر);
         }
         av_freep(&m->elems);
     }
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+صحیح av_dict_copy(AVDictionary **dst, ثابت AVDictionary *src, صحیح flags)
 {
-    const AVDictionaryEntry *t = NULL;
+    ثابت AVDictionary_اندراج *t = تہی;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    اگر (!*dst && src && src->گنتی && !src->duplicate_کلیدیں &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
-        AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
-        m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        AVDictionary *m = av_mallocz(حجم(*m));
+        اگر (!m)
+            واپس AVERROR(ENOMEM);
+        m->elems = av_calloc(src->گنتی, حجم(*m->elems));
+        اگر (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            واپس AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
-            m->elems[i].key   = av_strdup(src->elems[i].key);
-            m->elems[i].value = av_strdup(src->elems[i].value);
-            m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+        برائے (صحیح i = 0; i < src->گنتی; i++) {
+            m->elems[i].کلید   = av_strdup(src->elems[i].کلید);
+            m->elems[i].قدر = av_strdup(src->elems[i].قدر);
+            m->گنتی++;
+            اگر (!m->elems[i].کلید || !m->elems[i].قدر) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                واپس AVERROR(ENOMEM);
             }
         }
-        return 0;
+        واپس 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    جب ((t = av_dict_iterate(src, t))) {
+        صحیح ret = av_dict_سیٹ(dst, t->کلید, t->قدر, flags);
+        اگر (ret < 0)
+            واپس ret;
     }
 
-    return 0;
+    واپس 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep)
+صحیح av_dict_get_string(ثابت AVDictionary *m, حرف **بفر,
+                       ثابت حرف کلید_val_sep, ثابت حرف جوڑے_sep)
 {
-    const AVDictionaryEntry *t = NULL;
+    ثابت AVDictionary_اندراج *t = تہی;
     AVBPrint bprint;
-    int cnt = 0;
-    char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    صحیح cnt = 0;
+    حرف special_chars[] = {جوڑے_sep, کلید_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
-        pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+    اگر (!بفر || جوڑے_sep == '\0' || کلید_val_sep == '\0' || جوڑے_sep == کلید_val_sep ||
+        جوڑے_sep == '\\' || کلید_val_sep == '\\')
+        واپس AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
-        *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+    اگر (!av_dict_گنتی(m)) {
+        *بفر = av_strdup("");
+        واپس *بفر ? 0 : AVERROR(ENOMEM);
     }
 
-    av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
-            av_bprint_append_data(&bprint, &pairs_sep, 1);
-        av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
-        av_bprint_append_data(&bprint, &key_val_sep, 1);
-        av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+    av_bprint_init(&bprint, 64, AV_BPRINT_سائز_UNLIMITED);
+    جب ((t = av_dict_iterate(m, t))) {
+        اگر (cnt++)
+            av_bprint_append_ڈیٹا(&bprint, &جوڑے_sep, 1);
+        av_bprint_escape(&bprint, t->کلید, special_chars, AV_ESCAPE_منوال_BACKSLASH, 0);
+        av_bprint_append_ڈیٹا(&bprint, &کلید_val_sep, 1);
+        av_bprint_escape(&bprint, t->قدر, special_chars, AV_ESCAPE_منوال_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    واپس av_bprint_finalize(&bprint, بفر);
 }

@@ -16,34 +16,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_TIME_INTERNAL_H
-#define AVUTIL_TIME_INTERNAL_H
+#اگر_غیر_تعریف_شدہ AVUTIL_وقت_اندرونی_H
+#تعریف_کرو AVUTIL_وقت_اندرونی_H
 
-#include <time.h>
-#include "config.h"
+#شامل <time.h>
+#شامل "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#اگر !HAVE_GMTIME_R && !defined(gmtime_r)
+ساکن اندرونی ساخت tm *ff_gmtime_r(ثابت time_t* clock, ساخت tm *نتیجہ)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
-    *result = *ptr;
-    return result;
+    ساخت tm *ptr = gmtime(clock);
+    اگر (!ptr)
+        واپس تہی;
+    *نتیجہ = *ptr;
+    واپس نتیجہ;
 }
-#define gmtime_r ff_gmtime_r
-#endif
+#تعریف_کرو gmtime_r ff_gmtime_r
+#اگر_ختم
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#اگر !HAVE_LOCALTIME_R && !defined(localtime_r)
+ساکن اندرونی ساخت tm *ff_localtime_r(ثابت time_t* clock, ساخت tm *نتیجہ)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
-    *result = *ptr;
-    return result;
+    ساخت tm *ptr = localtime(clock);
+    اگر (!ptr)
+        واپس تہی;
+    *نتیجہ = *ptr;
+    واپس نتیجہ;
 }
-#define localtime_r ff_localtime_r
-#endif
+#تعریف_کرو localtime_r ff_localtime_r
+#اگر_ختم
 
-#endif /* AVUTIL_TIME_INTERNAL_H */
+#اگر_ختم /* AVUTIL_TIME_INTERNAL_H */

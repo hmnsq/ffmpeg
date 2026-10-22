@@ -16,103 +16,103 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#شامل <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/macros.h"
-#include "libavutil/mem.h"
-#include "libavutil/stereo3d.h"
+#شامل "libavutil/frame.h"
+#شامل "libavutil/macros.h"
+#شامل "libavutil/mem.h"
+#شامل "libavutil/stereo3d.h"
 
-int main(void)
+صحیح مین(خالی)
 {
     AVStereo3D *s3d;
-    AVFrame *frame;
-    size_t size;
-    int ret;
+    AVFrame *چوکھٹا;
+    size_t سائز;
+    صحیح ret;
 
     /* av_stereo3d_alloc_size with size output */
-    printf("Testing av_stereo3d_alloc_size()\n");
-    s3d = av_stereo3d_alloc_size(&size);
-    printf("alloc_size: %s, size>0: %s\n",
-           s3d ? "OK" : "FAIL", size > 0 ? "yes" : "no");
+    لکھو("Testing av_stereo3d_alloc_size()\n");
+    s3d = av_stereo3d_alloc_سائز(&سائز);
+    لکھو("alloc_size: %s, size>0: %s\n",
+           s3d ? "OK" : "FAIL", سائز > 0 ? "yes" : "no");
     av_free(s3d);
 
     /* av_stereo3d_alloc (no size) */
     s3d = av_stereo3d_alloc();
-    printf("alloc: %s\n", s3d ? "OK" : "FAIL");
+    لکھو("alloc: %s\n", s3d ? "OK" : "FAIL");
     av_free(s3d);
 
     /* av_stereo3d_create_side_data */
-    printf("\nTesting av_stereo3d_create_side_data()\n");
-    frame = av_frame_alloc();
-    s3d = av_stereo3d_create_side_data(frame);
-    printf("create_side_data: %s\n", s3d ? "OK" : "FAIL");
-    av_frame_free(&frame);
+    لکھو("\nTesting av_stereo3d_create_side_data()\n");
+    چوکھٹا = av_چوکھٹا_alloc();
+    s3d = av_stereo3d_create_side_ڈیٹا(چوکھٹا);
+    لکھو("create_side_data: %s\n", s3d ? "OK" : "FAIL");
+    av_چوکھٹا_free(&چوکھٹا);
 
     /* av_stereo3d_type_name - all valid types */
-    printf("\nTesting av_stereo3d_type_name()\n");
-    for (int i = 0; i <= AV_STEREO3D_UNSPEC; i++)
-        printf("type %d: %s\n", i, av_stereo3d_type_name(i));
-    printf("out of range: %s\n", av_stereo3d_type_name(100));
+    لکھو("\nTesting av_stereo3d_type_name()\n");
+    برائے (صحیح i = 0; i <= AV_STEREO3D_UNSPEC; i++)
+        لکھو("type %d: %s\n", i, av_stereo3d_type_name(i));
+    لکھو("out of range: %s\n", av_stereo3d_type_name(100));
 
     /* av_stereo3d_from_name - all valid names and unknown */
-    printf("\nTesting av_stereo3d_from_name()\n");
+    لکھو("\nTesting av_stereo3d_from_name()\n");
     {
-        static const char * const names[] = {
+        ساکن ثابت حرف * ثابت نام[] = {
             "2D", "side by side", "top and bottom", "frame alternate",
             "checkerboard", "side by side (quincunx subsampling)",
             "interleaved lines", "interleaved columns", "unspecified",
         };
-        for (int i = 0; i < FF_ARRAY_ELEMS(names); i++)
-            printf("%s: %d\n", names[i], av_stereo3d_from_name(names[i]));
+        برائے (صحیح i = 0; i < FF_ARRAY_ELEMS(نام); i++)
+            لکھو("%s: %d\n", نام[i], av_stereo3d_from_name(نام[i]));
     }
     ret = av_stereo3d_from_name("nonexistent");
-    printf("nonexistent: %d\n", ret);
+    لکھو("nonexistent: %d\n", ret);
 
     /* av_stereo3d_type_name / av_stereo3d_from_name round-trip */
-    printf("\nTesting type name round-trip\n");
-    for (int i = 0; i <= AV_STEREO3D_UNSPEC; i++) {
-        const char *name = av_stereo3d_type_name(i);
-        int rt = av_stereo3d_from_name(name);
-        printf("type roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
+    لکھو("\nTesting type name round-trip\n");
+    برائے (صحیح i = 0; i <= AV_STEREO3D_UNSPEC; i++) {
+        ثابت حرف *name = av_stereo3d_type_name(i);
+        صحیح rt = av_stereo3d_from_name(name);
+        لکھو("type roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
     }
 
     /* av_stereo3d_view_name - all valid views */
-    printf("\nTesting av_stereo3d_view_name()\n");
-    for (int i = 0; i <= AV_STEREO3D_VIEW_UNSPEC; i++)
-        printf("view %d: %s\n", i, av_stereo3d_view_name(i));
-    printf("out of range: %s\n", av_stereo3d_view_name(100));
+    لکھو("\nTesting av_stereo3d_view_name()\n");
+    برائے (صحیح i = 0; i <= AV_STEREO3D_VIEW_UNSPEC; i++)
+        لکھو("view %d: %s\n", i, av_stereo3d_view_name(i));
+    لکھو("out of range: %s\n", av_stereo3d_view_name(100));
 
     /* av_stereo3d_view_name / av_stereo3d_view_from_name round-trip */
-    printf("\nTesting view name round-trip\n");
-    for (int i = 0; i <= AV_STEREO3D_VIEW_UNSPEC; i++) {
-        const char *name = av_stereo3d_view_name(i);
-        int rt = av_stereo3d_view_from_name(name);
-        printf("view roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
+    لکھو("\nTesting view name round-trip\n");
+    برائے (صحیح i = 0; i <= AV_STEREO3D_VIEW_UNSPEC; i++) {
+        ثابت حرف *name = av_stereo3d_view_name(i);
+        صحیح rt = av_stereo3d_view_from_name(name);
+        لکھو("view roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
     }
 
     /* av_stereo3d_view_from_name */
-    printf("\nTesting av_stereo3d_view_from_name()\n");
-    printf("packed: %d\n", av_stereo3d_view_from_name("packed"));
-    printf("left: %d\n", av_stereo3d_view_from_name("left"));
-    printf("right: %d\n", av_stereo3d_view_from_name("right"));
-    printf("unspecified: %d\n", av_stereo3d_view_from_name("unspecified"));
+    لکھو("\nTesting av_stereo3d_view_from_name()\n");
+    لکھو("packed: %d\n", av_stereo3d_view_from_name("packed"));
+    لکھو("left: %d\n", av_stereo3d_view_from_name("left"));
+    لکھو("right: %d\n", av_stereo3d_view_from_name("right"));
+    لکھو("unspecified: %d\n", av_stereo3d_view_from_name("unspecified"));
     ret = av_stereo3d_view_from_name("nonexistent");
-    printf("nonexistent: %d\n", ret);
+    لکھو("nonexistent: %d\n", ret);
 
     /* av_stereo3d_primary_eye_name - all valid values */
-    printf("\nTesting av_stereo3d_primary_eye_name()\n");
-    for (int i = 0; i <= AV_PRIMARY_EYE_RIGHT; i++)
-        printf("eye %d: %s\n", i, av_stereo3d_primary_eye_name(i));
-    printf("out of range: %s\n", av_stereo3d_primary_eye_name(100));
+    لکھو("\nTesting av_stereo3d_primary_eye_name()\n");
+    برائے (صحیح i = 0; i <= AV_PRIMARY_EYE_دایاں; i++)
+        لکھو("eye %d: %s\n", i, av_stereo3d_primary_eye_name(i));
+    لکھو("out of range: %s\n", av_stereo3d_primary_eye_name(100));
 
     /* av_stereo3d_primary_eye_from_name */
-    printf("\nTesting av_stereo3d_primary_eye_from_name()\n");
-    printf("none: %d\n", av_stereo3d_primary_eye_from_name("none"));
-    printf("left: %d\n", av_stereo3d_primary_eye_from_name("left"));
-    printf("right: %d\n", av_stereo3d_primary_eye_from_name("right"));
+    لکھو("\nTesting av_stereo3d_primary_eye_from_name()\n");
+    لکھو("none: %d\n", av_stereo3d_primary_eye_from_name("none"));
+    لکھو("left: %d\n", av_stereo3d_primary_eye_from_name("left"));
+    لکھو("right: %d\n", av_stereo3d_primary_eye_from_name("right"));
     ret = av_stereo3d_primary_eye_from_name("nonexistent");
-    printf("nonexistent: %d\n", ret);
+    لکھو("nonexistent: %d\n", ret);
 
-    return 0;
+    واپس 0;
 }

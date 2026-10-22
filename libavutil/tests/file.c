@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#شامل <stdarg.h>
+#شامل <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#شامل "libavutil/file.c"
+#شامل "libavutil/log.h"
 
-static int last_log_level = -1;
+ساکن صحیح آخری_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+ساکن خالی log_callback(خالی *ctx, صحیح level, ثابت حرف *fmt, va_list دلائل)
 {
-    (void)ctx; (void)fmt; (void)args;
-    last_log_level = level;
+    (خالی)ctx; (خالی)fmt; (خالی)دلائل;
+    آخری_log_level = level;
 }
 
-int main(int argc, char **argv)
+صحیح مین(صحیح argc, حرف **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    ثابت حرف *راستہ = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
-    size_t size;
+    size_t سائز;
 
-    av_log_set_callback(log_callback);
+    av_log_سیٹ_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
-    av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    اگر (av_file_map(راستہ, &buf, &سائز, 0, تہی) < 0)
+        واپس 1;
+    av_file_unmap(buf, سائز);
+    اگر (سائز == 0)
+        واپس 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
-        last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
-            av_file_unmap(buf, size);
-            return 2;
+    برائے (صحیح i = 0; i < 2; i++) {
+        آخری_log_level = -1;
+        اگر (av_file_map("no_such_file_xyz", &buf, &سائز, i, تہی) >= 0) {
+            av_file_unmap(buf, سائز);
+            واپس 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        اگر (آخری_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
-                    AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+                    AV_LOG_ERROR + i, i, آخری_log_level);
+            واپس 3;
         }
     }
 
-    return 0;
+    واپس 0;
 }

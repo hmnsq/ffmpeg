@@ -16,51 +16,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CPU_INTERNAL_H
-#define AVUTIL_CPU_INTERNAL_H
+#اگر_غیر_تعریف_شدہ AVUTIL_CPU_اندرونی_H
+#تعریف_کرو AVUTIL_CPU_اندرونی_H
 
-#include "config.h"
+#شامل "config.h"
 
-#include "cpu.h"
+#شامل "cpu.h"
 
-#define CPUEXT_SUFFIX(flags, suffix, cpuext)                            \
+#تعریف_کرو CPUEXT_SUFFIX(flags, suffix, cpuext)                            \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext))
 
-#define CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, slow_cpuext)         \
+#تعریف_کرو CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, slow_cpuext)         \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext) && \
      !((flags) & AV_CPU_FLAG_ ## slow_cpuext ## SLOW))
 
-#define CPUEXT_SUFFIX_SLOW(flags, suffix, cpuext)                       \
+#تعریف_کرو CPUEXT_SUFFIX_SLOW(flags, suffix, cpuext)                       \
     (HAVE_ ## cpuext ## suffix &&                                       \
      ((flags) & (AV_CPU_FLAG_ ## cpuext | AV_CPU_FLAG_ ## cpuext ## SLOW)))
 
-#define CPUEXT_SUFFIX_SLOW2(flags, suffix, cpuext, slow_cpuext)         \
+#تعریف_کرو CPUEXT_SUFFIX_SLOW2(flags, suffix, cpuext, slow_cpuext)         \
     (HAVE_ ## cpuext ## suffix && ((flags) & AV_CPU_FLAG_ ## cpuext) && \
      ((flags) & (AV_CPU_FLAG_ ## slow_cpuext | AV_CPU_FLAG_ ## slow_cpuext ## SLOW)))
 
-#define CPUEXT_SUFFIX_FAST(flags, suffix, cpuext) CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, cpuext)
+#تعریف_کرو CPUEXT_SUFFIX_FAST(flags, suffix, cpuext) CPUEXT_SUFFIX_FAST2(flags, suffix, cpuext, cpuext)
 
-#define CPUEXT(flags, cpuext) CPUEXT_SUFFIX(flags, , cpuext)
-#define CPUEXT_FAST(flags, cpuext) CPUEXT_SUFFIX_FAST(flags, , cpuext)
-#define CPUEXT_SLOW(flags, cpuext) CPUEXT_SUFFIX_SLOW(flags, , cpuext)
+#تعریف_کرو CPUEXT(flags, cpuext) CPUEXT_SUFFIX(flags, , cpuext)
+#تعریف_کرو CPUEXT_FAST(flags, cpuext) CPUEXT_SUFFIX_FAST(flags, , cpuext)
+#تعریف_کرو CPUEXT_SLOW(flags, cpuext) CPUEXT_SUFFIX_SLOW(flags, , cpuext)
 
-int ff_get_cpu_flags_mips(void);
-int ff_get_cpu_flags_aarch64(void);
-int ff_get_cpu_flags_arm(void);
-int ff_get_cpu_flags_ppc(void);
-int ff_get_cpu_flags_riscv(void);
-int ff_get_cpu_flags_wasm(void);
-int ff_get_cpu_flags_x86(void);
-int ff_get_cpu_flags_loongarch(void);
+صحیح ff_get_cpu_flags_mips(خالی);
+صحیح ff_get_cpu_flags_aarch64(خالی);
+صحیح ff_get_cpu_flags_arm(خالی);
+صحیح ff_get_cpu_flags_ppc(خالی);
+صحیح ff_get_cpu_flags_riscv(خالی);
+صحیح ff_get_cpu_flags_wasm(خالی);
+صحیح ff_get_cpu_flags_x86(خالی);
+صحیح ff_get_cpu_flags_loongarch(خالی);
 
-size_t ff_get_cpu_max_align_mips(void);
-size_t ff_get_cpu_max_align_aarch64(void);
-size_t ff_get_cpu_max_align_arm(void);
-size_t ff_get_cpu_max_align_ppc(void);
-size_t ff_get_cpu_max_align_wasm(void);
-size_t ff_get_cpu_max_align_x86(void);
-size_t ff_get_cpu_max_align_loongarch(void);
+size_t ff_get_cpu_max_align_mips(خالی);
+size_t ff_get_cpu_max_align_aarch64(خالی);
+size_t ff_get_cpu_max_align_arm(خالی);
+size_t ff_get_cpu_max_align_ppc(خالی);
+size_t ff_get_cpu_max_align_wasm(خالی);
+size_t ff_get_cpu_max_align_x86(خالی);
+size_t ff_get_cpu_max_align_loongarch(خالی);
 
-unsigned long ff_getauxval(unsigned long type);
+غیرعلامتی طویل ff_getauxval(غیرعلامتی طویل type);
 
-#endif /* AVUTIL_CPU_INTERNAL_H */
+#اگر_ختم /* AVUTIL_CPU_INTERNAL_H */

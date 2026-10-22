@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SLICETHREAD_H
-#define AVUTIL_SLICETHREAD_H
+#اگر_غیر_تعریف_شدہ AVUTIL_SLICETHREAD_H
+#تعریف_کرو AVUTIL_SLICETHREAD_H
 
-#include "attributes.h"
-#include "version.h"
+#شامل "attributes.h"
+#شامل "version.h"
 
-typedef struct AVSliceThread AVSliceThread;
+قسمتعریف ساخت AVSliceThread AVSliceThread;
 
 /**
  * Create slice threading context.
@@ -33,10 +33,10 @@ typedef struct AVSliceThread AVSliceThread;
  * @param nb_threads number of threads, 0 for automatic, must be >= 0
  * @return return number of threads or negative AVERROR on failure
  */
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads);
+صحیح avpriv_slicethread_create2(AVSliceThread **pctx, خالی *priv,
+                               صحیح (*کارکن_func)(خالی *priv, صحیح jobnr, صحیح threadnr, صحیح nb_jobs, صحیح nb_دھاگے),
+                               صحیح (*main_func)(خالی *priv),
+                               صحیح nb_دھاگے);
 
 /**
  * Execute slice threading. If any job returns a nonzero value,
@@ -50,31 +50,31 @@ int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
  * @param execute_main also execute main_func
  * @return 0 on success, else first seen return value
  */
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main);
+صحیح avpriv_slicethread_execute2(AVSliceThread *ctx, صحیح nb_jobs, صحیح execute_main);
 
 /**
  * Destroy slice threading context.
  * @param pctx pointer to context
  */
-void avpriv_slicethread_free(AVSliceThread **pctx);
+خالی avpriv_slicethread_free(AVSliceThread **pctx);
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#اگر LIBAVUTIL_نسخہ_MAJOR < 62
 /**
  * @deprecated
  * Wrapper around avpriv_slicethread_create2() for ABI backwards compatibility.
  */
 attribute_deprecated
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                              void (*main_func)(void *priv),
-                              int nb_threads);
+صحیح avpriv_slicethread_create(AVSliceThread **pctx, خالی *priv,
+                              خالی (*کارکن_func)(خالی *priv, صحیح jobnr, صحیح threadnr, صحیح nb_jobs, صحیح nb_دھاگے),
+                              خالی (*main_func)(خالی *priv),
+                              صحیح nb_دھاگے);
 
 /**
  * @deprecated
  * Wrapper around avpriv_slicethread_execute2() for ABI backwards compatibility.
  */
 attribute_deprecated
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main);
-#endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
+خالی avpriv_slicethread_execute(AVSliceThread *ctx, صحیح nb_jobs, صحیح execute_main);
+#اگر_ختم /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
-#endif
+#اگر_ختم

@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "config.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/cpu_internal.h"
+#شامل "config.h"
 
-#define CORE_FLAG(f) \
+#تعریف_کرو CORE_FLAG(f) \
     (AV_CPU_FLAG_ ## f * (HAVE_ ## f ## _EXTERNAL || HAVE_ ## f ## _INLINE))
 
-#define CORE_CPU_FLAGS                          \
+#تعریف_کرو CORE_CPU_FLAGS                          \
     (CORE_FLAG(ARMV5TE) |                       \
      CORE_FLAG(ARMV6)   |                       \
      CORE_FLAG(ARMV6T2) |                       \
@@ -31,125 +31,125 @@
      CORE_FLAG(VFPV3)   |                       \
      CORE_FLAG(NEON))
 
-#if defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
+#اگر defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
 
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include "libavutil/avstring.h"
+#شامل <stdint.h>
+#شامل <stdio.h>
+#شامل <string.h>
+#شامل "libavutil/avstring.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#include <sys/auxv.h>
-#endif
+#اگر HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#شامل <sys/auxv.h>
+#اگر_ختم
 
-#ifndef AT_HWCAP
-#define AT_HWCAP        16
-#endif
+#اگر_غیر_تعریف_شدہ AT_HWCAP
+#تعریف_کرو AT_HWCAP        16
+#اگر_ختم
 
 /* Relevant HWCAP values from <sys/auxv.h> that includes <bits/hwcap.h> */
-#ifndef HWCAP_ARM_VFP
-#define HWCAP_ARM_VFP     (1 << 6)
-#endif
-#ifndef HWCAP_ARM_EDSP
-#define HWCAP_ARM_EDSP    (1 << 7)
-#endif
-#ifndef HWCAP_ARM_THUMBEE
-#define HWCAP_ARM_THUMBEE (1 << 11)
-#endif
-#ifndef HWCAP_ARM_NEON
-#define HWCAP_ARM_NEON    (1 << 12)
-#endif
-#ifndef HWCAP_ARM_VFPv3
-#define HWCAP_ARM_VFPv3   (1 << 13)
-#endif
-#ifndef HWCAP_ARM_TLS
-#define HWCAP_ARM_TLS     (1 << 15)
-#endif
+#اگر_غیر_تعریف_شدہ HWCAP_ARM_VFP
+#تعریف_کرو HWCAP_ARM_VFP     (1 << 6)
+#اگر_ختم
+#اگر_غیر_تعریف_شدہ HWCAP_ARM_EDSP
+#تعریف_کرو HWCAP_ARM_EDSP    (1 << 7)
+#اگر_ختم
+#اگر_غیر_تعریف_شدہ HWCAP_ARM_THUMBEE
+#تعریف_کرو HWCAP_ARM_THUMBEE (1 << 11)
+#اگر_ختم
+#اگر_غیر_تعریف_شدہ HWCAP_ARM_NEON
+#تعریف_کرو HWCAP_ARM_NEON    (1 << 12)
+#اگر_ختم
+#اگر_غیر_تعریف_شدہ HWCAP_ARM_VFPv3
+#تعریف_کرو HWCAP_ARM_VFPv3   (1 << 13)
+#اگر_ختم
+#اگر_غیر_تعریف_شدہ HWCAP_ARM_TLS
+#تعریف_کرو HWCAP_ARM_TLS     (1 << 15)
+#اگر_ختم
 
-static int get_auxval(uint32_t *hwcap)
+ساکن صحیح get_auxval(uint32_t *hwcap)
 {
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-    unsigned long ret = ff_getauxval(AT_HWCAP);
-    if (ret == 0)
-        return -1;
+#اگر HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+    غیرعلامتی طویل ret = ff_getauxval(AT_HWCAP);
+    اگر (ret == 0)
+        واپس -1;
     *hwcap = ret;
-    return 0;
-#else
-    return -1;
-#endif
+    واپس 0;
+#ورنہ
+    واپس -1;
+#اگر_ختم
 }
 
-#if defined __linux__ || defined __ANDROID__
-static int get_hwcap(uint32_t *hwcap)
+#اگر defined __linux__ || defined __ANDROID__
+ساکن صحیح get_hwcap(uint32_t *hwcap)
 {
-    struct { uint32_t a_type; uint32_t a_val; } auxv;
+    ساخت { uint32_t a_type; uint32_t a_val; } auxv;
     FILE *f = fopen("/proc/self/auxv", "r");
-    int err = -1;
+    صحیح err = -1;
 
-    if (!f)
-        return -1;
+    اگر (!f)
+        واپس -1;
 
-    while (fread(&auxv, sizeof(auxv), 1, f) > 0) {
-        if (auxv.a_type == AT_HWCAP) {
+    جب (fread(&auxv, حجم(auxv), 1, f) > 0) {
+        اگر (auxv.a_type == AT_HWCAP) {
             *hwcap = auxv.a_val;
             err = 0;
-            break;
+            توڑو;
         }
     }
 
     fclose(f);
-    return err;
+    واپس err;
 }
 
-static int get_cpuinfo(uint32_t *hwcap)
+ساکن صحیح get_cpuinfo(uint32_t *hwcap)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
+    حرف buf[200];
 
-    if (!f)
-        return -1;
+    اگر (!f)
+        واپس -1;
 
     *hwcap = 0;
-    while (fgets(buf, sizeof(buf), f)) {
-        if (av_strstart(buf, "Features", NULL)) {
-            if (strstr(buf, " edsp "))
+    جب (fgets(buf, حجم(buf), f)) {
+        اگر (av_strstart(buf, "Features", تہی)) {
+            اگر (لڑی_تلاش(buf, " edsp "))
                 *hwcap |= HWCAP_ARM_EDSP;
-            if (strstr(buf, " tls "))
+            اگر (لڑی_تلاش(buf, " tls "))
                 *hwcap |= HWCAP_ARM_TLS;
-            if (strstr(buf, " thumbee "))
+            اگر (لڑی_تلاش(buf, " thumbee "))
                 *hwcap |= HWCAP_ARM_THUMBEE;
-            if (strstr(buf, " vfp "))
+            اگر (لڑی_تلاش(buf, " vfp "))
                 *hwcap |= HWCAP_ARM_VFP;
-            if (strstr(buf, " vfpv3 "))
+            اگر (لڑی_تلاش(buf, " vfpv3 "))
                 *hwcap |= HWCAP_ARM_VFPv3;
-            if (strstr(buf, " neon ") || strstr(buf, " asimd "))
+            اگر (لڑی_تلاش(buf, " neon ") || لڑی_تلاش(buf, " asimd "))
                 *hwcap |= HWCAP_ARM_NEON;
-            if (strstr(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
+            اگر (لڑی_تلاش(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
                 *hwcap |= HWCAP_ARM_VFP | HWCAP_ARM_VFPv3;
-            break;
+            توڑو;
         }
     }
     fclose(f);
-    return 0;
+    واپس 0;
 }
-#endif
+#اگر_ختم
 
-int ff_get_cpu_flags_arm(void)
+صحیح ff_get_cpu_flags_arm(خالی)
 {
-    int flags = CORE_CPU_FLAGS;
+    صحیح flags = CORE_CPU_FLAGS;
     uint32_t hwcap;
 
-    if (get_auxval(&hwcap) < 0)
-#if defined __linux__ || defined __ANDROID__
-        if (get_hwcap(&hwcap) < 0)
-            if (get_cpuinfo(&hwcap) < 0)
-#endif
-                return flags;
+    اگر (get_auxval(&hwcap) < 0)
+#اگر defined __linux__ || defined __ANDROID__
+        اگر (get_hwcap(&hwcap) < 0)
+            اگر (get_cpuinfo(&hwcap) < 0)
+#اگر_ختم
+                واپس flags;
 
-#define check_cap(cap, flag) do {               \
-        if (hwcap & HWCAP_ARM_ ## cap)          \
+#تعریف_کرو check_cap(cap, flag) کرو {               \
+        اگر (hwcap & HWCAP_ARM_ ## cap)          \
             flags |= AV_CPU_FLAG_ ## flag;      \
-    } while (0)
+    } جب (0)
 
     /* No flags explicitly indicate v6 or v6T2 so check others which
        imply support. */
@@ -162,29 +162,29 @@ int ff_get_cpu_flags_arm(void)
 
     /* The v6 checks above are not reliable so let higher flags
        trickle down. */
-    if (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
+    اگر (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
         flags |= AV_CPU_FLAG_ARMV6T2;
-    else if (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
+    ورنہ اگر (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
     /* Some functions use the 'setend' instruction which is deprecated on ARMv8
      * and serializing on some ARMv7 cores. This ensures such functions
      * are only enabled on ARMv6. */
         flags |= AV_CPU_FLAG_SETEND;
 
-    if (flags & AV_CPU_FLAG_ARMV6T2)
+    اگر (flags & AV_CPU_FLAG_ARMV6T2)
         flags |= AV_CPU_FLAG_ARMV6;
 
     /* set the virtual VFPv2 vector mode flag */
-    if ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
+    اگر ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
         flags |= AV_CPU_FLAG_VFP_VM;
 
-    return flags;
+    واپس flags;
 }
 
-#else
+#ورنہ
 
-int ff_get_cpu_flags_arm(void)
+صحیح ff_get_cpu_flags_arm(خالی)
 {
-    return AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
+    واپس AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
            AV_CPU_FLAG_ARMV6   * HAVE_ARMV6   |
            AV_CPU_FLAG_ARMV6T2 * HAVE_ARMV6T2 |
            AV_CPU_FLAG_VFP     * HAVE_VFP     |
@@ -193,14 +193,14 @@ int ff_get_cpu_flags_arm(void)
            AV_CPU_FLAG_SETEND  * !(HAVE_NEON | HAVE_VFPV3);
 }
 
-#endif
+#اگر_ختم
 
-size_t ff_get_cpu_max_align_arm(void)
+size_t ff_get_cpu_max_align_arm(خالی)
 {
-    int flags = av_get_cpu_flags();
+    صحیح flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_NEON)
-        return 16;
+    اگر (flags & AV_CPU_FLAG_NEON)
+        واپس 16;
 
-    return 8;
+    واپس 8;
 }

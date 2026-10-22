@@ -18,45 +18,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/display.c"
+#شامل <stdio.h>
+#شامل "libavutil/display.c"
 
-static void print_matrix(int32_t matrix[9])
+ساکن خالی print_میٹرکس(int32_t میٹرکس[9])
 {
-    int i, j;
+    صحیح i, j;
 
-    for (i = 0; i < 3; ++i) {
-        for (j = 0; j < 3 - 1; ++j)
-            printf("%d ", matrix[i*3 + j]);
+    برائے (i = 0; i < 3; ++i) {
+        برائے (j = 0; j < 3 - 1; ++j)
+            لکھو("%d ", میٹرکس[i*3 + j]);
 
-        printf("%d\n", matrix[i*3 + j]);
+        لکھو("%d\n", میٹرکس[i*3 + j]);
     }
 }
 
-int main(void)
+صحیح مین(خالی)
 {
-    int32_t matrix[9];
+    int32_t میٹرکس[9];
 
     // Set the matrix to 90 degrees
-    av_display_rotation_set(matrix, 90);
-    print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    av_display_rotation_سیٹ(میٹرکس, 90);
+    print_میٹرکس(میٹرکس);
+    لکھو("degrees: %f\n", av_display_rotation_get(میٹرکس));
 
     // Set the matrix to -45 degrees
-    av_display_rotation_set(matrix, -45);
-    print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    av_display_rotation_سیٹ(میٹرکس, -45);
+    print_میٹرکس(میٹرکس);
+    لکھو("degrees: %f\n", av_display_rotation_get(میٹرکس));
 
     // flip horizontal
-    av_display_matrix_flip(matrix, 1, 0);
-    print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    av_display_میٹرکس_flip(میٹرکس, 1, 0);
+    print_میٹرکس(میٹرکس);
+    لکھو("degrees: %f\n", av_display_rotation_get(میٹرکس));
 
     // flip vertical
-    av_display_matrix_flip(matrix, 0, 1);
-    print_matrix(matrix);
-    printf("degrees: %f\n", av_display_rotation_get(matrix));
+    av_display_میٹرکس_flip(میٹرکس, 0, 1);
+    print_میٹرکس(میٹرکس);
+    لکھو("degrees: %f\n", av_display_rotation_get(میٹرکس));
 
-    return 0;
+    واپس 0;
 
 }

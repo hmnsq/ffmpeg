@@ -22,20 +22,20 @@
  * reference-counted frame API
  */
 
-#ifndef AVUTIL_FRAME_H
-#define AVUTIL_FRAME_H
+#اگر_غیر_تعریف_شدہ AVUTIL_چوکھٹا_H
+#تعریف_کرو AVUTIL_چوکھٹا_H
 
-#include <stddef.h>
-#include <stdint.h>
+#شامل <stddef.h>
+#شامل <stdint.h>
 
-#include "avutil.h"
-#include "buffer.h"
-#include "channel_layout.h"
-#include "dict.h"
-#include "rational.h"
-#include "samplefmt.h"
-#include "pixfmt.h"
-#include "version.h"
+#شامل "avutil.h"
+#شامل "buffer.h"
+#شامل "channel_layout.h"
+#شامل "dict.h"
+#شامل "rational.h"
+#شامل "samplefmt.h"
+#شامل "pixfmt.h"
+#شامل "version.h"
 
 
 /**
@@ -46,35 +46,35 @@
  * AVFrame is an abstraction for reference-counted raw multimedia data.
  */
 
-enum AVFrameSideDataType {
+شمار AVFrame_Side_ڈیٹا_Type {
     /**
      * The data is the AVPanScan struct defined in libavcodec.
      */
-    AV_FRAME_DATA_PANSCAN,
+    AV_چوکھٹا_ڈیٹا_PANSCAN,
     /**
      * ATSC A53 Part 4 Closed Captions.
      * A53 CC bitstream is stored as uint8_t in AVFrameSideData.data.
      * The number of bytes of CC data is AVFrameSideData.size.
      */
-    AV_FRAME_DATA_A53_CC,
+    AV_چوکھٹا_ڈیٹا_A53_CC,
     /**
      * Stereoscopic 3d metadata.
      * The data is the AVStereo3D struct defined in libavutil/stereo3d.h.
      */
-    AV_FRAME_DATA_STEREO3D,
+    AV_چوکھٹا_ڈیٹا_STEREO3_D,
     /**
      * The data is the AVMatrixEncoding enum defined in libavutil/channel_layout.h.
      */
-    AV_FRAME_DATA_MATRIXENCODING,
+    AV_چوکھٹا_ڈیٹا_MATRIXENCODING,
     /**
      * Metadata relevant to a downmix procedure.
      * The data is the AVDownmixInfo struct defined in libavutil/downmix_info.h.
      */
-    AV_FRAME_DATA_DOWNMIX_INFO,
+    AV_چوکھٹا_ڈیٹا_DOWNMIX_INFO,
     /**
      * ReplayGain information in the form of the AVReplayGain struct.
      */
-    AV_FRAME_DATA_REPLAYGAIN,
+    AV_چوکھٹا_ڈیٹا_REPLAYGAIN,
     /**
      * This side data contains a 3x3 transformation matrix describing an affine
      * transformation that needs to be applied to the frame for correct
@@ -82,19 +82,19 @@ enum AVFrameSideDataType {
      *
      * See libavutil/display.h for a detailed description of the data.
      */
-    AV_FRAME_DATA_DISPLAYMATRIX,
+    AV_چوکھٹا_ڈیٹا_DISPLAYMATRIX,
     /**
      * Active Format Description data consisting of a single byte as specified
      * in ETSI TS 101 154 using AVActiveFormatDescription enum.
      */
-    AV_FRAME_DATA_AFD,
+    AV_چوکھٹا_ڈیٹا_AFD,
     /**
      * Motion vectors exported by some codecs (on demand through the export_mvs
      * flag set in the libavcodec AVCodecContext flags2 option).
      * The data is the AVMotionVector struct defined in
      * libavutil/motion_vector.h.
      */
-    AV_FRAME_DATA_MOTION_VECTORS,
+    AV_چوکھٹا_ڈیٹا_MOTION_VECTORS,
     /**
      * Recommends skipping the specified number of samples. This is exported
      * only if the "skip_manual" AVOption is set in libavcodec.
@@ -106,42 +106,42 @@ enum AVFrameSideDataType {
      * u8    reason for end   skip (0=padding silence, 1=convergence)
      * @endcode
      */
-    AV_FRAME_DATA_SKIP_SAMPLES,
+    AV_چوکھٹا_ڈیٹا_SKIP_SAMPLES,
     /**
      * This side data must be associated with an audio frame and corresponds to
      * enum AVAudioServiceType defined in avcodec.h.
      */
-    AV_FRAME_DATA_AUDIO_SERVICE_TYPE,
+    AV_چوکھٹا_ڈیٹا_AUDIO_SERVICE_TYPE,
     /**
      * Mastering display metadata associated with a video frame. The payload is
      * an AVMasteringDisplayMetadata type and contains information about the
      * mastering display color volume.
      */
-    AV_FRAME_DATA_MASTERING_DISPLAY_METADATA,
+    AV_چوکھٹا_ڈیٹا_MASTERING_DISPLAY_METADATA,
     /**
      * The GOP timecode in 25 bit timecode format. Data format is 64-bit integer.
      * This is set on the first frame of a GOP that has a temporal reference of 0.
      */
-    AV_FRAME_DATA_GOP_TIMECODE,
+    AV_چوکھٹا_ڈیٹا_GOP_TIMECODE,
 
     /**
      * The data represents the AVSphericalMapping structure defined in
      * libavutil/spherical.h.
      */
-    AV_FRAME_DATA_SPHERICAL,
+    AV_چوکھٹا_ڈیٹا_SPHERICAL,
 
     /**
      * Content light level (based on CTA-861.3). This payload contains data in
      * the form of the AVContentLightMetadata struct.
      */
-    AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
+    AV_چوکھٹا_ڈیٹا_CONTENT_LIGHT_LEVEL,
 
     /**
      * The data contains an ICC profile as an opaque octet buffer following the
      * format described by ISO 15076-1 with an optional name defined in the
      * metadata key entry "name".
      */
-    AV_FRAME_DATA_ICC_PROFILE,
+    AV_چوکھٹا_ڈیٹا_ICC_PROFILE,
 
     /**
      * Timecode which conforms to SMPTE ST 12-1. The data is an array of 4 uint32_t
@@ -149,25 +149,25 @@ enum AVFrameSideDataType {
      * The timecode format is described in the documentation of av_timecode_get_smpte_from_framenum()
      * function in libavutil/timecode.h.
      */
-    AV_FRAME_DATA_S12M_TIMECODE,
+    AV_چوکھٹا_ڈیٹا_S12_M_TIMECODE,
 
     /**
      * HDR dynamic metadata associated with a video frame. The payload is
      * an AVDynamicHDRPlus type and contains information for color
      * volume transform - application 4 of SMPTE 2094-40:2016 standard.
      */
-    AV_FRAME_DATA_DYNAMIC_HDR_PLUS,
+    AV_چوکھٹا_ڈیٹا_DYNAMIC_HDR_PLUS,
 
     /**
      * Regions Of Interest, the data is an array of AVRegionOfInterest type, the number of
      * array element is implied by AVFrameSideData.size / AVRegionOfInterest.self_size.
      */
-    AV_FRAME_DATA_REGIONS_OF_INTEREST,
+    AV_چوکھٹا_ڈیٹا_REGIONS_کا_INTEREST,
 
     /**
      * Encoding parameters for a video frame, as described by AVVideoEncParams.
      */
-    AV_FRAME_DATA_VIDEO_ENC_PARAMS,
+    AV_چوکھٹا_ڈیٹا_VIDEO_ENC_PARAMS,
 
     /**
      * User data unregistered metadata associated with a video frame.
@@ -175,7 +175,7 @@ enum AVFrameSideDataType {
      * The data is stored as uint8_t in AVFrameSideData.data which is 16 bytes of
      * uuid_iso_iec_11578 followed by AVFrameSideData.size - 16 bytes of user_data_payload_byte.
      */
-    AV_FRAME_DATA_SEI_UNREGISTERED,
+    AV_چوکھٹا_ڈیٹا_SEI_UNREGISTERED,
 
     /**
      * Film grain parameters for a frame, described by AVFilmGrainParams.
@@ -185,39 +185,39 @@ enum AVFrameSideDataType {
      * alternative parameter sets for different video signal characteristics.
      * The user should select the most appropriate set for the application.
      */
-    AV_FRAME_DATA_FILM_GRAIN_PARAMS,
+    AV_چوکھٹا_ڈیٹا_FILM_GRAIN_PARAMS,
 
     /**
      * Bounding boxes for object detection and classification,
      * as described by AVDetectionBBoxHeader.
      */
-    AV_FRAME_DATA_DETECTION_BBOXES,
+    AV_چوکھٹا_ڈیٹا_DETECTION_BBOXES,
 
     /**
      * Dolby Vision RPU raw data, suitable for passing to x265
      * or other libraries. Array of uint8_t, with NAL emulation
      * bytes intact.
      */
-    AV_FRAME_DATA_DOVI_RPU_BUFFER,
+    AV_چوکھٹا_ڈیٹا_DOVI_RPU_بفر,
 
     /**
      * Parsed Dolby Vision metadata, suitable for passing to a software
      * implementation. The payload is the AVDOVIMetadata struct defined in
      * libavutil/dovi_meta.h.
      */
-    AV_FRAME_DATA_DOVI_METADATA,
+    AV_چوکھٹا_ڈیٹا_DOVI_METADATA,
 
     /**
      * HDR Vivid dynamic metadata associated with a video frame. The payload is
      * an AVDynamicHDRVivid type and contains information for color
      * volume transform - CUVA 005.1-2021.
      */
-    AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
+    AV_چوکھٹا_ڈیٹا_DYNAMIC_HDR_VIVID,
 
     /**
      * Ambient viewing environment metadata, as defined by H.274.
      */
-    AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
+    AV_چوکھٹا_ڈیٹا_AMBIENT_VIEWING_ENVIRONMENT,
 
     /**
      * Provide encoder-specific hinting information about changed/unchanged
@@ -227,13 +227,13 @@ enum AVFrameSideDataType {
      * applications which know this information in advance to speed up
      * encoding.
      */
-    AV_FRAME_DATA_VIDEO_HINT,
+    AV_چوکھٹا_ڈیٹا_VIDEO_HINT,
 
     /**
      * Raw LCEVC payload data, as a uint8_t array, with NAL emulation
      * bytes intact.
      */
-    AV_FRAME_DATA_LCEVC,
+    AV_چوکھٹا_ڈیٹا_LCEVC,
 
     /**
      * This side data must be associated with a video frame.
@@ -242,7 +242,7 @@ enum AVFrameSideDataType {
      * cf. H.264 Annex H or H.265 Annex G).
      * The data is an int storing the view ID.
      */
-    AV_FRAME_DATA_VIEW_ID,
+    AV_چوکھٹا_ڈیٹا_VIEW_ID,
 
     /**
      * This side data contains information about the reference display width(s)
@@ -253,21 +253,21 @@ enum AVFrameSideDataType {
      * The payload is the AV3DReferenceDisplaysInfo struct defined in
      * libavutil/tdrdi.h.
      */
-    AV_FRAME_DATA_3D_REFERENCE_DISPLAYS,
+    AV_چوکھٹا_ڈیٹا_3_D_REFERENCE_DISPLAYS,
 
     /**
      * Exchangeable image file format metadata. The payload is a buffer containing
      * EXIF metadata, starting with either 49 49 2a 00, or 4d 4d 00 2a. These four
      * bytes signify the endianness, and occur as the first part of the TIFF header.
      */
-    AV_FRAME_DATA_EXIF,
+    AV_چوکھٹا_ڈیٹا_EXIF,
 
     /**
      * HDR dynamic metadata associated with a video frame. The payload is
      * an AVDynamicHDRSmpte2094App5 type and contains information for color
      * volume transform as specified in the SMPTE 2094-50 standard.
      */
-    AV_FRAME_DATA_DYNAMIC_HDR_SMPTE_2094_APP5,
+    AV_چوکھٹا_ڈیٹا_DYNAMIC_HDR_SMPTE_2094_APP5,
 
     /**
      * IAMF Mix Gain Parameter Data associated with the audio frame. This metadata
@@ -275,7 +275,7 @@ enum AVFrameSideDataType {
      * defined in sections 3.6.1 and 3.8.1 of the Immersive Audio Model and
      * Formats standard.
      */
-    AV_FRAME_DATA_IAMF_MIX_GAIN_PARAM,
+    AV_چوکھٹا_ڈیٹا_IAMF_MIX_GAIN_PARAM,
 
     /**
     * IAMF Demixing Info Parameter Data associated with the audio frame. This
@@ -283,7 +283,7 @@ enum AVFrameSideDataType {
     * information defined in sections 3.6.1 and 3.8.2 of the Immersive Audio Model
     * and Formats standard.
     */
-    AV_FRAME_DATA_IAMF_DEMIXING_INFO_PARAM,
+    AV_چوکھٹا_ڈیٹا_IAMF_DEMIXING_INFO_PARAM,
 
     /**
     * IAMF Recon Gain Info Parameter Data associated with the audio frame. This
@@ -291,30 +291,30 @@ enum AVFrameSideDataType {
     * information defined in sections 3.6.1 and 3.8.3 of the Immersive Audio Model
     * and Formats standard.
     */
-    AV_FRAME_DATA_IAMF_RECON_GAIN_INFO_PARAM,
+    AV_چوکھٹا_ڈیٹا_IAMF_RECON_GAIN_INFO_PARAM,
 
     /**
      * Color information from a RAW camera codecs, needed to correctly process
      * the video data. The payload is an AVRawColorParams struct defined in
      * libavutil/raw_color_params.h.
      */
-    AV_FRAME_DATA_RAW_COLOR_PARAMS,
+    AV_چوکھٹا_ڈیٹا_RAW_COLOR_PARAMS,
 
     /**
      * Metadata relevant to a downmix procedure in the form of a remixig matrix.
      * The data is the AVDownmixMatrix struct defined in libavutil/downmix_info.h.
      */
-    AV_FRAME_DATA_DOWNMIX_MATRIX,
+    AV_چوکھٹا_ڈیٹا_DOWNMIX_میٹرکس,
 
     /**
      * Parameters describing how to combine this gain map with its base image
      * to form an alternate rendition. The payload is the AVGainMapParams
      * struct defined in libavutil/gain_map.h.
      */
-    AV_FRAME_DATA_GAIN_MAP_PARAMS,
+    AV_چوکھٹا_ڈیٹا_GAIN_MAP_PARAMS,
 };
 
-enum AVActiveFormatDescription {
+شمار AVActiveFormatDescription {
     AV_AFD_SAME         = 8,
     AV_AFD_4_3          = 9,
     AV_AFD_16_9         = 10,
@@ -331,65 +331,65 @@ enum AVActiveFormatDescription {
  * sizeof(AVFrameSideData) is not a part of the public ABI, so new fields may be added
  * to the end with a minor bump.
  */
-typedef struct AVFrameSideData {
-    enum AVFrameSideDataType type;
-    uint8_t *data;
-    size_t   size;
+قسمتعریف ساخت AVFrame_Side_ڈیٹا {
+    شمار AVFrame_Side_ڈیٹا_Type type;
+    uint8_t *ڈیٹا;
+    size_t   سائز;
     AVDictionary *metadata;
     AVBufferRef *buf;
-} AVFrameSideData;
+} AVFrame_Side_ڈیٹا;
 
-enum AVSideDataProps {
+شمار AVSide_ڈیٹا_Props {
     /**
      * The side data type can be used in stream-global structures.
      * Side data types without this property are only meaningful on per-frame
      * basis.
      */
-    AV_SIDE_DATA_PROP_GLOBAL = (1 << 0),
+    AV_SIDE_ڈیٹا_PROP_GLOBAL = (1 << 0),
 
     /**
      * Multiple instances of this side data type can be meaningfully present in
      * a single side data array.
      */
-    AV_SIDE_DATA_PROP_MULTI  = (1 << 1),
+    AV_SIDE_ڈیٹا_PROP_MULTI  = (1 << 1),
 
     /**
      * Side data depends on the video dimensions. Side data with this property
      * loses its meaning when rescaling or cropping the image, unless
      * either recomputed or adjusted to the new resolution.
      */
-    AV_SIDE_DATA_PROP_SIZE_DEPENDENT = (1 << 2),
+    AV_SIDE_ڈیٹا_PROP_سائز_DEPENDENT = (1 << 2),
 
     /**
      * Side data depends on the video color space. Side data with this property
      * loses its meaning when changing the video color encoding, e.g. by
      * adapting to a different set of primaries or transfer characteristics.
      */
-    AV_SIDE_DATA_PROP_COLOR_DEPENDENT = (1 << 3),
+    AV_SIDE_ڈیٹا_PROP_COLOR_DEPENDENT = (1 << 3),
 
     /**
      * Side data depends on the channel layout. Side data with this property
      * loses its meaning when downmixing or upmixing, unless either recomputed
      * or adjusted to the new layout.
      */
-    AV_SIDE_DATA_PROP_CHANNEL_DEPENDENT = (1 << 4),
+    AV_SIDE_ڈیٹا_PROP_CHANNEL_DEPENDENT = (1 << 4),
 };
 
 /**
  * This struct describes the properties of a side data type. Its instance
  * corresponding to a given type can be obtained from av_frame_side_data_desc().
  */
-typedef struct AVSideDataDescriptor {
+قسمتعریف ساخت AVSide_ڈیٹا_Descriptor {
     /**
      * Human-readable side data description.
      */
-    const char      *name;
+    ثابت حرف      *name;
 
     /**
      * Side data property flags, a combination of AVSideDataProps values.
      */
-    unsigned         props;
-} AVSideDataDescriptor;
+    غیرعلامتی         props;
+} AVSide_ڈیٹا_Descriptor;
 
 /**
  * Structure describing a single Region Of Interest.
@@ -402,12 +402,12 @@ typedef struct AVSideDataDescriptor {
  * When overlapping regions are defined, the first region containing a given
  * area of the frame applies.
  */
-typedef struct AVRegionOfInterest {
+قسمتعریف ساخت AVRegion_کا_Interest {
     /**
      * Must be set to the size of this data structure (that is,
      * sizeof(AVRegionOfInterest)).
      */
-    uint32_t self_size;
+    uint32_t self_سائز;
     /**
      * Distance in pixels from the top edge of the frame to the top and
      * bottom edges and from the left edge of the frame to the left and
@@ -417,10 +417,10 @@ typedef struct AVRegionOfInterest {
      * actually affected may be slightly larger for alignment or other
      * reasons.
      */
-    int top;
-    int bottom;
-    int left;
-    int right;
+    صحیح چوٹی;
+    صحیح bottom;
+    صحیح بایاں;
+    صحیح دایاں;
     /**
      * Quantisation offset.
      *
@@ -445,7 +445,7 @@ typedef struct AVRegionOfInterest {
      * the rest of the frame - that is, should be encoded at a QP of -12.
      */
     AVRational qoffset;
-} AVRegionOfInterest;
+} AVRegion_کا_Interest;
 
 /**
  * This structure describes decoded (raw) audio or video data.
@@ -476,8 +476,8 @@ typedef struct AVRegionOfInterest {
  * Fields can be accessed through AVOptions, the name string used, matches the
  * C structure field name for fields accessible through AVOptions.
  */
-typedef struct AVFrame {
-#define AV_NUM_DATA_POINTERS 8
+قسمتعریف ساخت AVFrame {
+#تعریف_کرو AV_عدد_ڈیٹا_اشارے 8
     /**
      * pointer to the picture/channel planes.
      * This might be different from the first allocated byte. For video,
@@ -497,7 +497,7 @@ typedef struct AVFrame {
      * end of image data in order to reverse line order, when used in
      * combination with negative values in the linesize[] array.
      */
-    uint8_t *data[AV_NUM_DATA_POINTERS];
+    uint8_t *ڈیٹا[AV_عدد_ڈیٹا_اشارے];
 
     /**
      * For video, a positive or negative value, which is typically indicating
@@ -521,7 +521,7 @@ typedef struct AVFrame {
      * @attention In case of video, line size values can be negative to achieve
      * a vertically inverted iteration over image lines.
      */
-    int linesize[AV_NUM_DATA_POINTERS];
+    صحیح linesize[AV_عدد_ڈیٹا_اشارے];
 
     /**
      * pointers to the data planes/channels.
@@ -537,7 +537,7 @@ typedef struct AVFrame {
      * but for planar audio with more channels that can fit in data,
      * extended_data must be used in order to access all channels.
      */
-    uint8_t **extended_data;
+    uint8_t **extended_ڈیٹا;
 
     /**
      * @name Video dimensions
@@ -548,7 +548,7 @@ typedef struct AVFrame {
      * restricted by the @ref cropping "Cropping rectangle".
      * @{
      */
-    int width, height;
+    صحیح چوڑائی, اونچائی;
     /**
      * @}
      */
@@ -556,24 +556,24 @@ typedef struct AVFrame {
     /**
      * number of audio samples (per channel) described by this frame
      */
-    int nb_samples;
+    صحیح nb_samples;
 
     /**
      * format of the frame, -1 if unknown or unset
      * Values correspond to enum AVPixelFormat for video frames,
      * enum AVSampleFormat for audio)
      */
-    int format;
+    صحیح format;
 
     /**
      * Picture type of the frame.
      */
-    enum AVPictureType pict_type;
+    شمار AVPictureType pict_type;
 
     /**
      * Sample aspect ratio for the video frame, 0/1 if unknown/unspecified.
      */
-    AVRational sample_aspect_ratio;
+    AVRational sample_aspect_تناسب;
 
     /**
      * Presentation timestamp in time_base units (time when frame should be shown to user).
@@ -593,12 +593,12 @@ typedef struct AVFrame {
      * filters, but its value will be by default ignored on input to encoders
      * or filters.
      */
-    AVRational time_base;
+    AVRational وقت_بنیاد;
 
     /**
      * quality (between 1 (good) and FF_LAMBDA_MAX (bad))
      */
-    int quality;
+    صحیح quality;
 
     /**
      * Frame owner's private data.
@@ -614,7 +614,7 @@ typedef struct AVFrame {
      *
      * @see opaque_ref the reference-counted analogue
      */
-    void *opaque;
+    خالی *opaque;
 
     /**
      * Number of fields in this frame which should be repeated, i.e. the total
@@ -634,12 +634,12 @@ typedef struct AVFrame {
      * their analogues in other codecs. Typically it should only be used when
      * higher-layer timing information is not available.
      */
-    int repeat_pict;
+    صحیح repeat_pict;
 
     /**
      * Sample rate of the audio data.
      */
-    int sample_rate;
+    صحیح sample_شرح;
 
     /**
      * AVBuffer references backing the data for this frame. All the pointers in
@@ -653,7 +653,7 @@ typedef struct AVFrame {
      * this array. Then the extra AVBufferRef pointers are stored in the
      * extended_buf array.
      */
-    AVBufferRef *buf[AV_NUM_DATA_POINTERS];
+    AVBufferRef *buf[AV_عدد_ڈیٹا_اشارے];
 
     /**
      * For planar audio which requires more than AV_NUM_DATA_POINTERS
@@ -671,10 +671,10 @@ typedef struct AVFrame {
     /**
      * Number of elements in extended_buf.
      */
-    int        nb_extended_buf;
+    صحیح        nb_extended_buf;
 
-    AVFrameSideData **side_data;
-    int            nb_side_data;
+    AVFrame_Side_ڈیٹا **side_ڈیٹا;
+    صحیح            nb_side_ڈیٹا;
 
 /**
  * @defgroup lavu_frame_flags AV_FRAME_FLAGS
@@ -687,24 +687,24 @@ typedef struct AVFrame {
 /**
  * The frame data may be corrupted, e.g. due to decoding errors.
  */
-#define AV_FRAME_FLAG_CORRUPT       (1 << 0)
+#تعریف_کرو AV_چوکھٹا_FLAG_CORRUPT       (1 << 0)
 /**
  * A flag to mark frames that are keyframes.
  */
-#define AV_FRAME_FLAG_KEY (1 << 1)
+#تعریف_کرو AV_چوکھٹا_FLAG_کلید (1 << 1)
 /**
  * A flag to mark the frames which need to be decoded, but shouldn't be output.
  */
-#define AV_FRAME_FLAG_DISCARD   (1 << 2)
+#تعریف_کرو AV_چوکھٹا_FLAG_DISCARD   (1 << 2)
 /**
  * A flag to mark frames whose content is interlaced.
  */
-#define AV_FRAME_FLAG_INTERLACED (1 << 3)
+#تعریف_کرو AV_چوکھٹا_FLAG_INTERLACED (1 << 3)
 /**
  * A flag to mark frames where the top field is displayed first if the content
  * is interlaced.
  */
-#define AV_FRAME_FLAG_TOP_FIELD_FIRST (1 << 4)
+#تعریف_کرو AV_چوکھٹا_FLAG_چوٹی_میدان_پہلا (1 << 4)
 /**
  * A decoder can use this flag to mark frames which were originally encoded losslessly.
  *
@@ -712,7 +712,7 @@ typedef struct AVFrame {
  * encoding, it is sometimes possible for a decoder to determine which method
  * was used when the bitstream was encoded.
  */
-#define AV_FRAME_FLAG_LOSSLESS        (1 << 5)
+#تعریف_کرو AV_چوکھٹا_FLAG_LOSSLESS        (1 << 5)
 /**
  * @}
  */
@@ -720,34 +720,34 @@ typedef struct AVFrame {
     /**
      * Frame flags, a combination of @ref lavu_frame_flags
      */
-    int flags;
+    صحیح flags;
 
     /**
      * MPEG vs JPEG YUV range.
      * - encoding: Set by user
      * - decoding: Set by libavcodec
      */
-    enum AVColorRange color_range;
+    شمار AVColorRange color_range;
 
-    enum AVColorPrimaries color_primaries;
+    شمار AVColorPrimaries color_primaries;
 
-    enum AVColorTransferCharacteristic color_trc;
+    شمار AVColorTransferCharacteristic color_trc;
 
     /**
      * YUV colorspace type.
      * - encoding: Set by user
      * - decoding: Set by libavcodec
      */
-    enum AVColorSpace colorspace;
+    شمار AVColorSpace colorspace;
 
-    enum AVChromaLocation chroma_location;
+    شمار AVChromaLocation chroma_location;
 
     /**
      * frame timestamp estimated using various heuristics, in stream time base
      * - encoding: unused
      * - decoding: set by libavcodec, read by user.
      */
-    int64_t best_effort_timestamp;
+    int64_t بہترین_effort_timestamp;
 
     /**
      * metadata.
@@ -763,17 +763,17 @@ typedef struct AVFrame {
      * - encoding: unused
      * - decoding: set by libavcodec, read by user.
      */
-    int decode_error_flags;
-#define FF_DECODE_ERROR_INVALID_BITSTREAM   1
-#define FF_DECODE_ERROR_MISSING_REFERENCE   2
-#define FF_DECODE_ERROR_CONCEALMENT_ACTIVE  4
-#define FF_DECODE_ERROR_DECODE_SLICES       8
+    صحیح decode_error_flags;
+#تعریف_کرو FF_DECODE_ERROR_INVALID_BITSTREAM   1
+#تعریف_کرو FF_DECODE_ERROR_MISSING_REFERENCE   2
+#تعریف_کرو FF_DECODE_ERROR_CONCEALMENT_فعال  4
+#تعریف_کرو FF_DECODE_ERROR_DECODE_SLICES       8
 
     /**
      * For hwaccel-format frames, this should be a reference to the
      * AVHWFramesContext describing the frame.
      */
-    AVBufferRef *hw_frames_ctx;
+    AVBufferRef *hw_چوکھٹے_ctx;
 
     /**
      * Frame owner's private data.
@@ -799,10 +799,10 @@ typedef struct AVFrame {
      * the frame intended for presentation.
      * @{
      */
-    size_t crop_top;
+    size_t crop_چوٹی;
     size_t crop_bottom;
-    size_t crop_left;
-    size_t crop_right;
+    size_t crop_بایاں;
+    size_t crop_دایاں;
     /**
      * @}
      */
@@ -814,7 +814,7 @@ typedef struct AVFrame {
      *
      * Code outside the FFmpeg libs must never check or change private_ref.
      */
-    void *private_ref;
+    خالی *نجی_ref;
 
     /**
      * Channel layout of the audio data.
@@ -831,7 +831,7 @@ typedef struct AVFrame {
      * - encoding: Set by user
      * - decoding: Set by libavcodec
      */
-    enum AVAlphaMode alpha_mode;
+    شمار AVAlpha_منوال alpha_منوال;
 } AVFrame;
 
 
@@ -845,7 +845,7 @@ typedef struct AVFrame {
  * must be allocated through other means, e.g. with av_frame_get_buffer() or
  * manually.
  */
-AVFrame *av_frame_alloc(void);
+AVFrame *av_چوکھٹا_alloc(خالی);
 
 /**
  * Free the frame and any dynamically allocated objects in it,
@@ -854,7 +854,7 @@ AVFrame *av_frame_alloc(void);
  *
  * @param frame frame to be freed. The pointer will be set to NULL.
  */
-void av_frame_free(AVFrame **frame);
+خالی av_چوکھٹا_free(AVFrame **چوکھٹا);
 
 /**
  * Set up a new reference to the data described by the source frame.
@@ -871,7 +871,7 @@ void av_frame_free(AVFrame **frame);
  *
  * @return 0 on success, a negative AVERROR on error
  */
-int av_frame_ref(AVFrame *dst, const AVFrame *src);
+صحیح av_چوکھٹا_ref(AVFrame *dst, ثابت AVFrame *src);
 
 /**
  * Ensure the destination frame refers to the same data described by the source
@@ -884,7 +884,7 @@ int av_frame_ref(AVFrame *dst, const AVFrame *src);
  * @return 0 on success, a negative AVERROR on error. On error, dst is
  *         unreferenced.
  */
-int av_frame_replace(AVFrame *dst, const AVFrame *src);
+صحیح av_چوکھٹا_replace(AVFrame *dst, ثابت AVFrame *src);
 
 /**
  * Create a new frame that references the same data as src.
@@ -893,12 +893,12 @@ int av_frame_replace(AVFrame *dst, const AVFrame *src);
  *
  * @return newly created AVFrame on success, NULL on error.
  */
-AVFrame *av_frame_clone(const AVFrame *src);
+AVFrame *av_چوکھٹا_clone(ثابت AVFrame *src);
 
 /**
  * Unreference all the buffers referenced by frame and reset the frame fields.
  */
-void av_frame_unref(AVFrame *frame);
+خالی av_چوکھٹا_unref(AVFrame *چوکھٹا);
 
 /**
  * Move everything contained in src to dst and reset src.
@@ -907,7 +907,7 @@ void av_frame_unref(AVFrame *frame);
  *           or deallocating its contents. Call av_frame_unref(dst) manually
  *           before calling this function to ensure that no memory is leaked.
  */
-void av_frame_move_ref(AVFrame *dst, AVFrame *src);
+خالی av_چوکھٹا_move_ref(AVFrame *dst, AVFrame *src);
 
 /**
  * Allocate new buffer(s) for audio or video data.
@@ -933,7 +933,7 @@ void av_frame_move_ref(AVFrame *dst, AVFrame *src);
  *
  * @return 0 on success, a negative AVERROR on error.
  */
-int av_frame_get_buffer(AVFrame *frame, int align);
+صحیح av_چوکھٹا_get_بفر(AVFrame *چوکھٹا, صحیح align);
 
 /**
  * Check if the frame data is writable.
@@ -947,7 +947,7 @@ int av_frame_get_buffer(AVFrame *frame, int align);
  *
  * @see av_frame_make_writable(), av_buffer_is_writable()
  */
-int av_frame_is_writable(AVFrame *frame);
+صحیح av_چوکھٹا_is_writable(AVFrame *چوکھٹا);
 
 /**
  * Ensure that the frame data is writable, avoiding data copy if possible.
@@ -961,7 +961,7 @@ int av_frame_is_writable(AVFrame *frame);
  * @see av_frame_is_writable(), av_buffer_is_writable(),
  * av_buffer_make_writable()
  */
-int av_frame_make_writable(AVFrame *frame);
+صحیح av_چوکھٹا_make_writable(AVFrame *چوکھٹا);
 
 /**
  * Copy the frame data from src to dst.
@@ -974,7 +974,7 @@ int av_frame_make_writable(AVFrame *frame);
  *
  * @return >= 0 on success, a negative AVERROR on error.
  */
-int av_frame_copy(AVFrame *dst, const AVFrame *src);
+صحیح av_چوکھٹا_copy(AVFrame *dst, ثابت AVFrame *src);
 
 /**
  * Copy only "metadata" fields from src to dst.
@@ -984,7 +984,7 @@ int av_frame_copy(AVFrame *dst, const AVFrame *src);
  * aspect ratio (for video), but not width/height or channel layout.
  * Side data is also copied.
  */
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src);
+صحیح av_چوکھٹا_copy_props(AVFrame *dst, ثابت AVFrame *src);
 
 /**
  * Get the buffer reference a given data plane is stored in.
@@ -995,7 +995,7 @@ int av_frame_copy_props(AVFrame *dst, const AVFrame *src);
  * @return the buffer reference that contains the plane or NULL if the input
  * frame is not valid.
  */
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane);
+AVBufferRef *av_چوکھٹا_get_plane_بفر(ثابت AVFrame *چوکھٹا, صحیح plane);
 
 /**
  * Add a new side data to a frame.
@@ -1006,9 +1006,9 @@ AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane);
  *
  * @return newly added side data on success, NULL on error
  */
-AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
-                                        size_t size);
+AVFrame_Side_ڈیٹا *av_چوکھٹا_new_side_ڈیٹا(AVFrame *چوکھٹا,
+                                        شمار AVFrame_Side_ڈیٹا_Type type,
+                                        size_t سائز);
 
 /**
  * Add a new side data to a frame from an existing AVBufferRef
@@ -1022,27 +1022,27 @@ AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
  *         the frame is unchanged and the AVBufferRef remains owned by
  *         the caller.
  */
-AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_ڈیٹا *av_چوکھٹا_new_side_ڈیٹا_from_buf(AVFrame *چوکھٹا,
+                                                 شمار AVFrame_Side_ڈیٹا_Type type,
                                                  AVBufferRef *buf);
 
 /**
  * @return a pointer to the side data of a given type on success, NULL if there
  * is no side data with such type in this frame.
  */
-AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type);
+AVFrame_Side_ڈیٹا *av_چوکھٹا_get_side_ڈیٹا(ثابت AVFrame *چوکھٹا,
+                                        شمار AVFrame_Side_ڈیٹا_Type type);
 
 /**
  * Remove and free all side data instances of the given type.
  */
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type);
+خالی av_چوکھٹا_remove_side_ڈیٹا(AVFrame *چوکھٹا, شمار AVFrame_Side_ڈیٹا_Type type);
 
 
 /**
  * Flags for frame cropping.
  */
-enum {
+شمار {
     /**
      * Apply the maximum possible cropping, even if it requires setting the
      * AVFrame.data[] entries to unaligned pointers. Passing unaligned data
@@ -1051,7 +1051,7 @@ enum {
      * are explicitly documented to accept it. Use this flag only if you
      * absolutely know what you are doing.
      */
-    AV_FRAME_CROP_UNALIGNED     = 1 << 0,
+    AV_چوکھٹا_CROP_UNALIGNED     = 1 << 0,
 };
 
 /**
@@ -1070,18 +1070,18 @@ enum {
  * @return >= 0 on success, a negative AVERROR on error. If the cropping fields
  * were invalid, AVERROR(ERANGE) is returned, and nothing is changed.
  */
-int av_frame_apply_cropping(AVFrame *frame, int flags);
+صحیح av_چوکھٹا_apply_cropping(AVFrame *چوکھٹا, صحیح flags);
 
 /**
  * @return a string identifying the side data type
  */
-const char *av_frame_side_data_name(enum AVFrameSideDataType type);
+ثابت حرف *av_چوکھٹا_side_ڈیٹا_name(شمار AVFrame_Side_ڈیٹا_Type type);
 
 /**
  * @return side data descriptor corresponding to a given side data type, NULL
  *         when not available.
  */
-const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type);
+ثابت AVSide_ڈیٹا_Descriptor *av_چوکھٹا_side_ڈیٹا_desc(شمار AVFrame_Side_ڈیٹا_Type type);
 
 /**
  * Free all side data entries and their contents, then zeroes out the
@@ -1092,22 +1092,22 @@ const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType typ
  * @param nb_sd pointer to an integer containing the number of entries in
  *              the array. Will be set to 0 upon return.
  */
-void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd);
+خالی av_چوکھٹا_side_ڈیٹا_free(AVFrame_Side_ڈیٹا ***sd, صحیح *nb_sd);
 
 /**
  * Remove existing entries before adding new ones.
  */
-#define AV_FRAME_SIDE_DATA_FLAG_UNIQUE (1 << 0)
+#تعریف_کرو AV_چوکھٹا_SIDE_ڈیٹا_FLAG_UNIQUE (1 << 0)
 /**
  * Don't add a new entry if another of the same type exists.
  * Applies only for side data types without the AV_SIDE_DATA_PROP_MULTI prop.
  */
-#define AV_FRAME_SIDE_DATA_FLAG_REPLACE (1 << 1)
+#تعریف_کرو AV_چوکھٹا_SIDE_ڈیٹا_FLAG_REPLACE (1 << 1)
 /**
  * Create a new reference to the passed in buffer instead of taking ownership
  * of it.
  */
-#define AV_FRAME_SIDE_DATA_FLAG_NEW_REF (1 << 2)
+#تعریف_کرو AV_چوکھٹا_SIDE_ڈیٹا_FLAG_NEW_REF (1 << 2)
 
 /**
  * Add new side data entry to an array.
@@ -1127,9 +1127,9 @@ void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd);
  * @note In case of AV_FRAME_SIDE_DATA_FLAG_REPLACE being set, if an
  *       entry of the same type already exists, it will be replaced instead.
  */
-AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        size_t size, unsigned int flags);
+AVFrame_Side_ڈیٹا *av_چوکھٹا_side_ڈیٹا_new(AVFrame_Side_ڈیٹا ***sd, صحیح *nb_sd,
+                                        شمار AVFrame_Side_ڈیٹا_Type type,
+                                        size_t سائز, غیرعلامتی صحیح flags);
 
 /**
  * Add a new side data entry to an array from an existing AVBufferRef.
@@ -1153,9 +1153,9 @@ AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
  *       entry of the same type already exists, it will be replaced instead.
  *
  */
-AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        AVBufferRef **buf, unsigned int flags);
+AVFrame_Side_ڈیٹا *av_چوکھٹا_side_ڈیٹا_جوڑو(AVFrame_Side_ڈیٹا ***sd, صحیح *nb_sd,
+                                        شمار AVFrame_Side_ڈیٹا_Type type,
+                                        AVBufferRef **buf, غیرعلامتی صحیح flags);
 
 /**
  * Add a new side data entry to an array based on existing side data, taking
@@ -1176,8 +1176,8 @@ AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
  * @note In case of AV_FRAME_SIDE_DATA_FLAG_REPLACE being set, if an
  *       entry of the same type already exists, it will be replaced instead.
  */
-int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
-                             const AVFrameSideData *src, unsigned int flags);
+صحیح av_چوکھٹا_side_ڈیٹا_clone(AVFrame_Side_ڈیٹا ***sd, صحیح *nb_sd,
+                             ثابت AVFrame_Side_ڈیٹا *src, غیرعلامتی صحیح flags);
 
 /**
  * Get a side data entry of a specific type from an array.
@@ -1189,9 +1189,9 @@ int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
  * @return a pointer to the side data of a given type on success, NULL if there
  *         is no side data with such type in this set.
  */
-const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
-                                                const int nb_sd,
-                                                enum AVFrameSideDataType type);
+ثابت AVFrame_Side_ڈیٹا *av_چوکھٹا_side_ڈیٹا_get_c(ثابت AVFrame_Side_ڈیٹا * ثابت *sd,
+                                                ثابت صحیح nb_sd,
+                                                شمار AVFrame_Side_ڈیٹا_Type type);
 
 /**
  * Wrapper around av_frame_side_data_get_c() to workaround the limitation
@@ -1199,30 +1199,30 @@ const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *s
  * is not performed automatically in C.
  * @see av_frame_side_data_get_c()
  */
-static inline
-const AVFrameSideData *av_frame_side_data_get(AVFrameSideData * const *sd,
-                                              const int nb_sd,
-                                              enum AVFrameSideDataType type)
+ساکن اندرونی
+ثابت AVFrame_Side_ڈیٹا *av_چوکھٹا_side_ڈیٹا_get(AVFrame_Side_ڈیٹا * ثابت *sd,
+                                              ثابت صحیح nb_sd,
+                                              شمار AVFrame_Side_ڈیٹا_Type type)
 {
-    return av_frame_side_data_get_c((const AVFrameSideData * const *)sd,
+    واپس av_چوکھٹا_side_ڈیٹا_get_c((ثابت AVFrame_Side_ڈیٹا * ثابت *)sd,
                                     nb_sd, type);
 }
 
 /**
  * Remove and free all side data instances of the given type from an array.
  */
-void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
-                               enum AVFrameSideDataType type);
+خالی av_چوکھٹا_side_ڈیٹا_remove(AVFrame_Side_ڈیٹا ***sd, صحیح *nb_sd,
+                               شمار AVFrame_Side_ڈیٹا_Type type);
 
 /**
  * Remove and free all side data instances that match any of the given
  * side data properties. (See enum AVSideDataProps)
  */
-void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
-                                        int props);
+خالی av_چوکھٹا_side_ڈیٹا_remove_by_props(AVFrame_Side_ڈیٹا ***sd, صحیح *nb_sd,
+                                        صحیح props);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_FRAME_H */
+#اگر_ختم /* AVUTIL_FRAME_H */

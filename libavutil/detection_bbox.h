@@ -16,29 +16,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DETECTION_BBOX_H
-#define AVUTIL_DETECTION_BBOX_H
+#اگر_غیر_تعریف_شدہ AVUTIL_DETECTION_BBOX_H
+#تعریف_کرو AVUTIL_DETECTION_BBOX_H
 
-#include "rational.h"
-#include "avassert.h"
-#include "frame.h"
+#شامل "rational.h"
+#شامل "avassert.h"
+#شامل "frame.h"
 
-typedef struct AVDetectionBBox {
+قسمتعریف ساخت AVDetectionBBox {
     /**
      * Distance in pixels from the left/top edge of the frame,
      * together with width and height, defining the bounding box.
      */
-    int x;
-    int y;
-    int w;
-    int h;
+    صحیح x;
+    صحیح y;
+    صحیح w;
+    صحیح h;
 
-#define AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE 64
+#تعریف_کرو AV_DETECTION_BBOX_LABEL_NAME_MAX_سائز 64
 
     /**
      * Detect result with confidence
      */
-    char detect_label[AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
+    حرف detect_label[AV_DETECTION_BBOX_LABEL_NAME_MAX_سائز];
     AVRational detect_confidence;
 
     /**
@@ -47,18 +47,18 @@ typedef struct AVDetectionBBox {
      * DNN models on one bounding box.
      * classify_count is zero if no classification.
      */
-#define AV_NUM_DETECTION_BBOX_CLASSIFY 4
-    uint32_t classify_count;
-    char classify_labels[AV_NUM_DETECTION_BBOX_CLASSIFY][AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
-    AVRational classify_confidences[AV_NUM_DETECTION_BBOX_CLASSIFY];
+#تعریف_کرو AV_عدد_DETECTION_BBOX_CLASSIFY 4
+    uint32_t classify_گنتی;
+    حرف classify_labels[AV_عدد_DETECTION_BBOX_CLASSIFY][AV_DETECTION_BBOX_LABEL_NAME_MAX_سائز];
+    AVRational classify_confidences[AV_عدد_DETECTION_BBOX_CLASSIFY];
 } AVDetectionBBox;
 
-typedef struct AVDetectionBBoxHeader {
+قسمتعریف ساخت AVDetection_BBox_سرخی {
     /**
      * Information about how the bounding box is generated.
      * for example, the DNN model name.
      */
-    char source[256];
+    حرف ماخذ[256];
 
     /**
      * Number of bounding boxes in the array.
@@ -69,23 +69,23 @@ typedef struct AVDetectionBBoxHeader {
      * Offset in bytes from the beginning of this structure at which
      * the array of bounding boxes starts.
      */
-    size_t bboxes_offset;
+    size_t bboxes_انحراف;
 
     /**
      * Size of each bounding box in bytes.
      */
-    size_t bbox_size;
-} AVDetectionBBoxHeader;
+    size_t bbox_سائز;
+} AVDetection_BBox_سرخی;
 
 /*
  * Get the bounding box at the specified {@code idx}. Must be between 0 and nb_bboxes.
  */
-static av_always_inline AVDetectionBBox *
-av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
+ساکن av_always_inline AVDetectionBBox *
+av_get_detection_bbox(ثابت AVDetection_BBox_سرخی *سرخی, غیرعلامتی صحیح idx)
 {
-    av_assert0(idx < header->nb_bboxes);
-    return (AVDetectionBBox *)((uint8_t *)header + header->bboxes_offset +
-                               idx * header->bbox_size);
+    av_assert0(idx < سرخی->nb_bboxes);
+    واپس (AVDetectionBBox *)((uint8_t *)سرخی + سرخی->bboxes_انحراف +
+                               idx * سرخی->bbox_سائز);
 }
 
 /**
@@ -97,12 +97,12 @@ av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size);
+AVDetection_BBox_سرخی *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *برآمد_سائز);
 
 /**
  * Allocates memory for AVDetectionBBoxHeader, plus an array of {@code nb_bboxes}
  * AVDetectionBBox, in the given AVFrame {@code frame} as AVFrameSideData of type
  * AV_FRAME_DATA_DETECTION_BBOXES and initializes the variables.
  */
-AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes);
-#endif
+AVDetection_BBox_سرخی *av_detection_bbox_create_side_ڈیٹا(AVFrame *چوکھٹا, uint32_t nb_bboxes);
+#اگر_ختم

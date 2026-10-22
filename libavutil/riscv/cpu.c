@@ -18,136 +18,136 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef _GNU_SOURCE
-# define _GNU_SOURCE
-#endif
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "libavutil/macros.h"
-#include "libavutil/log.h"
-#include "config.h"
+#اگر_غیر_تعریف_شدہ GNU_ماخذ
+# define GNU_ماخذ
+#اگر_ختم
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/riscv/cpu.h"
+#شامل "libavutil/cpu_internal.h"
+#شامل "libavutil/macros.h"
+#شامل "libavutil/log.h"
+#شامل "config.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#include <sys/auxv.h>
-#define HWCAP_RV(letter) (1ul << ((letter) - 'A'))
-#endif
-#if HAVE_SYS_HWPROBE_H
-#include <sys/hwprobe.h>
-#elif HAVE_ASM_HWPROBE_H
-#include <asm/hwprobe.h>
-#include <asm/unistd.h>
-#include <sys/syscall.h>
-#include <unistd.h>
+#اگر HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#شامل <sys/auxv.h>
+#تعریف_کرو HWCAP_RV(letter) (1ul << ((letter) - 'A'))
+#اگر_ختم
+#اگر HAVE_SYS_HWPROBE_H
+#شامل <sys/hwprobe.h>
+#وگرنہ_اگر HAVE_ASM_HWPROBE_H
+#شامل <asm/hwprobe.h>
+#شامل <asm/unistd.h>
+#شامل <sys/syscall.h>
+#شامل <unistd.h>
 
-static int __riscv_hwprobe(struct riscv_hwprobe *pairs, size_t pair_count,
-                           size_t cpu_count, unsigned long *cpus,
-                           unsigned int flags)
+ساکن صحیح __riscv_hwprobe(ساخت riscv_hwprobe *جوڑے, size_t pair_گنتی,
+                           size_t cpu_گنتی, غیرعلامتی طویل *cpus,
+                           غیرعلامتی صحیح flags)
 {
-        return syscall(__NR_riscv_hwprobe, pairs, pair_count, cpu_count, cpus,
+        واپس syscall(__NR_riscv_hwprobe, جوڑے, pair_گنتی, cpu_گنتی, cpus,
                        flags);
 }
-#endif
+#اگر_ختم
 
-int ff_get_cpu_flags_riscv(void)
+صحیح ff_get_cpu_flags_riscv(خالی)
 {
-    int ret = 0;
-#if HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
-    struct riscv_hwprobe pairs[] = {
-        { RISCV_HWPROBE_KEY_BASE_BEHAVIOR, 0 },
-        { RISCV_HWPROBE_KEY_IMA_EXT_0, 0 },
-        { RISCV_HWPROBE_KEY_CPUPERF_0, 0 },
+    صحیح ret = 0;
+#اگر HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
+    ساخت riscv_hwprobe جوڑے[] = {
+        { RISCV_HWPROBE_کلید_بنیاد_BEHAVIOR, 0 },
+        { RISCV_HWPROBE_کلید_IMA_EXT_0, 0 },
+        { RISCV_HWPROBE_کلید_CPUPERF_0, 0 },
     };
 
-    if (__riscv_hwprobe(pairs, FF_ARRAY_ELEMS(pairs), 0, NULL, 0) == 0) {
-        if (pairs[0].value & RISCV_HWPROBE_BASE_BEHAVIOR_IMA)
+    اگر (__riscv_hwprobe(جوڑے, FF_ARRAY_ELEMS(جوڑے), 0, تہی, 0) == 0) {
+        اگر (جوڑے[0].قدر & RISCV_HWPROBE_بنیاد_BEHAVIOR_IMA)
             ret |= AV_CPU_FLAG_RVI;
-#ifdef RISCV_HWPROBE_IMA_V
-        if (pairs[1].value & RISCV_HWPROBE_IMA_V)
+#اگر_تعریف_شدہ RISCV_HWPROBE_IMA_V
+        اگر (جوڑے[1].قدر & RISCV_HWPROBE_IMA_V)
             ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                  | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
-#ifdef RISCV_HWPROBE_EXT_ZVE32X
-        else if ((pairs[1].value & RISCV_HWPROBE_EXT_ZVE32X) &&
+#اگر_تعریف_شدہ RISCV_HWPROBE_EXT_ZVE32X
+        ورنہ اگر ((جوڑے[1].قدر & RISCV_HWPROBE_EXT_ZVE32X) &&
                  ff_get_rv_vlenb() >= 16) { // runtime detect assumes 128+ bits
             ret |= AV_CPU_FLAG_RVV_I32;
 
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE32F)
+            اگر (جوڑے[1].قدر & RISCV_HWPROBE_EXT_ZVE32F)
                 ret |= AV_CPU_FLAG_RVV_F32;
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64X) {
+            اگر (جوڑے[1].قدر & RISCV_HWPROBE_EXT_ZVE64X) {
                 ret |= AV_CPU_FLAG_RVV_I64;
 
-                if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64D)
+                اگر (جوڑے[1].قدر & RISCV_HWPROBE_EXT_ZVE64D)
                     ret |= AV_CPU_FLAG_RVV_F64;
             }
         }
-#endif
-#endif
-#ifdef RISCV_HWPROBE_EXT_ZBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZBB)
+#اگر_ختم
+#اگر_ختم
+#اگر_تعریف_شدہ RISCV_HWPROBE_EXT_ZBB
+        اگر (جوڑے[1].قدر & RISCV_HWPROBE_EXT_ZBB)
             ret |= AV_CPU_FLAG_RVB_BASIC;
-#if defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
-        if ((pairs[1].value & RISCV_HWPROBE_EXT_ZBA) &&
-            (pairs[1].value & RISCV_HWPROBE_EXT_ZBB) &&
-            (pairs[1].value & RISCV_HWPROBE_EXT_ZBS))
+#اگر defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
+        اگر ((جوڑے[1].قدر & RISCV_HWPROBE_EXT_ZBA) &&
+            (جوڑے[1].قدر & RISCV_HWPROBE_EXT_ZBB) &&
+            (جوڑے[1].قدر & RISCV_HWPROBE_EXT_ZBS))
             ret |= AV_CPU_FLAG_RVB;
-#endif
-#endif
-#ifdef RISCV_HWPROBE_EXT_ZVBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZVBB)
+#اگر_ختم
+#اگر_ختم
+#اگر_تعریف_شدہ RISCV_HWPROBE_EXT_ZVBB
+        اگر (جوڑے[1].قدر & RISCV_HWPROBE_EXT_ZVBB)
             ret |= AV_CPU_FLAG_RV_ZVBB;
-#endif
-        switch (pairs[2].value & RISCV_HWPROBE_MISALIGNED_MASK) {
-            case RISCV_HWPROBE_MISALIGNED_FAST:
+#اگر_ختم
+        انتخاب (جوڑے[2].قدر & RISCV_HWPROBE_MISALIGNED_نقاب) {
+            حالت RISCV_HWPROBE_MISALIGNED_FAST:
                 ret |= AV_CPU_FLAG_RV_MISALIGNED;
-                break;
-            default:
+                توڑو;
+            طےشدہ:
                 ; /* do nothing */
         }
     }
-#elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#وگرنہ_اگر HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
     {
-        const unsigned long hwcap = ff_getauxval(AT_HWCAP);
+        ثابت غیرعلامتی طویل hwcap = ff_getauxval(AT_HWCAP);
 
-        if (hwcap & HWCAP_RV('I'))
+        اگر (hwcap & HWCAP_RV('I'))
             ret |= AV_CPU_FLAG_RVI;
-        if (hwcap & HWCAP_RV('B'))
+        اگر (hwcap & HWCAP_RV('B'))
             ret |= AV_CPU_FLAG_RVB_BASIC | AV_CPU_FLAG_RVB;
 
         /* The V extension implies all Zve* functional subsets */
-        if (hwcap & HWCAP_RV('V'))
+        اگر (hwcap & HWCAP_RV('V'))
              ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                   | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
     }
-#endif
+#اگر_ختم
 
-#ifdef __riscv_i
+#اگر_تعریف_شدہ __riscv_i
     ret |= AV_CPU_FLAG_RVI;
-#endif
+#اگر_ختم
 
-#ifdef __riscv_zbb
+#اگر_تعریف_شدہ __riscv_zbb
     ret |= AV_CPU_FLAG_RVB_BASIC;
-#endif
-#if defined (__riscv_b) || \
+#اگر_ختم
+#اگر defined (__riscv_b) || \
     (defined (__riscv_zba) && defined (__riscv_zbb) && defined (__riscv_zbs))
     ret |= AV_CPU_FLAG_RVB;
-#endif
+#اگر_ختم
 
     /* If RV-V is enabled statically at compile-time, check the details. */
-#ifdef __riscv_vector
+#اگر_تعریف_شدہ __riscv_vector
     ret |= AV_CPU_FLAG_RVV_I32;
-#if __riscv_v_elen >= 64
+#اگر __riscv_v_elen >= 64
     ret |= AV_CPU_FLAG_RVV_I64;
-#endif
-#if __riscv_v_elen_fp >= 32
+#اگر_ختم
+#اگر __riscv_v_elen_fp >= 32
     ret |= AV_CPU_FLAG_RVV_F32;
-#if __riscv_v_elen_fp >= 64
+#اگر __riscv_v_elen_fp >= 64
     ret |= AV_CPU_FLAG_RVV_F64;
-#endif
-#endif
-#endif
-#ifdef __riscv_zvbb
+#اگر_ختم
+#اگر_ختم
+#اگر_ختم
+#اگر_تعریف_شدہ __riscv_zvbb
     ret |= AV_CPU_FLAG_RV_ZVBB;
-#endif
+#اگر_ختم
 
-    return ret;
+    واپس ret;
 }

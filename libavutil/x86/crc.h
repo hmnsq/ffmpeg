@@ -18,85 +18,85 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_CRC_H
-#define AVUTIL_X86_CRC_H
+#اگر_غیر_تعریف_شدہ AVUTIL_X86_چکری_جانچ_H
+#تعریف_کرو AVUTIL_X86_چکری_جانچ_H
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/attributes_internal.h"
-#include "libavutil/avassert.h"
-#include "libavutil/cpu.h"
-#include "libavutil/crc.h"
-#include "libavutil/intreadwrite.h"
-#include "libavutil/x86/cpu.h"
+#شامل "config.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/attributes_internal.h"
+#شامل "libavutil/avassert.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/crc.h"
+#شامل "libavutil/intreadwrite.h"
+#شامل "libavutil/x86/cpu.h"
 
-#if HAVE_CLMUL_EXTERNAL
-#include "libavutil/crc_internal.h"
+#اگر HAVE_CLMUL_EXTERNAL
+#شامل "libavutil/crc_internal.h"
 
-FF_VISIBILITY_PUSH_HIDDEN
-uint32_t ff_crc_clmul(const AVCRC *ctx, uint32_t crc,
-                      const uint8_t *buffer, size_t length);
-uint32_t ff_crc_le_clmul(const AVCRC *ctx, uint32_t crc,
-                         const uint8_t *buffer, size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_ڈالو_HIDDEN
+uint32_t ff_چکری_جانچ_clmul(ثابت AVCRC *ctx, uint32_t چکری_جانچ,
+                      ثابت uint8_t *بفر, size_t لمبائی);
+uint32_t ff_چکری_جانچ_le_clmul(ثابت AVCRC *ctx, uint32_t چکری_جانچ,
+                         ثابت uint8_t *بفر, size_t لمبائی);
+FF_VISIBILITY_نکالو_HIDDEN
 
-enum {
-    CRC_C    = 0,
+شمار {
+    چکری_جانچ_C    = 0,
     CLMUL_BE,
     CLMUL_LE,
 };
 
-static const AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
-    [AV_CRC_8_ATM] = {
+ساکن ثابت AVCRC چکری_جانچ_جدول_clmul[AV_چکری_جانچ_MAX][17] = {
+    [AV_چکری_جانچ_8_ATM] = {
         CLMUL_BE,
         0x32000000, 0x0, 0xbc000000, 0x0,
         0xc4000000, 0x0, 0x94000000, 0x0,
         0x62000000, 0x0, 0x79000000, 0x0,
         0x07156a16, 0x1, 0x07000000, 0x1,
     },
-    [AV_CRC_8_EBU] = {
+    [AV_چکری_جانچ_8_EBU] = {
         CLMUL_BE,
         0xb5000000, 0x0, 0xf3000000, 0x0,
         0xfc000000, 0x0, 0x0d000000, 0x0,
         0x6a000000, 0x0, 0x65000000, 0x0,
         0x1c4b8192, 0x1, 0x1d000000, 0x1,
     },
-    [AV_CRC_16_ANSI] = {
+    [AV_چکری_جانچ_16_ANSI] = {
         CLMUL_BE,
         0xf9e30000, 0x0, 0x807d0000, 0x0,
         0xf9130000, 0x0, 0xff830000, 0x0,
         0x807b0000, 0x0, 0x86630000, 0x0,
         0xfffbffe7, 0x1, 0x80050000, 0x1,
     },
-    [AV_CRC_16_CCITT] = {
+    [AV_چکری_جانچ_16_CCITT] = {
         CLMUL_BE,
         0x60190000, 0x0, 0x59b00000, 0x0,
         0xd5f60000, 0x0, 0x45630000, 0x0,
         0xaa510000, 0x0, 0xeb230000, 0x0,
         0x11303471, 0x1, 0x10210000, 0x1,
     },
-    [AV_CRC_24_IEEE] = {
+    [AV_چکری_جانچ_24_IEEE] = {
         CLMUL_BE,
         0x1f428700, 0x0, 0x467d2400, 0x0,
         0x2c8c9d00, 0x0, 0x64e4d700, 0x0,
         0xd9fe8c00, 0x0, 0xfd7e0c00, 0x0,
         0xf845fe24, 0x1, 0x864cfb00, 0x1,
     },
-    [AV_CRC_32_IEEE] = {
+    [AV_چکری_جانچ_32_IEEE] = {
         CLMUL_BE,
         0x8833794c, 0x0, 0xe6228b11, 0x0,
         0xc5b9cd4c, 0x0, 0xe8a45605, 0x0,
         0x490d678d, 0x0, 0xf200aa66, 0x0,
         0x04d101df, 0x1, 0x04c11db7, 0x1,
     },
-    [AV_CRC_32_IEEE_LE] = {
+    [AV_چکری_جانچ_32_IEEE_LE] = {
         CLMUL_LE,
         0xc6e41596, 0x1, 0x54442bd4, 0x1,
         0xccaa009e, 0x0, 0x751997d0, 0x1,
         0xccaa009e, 0x0, 0x63cd6124, 0x1,
         0xf7011640, 0x1, 0xdb710641, 0x1,
     },
-    [AV_CRC_16_ANSI_LE] = {
+    [AV_چکری_جانچ_16_ANSI_LE] = {
         CLMUL_LE,
         0x0000bffa, 0x0, 0x1b0c2, 0x0,
         0x00018cc2, 0x0, 0x1d0c2, 0x0,
@@ -105,19 +105,19 @@ static const AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
     },
 };
 
-static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+ساکن اندرونی خالی چکری_جانچ_init_x86(AVCRC *ctx, صحیح le, صحیح بٹ, uint32_t poly, صحیح ctx_سائز)
 {
     uint64_t poly_;
-    if (le) {
+    اگر (le) {
         // convert the reversed representation to regular form
-        poly = reverse(poly, bits) >> 1;
+        poly = الٹ(poly, بٹ) >> 1;
     }
     // convert to 32 degree polynomial
-    poly_ = ((uint64_t)poly) << (32 - bits);
+    poly_ = ((uint64_t)poly) << (32 - بٹ);
 
     uint64_t div;
     uint8_t *dst = (uint8_t*)(ctx + 1);
-    if (le) {
+    اگر (le) {
         ctx[0] = CLMUL_LE;
         AV_WN64(dst,      xnmodp(4 * 128 - 32, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128 + 32, poly_, 32, &div, le));
@@ -127,8 +127,8 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
         AV_WN64(dst + 32, tmp);
         AV_WN64(dst + 40, xnmodp(64, poly_, 32, &div, le));
         AV_WN64(dst + 48, div);
-        AV_WN64(dst + 56, reverse(poly_ | (1ULL << 32), 32));
-    } else {
+        AV_WN64(dst + 56, الٹ(poly_ | (1ULL << 32), 32));
+    } ورنہ {
         ctx[0] = CLMUL_BE;
         AV_WN64(dst,      xnmodp(4 * 128 + 64, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128, poly_, 32, &div, le));
@@ -140,44 +140,44 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
         AV_WN64(dst + 56, poly_ | (1ULL << 32));
     }
 }
-#endif
+#اگر_ختم
 
-static inline const AVCRC *ff_crc_get_table_x86(AVCRCId crc_id)
+ساکن اندرونی ثابت AVCRC *ff_چکری_جانچ_get_جدول_x86(AVCRCId چکری_جانچ_id)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#اگر HAVE_CLMUL_EXTERNAL
+    صحیح cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
-        return crc_table_clmul[crc_id];
+    اگر (EXTERNAL_CLMUL(cpu_flags)) {
+        واپس چکری_جانچ_جدول_clmul[چکری_جانچ_id];
     }
-#endif
-    return NULL;
+#اگر_ختم
+    واپس تہی;
 }
 
-static inline av_cold int ff_crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+ساکن اندرونی av_cold صحیح ff_چکری_جانچ_init_x86(AVCRC *ctx, صحیح le, صحیح بٹ, uint32_t poly, صحیح ctx_سائز)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#اگر HAVE_CLMUL_EXTERNAL
+    صحیح cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
-        crc_init_x86(ctx, le, bits, poly, ctx_size);
-        return 1;
+    اگر (EXTERNAL_CLMUL(cpu_flags)) {
+        چکری_جانچ_init_x86(ctx, le, بٹ, poly, ctx_سائز);
+        واپس 1;
     }
-#endif
-    return 0;
+#اگر_ختم
+    واپس 0;
 }
 
-static inline uint32_t ff_crc_x86(const AVCRC *ctx, uint32_t crc,
-                                  const uint8_t *buffer, size_t length)
+ساکن اندرونی uint32_t ff_چکری_جانچ_x86(ثابت AVCRC *ctx, uint32_t چکری_جانچ,
+                                  ثابت uint8_t *بفر, size_t لمبائی)
 {
-    switch (ctx[0]) {
-#if HAVE_CLMUL_EXTERNAL
-    case CLMUL_BE: return ff_crc_clmul(ctx, crc, buffer, length);
-    case CLMUL_LE: return ff_crc_le_clmul(ctx, crc, buffer, length);
-#endif
-    default: av_unreachable("x86 CRC only uses CLMUL_BE and CLMUL_LE");
+    انتخاب (ctx[0]) {
+#اگر HAVE_CLMUL_EXTERNAL
+    حالت CLMUL_BE: واپس ff_چکری_جانچ_clmul(ctx, چکری_جانچ, بفر, لمبائی);
+    حالت CLMUL_LE: واپس ff_چکری_جانچ_le_clmul(ctx, چکری_جانچ, بفر, لمبائی);
+#اگر_ختم
+    طےشدہ: av_unreachable("x86 CRC only uses CLMUL_BE and CLMUL_LE");
     }
-    return 0;
+    واپس 0;
 }
 
-#endif /* AVUTIL_X86_CRC_H */
+#اگر_ختم /* AVUTIL_X86_CRC_H */

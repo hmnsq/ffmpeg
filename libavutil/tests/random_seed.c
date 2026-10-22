@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define TEST 1
-#include "libavutil/random_seed.c"
+#تعریف_کرو TEST 1
+#شامل "libavutil/random_seed.c"
 
-#define N 256
-#define F 2
-#include <stdio.h>
+#تعریف_کرو N 256
+#تعریف_کرو F 2
+#شامل <stdio.h>
 
-typedef uint32_t (*random_seed_ptr_t)(void);
+قسمتعریف uint32_t (*random_بیج_ptr_t)(خالی);
 
-int main(void)
+صحیح مین(خالی)
 {
-    int i, j, rsf, retry;
+    صحیح i, j, rsf, retry;
     uint32_t seeds[N];
-    random_seed_ptr_t random_seed[F] = {av_get_random_seed, get_generic_seed};
+    random_بیج_ptr_t random_بیج[F] = {av_get_random_بیج, get_generic_بیج};
 
-    for (rsf=0; rsf<F; ++rsf){
-        for (retry=0; retry<3; retry++){
-            for (i=0; i<N; i++){
-                seeds[i] = random_seed[rsf]();
-                for (j=0; j<i; j++)
-                    if (seeds[j] == seeds[i])
-                        goto retry;
+    برائے (rsf=0; rsf<F; ++rsf){
+        برائے (retry=0; retry<3; retry++){
+            برائے (i=0; i<N; i++){
+                seeds[i] = random_بیج[rsf]();
+                برائے (j=0; j<i; j++)
+                    اگر (seeds[j] == seeds[i])
+                        جاؤ retry;
             }
-            printf("seeds OK\n");
-            break;
+            لکھو("seeds OK\n");
+            توڑو;
             retry:;
         }
-        if (retry >= 3) {
-            printf("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
-            return 1;
+        اگر (retry >= 3) {
+            لکھو("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
+            واپس 1;
         }
     }
-    return 0;
+    واپس 0;
 }

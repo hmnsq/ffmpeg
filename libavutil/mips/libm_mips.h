@@ -50,27 +50,27 @@
  * MIPS optimization for some libm functions
  */
 
-#ifndef AVUTIL_MIPS_LIBM_MIPS_H
-#define AVUTIL_MIPS_LIBM_MIPS_H
+#اگر_غیر_تعریف_شدہ AVUTIL_MIPS_LIBM_MIPS_H
+#تعریف_کرو AVUTIL_MIPS_LIBM_MIPS_H
 
-#include <math.h>
+#شامل <math.h>
 
-#include "libavutil/attributes.h"
+#شامل "libavutil/attributes.h"
 
-static av_always_inline av_const long int lrintf_mips(float x)
+ساکن av_always_inline av_const طویل صحیح lrintf_mips(اعشاری x)
 {
-    register int ret_int;
+    اندراج صحیح ret_int;
 
-    __asm__ volatile (
+    __asm__ متلون (
         "cvt.w.s    %[x],       %[x]    \n\t"
         "mfc1       %[ret_int], %[x]    \n\t"
 
         :[x]"+f"(x), [ret_int]"=r"(ret_int)
     );
-    return ret_int;
+    واپس ret_int;
 }
 
-#undef lrintf
-#define lrintf(x)   lrintf_mips(x)
+#تعریف_منسوخ lrintf
+#تعریف_کرو lrintf(x)   lrintf_mips(x)
 
-#endif /* AVUTIL_MIPS_LIBM_MIPS_H */
+#اگر_ختم /* AVUTIL_MIPS_LIBM_MIPS_H */

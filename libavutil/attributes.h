@@ -23,213 +23,213 @@
  * Macro definitions for various function/variable attributes
  */
 
-#ifndef AVUTIL_ATTRIBUTES_H
-#define AVUTIL_ATTRIBUTES_H
+#اگر_غیر_تعریف_شدہ AVUTIL_اوصاف_H
+#تعریف_کرو AVUTIL_اوصاف_H
 
-#ifdef __GNUC__
-#    define AV_GCC_VERSION_AT_LEAST(x,y) (__GNUC__ > (x) || __GNUC__ == (x) && __GNUC_MINOR__ >= (y))
-#    define AV_GCC_VERSION_AT_MOST(x,y)  (__GNUC__ < (x) || __GNUC__ == (x) && __GNUC_MINOR__ <= (y))
-#else
-#    define AV_GCC_VERSION_AT_LEAST(x,y) 0
-#    define AV_GCC_VERSION_AT_MOST(x,y)  0
-#endif
+#اگر_تعریف_شدہ __GNUC__
+#    define AV_GCC_نسخہ_AT_کم_سے_کم(x,y) (__GNUC__ > (x) || __GNUC__ == (x) && __GNUC_MINOR__ >= (y))
+#    define AV_GCC_نسخہ_AT_MOST(x,y)  (__GNUC__ < (x) || __GNUC__ == (x) && __GNUC_MINOR__ <= (y))
+#ورنہ
+#    define AV_GCC_نسخہ_AT_کم_سے_کم(x,y) 0
+#    define AV_GCC_نسخہ_AT_MOST(x,y)  0
+#اگر_ختم
 
-#ifdef __has_builtin
+#اگر_تعریف_شدہ __has_builtin
 #    define AV_HAS_BUILTIN(x) __has_builtin(x)
-#else
+#ورنہ
 #    define AV_HAS_BUILTIN(x) 0
-#endif
+#اگر_ختم
 
-#ifdef __has_attribute
+#اگر_تعریف_شدہ __has_attribute
 #    define AV_HAS_ATTRIBUTE(x) __has_attribute(x)
-#else
+#ورنہ
 #    define AV_HAS_ATTRIBUTE(x) 0
-#endif
+#اگر_ختم
 
-#if defined(__cplusplus) && \
+#اگر defined(__cplusplus) && \
     defined(__has_cpp_attribute) && \
     __cplusplus >= 201103L
 #    define AV_HAS_STD_ATTRIBUTE(x) __has_cpp_attribute(x)
-#elif !defined(__cplusplus) && \
+#وگرنہ_اگر !defined(__cplusplus) && \
       defined(__has_c_attribute) && \
       defined(__STDC_VERSION__) && \
       __STDC_VERSION__ >= 202311L
 #    define AV_HAS_STD_ATTRIBUTE(x) __has_c_attribute(x)
-#else
+#ورنہ
 #    define AV_HAS_STD_ATTRIBUTE(x) 0
-#endif
+#اگر_ختم
 
-#if AV_HAS_STD_ATTRIBUTE(fallthrough)
+#اگر AV_HAS_STD_ATTRIBUTE(fallthrough)
 #    define av_fallthrough [[fallthrough]]
-#elif AV_HAS_ATTRIBUTE(fallthrough)
+#وگرنہ_اگر AV_HAS_ATTRIBUTE(fallthrough)
 #    define av_fallthrough __attribute__((fallthrough))
-#else
-#    define av_fallthrough do {} while(0)
-#endif
+#ورنہ
+#    define av_fallthrough کرو {} جب(0)
+#اگر_ختم
 
-#ifndef av_always_inline
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
-#    define av_always_inline __attribute__((always_inline)) inline
-#elif defined(_MSC_VER)
+#اگر_غیر_تعریف_شدہ av_always_inline
+#اگر AV_GCC_نسخہ_AT_کم_سے_کم(3,1) || defined(__clang__)
+#    define av_always_inline __attribute__((always_inline)) اندرونی
+#وگرنہ_اگر defined(_MSC_VER)
 #    define av_always_inline __forceinline
-#else
-#    define av_always_inline inline
-#endif
-#endif
+#ورنہ
+#    define av_always_inline اندرونی
+#اگر_ختم
+#اگر_ختم
 
-#ifndef av_extern_inline
-#if defined(__ICL) && __ICL >= 1210 || defined(__GNUC_STDC_INLINE__)
-#    define av_extern_inline extern inline
-#else
-#    define av_extern_inline inline
-#endif
-#endif
+#اگر_غیر_تعریف_شدہ av_extern_inline
+#اگر defined(__ICL) && __ICL >= 1210 || defined(__GNUC_STDC_INLINE__)
+#    define av_extern_inline خارجی اندرونی
+#ورنہ
+#    define av_extern_inline اندرونی
+#اگر_ختم
+#اگر_ختم
 
-#if AV_HAS_STD_ATTRIBUTE(nodiscard)
-#    define av_warn_unused_result [[nodiscard]]
-#elif AV_GCC_VERSION_AT_LEAST(3,4) || defined(__clang__)
-#    define av_warn_unused_result __attribute__((warn_unused_result))
-#else
-#    define av_warn_unused_result
-#endif
+#اگر AV_HAS_STD_ATTRIBUTE(nodiscard)
+#    define av_warn_غیر_مستعمل_نتیجہ [[nodiscard]]
+#وگرنہ_اگر AV_GCC_نسخہ_AT_کم_سے_کم(3,4) || defined(__clang__)
+#    define av_warn_غیر_مستعمل_نتیجہ __attribute__((warn_غیر_مستعمل_نتیجہ))
+#ورنہ
+#    define av_warn_غیر_مستعمل_نتیجہ
+#اگر_ختم
 
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#اگر AV_GCC_نسخہ_AT_کم_سے_کم(3,1) || defined(__clang__)
 #    define av_noinline __attribute__((noinline))
-#elif defined(_MSC_VER)
+#وگرنہ_اگر defined(_MSC_VER)
 #    define av_noinline __declspec(noinline)
-#else
+#ورنہ
 #    define av_noinline
-#endif
+#اگر_ختم
 
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
-#    define av_pure __attribute__((pure))
-#else
-#    define av_pure
-#endif
+#اگر AV_GCC_نسخہ_AT_کم_سے_کم(3,1) || defined(__clang__)
+#    define av_خالص __attribute__((خالص))
+#ورنہ
+#    define av_خالص
+#اگر_ختم
 
-#if AV_GCC_VERSION_AT_LEAST(2,6) || defined(__clang__)
-#    define av_const __attribute__((const))
-#else
+#اگر AV_GCC_نسخہ_AT_کم_سے_کم(2,6) || defined(__clang__)
+#    define av_const __attribute__((ثابت))
+#ورنہ
 #    define av_const
-#endif
+#اگر_ختم
 
-#if AV_GCC_VERSION_AT_LEAST(4,3) || defined(__clang__)
+#اگر AV_GCC_نسخہ_AT_کم_سے_کم(4,3) || defined(__clang__)
 #    define av_cold __attribute__((cold))
-#else
+#ورنہ
 #    define av_cold
-#endif
+#اگر_ختم
 
-#if (AV_GCC_VERSION_AT_LEAST(4,1) && !defined(__clang__ )) || AV_HAS_ATTRIBUTE(flatten)
+#اگر (AV_GCC_نسخہ_AT_کم_سے_کم(4,1) && !defined(__clang__ )) || AV_HAS_ATTRIBUTE(flatten)
 #    define av_flatten __attribute__((flatten))
-#else
+#ورنہ
 #    define av_flatten
-#endif
+#اگر_ختم
 
-#if AV_HAS_STD_ATTRIBUTE(deprecated)
+#اگر AV_HAS_STD_ATTRIBUTE(deprecated)
 #    define attribute_deprecated [[deprecated]]
-#elif AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
+#وگرنہ_اگر AV_GCC_نسخہ_AT_کم_سے_کم(3,1) || defined(__clang__)
 #    define attribute_deprecated __attribute__((deprecated))
-#elif defined(_MSC_VER)
+#وگرنہ_اگر defined(_MSC_VER)
 #    define attribute_deprecated __declspec(deprecated)
-#else
+#ورنہ
 #    define attribute_deprecated
-#endif
+#اگر_ختم
 
 /**
  * Disable warnings about deprecated features
  * This is useful for sections of code kept for backward compatibility and
  * scheduled for removal.
  */
-#ifndef AV_NOWARN_DEPRECATED
-#if AV_GCC_VERSION_AT_LEAST(4,6) || defined(__clang__)
-#    define AV_NOWARN_DEPRECATED(code) \
+#اگر_غیر_تعریف_شدہ AV_NOWARN_DEPRECATED
+#اگر AV_GCC_نسخہ_AT_کم_سے_کم(4,6) || defined(__clang__)
+#    define AV_NOWARN_DEPRECATED(رمز) \
         _Pragma("GCC diagnostic push") \
         _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"") \
-        code \
+        رمز \
         _Pragma("GCC diagnostic pop")
-#elif defined(_MSC_VER)
-#    define AV_NOWARN_DEPRECATED(code) \
-        __pragma(warning(push)) \
+#وگرنہ_اگر defined(_MSC_VER)
+#    define AV_NOWARN_DEPRECATED(رمز) \
+        __pragma(warning(ڈالو)) \
         __pragma(warning(disable : 4996)) \
-        code; \
-        __pragma(warning(pop))
-#else
-#    define AV_NOWARN_DEPRECATED(code) code
-#endif
-#endif
+        رمز; \
+        __pragma(warning(نکالو))
+#ورنہ
+#    define AV_NOWARN_DEPRECATED(رمز) رمز
+#اگر_ختم
+#اگر_ختم
 
-#if AV_HAS_STD_ATTRIBUTE(maybe_unused)
-#    define av_unused [[maybe_unused]]
-#elif defined(__GNUC__) || defined(__clang__)
-#    define av_unused __attribute__((unused))
-#else
-#    define av_unused
-#endif
+#اگر AV_HAS_STD_ATTRIBUTE(maybe_غیر_مستعمل)
+#    define av_غیر_مستعمل [[maybe_غیر_مستعمل]]
+#وگرنہ_اگر defined(__GNUC__) || defined(__clang__)
+#    define av_غیر_مستعمل __attribute__((غیر_مستعمل))
+#ورنہ
+#    define av_غیر_مستعمل
+#اگر_ختم
 
 /**
  * Mark a variable as used and prevent the compiler from optimizing it
  * away.  This is useful for variables accessed only from inline
  * assembler without the compiler being aware.
  */
-#if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
-#    define av_used __attribute__((used))
-#else
-#    define av_used
-#endif
+#اگر AV_GCC_نسخہ_AT_کم_سے_کم(3,1) || defined(__clang__)
+#    define av_مستعمل __attribute__((مستعمل))
+#ورنہ
+#    define av_مستعمل
+#اگر_ختم
 
-#if AV_GCC_VERSION_AT_LEAST(3,3) || defined(__clang__)
+#اگر AV_GCC_نسخہ_AT_کم_سے_کم(3,3) || defined(__clang__)
 #   define av_alias __attribute__((may_alias))
-#else
+#ورنہ
 #   define av_alias
-#endif
+#اگر_ختم
 
-#if (defined(__GNUC__) || defined(__clang__)) && !defined(__INTEL_COMPILER)
+#اگر (defined(__GNUC__) || defined(__clang__)) && !defined(__INTEL_COMPILER)
 #    define av_uninit(x) x=x
-#else
+#ورنہ
 #    define av_uninit(x) x
-#endif
+#اگر_ختم
 
-#if defined(__GNUC__) || defined(__clang__)
+#اگر defined(__GNUC__) || defined(__clang__)
 #    define av_builtin_constant_p __builtin_constant_p
-#else
+#ورنہ
 #    define av_builtin_constant_p(x) 0
-#endif
+#اگر_ختم
 
 // for __MINGW_PRINTF_FORMAT and __MINGW_SCANF_FORMAT
-#ifdef __MINGW32__
+#اگر_تعریف_شدہ __MINGW32__
 #    include <stdio.h>
-#endif
+#اگر_ختم
 
-#ifdef __MINGW_PRINTF_FORMAT
+#اگر_تعریف_شدہ __MINGW_PRINTF_FORMAT
 #    define AV_PRINTF_FMT __MINGW_PRINTF_FORMAT
-#elif AV_HAS_ATTRIBUTE(format)
+#وگرنہ_اگر AV_HAS_ATTRIBUTE(format)
 #    define AV_PRINTF_FMT __printf__
-#endif
+#اگر_ختم
 
-#ifdef __MINGW_SCANF_FORMAT
+#اگر_تعریف_شدہ __MINGW_SCANF_FORMAT
 #    define AV_SCANF_FMT __MINGW_SCANF_FORMAT
-#elif AV_HAS_ATTRIBUTE(format)
+#وگرنہ_اگر AV_HAS_ATTRIBUTE(format)
 #    define AV_SCANF_FMT __scanf__
-#endif
+#اگر_ختم
 
-#ifdef AV_PRINTF_FMT
+#اگر_تعریف_شدہ AV_PRINTF_FMT
 #    define av_printf_format(fmtpos, attrpos) __attribute__((format(AV_PRINTF_FMT, fmtpos, attrpos)))
-#else
+#ورنہ
 #    define av_printf_format(fmtpos, attrpos)
-#endif
+#اگر_ختم
 
-#ifdef AV_SCANF_FMT
+#اگر_تعریف_شدہ AV_SCANF_FMT
 #    define av_scanf_format(fmtpos, attrpos) __attribute__((format(AV_SCANF_FMT, fmtpos, attrpos)))
-#else
+#ورنہ
 #    define av_scanf_format(fmtpos, attrpos)
-#endif
+#اگر_ختم
 
-#if AV_HAS_STD_ATTRIBUTE(noreturn)
+#اگر AV_HAS_STD_ATTRIBUTE(noreturn)
 #    define av_noreturn [[noreturn]]
-#elif AV_GCC_VERSION_AT_LEAST(2,5) || defined(__clang__)
+#وگرنہ_اگر AV_GCC_نسخہ_AT_کم_سے_کم(2,5) || defined(__clang__)
 #    define av_noreturn __attribute__((noreturn))
-#else
+#ورنہ
 #    define av_noreturn
-#endif
+#اگر_ختم
 
-#endif /* AVUTIL_ATTRIBUTES_H */
+#اگر_ختم /* AVUTIL_ATTRIBUTES_H */

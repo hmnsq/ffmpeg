@@ -18,21 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
-#define AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
+#اگر_غیر_تعریف_شدہ AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
+#تعریف_کرو AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
 
-void ff_vector_fmul_altivec(float *dst, const float *src0,
-                            const float *src1, int len);
+خالی ff_سمتیہ_fmul_altivec(اعشاری *dst, ثابت اعشاری *src0,
+                            ثابت اعشاری *src1, صحیح len);
 
-void ff_vector_fmul_window_altivec(float *dst, const float *src0,
-                                   const float *src1, const float *win,
-                                   int len);
+خالی ff_سمتیہ_fmul_کھڑکی_altivec(اعشاری *dst, ثابت اعشاری *src0,
+                                   ثابت اعشاری *src1, ثابت اعشاری *win,
+                                   صحیح len);
 
-void ff_vector_fmul_add_altivec(float *dst, const float *src0,
-                                const float *src1, const float *src2,
-                                int len);
+خالی ff_سمتیہ_fmul_جوڑو_altivec(اعشاری *dst, ثابت اعشاری *src0,
+                                ثابت اعشاری *src1, ثابت اعشاری *src2,
+                                صحیح len);
 
-void ff_vector_fmul_reverse_altivec(float *dst, const float *src0,
-                                    const float *src1, int len);
+خالی ff_سمتیہ_fmul_الٹ_altivec(اعشاری *dst, ثابت اعشاری *src0,
+                                    ثابت اعشاری *src1, صحیح len);
 
-#endif /* AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H */
+#اگر_ختم /* AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H */

@@ -16,270 +16,270 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#شامل <limits.h>
+#شامل <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/channel_layout.h"
-#include "libavutil/error.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/rational.h"
-#include "libavutil/opt.h"
-#include "libavutil/pixdesc.h"
+#شامل "libavutil/common.h"
+#شامل "libavutil/channel_layout.h"
+#شامل "libavutil/error.h"
+#شامل "libavutil/log.h"
+#شامل "libavutil/mem.h"
+#شامل "libavutil/rational.h"
+#شامل "libavutil/opt.h"
+#شامل "libavutil/pixdesc.h"
 
-typedef struct TestContext {
-    const AVClass *class;
-    struct ChildContext *child;
-    int num;
-    int unum;
-    int toggle;
-    char *string;
-    int flags;
+قسمتعریف ساخت TestContext {
+    ثابت AVClass *class;
+    ساخت بچہ_Context *بچہ;
+    صحیح عدد;
+    صحیح unum;
+    صحیح toggle;
+    حرف *string;
+    صحیح flags;
     AVRational rational;
-    AVRational video_rate;
-    int w, h;
-    enum AVPixelFormat pix_fmt;
-    enum AVSampleFormat sample_fmt;
+    AVRational video_شرح;
+    صحیح w, h;
+    شمار AVPixelFormat pix_fmt;
+    شمار AVSampleFormat sample_fmt;
     int64_t duration;
     uint8_t color[4];
     AVChannelLayout channel_layout;
-    void *binary;
-    int binary_size;
-    void *binary1;
-    int binary_size1;
-    void *binary2;
-    int binary_size2;
+    خالی *ثنائی;
+    صحیح ثنائی_سائز;
+    خالی *binary1;
+    صحیح ثنائی_size1;
+    خالی *binary2;
+    صحیح ثنائی_size2;
     int64_t num64;
-    float flt;
-    double dbl;
-    char *escape;
-    int bool1;
-    int bool2;
-    int bool3;
+    اعشاری flt;
+    دوہرا dbl;
+    حرف *escape;
+    صحیح bool1;
+    صحیح bool2;
+    صحیح bool3;
     AVDictionary *dict1;
     AVDictionary *dict2;
 
-    int           **array_int;
-    unsigned     nb_array_int;
+    صحیح           **array_int;
+    غیرعلامتی     nb_array_int;
 
-    char          **array_str;
-    unsigned     nb_array_str;
+    حرف          **array_str;
+    غیرعلامتی     nb_array_str;
 
     AVDictionary  **array_dict;
-    unsigned     nb_array_dict;
+    غیرعلامتی     nb_array_dict;
 } TestContext;
 
-#define OFFSET(x) offsetof(TestContext, x)
+#تعریف_کرو انحراف_2(x) offsetof(TestContext, x)
 
-#define TEST_FLAG_COOL 01
-#define TEST_FLAG_LAME 02
-#define TEST_FLAG_MU   04
+#تعریف_کرو TEST_FLAG_COOL 01
+#تعریف_کرو TEST_FLAG_LAME 02
+#تعریف_کرو TEST_FLAG_MU   04
 
-static const AVOptionArrayDef array_str = {
+ساکن ثابت AVOptionArrayDef array_str = {
     .sep         = '|',
     .def         = "str0|str\\|1|str\\\\2",
 };
 
-static const AVOptionArrayDef array_dict = {
+ساکن ثابت AVOptionArrayDef array_dict = {
     // there are three levels of escaping - C string, array option, dict - so 8 backslashes are needed to get a literal one inside a dict key/val
     .def         = "k00=v\\\\\\\\00:k01=v\\,01,k10=v\\\\=1\\\\:0",
 };
 
-static const AVOption test_options[]= {
-    {"num",        "set num",            OFFSET(num),            AV_OPT_TYPE_INT,            { .i64 = 0 },                     -1,       100, 1 },
-    {"unum",       "set unum",           OFFSET(unum),           AV_OPT_TYPE_UINT,           { .i64 = 1U << 31 },               0,  1U << 31, 1 },
-    {"toggle",     "set toggle",         OFFSET(toggle),         AV_OPT_TYPE_INT,            { .i64 = 1 },                      0,         1, 1 },
-    {"rational",   "set rational",       OFFSET(rational),       AV_OPT_TYPE_RATIONAL,       { .dbl = 1 },                      0,        10, 1 },
-    {"string",     "set string",         OFFSET(string),         AV_OPT_TYPE_STRING,         { .str = "default" },       CHAR_MIN,  CHAR_MAX, 1 },
-    {"escape",     "set escape str",     OFFSET(escape),         AV_OPT_TYPE_STRING,         { .str = "\\=," },          CHAR_MIN,  CHAR_MAX, 1 },
-    {"flags",      "set flags",          OFFSET(flags),          AV_OPT_TYPE_FLAGS,          { .i64 = 1 },                      0,   INT_MAX, 1, .unit = "flags" },
-    {"cool",       "set cool flag",      0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_COOL },   INT_MIN,   INT_MAX, 1, .unit = "flags" },
-    {"lame",       "set lame flag",      0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_LAME },   INT_MIN,   INT_MAX, 1, .unit = "flags" },
-    {"mu",         "set mu flag",        0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_MU },     INT_MIN,   INT_MAX, 1, .unit = "flags" },
-    {"size",       "set size",           OFFSET(w),              AV_OPT_TYPE_IMAGE_SIZE,     { .str="200x300" },                0,         0, 1 },
-    {"pix_fmt",    "set pixfmt",         OFFSET(pix_fmt),        AV_OPT_TYPE_PIXEL_FMT,      { .i64 = AV_PIX_FMT_0BGR },       -1,   INT_MAX, 1 },
-    {"sample_fmt", "set samplefmt",      OFFSET(sample_fmt),     AV_OPT_TYPE_SAMPLE_FMT,     { .i64 = AV_SAMPLE_FMT_S16 },     -1,   INT_MAX, 1 },
-    {"video_rate", "set videorate",      OFFSET(video_rate),     AV_OPT_TYPE_VIDEO_RATE,     { .str = "25" },                   0,         INT_MAX, 1 },
-    {"duration",   "set duration",       OFFSET(duration),       AV_OPT_TYPE_DURATION,       { .i64 = 1000 },                   0, INT64_MAX, 1 },
-    {"color",      "set color",          OFFSET(color),          AV_OPT_TYPE_COLOR,          { .str = "pink" },                 0,         0, 1 },
-    {"cl",         "set channel layout", OFFSET(channel_layout), AV_OPT_TYPE_CHLAYOUT,       { .str = "hexagonal" },            0,         0, 1 },
-    {"bin",        "set binary value",   OFFSET(binary),         AV_OPT_TYPE_BINARY,         { .str="62696e00" },               0,         0, 1 },
-    {"bin1",       "set binary value",   OFFSET(binary1),        AV_OPT_TYPE_BINARY,         { .str=NULL },                     0,         0, 1 },
-    {"bin2",       "set binary value",   OFFSET(binary2),        AV_OPT_TYPE_BINARY,         { .str="" },                       0,         0, 1 },
-    {"num64",      "set num 64bit",      OFFSET(num64),          AV_OPT_TYPE_INT64,          { .i64 = 1LL << 32 },             -1, 1LL << 32, 1 },
-    {"flt",        "set float",          OFFSET(flt),            AV_OPT_TYPE_FLOAT,          { .dbl = 1.0 / 3 },                0,       100, 1 },
-    {"dbl",        "set double",         OFFSET(dbl),            AV_OPT_TYPE_DOUBLE,         { .dbl = 1.0 / 3 },                0,       100, 1 },
-    {"bool1",      "set boolean value",  OFFSET(bool1),          AV_OPT_TYPE_BOOL,           { .i64 = -1 },                    -1,         1, 1 },
-    {"bool2",      "set boolean value",  OFFSET(bool2),          AV_OPT_TYPE_BOOL,           { .i64 = 1 },                     -1,         1, 1 },
-    {"bool3",      "set boolean value",  OFFSET(bool3),          AV_OPT_TYPE_BOOL,           { .i64 = 0 },                      0,         1, 1 },
-    {"dict1",      "set dictionary value", OFFSET(dict1),        AV_OPT_TYPE_DICT,           { .str = NULL},                    0,         0, 1 },
-    {"dict2",      "set dictionary value", OFFSET(dict2),        AV_OPT_TYPE_DICT,           { .str = "happy=':-)'"},           0,         0, 1 },
-    {"array_int",  "array of ints",        OFFSET(array_int),    AV_OPT_TYPE_INT | AV_OPT_TYPE_FLAG_ARRAY, .max = INT_MAX,           .flags = AV_OPT_FLAG_RUNTIME_PARAM },
-    {"array_str",  "array of strings",     OFFSET(array_str),    AV_OPT_TYPE_STRING | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_str }, .flags = AV_OPT_FLAG_RUNTIME_PARAM },
-    {"array_dict", "array of dicts",       OFFSET(array_dict),   AV_OPT_TYPE_DICT | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_dict },  .flags = AV_OPT_FLAG_RUNTIME_PARAM },
-    { NULL },
+ساکن ثابت AVOption test_options[]= {
+    {"num",        "set num",            انحراف_2(عدد),            AV_OPT_TYPE_INT,            { .i64 = 0 },                     -1,       100, 1 },
+    {"unum",       "set unum",           انحراف_2(unum),           AV_OPT_TYPE_UINT,           { .i64 = 1U << 31 },               0,  1U << 31, 1 },
+    {"toggle",     "set toggle",         انحراف_2(toggle),         AV_OPT_TYPE_INT,            { .i64 = 1 },                      0,         1, 1 },
+    {"rational",   "set rational",       انحراف_2(rational),       AV_OPT_TYPE_RATIONAL,       { .dbl = 1 },                      0,        10, 1 },
+    {"string",     "set string",         انحراف_2(string),         AV_OPT_TYPE_STRING,         { .str = "default" },       CHAR_MIN,  CHAR_MAX, 1 },
+    {"escape",     "set escape str",     انحراف_2(escape),         AV_OPT_TYPE_STRING,         { .str = "\\=," },          CHAR_MIN,  CHAR_MAX, 1 },
+    {"flags",      "set flags",          انحراف_2(flags),          AV_OPT_TYPE_FLAGS,          { .i64 = 1 },                      0,   زیادہ_سے_زیادہ_عدد, 1, .unit = "flags" },
+    {"cool",       "set cool flag",      0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_COOL },   INT_MIN,   زیادہ_سے_زیادہ_عدد, 1, .unit = "flags" },
+    {"lame",       "set lame flag",      0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_LAME },   INT_MIN,   زیادہ_سے_زیادہ_عدد, 1, .unit = "flags" },
+    {"mu",         "set mu flag",        0,                      AV_OPT_TYPE_CONST,          { .i64 = TEST_FLAG_MU },     INT_MIN,   زیادہ_سے_زیادہ_عدد, 1, .unit = "flags" },
+    {"size",       "set size",           انحراف_2(w),              AV_OPT_TYPE_IMAGE_سائز,     { .str="200x300" },                0,         0, 1 },
+    {"pix_fmt",    "set pixfmt",         انحراف_2(pix_fmt),        AV_OPT_TYPE_PIXEL_FMT,      { .i64 = AV_PIX_FMT_0BGR },       -1,   زیادہ_سے_زیادہ_عدد, 1 },
+    {"sample_fmt", "set samplefmt",      انحراف_2(sample_fmt),     AV_OPT_TYPE_SAMPLE_FMT,     { .i64 = AV_SAMPLE_FMT_S16 },     -1,   زیادہ_سے_زیادہ_عدد, 1 },
+    {"video_rate", "set videorate",      انحراف_2(video_شرح),     AV_OPT_TYPE_VIDEO_شرح,     { .str = "25" },                   0,         زیادہ_سے_زیادہ_عدد, 1 },
+    {"duration",   "set duration",       انحراف_2(duration),       AV_OPT_TYPE_DURATION,       { .i64 = 1000 },                   0, INT64_MAX, 1 },
+    {"color",      "set color",          انحراف_2(color),          AV_OPT_TYPE_COLOR,          { .str = "pink" },                 0,         0, 1 },
+    {"cl",         "set channel layout", انحراف_2(channel_layout), AV_OPT_TYPE_CHLAYOUT,       { .str = "hexagonal" },            0,         0, 1 },
+    {"bin",        "set binary value",   انحراف_2(ثنائی),         AV_OPT_TYPE_ثنائی,         { .str="62696e00" },               0,         0, 1 },
+    {"bin1",       "set binary value",   انحراف_2(binary1),        AV_OPT_TYPE_ثنائی,         { .str=تہی },                     0,         0, 1 },
+    {"bin2",       "set binary value",   انحراف_2(binary2),        AV_OPT_TYPE_ثنائی,         { .str="" },                       0,         0, 1 },
+    {"num64",      "set num 64bit",      انحراف_2(num64),          AV_OPT_TYPE_INT64,          { .i64 = 1LL << 32 },             -1, 1LL << 32, 1 },
+    {"flt",        "set float",          انحراف_2(flt),            AV_OPT_TYPE_FLOAT,          { .dbl = 1.0 / 3 },                0,       100, 1 },
+    {"dbl",        "set double",         انحراف_2(dbl),            AV_OPT_TYPE_DOUBLE,         { .dbl = 1.0 / 3 },                0,       100, 1 },
+    {"bool1",      "set boolean value",  انحراف_2(bool1),          AV_OPT_TYPE_BOOL,           { .i64 = -1 },                    -1,         1, 1 },
+    {"bool2",      "set boolean value",  انحراف_2(bool2),          AV_OPT_TYPE_BOOL,           { .i64 = 1 },                     -1,         1, 1 },
+    {"bool3",      "set boolean value",  انحراف_2(bool3),          AV_OPT_TYPE_BOOL,           { .i64 = 0 },                      0,         1, 1 },
+    {"dict1",      "set dictionary value", انحراف_2(dict1),        AV_OPT_TYPE_DICT,           { .str = تہی},                    0,         0, 1 },
+    {"dict2",      "set dictionary value", انحراف_2(dict2),        AV_OPT_TYPE_DICT,           { .str = "happy=':-)'"},           0,         0, 1 },
+    {"array_int",  "array of ints",        انحراف_2(array_int),    AV_OPT_TYPE_INT | AV_OPT_TYPE_FLAG_ARRAY, .max = زیادہ_سے_زیادہ_عدد,           .flags = AV_OPT_FLAG_RUNTIME_PARAM },
+    {"array_str",  "array of strings",     انحراف_2(array_str),    AV_OPT_TYPE_STRING | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_str }, .flags = AV_OPT_FLAG_RUNTIME_PARAM },
+    {"array_dict", "array of dicts",       انحراف_2(array_dict),   AV_OPT_TYPE_DICT | AV_OPT_TYPE_FLAG_ARRAY, { .arr = &array_dict },  .flags = AV_OPT_FLAG_RUNTIME_PARAM },
+    { تہی },
 };
 
-static const char *test_get_name(void *ctx)
+ساکن ثابت حرف *test_get_name(خالی *ctx)
 {
-    return "test";
+    واپس "test";
 }
 
-typedef struct ChildContext {
-    const AVClass *class;
-    int64_t child_num64;
-    int child_num;
-    unsigned int child_unum;
-} ChildContext;
+قسمتعریف ساخت بچہ_Context {
+    ثابت AVClass *class;
+    int64_t بچہ_num64;
+    صحیح بچہ_عدد;
+    غیرعلامتی صحیح بچہ_unum;
+} بچہ_Context;
 
-#undef OFFSET
-#define OFFSET(x) offsetof(ChildContext, x)
+#تعریف_منسوخ انحراف_2
+#تعریف_کرو انحراف_2(x) offsetof(بچہ_Context, x)
 
-static const AVOption child_options[]= {
-    {"child_num64", "set num 64bit", OFFSET(child_num64), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, 100, 1 | AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
-    {"child_num",   "set child_num", OFFSET(child_num),   AV_OPT_TYPE_INT,   { .i64 = 1 }, 0, 100, 1 },
-    {"child_unum",  "set child_unum", OFFSET(child_unum),  AV_OPT_TYPE_UINT,  { .i64 = 0 }, 0, 100, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
-    { NULL },
+ساکن ثابت AVOption بچہ_options[]= {
+    {"child_num64", "set num 64bit", انحراف_2(بچہ_num64), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, 100, 1 | AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
+    {"child_num",   "set child_num", انحراف_2(بچہ_عدد),   AV_OPT_TYPE_INT,   { .i64 = 1 }, 0, 100, 1 },
+    {"child_unum",  "set child_unum", انحراف_2(بچہ_unum),  AV_OPT_TYPE_UINT,  { .i64 = 0 }, 0, 100, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY },
+    { تہی },
 };
 
-static const char *child_get_name(void *ctx)
+ساکن ثابت حرف *بچہ_get_name(خالی *ctx)
 {
-    return "child";
+    واپس "child";
 }
 
-static const AVClass child_class = {
+ساکن ثابت AVClass بچہ_class = {
     .class_name = "ChildContext",
-    .item_name  = child_get_name,
-    .option     = child_options,
-    .version    = LIBAVUTIL_VERSION_INT,
+    .شے_name  = بچہ_get_name,
+    .option     = بچہ_options,
+    .نسخہ    = LIBAVUTIL_نسخہ_INT,
 };
 
-static void *test_child_next(void *obj, void *prev)
+ساکن خالی *test_بچہ_اگلا(خالی *obj, خالی *پچھلا)
 {
     TestContext *test_ctx = obj;
-    if (!prev)
-        return test_ctx->child;
-    return NULL;
+    اگر (!پچھلا)
+        واپس test_ctx->بچہ;
+    واپس تہی;
 }
 
-static const AVClass test_class = {
+ساکن ثابت AVClass test_class = {
     .class_name = "TestContext",
-    .item_name  = test_get_name,
+    .شے_name  = test_get_name,
     .option     = test_options,
-    .child_next = test_child_next,
-    .version    = LIBAVUTIL_VERSION_INT,
+    .بچہ_اگلا = test_بچہ_اگلا,
+    .نسخہ    = LIBAVUTIL_نسخہ_INT,
 };
 
-static void log_callback_help(void *ptr, int level, const char *fmt, va_list vl)
+ساکن خالی log_callback_help(خالی *ptr, صحیح level, ثابت حرف *fmt, va_list vl)
 {
     vfprintf(stdout, fmt, vl);
 }
 
-int main(void)
+صحیح مین(خالی)
 {
-    int i;
+    صحیح i;
 
-    av_log_set_level(AV_LOG_DEBUG);
-    av_log_set_callback(log_callback_help);
+    av_log_سیٹ_level(AV_LOG_DEBUG);
+    av_log_سیٹ_callback(log_callback_help);
 
-    printf("Testing default values\n");
+    لکھو("Testing default values\n");
     {
         TestContext test_ctx = { 0 };
         test_ctx.class = &test_class;
-        av_opt_set_defaults(&test_ctx);
+        av_opt_سیٹ_defaults(&test_ctx);
 
-        printf("num=%d\n", test_ctx.num);
-        printf("unum=%u\n", test_ctx.unum);
-        printf("toggle=%d\n", test_ctx.toggle);
-        printf("string=%s\n", test_ctx.string);
-        printf("escape=%s\n", test_ctx.escape);
-        printf("flags=%d\n", test_ctx.flags);
-        printf("rational=%d/%d\n", test_ctx.rational.num, test_ctx.rational.den);
-        printf("video_rate=%d/%d\n", test_ctx.video_rate.num, test_ctx.video_rate.den);
-        printf("width=%d height=%d\n", test_ctx.w, test_ctx.h);
-        printf("pix_fmt=%s\n", av_get_pix_fmt_name(test_ctx.pix_fmt));
-        printf("sample_fmt=%s\n", av_get_sample_fmt_name(test_ctx.sample_fmt));
-        printf("duration=%"PRId64"\n", test_ctx.duration);
-        printf("color=%d %d %d %d\n", test_ctx.color[0], test_ctx.color[1], test_ctx.color[2], test_ctx.color[3]);
-        printf("channel_layout=%"PRId64"=%"PRId64"\n", test_ctx.channel_layout.u.mask, (int64_t)AV_CH_LAYOUT_HEXAGONAL);
-        if (test_ctx.binary)
-            printf("binary=%x %x %x %x\n", ((uint8_t*)test_ctx.binary)[0], ((uint8_t*)test_ctx.binary)[1], ((uint8_t*)test_ctx.binary)[2], ((uint8_t*)test_ctx.binary)[3]);
-        printf("binary_size=%d\n", test_ctx.binary_size);
-        printf("num64=%"PRId64"\n", test_ctx.num64);
-        printf("flt=%.6f\n", test_ctx.flt);
-        printf("dbl=%.6f\n", test_ctx.dbl);
+        لکھو("num=%d\n", test_ctx.عدد);
+        لکھو("unum=%u\n", test_ctx.unum);
+        لکھو("toggle=%d\n", test_ctx.toggle);
+        لکھو("string=%s\n", test_ctx.string);
+        لکھو("escape=%s\n", test_ctx.escape);
+        لکھو("flags=%d\n", test_ctx.flags);
+        لکھو("rational=%d/%d\n", test_ctx.rational.عدد, test_ctx.rational.den);
+        لکھو("video_rate=%d/%d\n", test_ctx.video_شرح.عدد, test_ctx.video_شرح.den);
+        لکھو("width=%d height=%d\n", test_ctx.w, test_ctx.h);
+        لکھو("pix_fmt=%s\n", av_get_pix_fmt_name(test_ctx.pix_fmt));
+        لکھو("sample_fmt=%s\n", av_get_sample_fmt_name(test_ctx.sample_fmt));
+        لکھو("duration=%"PRId64"\n", test_ctx.duration);
+        لکھو("color=%d %d %d %d\n", test_ctx.color[0], test_ctx.color[1], test_ctx.color[2], test_ctx.color[3]);
+        لکھو("channel_layout=%"PRId64"=%"PRId64"\n", test_ctx.channel_layout.u.نقاب_2, (int64_t)AV_CH_LAYOUT_HEXAGONAL);
+        اگر (test_ctx.ثنائی)
+            لکھو("binary=%x %x %x %x\n", ((uint8_t*)test_ctx.ثنائی)[0], ((uint8_t*)test_ctx.ثنائی)[1], ((uint8_t*)test_ctx.ثنائی)[2], ((uint8_t*)test_ctx.ثنائی)[3]);
+        لکھو("binary_size=%d\n", test_ctx.ثنائی_سائز);
+        لکھو("num64=%"PRId64"\n", test_ctx.num64);
+        لکھو("flt=%.6f\n", test_ctx.flt);
+        لکھو("dbl=%.6f\n", test_ctx.dbl);
 
-        for (unsigned i = 0; i < test_ctx.nb_array_str; i++)
-            printf("array_str[%u]=%s\n", i, test_ctx.array_str[i]);
+        برائے (غیرعلامتی i = 0; i < test_ctx.nb_array_str; i++)
+            لکھو("array_str[%u]=%s\n", i, test_ctx.array_str[i]);
 
-        for (unsigned i = 0; i < test_ctx.nb_array_dict; i++) {
+        برائے (غیرعلامتی i = 0; i < test_ctx.nb_array_dict; i++) {
             AVDictionary            *d = test_ctx.array_dict[i];
-            const AVDictionaryEntry *e = NULL;
+            ثابت AVDictionary_اندراج *e = تہی;
 
-            while ((e = av_dict_iterate(d, e)))
-                printf("array_dict[%u]: %s\t%s\n", i, e->key, e->value);
+            جب ((e = av_dict_iterate(d, e)))
+                لکھو("array_dict[%u]: %s\t%s\n", i, e->کلید, e->قدر);
         }
 
-        av_opt_show2(&test_ctx, NULL, -1, 0);
+        av_opt_show2(&test_ctx, تہی, -1, 0);
 
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_opt_is_set_to_default()\n");
+    لکھو("\nTesting av_opt_is_set_to_default()\n");
     {
-        int ret;
+        صحیح ret;
         TestContext test_ctx = { 0 };
-        const AVOption *o = NULL;
+        ثابت AVOption *o = تہی;
         test_ctx.class = &test_class;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_سیٹ_level(AV_LOG_QUIET);
 
-        while (o = av_opt_next(&test_ctx, o)) {
-            ret = av_opt_is_set_to_default_by_name(&test_ctx, o->name, 0);
-            printf("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
+        جب (o = av_opt_اگلا(&test_ctx, o)) {
+            ret = av_opt_is_سیٹ_مقصد_default_by_name(&test_ctx, o->name, 0);
+            لکھو("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
         }
-        av_opt_set_defaults(&test_ctx);
-        while (o = av_opt_next(&test_ctx, o)) {
-            ret = av_opt_is_set_to_default_by_name(&test_ctx, o->name, 0);
-            printf("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
+        av_opt_سیٹ_defaults(&test_ctx);
+        جب (o = av_opt_اگلا(&test_ctx, o)) {
+            ret = av_opt_is_سیٹ_مقصد_default_by_name(&test_ctx, o->name, 0);
+            لکھو("name:%10s default:%d error:%s\n", o->name, !!ret, ret < 0 ? av_err2str(ret) : "");
         }
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_opt_get/av_opt_set()\n");
+    لکھو("\nTesting av_opt_get/av_opt_set()\n");
     {
         TestContext test_ctx = { 0 };
         TestContext test2_ctx = { 0 };
-        const AVOption *o = NULL;
-        char *val = NULL;
-        int ret;
+        ثابت AVOption *o = تہی;
+        حرف *val = تہی;
+        صحیح ret;
 
         test_ctx.class = &test_class;
         test2_ctx.class = &test_class;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_سیٹ_level(AV_LOG_QUIET);
 
-        av_opt_set_defaults(&test_ctx);
+        av_opt_سیٹ_defaults(&test_ctx);
 
-        while (o = av_opt_next(&test_ctx, o)) {
-            char *value1 = NULL;
-            char *value2 = NULL;
-            int ret1 = AVERROR_BUG;
-            int ret2 = AVERROR_BUG;
-            int ret3 = AVERROR_BUG;
+        جب (o = av_opt_اگلا(&test_ctx, o)) {
+            حرف *value1 = تہی;
+            حرف *value2 = تہی;
+            صحیح ret1 = AVERROR_BUG;
+            صحیح ret2 = AVERROR_BUG;
+            صحیح ret3 = AVERROR_BUG;
 
-            if (o->type == AV_OPT_TYPE_CONST)
-                continue;
+            اگر (o->type == AV_OPT_TYPE_CONST)
+                جاری;
 
             ret1 = av_opt_get(&test_ctx, o->name, 0, (uint8_t **)&value1);
-            if (ret1 >= 0) {
-                ret2 = av_opt_set(&test2_ctx, o->name, value1, 0);
-                if (ret2 >= 0)
+            اگر (ret1 >= 0) {
+                ret2 = av_opt_سیٹ(&test2_ctx, o->name, value1, 0);
+                اگر (ret2 >= 0)
                     ret3 = av_opt_get(&test2_ctx, o->name, 0, (uint8_t **)&value2);
             }
 
-            printf("name: %-11s get: %-16s set: %-16s get: %-16s %s\n", o->name,
+            لکھو("name: %-11s get: %-16s set: %-16s get: %-16s %s\n", o->name,
                     ret1 >= 0 ? value1 : av_err2str(ret1),
                     ret2 >= 0 ? "OK" : av_err2str(ret2),
                     ret3 >= 0 ? value2 : av_err2str(ret3),
@@ -289,180 +289,180 @@ int main(void)
         }
 
         // av_opt_set(NULL) with an array option resets it
-        ret = av_opt_set(&test_ctx, "array_dict", NULL, 0);
-        printf("av_opt_set(\"array_dict\", NULL) -> %d\n", ret);
-        printf("array_dict=%sNULL; nb_array_dict=%u\n",
+        ret = av_opt_سیٹ(&test_ctx, "array_dict", تہی, 0);
+        لکھو("av_opt_set(\"array_dict\", NULL) -> %d\n", ret);
+        لکھو("array_dict=%sNULL; nb_array_dict=%u\n",
                test_ctx.array_dict ? "non-" : "", test_ctx.nb_array_dict);
 
         // av_opt_get() on an empty array should return a NULL string
         ret = av_opt_get(&test_ctx, "array_dict", AV_OPT_ALLOW_NULL, (uint8_t**)&val);
-        printf("av_opt_get(\"array_dict\") -> %s\n", val ? val : "NULL");
+        لکھو("av_opt_get(\"array_dict\") -> %s\n", val ? val : "NULL");
 
         av_opt_free(&test_ctx);
         av_opt_free(&test2_ctx);
     }
 
-    printf("\nTesting av_opt_get_array()\n");
+    لکھو("\nTesting av_opt_get_array()\n");
     {
-        static const int int_array[] = { 5, 0, 42, 137, INT_MAX };
+        ساکن ثابت صحیح int_array[] = { 5, 0, 42, 137, زیادہ_سے_زیادہ_عدد };
 
         TestContext test_ctx = { 0 };
 
-        int     out_int   [FF_ARRAY_ELEMS(int_array)] = { 0 };
-        double  out_double[FF_ARRAY_ELEMS(int_array)] = { 0. };
-        char   *out_str   [FF_ARRAY_ELEMS(int_array)] = { NULL };
-        AVDictionary *out_dict[2] = { NULL };
+        صحیح     برآمد_int   [FF_ARRAY_ELEMS(int_array)] = { 0 };
+        دوہرا  برآمد_double[FF_ARRAY_ELEMS(int_array)] = { 0. };
+        حرف   *برآمد_str   [FF_ARRAY_ELEMS(int_array)] = { تہی };
+        AVDictionary *برآمد_dict[2] = { تہی };
 
-        int ret;
+        صحیح ret;
 
         test_ctx.class = &test_class;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_سیٹ_level(AV_LOG_QUIET);
 
-        av_opt_set_defaults(&test_ctx);
+        av_opt_سیٹ_defaults(&test_ctx);
 
-        test_ctx.array_int    = av_memdup(int_array, sizeof(int_array));
+        test_ctx.array_int    = av_memdup(int_array, حجم(int_array));
         test_ctx.nb_array_int = FF_ARRAY_ELEMS(int_array);
 
         // retrieve as int
         ret = av_opt_get_array(&test_ctx, "array_int", 0,
-                               1, 3, AV_OPT_TYPE_INT, out_int);
-        printf("av_opt_get_array(\"array_int\", 1, 3, INT)=%d -> [ %d, %d, %d ]\n",
-               ret, out_int[0], out_int[1], out_int[2]);
+                               1, 3, AV_OPT_TYPE_INT, برآمد_int);
+        لکھو("av_opt_get_array(\"array_int\", 1, 3, INT)=%d -> [ %d, %d, %d ]\n",
+               ret, برآمد_int[0], برآمد_int[1], برآمد_int[2]);
 
         // retrieve as double
         ret = av_opt_get_array(&test_ctx, "array_int", 0,
-                               3, 2, AV_OPT_TYPE_DOUBLE, out_double);
-        printf("av_opt_get_array(\"array_int\", 3, 2, DOUBLE)=%d -> [ %.2f, %.2f ]\n",
-               ret, out_double[0], out_double[1]);
+                               3, 2, AV_OPT_TYPE_DOUBLE, برآمد_double);
+        لکھو("av_opt_get_array(\"array_int\", 3, 2, DOUBLE)=%d -> [ %.2f, %.2f ]\n",
+               ret, برآمد_double[0], برآمد_double[1]);
 
         // retrieve as str
         ret = av_opt_get_array(&test_ctx, "array_int", 0,
-                               0, 5, AV_OPT_TYPE_STRING, out_str);
-        printf("av_opt_get_array(\"array_int\", 0, 5, STRING)=%d -> "
+                               0, 5, AV_OPT_TYPE_STRING, برآمد_str);
+        لکھو("av_opt_get_array(\"array_int\", 0, 5, STRING)=%d -> "
                "[ %s, %s, %s, %s, %s ]\n", ret,
-               out_str[0], out_str[1], out_str[2], out_str[3], out_str[4]);
+               برآمد_str[0], برآمد_str[1], برآمد_str[2], برآمد_str[3], برآمد_str[4]);
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(out_str); i++)
-            av_freep(&out_str[i]);
+        برائے (صحیح i = 0; i < FF_ARRAY_ELEMS(برآمد_str); i++)
+            av_freep(&برآمد_str[i]);
 
         ret = av_opt_get_array(&test_ctx, "array_dict", 0, 0, 2,
-                               AV_OPT_TYPE_DICT, out_dict);
-        printf("av_opt_get_array(\"array_dict\", 0, 2, DICT)=%d\n", ret);
+                               AV_OPT_TYPE_DICT, برآمد_dict);
+        لکھو("av_opt_get_array(\"array_dict\", 0, 2, DICT)=%d\n", ret);
 
-        for (int i = 0; i < test_ctx.nb_array_dict; i++) {
-            const AVDictionaryEntry *e = NULL;
-            while ((e = av_dict_iterate(test_ctx.array_dict[i], e))) {
-                const AVDictionaryEntry *e1 = av_dict_get(out_dict[i], e->key, NULL, 0);
-                if (!e1 || strcmp(e->value, e1->value)) {
-                    printf("mismatching dict entry %s: %s/%s\n",
-                           e->key, e->value, e1 ? e1->value : "<missing>");
+        برائے (صحیح i = 0; i < test_ctx.nb_array_dict; i++) {
+            ثابت AVDictionary_اندراج *e = تہی;
+            جب ((e = av_dict_iterate(test_ctx.array_dict[i], e))) {
+                ثابت AVDictionary_اندراج *e1 = av_dict_get(برآمد_dict[i], e->کلید, تہی, 0);
+                اگر (!e1 || strcmp(e->قدر, e1->قدر)) {
+                    لکھو("mismatching dict entry %s: %s/%s\n",
+                           e->کلید, e->قدر, e1 ? e1->قدر : "<missing>");
                 }
             }
-            av_dict_free(&out_dict[i]);
+            av_dict_free(&برآمد_dict[i]);
         }
 
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTest av_opt_serialize()\n");
+    لکھو("\nTest av_opt_serialize()\n");
     {
         TestContext test_ctx = { 0 };
-        char *buf;
-        int ret;
+        حرف *buf;
+        صحیح ret;
         test_ctx.class = &test_class;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_سیٹ_level(AV_LOG_QUIET);
 
-        av_opt_set_defaults(&test_ctx);
-        if (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
-            printf("%s\n", buf);
+        av_opt_سیٹ_defaults(&test_ctx);
+        اگر (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
+            لکھو("%s\n", buf);
             av_opt_free(&test_ctx);
-            memset(&test_ctx, 0, sizeof(test_ctx));
+            memset(&test_ctx, 0, حجم(test_ctx));
             test_ctx.class = &test_class;
-            ret = av_set_options_string(&test_ctx, buf, "=", ",");
+            ret = av_سیٹ_options_string(&test_ctx, buf, "=", ",");
             av_free(buf);
-            if (ret < 0)
-                printf("Error ret '%d'\n", ret);
-            if (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
-                ChildContext child_ctx = { .child_num64 = 1, .child_unum = 1 };
-                printf("%s\n", buf);
+            اگر (ret < 0)
+                لکھو("Error ret '%d'\n", ret);
+            اگر (av_opt_serialize(&test_ctx, 0, 0, &buf, '=', ',') >= 0) {
+                بچہ_Context بچہ_ctx = { .بچہ_num64 = 1, .بچہ_unum = 1 };
+                لکھو("%s\n", buf);
                 av_free(buf);
-                child_ctx.class = &child_class;
-                test_ctx.child = &child_ctx;
-                printf("Exclude flag EXPORT:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                بچہ_ctx.class = &بچہ_class;
+                test_ctx.بچہ = &بچہ_ctx;
+                لکھو("Exclude flag EXPORT:\n");
+                اگر (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    لکھو("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Include flag EXPORT:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN,
+                لکھو("Include flag EXPORT:\n");
+                اگر (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    لکھو("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Exclude flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                لکھو("Exclude flag 1:\n");
+                اگر (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    لکھو("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Include flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN,
+                لکھو("Include flag 1:\n");
+                اگر (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    لکھو("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Exclude exact match flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                لکھو("Exclude exact match flag 1:\n");
+                اگر (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT|AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    لکھو("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Include exact match flag 1:\n");
-                if (av_opt_serialize(&test_ctx, 1,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                لکھو("Include exact match flag 1:\n");
+                اگر (av_opt_serialize(&test_ctx, 1,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    لکھو("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Exclude exact match flag EXPORT|READONLY:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                لکھو("Exclude exact match flag EXPORT|READONLY:\n");
+                اگر (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT|AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    لکھو("%s\n", buf);
                     av_free(buf);
                 }
-                printf("Include exact match flag EXPORT|READONLY:\n");
-                if (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
-                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_SEARCH_CHILDREN|
+                لکھو("Include exact match flag EXPORT|READONLY:\n");
+                اگر (av_opt_serialize(&test_ctx, AV_OPT_FLAG_EXPORT | AV_OPT_FLAG_READONLY,
+                                     AV_OPT_SERIALIZE_SKIP_DEFAULTS|AV_OPT_SERIALIZE_تلاش_CHILDREN|
                                      AV_OPT_SERIALIZE_OPT_FLAGS_EXACT,
                                      &buf, '=', ',') >= 0) {
-                    printf("%s\n", buf);
+                    لکھو("%s\n", buf);
                     av_free(buf);
                 }
-                av_opt_free(&child_ctx);
-                test_ctx.child = NULL;
+                av_opt_free(&بچہ_ctx);
+                test_ctx.بچہ = تہی;
             }
         }
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_set_options_string()\n");
+    لکھو("\nTesting av_set_options_string()\n");
     {
         TestContext test_ctx = { 0 };
-        static const char * const options[] = {
+        ساکن ثابت حرف * ثابت options[] = {
             "",
             ":",
             "=",
@@ -544,28 +544,28 @@ int main(void)
         };
 
         test_ctx.class = &test_class;
-        av_opt_set_defaults(&test_ctx);
+        av_opt_سیٹ_defaults(&test_ctx);
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_سیٹ_level(AV_LOG_QUIET);
 
-        for (i=0; i < FF_ARRAY_ELEMS(options); i++) {
-            int silence_log = !strcmp(options[i], "rational=-1/0"); // inf formatting differs between platforms
+        برائے (i=0; i < FF_ARRAY_ELEMS(options); i++) {
+            صحیح silence_log = !strcmp(options[i], "rational=-1/0"); // inf formatting differs between platforms
             av_log(&test_ctx, AV_LOG_DEBUG, "Setting options string '%s'\n", options[i]);
-            if (silence_log)
-                av_log_set_callback(NULL);
-            if (av_set_options_string(&test_ctx, options[i], "=", ":") < 0)
-                printf("Error '%s'\n", options[i]);
-            else
-                printf("OK    '%s'\n", options[i]);
-            av_log_set_callback(log_callback_help);
+            اگر (silence_log)
+                av_log_سیٹ_callback(تہی);
+            اگر (av_سیٹ_options_string(&test_ctx, options[i], "=", ":") < 0)
+                لکھو("Error '%s'\n", options[i]);
+            ورنہ
+                لکھو("OK    '%s'\n", options[i]);
+            av_log_سیٹ_callback(log_callback_help);
         }
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_opt_set_from_string()\n");
+    لکھو("\nTesting av_opt_set_from_string()\n");
     {
         TestContext test_ctx = { 0 };
-        static const char * const options[] = {
+        ساکن ثابت حرف * ثابت options[] = {
             "",
             "5",
             "5:hello",
@@ -576,114 +576,114 @@ int main(void)
             " 5 : hello : size = pal ",
             "a_very_long_option_name_that_will_need_to_be_ellipsized_around_here=42"
         };
-        static const char * const shorthand[] = { "num", "string", NULL };
+        ساکن ثابت حرف * ثابت shorthand[] = { "num", "string", تہی };
 
         test_ctx.class = &test_class;
-        av_opt_set_defaults(&test_ctx);
+        av_opt_سیٹ_defaults(&test_ctx);
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_سیٹ_level(AV_LOG_QUIET);
 
-        for (i=0; i < FF_ARRAY_ELEMS(options); i++) {
+        برائے (i=0; i < FF_ARRAY_ELEMS(options); i++) {
             av_log(&test_ctx, AV_LOG_DEBUG, "Setting options string '%s'\n", options[i]);
-            if (av_opt_set_from_string(&test_ctx, options[i], shorthand, "=", ":") < 0)
-                printf("Error '%s'\n", options[i]);
-            else
-                printf("OK    '%s'\n", options[i]);
+            اگر (av_opt_سیٹ_from_string(&test_ctx, options[i], shorthand, "=", ":") < 0)
+                لکھو("Error '%s'\n", options[i]);
+            ورنہ
+                لکھو("OK    '%s'\n", options[i]);
         }
         av_opt_free(&test_ctx);
     }
 
-    printf("\nTesting av_opt_find2()\n");
+    لکھو("\nTesting av_opt_find2()\n");
     {
         TestContext test_ctx = { 0 };
-        ChildContext child_ctx = { 0 };
-        void *target;
-        const AVOption *opt;
+        بچہ_Context بچہ_ctx = { 0 };
+        خالی *ہدف;
+        ثابت AVOption *opt;
 
         test_ctx.class = &test_class;
-        child_ctx.class = &child_class;
-        test_ctx.child = &child_ctx;
+        بچہ_ctx.class = &بچہ_class;
+        test_ctx.بچہ = &بچہ_ctx;
 
-        av_log_set_level(AV_LOG_QUIET);
+        av_log_سیٹ_level(AV_LOG_QUIET);
 
         // Should succeed. num exists and has opt_flags 1
-        opt = av_opt_find2(&test_ctx, "num", NULL, 1, 0, &target);
-        if (opt && target == &test_ctx)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'num'\n");
+        opt = av_opt_find2(&test_ctx, "num", تہی, 1, 0, &ہدف);
+        اگر (opt && ہدف == &test_ctx)
+            لکھو("OK    '%s'\n", opt->name);
+        ورنہ
+            لکھو("Error 'num'\n");
 
         // Should fail. num64 exists but has opt_flags 1, not 2
-        opt = av_opt_find(&test_ctx, "num64", NULL, 2, 0);
-        if (opt)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'num64'\n");
+        opt = av_opt_ڈھونڈو(&test_ctx, "num64", تہی, 2, 0);
+        اگر (opt)
+            لکھو("OK    '%s'\n", opt->name);
+        ورنہ
+            لکھو("Error 'num64'\n");
 
         // Should fail. child_num exists but in a child object we're not searching
-        opt = av_opt_find(&test_ctx, "child_num", NULL, 0, 0);
-        if (opt)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'child_num'\n");
+        opt = av_opt_ڈھونڈو(&test_ctx, "child_num", تہی, 0, 0);
+        اگر (opt)
+            لکھو("OK    '%s'\n", opt->name);
+        ورنہ
+            لکھو("Error 'child_num'\n");
 
         // Should succeed. child_num exists in a child object we're searching
-        opt = av_opt_find2(&test_ctx, "child_num", NULL, 0, AV_OPT_SEARCH_CHILDREN, &target);
-        if (opt && target == &child_ctx)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'child_num'\n");
+        opt = av_opt_find2(&test_ctx, "child_num", تہی, 0, AV_OPT_تلاش_CHILDREN, &ہدف);
+        اگر (opt && ہدف == &بچہ_ctx)
+            لکھو("OK    '%s'\n", opt->name);
+        ورنہ
+            لکھو("Error 'child_num'\n");
 
         // Should fail. foo doesn't exist
-        opt = av_opt_find(&test_ctx, "foo", NULL, 0, 0);
-        if (opt)
-            printf("OK    '%s'\n", opt->name);
-        else
-            printf("Error 'foo'\n");
+        opt = av_opt_ڈھونڈو(&test_ctx, "foo", تہی, 0, 0);
+        اگر (opt)
+            لکھو("OK    '%s'\n", opt->name);
+        ورنہ
+            لکھو("Error 'foo'\n");
     }
 
-    printf("\nTesting av_opt_copy() into a memdup'ed object\n");
+    لکھو("\nTesting av_opt_copy() into a memdup'ed object\n");
     {
         TestContext test_ctx = { 0 };
         TestContext *copy;
-        uint8_t *layout_name = NULL;
+        uint8_t *layout_name = تہی;
 
         test_ctx.class = &test_class;
-        av_opt_set_defaults(&test_ctx);
-        av_opt_set(&test_ctx, "cl", "FL@Left+FR@Right", 0);
+        av_opt_سیٹ_defaults(&test_ctx);
+        av_opt_سیٹ(&test_ctx, "cl", "FL@Left+FR@Right", 0);
 
-        copy = av_memdup(&test_ctx, sizeof(test_ctx));
-        if (!copy)
-            return 1;
+        copy = av_memdup(&test_ctx, حجم(test_ctx));
+        اگر (!copy)
+            واپس 1;
         av_opt_copy(copy, &test_ctx);
         av_opt_free(&test_ctx);
 
         av_opt_get(copy, "cl", 0, &layout_name);
-        printf("cl=%s\n", layout_name);
+        لکھو("cl=%s\n", layout_name);
         av_free(layout_name);
         av_opt_free(copy);
         av_free(copy);
     }
 
-    printf("\nTesting av_opt_copy() of a native layout into a custom layout\n");
+    لکھو("\nTesting av_opt_copy() of a native layout into a custom layout\n");
     {
         TestContext src = { 0 }, dst = { 0 };
-        AVChannelLayout native = { AV_CHANNEL_ORDER_NATIVE };
+        AVChannelLayout native = { AV_CHANNEL_ترتیب_NATIVE };
 
         src.class = dst.class = &test_class;
-        av_opt_set_defaults(&src);
-        av_opt_set_defaults(&dst);
-        av_opt_set(&dst, "cl", "FL@Left+FR@Right", 0);
+        av_opt_سیٹ_defaults(&src);
+        av_opt_سیٹ_defaults(&dst);
+        av_opt_سیٹ(&dst, "cl", "FL@Left+FR@Right", 0);
 
-        native.u.mask      = (uintptr_t)dst.channel_layout.u.map;
-        native.nb_channels = av_popcount64(native.u.mask);
-        av_opt_set_chlayout(&src, "cl", &native, 0);
+        native.u.نقاب_2      = (uintptr_t)dst.channel_layout.u.map;
+        native.nb_channels = av_popcount64(native.u.نقاب_2);
+        av_opt_سیٹ_chlayout(&src, "cl", &native, 0);
 
-        printf("copy: %d\n", av_opt_copy(&dst, &src));
-        printf("same layout: %d\n", !av_channel_layout_compare(&src.channel_layout, &dst.channel_layout));
+        لکھو("copy: %d\n", av_opt_copy(&dst, &src));
+        لکھو("same layout: %d\n", !av_channel_layout_compare(&src.channel_layout, &dst.channel_layout));
         av_opt_free(&src);
         av_opt_free(&dst);
     }
 
-    return 0;
+    واپس 0;
 }

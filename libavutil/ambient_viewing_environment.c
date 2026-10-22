@@ -18,43 +18,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ambient_viewing_environment.h"
-#include "mem.h"
+#شامل "ambient_viewing_environment.h"
+#شامل "mem.h"
 
-static void get_defaults(AVAmbientViewingEnvironment *env)
+ساکن خالی get_defaults(AVAmbientViewingEnvironment *env)
 {
     env->ambient_illuminance =
     env->ambient_light_x     =
     env->ambient_light_y     = (AVRational) { 0, 1 };
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *سائز)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(حجم(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    اگر (سائز)
+        *سائز = env ? حجم(*env) : 0;
 
-    if (!env)
-        return NULL;
+    اگر (!env)
+        واپس تہی;
 
     get_defaults(env);
 
-    return env;
+    واپس env;
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_ڈیٹا(AVFrame *چوکھٹا)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame,
-                               AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ڈیٹا *side_ڈیٹا =
+        av_چوکھٹا_new_side_ڈیٹا(چوکھٹا,
+                               AV_چوکھٹا_ڈیٹا_AMBIENT_VIEWING_ENVIRONMENT,
+                               حجم(AVAmbientViewingEnvironment));
+    اگر (!side_ڈیٹا)
+        واپس تہی;
 
-    memset(side_data->data, 0, side_data->size);
-    get_defaults((AVAmbientViewingEnvironment *)side_data->data);
+    memset(side_ڈیٹا->ڈیٹا, 0, side_ڈیٹا->سائز);
+    get_defaults((AVAmbientViewingEnvironment *)side_ڈیٹا->ڈیٹا);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    واپس (AVAmbientViewingEnvironment *)side_ڈیٹا->ڈیٹا;
 }

@@ -19,117 +19,117 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#شامل <string.h>
 
-#include "aes_ctr.h"
-#include "aes.h"
-#include "aes_internal.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "random_seed.h"
+#شامل "aes_ctr.h"
+#شامل "aes.h"
+#شامل "aes_internal.h"
+#شامل "intreadwrite.h"
+#شامل "macros.h"
+#شامل "mem.h"
+#شامل "random_seed.h"
 
-#define AES_BLOCK_SIZE (16)
+#تعریف_کرو AES_بلاک_سائز (16)
 
-typedef struct AVAESCTR {
-    DECLARE_ALIGNED(8, uint8_t, counter)[AES_BLOCK_SIZE];
-    DECLARE_ALIGNED(8, uint8_t, encrypted_counter)[AES_BLOCK_SIZE];
-    int block_offset;
+قسمتعریف ساخت AVAESCTR {
+    DECLARE_ALIGNED(8, uint8_t, شمار_2)[AES_بلاک_سائز];
+    DECLARE_ALIGNED(8, uint8_t, encrypted_شمار)[AES_بلاک_سائز];
+    صحیح بلاک_انحراف;
     AVAES aes;
 } AVAESCTR;
 
-struct AVAESCTR *av_aes_ctr_alloc(void)
+ساخت AVAESCTR *av_aes_ctr_alloc(خالی)
 {
-    return av_mallocz(sizeof(struct AVAESCTR));
+    واپس av_mallocz(حجم(ساخت AVAESCTR));
 }
 
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv)
+خالی av_aes_ctr_سیٹ_iv(ساخت AVAESCTR *a, ثابت uint8_t* iv)
 {
-    memcpy(a->counter, iv, AES_CTR_IV_SIZE);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
-    a->block_offset = 0;
+    حافظہ_نقل(a->شمار_2, iv, AES_CTR_IV_سائز);
+    memset(a->شمار_2 + AES_CTR_IV_سائز, 0, حجم(a->شمار_2) - AES_CTR_IV_سائز);
+    a->بلاک_انحراف = 0;
 }
 
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv)
+خالی av_aes_ctr_سیٹ_بھرا_iv(ساخت AVAESCTR *a, ثابت uint8_t* iv)
 {
-    memcpy(a->counter, iv, sizeof(a->counter));
-    a->block_offset = 0;
+    حافظہ_نقل(a->شمار_2, iv, حجم(a->شمار_2));
+    a->بلاک_انحراف = 0;
 }
 
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a)
+ثابت uint8_t* av_aes_ctr_get_iv(ساخت AVAESCTR *a)
 {
-    return a->counter;
+    واپس a->شمار_2;
 }
 
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
+خالی av_aes_ctr_سیٹ_random_iv(ساخت AVAESCTR *a)
 {
     uint32_t iv[2];
 
-    iv[0] = av_get_random_seed();
-    iv[1] = av_get_random_seed();
+    iv[0] = av_get_random_بیج();
+    iv[1] = av_get_random_بیج();
 
-    av_aes_ctr_set_iv(a, (uint8_t*)iv);
+    av_aes_ctr_سیٹ_iv(a, (uint8_t*)iv);
 }
 
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key)
+صحیح av_aes_ctr_init(ساخت AVAESCTR *a, ثابت uint8_t *کلید)
 {
-    av_aes_init(&a->aes, key, 128, 0);
+    av_aes_init(&a->aes, کلید, 128, 0);
 
-    memset(a->counter, 0, sizeof(a->counter));
-    a->block_offset = 0;
+    memset(a->شمار_2, 0, حجم(a->شمار_2));
+    a->بلاک_انحراف = 0;
 
-    return 0;
+    واپس 0;
 }
 
-void av_aes_ctr_free(struct AVAESCTR *a)
+خالی av_aes_ctr_free(ساخت AVAESCTR *a)
 {
     av_free(a);
 }
 
-static inline void av_aes_ctr_increment_be64(uint8_t* counter)
+ساکن اندرونی خالی av_aes_ctr_increment_be64(uint8_t* شمار_2)
 {
-    uint64_t c = AV_RB64A(counter) + 1;
-    AV_WB64A(counter, c);
+    uint64_t c = AV_RB64A(شمار_2) + 1;
+    AV_WB64A(شمار_2, c);
 }
 
-void av_aes_ctr_increment_iv(struct AVAESCTR *a)
+خالی av_aes_ctr_increment_iv(ساخت AVAESCTR *a)
 {
-    av_aes_ctr_increment_be64(a->counter);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
-    a->block_offset = 0;
+    av_aes_ctr_increment_be64(a->شمار_2);
+    memset(a->شمار_2 + AES_CTR_IV_سائز, 0, حجم(a->شمار_2) - AES_CTR_IV_سائز);
+    a->بلاک_انحراف = 0;
 }
 
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int count)
+خالی av_aes_ctr_crypt(ساخت AVAESCTR *a, uint8_t *dst, ثابت uint8_t *src, صحیح گنتی)
 {
-    if (a->block_offset && count > 0) {
-        int left = FFMIN(count, AES_BLOCK_SIZE - a->block_offset);
-        for (int len = 0; len < left; len++)
-            dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
-        a->block_offset &= AES_BLOCK_SIZE - 1;
-        dst += left;
-        src += left;
-        count -= left;
+    اگر (a->بلاک_انحراف && گنتی > 0) {
+        صحیح بایاں = FFMIN(گنتی, AES_بلاک_سائز - a->بلاک_انحراف);
+        برائے (صحیح len = 0; len < بایاں; len++)
+            dst[len] = src[len] ^ a->encrypted_شمار[a->بلاک_انحراف++];
+        a->بلاک_انحراف &= AES_بلاک_سائز - 1;
+        dst += بایاں;
+        src += بایاں;
+        گنتی -= بایاں;
     }
 
-    while (count >= AES_BLOCK_SIZE) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
-        av_aes_ctr_increment_be64(a->counter + 8);
-#if HAVE_FAST_64BIT
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 8)
-            AV_WN64(&dst[len], AV_RN64(&src[len]) ^ AV_RN64A(&a->encrypted_counter[len]));
-#else
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 4)
-            AV_WN32(&dst[len], AV_RN32(&src[len]) ^ AV_RN32A(&a->encrypted_counter[len]));
-#endif
-        dst += AES_BLOCK_SIZE;
-        src += AES_BLOCK_SIZE;
-        count -= AES_BLOCK_SIZE;
+    جب (گنتی >= AES_بلاک_سائز) {
+        av_aes_crypt(&a->aes, a->encrypted_شمار, a->شمار_2, 1, تہی, 0);
+        av_aes_ctr_increment_be64(a->شمار_2 + 8);
+#اگر HAVE_FAST_64_ثنائی_ہندسہ
+        برائے (صحیح len = 0; len < AES_بلاک_سائز; len += 8)
+            AV_WN64(&dst[len], AV_RN64(&src[len]) ^ AV_RN64A(&a->encrypted_شمار[len]));
+#ورنہ
+        برائے (صحیح len = 0; len < AES_بلاک_سائز; len += 4)
+            AV_WN32(&dst[len], AV_RN32(&src[len]) ^ AV_RN32A(&a->encrypted_شمار[len]));
+#اگر_ختم
+        dst += AES_بلاک_سائز;
+        src += AES_بلاک_سائز;
+        گنتی -= AES_بلاک_سائز;
     }
 
-    if (count > 0) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
-        av_aes_ctr_increment_be64(a->counter + 8);
-        for (int len = 0; len < count; len++)
-            dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
+    اگر (گنتی > 0) {
+        av_aes_crypt(&a->aes, a->encrypted_شمار, a->شمار_2, 1, تہی, 0);
+        av_aes_ctr_increment_be64(a->شمار_2 + 8);
+        برائے (صحیح len = 0; len < گنتی; len++)
+            dst[len] = src[len] ^ a->encrypted_شمار[a->بلاک_انحراف++];
     }
 }

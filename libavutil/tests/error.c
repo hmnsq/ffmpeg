@@ -16,45 +16,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/error.c"
+#شامل "libavutil/error.c"
 
 /* errno descriptions depend on the C library, so those are only looked up */
-static const struct {
-    int num;
-    const char *tag;
+ساکن ثابت ساخت {
+    صحیح عدد;
+    ثابت حرف *لیبل;
 } ffmpeg_codes[] = {
-#define ERROR_TAG(CODE, DESC)         { AVERROR_ ## CODE, #CODE },
-#define ERROR_TAG2(CODE, CODE2, DESC) { AVERROR_ ## CODE, #CODE },
-    AVERROR_LIST(ERROR_TAG, ERROR_TAG2)
+#تعریف_کرو ERROR_لیبل(رمز_2, DESC)         { AVERROR_ ## رمز_2, #CODE },
+#تعریف_کرو ERROR_TAG2(رمز_2, CODE2, DESC) { AVERROR_ ## رمز_2, #CODE },
+    AVERROR_LIST(ERROR_لیبل, ERROR_TAG2)
 };
 
-static const int errno_codes[] = {
-#define ERRNO_CODE(CODE, DESC) AVERROR(CODE),
-    STRERROR_LIST(ERRNO_CODE)
+ساکن ثابت صحیح errno_codes[] = {
+#تعریف_کرو ERRNO_رمز(رمز_2, DESC) AVERROR(رمز_2),
+    STRERROR_LIST(ERRNO_رمز)
 };
 
-int main(void)
+صحیح مین(خالی)
 {
-    char buf[AV_ERROR_MAX_STRING_SIZE];
-    int ret = 0;
+    حرف buf[AV_ERROR_MAX_STRING_سائز];
+    صحیح ret = 0;
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
-        int num = ffmpeg_codes[i].num;
+    برائے (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
+        صحیح عدد = ffmpeg_codes[i].عدد;
 
-        if (av_strerror(num, buf, sizeof(buf)) < 0) {
-            printf("%d: lookup failed [%s]\n", num, ffmpeg_codes[i].tag);
+        اگر (av_strerror(عدد, buf, حجم(buf)) < 0) {
+            لکھو("%d: lookup failed [%s]\n", عدد, ffmpeg_codes[i].لیبل);
             ret = 1;
-            continue;
+            جاری;
         }
-        printf("%d: %s [%s]\n", num, buf, ffmpeg_codes[i].tag);
+        لکھو("%d: %s [%s]\n", عدد, buf, ffmpeg_codes[i].لیبل);
     }
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
-        if (av_strerror(errno_codes[i], buf, sizeof(buf)) < 0) {
-            printf("errno %d: lookup failed\n", AVUNERROR(errno_codes[i]));
+    برائے (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
+        اگر (av_strerror(errno_codes[i], buf, حجم(buf)) < 0) {
+            لکھو("errno %d: lookup failed\n", AVUNERROR(errno_codes[i]));
             ret = 1;
         }
     }
 
-    return ret;
+    واپس ret;
 }

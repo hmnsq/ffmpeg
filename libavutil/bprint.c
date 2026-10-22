@@ -18,107 +18,107 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
+#شامل <limits.h>
+#شامل <stdarg.h>
+#شامل <stdio.h>
+#شامل <string.h>
+#شامل <time.h>
+#شامل "avstring.h"
+#شامل "bprint.h"
+#شامل "error.h"
+#شامل "macros.h"
+#شامل "mem.h"
 
-#define av_bprint_room(buf) ((buf)->size - FFMIN((buf)->len, (buf)->size))
-#define av_bprint_is_allocated(buf) ((buf)->str != (buf)->reserved_internal_buffer)
+#تعریف_کرو av_bprint_گنجائش(buf) ((buf)->سائز - FFMIN((buf)->len, (buf)->سائز))
+#تعریف_کرو av_bprint_is_allocated(buf) ((buf)->str != (buf)->reserved_اندرونی_بفر)
 
-static int av_bprint_alloc(AVBPrint *buf, unsigned room)
+ساکن صحیح av_bprint_alloc(AVBPrint *buf, غیرعلامتی گنجائش)
 {
-    char *old_str, *new_str;
-    unsigned min_size, new_size;
+    حرف *old_str, *new_str;
+    غیرعلامتی min_سائز, new_سائز;
 
-    if (buf->size == buf->size_max)
-        return AVERROR(EIO);
-    if (!av_bprint_is_complete(buf))
-        return AVERROR_INVALIDDATA; /* it is already truncated anyway */
-    min_size = buf->len + 1 + FFMIN(UINT_MAX - buf->len - 1, room);
-    new_size = buf->size > buf->size_max / 2 ? buf->size_max : buf->size * 2;
-    if (new_size < min_size)
-        new_size = FFMIN(buf->size_max, min_size);
-    old_str = av_bprint_is_allocated(buf) ? buf->str : NULL;
-    new_str = av_realloc(old_str, new_size);
-    if (!new_str)
-        return AVERROR(ENOMEM);
-    if (!old_str)
-        memcpy(new_str, buf->str, buf->len + 1);
+    اگر (buf->سائز == buf->سائز_max)
+        واپس AVERROR(EIO);
+    اگر (!av_bprint_is_complete(buf))
+        واپس AVERROR_INVALIDDATA; /* it is already truncated anyway */
+    min_سائز = buf->len + 1 + FFMIN(UINT_MAX - buf->len - 1, گنجائش);
+    new_سائز = buf->سائز > buf->سائز_max / 2 ? buf->سائز_max : buf->سائز * 2;
+    اگر (new_سائز < min_سائز)
+        new_سائز = FFMIN(buf->سائز_max, min_سائز);
+    old_str = av_bprint_is_allocated(buf) ? buf->str : تہی;
+    new_str = av_realloc(old_str, new_سائز);
+    اگر (!new_str)
+        واپس AVERROR(ENOMEM);
+    اگر (!old_str)
+        حافظہ_نقل(new_str, buf->str, buf->len + 1);
     buf->str  = new_str;
-    buf->size = new_size;
-    return 0;
+    buf->سائز = new_سائز;
+    واپس 0;
 }
 
-static void av_bprint_grow(AVBPrint *buf, unsigned extra_len)
+ساکن خالی av_bprint_grow(AVBPrint *buf, غیرعلامتی extra_len)
 {
     /* arbitrary margin to avoid small overflows */
     extra_len = FFMIN(extra_len, UINT_MAX - 5 - buf->len);
     buf->len += extra_len;
-    if (buf->size)
-        buf->str[FFMIN(buf->len, buf->size - 1)] = 0;
+    اگر (buf->سائز)
+        buf->str[FFMIN(buf->len, buf->سائز - 1)] = 0;
 }
 
-void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max)
+خالی av_bprint_init(AVBPrint *buf, غیرعلامتی سائز_init, غیرعلامتی سائز_max)
 {
-    unsigned size_auto = (char *)buf + sizeof(*buf) -
-                         buf->reserved_internal_buffer;
+    غیرعلامتی سائز_auto = (حرف *)buf + حجم(*buf) -
+                         buf->reserved_اندرونی_بفر;
 
-    if (size_max == AV_BPRINT_SIZE_AUTOMATIC)
-        size_max = size_auto;
-    buf->str      = buf->reserved_internal_buffer;
+    اگر (سائز_max == AV_BPRINT_سائز_AUTOMATIC)
+        سائز_max = سائز_auto;
+    buf->str      = buf->reserved_اندرونی_بفر;
     buf->len      = 0;
-    buf->size     = FFMIN(size_auto, size_max);
-    buf->size_max = size_max;
+    buf->سائز     = FFMIN(سائز_auto, سائز_max);
+    buf->سائز_max = سائز_max;
     *buf->str = 0;
-    if (size_init > buf->size)
-        av_bprint_alloc(buf, size_init - 1);
+    اگر (سائز_init > buf->سائز)
+        av_bprint_alloc(buf, سائز_init - 1);
 }
 
-void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size)
+خالی av_bprint_init_for_بفر(AVBPrint *buf, حرف *بفر, غیرعلامتی سائز)
 {
-    if (size == 0) {
-        av_bprint_init(buf, 0, AV_BPRINT_SIZE_COUNT_ONLY);
-        return;
+    اگر (سائز == 0) {
+        av_bprint_init(buf, 0, AV_BPRINT_سائز_گنتی_ONLY);
+        واپس;
     }
 
-    buf->str      = buffer;
+    buf->str      = بفر;
     buf->len      = 0;
-    buf->size     = size;
-    buf->size_max = size;
+    buf->سائز     = سائز;
+    buf->سائز_max = سائز;
     *buf->str = 0;
 }
 
-void av_vbprintf(AVBPrint *buf, const char *fmt, va_list vl_arg)
+خالی av_vbprintf(AVBPrint *buf, ثابت حرف *fmt, va_list vl_arg)
 {
-    unsigned room;
-    char *dst;
-    int extra_len;
+    غیرعلامتی گنجائش;
+    حرف *dst;
+    صحیح extra_len;
     va_list vl;
 
-    while (1) {
-        room = av_bprint_room(buf);
-        dst = room ? buf->str + buf->len : NULL;
+    جب (1) {
+        گنجائش = av_bprint_گنجائش(buf);
+        dst = گنجائش ? buf->str + buf->len : تہی;
         va_copy(vl, vl_arg);
-        extra_len = vsnprintf(dst, room, fmt, vl);
+        extra_len = vsnprintf(dst, گنجائش, fmt, vl);
         va_end(vl);
-        if (extra_len <= 0)
-            return;
-        if (extra_len < room)
-            break;
-        if (av_bprint_alloc(buf, extra_len))
-            break;
+        اگر (extra_len <= 0)
+            واپس;
+        اگر (extra_len < گنجائش)
+            توڑو;
+        اگر (av_bprint_alloc(buf, extra_len))
+            توڑو;
     }
     av_bprint_grow(buf, extra_len);
 }
 
-void av_bprintf(AVBPrint *buf, const char *fmt, ...)
+خالی av_bprintf(AVBPrint *buf, ثابت حرف *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
@@ -126,206 +126,206 @@ void av_bprintf(AVBPrint *buf, const char *fmt, ...)
     va_end(vl);
 }
 
-void av_bprint_chars(AVBPrint *buf, char c, unsigned n)
+خالی av_bprint_chars(AVBPrint *buf, حرف c, غیرعلامتی n)
 {
-    unsigned room, real_n;
+    غیرعلامتی گنجائش, real_n;
 
-    while (1) {
-        room = av_bprint_room(buf);
-        if (n < room)
-            break;
-        if (av_bprint_alloc(buf, n))
-            break;
+    جب (1) {
+        گنجائش = av_bprint_گنجائش(buf);
+        اگر (n < گنجائش)
+            توڑو;
+        اگر (av_bprint_alloc(buf, n))
+            توڑو;
     }
-    if (room) {
-        real_n = FFMIN(n, room - 1);
+    اگر (گنجائش) {
+        real_n = FFMIN(n, گنجائش - 1);
         memset(buf->str + buf->len, c, real_n);
     }
     av_bprint_grow(buf, n);
 }
 
-void av_bprint_append_data(AVBPrint *buf, const char *data, unsigned size)
+خالی av_bprint_append_ڈیٹا(AVBPrint *buf, ثابت حرف *ڈیٹا, غیرعلامتی سائز)
 {
-    unsigned room, real_n;
+    غیرعلامتی گنجائش, real_n;
 
-    while (1) {
-        room = av_bprint_room(buf);
-        if (size < room)
-            break;
-        if (av_bprint_alloc(buf, size))
-            break;
+    جب (1) {
+        گنجائش = av_bprint_گنجائش(buf);
+        اگر (سائز < گنجائش)
+            توڑو;
+        اگر (av_bprint_alloc(buf, سائز))
+            توڑو;
     }
-    if (room) {
-        real_n = FFMIN(size, room - 1);
-        memcpy(buf->str + buf->len, data, real_n);
+    اگر (گنجائش) {
+        real_n = FFMIN(سائز, گنجائش - 1);
+        حافظہ_نقل(buf->str + buf->len, ڈیٹا, real_n);
     }
-    av_bprint_grow(buf, size);
+    av_bprint_grow(buf, سائز);
 }
 
-void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm)
+خالی av_bprint_strftime(AVBPrint *buf, ثابت حرف *fmt, ثابت ساخت tm *tm)
 {
-    unsigned room;
+    غیرعلامتی گنجائش;
     size_t l;
-    size_t fmt_len = strlen(fmt);
+    size_t fmt_len = لڑی_لمبائی(fmt);
 
-    if (!*fmt)
-        return;
-    while (1) {
-        room = av_bprint_room(buf);
-        if (room && (l = strftime(buf->str + buf->len, room, fmt, tm)))
-            break;
+    اگر (!*fmt)
+        واپس;
+    جب (1) {
+        گنجائش = av_bprint_گنجائش(buf);
+        اگر (گنجائش && (l = strftime(buf->str + buf->len, گنجائش, fmt, tm)))
+            توڑو;
 
         /* Due to the limitations of strftime() it is not possible to know if
          * the output buffer is too small or the output is empty.
          * However, a 256x output space requirement compared to the format
          * string length is so unlikely we can safely assume empty output. This
          * allows supporting possibly empty format strings like "%p". */
-        if (room >> 8 > fmt_len)
-            break;
+        اگر (گنجائش >> 8 > fmt_len)
+            توڑو;
 
         /* strftime does not tell us how much room it would need: let us
            retry with twice as much until the buffer is large enough */
-        room = !room ? fmt_len + 1 :
-               room <= INT_MAX / 2 ? room * 2 : INT_MAX;
-        if (av_bprint_alloc(buf, room)) {
+        گنجائش = !گنجائش ? fmt_len + 1 :
+               گنجائش <= زیادہ_سے_زیادہ_عدد / 2 ? گنجائش * 2 : زیادہ_سے_زیادہ_عدد;
+        اگر (av_bprint_alloc(buf, گنجائش)) {
             /* impossible to grow, try to manage something useful anyway */
-            room = av_bprint_room(buf);
-            if (room < 1024) {
+            گنجائش = av_bprint_گنجائش(buf);
+            اگر (گنجائش < 1024) {
                 /* if strftime fails because the buffer has (almost) reached
                    its maximum size, let us try in a local buffer; 1k should
                    be enough to format any real date+time string */
-                char buf2[1024];
-                if ((l = strftime(buf2, sizeof(buf2), fmt, tm))) {
+                حرف buf2[1024];
+                اگر ((l = strftime(buf2, حجم(buf2), fmt, tm))) {
                     av_bprintf(buf, "%s", buf2);
-                    return;
+                    واپس;
                 }
             }
-            if (room) {
+            اگر (گنجائش) {
                 /* if anything else failed and the buffer is not already
                    truncated, let us add a stock string and force truncation */
-                static const char txt[] = "[truncated strftime output]";
-                memset(buf->str + buf->len, '!', room);
-                memcpy(buf->str + buf->len, txt, FFMIN(sizeof(txt) - 1, room));
-                av_bprint_grow(buf, room); /* force truncation */
+                ساکن ثابت حرف txt[] = "[truncated strftime output]";
+                memset(buf->str + buf->len, '!', گنجائش);
+                حافظہ_نقل(buf->str + buf->len, txt, FFMIN(حجم(txt) - 1, گنجائش));
+                av_bprint_grow(buf, گنجائش); /* force truncation */
             }
-            return;
+            واپس;
         }
     }
     av_bprint_grow(buf, l);
 }
 
-void av_bprint_get_buffer(AVBPrint *buf, unsigned size,
-                          unsigned char **mem, unsigned *actual_size)
+خالی av_bprint_get_بفر(AVBPrint *buf, غیرعلامتی سائز,
+                          غیرعلامتی حرف **mem, غیرعلامتی *actual_سائز)
 {
-    if (size > av_bprint_room(buf))
-        av_bprint_alloc(buf, size);
-    *actual_size = av_bprint_room(buf);
-    *mem = *actual_size ? (unsigned char *) (buf->str + buf->len) : NULL;
+    اگر (سائز > av_bprint_گنجائش(buf))
+        av_bprint_alloc(buf, سائز);
+    *actual_سائز = av_bprint_گنجائش(buf);
+    *mem = *actual_سائز ? (غیرعلامتی حرف *) (buf->str + buf->len) : تہی;
 }
 
-void av_bprint_clear(AVBPrint *buf)
+خالی av_bprint_clear(AVBPrint *buf)
 {
-    if (buf->len) {
+    اگر (buf->len) {
         *buf->str = 0;
         buf->len  = 0;
     }
 }
 
-int av_bprint_finalize(AVBPrint *buf, char **ret_str)
+صحیح av_bprint_finalize(AVBPrint *buf, حرف **ret_str)
 {
-    unsigned real_size = FFMIN(buf->len + 1, buf->size);
-    char *str;
-    int ret = 0;
+    غیرعلامتی real_سائز = FFMIN(buf->len + 1, buf->سائز);
+    حرف *str;
+    صحیح ret = 0;
 
-    if (ret_str) {
-        if (av_bprint_is_allocated(buf)) {
-            str = av_realloc(buf->str, real_size);
-            if (!str)
+    اگر (ret_str) {
+        اگر (av_bprint_is_allocated(buf)) {
+            str = av_realloc(buf->str, real_سائز);
+            اگر (!str)
                 str = buf->str;
-            buf->str = NULL;
-        } else {
-            str = av_memdup(buf->str, real_size);
-            if (!str)
+            buf->str = تہی;
+        } ورنہ {
+            str = av_memdup(buf->str, real_سائز);
+            اگر (!str)
                 ret = AVERROR(ENOMEM);
         }
         *ret_str = str;
-    } else {
-        if (av_bprint_is_allocated(buf))
+    } ورنہ {
+        اگر (av_bprint_is_allocated(buf))
             av_freep(&buf->str);
     }
-    buf->size = real_size;
-    return ret;
+    buf->سائز = real_سائز;
+    واپس ret;
 }
 
-#define WHITESPACES " \n\t\r"
+#تعریف_کرو WHITESPACES " \n\t\r"
 
-void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
-                      enum AVEscapeMode mode, int flags)
+خالی av_bprint_escape(AVBPrint *dstbuf, ثابت حرف *src, ثابت حرف *special_chars,
+                      شمار AVEscape_منوال منوال, صحیح flags)
 {
-    const char *src0 = src;
+    ثابت حرف *src0 = src;
 
-    if (mode == AV_ESCAPE_MODE_AUTO)
-        mode = AV_ESCAPE_MODE_BACKSLASH; /* TODO: implement a heuristic */
+    اگر (منوال == AV_ESCAPE_منوال_AUTO)
+        منوال = AV_ESCAPE_منوال_BACKSLASH; /* TODO: implement a heuristic */
 
-    switch (mode) {
-    case AV_ESCAPE_MODE_QUOTE:
+    انتخاب (منوال) {
+    حالت AV_ESCAPE_منوال_QUOTE:
         /* enclose the string between '' */
         av_bprint_chars(dstbuf, '\'', 1);
-        for (; *src; src++) {
-            if (*src == '\'')
+        برائے (; *src; src++) {
+            اگر (*src == '\'')
                 av_bprintf(dstbuf, "'\\''");
-            else
+            ورنہ
                 av_bprint_chars(dstbuf, *src, 1);
         }
         av_bprint_chars(dstbuf, '\'', 1);
-        break;
+        توڑو;
 
-    case AV_ESCAPE_MODE_XML:
+    حالت AV_ESCAPE_منوال_XML:
         /* escape XML non-markup character data as per 2.4 by default: */
         /*  [^<&]* - ([^<&]* ']]>' [^<&]*) */
 
         /* additionally, given one of the AV_ESCAPE_FLAG_XML_* flags, */
         /* escape those specific characters as required. */
-        for (; *src; src++) {
-            switch (*src) {
-            case '&' : av_bprintf(dstbuf, "%s", "&amp;");  break;
-            case '<' : av_bprintf(dstbuf, "%s", "&lt;");   break;
-            case '>' : av_bprintf(dstbuf, "%s", "&gt;");   break;
-            case '\'':
-                if (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+        برائے (; *src; src++) {
+            انتخاب (*src) {
+            حالت '&' : av_bprintf(dstbuf, "%s", "&amp;");  توڑو;
+            حالت '<' : av_bprintf(dstbuf, "%s", "&lt;");   توڑو;
+            حالت '>' : av_bprintf(dstbuf, "%s", "&gt;");   توڑو;
+            حالت '\'':
+                اگر (!(flags & AV_ESCAPE_FLAG_XML_SINGLE_QUOTES))
+                    جاؤ XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&apos;");
-                break;
-            case '"' :
-                if (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
-                    goto XML_DEFAULT_HANDLING;
+                توڑو;
+            حالت '"' :
+                اگر (!(flags & AV_ESCAPE_FLAG_XML_DOUBLE_QUOTES))
+                    جاؤ XML_DEFAULT_HANDLING;
 
                 av_bprintf(dstbuf, "%s", "&quot;");
-                break;
+                توڑو;
 XML_DEFAULT_HANDLING:
-            default: av_bprint_chars(dstbuf, *src, 1);
+            طےشدہ: av_bprint_chars(dstbuf, *src, 1);
             }
         }
-        break;
+        توڑو;
 
     /* case AV_ESCAPE_MODE_BACKSLASH or unknown mode */
-    default:
+    طےشدہ:
         /* \-escape characters */
-        for (; *src; src++) {
-            int is_first_last       = src == src0 || !*(src+1);
-            int is_ws               = !!strchr(WHITESPACES, *src);
-            int is_strictly_special = special_chars && strchr(special_chars, *src);
-            int is_special          =
+        برائے (; *src; src++) {
+            صحیح is_پہلا_آخری       = src == src0 || !*(src+1);
+            صحیح is_ws               = !!strchr(WHITESPACES, *src);
+            صحیح is_strictly_special = special_chars && strchr(special_chars, *src);
+            صحیح is_special          =
                 is_strictly_special || strchr("'\\", *src) ||
                 (is_ws && (flags & AV_ESCAPE_FLAG_WHITESPACE));
 
-            if (is_strictly_special ||
+            اگر (is_strictly_special ||
                 (!(flags & AV_ESCAPE_FLAG_STRICT) &&
-                 (is_special || (is_ws && is_first_last))))
+                 (is_special || (is_ws && is_پہلا_آخری))))
                 av_bprint_chars(dstbuf, '\\', 1);
             av_bprint_chars(dstbuf, *src, 1);
         }
-        break;
+        توڑو;
     }
 }

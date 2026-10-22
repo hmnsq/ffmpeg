@@ -21,59 +21,59 @@
  * misc parsing utilities
  */
 
-#include <time.h>
+#شامل <time.h>
 
-#include "avstring.h"
-#include "avutil.h"
-#include "common.h"
-#include "eval.h"
-#include "log.h"
-#include "random_seed.h"
-#include "time_internal.h"
-#include "parseutils.h"
-#include "time.h"
+#شامل "avstring.h"
+#شامل "avutil.h"
+#شامل "common.h"
+#شامل "eval.h"
+#شامل "log.h"
+#شامل "random_seed.h"
+#شامل "time_internal.h"
+#شامل "parseutils.h"
+#شامل "time.h"
 
-#ifdef TEST
+#اگر_تعریف_شدہ TEST
 
-#define av_get_random_seed av_get_random_seed_deterministic
-static uint32_t av_get_random_seed_deterministic(void);
+#تعریف_کرو av_get_random_بیج av_get_random_بیج_deterministic
+ساکن uint32_t av_get_random_بیج_deterministic(خالی);
 
-#define av_gettime() 1331972053200000
+#تعریف_کرو av_gettime() 1331972053200000
 
-#endif
+#اگر_ختم
 
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx)
+صحیح av_parse_تناسب(AVRational *q, ثابت حرف *str, صحیح max,
+                   صحیح log_انحراف, خالی *log_ctx)
 {
-    char c;
-    int ret;
+    حرف c;
+    صحیح ret;
 
-    if (sscanf(str, "%d:%d%c", &q->num, &q->den, &c) != 2) {
-        double d;
-        ret = av_expr_parse_and_eval(&d, str, NULL, NULL,
-                                     NULL, NULL, NULL, NULL,
-                                     NULL, log_offset, log_ctx);
-        if (ret < 0)
-            return ret;
+    اگر (لڑی_سے_پڑھو(str, "%d:%d%c", &q->عدد, &q->den, &c) != 2) {
+        دوہرا d;
+        ret = av_اظہاریہ_parse_and_eval(&d, str, تہی, تہی,
+                                     تہی, تہی, تہی, تہی,
+                                     تہی, log_انحراف, log_ctx);
+        اگر (ret < 0)
+            واپس ret;
         *q = av_d2q(d, max);
-    } else {
-        av_reduce(&q->num, &q->den, q->num, q->den, max);
+    } ورنہ {
+        av_reduce(&q->عدد, &q->den, q->عدد, q->den, max);
     }
 
-    return 0;
+    واپس 0;
 }
 
-typedef struct VideoSizeAbbr {
-    const char *abbr;
-    int width, height;
-} VideoSizeAbbr;
+قسمتعریف ساخت Video_سائز_Abbr {
+    ثابت حرف *abbr;
+    صحیح چوڑائی, اونچائی;
+} Video_سائز_Abbr;
 
-typedef struct VideoRateAbbr {
-    const char *abbr;
-    AVRational rate;
-} VideoRateAbbr;
+قسمتعریف ساخت Video_شرح_Abbr {
+    ثابت حرف *abbr;
+    AVRational شرح;
+} Video_شرح_Abbr;
 
-static const VideoSizeAbbr video_size_abbrs[] = {
+ساکن ثابت Video_سائز_Abbr video_سائز_abbrs[] = {
     { "ntsc",      720, 480 },
     { "pal",       720, 576 },
     { "qntsc",     352, 240 }, /* VCD compliant NTSC */
@@ -131,7 +131,7 @@ static const VideoSizeAbbr video_size_abbrs[] = {
     { "uhd4320",  7680,4320 },
 };
 
-static const VideoRateAbbr video_rate_abbrs[]= {
+ساکن ثابت Video_شرح_Abbr video_شرح_abbrs[]= {
     { "ntsc",      { 30000, 1001 } },
     { "pal",       {    25,    1 } },
     { "qntsc",     { 30000, 1001 } }, /* VCD compliant NTSC */
@@ -142,71 +142,71 @@ static const VideoRateAbbr video_rate_abbrs[]= {
     { "ntsc-film", { 24000, 1001 } },
 };
 
-static const char *months[12] = {
+ساکن ثابت حرف *months[12] = {
     "january", "february", "march", "april", "may", "june", "july", "august",
     "september", "october", "november", "december"
 };
 
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str)
+صحیح av_parse_video_سائز(صحیح *چوڑائی_ptr, صحیح *اونچائی_ptr, ثابت حرف *str)
 {
-    int i;
-    int n = FF_ARRAY_ELEMS(video_size_abbrs);
-    const char *p;
-    int width = 0, height = 0;
+    صحیح i;
+    صحیح n = FF_ARRAY_ELEMS(video_سائز_abbrs);
+    ثابت حرف *p;
+    صحیح چوڑائی = 0, اونچائی = 0;
 
-    for (i = 0; i < n; i++) {
-        if (!strcmp(video_size_abbrs[i].abbr, str)) {
-            width  = video_size_abbrs[i].width;
-            height = video_size_abbrs[i].height;
-            break;
+    برائے (i = 0; i < n; i++) {
+        اگر (!strcmp(video_سائز_abbrs[i].abbr, str)) {
+            چوڑائی  = video_سائز_abbrs[i].چوڑائی;
+            اونچائی = video_سائز_abbrs[i].اونچائی;
+            توڑو;
         }
     }
-    if (i == n) {
-        width = strtol(str, (void*)&p, 10);
-        if (*p)
+    اگر (i == n) {
+        چوڑائی = strtol(str, (خالی*)&p, 10);
+        اگر (*p)
             p++;
-        height = strtol(p, (void*)&p, 10);
+        اونچائی = strtol(p, (خالی*)&p, 10);
 
         /* trailing extraneous data detected, like in 123x345foobar */
-        if (*p)
-            return AVERROR(EINVAL);
+        اگر (*p)
+            واپس AVERROR(EINVAL);
     }
-    if (width <= 0 || height <= 0)
-        return AVERROR(EINVAL);
-    *width_ptr  = width;
-    *height_ptr = height;
-    return 0;
+    اگر (چوڑائی <= 0 || اونچائی <= 0)
+        واپس AVERROR(EINVAL);
+    *چوڑائی_ptr  = چوڑائی;
+    *اونچائی_ptr = اونچائی;
+    واپس 0;
 }
 
-int av_parse_video_rate(AVRational *rate, const char *arg)
+صحیح av_parse_video_شرح(AVRational *شرح, ثابت حرف *arg)
 {
-    int i, ret;
-    int n = FF_ARRAY_ELEMS(video_rate_abbrs);
+    صحیح i, ret;
+    صحیح n = FF_ARRAY_ELEMS(video_شرح_abbrs);
 
     /* First, we check our abbreviation table */
-    for (i = 0; i < n; ++i)
-        if (!strcmp(video_rate_abbrs[i].abbr, arg)) {
-            *rate = video_rate_abbrs[i].rate;
-            return 0;
+    برائے (i = 0; i < n; ++i)
+        اگر (!strcmp(video_شرح_abbrs[i].abbr, arg)) {
+            *شرح = video_شرح_abbrs[i].شرح;
+            واپس 0;
         }
 
     /* Then, we try to parse it as fraction */
-    if ((ret = av_parse_ratio_quiet(rate, arg, 1001000)) < 0)
-        return ret;
-    if (!rate->num || !rate->den)
-        if ((ret = av_parse_ratio_quiet(rate, arg, INT_MAX)) < 0)
-            return ret;
-    if (rate->num <= 0 || rate->den <= 0)
-        return AVERROR(EINVAL);
-    return 0;
+    اگر ((ret = av_parse_تناسب_quiet(شرح, arg, 1001000)) < 0)
+        واپس ret;
+    اگر (!شرح->عدد || !شرح->den)
+        اگر ((ret = av_parse_تناسب_quiet(شرح, arg, زیادہ_سے_زیادہ_عدد)) < 0)
+            واپس ret;
+    اگر (شرح->عدد <= 0 || شرح->den <= 0)
+        واپس AVERROR(EINVAL);
+    واپس 0;
 }
 
-typedef struct ColorEntry {
-    const char *name;            ///< a string representing the name of the color
+قسمتعریف ساخت Color_اندراج {
+    ثابت حرف *name;            ///< a string representing the name of the color
     uint8_t     rgb_color[3];    ///< RGB values for the color
-} ColorEntry;
+} Color_اندراج;
 
-static const ColorEntry color_table[] = {
+ساکن ثابت Color_اندراج color_جدول[] = {
     { "AliceBlue",            { 0xF0, 0xF8, 0xFF } },
     { "AntiqueWhite",         { 0xFA, 0xEB, 0xD7 } },
     { "Aqua",                 { 0x00, 0xFF, 0xFF } },
@@ -349,234 +349,234 @@ static const ColorEntry color_table[] = {
     { "YellowGreen",          { 0x9A, 0xCD, 0x32 } },
 };
 
-static int color_table_compare(const void *lhs, const void *rhs)
+ساکن صحیح color_جدول_compare(ثابت خالی *lhs, ثابت خالی *rhs)
 {
-    return av_strcasecmp(lhs, ((const ColorEntry *)rhs)->name);
+    واپس av_strcasecmp(lhs, ((ثابت Color_اندراج *)rhs)->name);
 }
 
-#define ALPHA_SEP '@'
+#تعریف_کرو ALPHA_SEP '@'
 
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx)
+صحیح av_parse_color(uint8_t *rgba_color, ثابت حرف *color_string, صحیح slen,
+                   خالی *log_ctx)
 {
-    char *tail, color_string2[128];
-    const ColorEntry *entry;
-    int len, hex_offset = 0;
+    حرف *دم, color_string2[128];
+    ثابت Color_اندراج *اندراج_2;
+    صحیح len, hex_انحراف = 0;
 
-    if (color_string[0] == '#') {
-        hex_offset = 1;
-    } else if (!strncmp(color_string, "0x", 2))
-        hex_offset = 2;
+    اگر (color_string[0] == '#') {
+        hex_انحراف = 1;
+    } ورنہ اگر (!لڑی_موازنہ(color_string, "0x", 2))
+        hex_انحراف = 2;
 
-    if (slen < 0)
-        slen = strlen(color_string);
-    av_strlcpy(color_string2, color_string + hex_offset,
-               FFMIN(slen-hex_offset+1, sizeof(color_string2)));
-    if ((tail = strchr(color_string2, ALPHA_SEP)))
-        *tail++ = 0;
-    len = strlen(color_string2);
+    اگر (slen < 0)
+        slen = لڑی_لمبائی(color_string);
+    av_strlcpy(color_string2, color_string + hex_انحراف,
+               FFMIN(slen-hex_انحراف+1, حجم(color_string2)));
+    اگر ((دم = strchr(color_string2, ALPHA_SEP)))
+        *دم++ = 0;
+    len = لڑی_لمبائی(color_string2);
     rgba_color[3] = 255;
 
-    if (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
-        int rgba = av_get_random_seed();
+    اگر (!av_strcasecmp(color_string2, "random") || !av_strcasecmp(color_string2, "bikeshed")) {
+        صحیح rgba = av_get_random_بیج();
         rgba_color[0] = rgba >> 24;
         rgba_color[1] = rgba >> 16;
         rgba_color[2] = rgba >> 8;
         rgba_color[3] = rgba;
-    } else if (hex_offset ||
+    } ورنہ اگر (hex_انحراف ||
                strspn(color_string2, "0123456789ABCDEFabcdef") == len) {
-        char *tail;
-        unsigned int rgba = strtoul(color_string2, &tail, 16);
+        حرف *دم;
+        غیرعلامتی صحیح rgba = strtoul(color_string2, &دم, 16);
 
-        if (*tail || (len != 6 && len != 8)) {
+        اگر (*دم || (len != 6 && len != 8)) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid 0xRRGGBB[AA] color string: '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            واپس AVERROR(EINVAL);
         }
-        if (len == 8) {
+        اگر (len == 8) {
             rgba_color[3] = rgba;
             rgba >>= 8;
         }
         rgba_color[0] = rgba >> 16;
         rgba_color[1] = rgba >> 8;
         rgba_color[2] = rgba;
-    } else {
-        entry = bsearch(color_string2,
-                        color_table,
-                        FF_ARRAY_ELEMS(color_table),
-                        sizeof(ColorEntry),
-                        color_table_compare);
-        if (!entry) {
+    } ورنہ {
+        اندراج_2 = bsearch(color_string2,
+                        color_جدول,
+                        FF_ARRAY_ELEMS(color_جدول),
+                        حجم(Color_اندراج),
+                        color_جدول_compare);
+        اگر (!اندراج_2) {
             av_log(log_ctx, AV_LOG_ERROR, "Cannot find color '%s'\n", color_string2);
-            return AVERROR(EINVAL);
+            واپس AVERROR(EINVAL);
         }
-        memcpy(rgba_color, entry->rgb_color, 3);
+        حافظہ_نقل(rgba_color, اندراج_2->rgb_color, 3);
     }
 
-    if (tail) {
-        double alpha;
-        const char *alpha_string = tail;
-        if (!strncmp(alpha_string, "0x", 2)) {
-            alpha = strtoul(alpha_string, &tail, 16);
-        } else {
-            double norm_alpha = strtod(alpha_string, &tail);
-            if (norm_alpha < 0.0 || norm_alpha > 1.0)
+    اگر (دم) {
+        دوہرا alpha;
+        ثابت حرف *alpha_string = دم;
+        اگر (!لڑی_موازنہ(alpha_string, "0x", 2)) {
+            alpha = strtoul(alpha_string, &دم, 16);
+        } ورنہ {
+            دوہرا norm_alpha = strtod(alpha_string, &دم);
+            اگر (norm_alpha < 0.0 || norm_alpha > 1.0)
                 alpha = 256;
-            else
+            ورنہ
                 alpha = 255 * norm_alpha;
         }
 
-        if (tail == alpha_string || *tail || alpha > 255 || alpha < 0) {
+        اگر (دم == alpha_string || *دم || alpha > 255 || alpha < 0) {
             av_log(log_ctx, AV_LOG_ERROR, "Invalid alpha value specifier '%s' in '%s'\n",
                    alpha_string, color_string);
-            return AVERROR(EINVAL);
+            واپس AVERROR(EINVAL);
         }
         rgba_color[3] = alpha;
     }
 
-    return 0;
+    واپس 0;
 }
 
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgbp)
+ثابت حرف *av_get_معلوم_color_name(صحیح color_idx, ثابت uint8_t **rgbp)
 {
-    const ColorEntry *color;
+    ثابت Color_اندراج *color;
 
-    if ((unsigned)color_idx >= FF_ARRAY_ELEMS(color_table))
-        return NULL;
+    اگر ((غیرعلامتی)color_idx >= FF_ARRAY_ELEMS(color_جدول))
+        واپس تہی;
 
-    color = &color_table[color_idx];
-    if (rgbp)
+    color = &color_جدول[color_idx];
+    اگر (rgbp)
         *rgbp = color->rgb_color;
 
-    return color->name;
+    واپس color->name;
 }
 
 /* get a positive number between n_min and n_max, for a maximum length
    of len_max. Return -1 if error. */
-static int date_get_num(const char **pp,
-                        int n_min, int n_max, int len_max)
+ساکن صحیح date_get_عدد(ثابت حرف **pp,
+                        صحیح n_min, صحیح n_max, صحیح len_max)
 {
-    int i, val, c;
-    const char *p;
+    صحیح i, val, c;
+    ثابت حرف *p;
 
     p = *pp;
     val = 0;
-    for(i = 0; i < len_max; i++) {
+    برائے(i = 0; i < len_max; i++) {
         c = *p;
-        if (!av_isdigit(c))
-            break;
+        اگر (!av_isdigit(c))
+            توڑو;
         val = (val * 10) + c - '0';
         p++;
     }
     /* no number read ? */
-    if (p == *pp)
-        return -1;
-    if (val < n_min || val > n_max)
-        return -1;
+    اگر (p == *pp)
+        واپس -1;
+    اگر (val < n_min || val > n_max)
+        واپس -1;
     *pp = p;
-    return val;
+    واپس val;
 }
 
-static int date_get_month(const char **pp) {
-    int i = 0;
-    for (; i < 12; i++) {
-        if (!av_strncasecmp(*pp, months[i], 3)) {
-            const char *mo_full = months[i] + 3;
-            int len = strlen(mo_full);
+ساکن صحیح date_get_month(ثابت حرف **pp) {
+    صحیح i = 0;
+    برائے (; i < 12; i++) {
+        اگر (!av_strncasecmp(*pp, months[i], 3)) {
+            ثابت حرف *mo_بھرا = months[i] + 3;
+            صحیح len = لڑی_لمبائی(mo_بھرا);
             *pp += 3;
-            if (len > 0 && !av_strncasecmp(*pp, mo_full, len))
+            اگر (len > 0 && !av_strncasecmp(*pp, mo_بھرا, len))
                 *pp += len;
-            return i;
+            واپس i;
         }
     }
-    return -1;
+    واپس -1;
 }
 
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt)
+حرف *av_small_strptime(ثابت حرف *p, ثابت حرف *fmt, ساخت tm *dt)
 {
-    int c, val;
+    صحیح c, val;
 
-    while((c = *fmt++)) {
-        if (c != '%') {
-            if (av_isspace(c))
-                for (; *p && av_isspace(*p); p++);
-            else if (*p != c)
-                return NULL;
-            else p++;
-            continue;
+    جب((c = *fmt++)) {
+        اگر (c != '%') {
+            اگر (av_isspace(c))
+                برائے (; *p && av_isspace(*p); p++);
+            ورنہ اگر (*p != c)
+                واپس تہی;
+            ورنہ p++;
+            جاری;
         }
 
         c = *fmt++;
-        switch(c) {
-        case 'H':
-        case 'J':
-            val = date_get_num(&p, 0, c == 'H' ? 23 : INT_MAX, c == 'H' ? 2 : 4);
+        انتخاب(c) {
+        حالت 'H':
+        حالت 'J':
+            val = date_get_عدد(&p, 0, c == 'H' ? 23 : زیادہ_سے_زیادہ_عدد, c == 'H' ? 2 : 4);
 
-            if (val == -1)
-                return NULL;
+            اگر (val == -1)
+                واپس تہی;
             dt->tm_hour = val;
-            break;
-        case 'M':
-            val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            توڑو;
+        حالت 'M':
+            val = date_get_عدد(&p, 0, 59, 2);
+            اگر (val == -1)
+                واپس تہی;
             dt->tm_min = val;
-            break;
-        case 'S':
-            val = date_get_num(&p, 0, 59, 2);
-            if (val == -1)
-                return NULL;
+            توڑو;
+        حالت 'S':
+            val = date_get_عدد(&p, 0, 59, 2);
+            اگر (val == -1)
+                واپس تہی;
             dt->tm_sec = val;
-            break;
-        case 'Y':
-            val = date_get_num(&p, 0, 9999, 4);
-            if (val == -1)
-                return NULL;
+            توڑو;
+        حالت 'Y':
+            val = date_get_عدد(&p, 0, 9999, 4);
+            اگر (val == -1)
+                واپس تہی;
             dt->tm_year = val - 1900;
-            break;
-        case 'm':
-            val = date_get_num(&p, 1, 12, 2);
-            if (val == -1)
-                return NULL;
+            توڑو;
+        حالت 'm':
+            val = date_get_عدد(&p, 1, 12, 2);
+            اگر (val == -1)
+                واپس تہی;
             dt->tm_mon = val - 1;
-            break;
-        case 'd':
-            val = date_get_num(&p, 1, 31, 2);
-            if (val == -1)
-                return NULL;
+            توڑو;
+        حالت 'd':
+            val = date_get_عدد(&p, 1, 31, 2);
+            اگر (val == -1)
+                واپس تہی;
             dt->tm_mday = val;
-            break;
-        case 'T':
+            توڑو;
+        حالت 'T':
             p = av_small_strptime(p, "%H:%M:%S", dt);
-            if (!p)
-                return NULL;
-            break;
-        case 'b':
-        case 'B':
-        case 'h':
+            اگر (!p)
+                واپس تہی;
+            توڑو;
+        حالت 'b':
+        حالت 'B':
+        حالت 'h':
             val = date_get_month(&p);
-            if (val == -1)
-                return NULL;
+            اگر (val == -1)
+                واپس تہی;
             dt->tm_mon = val;
-            break;
-        case '%':
-            if (*p++ != '%')
-                return NULL;
-            break;
-        default:
-            return NULL;
+            توڑو;
+        حالت '%':
+            اگر (*p++ != '%')
+                واپس تہی;
+            توڑو;
+        طےشدہ:
+            واپس تہی;
         }
     }
 
-    return (char*)p;
+    واپس (حرف*)p;
 }
 
-time_t av_timegm(struct tm *tm)
+time_t av_timegm(ساخت tm *tm)
 {
     time_t t;
 
-    int y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
+    صحیح y = tm->tm_year + 1900, m = tm->tm_mon + 1, d = tm->tm_mday;
 
-    if (m < 3) {
+    اگر (m < 3) {
         m += 12;
         y--;
     }
@@ -586,147 +586,147 @@ time_t av_timegm(struct tm *tm)
 
     t += 3600 * tm->tm_hour + 60 * tm->tm_min + tm->tm_sec;
 
-    return t;
+    واپس t;
 }
 
-int av_parse_time(int64_t *timeval, const char *timestr, int duration)
+صحیح av_parse_وقت(int64_t *timeval, ثابت حرف *timestr, صحیح duration)
 {
-    const char *p, *q;
+    ثابت حرف *p, *q;
     int64_t t, now64;
     time_t now;
-    struct tm dt = { 0 }, tmbuf;
-    int today = 0, negative = 0, microseconds = 0, suffix = 1000000;
-    int i;
-    static const char * const date_fmt[] = {
+    ساخت tm dt = { 0 }, tmbuf;
+    صحیح today = 0, negative = 0, microseconds = 0, suffix = 1000000;
+    صحیح i;
+    ساکن ثابت حرف * ثابت date_fmt[] = {
         "%Y - %m - %d",
         "%Y%m%d",
     };
-    static const char * const time_fmt[] = {
+    ساکن ثابت حرف * ثابت وقت_fmt[] = {
         "%H:%M:%S",
         "%H%M%S",
     };
-    static const char * const tz_fmt[] = {
+    ساکن ثابت حرف * ثابت tz_fmt[] = {
         "%H:%M",
         "%H%M",
         "%H",
     };
 
     p = timestr;
-    q = NULL;
+    q = تہی;
     *timeval = INT64_MIN;
-    if (!duration) {
+    اگر (!duration) {
         now64 = av_gettime();
         now = now64 / 1000000;
 
-        if (!av_strcasecmp(timestr, "now")) {
+        اگر (!av_strcasecmp(timestr, "now")) {
             *timeval = now64;
-            return 0;
+            واپس 0;
         }
 
         /* parse the year-month-day part */
-        for (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
+        برائے (i = 0; i < FF_ARRAY_ELEMS(date_fmt); i++) {
             q = av_small_strptime(p, date_fmt[i], &dt);
-            if (q)
-                break;
+            اگر (q)
+                توڑو;
         }
 
         /* if the year-month-day part is missing, then take the
          * current year-month-day time */
-        if (!q) {
+        اگر (!q) {
             today = 1;
             q = p;
         }
         p = q;
 
-        if (*p == 'T' || *p == 't')
+        اگر (*p == 'T' || *p == 't')
             p++;
-        else
-            while (av_isspace(*p))
+        ورنہ
+            جب (av_isspace(*p))
                 p++;
 
         /* parse the hour-minute-second part */
-        for (i = 0; i < FF_ARRAY_ELEMS(time_fmt); i++) {
-            q = av_small_strptime(p, time_fmt[i], &dt);
-            if (q)
-                break;
+        برائے (i = 0; i < FF_ARRAY_ELEMS(وقت_fmt); i++) {
+            q = av_small_strptime(p, وقت_fmt[i], &dt);
+            اگر (q)
+                توڑو;
         }
-    } else {
+    } ورنہ {
         /* parse timestr as a duration */
-        if (p[0] == '-') {
+        اگر (p[0] == '-') {
             negative = 1;
             ++p;
         }
         /* parse timestr as HH:MM:SS */
         q = av_small_strptime(p, "%J:%M:%S", &dt);
-        if (!q) {
+        اگر (!q) {
             /* parse timestr as MM:SS */
             q = av_small_strptime(p, "%M:%S", &dt);
             dt.tm_hour = 0;
         }
-        if (!q) {
-            char *o;
+        اگر (!q) {
+            حرف *o;
             /* parse timestr as S+ */
             errno = 0;
             t = strtoll(p, &o, 10);
-            if (o == p) /* the parsing didn't succeed */
-                return AVERROR(EINVAL);
-            if (errno == ERANGE)
-                return AVERROR(ERANGE);
+            اگر (o == p) /* the parsing didn't succeed */
+                واپس AVERROR(EINVAL);
+            اگر (errno == ERANGE)
+                واپس AVERROR(ERANGE);
             q = o;
-        } else {
+        } ورنہ {
             t = dt.tm_hour * 3600 + dt.tm_min * 60 + dt.tm_sec;
         }
     }
 
     /* Now we have all the fields that we can get */
-    if (!q)
-        return AVERROR(EINVAL);
+    اگر (!q)
+        واپس AVERROR(EINVAL);
 
     /* parse the .m... part */
-    if (*q == '.') {
-        int n;
+    اگر (*q == '.') {
+        صحیح n;
         q++;
-        for (n = 100000; n >= 1; n /= 10, q++) {
-            if (!av_isdigit(*q))
-                break;
+        برائے (n = 100000; n >= 1; n /= 10, q++) {
+            اگر (!av_isdigit(*q))
+                توڑو;
             microseconds += n * (*q - '0');
         }
-        while (av_isdigit(*q))
+        جب (av_isdigit(*q))
             q++;
     }
 
-    if (duration) {
-        if (q[0] == 'm' && q[1] == 's') {
+    اگر (duration) {
+        اگر (q[0] == 'm' && q[1] == 's') {
             suffix = 1000;
             microseconds /= 1000;
             q += 2;
-        } else if (q[0] == 'u' && q[1] == 's') {
+        } ورنہ اگر (q[0] == 'u' && q[1] == 's') {
             suffix = 1;
             microseconds = 0;
             q += 2;
-        } else if (*q == 's')
+        } ورنہ اگر (*q == 's')
             q++;
-    } else {
-        int is_utc = *q == 'Z' || *q == 'z';
-        int tzoffset = 0;
+    } ورنہ {
+        صحیح is_utc = *q == 'Z' || *q == 'z';
+        صحیح tzoffset = 0;
         q += is_utc;
-        if (!today && !is_utc && (*q == '+' || *q == '-')) {
-            struct tm tz = { 0 };
-            int sign = (*q == '+' ? -1 : 1);
+        اگر (!today && !is_utc && (*q == '+' || *q == '-')) {
+            ساخت tm tz = { 0 };
+            صحیح sign = (*q == '+' ? -1 : 1);
             q++;
             p = q;
-            for (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
+            برائے (i = 0; i < FF_ARRAY_ELEMS(tz_fmt); i++) {
                 q = av_small_strptime(p, tz_fmt[i], &tz);
-                if (q)
-                    break;
+                اگر (q)
+                    توڑو;
             }
-            if (!q)
-                return AVERROR(EINVAL);
+            اگر (!q)
+                واپس AVERROR(EINVAL);
             tzoffset = sign * (tz.tm_hour * 60 + tz.tm_min) * 60;
             is_utc = 1;
         }
-        if (today) { /* fill in today's date */
-            struct tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
+        اگر (today) { /* fill in today's date */
+            ساخت tm dt2 = is_utc ? *gmtime_r(&now, &tmbuf) : *localtime_r(&now, &tmbuf);
             dt2.tm_hour = dt.tm_hour;
             dt2.tm_min  = dt.tm_min;
             dt2.tm_sec  = dt.tm_sec;
@@ -738,56 +738,56 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration)
     }
 
     /* Check that we are at the end of the string */
-    if (*q)
-        return AVERROR(EINVAL);
+    اگر (*q)
+        واپس AVERROR(EINVAL);
 
-    if (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
-        return AVERROR(ERANGE);
+    اگر (INT64_MAX / suffix < t || t < INT64_MIN / suffix)
+        واپس AVERROR(ERANGE);
     t *= suffix;
-    if (INT64_MAX - microseconds < t)
-        return AVERROR(ERANGE);
+    اگر (INT64_MAX - microseconds < t)
+        واپس AVERROR(ERANGE);
     t += microseconds;
-    if (t == INT64_MIN && negative)
-        return AVERROR(ERANGE);
+    اگر (t == INT64_MIN && negative)
+        واپس AVERROR(ERANGE);
     *timeval = negative ? -t : t;
-    return 0;
+    واپس 0;
 }
 
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info)
+صحیح av_ڈھونڈو_info_لیبل(حرف *arg, صحیح arg_سائز, ثابت حرف *tag1, ثابت حرف *info)
 {
-    const char *p;
-    char tag[128], *q;
+    ثابت حرف *p;
+    حرف لیبل[128], *q;
 
     p = info;
-    if (*p == '?')
+    اگر (*p == '?')
         p++;
-    for(;;) {
-        q = tag;
-        while (*p != '\0' && *p != '=' && *p != '&') {
-            if ((q - tag) < sizeof(tag) - 1)
+    برائے(;;) {
+        q = لیبل;
+        جب (*p != '\0' && *p != '=' && *p != '&') {
+            اگر ((q - لیبل) < حجم(لیبل) - 1)
                 *q++ = *p;
             p++;
         }
         *q = '\0';
         q = arg;
-        if (*p == '=') {
+        اگر (*p == '=') {
             p++;
-            while (*p != '&' && *p != '\0') {
-                if ((q - arg) < arg_size - 1) {
-                    if (*p == '+')
+            جب (*p != '&' && *p != '\0') {
+                اگر ((q - arg) < arg_سائز - 1) {
+                    اگر (*p == '+')
                         *q++ = ' ';
-                    else
+                    ورنہ
                         *q++ = *p;
                 }
                 p++;
             }
         }
         *q = '\0';
-        if (!strcmp(tag, tag1))
-            return 1;
-        if (*p != '&')
-            break;
+        اگر (!strcmp(لیبل, tag1))
+            واپس 1;
+        اگر (*p != '&')
+            توڑو;
         p++;
     }
-    return 0;
+    واپس 0;
 }

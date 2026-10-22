@@ -16,85 +16,85 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#شامل <limits.h>
+#شامل <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/hdr_dynamic_vivid_metadata.h"
-#include "libavutil/mem.h"
+#شامل "libavutil/frame.h"
+#شامل "libavutil/hdr_dynamic_vivid_metadata.h"
+#شامل "libavutil/mem.h"
 
-int main(void)
+صحیح مین(خالی)
 {
     AVDynamicHDRVivid *vivid;
-    AVFrame *frame;
-    size_t size;
+    AVFrame *چوکھٹا;
+    size_t سائز;
 
     /* av_dynamic_hdr_vivid_alloc */
-    printf("Testing av_dynamic_hdr_vivid_alloc()\n");
-    vivid = av_dynamic_hdr_vivid_alloc(&size);
-    if (vivid) {
-        printf("alloc: OK, size>0=%s\n", size > 0 ? "yes" : "no");
-        printf("defaults: system_start_code=%u, num_windows=%u\n",
-               vivid->system_start_code, vivid->num_windows);
+    لکھو("Testing av_dynamic_hdr_vivid_alloc()\n");
+    vivid = av_dynamic_hdr_vivid_alloc(&سائز);
+    اگر (vivid) {
+        لکھو("alloc: OK, size>0=%s\n", سائز > 0 ? "yes" : "no");
+        لکھو("defaults: system_start_code=%u, num_windows=%u\n",
+               vivid->system_آغاز_رمز, vivid->عدد_windows);
 
         /* write and read back */
-        vivid->system_start_code = 0x01;
-        vivid->num_windows = 1;
+        vivid->system_آغاز_رمز = 0x01;
+        vivid->عدد_windows = 1;
         vivid->params[0].minimum_maxrgb = (AVRational){ 100, 1 };
-        vivid->params[0].average_maxrgb = (AVRational){ 500, 1 };
+        vivid->params[0].اوسط_قدر_maxrgb = (AVRational){ 500, 1 };
         vivid->params[0].variance_maxrgb = (AVRational){ 200, 1 };
-        vivid->params[0].maximum_maxrgb = (AVRational){ 1000, 1 };
-        printf("write: system_start_code=%u, num_windows=%u\n",
-               vivid->system_start_code, vivid->num_windows);
-        printf("params[0]: min=%d/%d avg=%d/%d var=%d/%d max=%d/%d\n",
-               vivid->params[0].minimum_maxrgb.num,
+        vivid->params[0].زیادہ_سے_زیادہ_maxrgb = (AVRational){ 1000, 1 };
+        لکھو("write: system_start_code=%u, num_windows=%u\n",
+               vivid->system_آغاز_رمز, vivid->عدد_windows);
+        لکھو("params[0]: min=%d/%d avg=%d/%d var=%d/%d max=%d/%d\n",
+               vivid->params[0].minimum_maxrgb.عدد,
                vivid->params[0].minimum_maxrgb.den,
-               vivid->params[0].average_maxrgb.num,
-               vivid->params[0].average_maxrgb.den,
-               vivid->params[0].variance_maxrgb.num,
+               vivid->params[0].اوسط_قدر_maxrgb.عدد,
+               vivid->params[0].اوسط_قدر_maxrgb.den,
+               vivid->params[0].variance_maxrgb.عدد,
                vivid->params[0].variance_maxrgb.den,
-               vivid->params[0].maximum_maxrgb.num,
-               vivid->params[0].maximum_maxrgb.den);
+               vivid->params[0].زیادہ_سے_زیادہ_maxrgb.عدد,
+               vivid->params[0].زیادہ_سے_زیادہ_maxrgb.den);
         av_free(vivid);
     }
 
     /* alloc with NULL size */
-    vivid = av_dynamic_hdr_vivid_alloc(NULL);
-    printf("alloc (no size): %s\n", vivid ? "OK" : "FAIL");
+    vivid = av_dynamic_hdr_vivid_alloc(تہی);
+    لکھو("alloc (no size): %s\n", vivid ? "OK" : "FAIL");
     av_free(vivid);
 
     /* av_dynamic_hdr_vivid_create_side_data */
-    printf("\nTesting av_dynamic_hdr_vivid_create_side_data()\n");
-    frame = av_frame_alloc();
-    if (frame) {
-        vivid = av_dynamic_hdr_vivid_create_side_data(frame);
-        if (vivid) {
-            printf("side_data: OK\n");
-            vivid->system_start_code = 0x02;
-            printf("side_data write: system_start_code=%u\n",
-                   vivid->system_start_code);
-        } else {
-            printf("side_data: FAIL\n");
+    لکھو("\nTesting av_dynamic_hdr_vivid_create_side_data()\n");
+    چوکھٹا = av_چوکھٹا_alloc();
+    اگر (چوکھٹا) {
+        vivid = av_dynamic_hdr_vivid_create_side_ڈیٹا(چوکھٹا);
+        اگر (vivid) {
+            لکھو("side_data: OK\n");
+            vivid->system_آغاز_رمز = 0x02;
+            لکھو("side_data write: system_start_code=%u\n",
+                   vivid->system_آغاز_رمز);
+        } ورنہ {
+            لکھو("side_data: FAIL\n");
         }
-        av_frame_free(&frame);
+        av_چوکھٹا_free(&چوکھٹا);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    لکھو("\nTesting OOM paths\n");
     av_max_alloc(1);
-    vivid = av_dynamic_hdr_vivid_alloc(&size);
-    printf("alloc OOM: %s\n", vivid ? "FAIL" : "OK");
+    vivid = av_dynamic_hdr_vivid_alloc(&سائز);
+    لکھو("alloc OOM: %s\n", vivid ? "FAIL" : "OK");
     av_free(vivid);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(زیادہ_سے_زیادہ_عدد);
 
-    frame = av_frame_alloc();
-    if (frame) {
+    چوکھٹا = av_چوکھٹا_alloc();
+    اگر (چوکھٹا) {
         av_max_alloc(1);
-        vivid = av_dynamic_hdr_vivid_create_side_data(frame);
-        printf("side_data OOM: %s\n", vivid ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
-        av_frame_free(&frame);
+        vivid = av_dynamic_hdr_vivid_create_side_ڈیٹا(چوکھٹا);
+        لکھو("side_data OOM: %s\n", vivid ? "FAIL" : "OK");
+        av_max_alloc(زیادہ_سے_زیادہ_عدد);
+        av_چوکھٹا_free(&چوکھٹا);
     }
 
-    return 0;
+    واپس 0;
 }

@@ -16,19 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "intmath.h"
+#شامل "intmath.h"
 
 /* undef these to get the function prototypes from common.h */
-#undef av_log2
-#undef av_log2_16bit
-#include "common.h"
+#تعریف_منسوخ av_log2
+#تعریف_منسوخ av_log2_16bit
+#شامل "common.h"
 
-int av_log2(unsigned v)
+صحیح av_log2(غیرعلامتی v)
 {
-    return ff_log2(v);
+    واپس ff_log2(v);
 }
 
-int av_log2_16bit(unsigned v)
+صحیح av_log2_16bit(غیرعلامتی v)
 {
-    return ff_log2_16bit(v);
+    واپس ff_log2_16bit(v);
 }

@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AES_CTR_H
-#define AVUTIL_AES_CTR_H
+#اگر_غیر_تعریف_شدہ AVUTIL_AES_CTR_H
+#تعریف_کرو AVUTIL_AES_CTR_H
 
 /**
  * @defgroup lavu_aes_ctr AES-CTR
@@ -28,19 +28,19 @@
  * @{
  */
 
-#include <stdint.h>
+#شامل <stdint.h>
 
-#include "attributes.h"
+#شامل "attributes.h"
 
-#define AES_CTR_KEY_SIZE (16)
-#define AES_CTR_IV_SIZE (8)
+#تعریف_کرو AES_CTR_کلید_سائز (16)
+#تعریف_کرو AES_CTR_IV_سائز (8)
 
-struct AVAESCTR;
+ساخت AVAESCTR;
 
 /**
  * Allocate an AVAESCTR context.
  */
-struct AVAESCTR *av_aes_ctr_alloc(void);
+ساخت AVAESCTR *av_aes_ctr_alloc(خالی);
 
 /**
  * Initialize an AVAESCTR context.
@@ -48,14 +48,14 @@ struct AVAESCTR *av_aes_ctr_alloc(void);
  * @param a The AVAESCTR context to initialize
  * @param key encryption key, must have a length of AES_CTR_KEY_SIZE
  */
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key);
+صحیح av_aes_ctr_init(ساخت AVAESCTR *a, ثابت uint8_t *کلید);
 
 /**
  * Release an AVAESCTR context.
  *
  * @param a The AVAESCTR context
  */
-void av_aes_ctr_free(struct AVAESCTR *a);
+خالی av_aes_ctr_free(ساخت AVAESCTR *a);
 
 /**
  * Process a buffer using a previously initialized context.
@@ -65,35 +65,35 @@ void av_aes_ctr_free(struct AVAESCTR *a);
  * @param src source array, can be equal to dst
  * @param size the size of src and dst
  */
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int size);
+خالی av_aes_ctr_crypt(ساخت AVAESCTR *a, uint8_t *dst, ثابت uint8_t *src, صحیح سائز);
 
 /**
  * Get the current iv
  */
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a);
+ثابت uint8_t* av_aes_ctr_get_iv(ساخت AVAESCTR *a);
 
 /**
  * Generate a random iv
  */
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a);
+خالی av_aes_ctr_سیٹ_random_iv(ساخت AVAESCTR *a);
 
 /**
  * Forcefully change the 8-byte iv
  */
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv);
+خالی av_aes_ctr_سیٹ_iv(ساخت AVAESCTR *a, ثابت uint8_t* iv);
 
 /**
  * Forcefully change the "full" 16-byte iv, including the counter
  */
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv);
+خالی av_aes_ctr_سیٹ_بھرا_iv(ساخت AVAESCTR *a, ثابت uint8_t* iv);
 
 /**
  * Increment the top 64 bit of the iv (performed after each frame)
  */
-void av_aes_ctr_increment_iv(struct AVAESCTR *a);
+خالی av_aes_ctr_increment_iv(ساخت AVAESCTR *a);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_AES_CTR_H */
+#اگر_ختم /* AVUTIL_AES_CTR_H */

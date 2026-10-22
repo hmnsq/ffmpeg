@@ -16,112 +16,112 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/imgutils.c"
-#include "libavutil/crc.h"
-#include "libavutil/mem.h"
+#شامل "libavutil/imgutils.c"
+#شامل "libavutil/crc.h"
+#شامل "libavutil/mem.h"
 
-static int check_image_fill(enum AVPixelFormat pix_fmt, int w, int h) {
-    uint8_t *data[4];
+ساکن صحیح check_image_fill(شمار AVPixelFormat pix_fmt, صحیح w, صحیح h) {
+    uint8_t *ڈیٹا[4];
     size_t sizes[4];
     ptrdiff_t linesizes1[4], offsets[3] = { 0 };
-    int i, total_size, linesizes[4];
+    صحیح i, کل_سائز, linesizes[4];
 
-    if (av_image_fill_linesizes(linesizes, pix_fmt, w) < 0)
-        return -1;
-    for (i = 0; i < 4; i++)
+    اگر (av_image_fill_linesizes(linesizes, pix_fmt, w) < 0)
+        واپس -1;
+    برائے (i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
-    if (av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1) < 0)
-        return -1;
-    total_size = av_image_fill_pointers(data, pix_fmt, h, (void *)1, linesizes);
-    if (total_size < 0)
-        return -1;
-    for (i = 0; i < 4 && data[i]; i++);
-    printf("planes: %d", i);
+    اگر (av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1) < 0)
+        واپس -1;
+    کل_سائز = av_image_fill_اشارے(ڈیٹا, pix_fmt, h, (خالی *)1, linesizes);
+    اگر (کل_سائز < 0)
+        واپس -1;
+    برائے (i = 0; i < 4 && ڈیٹا[i]; i++);
+    لکھو("planes: %d", i);
     // Test the output of av_image_fill_linesizes()
-    printf(", linesizes:");
-    for (i = 0; i < 4; i++)
-        printf(" %3d", linesizes[i]);
+    لکھو(", linesizes:");
+    برائے (i = 0; i < 4; i++)
+        لکھو(" %3d", linesizes[i]);
     // Test the output of av_image_fill_plane_sizes()
-    printf(", plane_sizes:");
-    for (i = 0; i < 4; i++)
-        printf(" %5zu", sizes[i]);
+    لکھو(", plane_sizes:");
+    برائے (i = 0; i < 4; i++)
+        لکھو(" %5zu", sizes[i]);
     // Test the output of av_image_fill_pointers()
-    for (i = 0; i < 3 && data[i + 1]; i++)
-        offsets[i] = data[i + 1] - data[i];
-    printf(", plane_offsets:");
-    for (i = 0; i < 3; i++)
-        printf(" %5td", offsets[i]);
-    printf(", total_size: %d", total_size);
+    برائے (i = 0; i < 3 && ڈیٹا[i + 1]; i++)
+        offsets[i] = ڈیٹا[i + 1] - ڈیٹا[i];
+    لکھو(", plane_offsets:");
+    برائے (i = 0; i < 3; i++)
+        لکھو(" %5td", offsets[i]);
+    لکھو(", total_size: %d", کل_سائز);
 
-    return 0;
+    واپس 0;
 }
 
-static int check_image_fill_black(const AVPixFmtDescriptor *desc, enum AVPixelFormat pix_fmt, int w, int h)
+ساکن صحیح check_image_fill_black(ثابت AVPixFmtDescriptor *desc, شمار AVPixelFormat pix_fmt, صحیح w, صحیح h)
 {
-    uint8_t *data[4];
+    uint8_t *ڈیٹا[4];
     ptrdiff_t linesizes1[4];
-    int ret, total_size, linesizes[4];
+    صحیح ret, کل_سائز, linesizes[4];
 
     ret = av_image_fill_linesizes(linesizes, pix_fmt, w);
-    if (ret < 0)
-        return ret;
-    total_size = av_image_alloc(data, linesizes, w, h, pix_fmt, 4);
-    if (total_size < 0) {
-        printf("alloc failure");
-        return total_size;
+    اگر (ret < 0)
+        واپس ret;
+    کل_سائز = av_image_alloc(ڈیٹا, linesizes, w, h, pix_fmt, 4);
+    اگر (کل_سائز < 0) {
+        لکھو("alloc failure");
+        واپس کل_سائز;
     }
-    printf("total_size: %6d", total_size);
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL)
-        total_size -= 256 * 4;
+    لکھو("total_size: %6d", کل_سائز);
+    اگر (desc->flags & AV_PIX_FMT_FLAG_PAL)
+        کل_سائز -= 256 * 4;
     // Make it non-black by default...
-    memset(data[0], 0xA3, total_size);
-    for (int i = 0; i < 4; i++)
+    memset(ڈیٹا[0], 0xA3, کل_سائز);
+    برائے (صحیح i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
-    for (enum AVColorRange range = 0; range < AVCOL_RANGE_NB; range++) {
-        ret = av_image_fill_black(data, linesizes1, pix_fmt, range, w, h);
-        printf(",  black_%s_crc: ", av_color_range_name(range));
-        if (ret < 0) {
-            printf("----------");
-        } else {
-            const AVCRC *crc = av_crc_get_table(AV_CRC_32_IEEE_LE);
-            printf("0x%08"PRIx32, av_crc(crc, 0, data[0], total_size));
+    برائے (شمار AVColorRange range = 0; range < AVCOL_RANGE_NB; range++) {
+        ret = av_image_fill_black(ڈیٹا, linesizes1, pix_fmt, range, w, h);
+        لکھو(",  black_%s_crc: ", av_color_range_name(range));
+        اگر (ret < 0) {
+            لکھو("----------");
+        } ورنہ {
+            ثابت AVCRC *چکری_جانچ = av_چکری_جانچ_get_جدول(AV_چکری_جانچ_32_IEEE_LE);
+            لکھو("0x%08"PRIx32, av_چکری_جانچ(چکری_جانچ, 0, ڈیٹا[0], کل_سائز));
         }
     }
-    av_freep(&data[0]);
+    av_freep(&ڈیٹا[0]);
 
-    return 0;
+    واپس 0;
 }
 
-int main(void)
+صحیح مین(خالی)
 {
     int64_t x, y;
 
-    for (y = -1; y<UINT_MAX; y+= y/2 + 1) {
-        for (x = -1; x<UINT_MAX; x+= x/2 + 1) {
-            int ret = av_image_check_size(x, y, 0, NULL);
-            printf("%d", ret >= 0);
+    برائے (y = -1; y<UINT_MAX; y+= y/2 + 1) {
+        برائے (x = -1; x<UINT_MAX; x+= x/2 + 1) {
+            صحیح ret = av_image_check_سائز(x, y, 0, تہی);
+            لکھو("%d", ret >= 0);
         }
-        printf("\n");
+        لکھو("\n");
     }
-    printf("\n");
+    لکھو("\n");
 
-    for (int i = 0; i < 2; i++) {
-        printf(i ? "\nimage_fill_black tests\n" : "image_fill tests\n");
-        for (const AVPixFmtDescriptor *desc = NULL; desc = av_pix_fmt_desc_next(desc);) {
-            int w = 64, h = 48;
-            enum AVPixelFormat pix_fmt = av_pix_fmt_desc_get_id(desc);
+    برائے (صحیح i = 0; i < 2; i++) {
+        لکھو(i ? "\nimage_fill_black tests\n" : "image_fill tests\n");
+        برائے (ثابت AVPixFmtDescriptor *desc = تہی; desc = av_pix_fmt_desc_اگلا(desc);) {
+            صحیح w = 64, h = 48;
+            شمار AVPixelFormat pix_fmt = av_pix_fmt_desc_get_id(desc);
 
-            if (desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-                continue;
+            اگر (desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+                جاری;
 
-            printf("%-16s", desc->name);
-            if (i == 0)
+            لکھو("%-16s", desc->name);
+            اگر (i == 0)
                 check_image_fill(pix_fmt, w, h);
-            else
+            ورنہ
                 check_image_fill_black(desc, pix_fmt, w, h);
-            printf("\n");
+            لکھو("\n");
         }
     }
 
-    return 0;
+    واپس 0;
 }

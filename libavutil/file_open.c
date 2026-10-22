@@ -16,177 +16,177 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "avutil.h"
-#include "file_open.h"
-#include "mem.h"
-#include <stdarg.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_IO_H
-#include <io.h>
-#endif
+#شامل "config.h"
+#شامل "avutil.h"
+#شامل "file_open.h"
+#شامل "mem.h"
+#شامل <stdarg.h>
+#شامل <fcntl.h>
+#شامل <sys/stat.h>
+#اگر HAVE_UNISTD_H
+#شامل <unistd.h>
+#اگر_ختم
+#اگر HAVE_IO_H
+#شامل <io.h>
+#اگر_ختم
 
-#ifdef _WIN32
-#undef open
-#undef lseek
-#undef stat
-#undef fstat
-#include <windows.h>
-#include <share.h>
-#include <errno.h>
-#include "wchar_filename.h"
+#اگر_تعریف_شدہ _WIN32
+#تعریف_منسوخ open
+#تعریف_منسوخ lseek
+#تعریف_منسوخ stat
+#تعریف_منسوخ fstat
+#شامل <windows.h>
+#شامل <share.h>
+#شامل <errno.h>
+#شامل "wchar_filename.h"
 
-static int win32_open(const char *filename_utf8, int oflag, int pmode)
+ساکن صحیح win32_open(ثابت حرف *filename_utf8, صحیح oflag, صحیح pmode)
 {
-    int fd;
+    صحیح fd;
     wchar_t *filename_w;
 
     /* convert UTF-8 to wide chars */
-    if (get_extended_win32_path(filename_utf8, &filename_w))
-        return -1;
-    if (!filename_w)
-        goto fallback;
+    اگر (get_extended_win32_راستہ(filename_utf8, &filename_w))
+        واپس -1;
+    اگر (!filename_w)
+        جاؤ fallback;
 
     fd = _wsopen(filename_w, oflag, SH_DENYNO, pmode);
     av_freep(&filename_w);
 
-    if (fd != -1 || (oflag & O_CREAT))
-        return fd;
+    اگر (fd != -1 || (oflag & O_CREAT))
+        واپس fd;
 
 fallback:
     /* filename may be in CP_ACP */
-    return _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
+    واپس _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
 }
-#define open win32_open
-#endif
+#تعریف_کرو open win32_open
+#اگر_ختم
 
-int avpriv_open(const char *filename, int flags, ...)
+صحیح avpriv_open(ثابت حرف *filename, صحیح flags, ...)
 {
-    int fd;
-    unsigned int mode = 0;
+    صحیح fd;
+    غیرعلامتی صحیح منوال = 0;
     va_list ap;
 
     va_start(ap, flags);
-    if (flags & O_CREAT)
-        mode = va_arg(ap, unsigned int);
+    اگر (flags & O_CREAT)
+        منوال = va_arg(ap, غیرعلامتی صحیح);
     va_end(ap);
 
-#ifdef O_CLOEXEC
+#اگر_تعریف_شدہ O_CLOEXEC
     flags |= O_CLOEXEC;
-#endif
-#ifdef O_NOINHERIT
+#اگر_ختم
+#اگر_تعریف_شدہ O_NOINHERIT
     flags |= O_NOINHERIT;
-#endif
+#اگر_ختم
 
-    fd = open(filename, flags, mode);
-#if HAVE_FCNTL
-    if (fd != -1) {
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
-            av_log(NULL, AV_LOG_DEBUG, "Failed to set close on exec\n");
+    fd = open(filename, flags, منوال);
+#اگر HAVE_FCNTL
+    اگر (fd != -1) {
+        اگر (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
+            av_log(تہی, AV_LOG_DEBUG, "Failed to set close on exec\n");
     }
-#endif
+#اگر_ختم
 
-    return fd;
+    واپس fd;
 }
 
-typedef struct FileLogContext {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+قسمتعریف ساخت FileLogContext {
+    ثابت AVClass *class;
+    صحیح   log_انحراف;
+    خالی *log_ctx;
 } FileLogContext;
 
-static const AVClass file_log_ctx_class = {
+ساکن ثابت AVClass file_log_ctx_class = {
     .class_name                = "TEMPFILE",
-    .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(FileLogContext, log_offset),
-    .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
+    .شے_name                 = av_default_شے_name,
+    .option                    = تہی,
+    .نسخہ                   = LIBAVUTIL_نسخہ_INT,
+    .log_level_انحراف_انحراف   = offsetof(FileLogContext, log_انحراف),
+    .والد_log_context_انحراف = offsetof(FileLogContext, log_ctx),
 };
 
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx)
+صحیح avpriv_tempfile(ثابت حرف *سابقہ, حرف **filename, صحیح log_انحراف, خالی *log_ctx)
 {
-    FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int fd = -1;
-#if HAVE_MKSTEMP
-    size_t len = strlen(prefix) + 12; /* room for "/tmp/" and "XXXXXX\0" */
+    FileLogContext file_log_ctx = { &file_log_ctx_class, log_انحراف, log_ctx };
+    صحیح fd = -1;
+#اگر HAVE_MKSTEMP
+    size_t len = لڑی_لمبائی(سابقہ) + 12; /* room for "/tmp/" and "XXXXXX\0" */
     *filename  = av_malloc(len);
-#elif HAVE_TEMPNAM
-    void *ptr= tempnam(NULL, prefix);
-    if(!ptr)
-        ptr= tempnam(".", prefix);
+#وگرنہ_اگر HAVE_TEMPNAM
+    خالی *ptr= tempnam(تہی, سابقہ);
+    اگر(!ptr)
+        ptr= tempnam(".", سابقہ);
     *filename = av_strdup(ptr);
-    free(ptr);
-#else
-    return AVERROR(ENOSYS);
-#endif
+    آزاد(ptr);
+#ورنہ
+    واپس AVERROR(ENOSYS);
+#اگر_ختم
     /* -----common section-----*/
-    if (!*filename) {
+    اگر (!*filename) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot allocate file name\n");
-        return AVERROR(ENOMEM);
+        واپس AVERROR(ENOMEM);
     }
-#if !HAVE_MKSTEMP
-#   ifndef O_BINARY
-#       define O_BINARY 0
+#اگر !HAVE_MKSTEMP
+#   ifndef O_ثنائی
+#       define O_ثنائی 0
 #   endif
 #   ifndef O_EXCL
 #       define O_EXCL 0
 #   endif
-    fd = open(*filename, O_RDWR | O_BINARY | O_CREAT | O_EXCL, 0600);
-#else
-    snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
+    fd = open(*filename, O_RDWR | O_ثنائی | O_CREAT | O_EXCL, 0600);
+#ورنہ
+    snprintf(*filename, len, "/tmp/%sXXXXXX", سابقہ);
     fd = mkstemp(*filename);
-#if defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
-    if (fd < 0) {
-        snprintf(*filename, len, "./%sXXXXXX", prefix);
+#اگر defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
+    اگر (fd < 0) {
+        snprintf(*filename, len, "./%sXXXXXX", سابقہ);
         fd = mkstemp(*filename);
     }
-#endif
-#endif
+#اگر_ختم
+#اگر_ختم
     /* -----common section-----*/
-    if (fd < 0) {
-        int err = AVERROR(errno);
+    اگر (fd < 0) {
+        صحیح err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot open temporary file %s\n", *filename);
         av_freep(filename);
-        return err;
+        واپس err;
     }
-    return fd; /* success */
+    واپس fd; /* success */
 }
 
-FILE *avpriv_fopen_utf8(const char *path, const char *mode)
+FILE *avpriv_fopen_utf8(ثابت حرف *راستہ, ثابت حرف *منوال)
 {
-    int fd;
-    int access;
-    const char *m = mode;
+    صحیح fd;
+    صحیح access;
+    ثابت حرف *m = منوال;
 
-    switch (*m++) {
-    case 'r': access = O_RDONLY; break;
-    case 'w': access = O_CREAT|O_WRONLY|O_TRUNC; break;
-    case 'a': access = O_CREAT|O_WRONLY|O_APPEND; break;
-    default :
+    انتخاب (*m++) {
+    حالت 'r': access = O_RDONLY; توڑو;
+    حالت 'w': access = O_CREAT|O_WRONLY|O_TRUNC; توڑو;
+    حالت 'a': access = O_CREAT|O_WRONLY|O_APPEND; توڑو;
+    طےشدہ :
         errno = EINVAL;
-        return NULL;
+        واپس تہی;
     }
-    while (*m) {
-        if (*m == '+') {
+    جب (*m) {
+        اگر (*m == '+') {
             access &= ~(O_RDONLY | O_WRONLY);
             access |= O_RDWR;
-        } else if (*m == 'b') {
-#ifdef O_BINARY
-            access |= O_BINARY;
-#endif
-        } else if (*m) {
+        } ورنہ اگر (*m == 'b') {
+#اگر_تعریف_شدہ O_ثنائی
+            access |= O_ثنائی;
+#اگر_ختم
+        } ورنہ اگر (*m) {
             errno = EINVAL;
-            return NULL;
+            واپس تہی;
         }
         m++;
     }
-    fd = avpriv_open(path, access, 0666);
-    if (fd == -1)
-        return NULL;
-    return fdopen(fd, mode);
+    fd = avpriv_open(راستہ, access, 0666);
+    اگر (fd == -1)
+        واپس تہی;
+    واپس fdopen(fd, منوال);
 }

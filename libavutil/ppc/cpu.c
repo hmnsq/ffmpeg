@@ -16,141 +16,141 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#شامل "config.h"
 
-#ifdef __APPLE__
-#include <sys/sysctl.h>
-#elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#ifdef __FreeBSD__
-#include <machine/cpu.h>
-#endif
-#include <sys/auxv.h>
-#elif defined(__linux__)
-#include <asm/cputable.h>
-#include <linux/auxvec.h>
-#include <fcntl.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#elif defined(__NetBSD__) || defined(__OpenBSD__)
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#include <machine/cpu.h>
-#elif defined(__AMIGAOS4__)
-#include <exec/exec.h>
-#include <interfaces/exec.h>
-#include <proto/exec.h>
-#endif /* __APPLE__ */
+#اگر_تعریف_شدہ __APPLE__
+#شامل <sys/sysctl.h>
+#وگرنہ_اگر HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#اگر_تعریف_شدہ __FreeBSD__
+#شامل <machine/cpu.h>
+#اگر_ختم
+#شامل <sys/auxv.h>
+#وگرنہ_اگر defined(__linux__)
+#شامل <asm/cputable.h>
+#شامل <linux/auxvec.h>
+#شامل <fcntl.h>
+#اگر HAVE_UNISTD_H
+#شامل <unistd.h>
+#اگر_ختم
+#وگرنہ_اگر defined(__NetBSD__) || defined(__OpenBSD__)
+#شامل <sys/types.h>
+#شامل <sys/sysctl.h>
+#شامل <machine/cpu.h>
+#وگرنہ_اگر defined(__AMIGAOS4__)
+#شامل <exec/exec.h>
+#شامل <interfaces/exec.h>
+#شامل <proto/exec.h>
+#اگر_ختم /* __APPLE__ */
 
-#include "libavutil/avassert.h"
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#شامل "libavutil/avassert.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/cpu_internal.h"
 
-#ifndef AT_HWCAP
-#define AT_HWCAP             16
-#endif
-#ifndef AT_HWCAP2
-#define AT_HWCAP2            26
-#endif
+#اگر_غیر_تعریف_شدہ AT_HWCAP
+#تعریف_کرو AT_HWCAP             16
+#اگر_ختم
+#اگر_غیر_تعریف_شدہ AT_HWCAP2
+#تعریف_کرو AT_HWCAP2            26
+#اگر_ختم
 
-#define HWCAP_PPC_VSX        (1U << 7)
-#define HWCAP_PPC_ALTIVEC    (1U << 28)
-#define HWCAP2_PPC_ARCH_2_07 (1U << 31)
+#تعریف_کرو HWCAP_PPC_VSX        (1U << 7)
+#تعریف_کرو HWCAP_PPC_ALTIVEC    (1U << 28)
+#تعریف_کرو HWCAP2_PPC_ARCH_2_07 (1U << 31)
 
 /**
  * This function MAY rely on signal() or fork() in order to make sure AltiVec
  * is present.
  */
-int ff_get_cpu_flags_ppc(void)
+صحیح ff_get_cpu_flags_ppc(خالی)
 {
-#if HAVE_ALTIVEC
-#ifdef __AMIGAOS4__
-    ULONG result = 0;
-    extern struct ExecIFace *IExec;
+#اگر HAVE_ALTIVEC
+#اگر_تعریف_شدہ __AMIGAOS4__
+    ULONG نتیجہ = 0;
+    خارجی ساخت ExecIFace *IExec;
 
-    IExec->GetCPUInfoTags(GCIT_VectorUnit, &result, TAG_DONE);
-    if (result == VECTORTYPE_ALTIVEC)
-        return AV_CPU_FLAG_ALTIVEC;
-    return 0;
-#elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-    int flags = 0;
+    IExec->Get_CPUInfo_لیبل_فہرست(GCIT_سمتیہ_Unit, &نتیجہ, لیبل_مکمل);
+    اگر (نتیجہ == VECTORTYPE_ALTIVEC)
+        واپس AV_CPU_FLAG_ALTIVEC;
+    واپس 0;
+#وگرنہ_اگر HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+    صحیح flags = 0;
 
-    unsigned long hwcap = ff_getauxval(AT_HWCAP);
-    unsigned long hwcap2 = ff_getauxval(AT_HWCAP2);
+    غیرعلامتی طویل hwcap = ff_getauxval(AT_HWCAP);
+    غیرعلامتی طویل hwcap2 = ff_getauxval(AT_HWCAP2);
 
-    if (hwcap & HWCAP_PPC_ALTIVEC)
+    اگر (hwcap & HWCAP_PPC_ALTIVEC)
        flags |= AV_CPU_FLAG_ALTIVEC;
-    if (hwcap & HWCAP_PPC_VSX)
+    اگر (hwcap & HWCAP_PPC_VSX)
        flags |= AV_CPU_FLAG_VSX;
-    if (hwcap2 & HWCAP2_PPC_ARCH_2_07)
+    اگر (hwcap2 & HWCAP2_PPC_ARCH_2_07)
        flags |= AV_CPU_FLAG_POWER8;
 
-    return flags;
-#elif defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__)
-#if defined(__NetBSD__) || defined(__OpenBSD__)
-    int sels[2] = {CTL_MACHDEP, CPU_ALTIVEC};
-#else
-    int sels[2] = {CTL_HW, HW_VECTORUNIT};
-#endif
-    int has_vu = 0;
-    size_t len = sizeof(has_vu);
-    int err;
+    واپس flags;
+#وگرنہ_اگر defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#اگر defined(__NetBSD__) || defined(__OpenBSD__)
+    صحیح sels[2] = {CTL_MACHDEP, CPU_ALTIVEC};
+#ورنہ
+    صحیح sels[2] = {CTL_HW, HW_VECTORUNIT};
+#اگر_ختم
+    صحیح has_vu = 0;
+    size_t len = حجم(has_vu);
+    صحیح err;
 
-    err = sysctl(sels, 2, &has_vu, &len, NULL, 0);
+    err = sysctl(sels, 2, &has_vu, &len, تہی, 0);
 
-    if (err == 0)
-        return has_vu ? AV_CPU_FLAG_ALTIVEC : 0;
-    return 0;
-#elif defined(__linux__)
+    اگر (err == 0)
+        واپس has_vu ? AV_CPU_FLAG_ALTIVEC : 0;
+    واپس 0;
+#وگرنہ_اگر defined(__linux__)
     // The linux kernel could have the altivec support disabled
     // even if the cpu has it.
-    int i, ret = 0;
-    int fd = open("/proc/self/auxv", O_RDONLY);
-    unsigned long buf[64] = { 0 };
-    ssize_t count;
+    صحیح i, ret = 0;
+    صحیح fd = open("/proc/self/auxv", O_RDONLY);
+    غیرعلامتی طویل buf[64] = { 0 };
+    ssize_t گنتی;
 
-    if (fd < 0)
-        return 0;
+    اگر (fd < 0)
+        واپس 0;
 
-    while ((count = read(fd, buf, sizeof(buf))) > 0) {
-        for (i = 0; i < count / sizeof(*buf); i += 2) {
-            if (buf[i] == AT_NULL)
-                goto out;
-            if (buf[i] == AT_HWCAP) {
-                if (buf[i + 1] & HWCAP_PPC_ALTIVEC)
+    جب ((گنتی = اقرأ(fd, buf, حجم(buf))) > 0) {
+        برائے (i = 0; i < گنتی / حجم(*buf); i += 2) {
+            اگر (buf[i] == AT_NULL)
+                جاؤ برآمد;
+            اگر (buf[i] == AT_HWCAP) {
+                اگر (buf[i + 1] & HWCAP_PPC_ALTIVEC)
                     ret = AV_CPU_FLAG_ALTIVEC;
-                if (buf[i + 1] & HWCAP_PPC_VSX)
+                اگر (buf[i + 1] & HWCAP_PPC_VSX)
                     ret |= AV_CPU_FLAG_VSX;
-                if (ret & AV_CPU_FLAG_VSX)
+                اگر (ret & AV_CPU_FLAG_VSX)
                     av_assert0(ret & AV_CPU_FLAG_ALTIVEC);
             }
-            else if (buf[i] == AT_HWCAP2) {
-                if (buf[i + 1] & HWCAP2_PPC_ARCH_2_07)
+            ورنہ اگر (buf[i] == AT_HWCAP2) {
+                اگر (buf[i + 1] & HWCAP2_PPC_ARCH_2_07)
                     ret |= AV_CPU_FLAG_POWER8;
             }
         }
     }
 
-out:
+برآمد:
     close(fd);
-    return ret;
-#else
+    واپس ret;
+#ورنہ
     // Since we were compiled for AltiVec, just assume we have it
     // until someone comes up with a proper way (not involving signal hacks).
-    return AV_CPU_FLAG_ALTIVEC;
-#endif /* __AMIGAOS4__ */
-#endif /* HAVE_ALTIVEC */
-    return 0;
+    واپس AV_CPU_FLAG_ALTIVEC;
+#اگر_ختم /* __AMIGAOS4__ */
+#اگر_ختم /* HAVE_ALTIVEC */
+    واپس 0;
 }
 
-size_t ff_get_cpu_max_align_ppc(void)
+size_t ff_get_cpu_max_align_ppc(خالی)
 {
-    int flags = av_get_cpu_flags();
+    صحیح flags = av_get_cpu_flags();
 
-    if (flags & (AV_CPU_FLAG_ALTIVEC   |
+    اگر (flags & (AV_CPU_FLAG_ALTIVEC   |
                  AV_CPU_FLAG_VSX       |
                  AV_CPU_FLAG_POWER8))
-        return 16;
+        واپس 16;
 
-    return 8;
+    واپس 8;
 }

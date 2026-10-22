@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
+#شامل "libavutil/cpu.h"
 
-#ifndef __riscv_zbb
-unsigned char ff_rv_zbb_supported = 0;
+#اگر_غیر_تعریف_شدہ __riscv_zbb
+غیرعلامتی حرف ff_rv_zbb_supported = 0;
 
-#ifdef __ELF__
+#اگر_تعریف_شدہ __ELF__
 __attribute__((constructor))
-static void probe_zbb(void)
+ساکن خالی probe_zbb(خالی)
 {
     ff_rv_zbb_supported = (av_get_cpu_flags() & AV_CPU_FLAG_RVB_BASIC) != 0;
 }
-#endif
-#endif
+#اگر_ختم
+#اگر_ختم

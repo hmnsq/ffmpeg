@@ -16,21 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_BSWAP_H
-#define AVUTIL_RISCV_BSWAP_H
+#اگر_غیر_تعریف_شدہ AVUTIL_RISCV_BSWAP_H
+#تعریف_کرو AVUTIL_RISCV_BSWAP_H
 
-#include <stdint.h>
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/riscv/cpu.h"
+#شامل <stdint.h>
+#شامل "config.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/riscv/cpu.h"
 
-#if defined (__GNUC__) || defined (__clang__)
-#define av_bswap16 __builtin_bswap16
+#اگر defined (__GNUC__) || defined (__clang__)
+#تعریف_کرو av_bswap16 __builtin_bswap16
 
-static av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
+ساکن av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#اگر HAVE_RV && !defined(__riscv_zbb)
+    اگر (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), 1)) {
         uintptr_t y;
 
@@ -39,18 +39,18 @@ static av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
             ".option arch, +zbb\n"
             "rev8    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        return y >> (__riscv_xlen - 32);
+        واپس y >> (__riscv_xlen - 32);
     }
-#endif
-    return __builtin_bswap32(x);
+#اگر_ختم
+    واپس __builtin_bswap32(x);
 }
-#define av_bswap32 av_bswap32_rv
+#تعریف_کرو av_bswap32 av_bswap32_rv
 
-#if __riscv_xlen >= 64
-static av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
+#اگر __riscv_xlen >= 64
+ساکن av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#اگر HAVE_RV && !defined(__riscv_zbb)
+    اگر (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), 1)) {
         uintptr_t y;
 
@@ -59,14 +59,14 @@ static av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
             ".option arch, +zbb\n"
             "rev8    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        return y >> (__riscv_xlen - 64);
+        واپس y >> (__riscv_xlen - 64);
     }
-#endif
-    return __builtin_bswap64(x);
+#اگر_ختم
+    واپس __builtin_bswap64(x);
 }
-#define av_bswap64 av_bswap64_rv
-#endif
+#تعریف_کرو av_bswap64 av_bswap64_rv
+#اگر_ختم
 
-#endif
+#اگر_ختم
 
-#endif /* AVUTIL_RISCV_BSWAP_H */
+#اگر_ختم /* AVUTIL_RISCV_BSWAP_H */

@@ -16,21 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "timestamp.h"
+#شامل "timestamp.h"
 
-char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb)
+حرف *av_ts_make_وقت_string2(حرف *buf, int64_t ts, AVRational tb)
 {
-    if (ts == AV_NOPTS_VALUE) {
-        snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    } else {
-        double val = av_q2d(tb) * ts;
-        double log = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
-        int precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
-        int last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
-        last = FFMIN(last, AV_TS_MAX_STRING_SIZE - 1) - 1;
-        for (; last && buf[last] == '0'; last--);
-        for (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
-        buf[last + 1] = '\0';
+    اگر (ts == AV_NOPTS_قدر) {
+        snprintf(buf, AV_TS_MAX_STRING_سائز, "NOPTS");
+    } ورنہ {
+        دوہرا val = av_q2d(tb) * ts;
+        دوہرا لوگارتھم = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
+        صحیح precision = (isfinite(لوگارتھم) && لوگارتھم < 0) ? -لوگارتھم + 5 : 6;
+        صحیح آخری = snprintf(buf, AV_TS_MAX_STRING_سائز, "%.*f", precision, val);
+        آخری = FFMIN(آخری, AV_TS_MAX_STRING_سائز - 1) - 1;
+        برائے (; آخری && buf[آخری] == '0'; آخری--);
+        برائے (; آخری && buf[آخری] != 'f' && (buf[آخری] < '0' || buf[0] > '9'); آخری--);
+        buf[آخری + 1] = '\0';
     }
-    return buf;
+    واپس buf;
 }

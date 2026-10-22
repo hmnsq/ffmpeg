@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MIPS_INTREADWRITE_H
-#define AVUTIL_MIPS_INTREADWRITE_H
+#اگر_غیر_تعریف_شدہ AVUTIL_MIPS_INTREADWRITE_H
+#تعریف_کرو AVUTIL_MIPS_INTREADWRITE_H
 
-#include <stdint.h>
-#include "config.h"
+#شامل <stdint.h>
+#شامل "config.h"
 
-#if ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
+#اگر ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
 
-#define AV_RN32 AV_RN32
-static av_always_inline uint32_t AV_RN32(const void *p)
+#تعریف_کرو AV_RN32 AV_RN32
+ساکن av_always_inline uint32_t AV_RN32(ثابت خالی *p)
 {
-    struct __attribute__((packed)) u32 { uint32_t v; };
-    const uint8_t *q = p;
-    const struct u32 *pl = (const struct u32 *)(q + 3 * !HAVE_BIGENDIAN);
-    const struct u32 *pr = (const struct u32 *)(q + 3 *  HAVE_BIGENDIAN);
+    ساخت __attribute__((packed)) u32 { uint32_t v; };
+    ثابت uint8_t *q = p;
+    ثابت ساخت u32 *pl = (ثابت ساخت u32 *)(q + 3 * !HAVE_BIGENDIAN);
+    ثابت ساخت u32 *pr = (ثابت ساخت u32 *)(q + 3 *  HAVE_BIGENDIAN);
     uint32_t v;
     __asm__ ("lwl %0, %1  \n\t"
              "lwr %0, %2  \n\t"
              : "=&r"(v)
              : "m"(*pl), "m"(*pr));
-    return v;
+    واپس v;
 }
 
-#endif /* ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6 */
+#اگر_ختم /* ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6 */
 
-#endif /* AVUTIL_MIPS_INTREADWRITE_H */
+#اگر_ختم /* AVUTIL_MIPS_INTREADWRITE_H */

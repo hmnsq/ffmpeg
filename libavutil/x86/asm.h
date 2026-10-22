@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_ASM_H
-#define AVUTIL_X86_ASM_H
+#اگر_غیر_تعریف_شدہ AVUTIL_X86_ASM_H
+#تعریف_کرو AVUTIL_X86_ASM_H
 
-#include <stdint.h>
-#include "config.h"
+#شامل <stdint.h>
+#شامل "config.h"
 
-typedef struct xmm_reg { uint64_t a, b; } xmm_reg;
-typedef struct ymm_reg { uint64_t a, b, c, d; } ymm_reg;
+قسمتعریف ساخت xmm_reg { uint64_t a, b; } xmm_reg;
+قسمتعریف ساخت ymm_reg { uint64_t a, b, c, d; } ymm_reg;
 
-#if ARCH_X86_64
+#اگر ARCH_X86_64
 #    define FF_OPSIZE "q"
 #    define FF_REG_a "rax"
 #    define FF_REG_b "rbx"
@@ -35,8 +35,8 @@ typedef struct ymm_reg { uint64_t a, b, c, d; } ymm_reg;
 #    define FF_REG_d "rdx"
 #    define FF_REG_D "rdi"
 #    define FF_REG_S "rsi"
-#    define FF_PTR_SIZE "8"
-typedef int64_t x86_reg;
+#    define FF_PTR_سائز "8"
+قسمتعریف int64_t x86_reg;
 
 #    define FF_REG_SP "rsp"
 #    define FF_REG_BP "rbp"
@@ -47,7 +47,7 @@ typedef int64_t x86_reg;
 #    define FF_REGd    rdx
 #    define FF_REGSP   rsp
 
-#elif ARCH_X86_32
+#وگرنہ_اگر ARCH_X86_32
 
 #    define FF_OPSIZE "l"
 #    define FF_REG_a "eax"
@@ -56,8 +56,8 @@ typedef int64_t x86_reg;
 #    define FF_REG_d "edx"
 #    define FF_REG_D "edi"
 #    define FF_REG_S "esi"
-#    define FF_PTR_SIZE "4"
-typedef int32_t x86_reg;
+#    define FF_PTR_سائز "4"
+قسمتعریف int32_t x86_reg;
 
 #    define FF_REG_SP "esp"
 #    define FF_REG_BP "ebp"
@@ -67,13 +67,13 @@ typedef int32_t x86_reg;
 #    define FF_REGc    ecx
 #    define FF_REGd    edx
 #    define FF_REGSP   esp
-#else
-typedef int x86_reg;
-#endif
+#ورنہ
+قسمتعریف صحیح x86_reg;
+#اگر_ختم
 
-#if ARCH_X86_64 && defined(PIC)
+#اگر ARCH_X86_64 && defined(PIC)
 #    define BROKEN_RELOCATIONS 1
-#endif
+#اگر_ختم
 
 /*
  * If gcc is not set to support sse (-msse) it will not accept xmm registers
@@ -87,31 +87,31 @@ typedef int x86_reg;
  * and a list with only "xmm0" should become:
  * XMM_CLOBBERS_ONLY("xmm0")
  */
-#if HAVE_XMM_CLOBBERS
+#اگر HAVE_XMM_CLOBBERS
 #    define XMM_CLOBBERS(...)        __VA_ARGS__
 #    define XMM_CLOBBERS_ONLY(...) : __VA_ARGS__
-#else
+#ورنہ
 #    define XMM_CLOBBERS(...)
 #    define XMM_CLOBBERS_ONLY(...)
-#endif
+#اگر_ختم
 
 /* Use to export labels from asm. */
-#define LABEL_MANGLE(a) EXTERN_PREFIX #a
+#تعریف_کرو LABEL_MANGLE(a) EXTERN_سابقہ #a
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
-#if ARCH_X86_64 && defined(PIC)
+#اگر ARCH_X86_64 && defined(PIC)
 #    define LOCAL_MANGLE(a) #a "(%%rip)"
-#else
+#ورنہ
 #    define LOCAL_MANGLE(a) #a
-#endif
+#اگر_ختم
 
-#if HAVE_INLINE_ASM_DIRECT_SYMBOL_REFS
-#   define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
-#   define NAMED_CONSTRAINTS_ADD(...)
+#اگر HAVE_INLINE_ASM_براہ_راست_علامت_REFS
+#   define MANGLE(a) EXTERN_سابقہ LOCAL_MANGLE(a)
+#   define NAMED_CONSTRAINTS_جوڑو(...)
 #   define NAMED_CONSTRAINTS(...)
-#   define NAMED_CONSTRAINTS_ARRAY_ADD(...)
+#   define NAMED_CONSTRAINTS_ARRAY_جوڑو(...)
 #   define NAMED_CONSTRAINTS_ARRAY(...)
-#else
+#ورنہ
     /* When direct symbol references are used in code passed to a compiler that does not support them
      *  then these references need to be converted to named asm constraints instead.
      * Instead of returning a direct symbol MANGLE now returns a named constraint for that specific symbol.
@@ -138,13 +138,13 @@ typedef int x86_reg;
 #   define FOR_EACH_VA(P,...) GET_FE_GLUE(GET_FE((__VA_ARGS__,FE_9,FE_8,FE_7,FE_6,FE_5,FE_4,FE_3,FE_2,FE_1,FE_0)), (P,__VA_ARGS__))
 #   define NAME_CONSTRAINT(x) [x] "m"(x)
     // Parameters are a list of each symbol reference required
-#   define NAMED_CONSTRAINTS_ADD(...) , FOR_EACH_VA(NAME_CONSTRAINT,__VA_ARGS__)
+#   define NAMED_CONSTRAINTS_جوڑو(...) , FOR_EACH_VA(NAME_CONSTRAINT,__VA_ARGS__)
     // Same but without comma for when there are no previously defined constraints
 #   define NAMED_CONSTRAINTS(...) FOR_EACH_VA(NAME_CONSTRAINT,__VA_ARGS__)
     // Same as above NAMED_CONSTRAINTS except used for passing arrays/pointers instead of normal variables
 #   define NAME_CONSTRAINT_ARRAY(x) [x] "m"(*x)
-#   define NAMED_CONSTRAINTS_ARRAY_ADD(...) , FOR_EACH_VA(NAME_CONSTRAINT_ARRAY,__VA_ARGS__)
+#   define NAMED_CONSTRAINTS_ARRAY_جوڑو(...) , FOR_EACH_VA(NAME_CONSTRAINT_ARRAY,__VA_ARGS__)
 #   define NAMED_CONSTRAINTS_ARRAY(...) FOR_EACH_VA(NAME_CONSTRAINT_ARRAY,__VA_ARGS__)
-#endif
+#اگر_ختم
 
-#endif /* AVUTIL_X86_ASM_H */
+#اگر_ختم /* AVUTIL_X86_ASM_H */

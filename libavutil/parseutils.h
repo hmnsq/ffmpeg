@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PARSEUTILS_H
-#define AVUTIL_PARSEUTILS_H
+#اگر_غیر_تعریف_شدہ AVUTIL_PARSEUTILS_H
+#تعریف_کرو AVUTIL_PARSEUTILS_H
 
-#include <time.h>
+#شامل <time.h>
 
-#include "rational.h"
+#شامل "rational.h"
 
 /**
  * @file
@@ -46,11 +46,11 @@
  * @param[in] log_ctx parent logging context
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx);
+صحیح av_parse_تناسب(AVRational *q, ثابت حرف *str, صحیح max,
+                   صحیح log_انحراف, خالی *log_ctx);
 
-#define av_parse_ratio_quiet(rate, str, max) \
-    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, NULL)
+#تعریف_کرو av_parse_تناسب_quiet(شرح, str, max) \
+    av_parse_تناسب(شرح, str, max, AV_LOG_MAX_انحراف, تہی)
 
 /**
  * Parse str and put in width_ptr and height_ptr the detected values.
@@ -63,7 +63,7 @@ int av_parse_ratio(AVRational *q, const char *str, int max,
  * width x height or a valid video size abbreviation.
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
+صحیح av_parse_video_سائز(صحیح *چوڑائی_ptr, صحیح *اونچائی_ptr, ثابت حرف *str);
 
 /**
  * Parse str and store the detected values in *rate.
@@ -74,7 +74,7 @@ int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
  * rate_num / rate_den, a float number or a valid video rate abbreviation
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_rate(AVRational *rate, const char *str);
+صحیح av_parse_video_شرح(AVRational *شرح, ثابت حرف *str);
 
 /**
  * Put the RGBA values that correspond to color_string in rgba_color.
@@ -99,8 +99,8 @@ int av_parse_video_rate(AVRational *rate, const char *str);
  * @return >= 0 in case of success, a negative value in case of
  * failure (for example if color_string cannot be parsed).
  */
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx);
+صحیح av_parse_color(uint8_t *rgba_color, ثابت حرف *color_string, صحیح slen,
+                   خالی *log_ctx);
 
 /**
  * Get the name of a color from the internal table of hard-coded named
@@ -113,7 +113,7 @@ int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
  * @param rgb      if not NULL, will point to a 3-elements array with the color value in RGB
  * @return the color name string or NULL if color_idx is not in the array
  */
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
+ثابت حرف *av_get_معلوم_color_name(صحیح color_idx, ثابت uint8_t **rgb);
 
 /**
  * Parse timestr and return in *time a corresponding number of
@@ -147,7 +147,7 @@ const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_parse_time(int64_t *timeval, const char *timestr, int duration);
+صحیح av_parse_وقت(int64_t *timeval, ثابت حرف *timestr, صحیح duration);
 
 /**
  * Attempt to find a specific tag in a URL.
@@ -155,7 +155,7 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration);
  * syntax: '?tag1=val1&tag2=val2...'. Little URL decoding is done.
  * Return 1 if found.
  */
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info);
+صحیح av_ڈھونڈو_info_لیبل(حرف *arg, صحیح arg_سائز, ثابت حرف *tag1, ثابت حرف *info);
 
 /**
  * Simplified version of strptime
@@ -187,11 +187,11 @@ int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info
  *         is consumed the return value points to the null byte at the end of
  *         the string. On failure NULL is returned.
  */
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt);
+حرف *av_small_strptime(ثابت حرف *p, ثابت حرف *fmt, ساخت tm *dt);
 
 /**
  * Convert the decomposed UTC time in tm to a time_t value.
  */
-time_t av_timegm(struct tm *tm);
+time_t av_timegm(ساخت tm *tm);
 
-#endif /* AVUTIL_PARSEUTILS_H */
+#اگر_ختم /* AVUTIL_PARSEUTILS_H */

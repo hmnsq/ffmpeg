@@ -24,10 +24,10 @@
  * Libavutil version macros
  */
 
-#ifndef AVUTIL_VERSION_H
-#define AVUTIL_VERSION_H
+#اگر_غیر_تعریف_شدہ AVUTIL_نسخہ_H
+#تعریف_کرو AVUTIL_نسخہ_H
 
-#include "macros.h"
+#شامل "macros.h"
 
 /**
  * @addtogroup version_utils
@@ -53,17 +53,17 @@
  * @{
  */
 
-#define AV_VERSION_INT(a, b, c) ((a)<<16 | (b)<<8 | (c))
-#define AV_VERSION_DOT(a, b, c) a ##.## b ##.## c
-#define AV_VERSION(a, b, c) AV_VERSION_DOT(a, b, c)
+#تعریف_کرو AV_نسخہ_INT(a, b, c) ((a)<<16 | (b)<<8 | (c))
+#تعریف_کرو AV_نسخہ_DOT(a, b, c) a ##.## b ##.## c
+#تعریف_کرو AV_نسخہ(a, b, c) AV_نسخہ_DOT(a, b, c)
 
 /**
  * Extract version components from the full ::AV_VERSION_INT int as returned
  * by functions like ::avformat_version() and ::avcodec_version()
  */
-#define AV_VERSION_MAJOR(a) ((a) >> 16)
-#define AV_VERSION_MINOR(a) (((a) & 0x00FF00) >> 8)
-#define AV_VERSION_MICRO(a) ((a) & 0xFF)
+#تعریف_کرو AV_نسخہ_MAJOR(a) ((a) >> 16)
+#تعریف_کرو AV_نسخہ_MINOR(a) (((a) & 0x00FF00) >> 8)
+#تعریف_کرو AV_نسخہ_MICRO(a) ((a) & 0xFF)
 
 /**
  * @}
@@ -78,19 +78,19 @@
  * @{
  */
 
-#define LIBAVUTIL_VERSION_MAJOR  61
-#define LIBAVUTIL_VERSION_MINOR  16
-#define LIBAVUTIL_VERSION_MICRO 100
+#تعریف_کرو LIBAVUTIL_نسخہ_MAJOR  61
+#تعریف_کرو LIBAVUTIL_نسخہ_MINOR  16
+#تعریف_کرو LIBAVUTIL_نسخہ_MICRO 100
 
-#define LIBAVUTIL_VERSION_INT   AV_VERSION_INT(LIBAVUTIL_VERSION_MAJOR, \
-                                               LIBAVUTIL_VERSION_MINOR, \
-                                               LIBAVUTIL_VERSION_MICRO)
-#define LIBAVUTIL_VERSION       AV_VERSION(LIBAVUTIL_VERSION_MAJOR,     \
-                                           LIBAVUTIL_VERSION_MINOR,     \
-                                           LIBAVUTIL_VERSION_MICRO)
-#define LIBAVUTIL_BUILD         LIBAVUTIL_VERSION_INT
+#تعریف_کرو LIBAVUTIL_نسخہ_INT   AV_نسخہ_INT(LIBAVUTIL_نسخہ_MAJOR, \
+                                               LIBAVUTIL_نسخہ_MINOR, \
+                                               LIBAVUTIL_نسخہ_MICRO)
+#تعریف_کرو LIBAVUTIL_نسخہ       AV_نسخہ(LIBAVUTIL_نسخہ_MAJOR,     \
+                                           LIBAVUTIL_نسخہ_MINOR,     \
+                                           LIBAVUTIL_نسخہ_MICRO)
+#تعریف_کرو LIBAVUTIL_BUILD         LIBAVUTIL_نسخہ_INT
 
-#define LIBAVUTIL_IDENT         "Lavu" AV_STRINGIFY(LIBAVUTIL_VERSION)
+#تعریف_کرو LIBAVUTIL_IDENT         "Lavu" AV_STRINGIFY(LIBAVUTIL_نسخہ)
 
 /**
  * @defgroup lavu_depr_guards Deprecation Guards
@@ -105,15 +105,15 @@
  * @{
  */
 
-#define FF_API_CPU_FLAG_FORCE           (LIBAVUTIL_VERSION_MAJOR < 62)
-#define FF_API_DOVI_L11_INVALID_PROPS   (LIBAVUTIL_VERSION_MAJOR < 62)
-#define FF_API_ASSERT_FPU               (LIBAVUTIL_VERSION_MAJOR < 62)
-#define FF_API_VULKAN_SYNC_QUEUES       (LIBAVUTIL_VERSION_MAJOR < 62)
-#define FF_API_CHANNEL_LAYOUT_BACK      (LIBAVUTIL_VERSION_MAJOR < 62)
+#تعریف_کرو FF_API_CPU_FLAG_FORCE           (LIBAVUTIL_نسخہ_MAJOR < 62)
+#تعریف_کرو FF_API_DOVI_L11_INVALID_PROPS   (LIBAVUTIL_نسخہ_MAJOR < 62)
+#تعریف_کرو FF_API_ASSERT_FPU               (LIBAVUTIL_نسخہ_MAJOR < 62)
+#تعریف_کرو FF_API_VULKAN_SYNC_QUEUES       (LIBAVUTIL_نسخہ_MAJOR < 62)
+#تعریف_کرو FF_API_CHANNEL_LAYOUT_عقب      (LIBAVUTIL_نسخہ_MAJOR < 62)
 
 /**
  * @}
  * @}
  */
 
-#endif /* AVUTIL_VERSION_H */
+#اگر_ختم /* AVUTIL_VERSION_H */

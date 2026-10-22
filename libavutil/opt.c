@@ -25,133 +25,133 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#include "avutil.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "channel_layout.h"
-#include "dict.h"
-#include "eval.h"
-#include "log.h"
-#include "mem.h"
-#include "parseutils.h"
-#include "pixdesc.h"
-#include "mathematics.h"
-#include "opt.h"
-#include "samplefmt.h"
-#include "bprint.h"
+#شامل "avutil.h"
+#شامل "avassert.h"
+#شامل "avstring.h"
+#شامل "channel_layout.h"
+#شامل "dict.h"
+#شامل "eval.h"
+#شامل "log.h"
+#شامل "mem.h"
+#شامل "parseutils.h"
+#شامل "pixdesc.h"
+#شامل "mathematics.h"
+#شامل "opt.h"
+#شامل "samplefmt.h"
+#شامل "bprint.h"
 
-#include <float.h>
+#شامل <float.h>
 
-#define TYPE_BASE(type) ((type) & ~AV_OPT_TYPE_FLAG_ARRAY)
+#تعریف_کرو TYPE_بنیاد(type) ((type) & ~AV_OPT_TYPE_FLAG_ARRAY)
 
-const AVOption *av_opt_next(const void *obj, const AVOption *last)
+ثابت AVOption *av_opt_اگلا(ثابت خالی *obj, ثابت AVOption *آخری)
 {
-    const AVClass *class;
-    if (!obj)
-        return NULL;
-    class = *(const AVClass**)obj;
-    if (!last && class && class->option && class->option[0].name)
-        return class->option;
-    if (last && last[1].name)
-        return ++last;
-    return NULL;
+    ثابت AVClass *class;
+    اگر (!obj)
+        واپس تہی;
+    class = *(ثابت AVClass**)obj;
+    اگر (!آخری && class && class->option && class->option[0].name)
+        واپس class->option;
+    اگر (آخری && آخری[1].name)
+        واپس ++آخری;
+    واپس تہی;
 }
 
-static const struct {
-    size_t      size;
-    const char *name;
+ساکن ثابت ساخت {
+    size_t      سائز;
+    ثابت حرف *name;
 } opt_type_desc[] = {
-    [AV_OPT_TYPE_FLAGS]         = { sizeof(unsigned),       "<flags>" },
-    [AV_OPT_TYPE_INT]           = { sizeof(int),            "<int>" },
-    [AV_OPT_TYPE_INT64]         = { sizeof(int64_t),        "<int64>" },
-    [AV_OPT_TYPE_UINT]          = { sizeof(unsigned),       "<unsigned>" },
-    [AV_OPT_TYPE_UINT64]        = { sizeof(uint64_t),       "<uint64>" },
-    [AV_OPT_TYPE_DOUBLE]        = { sizeof(double),         "<double>" },
-    [AV_OPT_TYPE_FLOAT]         = { sizeof(float),          "<float>" },
-    [AV_OPT_TYPE_STRING]        = { sizeof(char *),         "<string>" },
-    [AV_OPT_TYPE_RATIONAL]      = { sizeof(AVRational),     "<rational>" },
-    [AV_OPT_TYPE_BINARY]        = { sizeof(uint8_t *),      "<binary>" },
-    [AV_OPT_TYPE_DICT]          = { sizeof(AVDictionary *), "<dictionary>" },
-    [AV_OPT_TYPE_IMAGE_SIZE]    = { sizeof(int[2]),         "<image_size>" },
-    [AV_OPT_TYPE_VIDEO_RATE]    = { sizeof(AVRational),     "<video_rate>" },
-    [AV_OPT_TYPE_PIXEL_FMT]     = { sizeof(enum AVPixelFormat),  "<pix_fmt>" },
-    [AV_OPT_TYPE_SAMPLE_FMT]    = { sizeof(enum AVSampleFormat), "<sample_fmt>" },
-    [AV_OPT_TYPE_DURATION]      = { sizeof(int64_t),        "<duration>" },
-    [AV_OPT_TYPE_COLOR]         = { sizeof(uint8_t[4]),     "<color>" },
-    [AV_OPT_TYPE_CHLAYOUT]      = { sizeof(AVChannelLayout),"<channel_layout>" },
-    [AV_OPT_TYPE_BOOL]          = { sizeof(int),            "<boolean>" },
+    [AV_OPT_TYPE_FLAGS]         = { حجم(غیرعلامتی),       "<flags>" },
+    [AV_OPT_TYPE_INT]           = { حجم(صحیح),            "<int>" },
+    [AV_OPT_TYPE_INT64]         = { حجم(int64_t),        "<int64>" },
+    [AV_OPT_TYPE_UINT]          = { حجم(غیرعلامتی),       "<unsigned>" },
+    [AV_OPT_TYPE_UINT64]        = { حجم(uint64_t),       "<uint64>" },
+    [AV_OPT_TYPE_DOUBLE]        = { حجم(دوہرا),         "<double>" },
+    [AV_OPT_TYPE_FLOAT]         = { حجم(اعشاری),          "<float>" },
+    [AV_OPT_TYPE_STRING]        = { حجم(حرف *),         "<string>" },
+    [AV_OPT_TYPE_RATIONAL]      = { حجم(AVRational),     "<rational>" },
+    [AV_OPT_TYPE_ثنائی]        = { حجم(uint8_t *),      "<binary>" },
+    [AV_OPT_TYPE_DICT]          = { حجم(AVDictionary *), "<dictionary>" },
+    [AV_OPT_TYPE_IMAGE_سائز]    = { حجم(صحیح[2]),         "<image_size>" },
+    [AV_OPT_TYPE_VIDEO_شرح]    = { حجم(AVRational),     "<video_rate>" },
+    [AV_OPT_TYPE_PIXEL_FMT]     = { حجم(شمار AVPixelFormat),  "<pix_fmt>" },
+    [AV_OPT_TYPE_SAMPLE_FMT]    = { حجم(شمار AVSampleFormat), "<sample_fmt>" },
+    [AV_OPT_TYPE_DURATION]      = { حجم(int64_t),        "<duration>" },
+    [AV_OPT_TYPE_COLOR]         = { حجم(uint8_t[4]),     "<color>" },
+    [AV_OPT_TYPE_CHLAYOUT]      = { حجم(AVChannelLayout),"<channel_layout>" },
+    [AV_OPT_TYPE_BOOL]          = { حجم(صحیح),            "<boolean>" },
 };
 
 // option is plain old data
-static int opt_is_pod(enum AVOptionType type)
+ساکن صحیح opt_is_pod(شمار AVOptionType type)
 {
-    switch (type) {
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_FLOAT:
-    case AV_OPT_TYPE_RATIONAL:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_IMAGE_SIZE:
-    case AV_OPT_TYPE_PIXEL_FMT:
-    case AV_OPT_TYPE_SAMPLE_FMT:
-    case AV_OPT_TYPE_VIDEO_RATE:
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_COLOR:
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_UINT:
-        return 1;
+    انتخاب (type) {
+    حالت AV_OPT_TYPE_FLAGS:
+    حالت AV_OPT_TYPE_INT:
+    حالت AV_OPT_TYPE_INT64:
+    حالت AV_OPT_TYPE_DOUBLE:
+    حالت AV_OPT_TYPE_FLOAT:
+    حالت AV_OPT_TYPE_RATIONAL:
+    حالت AV_OPT_TYPE_UINT64:
+    حالت AV_OPT_TYPE_IMAGE_سائز:
+    حالت AV_OPT_TYPE_PIXEL_FMT:
+    حالت AV_OPT_TYPE_SAMPLE_FMT:
+    حالت AV_OPT_TYPE_VIDEO_شرح:
+    حالت AV_OPT_TYPE_DURATION:
+    حالت AV_OPT_TYPE_COLOR:
+    حالت AV_OPT_TYPE_BOOL:
+    حالت AV_OPT_TYPE_UINT:
+        واپس 1;
     }
-    return 0;
+    واپس 0;
 }
 
-static uint8_t opt_array_sep(const AVOption *o)
+ساکن uint8_t opt_array_sep(ثابت AVOption *o)
 {
-    const AVOptionArrayDef *d = o->default_val.arr;
+    ثابت AVOptionArrayDef *d = o->default_val.arr;
     av_assert1(o->type & AV_OPT_TYPE_FLAG_ARRAY);
-    return (d && d->sep) ? d->sep : ',';
+    واپس (d && d->sep) ? d->sep : ',';
 }
 
-static void *opt_array_pelem(const AVOption *o, void *array, unsigned idx)
+ساکن خالی *opt_array_pelem(ثابت AVOption *o, خالی *array, غیرعلامتی idx)
 {
     av_assert1(o->type & AV_OPT_TYPE_FLAG_ARRAY);
-    return (uint8_t *)array + idx * opt_type_desc[TYPE_BASE(o->type)].size;
+    واپس (uint8_t *)array + idx * opt_type_desc[TYPE_بنیاد(o->type)].سائز;
 }
 
-static unsigned *opt_array_pcount(const void *parray)
+ساکن غیرعلامتی *opt_array_pcount(ثابت خالی *parray)
 {
-    return (unsigned *)((const void * const *)parray + 1);
+    واپس (غیرعلامتی *)((ثابت خالی * ثابت *)parray + 1);
 }
 
-static void opt_free_elem(enum AVOptionType type, void *ptr)
+ساکن خالی opt_free_elem(شمار AVOptionType type, خالی *ptr)
 {
-    switch (TYPE_BASE(type)) {
-    case AV_OPT_TYPE_STRING:
-    case AV_OPT_TYPE_BINARY:
+    انتخاب (TYPE_بنیاد(type)) {
+    حالت AV_OPT_TYPE_STRING:
+    حالت AV_OPT_TYPE_ثنائی:
         av_freep(ptr);
-        break;
+        توڑو;
 
-    case AV_OPT_TYPE_DICT:
+    حالت AV_OPT_TYPE_DICT:
         av_dict_free((AVDictionary **)ptr);
-        break;
+        توڑو;
 
-    case AV_OPT_TYPE_CHLAYOUT:
+    حالت AV_OPT_TYPE_CHLAYOUT:
         av_channel_layout_uninit((AVChannelLayout *)ptr);
-        break;
+        توڑو;
 
-    default:
-        break;
+    طےشدہ:
+        توڑو;
     }
 }
 
-static void opt_free_array(const AVOption *o, void *parray, unsigned *count)
+ساکن خالی opt_free_array(ثابت AVOption *o, خالی *parray, غیرعلامتی *گنتی)
 {
-    for (unsigned i = 0; i < *count; i++)
-        opt_free_elem(o->type, opt_array_pelem(o, *(void **)parray, i));
+    برائے (غیرعلامتی i = 0; i < *گنتی; i++)
+        opt_free_elem(o->type, opt_array_pelem(o, *(خالی **)parray, i));
 
     av_freep(parray);
-    *count = 0;
+    *گنتی = 0;
 }
 
 /**
@@ -162,261 +162,261 @@ static void opt_free_array(const AVOption *o, void *parray, unsigned *count)
  * @param po           the option is written here
  * @param pdst         pointer to option value is written here
  */
-static int opt_set_init(void *obj, const char *name, int search_flags,
-                        int require_type,
-                        void **ptgt, const AVOption **po, void **pdst)
+ساکن صحیح opt_سیٹ_init(خالی *obj, ثابت حرف *name, صحیح تلاش_flags,
+                        صحیح require_type,
+                        خالی **ptgt, ثابت AVOption **po, خالی **pdst)
 {
-    void *logctx;
-    const AVOption *o;
-    void *tgt;
+    خالی *logctx;
+    ثابت AVOption *o;
+    خالی *tgt;
 
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &tgt);
-    if (!o || (!tgt && !(search_flags & AV_OPT_SEARCH_FAKE_OBJ)))
-        return AVERROR_OPTION_NOT_FOUND;
+    o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &tgt);
+    اگر (!o || (!tgt && !(تلاش_flags & AV_OPT_تلاش_FAKE_OBJ)))
+        واپس AVERROR_OPTION_NOT_ملا;
 
-    if (o->flags & AV_OPT_FLAG_READONLY)
-        return AVERROR(EINVAL);
+    اگر (o->flags & AV_OPT_FLAG_READONLY)
+        واپس AVERROR(EINVAL);
 
-    logctx = tgt ? obj : NULL;
+    logctx = tgt ? obj : تہی;
 
-    if (require_type && (o->type != require_type)) {
+    اگر (require_type && (o->type != require_type)) {
         av_log(logctx, AV_LOG_ERROR,
                "Tried to set option '%s' of type %s from value of type %s, "
                "this is not supported\n", o->name, opt_type_desc[o->type].name,
                opt_type_desc[require_type].name);
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    if (!(o->flags & AV_OPT_FLAG_RUNTIME_PARAM)) {
-        unsigned *state_flags = NULL;
-        const AVClass *class;
+    اگر (!(o->flags & AV_OPT_FLAG_RUNTIME_PARAM)) {
+        غیرعلامتی *state_flags = تہی;
+        ثابت AVClass *class;
 
         // try state flags first from the target (child), then from its parent
-        class = *(const AVClass**)tgt;
-        if (class->state_flags_offset)
-            state_flags = (unsigned*)((uint8_t*)tgt + class->state_flags_offset);
+        class = *(ثابت AVClass**)tgt;
+        اگر (class->state_flags_انحراف)
+            state_flags = (غیرعلامتی*)((uint8_t*)tgt + class->state_flags_انحراف);
 
-        if (!state_flags && obj != tgt) {
-            class = *(const AVClass**)obj;
-            if (class->state_flags_offset)
-                state_flags = (unsigned*)((uint8_t*)obj + class->state_flags_offset);
+        اگر (!state_flags && obj != tgt) {
+            class = *(ثابت AVClass**)obj;
+            اگر (class->state_flags_انحراف)
+                state_flags = (غیرعلامتی*)((uint8_t*)obj + class->state_flags_انحراف);
         }
 
-        if (state_flags && (*state_flags & AV_CLASS_STATE_INITIALIZED)) {
+        اگر (state_flags && (*state_flags & AV_CLASS_STATE_INITIALIZED)) {
             av_log(logctx, AV_LOG_ERROR, "Option '%s' is not a runtime option and "
                    "so cannot be set after the object has been initialized\n",
                    o->name);
-            return AVERROR(EINVAL);
+            واپس AVERROR(EINVAL);
         }
     }
 
-    if (o->flags & AV_OPT_FLAG_DEPRECATED)
+    اگر (o->flags & AV_OPT_FLAG_DEPRECATED)
         av_log(logctx, AV_LOG_WARNING, "The \"%s\" option is deprecated: %s\n", name, o->help);
 
-    if (po)
+    اگر (po)
         *po   = o;
-    if (ptgt)
+    اگر (ptgt)
         *ptgt = tgt;
-    if (pdst)
-        *pdst = tgt ? ((uint8_t *)tgt) + o->offset : NULL;
+    اگر (pdst)
+        *pdst = tgt ? ((uint8_t *)tgt) + o->انحراف : تہی;
 
-    return 0;
+    واپس 0;
 }
 
-static AVRational double_to_rational(double d)
+ساکن AVRational double_مقصد_rational(دوہرا d)
 {
      AVRational r = av_d2q(d, 1 << 24);
-     if ((!r.num || !r.den) && d)
-         r = av_d2q(d, INT_MAX);
-     return r;
+     اگر ((!r.عدد || !r.den) && d)
+         r = av_d2q(d, زیادہ_سے_زیادہ_عدد);
+     واپس r;
 }
 
-static int read_number(const AVOption *o, const void *dst, double *num, int *den, int64_t *intnum)
+ساکن صحیح read_نمبر(ثابت AVOption *o, ثابت خالی *dst, دوہرا *عدد, صحیح *den, int64_t *intnum)
 {
-    switch (TYPE_BASE(o->type)) {
-    case AV_OPT_TYPE_FLAGS:
-        *intnum = *(unsigned int*)dst;
-        return 0;
-    case AV_OPT_TYPE_PIXEL_FMT:
-        *intnum = *(enum AVPixelFormat *)dst;
-        return 0;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        *intnum = *(enum AVSampleFormat *)dst;
-        return 0;
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_INT:
-        *intnum = *(int *)dst;
-        return 0;
-    case AV_OPT_TYPE_UINT:
-        *intnum = *(unsigned int *)dst;
-        return 0;
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
+    انتخاب (TYPE_بنیاد(o->type)) {
+    حالت AV_OPT_TYPE_FLAGS:
+        *intnum = *(غیرعلامتی صحیح*)dst;
+        واپس 0;
+    حالت AV_OPT_TYPE_PIXEL_FMT:
+        *intnum = *(شمار AVPixelFormat *)dst;
+        واپس 0;
+    حالت AV_OPT_TYPE_SAMPLE_FMT:
+        *intnum = *(شمار AVSampleFormat *)dst;
+        واپس 0;
+    حالت AV_OPT_TYPE_BOOL:
+    حالت AV_OPT_TYPE_INT:
+        *intnum = *(صحیح *)dst;
+        واپس 0;
+    حالت AV_OPT_TYPE_UINT:
+        *intnum = *(غیرعلامتی صحیح *)dst;
+        واپس 0;
+    حالت AV_OPT_TYPE_DURATION:
+    حالت AV_OPT_TYPE_INT64:
+    حالت AV_OPT_TYPE_UINT64:
         *intnum = *(int64_t *)dst;
-        return 0;
-    case AV_OPT_TYPE_FLOAT:
-        *num = *(float *)dst;
-        return 0;
-    case AV_OPT_TYPE_DOUBLE:
-        *num = *(double *)dst;
-        return 0;
-    case AV_OPT_TYPE_RATIONAL:
-        *intnum = ((AVRational *)dst)->num;
+        واپس 0;
+    حالت AV_OPT_TYPE_FLOAT:
+        *عدد = *(اعشاری *)dst;
+        واپس 0;
+    حالت AV_OPT_TYPE_DOUBLE:
+        *عدد = *(دوہرا *)dst;
+        واپس 0;
+    حالت AV_OPT_TYPE_RATIONAL:
+        *intnum = ((AVRational *)dst)->عدد;
         *den    = ((AVRational *)dst)->den;
-        return 0;
-    case AV_OPT_TYPE_CONST:
+        واپس 0;
+    حالت AV_OPT_TYPE_CONST:
         *intnum = o->default_val.i64;
-        return 0;
+        واپس 0;
     }
-    return AVERROR(EINVAL);
+    واپس AVERROR(EINVAL);
 }
 
-static int write_number(void *obj, const AVOption *o, void *dst,
-                        double num, int den, int64_t intnum,
-                        int ignore_range)
+ساکن صحیح write_نمبر(خالی *obj, ثابت AVOption *o, خالی *dst,
+                        دوہرا عدد, صحیح den, int64_t intnum,
+                        صحیح ignore_range)
 {
-    void *logctx = dst ? obj : NULL;
-    const enum AVOptionType type = TYPE_BASE(o->type);
+    خالی *logctx = dst ? obj : تہی;
+    ثابت شمار AVOptionType type = TYPE_بنیاد(o->type);
 
-    if (!ignore_range && type != AV_OPT_TYPE_FLAGS &&
-        (!den || o->max * den < num * intnum || o->min * den > num * intnum)) {
-        num = den ? num * intnum / den : (num && intnum ? INFINITY : NAN);
+    اگر (!ignore_range && type != AV_OPT_TYPE_FLAGS &&
+        (!den || o->max * den < عدد * intnum || o->min * den > عدد * intnum)) {
+        عدد = den ? عدد * intnum / den : (عدد && intnum ? INFINITY : NAN);
         av_log(obj, AV_LOG_ERROR, "Value %f for parameter '%s' out of range [%g - %g]\n",
-               num, o->name, o->min, o->max);
-        return AVERROR(ERANGE);
+               عدد, o->name, o->min, o->max);
+        واپس AVERROR(ERANGE);
     }
-    if (!ignore_range && type == AV_OPT_TYPE_FLAGS) {
-        double d = num*intnum/den;
-        if (d < -1.5 || d > 0xFFFFFFFF+0.5 || (llrint(d*256) & 255)) {
+    اگر (!ignore_range && type == AV_OPT_TYPE_FLAGS) {
+        دوہرا d = عدد*intnum/den;
+        اگر (d < -1.5 || d > 0xFFFFFFFF+0.5 || (llrint(d*256) & 255)) {
             av_log(logctx, AV_LOG_ERROR,
                    "Value %f for parameter '%s' is not a valid set of 32bit integer flags\n",
-                   num*intnum/den, o->name);
-            return AVERROR(ERANGE);
+                   عدد*intnum/den, o->name);
+            واپس AVERROR(ERANGE);
         }
     }
 
-    if (!dst)
-        return 0;
+    اگر (!dst)
+        واپس 0;
 
-    switch (type) {
-    case AV_OPT_TYPE_PIXEL_FMT:
-        *(enum AVPixelFormat *)dst = llrint(num / den) * intnum;
-        break;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        *(enum AVSampleFormat *)dst = llrint(num / den) * intnum;
-        break;
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-        *(int *)dst = llrint(num / den) * intnum;
-        break;
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_INT64:{
-        double d = num / den;
-        if (intnum == 1 && d == (double)INT64_MAX) {
+    انتخاب (type) {
+    حالت AV_OPT_TYPE_PIXEL_FMT:
+        *(شمار AVPixelFormat *)dst = llrint(عدد / den) * intnum;
+        توڑو;
+    حالت AV_OPT_TYPE_SAMPLE_FMT:
+        *(شمار AVSampleFormat *)dst = llrint(عدد / den) * intnum;
+        توڑو;
+    حالت AV_OPT_TYPE_BOOL:
+    حالت AV_OPT_TYPE_FLAGS:
+    حالت AV_OPT_TYPE_INT:
+    حالت AV_OPT_TYPE_UINT:
+        *(صحیح *)dst = llrint(عدد / den) * intnum;
+        توڑو;
+    حالت AV_OPT_TYPE_DURATION:
+    حالت AV_OPT_TYPE_INT64:{
+        دوہرا d = عدد / den;
+        اگر (intnum == 1 && d == (دوہرا)INT64_MAX) {
             *(int64_t *)dst = INT64_MAX;
-        } else
+        } ورنہ
             *(int64_t *)dst = llrint(d) * intnum;
-        break;}
-    case AV_OPT_TYPE_UINT64:{
-        double d = num / den;
+        توڑو;}
+    حالت AV_OPT_TYPE_UINT64:{
+        دوہرا d = عدد / den;
         // We must special case uint64_t here as llrint() does not support values
         // outside the int64_t range and there is no portable function which does
         // "INT64_MAX + 1ULL" is used as it is representable exactly as IEEE double
         // while INT64_MAX is not
-        if (intnum == 1 && d == (double)UINT64_MAX) {
+        اگر (intnum == 1 && d == (دوہرا)UINT64_MAX) {
             *(uint64_t *)dst = UINT64_MAX;
-        } else if (d > INT64_MAX + 1ULL) {
+        } ورنہ اگر (d > INT64_MAX + 1ULL) {
             *(uint64_t *)dst = (llrint(d - (INT64_MAX + 1ULL)) + (INT64_MAX + 1ULL))*intnum;
-        } else {
+        } ورنہ {
             *(uint64_t *)dst = llrint(d) * intnum;
         }
-        break;}
-    case AV_OPT_TYPE_FLOAT:
-        *(float *)dst = num * intnum / den;
-        break;
-    case AV_OPT_TYPE_DOUBLE:
-        *(double    *)dst = num * intnum / den;
-        break;
-    case AV_OPT_TYPE_RATIONAL:
-    case AV_OPT_TYPE_VIDEO_RATE:
-        if ((int) num == num)
-            *(AVRational *)dst = (AVRational) { num *intnum, den };
-        else
-            *(AVRational *)dst = double_to_rational(num * intnum / den);
-        break;
-    default:
-        return AVERROR(EINVAL);
+        توڑو;}
+    حالت AV_OPT_TYPE_FLOAT:
+        *(اعشاری *)dst = عدد * intnum / den;
+        توڑو;
+    حالت AV_OPT_TYPE_DOUBLE:
+        *(دوہرا    *)dst = عدد * intnum / den;
+        توڑو;
+    حالت AV_OPT_TYPE_RATIONAL:
+    حالت AV_OPT_TYPE_VIDEO_شرح:
+        اگر ((صحیح) عدد == عدد)
+            *(AVRational *)dst = (AVRational) { عدد *intnum, den };
+        ورنہ
+            *(AVRational *)dst = double_مقصد_rational(عدد * intnum / den);
+        توڑو;
+    طےشدہ:
+        واپس AVERROR(EINVAL);
     }
-    return 0;
+    واپس 0;
 }
 
-static int hexchar2int(char c) {
-    if (c >= '0' && c <= '9')
-        return c - '0';
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
-    if (c >= 'A' && c <= 'F')
-        return c - 'A' + 10;
-    return -1;
+ساکن صحیح hexchar2int(حرف c) {
+    اگر (c >= '0' && c <= '9')
+        واپس c - '0';
+    اگر (c >= 'a' && c <= 'f')
+        واپس c - 'a' + 10;
+    اگر (c >= 'A' && c <= 'F')
+        واپس c - 'A' + 10;
+    واپس -1;
 }
 
-static int set_string_binary(void *obj, const AVOption *o, const char *val, uint8_t **dst)
+ساکن صحیح سیٹ_string_ثنائی(خالی *obj, ثابت AVOption *o, ثابت حرف *val, uint8_t **dst)
 {
-    int *lendst;
+    صحیح *lendst;
     uint8_t *bin, *ptr;
-    int len;
+    صحیح len;
 
-    if (dst) {
-        lendst = (int *)(dst + 1);
+    اگر (dst) {
+        lendst = (صحیح *)(dst + 1);
         av_freep(dst);
         *lendst = 0;
     }
 
-    if (!val || !(len = strlen(val)))
-        return 0;
+    اگر (!val || !(len = لڑی_لمبائی(val)))
+        واپس 0;
 
-    if (len & 1)
-        return AVERROR(EINVAL);
+    اگر (len & 1)
+        واپس AVERROR(EINVAL);
     len /= 2;
 
     ptr = bin = av_malloc(len);
-    if (!ptr)
-        return AVERROR(ENOMEM);
-    while (*val) {
-        int a = hexchar2int(*val++);
-        int b = hexchar2int(*val++);
-        if (a < 0 || b < 0) {
+    اگر (!ptr)
+        واپس AVERROR(ENOMEM);
+    جب (*val) {
+        صحیح a = hexchar2int(*val++);
+        صحیح b = hexchar2int(*val++);
+        اگر (a < 0 || b < 0) {
             av_free(bin);
-            return AVERROR(EINVAL);
+            واپس AVERROR(EINVAL);
         }
         *ptr++ = (a << 4) | b;
     }
 
-    if (dst) {
+    اگر (dst) {
         *dst    = bin;
         *lendst = len;
-    } else {
+    } ورنہ {
         av_free(bin);
     }
 
-    return 0;
+    واپس 0;
 }
 
-static int set_string(void *obj, const AVOption *o, const char *val, uint8_t **dst)
+ساکن صحیح سیٹ_string(خالی *obj, ثابت AVOption *o, ثابت حرف *val, uint8_t **dst)
 {
-    if (!dst)
-        return 0;
+    اگر (!dst)
+        واپس 0;
     av_freep(dst);
-    if (!val)
-        return 0;
+    اگر (!val)
+        واپس 0;
     *dst = av_strdup(val);
-    return *dst ? 0 : AVERROR(ENOMEM);
+    واپس *dst ? 0 : AVERROR(ENOMEM);
 }
 
-#define DEFAULT_NUMVAL(opt) ((opt->type == AV_OPT_TYPE_INT64 || \
+#تعریف_کرو DEFAULT_NUMVAL(opt) ((opt->type == AV_OPT_TYPE_INT64 || \
                               opt->type == AV_OPT_TYPE_UINT64 || \
                               opt->type == AV_OPT_TYPE_CONST || \
                               opt->type == AV_OPT_TYPE_FLAGS || \
@@ -425,215 +425,215 @@ static int set_string(void *obj, const AVOption *o, const char *val, uint8_t **d
                              ? opt->default_val.i64             \
                              : opt->default_val.dbl)
 
-static int set_string_number(void *obj, void *target_obj, const AVOption *o, const char *val, void *dst)
+ساکن صحیح سیٹ_string_نمبر(خالی *obj, خالی *ہدف_obj, ثابت AVOption *o, ثابت حرف *val, خالی *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    const enum AVOptionType type = TYPE_BASE(o->type);
-    int ret = 0;
+    خالی *logctx = dst ? obj : تہی;
+    ثابت شمار AVOptionType type = TYPE_بنیاد(o->type);
+    صحیح ret = 0;
 
-    if (type == AV_OPT_TYPE_RATIONAL || type == AV_OPT_TYPE_VIDEO_RATE) {
-        int num, den;
-        char c;
-        if (sscanf(val, "%d%*1[:/]%d%c", &num, &den, &c) == 2) {
-            if ((ret = write_number(obj, o, dst, 1, den, num, 0)) >= 0)
-                return ret;
+    اگر (type == AV_OPT_TYPE_RATIONAL || type == AV_OPT_TYPE_VIDEO_شرح) {
+        صحیح عدد, den;
+        حرف c;
+        اگر (لڑی_سے_پڑھو(val, "%d%*1[:/]%d%c", &عدد, &den, &c) == 2) {
+            اگر ((ret = write_نمبر(obj, o, dst, 1, den, عدد, 0)) >= 0)
+                واپس ret;
             ret = 0;
         }
     }
 
-    for (;;) {
-        int i = 0;
-        char buf[256];
-        int cmd = 0;
-        double d;
+    برائے (;;) {
+        صحیح i = 0;
+        حرف buf[256];
+        صحیح cmd = 0;
+        دوہرا d;
         int64_t intnum = 1;
 
-        if (type == AV_OPT_TYPE_FLAGS) {
-            if (*val == '+' || *val == '-')
+        اگر (type == AV_OPT_TYPE_FLAGS) {
+            اگر (*val == '+' || *val == '-')
                 cmd = *(val++);
-            for (; i < sizeof(buf) - 1 && val[i] && val[i] != '+' && val[i] != '-'; i++)
+            برائے (; i < حجم(buf) - 1 && val[i] && val[i] != '+' && val[i] != '-'; i++)
                 buf[i] = val[i];
             buf[i] = 0;
         }
 
         {
-            int res;
-            int ci = 0;
-            double const_values[64];
-            const char * const_names[64];
-            int search_flags = (o->flags & AV_OPT_FLAG_CHILD_CONSTS) ? AV_OPT_SEARCH_CHILDREN : 0;
-            const AVOption *o_named = av_opt_find(target_obj, i ? buf : val, o->unit, 0, search_flags);
-            if (o_named && o_named->type == AV_OPT_TYPE_CONST) {
+            صحیح res;
+            صحیح ci = 0;
+            دوہرا const_اقدار[64];
+            ثابت حرف * const_نام[64];
+            صحیح تلاش_flags = (o->flags & AV_OPT_FLAG_بچہ_CONSTS) ? AV_OPT_تلاش_CHILDREN : 0;
+            ثابت AVOption *o_named = av_opt_ڈھونڈو(ہدف_obj, i ? buf : val, o->unit, 0, تلاش_flags);
+            اگر (o_named && o_named->type == AV_OPT_TYPE_CONST) {
                 d = DEFAULT_NUMVAL(o_named);
-                if (o_named->flags & AV_OPT_FLAG_DEPRECATED)
+                اگر (o_named->flags & AV_OPT_FLAG_DEPRECATED)
                     av_log(logctx, AV_LOG_WARNING, "The \"%s\" option is deprecated: %s\n",
                            o_named->name, o_named->help);
-            } else {
-                if (o->unit) {
-                    for (o_named = NULL; o_named = av_opt_next(target_obj, o_named); ) {
-                        if (o_named->type == AV_OPT_TYPE_CONST &&
+            } ورنہ {
+                اگر (o->unit) {
+                    برائے (o_named = تہی; o_named = av_opt_اگلا(ہدف_obj, o_named); ) {
+                        اگر (o_named->type == AV_OPT_TYPE_CONST &&
                             o_named->unit &&
                             !strcmp(o_named->unit, o->unit)) {
-                            if (ci + 6 >= FF_ARRAY_ELEMS(const_values)) {
+                            اگر (ci + 6 >= FF_ARRAY_ELEMS(const_اقدار)) {
                                 av_log(logctx, AV_LOG_ERROR, "const_values array too small for %s\n", o->unit);
-                                return AVERROR_PATCHWELCOME;
+                                واپس AVERROR_PATCHWELCOME;
                             }
-                            const_names [ci  ] = o_named->name;
-                            const_values[ci++] = DEFAULT_NUMVAL(o_named);
+                            const_نام [ci  ] = o_named->name;
+                            const_اقدار[ci++] = DEFAULT_NUMVAL(o_named);
                         }
                     }
                 }
-                const_names [ci  ] = "default";
-                const_values[ci++] = DEFAULT_NUMVAL(o);
-                const_names [ci  ] = "max";
-                const_values[ci++] = o->max;
-                const_names [ci  ] = "min";
-                const_values[ci++] = o->min;
-                const_names [ci  ] = "none";
-                const_values[ci++] = 0;
-                const_names [ci  ] = "all";
-                const_values[ci++] = ~0;
-                const_names [ci] = NULL;
-                const_values[ci] = 0;
+                const_نام [ci  ] = "default";
+                const_اقدار[ci++] = DEFAULT_NUMVAL(o);
+                const_نام [ci  ] = "max";
+                const_اقدار[ci++] = o->max;
+                const_نام [ci  ] = "min";
+                const_اقدار[ci++] = o->min;
+                const_نام [ci  ] = "none";
+                const_اقدار[ci++] = 0;
+                const_نام [ci  ] = "all";
+                const_اقدار[ci++] = ~0;
+                const_نام [ci] = تہی;
+                const_اقدار[ci] = 0;
 
-                res = av_expr_parse_and_eval(&d, i ? buf : val, const_names,
-                                            const_values, NULL, NULL, NULL, NULL, NULL, 0, obj);
-                if (res < 0) {
+                res = av_اظہاریہ_parse_and_eval(&d, i ? buf : val, const_نام,
+                                            const_اقدار, تہی, تہی, تہی, تہی, تہی, 0, obj);
+                اگر (res < 0) {
                     av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\"\n", o->name, val);
-                    return res;
+                    واپس res;
                 }
             }
         }
-        if (type == AV_OPT_TYPE_FLAGS && dst) {
-            intnum = *(unsigned int*)dst;
-            if (cmd == '+')
+        اگر (type == AV_OPT_TYPE_FLAGS && dst) {
+            intnum = *(غیرعلامتی صحیح*)dst;
+            اگر (cmd == '+')
                 d = intnum | (int64_t)d;
-            else if (cmd == '-')
+            ورنہ اگر (cmd == '-')
                 d = intnum &~(int64_t)d;
         }
 
-        if ((ret = write_number(obj, o, dst, d, 1, 1, 0)) < 0)
-            return ret;
+        اگر ((ret = write_نمبر(obj, o, dst, d, 1, 1, 0)) < 0)
+            واپس ret;
         val += i;
-        if (!i || !*val)
-            return 0;
+        اگر (!i || !*val)
+            واپس 0;
     }
 }
 
-static int set_string_image_size(void *obj, const AVOption *o, const char *val, int *dst)
+ساکن صحیح سیٹ_string_image_سائز(خالی *obj, ثابت AVOption *o, ثابت حرف *val, صحیح *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    int tmp[2];
-    int ret;
+    خالی *logctx = dst ? obj : تہی;
+    صحیح tmp[2];
+    صحیح ret;
 
-    if (!val || !strcmp(val, "none")) {
-        if (dst) {
+    اگر (!val || !strcmp(val, "none")) {
+        اگر (dst) {
         dst[0] =
         dst[1] = 0;
         }
-        return 0;
+        واپس 0;
     }
-    ret = av_parse_video_size(&tmp[0], &tmp[1], val);
-    if (ret < 0) {
+    ret = av_parse_video_سائز(&tmp[0], &tmp[1], val);
+    اگر (ret < 0) {
         av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as image size\n", o->name, val);
-        return ret;
+        واپس ret;
     }
-    if (dst)
-        memcpy(dst, tmp, sizeof(tmp));
-    return ret;
+    اگر (dst)
+        حافظہ_نقل(dst, tmp, حجم(tmp));
+    واپس ret;
 }
 
-static int set_string_video_rate(void *obj, const AVOption *o, const char *val, AVRational *dst)
+ساکن صحیح سیٹ_string_video_شرح(خالی *obj, ثابت AVOption *o, ثابت حرف *val, AVRational *dst)
 {
-    void *logctx = dst ? obj : NULL;
+    خالی *logctx = dst ? obj : تہی;
     AVRational tmp;
-    int ret = av_parse_video_rate(&tmp, val);
-    if (ret < 0)
+    صحیح ret = av_parse_video_شرح(&tmp, val);
+    اگر (ret < 0)
         av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as video rate\n", o->name, val);
-    if (dst)
+    اگر (dst)
         *dst = tmp;
-    return ret;
+    واپس ret;
 }
 
-static int set_string_color(void *obj, const AVOption *o, const char *val, uint8_t *dst)
+ساکن صحیح سیٹ_string_color(خالی *obj, ثابت AVOption *o, ثابت حرف *val, uint8_t *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    int ret;
+    خالی *logctx = dst ? obj : تہی;
+    صحیح ret;
 
-    if (!val) {
-        return 0;
-    } else {
+    اگر (!val) {
+        واپس 0;
+    } ورنہ {
         uint8_t tmp[4];
         ret = av_parse_color(tmp, val, -1, obj);
-        if (ret < 0) {
+        اگر (ret < 0) {
             av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as color\n", o->name, val);
-            return ret;
+            واپس ret;
         }
-        if (dst)
-            memcpy(dst, tmp, sizeof(tmp));
-        return ret;
+        اگر (dst)
+            حافظہ_نقل(dst, tmp, حجم(tmp));
+        واپس ret;
     }
-    return 0;
+    واپس 0;
 }
 
-static const char *get_bool_name(int val)
+ساکن ثابت حرف *get_bool_name(صحیح val)
 {
-    if (val < 0)
-        return "auto";
-    return val ? "true" : "false";
+    اگر (val < 0)
+        واپس "auto";
+    واپس val ? "true" : "false";
 }
 
-static int set_string_bool(void *obj, const AVOption *o, const char *val, int *dst)
+ساکن صحیح سیٹ_string_bool(خالی *obj, ثابت AVOption *o, ثابت حرف *val, صحیح *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    int n;
+    خالی *logctx = dst ? obj : تہی;
+    صحیح n;
 
-    if (!val)
-        return 0;
+    اگر (!val)
+        واپس 0;
 
-    if (!strcmp(val, "auto")) {
+    اگر (!strcmp(val, "auto")) {
         n = -1;
-    } else if (av_match_name(val, "true,y,yes,enable,enabled,on")) {
+    } ورنہ اگر (av_مطابقت_name(val, "true,y,yes,enable,enabled,on")) {
         n = 1;
-    } else if (av_match_name(val, "false,n,no,disable,disabled,off")) {
+    } ورنہ اگر (av_مطابقت_name(val, "false,n,no,disable,disabled,off")) {
         n = 0;
-    } else {
-        char *end = NULL;
-        n = strtol(val, &end, 10);
-        if (val + strlen(val) != end)
-            goto fail;
+    } ورنہ {
+        حرف *انتہا = تہی;
+        n = strtol(val, &انتہا, 10);
+        اگر (val + لڑی_لمبائی(val) != انتہا)
+            جاؤ fail;
     }
 
-    if (n < o->min || n > o->max)
-        goto fail;
+    اگر (n < o->min || n > o->max)
+        جاؤ fail;
 
-    if (dst)
+    اگر (dst)
     *dst = n;
-    return 0;
+    واپس 0;
 
 fail:
     av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as boolean\n", o->name, val);
-    return AVERROR(EINVAL);
+    واپس AVERROR(EINVAL);
 }
 
-static int set_string_fmt(void *obj, const AVOption *o, const char *val, uint8_t *dst,
-                          int fmt_nb, int ((*get_fmt)(const char *)), const char *desc,
-                          enum AVOptionType type)
+ساکن صحیح سیٹ_string_fmt(خالی *obj, ثابت AVOption *o, ثابت حرف *val, uint8_t *dst,
+                          صحیح fmt_nb, صحیح ((*get_fmt)(ثابت حرف *)), ثابت حرف *desc,
+                          شمار AVOptionType type)
 {
-    void *logctx = dst ? obj : NULL;
-    int fmt, min, max;
+    خالی *logctx = dst ? obj : تہی;
+    صحیح fmt, min, max;
 
-    if (!val || !strcmp(val, "none")) {
+    اگر (!val || !strcmp(val, "none")) {
         fmt = -1;
-    } else {
+    } ورنہ {
         fmt = get_fmt(val);
-        if (fmt == -1) {
-            char *tail;
-            fmt = strtol(val, &tail, 0);
-            if (*tail || (unsigned)fmt >= fmt_nb) {
+        اگر (fmt == -1) {
+            حرف *دم;
+            fmt = strtol(val, &دم, 0);
+            اگر (*دم || (غیرعلامتی)fmt >= fmt_nb) {
                 av_log(logctx, AV_LOG_ERROR,
                        "Unable to parse \"%s\" option value \"%s\" as %s\n", o->name, val, desc);
-                return AVERROR(EINVAL);
+                واپس AVERROR(EINVAL);
             }
         }
     }
@@ -642,1065 +642,1065 @@ static int set_string_fmt(void *obj, const AVOption *o, const char *val, uint8_t
     max = FFMIN(o->max, fmt_nb-1);
 
     // hack for compatibility with old ffmpeg
-    if(min == 0 && max == 0) {
+    اگر(min == 0 && max == 0) {
         min = -1;
         max = fmt_nb-1;
     }
 
-    if (fmt < min || fmt > max) {
+    اگر (fmt < min || fmt > max) {
         av_log(logctx, AV_LOG_ERROR,
                "Value %d for parameter '%s' out of %s format range [%d - %d]\n",
                fmt, o->name, desc, min, max);
-        return AVERROR(ERANGE);
+        واپس AVERROR(ERANGE);
     }
 
-    if (dst)
-    switch (type) {
-    case AV_OPT_TYPE_PIXEL_FMT:  *(enum AVPixelFormat *)dst = fmt; break;
-    case AV_OPT_TYPE_SAMPLE_FMT: *(enum AVSampleFormat*)dst = fmt; break;
-    default: av_unreachable("set_string_fmt() is only called for pixel and sample formats");
+    اگر (dst)
+    انتخاب (type) {
+    حالت AV_OPT_TYPE_PIXEL_FMT:  *(شمار AVPixelFormat *)dst = fmt; توڑو;
+    حالت AV_OPT_TYPE_SAMPLE_FMT: *(شمار AVSampleFormat*)dst = fmt; توڑو;
+    طےشدہ: av_unreachable("set_string_fmt() is only called for pixel and sample formats");
     }
-    return 0;
+    واپس 0;
 }
 
-static int get_pix_fmt(const char *name)
+ساکن صحیح get_pix_fmt(ثابت حرف *name)
 {
-    return av_get_pix_fmt(name);
+    واپس av_get_pix_fmt(name);
 }
 
-static int set_string_pixel_fmt(void *obj, const AVOption *o, const char *val, uint8_t *dst)
+ساکن صحیح سیٹ_string_pixel_fmt(خالی *obj, ثابت AVOption *o, ثابت حرف *val, uint8_t *dst)
 {
-    return set_string_fmt(obj, o, val, dst,
+    واپس سیٹ_string_fmt(obj, o, val, dst,
                           AV_PIX_FMT_NB, get_pix_fmt,
                           "pixel format", AV_OPT_TYPE_PIXEL_FMT);
 }
 
-static int get_sample_fmt(const char *name)
+ساکن صحیح get_sample_fmt(ثابت حرف *name)
 {
-    return av_get_sample_fmt(name);
+    واپس av_get_sample_fmt(name);
 }
 
-static int set_string_sample_fmt(void *obj, const AVOption *o, const char *val, uint8_t *dst)
+ساکن صحیح سیٹ_string_sample_fmt(خالی *obj, ثابت AVOption *o, ثابت حرف *val, uint8_t *dst)
 {
-    return set_string_fmt(obj, o, val, dst,
+    واپس سیٹ_string_fmt(obj, o, val, dst,
                           AV_SAMPLE_FMT_NB, get_sample_fmt,
                           "sample format", AV_OPT_TYPE_SAMPLE_FMT);
 }
 
-static int set_string_dict(void *obj, const AVOption *o, const char *val, uint8_t **dst)
+ساکن صحیح سیٹ_string_dict(خالی *obj, ثابت AVOption *o, ثابت حرف *val, uint8_t **dst)
 {
-    AVDictionary *options = NULL;
+    AVDictionary *options = تہی;
 
-    if (val) {
-        int ret = av_dict_parse_string(&options, val, "=", ":", 0);
-        if (ret < 0) {
+    اگر (val) {
+        صحیح ret = av_dict_parse_string(&options, val, "=", ":", 0);
+        اگر (ret < 0) {
             av_dict_free(&options);
-            return ret;
+            واپس ret;
         }
     }
 
-    if (!dst) {
+    اگر (!dst) {
         av_dict_free(&options);
-        return 0;
+        واپس 0;
     }
 
     av_dict_free((AVDictionary **)dst);
     *dst = (uint8_t *)options;
 
-    return 0;
+    واپس 0;
 }
 
-static int set_string_channel_layout(void *obj, const AVOption *o,
-                                     const char *val, void *dst)
+ساکن صحیح سیٹ_string_channel_layout(خالی *obj, ثابت AVOption *o,
+                                     ثابت حرف *val, خالی *dst)
 {
     AVChannelLayout tmp;
     AVChannelLayout *channel_layout = dst;
-    int ret;
-    if (dst)
+    صحیح ret;
+    اگر (dst)
     av_channel_layout_uninit(channel_layout);
-    else
+    ورنہ
         channel_layout = &tmp;
-    if (!val)
-        return 0;
+    اگر (!val)
+        واپس 0;
     ret = av_channel_layout_from_string(channel_layout, val);
-    if (ret < 0)
-        return ret;
-    if (!dst)
+    اگر (ret < 0)
+        واپس ret;
+    اگر (!dst)
         av_channel_layout_uninit(channel_layout);
-    return 0;
+    واپس 0;
 }
 
-static int opt_set_elem(void *obj, void *target_obj, const AVOption *o,
-                        const char *val, void *dst)
+ساکن صحیح opt_سیٹ_elem(خالی *obj, خالی *ہدف_obj, ثابت AVOption *o,
+                        ثابت حرف *val, خالی *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    const enum AVOptionType type = TYPE_BASE(o->type);
-    int ret;
+    خالی *logctx = dst ? obj : تہی;
+    ثابت شمار AVOptionType type = TYPE_بنیاد(o->type);
+    صحیح ret;
 
-    if (!val && (type != AV_OPT_TYPE_STRING &&
+    اگر (!val && (type != AV_OPT_TYPE_STRING &&
                  type != AV_OPT_TYPE_PIXEL_FMT && type != AV_OPT_TYPE_SAMPLE_FMT &&
-                 type != AV_OPT_TYPE_IMAGE_SIZE &&
+                 type != AV_OPT_TYPE_IMAGE_سائز &&
                  type != AV_OPT_TYPE_DURATION && type != AV_OPT_TYPE_COLOR &&
                  type != AV_OPT_TYPE_BOOL))
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
 
-    switch (type) {
-    case AV_OPT_TYPE_BOOL:
-        return set_string_bool(obj, o, val, dst);
-    case AV_OPT_TYPE_STRING:
-        return set_string(obj, o, val, dst);
-    case AV_OPT_TYPE_BINARY:
-        return set_string_binary(obj, o, val, dst);
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_FLOAT:
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_RATIONAL:
-        return set_string_number(obj, target_obj, o, val, dst);
-    case AV_OPT_TYPE_IMAGE_SIZE:
-        return set_string_image_size(obj, o, val, dst);
-    case AV_OPT_TYPE_VIDEO_RATE: {
+    انتخاب (type) {
+    حالت AV_OPT_TYPE_BOOL:
+        واپس سیٹ_string_bool(obj, o, val, dst);
+    حالت AV_OPT_TYPE_STRING:
+        واپس سیٹ_string(obj, o, val, dst);
+    حالت AV_OPT_TYPE_ثنائی:
+        واپس سیٹ_string_ثنائی(obj, o, val, dst);
+    حالت AV_OPT_TYPE_FLAGS:
+    حالت AV_OPT_TYPE_INT:
+    حالت AV_OPT_TYPE_UINT:
+    حالت AV_OPT_TYPE_INT64:
+    حالت AV_OPT_TYPE_UINT64:
+    حالت AV_OPT_TYPE_FLOAT:
+    حالت AV_OPT_TYPE_DOUBLE:
+    حالت AV_OPT_TYPE_RATIONAL:
+        واپس سیٹ_string_نمبر(obj, ہدف_obj, o, val, dst);
+    حالت AV_OPT_TYPE_IMAGE_سائز:
+        واپس سیٹ_string_image_سائز(obj, o, val, dst);
+    حالت AV_OPT_TYPE_VIDEO_شرح: {
         AVRational tmp;
-        ret = set_string_video_rate(obj, o, val, &tmp);
-        if (ret < 0)
-            return ret;
-        return write_number(obj, o, dst, 1, tmp.den, tmp.num, 0);
+        ret = سیٹ_string_video_شرح(obj, o, val, &tmp);
+        اگر (ret < 0)
+            واپس ret;
+        واپس write_نمبر(obj, o, dst, 1, tmp.den, tmp.عدد, 0);
     }
-    case AV_OPT_TYPE_PIXEL_FMT:
-        return set_string_pixel_fmt(obj, o, val, dst);
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        return set_string_sample_fmt(obj, o, val, dst);
-    case AV_OPT_TYPE_DURATION:
+    حالت AV_OPT_TYPE_PIXEL_FMT:
+        واپس سیٹ_string_pixel_fmt(obj, o, val, dst);
+    حالت AV_OPT_TYPE_SAMPLE_FMT:
+        واپس سیٹ_string_sample_fmt(obj, o, val, dst);
+    حالت AV_OPT_TYPE_DURATION:
         {
             int64_t usecs = 0;
-            if (val) {
-                if ((ret = av_parse_time(&usecs, val, 1)) < 0) {
+            اگر (val) {
+                اگر ((ret = av_parse_وقت(&usecs, val, 1)) < 0) {
                     av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as duration\n", o->name, val);
-                    return ret;
+                    واپس ret;
                 }
             }
-            if (usecs < o->min || usecs > o->max) {
+            اگر (usecs < o->min || usecs > o->max) {
                 av_log(logctx, AV_LOG_ERROR, "Value %f for parameter '%s' out of range [%g - %g]\n",
                        usecs / 1000000.0, o->name, o->min / 1000000.0, o->max / 1000000.0);
-                return AVERROR(ERANGE);
+                واپس AVERROR(ERANGE);
             }
-            if (dst)
+            اگر (dst)
             *(int64_t *)dst = usecs;
-            return 0;
+            واپس 0;
         }
-    case AV_OPT_TYPE_COLOR:
-        return set_string_color(obj, o, val, dst);
-    case AV_OPT_TYPE_CHLAYOUT:
-        ret = set_string_channel_layout(obj, o, val, dst);
-        if (ret < 0) {
+    حالت AV_OPT_TYPE_COLOR:
+        واپس سیٹ_string_color(obj, o, val, dst);
+    حالت AV_OPT_TYPE_CHLAYOUT:
+        ret = سیٹ_string_channel_layout(obj, o, val, dst);
+        اگر (ret < 0) {
             av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as channel layout\n", o->name, val);
             ret = AVERROR(EINVAL);
         }
-        return ret;
-    case AV_OPT_TYPE_DICT:
-        return set_string_dict(obj, o, val, dst);
+        واپس ret;
+    حالت AV_OPT_TYPE_DICT:
+        واپس سیٹ_string_dict(obj, o, val, dst);
     }
 
     av_log(logctx, AV_LOG_ERROR, "Invalid option type.\n");
-    return AVERROR(EINVAL);
+    واپس AVERROR(EINVAL);
 }
 
-static int opt_set_array(void *obj, void *target_obj, const AVOption *o,
-                         const char *val, void *dst)
+ساکن صحیح opt_سیٹ_array(خالی *obj, خالی *ہدف_obj, ثابت AVOption *o,
+                         ثابت حرف *val, خالی *dst)
 {
-    const AVOptionArrayDef *arr = o->default_val.arr;
-    const size_t      elem_size = opt_type_desc[TYPE_BASE(o->type)].size;
-    const uint8_t           sep = opt_array_sep(o);
-    uint8_t                *str = NULL;
+    ثابت AVOptionArrayDef *arr = o->default_val.arr;
+    ثابت size_t      elem_سائز = opt_type_desc[TYPE_بنیاد(o->type)].سائز;
+    ثابت uint8_t           sep = opt_array_sep(o);
+    uint8_t                *str = تہی;
 
-    void      *logctx = dst ? obj : NULL;
-    void       *elems = NULL;
-    unsigned nb_elems = 0;
-    int ret;
+    خالی      *logctx = dst ? obj : تہی;
+    خالی       *elems = تہی;
+    غیرعلامتی nb_elems = 0;
+    صحیح ret;
 
-    if (val && *val) {
-        str = av_malloc(strlen(val) + 1);
-        if (!str)
-            return AVERROR(ENOMEM);
+    اگر (val && *val) {
+        str = av_malloc(لڑی_لمبائی(val) + 1);
+        اگر (!str)
+            واپس AVERROR(ENOMEM);
     }
 
     // split and unescape the string
-    while (val && *val) {
+    جب (val && *val) {
         uint8_t *p = str;
-        void *tmp;
+        خالی *tmp;
 
-        if (arr && arr->size_max && nb_elems >= arr->size_max) {
+        اگر (arr && arr->سائز_max && nb_elems >= arr->سائز_max) {
             av_log(logctx, AV_LOG_ERROR,
                    "Cannot assign more than %u elements to array option %s\n",
-                   arr->size_max, o->name);
+                   arr->سائز_max, o->name);
             ret = AVERROR(EINVAL);
-            goto fail;
+            جاؤ fail;
         }
 
-        for (; *val; val++, p++) {
-            if (*val == '\\' && val[1])
+        برائے (; *val; val++, p++) {
+            اگر (*val == '\\' && val[1])
                 val++;
-            else if (*val == sep) {
+            ورنہ اگر (*val == sep) {
                 val++;
-                break;
+                توڑو;
             }
             *p = *val;
         }
         *p = 0;
 
-        tmp = av_realloc_array(elems, nb_elems + 1, elem_size);
-        if (!tmp) {
+        tmp = av_realloc_array(elems, nb_elems + 1, elem_سائز);
+        اگر (!tmp) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            جاؤ fail;
         }
         elems = tmp;
 
         tmp = opt_array_pelem(o, elems, nb_elems);
-        memset(tmp, 0, elem_size);
+        memset(tmp, 0, elem_سائز);
 
-        ret = opt_set_elem(obj, target_obj, o, str, tmp);
-        if (ret < 0)
-            goto fail;
+        ret = opt_سیٹ_elem(obj, ہدف_obj, o, str, tmp);
+        اگر (ret < 0)
+            جاؤ fail;
         nb_elems++;
     }
     av_freep(&str);
 
-    if (dst)
+    اگر (dst)
     opt_free_array(o, dst, opt_array_pcount(dst));
 
-    if (arr && nb_elems < arr->size_min) {
+    اگر (arr && nb_elems < arr->سائز_min) {
         av_log(logctx, AV_LOG_ERROR,
                "Cannot assign fewer than %u elements to array option %s\n",
-               arr->size_min, o->name);
+               arr->سائز_min, o->name);
         ret = AVERROR(EINVAL);
-        goto fail;
+        جاؤ fail;
     }
 
-    if (dst) {
-    *((void **)dst)        = elems;
+    اگر (dst) {
+    *((خالی **)dst)        = elems;
     *opt_array_pcount(dst) = nb_elems;
-    } else
+    } ورنہ
         opt_free_array(o, &elems, &nb_elems);
 
-    return 0;
+    واپس 0;
 fail:
     av_freep(&str);
     opt_free_array(o, &elems, &nb_elems);
-    return ret;
+    واپس ret;
 }
 
-int av_opt_set(void *obj, const char *name, const char *val, int search_flags)
+صحیح av_opt_سیٹ(خالی *obj, ثابت حرف *name, ثابت حرف *val, صحیح تلاش_flags)
 {
-    void *dst, *target_obj;
-    const AVOption *o;
-    int ret;
+    خالی *dst, *ہدف_obj;
+    ثابت AVOption *o;
+    صحیح ret;
 
-    ret = opt_set_init(obj, name, search_flags, 0, &target_obj, &o, &dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_سیٹ_init(obj, name, تلاش_flags, 0, &ہدف_obj, &o, &dst);
+    اگر (ret < 0)
+        واپس ret;
 
-    return ((o->type & AV_OPT_TYPE_FLAG_ARRAY) ?
-            opt_set_array : opt_set_elem)(obj, target_obj, o, val, dst);
+    واپس ((o->type & AV_OPT_TYPE_FLAG_ARRAY) ?
+            opt_سیٹ_array : opt_سیٹ_elem)(obj, ہدف_obj, o, val, dst);
 }
 
-#define OPT_EVAL_NUMBER(name, opttype, vartype)                         \
-int av_opt_eval_ ## name(void *obj, const AVOption *o,                  \
-                         const char *val, vartype *name ## _out)        \
+#تعریف_کرو OPT_EVAL_نمبر(name, opttype, vartype)                         \
+صحیح av_opt_eval_ ## name(خالی *obj, ثابت AVOption *o,                  \
+                         ثابت حرف *val, vartype *name ## برآمد_3)        \
 {                                                                       \
-    if (!o || o->type != opttype || o->flags & AV_OPT_FLAG_READONLY)    \
-        return AVERROR(EINVAL);                                         \
-    return set_string_number(obj, obj, o, val, name ## _out);           \
+    اگر (!o || o->type != opttype || o->flags & AV_OPT_FLAG_READONLY)    \
+        واپس AVERROR(EINVAL);                                         \
+    واپس سیٹ_string_نمبر(obj, obj, o, val, name ## برآمد_3);           \
 }
 
-OPT_EVAL_NUMBER(flags,  AV_OPT_TYPE_FLAGS,    int)
-OPT_EVAL_NUMBER(int,    AV_OPT_TYPE_INT,      int)
-OPT_EVAL_NUMBER(uint,   AV_OPT_TYPE_UINT,     unsigned)
-OPT_EVAL_NUMBER(int64,  AV_OPT_TYPE_INT64,    int64_t)
-OPT_EVAL_NUMBER(float,  AV_OPT_TYPE_FLOAT,    float)
-OPT_EVAL_NUMBER(double, AV_OPT_TYPE_DOUBLE,   double)
-OPT_EVAL_NUMBER(q,      AV_OPT_TYPE_RATIONAL, AVRational)
+OPT_EVAL_نمبر(flags,  AV_OPT_TYPE_FLAGS,    صحیح)
+OPT_EVAL_نمبر(صحیح,    AV_OPT_TYPE_INT,      صحیح)
+OPT_EVAL_نمبر(uint,   AV_OPT_TYPE_UINT,     غیرعلامتی)
+OPT_EVAL_نمبر(int64,  AV_OPT_TYPE_INT64,    int64_t)
+OPT_EVAL_نمبر(اعشاری,  AV_OPT_TYPE_FLOAT,    اعشاری)
+OPT_EVAL_نمبر(دوہرا, AV_OPT_TYPE_DOUBLE,   دوہرا)
+OPT_EVAL_نمبر(q,      AV_OPT_TYPE_RATIONAL, AVRational)
 
-static int set_number(void *obj, const char *name, double num, int den, int64_t intnum,
-                      int search_flags, int require_type)
+ساکن صحیح سیٹ_نمبر(خالی *obj, ثابت حرف *name, دوہرا عدد, صحیح den, int64_t intnum,
+                      صحیح تلاش_flags, صحیح require_type)
 {
-    void *dst;
-    const AVOption *o;
-    int ret;
+    خالی *dst;
+    ثابت AVOption *o;
+    صحیح ret;
 
-    ret = opt_set_init(obj, name, search_flags, require_type, NULL, &o, &dst);
-    if (ret < 0)
-        return ret;
-    if (dst)
-        ret = write_number(obj, o, dst, num, den, intnum, 0);
+    ret = opt_سیٹ_init(obj, name, تلاش_flags, require_type, تہی, &o, &dst);
+    اگر (ret < 0)
+        واپس ret;
+    اگر (dst)
+        ret = write_نمبر(obj, o, dst, عدد, den, intnum, 0);
 
-    return ret;
+    واپس ret;
 }
 
-int av_opt_set_int(void *obj, const char *name, int64_t val, int search_flags)
+صحیح av_opt_سیٹ_int(خالی *obj, ثابت حرف *name, int64_t val, صحیح تلاش_flags)
 {
-    return set_number(obj, name, 1, 1, val, search_flags, 0);
+    واپس سیٹ_نمبر(obj, name, 1, 1, val, تلاش_flags, 0);
 }
 
-int av_opt_set_double(void *obj, const char *name, double val, int search_flags)
+صحیح av_opt_سیٹ_double(خالی *obj, ثابت حرف *name, دوہرا val, صحیح تلاش_flags)
 {
-    return set_number(obj, name, val, 1, 1, search_flags, 0);
+    واپس سیٹ_نمبر(obj, name, val, 1, 1, تلاش_flags, 0);
 }
 
-int av_opt_set_q(void *obj, const char *name, AVRational val, int search_flags)
+صحیح av_opt_سیٹ_q(خالی *obj, ثابت حرف *name, AVRational val, صحیح تلاش_flags)
 {
-    return set_number(obj, name, val.num, val.den, 1, search_flags, 0);
+    واپس سیٹ_نمبر(obj, name, val.عدد, val.den, 1, تلاش_flags, 0);
 }
 
-int av_opt_set_bin(void *obj, const char *name, const uint8_t *val, int len, int search_flags)
+صحیح av_opt_سیٹ_bin(خالی *obj, ثابت حرف *name, ثابت uint8_t *val, صحیح len, صحیح تلاش_flags)
 {
     uint8_t *ptr;
     uint8_t **dst;
-    int *lendst;
-    int ret;
+    صحیح *lendst;
+    صحیح ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_BINARY,
-                       NULL, NULL, (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_سیٹ_init(obj, name, تلاش_flags, AV_OPT_TYPE_ثنائی,
+                       تہی, تہی, (خالی**)&dst);
+    اگر (ret < 0)
+        واپس ret;
 
-    if (dst) {
-    ptr = len ? av_malloc(len) : NULL;
-    if (len && !ptr)
-        return AVERROR(ENOMEM);
+    اگر (dst) {
+    ptr = len ? av_malloc(len) : تہی;
+    اگر (len && !ptr)
+        واپس AVERROR(ENOMEM);
 
-    lendst = (int *)(dst + 1);
+    lendst = (صحیح *)(dst + 1);
 
     av_free(*dst);
     *dst    = ptr;
     *lendst = len;
-    if (len)
-        memcpy(ptr, val, len);
+    اگر (len)
+        حافظہ_نقل(ptr, val, len);
     }
 
-    return 0;
+    واپس 0;
 }
 
-int av_opt_set_image_size(void *obj, const char *name, int w, int h, int search_flags)
+صحیح av_opt_سیٹ_image_سائز(خالی *obj, ثابت حرف *name, صحیح w, صحیح h, صحیح تلاش_flags)
 {
-    const AVOption *o;
-    void *logctx;
-    int *dst;
-    int ret;
+    ثابت AVOption *o;
+    خالی *logctx;
+    صحیح *dst;
+    صحیح ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_IMAGE_SIZE,
-                       NULL, &o, (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_سیٹ_init(obj, name, تلاش_flags, AV_OPT_TYPE_IMAGE_سائز,
+                       تہی, &o, (خالی**)&dst);
+    اگر (ret < 0)
+        واپس ret;
 
-    logctx = dst ? obj : NULL;
+    logctx = dst ? obj : تہی;
 
-    if (w<0 || h<0) {
+    اگر (w<0 || h<0) {
         av_log(logctx, AV_LOG_ERROR,
                "Invalid negative size value %dx%d for size '%s'\n", w, h, o->name);
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    if (dst) {
+    اگر (dst) {
     dst[0] = w;
     dst[1] = h;
     }
 
-    return 0;
+    واپس 0;
 }
 
-int av_opt_set_video_rate(void *obj, const char *name, AVRational val, int search_flags)
+صحیح av_opt_سیٹ_video_شرح(خالی *obj, ثابت حرف *name, AVRational val, صحیح تلاش_flags)
 {
-    return set_number(obj, name, val.num, val.den, 1, search_flags, AV_OPT_TYPE_VIDEO_RATE);
+    واپس سیٹ_نمبر(obj, name, val.عدد, val.den, 1, تلاش_flags, AV_OPT_TYPE_VIDEO_شرح);
 }
 
-static int set_format(void *obj, const char *name, int fmt, int search_flags,
-                      enum AVOptionType type, const char *desc, int nb_fmts)
+ساکن صحیح سیٹ_format(خالی *obj, ثابت حرف *name, صحیح fmt, صحیح تلاش_flags,
+                      شمار AVOptionType type, ثابت حرف *desc, صحیح nb_fmts)
 {
-    const AVOption *o;
-    void *logctx;
-    int *dst;
-    int min, max, ret;
+    ثابت AVOption *o;
+    خالی *logctx;
+    صحیح *dst;
+    صحیح min, max, ret;
 
-    ret = opt_set_init(obj, name, search_flags, type, NULL, &o, (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_سیٹ_init(obj, name, تلاش_flags, type, تہی, &o, (خالی**)&dst);
+    اگر (ret < 0)
+        واپس ret;
 
-    logctx = dst ? obj : NULL;
+    logctx = dst ? obj : تہی;
 
     min = FFMAX(o->min, -1);
     max = FFMIN(o->max, nb_fmts-1);
 
-    if (fmt < min || fmt > max) {
+    اگر (fmt < min || fmt > max) {
         av_log(logctx, AV_LOG_ERROR,
                "Value %d for parameter '%s' out of %s format range [%d - %d]\n",
                fmt, name, desc, min, max);
-        return AVERROR(ERANGE);
+        واپس AVERROR(ERANGE);
     }
-    if (dst)
+    اگر (dst)
     *dst = fmt;
-    return 0;
+    واپس 0;
 }
 
-int av_opt_set_pixel_fmt(void *obj, const char *name, enum AVPixelFormat fmt, int search_flags)
+صحیح av_opt_سیٹ_pixel_fmt(خالی *obj, ثابت حرف *name, شمار AVPixelFormat fmt, صحیح تلاش_flags)
 {
-    return set_format(obj, name, fmt, search_flags, AV_OPT_TYPE_PIXEL_FMT, "pixel", AV_PIX_FMT_NB);
+    واپس سیٹ_format(obj, name, fmt, تلاش_flags, AV_OPT_TYPE_PIXEL_FMT, "pixel", AV_PIX_FMT_NB);
 }
 
-int av_opt_set_sample_fmt(void *obj, const char *name, enum AVSampleFormat fmt, int search_flags)
+صحیح av_opt_سیٹ_sample_fmt(خالی *obj, ثابت حرف *name, شمار AVSampleFormat fmt, صحیح تلاش_flags)
 {
-    return set_format(obj, name, fmt, search_flags, AV_OPT_TYPE_SAMPLE_FMT, "sample", AV_SAMPLE_FMT_NB);
+    واپس سیٹ_format(obj, name, fmt, تلاش_flags, AV_OPT_TYPE_SAMPLE_FMT, "sample", AV_SAMPLE_FMT_NB);
 }
 
-int av_opt_set_dict_val(void *obj, const char *name, const AVDictionary *val,
-                        int search_flags)
+صحیح av_opt_سیٹ_dict_val(خالی *obj, ثابت حرف *name, ثابت AVDictionary *val,
+                        صحیح تلاش_flags)
 {
     AVDictionary **dst;
-    int ret;
+    صحیح ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_DICT, NULL, NULL,
-                       (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_سیٹ_init(obj, name, تلاش_flags, AV_OPT_TYPE_DICT, تہی, تہی,
+                       (خالی**)&dst);
+    اگر (ret < 0)
+        واپس ret;
 
-    if (dst) {
+    اگر (dst) {
     av_dict_free(dst);
 
         ret = av_dict_copy(dst, val, 0);
     }
 
-    return ret;
+    واپس ret;
 }
 
-int av_opt_set_chlayout(void *obj, const char *name,
-                        const AVChannelLayout *channel_layout,
-                        int search_flags)
+صحیح av_opt_سیٹ_chlayout(خالی *obj, ثابت حرف *name,
+                        ثابت AVChannelLayout *channel_layout,
+                        صحیح تلاش_flags)
 {
     AVChannelLayout *dst;
-    int ret;
+    صحیح ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_CHLAYOUT, NULL, NULL,
-                       (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_سیٹ_init(obj, name, تلاش_flags, AV_OPT_TYPE_CHLAYOUT, تہی, تہی,
+                       (خالی**)&dst);
+    اگر (ret < 0)
+        واپس ret;
 
-    if (dst)
+    اگر (dst)
         ret = av_channel_layout_copy(dst, channel_layout);
 
-    return ret;
+    واپس ret;
 }
 
-static void format_duration(char *buf, size_t size, int64_t d)
+ساکن خالی format_duration(حرف *buf, size_t سائز, int64_t d)
 {
-    char *e;
+    حرف *e;
 
-    av_assert0(size >= 25);
-    if (d < 0 && d != INT64_MIN) {
+    av_assert0(سائز >= 25);
+    اگر (d < 0 && d != INT64_MIN) {
         *(buf++) = '-';
-        size--;
+        سائز--;
         d = -d;
     }
-    if (d == INT64_MAX)
-        snprintf(buf, size, "INT64_MAX");
-    else if (d == INT64_MIN)
-        snprintf(buf, size, "INT64_MIN");
-    else if (d > (int64_t)3600*1000000)
-        snprintf(buf, size, "%"PRId64":%02d:%02d.%06d", d / 3600000000,
-                 (int)((d / 60000000) % 60),
-                 (int)((d / 1000000) % 60),
-                 (int)(d % 1000000));
-    else if (d > 60*1000000)
-        snprintf(buf, size, "%d:%02d.%06d",
-                 (int)(d / 60000000),
-                 (int)((d / 1000000) % 60),
-                 (int)(d % 1000000));
-    else
-        snprintf(buf, size, "%d.%06d",
-                 (int)(d / 1000000),
-                 (int)(d % 1000000));
-    e = buf + strlen(buf);
-    while (e > buf && e[-1] == '0')
+    اگر (d == INT64_MAX)
+        snprintf(buf, سائز, "INT64_MAX");
+    ورنہ اگر (d == INT64_MIN)
+        snprintf(buf, سائز, "INT64_MIN");
+    ورنہ اگر (d > (int64_t)3600*1000000)
+        snprintf(buf, سائز, "%"PRId64":%02d:%02d.%06d", d / 3600000000,
+                 (صحیح)((d / 60000000) % 60),
+                 (صحیح)((d / 1000000) % 60),
+                 (صحیح)(d % 1000000));
+    ورنہ اگر (d > 60*1000000)
+        snprintf(buf, سائز, "%d:%02d.%06d",
+                 (صحیح)(d / 60000000),
+                 (صحیح)((d / 1000000) % 60),
+                 (صحیح)(d % 1000000));
+    ورنہ
+        snprintf(buf, سائز, "%d.%06d",
+                 (صحیح)(d / 1000000),
+                 (صحیح)(d % 1000000));
+    e = buf + لڑی_لمبائی(buf);
+    جب (e > buf && e[-1] == '0')
         *(--e) = 0;
-    if (e > buf && e[-1] == '.')
+    اگر (e > buf && e[-1] == '.')
         *(--e) = 0;
 }
 
-static int opt_get_elem(const AVOption *o, uint8_t **pbuf, size_t buf_len,
-                        const void *dst, int search_flags)
+ساکن صحیح opt_get_elem(ثابت AVOption *o, uint8_t **pbuf, size_t buf_len,
+                        ثابت خالی *dst, صحیح تلاش_flags)
 {
-    int ret;
+    صحیح ret;
 
-    switch (TYPE_BASE(o->type)) {
-    case AV_OPT_TYPE_BOOL:
-        ret = snprintf(*pbuf, buf_len, "%s", get_bool_name(*(int *)dst));
-        break;
-    case AV_OPT_TYPE_FLAGS:
-        ret = snprintf(*pbuf, buf_len, "0x%08X", *(int *)dst);
-        break;
-    case AV_OPT_TYPE_INT:
-        ret = snprintf(*pbuf, buf_len, "%d", *(int *)dst);
-        break;
-    case AV_OPT_TYPE_UINT:
-        ret = snprintf(*pbuf, buf_len, "%u", *(unsigned *)dst);
-        break;
-    case AV_OPT_TYPE_INT64:
+    انتخاب (TYPE_بنیاد(o->type)) {
+    حالت AV_OPT_TYPE_BOOL:
+        ret = snprintf(*pbuf, buf_len, "%s", get_bool_name(*(صحیح *)dst));
+        توڑو;
+    حالت AV_OPT_TYPE_FLAGS:
+        ret = snprintf(*pbuf, buf_len, "0x%08X", *(صحیح *)dst);
+        توڑو;
+    حالت AV_OPT_TYPE_INT:
+        ret = snprintf(*pbuf, buf_len, "%d", *(صحیح *)dst);
+        توڑو;
+    حالت AV_OPT_TYPE_UINT:
+        ret = snprintf(*pbuf, buf_len, "%u", *(غیرعلامتی *)dst);
+        توڑو;
+    حالت AV_OPT_TYPE_INT64:
         ret = snprintf(*pbuf, buf_len, "%"PRId64, *(int64_t *)dst);
-        break;
-    case AV_OPT_TYPE_UINT64:
+        توڑو;
+    حالت AV_OPT_TYPE_UINT64:
         ret = snprintf(*pbuf, buf_len, "%"PRIu64, *(uint64_t *)dst);
-        break;
-    case AV_OPT_TYPE_FLOAT:
-        ret = snprintf(*pbuf, buf_len, "%f", *(float *)dst);
-        break;
-    case AV_OPT_TYPE_DOUBLE:
-        ret = snprintf(*pbuf, buf_len, "%f", *(double *)dst);
-        break;
-    case AV_OPT_TYPE_VIDEO_RATE:
-    case AV_OPT_TYPE_RATIONAL:
-        ret = snprintf(*pbuf, buf_len, "%d/%d", ((AVRational *)dst)->num, ((AVRational *)dst)->den);
-        break;
-    case AV_OPT_TYPE_CONST:
+        توڑو;
+    حالت AV_OPT_TYPE_FLOAT:
+        ret = snprintf(*pbuf, buf_len, "%f", *(اعشاری *)dst);
+        توڑو;
+    حالت AV_OPT_TYPE_DOUBLE:
+        ret = snprintf(*pbuf, buf_len, "%f", *(دوہرا *)dst);
+        توڑو;
+    حالت AV_OPT_TYPE_VIDEO_شرح:
+    حالت AV_OPT_TYPE_RATIONAL:
+        ret = snprintf(*pbuf, buf_len, "%d/%d", ((AVRational *)dst)->عدد, ((AVRational *)dst)->den);
+        توڑو;
+    حالت AV_OPT_TYPE_CONST:
         ret = snprintf(*pbuf, buf_len, "%"PRId64, o->default_val.i64);
-        break;
-    case AV_OPT_TYPE_STRING:
-        if (*(uint8_t **)dst) {
+        توڑو;
+    حالت AV_OPT_TYPE_STRING:
+        اگر (*(uint8_t **)dst) {
             *pbuf = av_strdup(*(uint8_t **)dst);
-        } else if (search_flags & AV_OPT_ALLOW_NULL) {
-            *pbuf = NULL;
-            return 0;
-        } else {
+        } ورنہ اگر (تلاش_flags & AV_OPT_ALLOW_NULL) {
+            *pbuf = تہی;
+            واپس 0;
+        } ورنہ {
             *pbuf = av_strdup("");
         }
-        return *pbuf ? 0 : AVERROR(ENOMEM);
-    case AV_OPT_TYPE_BINARY: {
-        const uint8_t *bin;
-        int len;
+        واپس *pbuf ? 0 : AVERROR(ENOMEM);
+    حالت AV_OPT_TYPE_ثنائی: {
+        ثابت uint8_t *bin;
+        صحیح len;
 
-        if (!*(uint8_t **)dst && (search_flags & AV_OPT_ALLOW_NULL)) {
-            *pbuf = NULL;
-            return 0;
+        اگر (!*(uint8_t **)dst && (تلاش_flags & AV_OPT_ALLOW_NULL)) {
+            *pbuf = تہی;
+            واپس 0;
         }
-        len = *(int *)(((uint8_t *)dst) + sizeof(uint8_t *));
-        if ((uint64_t)len * 2 + 1 > INT_MAX)
-            return AVERROR(EINVAL);
-        if (!(*pbuf = av_malloc(len * 2 + 1)))
-            return AVERROR(ENOMEM);
-        if (!len) {
+        len = *(صحیح *)(((uint8_t *)dst) + حجم(uint8_t *));
+        اگر ((uint64_t)len * 2 + 1 > زیادہ_سے_زیادہ_عدد)
+            واپس AVERROR(EINVAL);
+        اگر (!(*pbuf = av_malloc(len * 2 + 1)))
+            واپس AVERROR(ENOMEM);
+        اگر (!len) {
             *pbuf[0] = '\0';
-            return 0;
+            واپس 0;
         }
         bin = *(uint8_t **)dst;
-        for (int i = 0; i < len; i++)
+        برائے (صحیح i = 0; i < len; i++)
             snprintf(*pbuf + i * 2, 3, "%02X", bin[i]);
-        return 0;
+        واپس 0;
     }
-    case AV_OPT_TYPE_IMAGE_SIZE:
-        ret = snprintf(*pbuf, buf_len, "%dx%d", ((int *)dst)[0], ((int *)dst)[1]);
-        break;
-    case AV_OPT_TYPE_PIXEL_FMT:
-        ret = snprintf(*pbuf, buf_len, "%s", (char *)av_x_if_null(av_get_pix_fmt_name(*(enum AVPixelFormat *)dst), "none"));
-        break;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        ret = snprintf(*pbuf, buf_len, "%s", (char *)av_x_if_null(av_get_sample_fmt_name(*(enum AVSampleFormat *)dst), "none"));
-        break;
-    case AV_OPT_TYPE_DURATION: {
+    حالت AV_OPT_TYPE_IMAGE_سائز:
+        ret = snprintf(*pbuf, buf_len, "%dx%d", ((صحیح *)dst)[0], ((صحیح *)dst)[1]);
+        توڑو;
+    حالت AV_OPT_TYPE_PIXEL_FMT:
+        ret = snprintf(*pbuf, buf_len, "%s", (حرف *)av_x_if_null(av_get_pix_fmt_name(*(شمار AVPixelFormat *)dst), "none"));
+        توڑو;
+    حالت AV_OPT_TYPE_SAMPLE_FMT:
+        ret = snprintf(*pbuf, buf_len, "%s", (حرف *)av_x_if_null(av_get_sample_fmt_name(*(شمار AVSampleFormat *)dst), "none"));
+        توڑو;
+    حالت AV_OPT_TYPE_DURATION: {
         int64_t i64 = *(int64_t *)dst;
         format_duration(*pbuf, buf_len, i64);
-        ret = strlen(*pbuf); // no overflow possible, checked by an assert
-        break;
+        ret = لڑی_لمبائی(*pbuf); // no overflow possible, checked by an assert
+        توڑو;
     }
-    case AV_OPT_TYPE_COLOR:
+    حالت AV_OPT_TYPE_COLOR:
         ret = snprintf(*pbuf, buf_len, "0x%02x%02x%02x%02x",
-                       (int)((uint8_t *)dst)[0], (int)((uint8_t *)dst)[1],
-                       (int)((uint8_t *)dst)[2], (int)((uint8_t *)dst)[3]);
-        break;
-    case AV_OPT_TYPE_CHLAYOUT:
+                       (صحیح)((uint8_t *)dst)[0], (صحیح)((uint8_t *)dst)[1],
+                       (صحیح)((uint8_t *)dst)[2], (صحیح)((uint8_t *)dst)[3]);
+        توڑو;
+    حالت AV_OPT_TYPE_CHLAYOUT:
         ret = av_channel_layout_describe(dst, *pbuf, buf_len);
-        break;
-    case AV_OPT_TYPE_DICT:
-        if (!*(AVDictionary **)dst && (search_flags & AV_OPT_ALLOW_NULL)) {
-            *pbuf = NULL;
-            return 0;
+        توڑو;
+    حالت AV_OPT_TYPE_DICT:
+        اگر (!*(AVDictionary **)dst && (تلاش_flags & AV_OPT_ALLOW_NULL)) {
+            *pbuf = تہی;
+            واپس 0;
         }
-        return av_dict_get_string(*(AVDictionary **)dst, (char **)pbuf, '=', ':');
-    default:
-        return AVERROR(EINVAL);
+        واپس av_dict_get_string(*(AVDictionary **)dst, (حرف **)pbuf, '=', ':');
+    طےشدہ:
+        واپس AVERROR(EINVAL);
     }
 
-    return ret;
+    واپس ret;
 }
 
-static int opt_get_array(const AVOption *o, void *dst, uint8_t **out_val)
+ساکن صحیح opt_get_array(ثابت AVOption *o, خالی *dst, uint8_t **برآمد_val)
 {
-    const unsigned count = *opt_array_pcount(dst);
-    const uint8_t    sep = opt_array_sep(o);
+    ثابت غیرعلامتی گنتی = *opt_array_pcount(dst);
+    ثابت uint8_t    sep = opt_array_sep(o);
 
-    uint8_t *str     = NULL;
+    uint8_t *str     = تہی;
     size_t   str_len = 0;
-    int ret;
+    صحیح ret;
 
-    *out_val = NULL;
+    *برآمد_val = تہی;
 
-    for (unsigned i = 0; i < count; i++) {
-        uint8_t buf[128], *out = buf;
-        size_t out_len;
+    برائے (غیرعلامتی i = 0; i < گنتی; i++) {
+        uint8_t buf[128], *برآمد = buf;
+        size_t برآمد_len;
 
-        ret = opt_get_elem(o, &out, sizeof(buf),
-                           opt_array_pelem(o, *(void **)dst, i), 0);
-        if (ret < 0)
-            goto fail;
+        ret = opt_get_elem(o, &برآمد, حجم(buf),
+                           opt_array_pelem(o, *(خالی **)dst, i), 0);
+        اگر (ret < 0)
+            جاؤ fail;
 
-        out_len = strlen(out);
-        if (out_len > SIZE_MAX / 2 - !!i ||
-            !!i + out_len * 2 > SIZE_MAX - str_len - 1) {
+        برآمد_len = لڑی_لمبائی(برآمد);
+        اگر (برآمد_len > SIZE_MAX / 2 - !!i ||
+            !!i + برآمد_len * 2 > SIZE_MAX - str_len - 1) {
             ret = AVERROR(ERANGE);
-            goto fail;
+            جاؤ fail;
         }
 
         //                         terminator     escaping  separator
         //                                ↓             ↓     ↓
-        ret = av_reallocp(&str, str_len + 1 + out_len * 2 + !!i);
-        if (ret < 0)
-            goto fail;
+        ret = av_reallocp(&str, str_len + 1 + برآمد_len * 2 + !!i);
+        اگر (ret < 0)
+            جاؤ fail;
 
         // add separator if needed
-        if (i)
+        اگر (i)
             str[str_len++] = sep;
 
         // escape the element
-        for (unsigned j = 0; j < out_len; j++) {
-            uint8_t val = out[j];
-            if (val == sep || val == '\\')
+        برائے (غیرعلامتی j = 0; j < برآمد_len; j++) {
+            uint8_t val = برآمد[j];
+            اگر (val == sep || val == '\\')
                 str[str_len++] = '\\';
             str[str_len++] = val;
         }
         str[str_len] = 0;
 
 fail:
-        if (out != buf)
-            av_freep(&out);
-        if (ret < 0) {
+        اگر (برآمد != buf)
+            av_freep(&برآمد);
+        اگر (ret < 0) {
             av_freep(&str);
-            return ret;
+            واپس ret;
         }
     }
 
-    *out_val = str;
+    *برآمد_val = str;
 
-    return 0;
+    واپس 0;
 }
 
-int av_opt_get(void *obj, const char *name, int search_flags, uint8_t **out_val)
+صحیح av_opt_get(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, uint8_t **برآمد_val)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    uint8_t *out, buf[128];
-    int ret;
+    خالی *dst, *ہدف_obj;
+    ثابت AVOption *o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &ہدف_obj);
+    uint8_t *برآمد, buf[128];
+    صحیح ret;
 
-    if (!o || !target_obj || (o->offset<=0 && o->type != AV_OPT_TYPE_CONST))
-        return AVERROR_OPTION_NOT_FOUND;
+    اگر (!o || !ہدف_obj || (o->انحراف<=0 && o->type != AV_OPT_TYPE_CONST))
+        واپس AVERROR_OPTION_NOT_ملا;
 
-    if (o->flags & AV_OPT_FLAG_DEPRECATED)
+    اگر (o->flags & AV_OPT_FLAG_DEPRECATED)
         av_log(obj, AV_LOG_WARNING, "The \"%s\" option is deprecated: %s\n", name, o->help);
 
-    dst = (uint8_t *)target_obj + o->offset;
+    dst = (uint8_t *)ہدف_obj + o->انحراف;
 
-    if (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
-        ret = opt_get_array(o, dst, out_val);
-        if (ret < 0)
-            return ret;
-        if (!*out_val && !(search_flags & AV_OPT_ALLOW_NULL)) {
-            *out_val = av_strdup("");
-            if (!*out_val)
-               return AVERROR(ENOMEM);
+    اگر (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
+        ret = opt_get_array(o, dst, برآمد_val);
+        اگر (ret < 0)
+            واپس ret;
+        اگر (!*برآمد_val && !(تلاش_flags & AV_OPT_ALLOW_NULL)) {
+            *برآمد_val = av_strdup("");
+            اگر (!*برآمد_val)
+               واپس AVERROR(ENOMEM);
         }
-        return 0;
+        واپس 0;
     }
 
     buf[0] = 0;
-    out = buf;
-    ret = opt_get_elem(o, &out, sizeof(buf), dst, search_flags);
-    if (ret < 0)
-        return ret;
-    if (out != buf) {
-        *out_val = out;
-        return 0;
+    برآمد = buf;
+    ret = opt_get_elem(o, &برآمد, حجم(buf), dst, تلاش_flags);
+    اگر (ret < 0)
+        واپس ret;
+    اگر (برآمد != buf) {
+        *برآمد_val = برآمد;
+        واپس 0;
     }
 
-    if (ret >= sizeof(buf))
-        return AVERROR(EINVAL);
-    *out_val = av_strdup(out);
-    return *out_val ? 0 : AVERROR(ENOMEM);
+    اگر (ret >= حجم(buf))
+        واپس AVERROR(EINVAL);
+    *برآمد_val = av_strdup(برآمد);
+    واپس *برآمد_val ? 0 : AVERROR(ENOMEM);
 }
 
-static int get_number(void *obj, const char *name, double *num, int *den, int64_t *intnum,
-                      int search_flags)
+ساکن صحیح get_نمبر(خالی *obj, ثابت حرف *name, دوہرا *عدد, صحیح *den, int64_t *intnum,
+                      صحیح تلاش_flags)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type & AV_OPT_TYPE_FLAG_ARRAY)
-        return AVERROR(EINVAL);
+    خالی *dst, *ہدف_obj;
+    ثابت AVOption *o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &ہدف_obj);
+    اگر (!o || !ہدف_obj)
+        واپس AVERROR_OPTION_NOT_ملا;
+    اگر (o->type & AV_OPT_TYPE_FLAG_ARRAY)
+        واپس AVERROR(EINVAL);
 
-    dst = ((uint8_t *)target_obj) + o->offset;
+    dst = ((uint8_t *)ہدف_obj) + o->انحراف;
 
-    return read_number(o, dst, num, den, intnum);
+    واپس read_نمبر(o, dst, عدد, den, intnum);
 }
 
-int av_opt_get_int(void *obj, const char *name, int search_flags, int64_t *out_val)
-{
-    int64_t intnum = 1;
-    double num = 1;
-    int ret, den = 1;
-
-    if ((ret = get_number(obj, name, &num, &den, &intnum, search_flags)) < 0)
-        return ret;
-    if (num == den)
-        *out_val = intnum;
-    else
-        *out_val = num * intnum / den;
-    return 0;
-}
-
-int av_opt_get_double(void *obj, const char *name, int search_flags, double *out_val)
+صحیح av_opt_get_int(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, int64_t *برآمد_val)
 {
     int64_t intnum = 1;
-    double num = 1;
-    int ret, den = 1;
+    دوہرا عدد = 1;
+    صحیح ret, den = 1;
 
-    if ((ret = get_number(obj, name, &num, &den, &intnum, search_flags)) < 0)
-        return ret;
-    *out_val = num * intnum / den;
-    return 0;
+    اگر ((ret = get_نمبر(obj, name, &عدد, &den, &intnum, تلاش_flags)) < 0)
+        واپس ret;
+    اگر (عدد == den)
+        *برآمد_val = intnum;
+    ورنہ
+        *برآمد_val = عدد * intnum / den;
+    واپس 0;
 }
 
-int av_opt_get_q(void *obj, const char *name, int search_flags, AVRational *out_val)
+صحیح av_opt_get_double(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, دوہرا *برآمد_val)
 {
     int64_t intnum = 1;
-    double num = 1;
-    int ret, den = 1;
+    دوہرا عدد = 1;
+    صحیح ret, den = 1;
 
-    if ((ret = get_number(obj, name, &num, &den, &intnum, search_flags)) < 0)
-        return ret;
-
-    if (num == 1.0 && (int)intnum == intnum)
-        *out_val = (AVRational){intnum, den};
-    else
-        *out_val = double_to_rational(num*intnum/den);
-    return 0;
+    اگر ((ret = get_نمبر(obj, name, &عدد, &den, &intnum, تلاش_flags)) < 0)
+        واپس ret;
+    *برآمد_val = عدد * intnum / den;
+    واپس 0;
 }
 
-int av_opt_get_image_size(void *obj, const char *name, int search_flags, int *w_out, int *h_out)
+صحیح av_opt_get_q(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, AVRational *برآمد_val)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != AV_OPT_TYPE_IMAGE_SIZE) {
+    int64_t intnum = 1;
+    دوہرا عدد = 1;
+    صحیح ret, den = 1;
+
+    اگر ((ret = get_نمبر(obj, name, &عدد, &den, &intnum, تلاش_flags)) < 0)
+        واپس ret;
+
+    اگر (عدد == 1.0 && (صحیح)intnum == intnum)
+        *برآمد_val = (AVRational){intnum, den};
+    ورنہ
+        *برآمد_val = double_مقصد_rational(عدد*intnum/den);
+    واپس 0;
+}
+
+صحیح av_opt_get_image_سائز(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, صحیح *w_برآمد, صحیح *h_برآمد)
+{
+    خالی *dst, *ہدف_obj;
+    ثابت AVOption *o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &ہدف_obj);
+    اگر (!o || !ہدف_obj)
+        واپس AVERROR_OPTION_NOT_ملا;
+    اگر (o->type != AV_OPT_TYPE_IMAGE_سائز) {
         av_log(obj, AV_LOG_ERROR,
                "The value for option '%s' is not a image size.\n", name);
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    dst = ((uint8_t*)target_obj) + o->offset;
-    if (w_out) *w_out = *(int *)dst;
-    if (h_out) *h_out = *((int *)dst+1);
-    return 0;
+    dst = ((uint8_t*)ہدف_obj) + o->انحراف;
+    اگر (w_برآمد) *w_برآمد = *(صحیح *)dst;
+    اگر (h_برآمد) *h_برآمد = *((صحیح *)dst+1);
+    واپس 0;
 }
 
-int av_opt_get_video_rate(void *obj, const char *name, int search_flags, AVRational *out_val)
+صحیح av_opt_get_video_شرح(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, AVRational *برآمد_val)
 {
-    return av_opt_get_q(obj, name, search_flags, out_val);
+    واپس av_opt_get_q(obj, name, تلاش_flags, برآمد_val);
 }
 
-static int get_format(void *obj, const char *name, int search_flags, void *out_fmt,
-                      enum AVOptionType type, const char *desc)
+ساکن صحیح get_format(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, خالی *برآمد_fmt,
+                      شمار AVOptionType type, ثابت حرف *desc)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != type) {
+    خالی *dst, *ہدف_obj;
+    ثابت AVOption *o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &ہدف_obj);
+    اگر (!o || !ہدف_obj)
+        واپس AVERROR_OPTION_NOT_ملا;
+    اگر (o->type != type) {
         av_log(obj, AV_LOG_ERROR,
                "The value for option '%s' is not a %s format.\n", desc, name);
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    dst = ((uint8_t*)target_obj) + o->offset;
-    if (type == AV_OPT_TYPE_PIXEL_FMT)
-        *(enum AVPixelFormat *)out_fmt = *(enum AVPixelFormat *)dst;
-    else
-        *(enum AVSampleFormat*)out_fmt = *(enum AVSampleFormat*)dst;
+    dst = ((uint8_t*)ہدف_obj) + o->انحراف;
+    اگر (type == AV_OPT_TYPE_PIXEL_FMT)
+        *(شمار AVPixelFormat *)برآمد_fmt = *(شمار AVPixelFormat *)dst;
+    ورنہ
+        *(شمار AVSampleFormat*)برآمد_fmt = *(شمار AVSampleFormat*)dst;
 
-    return 0;
+    واپس 0;
 }
 
-int av_opt_get_pixel_fmt(void *obj, const char *name, int search_flags, enum AVPixelFormat *out_fmt)
+صحیح av_opt_get_pixel_fmt(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, شمار AVPixelFormat *برآمد_fmt)
 {
-    return get_format(obj, name, search_flags, out_fmt, AV_OPT_TYPE_PIXEL_FMT, "pixel");
+    واپس get_format(obj, name, تلاش_flags, برآمد_fmt, AV_OPT_TYPE_PIXEL_FMT, "pixel");
 }
 
-int av_opt_get_sample_fmt(void *obj, const char *name, int search_flags, enum AVSampleFormat *out_fmt)
+صحیح av_opt_get_sample_fmt(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, شمار AVSampleFormat *برآمد_fmt)
 {
-    return get_format(obj, name, search_flags, out_fmt, AV_OPT_TYPE_SAMPLE_FMT, "sample");
+    واپس get_format(obj, name, تلاش_flags, برآمد_fmt, AV_OPT_TYPE_SAMPLE_FMT, "sample");
 }
 
-int av_opt_get_chlayout(void *obj, const char *name, int search_flags, AVChannelLayout *cl)
+صحیح av_opt_get_chlayout(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, AVChannelLayout *cl)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != AV_OPT_TYPE_CHLAYOUT) {
+    خالی *dst, *ہدف_obj;
+    ثابت AVOption *o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &ہدف_obj);
+    اگر (!o || !ہدف_obj)
+        واپس AVERROR_OPTION_NOT_ملا;
+    اگر (o->type != AV_OPT_TYPE_CHLAYOUT) {
         av_log(obj, AV_LOG_ERROR,
                "The value for option '%s' is not a channel layout.\n", name);
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    dst = ((uint8_t*)target_obj) + o->offset;
-    return av_channel_layout_copy(cl, dst);
+    dst = ((uint8_t*)ہدف_obj) + o->انحراف;
+    واپس av_channel_layout_copy(cl, dst);
 }
 
-int av_opt_get_dict_val(void *obj, const char *name, int search_flags, AVDictionary **out_val)
+صحیح av_opt_get_dict_val(خالی *obj, ثابت حرف *name, صحیح تلاش_flags, AVDictionary **برآمد_val)
 {
-    void *target_obj;
+    خالی *ہدف_obj;
     AVDictionary *src;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
+    ثابت AVOption *o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &ہدف_obj);
 
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != AV_OPT_TYPE_DICT)
-        return AVERROR(EINVAL);
+    اگر (!o || !ہدف_obj)
+        واپس AVERROR_OPTION_NOT_ملا;
+    اگر (o->type != AV_OPT_TYPE_DICT)
+        واپس AVERROR(EINVAL);
 
-    src = *(AVDictionary **)(((uint8_t *)target_obj) + o->offset);
+    src = *(AVDictionary **)(((uint8_t *)ہدف_obj) + o->انحراف);
 
-    return av_dict_copy(out_val, src, 0);
+    واپس av_dict_copy(برآمد_val, src, 0);
 }
 
-int av_opt_flag_is_set(void *obj, const char *field_name, const char *flag_name)
+صحیح av_opt_flag_is_سیٹ(خالی *obj, ثابت حرف *میدان_name, ثابت حرف *flag_name)
 {
-    const AVOption *field = av_opt_find(obj, field_name, NULL, 0, 0);
-    const AVOption *flag  = av_opt_find(obj, flag_name,
-                                        field ? field->unit : NULL, 0, 0);
+    ثابت AVOption *میدان = av_opt_ڈھونڈو(obj, میدان_name, تہی, 0, 0);
+    ثابت AVOption *flag  = av_opt_ڈھونڈو(obj, flag_name,
+                                        میدان ? میدان->unit : تہی, 0, 0);
     int64_t res;
 
-    if (!field || !flag || flag->type != AV_OPT_TYPE_CONST ||
-        av_opt_get_int(obj, field_name, 0, &res) < 0)
-        return 0;
-    return res & flag->default_val.i64;
+    اگر (!میدان || !flag || flag->type != AV_OPT_TYPE_CONST ||
+        av_opt_get_int(obj, میدان_name, 0, &res) < 0)
+        واپس 0;
+    واپس res & flag->default_val.i64;
 }
 
-static void log_int_value(void *av_log_obj, int level, int64_t i)
+ساکن خالی log_int_قدر(خالی *av_log_obj, صحیح level, int64_t i)
 {
-    if (i == INT_MAX) {
+    اگر (i == زیادہ_سے_زیادہ_عدد) {
         av_log(av_log_obj, level, "INT_MAX");
-    } else if (i == INT_MIN) {
+    } ورنہ اگر (i == INT_MIN) {
         av_log(av_log_obj, level, "INT_MIN");
-    } else if (i == UINT32_MAX) {
+    } ورنہ اگر (i == UINT32_MAX) {
         av_log(av_log_obj, level, "UINT32_MAX");
-    } else if (i == INT64_MAX) {
+    } ورنہ اگر (i == INT64_MAX) {
         av_log(av_log_obj, level, "I64_MAX");
-    } else if (i == INT64_MIN) {
+    } ورنہ اگر (i == INT64_MIN) {
         av_log(av_log_obj, level, "I64_MIN");
-    } else {
+    } ورنہ {
         av_log(av_log_obj, level, "%"PRId64, i);
     }
 }
 
-static void log_value(void *av_log_obj, int level, double d)
+ساکن خالی log_قدر(خالی *av_log_obj, صحیح level, دوہرا d)
 {
-    if      (d == INT_MAX) {
+    اگر      (d == زیادہ_سے_زیادہ_عدد) {
         av_log(av_log_obj, level, "INT_MAX");
-    } else if (d == INT_MIN) {
+    } ورنہ اگر (d == INT_MIN) {
         av_log(av_log_obj, level, "INT_MIN");
-    } else if (d == UINT32_MAX) {
+    } ورنہ اگر (d == UINT32_MAX) {
         av_log(av_log_obj, level, "UINT32_MAX");
-    } else if (d == (double)INT64_MAX) {
+    } ورنہ اگر (d == (دوہرا)INT64_MAX) {
         av_log(av_log_obj, level, "I64_MAX");
-    } else if (d == INT64_MIN) {
+    } ورنہ اگر (d == INT64_MIN) {
         av_log(av_log_obj, level, "I64_MIN");
-    } else if (d == FLT_MAX) {
+    } ورنہ اگر (d == FLT_MAX) {
         av_log(av_log_obj, level, "FLT_MAX");
-    } else if (d == FLT_MIN) {
+    } ورنہ اگر (d == FLT_MIN) {
         av_log(av_log_obj, level, "FLT_MIN");
-    } else if (d == -FLT_MAX) {
+    } ورنہ اگر (d == -FLT_MAX) {
         av_log(av_log_obj, level, "-FLT_MAX");
-    } else if (d == -FLT_MIN) {
+    } ورنہ اگر (d == -FLT_MIN) {
         av_log(av_log_obj, level, "-FLT_MIN");
-    } else if (d == DBL_MAX) {
+    } ورنہ اگر (d == DBL_MAX) {
         av_log(av_log_obj, level, "DBL_MAX");
-    } else if (d == DBL_MIN) {
+    } ورنہ اگر (d == DBL_MIN) {
         av_log(av_log_obj, level, "DBL_MIN");
-    } else if (d == -DBL_MAX) {
+    } ورنہ اگر (d == -DBL_MAX) {
         av_log(av_log_obj, level, "-DBL_MAX");
-    } else if (d == -DBL_MIN) {
+    } ورنہ اگر (d == -DBL_MIN) {
         av_log(av_log_obj, level, "-DBL_MIN");
-    } else {
+    } ورنہ {
         av_log(av_log_obj, level, "%g", d);
     }
 }
 
-static const char *get_opt_const_name(void *obj, const char *unit, int64_t value)
+ساکن ثابت حرف *get_opt_const_name(خالی *obj, ثابت حرف *unit, int64_t قدر)
 {
-    const AVOption *opt = NULL;
+    ثابت AVOption *opt = تہی;
 
-    if (!unit)
-        return NULL;
-    while ((opt = av_opt_next(obj, opt)))
-        if (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
-            opt->default_val.i64 == value)
-            return opt->name;
-    return NULL;
+    اگر (!unit)
+        واپس تہی;
+    جب ((opt = av_opt_اگلا(obj, opt)))
+        اگر (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
+            opt->default_val.i64 == قدر)
+            واپس opt->name;
+    واپس تہی;
 }
 
-static char *get_opt_flags_string(void *obj, const char *unit, int64_t value)
+ساکن حرف *get_opt_flags_string(خالی *obj, ثابت حرف *unit, int64_t قدر)
 {
-    const AVOption *opt = NULL;
-    char flags[512];
+    ثابت AVOption *opt = تہی;
+    حرف flags[512];
 
     flags[0] = 0;
-    if (!unit)
-        return NULL;
-    while ((opt = av_opt_next(obj, opt))) {
-        if (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
-            opt->default_val.i64 & value) {
-            if (flags[0])
-                av_strlcatf(flags, sizeof(flags), "+");
-            av_strlcatf(flags, sizeof(flags), "%s", opt->name);
+    اگر (!unit)
+        واپس تہی;
+    جب ((opt = av_opt_اگلا(obj, opt))) {
+        اگر (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
+            opt->default_val.i64 & قدر) {
+            اگر (flags[0])
+                av_strlcatf(flags, حجم(flags), "+");
+            av_strlcatf(flags, حجم(flags), "%s", opt->name);
         }
     }
-    if (flags[0])
-        return av_strdup(flags);
-    return NULL;
+    اگر (flags[0])
+        واپس av_strdup(flags);
+    واپس تہی;
 }
 
-static void log_type(void *av_log_obj, const AVOption *o,
-                     enum AVOptionType parent_type)
+ساکن خالی log_type(خالی *av_log_obj, ثابت AVOption *o,
+                     شمار AVOptionType والد_type)
 {
-    const enum AVOptionType type = TYPE_BASE(o->type);
+    ثابت شمار AVOptionType type = TYPE_بنیاد(o->type);
 
-    if (o->type == AV_OPT_TYPE_CONST && (TYPE_BASE(parent_type) == AV_OPT_TYPE_INT || TYPE_BASE(parent_type) == AV_OPT_TYPE_INT64))
+    اگر (o->type == AV_OPT_TYPE_CONST && (TYPE_بنیاد(والد_type) == AV_OPT_TYPE_INT || TYPE_بنیاد(والد_type) == AV_OPT_TYPE_INT64))
         av_log(av_log_obj, AV_LOG_INFO, "%-12"PRId64" ", o->default_val.i64);
-    else if (type < FF_ARRAY_ELEMS(opt_type_desc) && opt_type_desc[type].name) {
-        if (o->type & AV_OPT_TYPE_FLAG_ARRAY)
+    ورنہ اگر (type < FF_ARRAY_ELEMS(opt_type_desc) && opt_type_desc[type].name) {
+        اگر (o->type & AV_OPT_TYPE_FLAG_ARRAY)
             av_log(av_log_obj, AV_LOG_INFO, "[%-10s]", opt_type_desc[type].name);
-        else
+        ورنہ
             av_log(av_log_obj, AV_LOG_INFO, "%-12s ", opt_type_desc[type].name);
     }
-    else
+    ورنہ
         av_log(av_log_obj, AV_LOG_INFO, "%-12s ", "");
 }
 
-static void log_default(void *obj, void *av_log_obj, const AVOption *opt)
+ساکن خالی log_default(خالی *obj, خالی *av_log_obj, ثابت AVOption *opt)
 {
-    if (opt->type == AV_OPT_TYPE_CONST || opt->type == AV_OPT_TYPE_BINARY)
-        return;
-    if ((opt->type == AV_OPT_TYPE_COLOR      ||
-         opt->type == AV_OPT_TYPE_IMAGE_SIZE ||
+    اگر (opt->type == AV_OPT_TYPE_CONST || opt->type == AV_OPT_TYPE_ثنائی)
+        واپس;
+    اگر ((opt->type == AV_OPT_TYPE_COLOR      ||
+         opt->type == AV_OPT_TYPE_IMAGE_سائز ||
          opt->type == AV_OPT_TYPE_STRING     ||
          opt->type == AV_OPT_TYPE_DICT       ||
          opt->type == AV_OPT_TYPE_CHLAYOUT   ||
-         opt->type == AV_OPT_TYPE_VIDEO_RATE) &&
+         opt->type == AV_OPT_TYPE_VIDEO_شرح) &&
         !opt->default_val.str)
-        return;
+        واپس;
 
-    if (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
-        const AVOptionArrayDef *arr = opt->default_val.arr;
-        if (arr && arr->def)
+    اگر (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
+        ثابت AVOptionArrayDef *arr = opt->default_val.arr;
+        اگر (arr && arr->def)
             av_log(av_log_obj, AV_LOG_INFO, " (default %s)", arr->def);
-        return;
+        واپس;
     }
 
     av_log(av_log_obj, AV_LOG_INFO, " (default ");
-    switch (opt->type) {
-    case AV_OPT_TYPE_BOOL:
+    انتخاب (opt->type) {
+    حالت AV_OPT_TYPE_BOOL:
         av_log(av_log_obj, AV_LOG_INFO, "%s", get_bool_name(opt->default_val.i64));
-        break;
-    case AV_OPT_TYPE_FLAGS: {
-        char *def_flags = get_opt_flags_string(obj, opt->unit, opt->default_val.i64);
-        if (def_flags) {
+        توڑو;
+    حالت AV_OPT_TYPE_FLAGS: {
+        حرف *def_flags = get_opt_flags_string(obj, opt->unit, opt->default_val.i64);
+        اگر (def_flags) {
             av_log(av_log_obj, AV_LOG_INFO, "%s", def_flags);
             av_freep(&def_flags);
-        } else {
+        } ورنہ {
             av_log(av_log_obj, AV_LOG_INFO, "%"PRIX64, opt->default_val.i64);
         }
-        break;
+        توڑو;
     }
-    case AV_OPT_TYPE_DURATION: {
-        char buf[25];
-        format_duration(buf, sizeof(buf), opt->default_val.i64);
+    حالت AV_OPT_TYPE_DURATION: {
+        حرف buf[25];
+        format_duration(buf, حجم(buf), opt->default_val.i64);
         av_log(av_log_obj, AV_LOG_INFO, "%s", buf);
-        break;
+        توڑو;
     }
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_INT64: {
-        const char *def_const = get_opt_const_name(obj, opt->unit, opt->default_val.i64);
-        if (def_const)
+    حالت AV_OPT_TYPE_UINT:
+    حالت AV_OPT_TYPE_INT:
+    حالت AV_OPT_TYPE_UINT64:
+    حالت AV_OPT_TYPE_INT64: {
+        ثابت حرف *def_const = get_opt_const_name(obj, opt->unit, opt->default_val.i64);
+        اگر (def_const)
             av_log(av_log_obj, AV_LOG_INFO, "%s", def_const);
-        else
-            log_int_value(av_log_obj, AV_LOG_INFO, opt->default_val.i64);
-        break;
+        ورنہ
+            log_int_قدر(av_log_obj, AV_LOG_INFO, opt->default_val.i64);
+        توڑو;
     }
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_FLOAT:
-        log_value(av_log_obj, AV_LOG_INFO, opt->default_val.dbl);
-        break;
-    case AV_OPT_TYPE_RATIONAL: {
-        AVRational q = av_d2q(opt->default_val.dbl, INT_MAX);
-        av_log(av_log_obj, AV_LOG_INFO, "%d/%d", q.num, q.den); }
-        break;
-    case AV_OPT_TYPE_PIXEL_FMT:
-        av_log(av_log_obj, AV_LOG_INFO, "%s", (char *)av_x_if_null(av_get_pix_fmt_name(opt->default_val.i64), "none"));
-        break;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        av_log(av_log_obj, AV_LOG_INFO, "%s", (char *)av_x_if_null(av_get_sample_fmt_name(opt->default_val.i64), "none"));
-        break;
-    case AV_OPT_TYPE_COLOR:
-    case AV_OPT_TYPE_IMAGE_SIZE:
-    case AV_OPT_TYPE_STRING:
-    case AV_OPT_TYPE_DICT:
-    case AV_OPT_TYPE_VIDEO_RATE:
-    case AV_OPT_TYPE_CHLAYOUT:
+    حالت AV_OPT_TYPE_DOUBLE:
+    حالت AV_OPT_TYPE_FLOAT:
+        log_قدر(av_log_obj, AV_LOG_INFO, opt->default_val.dbl);
+        توڑو;
+    حالت AV_OPT_TYPE_RATIONAL: {
+        AVRational q = av_d2q(opt->default_val.dbl, زیادہ_سے_زیادہ_عدد);
+        av_log(av_log_obj, AV_LOG_INFO, "%d/%d", q.عدد, q.den); }
+        توڑو;
+    حالت AV_OPT_TYPE_PIXEL_FMT:
+        av_log(av_log_obj, AV_LOG_INFO, "%s", (حرف *)av_x_if_null(av_get_pix_fmt_name(opt->default_val.i64), "none"));
+        توڑو;
+    حالت AV_OPT_TYPE_SAMPLE_FMT:
+        av_log(av_log_obj, AV_LOG_INFO, "%s", (حرف *)av_x_if_null(av_get_sample_fmt_name(opt->default_val.i64), "none"));
+        توڑو;
+    حالت AV_OPT_TYPE_COLOR:
+    حالت AV_OPT_TYPE_IMAGE_سائز:
+    حالت AV_OPT_TYPE_STRING:
+    حالت AV_OPT_TYPE_DICT:
+    حالت AV_OPT_TYPE_VIDEO_شرح:
+    حالت AV_OPT_TYPE_CHLAYOUT:
         av_log(av_log_obj, AV_LOG_INFO, "\"%s\"", opt->default_val.str);
-        break;
+        توڑو;
     }
     av_log(av_log_obj, AV_LOG_INFO, ")");
 }
 
-static void opt_list(void *obj, void *av_log_obj, const char *unit,
-                     int req_flags, int rej_flags, enum AVOptionType parent_type)
+ساکن خالی opt_list(خالی *obj, خالی *av_log_obj, ثابت حرف *unit,
+                     صحیح req_flags, صحیح rej_flags, شمار AVOptionType والد_type)
 {
-    const AVOption *opt = NULL;
+    ثابت AVOption *opt = تہی;
     AVOptionRanges *r;
-    int i;
+    صحیح i;
 
-    while ((opt = av_opt_next(obj, opt))) {
-        if (!(opt->flags & req_flags) || (opt->flags & rej_flags))
-            continue;
+    جب ((opt = av_opt_اگلا(obj, opt))) {
+        اگر (!(opt->flags & req_flags) || (opt->flags & rej_flags))
+            جاری;
 
         /* Don't print CONST's on level one.
          * Don't print anything but CONST's on level two.
          * Only print items from the requested unit.
          */
-        if (!unit && opt->type == AV_OPT_TYPE_CONST)
-            continue;
-        else if (unit && opt->type != AV_OPT_TYPE_CONST)
-            continue;
-        else if (unit && opt->type == AV_OPT_TYPE_CONST && strcmp(unit, opt->unit))
-            continue;
-        else if (unit && opt->type == AV_OPT_TYPE_CONST)
+        اگر (!unit && opt->type == AV_OPT_TYPE_CONST)
+            جاری;
+        ورنہ اگر (unit && opt->type != AV_OPT_TYPE_CONST)
+            جاری;
+        ورنہ اگر (unit && opt->type == AV_OPT_TYPE_CONST && strcmp(unit, opt->unit))
+            جاری;
+        ورنہ اگر (unit && opt->type == AV_OPT_TYPE_CONST)
             av_log(av_log_obj, AV_LOG_INFO, "     %-15s ", opt->name);
-        else
+        ورنہ
             av_log(av_log_obj, AV_LOG_INFO, "  %s%-17s ",
                    (opt->flags & AV_OPT_FLAG_FILTERING_PARAM) ? " " : "-",
                    opt->name);
 
-        log_type(av_log_obj, opt, parent_type);
+        log_type(av_log_obj, opt, والد_type);
 
         av_log(av_log_obj, AV_LOG_INFO, "%c%c%c%c%c%c%c%c%c%c%c",
                (opt->flags & AV_OPT_FLAG_ENCODING_PARAM)  ? 'E' : '.',
@@ -1715,26 +1715,26 @@ static void opt_list(void *obj, void *av_log_obj, const char *unit,
                (opt->flags & AV_OPT_FLAG_RUNTIME_PARAM)   ? 'T' : '.',
                (opt->flags & AV_OPT_FLAG_DEPRECATED)      ? 'P' : '.');
 
-        if (opt->help)
+        اگر (opt->help)
             av_log(av_log_obj, AV_LOG_INFO, " %s", opt->help);
 
-        if (av_opt_query_ranges(&r, obj, opt->name, AV_OPT_SEARCH_FAKE_OBJ) >= 0) {
-            switch (opt->type) {
-            case AV_OPT_TYPE_INT:
-            case AV_OPT_TYPE_UINT:
-            case AV_OPT_TYPE_INT64:
-            case AV_OPT_TYPE_UINT64:
-            case AV_OPT_TYPE_DOUBLE:
-            case AV_OPT_TYPE_FLOAT:
-            case AV_OPT_TYPE_RATIONAL:
-                for (i = 0; i < r->nb_ranges; i++) {
+        اگر (av_opt_query_ranges(&r, obj, opt->name, AV_OPT_تلاش_FAKE_OBJ) >= 0) {
+            انتخاب (opt->type) {
+            حالت AV_OPT_TYPE_INT:
+            حالت AV_OPT_TYPE_UINT:
+            حالت AV_OPT_TYPE_INT64:
+            حالت AV_OPT_TYPE_UINT64:
+            حالت AV_OPT_TYPE_DOUBLE:
+            حالت AV_OPT_TYPE_FLOAT:
+            حالت AV_OPT_TYPE_RATIONAL:
+                برائے (i = 0; i < r->nb_ranges; i++) {
                     av_log(av_log_obj, AV_LOG_INFO, " (from ");
-                    log_value(av_log_obj, AV_LOG_INFO, r->range[i]->value_min);
+                    log_قدر(av_log_obj, AV_LOG_INFO, r->range[i]->قدر_min);
                     av_log(av_log_obj, AV_LOG_INFO, " to ");
-                    log_value(av_log_obj, AV_LOG_INFO, r->range[i]->value_max);
+                    log_قدر(av_log_obj, AV_LOG_INFO, r->range[i]->قدر_max);
                     av_log(av_log_obj, AV_LOG_INFO, ")");
                 }
-                break;
+                توڑو;
             }
             av_opt_freep_ranges(&r);
         }
@@ -1742,105 +1742,105 @@ static void opt_list(void *obj, void *av_log_obj, const char *unit,
         log_default(obj, av_log_obj, opt);
 
         av_log(av_log_obj, AV_LOG_INFO, "\n");
-        if (opt->unit && opt->type != AV_OPT_TYPE_CONST)
+        اگر (opt->unit && opt->type != AV_OPT_TYPE_CONST)
             opt_list(obj, av_log_obj, opt->unit, req_flags, rej_flags, opt->type);
     }
 }
 
-int av_opt_show2(void *obj, void *av_log_obj, int req_flags, int rej_flags)
+صحیح av_opt_show2(خالی *obj, خالی *av_log_obj, صحیح req_flags, صحیح rej_flags)
 {
-    if (!obj)
-        return -1;
+    اگر (!obj)
+        واپس -1;
 
     av_log(av_log_obj, AV_LOG_INFO, "%s AVOptions:\n", (*(AVClass **)obj)->class_name);
 
-    opt_list(obj, av_log_obj, NULL, req_flags, rej_flags, -1);
+    opt_list(obj, av_log_obj, تہی, req_flags, rej_flags, -1);
 
-    return 0;
+    واپس 0;
 }
 
-void av_opt_set_defaults(void *s)
+خالی av_opt_سیٹ_defaults(خالی *s)
 {
-    av_opt_set_defaults2(s, 0, 0);
+    av_opt_سیٹ_defaults2(s, 0, 0);
 }
 
-void av_opt_set_defaults2(void *s, int mask, int flags)
+خالی av_opt_سیٹ_defaults2(خالی *s, صحیح نقاب_2, صحیح flags)
 {
-    const AVOption *opt = NULL;
-    while ((opt = av_opt_next(s, opt))) {
-        void *dst = ((uint8_t*)s) + opt->offset;
+    ثابت AVOption *opt = تہی;
+    جب ((opt = av_opt_اگلا(s, opt))) {
+        خالی *dst = ((uint8_t*)s) + opt->انحراف;
 
-        if ((opt->flags & mask) != flags)
-            continue;
+        اگر ((opt->flags & نقاب_2) != flags)
+            جاری;
 
-        if (opt->flags & AV_OPT_FLAG_READONLY)
-            continue;
+        اگر (opt->flags & AV_OPT_FLAG_READONLY)
+            جاری;
 
-        if (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
-            const AVOptionArrayDef *arr = opt->default_val.arr;
-            const char              sep = opt_array_sep(opt);
+        اگر (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
+            ثابت AVOptionArrayDef *arr = opt->default_val.arr;
+            ثابت حرف              sep = opt_array_sep(opt);
 
             av_assert0(sep && sep != '\\' &&
                        (sep < 'a' || sep > 'z') &&
                        (sep < 'A' || sep > 'Z') &&
                        (sep < '0' || sep > '9'));
 
-            if (arr && arr->def)
-                opt_set_array(s, s, opt, arr->def, dst);
+            اگر (arr && arr->def)
+                opt_سیٹ_array(s, s, opt, arr->def, dst);
 
-            continue;
+            جاری;
         }
 
-        switch (opt->type) {
-            case AV_OPT_TYPE_CONST:
+        انتخاب (opt->type) {
+            حالت AV_OPT_TYPE_CONST:
                 /* Nothing to be done here */
-                break;
-            case AV_OPT_TYPE_BOOL:
-            case AV_OPT_TYPE_FLAGS:
-            case AV_OPT_TYPE_INT:
-            case AV_OPT_TYPE_UINT:
-            case AV_OPT_TYPE_INT64:
-            case AV_OPT_TYPE_UINT64:
-            case AV_OPT_TYPE_DURATION:
-            case AV_OPT_TYPE_PIXEL_FMT:
-            case AV_OPT_TYPE_SAMPLE_FMT:
-                write_number(s, opt, dst, 1, 1, opt->default_val.i64, 1);
-                break;
-            case AV_OPT_TYPE_DOUBLE:
-            case AV_OPT_TYPE_FLOAT: {
-                double val;
+                توڑو;
+            حالت AV_OPT_TYPE_BOOL:
+            حالت AV_OPT_TYPE_FLAGS:
+            حالت AV_OPT_TYPE_INT:
+            حالت AV_OPT_TYPE_UINT:
+            حالت AV_OPT_TYPE_INT64:
+            حالت AV_OPT_TYPE_UINT64:
+            حالت AV_OPT_TYPE_DURATION:
+            حالت AV_OPT_TYPE_PIXEL_FMT:
+            حالت AV_OPT_TYPE_SAMPLE_FMT:
+                write_نمبر(s, opt, dst, 1, 1, opt->default_val.i64, 1);
+                توڑو;
+            حالت AV_OPT_TYPE_DOUBLE:
+            حالت AV_OPT_TYPE_FLOAT: {
+                دوہرا val;
                 val = opt->default_val.dbl;
-                write_number(s, opt, dst, val, 1, 1, 1);
+                write_نمبر(s, opt, dst, val, 1, 1, 1);
             }
-            break;
-            case AV_OPT_TYPE_RATIONAL: {
+            توڑو;
+            حالت AV_OPT_TYPE_RATIONAL: {
                 AVRational val;
-                val = av_d2q(opt->default_val.dbl, INT_MAX);
-                write_number(s, opt, dst, 1, val.den, val.num, 1);
+                val = av_d2q(opt->default_val.dbl, زیادہ_سے_زیادہ_عدد);
+                write_نمبر(s, opt, dst, 1, val.den, val.عدد, 1);
             }
-            break;
-            case AV_OPT_TYPE_COLOR:
-                set_string_color(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_STRING:
-                set_string(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_IMAGE_SIZE:
-                set_string_image_size(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_VIDEO_RATE:
-                set_string_video_rate(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_BINARY:
-                set_string_binary(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_CHLAYOUT:
-                set_string_channel_layout(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_DICT:
-                set_string_dict(s, opt, opt->default_val.str, dst);
-                break;
-        default:
+            توڑو;
+            حالت AV_OPT_TYPE_COLOR:
+                سیٹ_string_color(s, opt, opt->default_val.str, dst);
+                توڑو;
+            حالت AV_OPT_TYPE_STRING:
+                سیٹ_string(s, opt, opt->default_val.str, dst);
+                توڑو;
+            حالت AV_OPT_TYPE_IMAGE_سائز:
+                سیٹ_string_image_سائز(s, opt, opt->default_val.str, dst);
+                توڑو;
+            حالت AV_OPT_TYPE_VIDEO_شرح:
+                سیٹ_string_video_شرح(s, opt, opt->default_val.str, dst);
+                توڑو;
+            حالت AV_OPT_TYPE_ثنائی:
+                سیٹ_string_ثنائی(s, opt, opt->default_val.str, dst);
+                توڑو;
+            حالت AV_OPT_TYPE_CHLAYOUT:
+                سیٹ_string_channel_layout(s, opt, opt->default_val.str, dst);
+                توڑو;
+            حالت AV_OPT_TYPE_DICT:
+                سیٹ_string_dict(s, opt, opt->default_val.str, dst);
+                توڑو;
+        طےشدہ:
             av_log(s, AV_LOG_DEBUG, "AVOption type %d of option %s not implemented yet\n",
                    opt->type, opt->name);
         }
@@ -1864,66 +1864,66 @@ void av_opt_set_defaults2(void *s, int mask, int flags)
  * the error code issued by av_opt_set() if the key/value pair
  * cannot be set
  */
-static int parse_key_value_pair(void *ctx, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep)
+ساکن صحیح parse_کلید_قدر_pair(خالی *ctx, ثابت حرف **buf,
+                                ثابت حرف *کلید_val_sep, ثابت حرف *جوڑے_sep)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val;
-    int ret;
+    حرف *کلید = av_get_token(buf, کلید_val_sep);
+    حرف *val;
+    صحیح ret;
 
-    if (!key)
-        return AVERROR(ENOMEM);
+    اگر (!کلید)
+        واپس AVERROR(ENOMEM);
 
-    if (*key && strspn(*buf, key_val_sep)) {
+    اگر (*کلید && strspn(*buf, کلید_val_sep)) {
         (*buf)++;
-        val = av_get_token(buf, pairs_sep);
-        if (!val) {
-            av_freep(&key);
-            return AVERROR(ENOMEM);
+        val = av_get_token(buf, جوڑے_sep);
+        اگر (!val) {
+            av_freep(&کلید);
+            واپس AVERROR(ENOMEM);
         }
-    } else {
-        av_log(ctx, AV_LOG_ERROR, "Missing key or no key/value separator found after key '%s'\n", key);
-        av_free(key);
-        return AVERROR(EINVAL);
+    } ورنہ {
+        av_log(ctx, AV_LOG_ERROR, "Missing key or no key/value separator found after key '%s'\n", کلید);
+        av_free(کلید);
+        واپس AVERROR(EINVAL);
     }
 
-    av_log(ctx, AV_LOG_DEBUG, "Setting entry with key '%s' to value '%s'\n", key, val);
+    av_log(ctx, AV_LOG_DEBUG, "Setting entry with key '%s' to value '%s'\n", کلید, val);
 
-    ret = av_opt_set(ctx, key, val, AV_OPT_SEARCH_CHILDREN);
-    if (ret == AVERROR_OPTION_NOT_FOUND)
-        av_log(ctx, AV_LOG_ERROR, "Key '%s' not found.\n", key);
+    ret = av_opt_سیٹ(ctx, کلید, val, AV_OPT_تلاش_CHILDREN);
+    اگر (ret == AVERROR_OPTION_NOT_ملا)
+        av_log(ctx, AV_LOG_ERROR, "Key '%s' not found.\n", کلید);
 
-    av_free(key);
+    av_free(کلید);
     av_free(val);
-    return ret;
+    واپس ret;
 }
 
-int av_set_options_string(void *ctx, const char *opts,
-                          const char *key_val_sep, const char *pairs_sep)
+صحیح av_سیٹ_options_string(خالی *ctx, ثابت حرف *opts,
+                          ثابت حرف *کلید_val_sep, ثابت حرف *جوڑے_sep)
 {
-    int ret, count = 0;
+    صحیح ret, گنتی = 0;
 
-    if (!opts)
-        return 0;
+    اگر (!opts)
+        واپس 0;
 
-    while (*opts) {
-        if ((ret = parse_key_value_pair(ctx, &opts, key_val_sep, pairs_sep)) < 0)
-            return ret;
-        count++;
+    جب (*opts) {
+        اگر ((ret = parse_کلید_قدر_pair(ctx, &opts, کلید_val_sep, جوڑے_sep)) < 0)
+            واپس ret;
+        گنتی++;
 
-        if (*opts)
+        اگر (*opts)
             opts++;
     }
 
-    return count;
+    واپس گنتی;
 }
 
-#define WHITESPACES " \n\t\r"
+#تعریف_کرو WHITESPACES " \n\t\r"
 
-static int is_key_char(char c)
+ساکن صحیح is_کلید_char(حرف c)
 {
-    return (unsigned)((c | 32) - 'a') < 26 ||
-           (unsigned)(c - '0') < 10 ||
+    واپس (غیرعلامتی)((c | 32) - 'a') < 26 ||
+           (غیرعلامتی)(c - '0') < 10 ||
            c == '-' || c == '_' || c == '/' || c == '.';
 }
 
@@ -1935,648 +1935,648 @@ static int is_key_char(char c)
  *
  * @return  0 for success (even with ellipsis), <0 for failure
  */
-static int get_key(const char **ropts, const char *delim, char **rkey)
+ساکن صحیح get_کلید(ثابت حرف **ropts, ثابت حرف *delim, حرف **rkey)
 {
-    const char *opts = *ropts;
-    const char *key_start, *key_end;
+    ثابت حرف *opts = *ropts;
+    ثابت حرف *کلید_آغاز, *کلید_انتہا;
 
-    key_start = opts += strspn(opts, WHITESPACES);
-    while (is_key_char(*opts))
+    کلید_آغاز = opts += strspn(opts, WHITESPACES);
+    جب (is_کلید_char(*opts))
         opts++;
-    key_end = opts;
+    کلید_انتہا = opts;
     opts += strspn(opts, WHITESPACES);
-    if (!*opts || !strchr(delim, *opts))
-        return AVERROR(EINVAL);
+    اگر (!*opts || !strchr(delim, *opts))
+        واپس AVERROR(EINVAL);
     opts++;
-    if (!(*rkey = av_malloc(key_end - key_start + 1)))
-        return AVERROR(ENOMEM);
-    memcpy(*rkey, key_start, key_end - key_start);
-    (*rkey)[key_end - key_start] = 0;
+    اگر (!(*rkey = av_malloc(کلید_انتہا - کلید_آغاز + 1)))
+        واپس AVERROR(ENOMEM);
+    حافظہ_نقل(*rkey, کلید_آغاز, کلید_انتہا - کلید_آغاز);
+    (*rkey)[کلید_انتہا - کلید_آغاز] = 0;
     *ropts = opts;
-    return 0;
+    واپس 0;
 }
 
-int av_opt_get_key_value(const char **ropts,
-                         const char *key_val_sep, const char *pairs_sep,
-                         unsigned flags,
-                         char **rkey, char **rval)
+صحیح av_opt_get_کلید_قدر(ثابت حرف **ropts,
+                         ثابت حرف *کلید_val_sep, ثابت حرف *جوڑے_sep,
+                         غیرعلامتی flags,
+                         حرف **rkey, حرف **rval)
 {
-    int ret;
-    char *key = NULL, *val;
-    const char *opts = *ropts;
+    صحیح ret;
+    حرف *کلید = تہی, *val;
+    ثابت حرف *opts = *ropts;
 
-    if ((ret = get_key(&opts, key_val_sep, &key)) < 0 &&
-        !(flags & AV_OPT_FLAG_IMPLICIT_KEY))
-        return AVERROR(EINVAL);
-    if (!(val = av_get_token(&opts, pairs_sep))) {
-        av_free(key);
-        return AVERROR(ENOMEM);
+    اگر ((ret = get_کلید(&opts, کلید_val_sep, &کلید)) < 0 &&
+        !(flags & AV_OPT_FLAG_IMPLICIT_کلید))
+        واپس AVERROR(EINVAL);
+    اگر (!(val = av_get_token(&opts, جوڑے_sep))) {
+        av_free(کلید);
+        واپس AVERROR(ENOMEM);
     }
     *ropts = opts;
-    *rkey  = key;
+    *rkey  = کلید;
     *rval  = val;
-    return 0;
+    واپس 0;
 }
 
-int av_opt_set_from_string(void *ctx, const char *opts,
-                           const char *const *shorthand,
-                           const char *key_val_sep, const char *pairs_sep)
+صحیح av_opt_سیٹ_from_string(خالی *ctx, ثابت حرف *opts,
+                           ثابت حرف *ثابت *shorthand,
+                           ثابت حرف *کلید_val_sep, ثابت حرف *جوڑے_sep)
 {
-    int ret, count = 0;
-    const char *dummy_shorthand = NULL;
-    const char *key;
+    صحیح ret, گنتی = 0;
+    ثابت حرف *dummy_shorthand = تہی;
+    ثابت حرف *کلید;
 
-    if (!opts)
-        return 0;
-    if (!shorthand)
+    اگر (!opts)
+        واپس 0;
+    اگر (!shorthand)
         shorthand = &dummy_shorthand;
 
-    while (*opts) {
-        char *parsed_key, *value;
-        ret = av_opt_get_key_value(&opts, key_val_sep, pairs_sep,
-                                   *shorthand ? AV_OPT_FLAG_IMPLICIT_KEY : 0,
-                                   &parsed_key, &value);
-        if (ret < 0) {
-            if (ret == AVERROR(EINVAL))
+    جب (*opts) {
+        حرف *parsed_کلید, *قدر;
+        ret = av_opt_get_کلید_قدر(&opts, کلید_val_sep, جوڑے_sep,
+                                   *shorthand ? AV_OPT_FLAG_IMPLICIT_کلید : 0,
+                                   &parsed_کلید, &قدر);
+        اگر (ret < 0) {
+            اگر (ret == AVERROR(EINVAL))
                 av_log(ctx, AV_LOG_ERROR, "No option name near '%s'\n", opts);
-            else
+            ورنہ
                 av_log(ctx, AV_LOG_ERROR, "Unable to parse '%s': %s\n", opts,
                        av_err2str(ret));
-            return ret;
+            واپس ret;
         }
-        if (*opts)
+        اگر (*opts)
             opts++;
-        if (parsed_key) {
-            key = parsed_key;
-            while (*shorthand) /* discard all remaining shorthand */
+        اگر (parsed_کلید) {
+            کلید = parsed_کلید;
+            جب (*shorthand) /* discard all remaining shorthand */
                 shorthand++;
-        } else {
-            key = *(shorthand++);
+        } ورنہ {
+            کلید = *(shorthand++);
         }
 
-        av_log(ctx, AV_LOG_DEBUG, "Setting '%s' to value '%s'\n", key, value);
-        if ((ret = av_opt_set(ctx, key, value, 0)) < 0) {
-            if (ret == AVERROR_OPTION_NOT_FOUND)
-                av_log(ctx, AV_LOG_ERROR, "Option '%s' not found\n", key);
-            av_free(value);
-            av_free(parsed_key);
-            return ret;
+        av_log(ctx, AV_LOG_DEBUG, "Setting '%s' to value '%s'\n", کلید, قدر);
+        اگر ((ret = av_opt_سیٹ(ctx, کلید, قدر, 0)) < 0) {
+            اگر (ret == AVERROR_OPTION_NOT_ملا)
+                av_log(ctx, AV_LOG_ERROR, "Option '%s' not found\n", کلید);
+            av_free(قدر);
+            av_free(parsed_کلید);
+            واپس ret;
         }
 
-        av_free(value);
-        av_free(parsed_key);
-        count++;
+        av_free(قدر);
+        av_free(parsed_کلید);
+        گنتی++;
     }
-    return count;
+    واپس گنتی;
 }
 
-void av_opt_free(void *obj)
+خالی av_opt_free(خالی *obj)
 {
-    const AVOption *o = NULL;
-    while ((o = av_opt_next(obj, o))) {
-        void *pitem = (uint8_t *)obj + o->offset;
+    ثابت AVOption *o = تہی;
+    جب ((o = av_opt_اگلا(obj, o))) {
+        خالی *pitem = (uint8_t *)obj + o->انحراف;
 
-        if (o->type & AV_OPT_TYPE_FLAG_ARRAY)
+        اگر (o->type & AV_OPT_TYPE_FLAG_ARRAY)
             opt_free_array(o, pitem, opt_array_pcount(pitem));
-        else
+        ورنہ
             opt_free_elem(o->type, pitem);
     }
 }
 
-int av_opt_set_dict2(void *obj, AVDictionary **options, int search_flags)
+صحیح av_opt_سیٹ_dict2(خالی *obj, AVDictionary **options, صحیح تلاش_flags)
 {
-    const AVDictionaryEntry *t = NULL;
-    AVDictionary    *tmp = NULL;
-    int ret;
+    ثابت AVDictionary_اندراج *t = تہی;
+    AVDictionary    *tmp = تہی;
+    صحیح ret;
 
-    if (!options)
-        return 0;
+    اگر (!options)
+        واپس 0;
 
-    while ((t = av_dict_iterate(*options, t))) {
-        ret = av_opt_set(obj, t->key, t->value, search_flags);
-        if (ret == AVERROR_OPTION_NOT_FOUND)
-            ret = av_dict_set(&tmp, t->key, t->value, AV_DICT_MULTIKEY);
-        if (ret < 0) {
-            av_log(obj, AV_LOG_ERROR, "Error setting option %s to value %s.\n", t->key, t->value);
+    جب ((t = av_dict_iterate(*options, t))) {
+        ret = av_opt_سیٹ(obj, t->کلید, t->قدر, تلاش_flags);
+        اگر (ret == AVERROR_OPTION_NOT_ملا)
+            ret = av_dict_سیٹ(&tmp, t->کلید, t->قدر, AV_DICT_MULTIKEY);
+        اگر (ret < 0) {
+            av_log(obj, AV_LOG_ERROR, "Error setting option %s to value %s.\n", t->کلید, t->قدر);
             av_dict_free(&tmp);
-            return ret;
+            واپس ret;
         }
     }
     av_dict_free(options);
     *options = tmp;
-    return 0;
+    واپس 0;
 }
 
-int av_opt_set_dict(void *obj, AVDictionary **options)
+صحیح av_opt_سیٹ_dict(خالی *obj, AVDictionary **options)
 {
-    return av_opt_set_dict2(obj, options, 0);
+    واپس av_opt_سیٹ_dict2(obj, options, 0);
 }
 
-const AVOption *av_opt_find(void *obj, const char *name, const char *unit,
-                            int opt_flags, int search_flags)
+ثابت AVOption *av_opt_ڈھونڈو(خالی *obj, ثابت حرف *name, ثابت حرف *unit,
+                            صحیح opt_flags, صحیح تلاش_flags)
 {
-    return av_opt_find2(obj, name, unit, opt_flags, search_flags, NULL);
+    واپس av_opt_find2(obj, name, unit, opt_flags, تلاش_flags, تہی);
 }
 
-const AVOption *av_opt_find2(void *obj, const char *name, const char *unit,
-                             int opt_flags, int search_flags, void **target_obj)
+ثابت AVOption *av_opt_find2(خالی *obj, ثابت حرف *name, ثابت حرف *unit,
+                             صحیح opt_flags, صحیح تلاش_flags, خالی **ہدف_obj)
 {
-    const AVClass  *c;
-    const AVOption *o = NULL;
+    ثابت AVClass  *c;
+    ثابت AVOption *o = تہی;
 
-    if(!obj)
-        return NULL;
+    اگر(!obj)
+        واپس تہی;
 
     c= *(AVClass**)obj;
 
-    if (!c)
-        return NULL;
+    اگر (!c)
+        واپس تہی;
 
-    if (search_flags & AV_OPT_SEARCH_CHILDREN) {
-        if (search_flags & AV_OPT_SEARCH_FAKE_OBJ) {
-            void *iter = NULL;
-            const AVClass *child;
-            while (child = av_opt_child_class_iterate(c, &iter))
-                if (o = av_opt_find2(&child, name, unit, opt_flags, search_flags, NULL))
-                    return o;
-        } else {
-            void *child = NULL;
-            while (child = av_opt_child_next(obj, child))
-                if (o = av_opt_find2(child, name, unit, opt_flags, search_flags, target_obj))
-                    return o;
+    اگر (تلاش_flags & AV_OPT_تلاش_CHILDREN) {
+        اگر (تلاش_flags & AV_OPT_تلاش_FAKE_OBJ) {
+            خالی *iter = تہی;
+            ثابت AVClass *بچہ;
+            جب (بچہ = av_opt_بچہ_class_iterate(c, &iter))
+                اگر (o = av_opt_find2(&بچہ, name, unit, opt_flags, تلاش_flags, تہی))
+                    واپس o;
+        } ورنہ {
+            خالی *بچہ = تہی;
+            جب (بچہ = av_opt_بچہ_اگلا(obj, بچہ))
+                اگر (o = av_opt_find2(بچہ, name, unit, opt_flags, تلاش_flags, ہدف_obj))
+                    واپس o;
         }
     }
 
-    while (o = av_opt_next(obj, o)) {
-        if (!strcmp(o->name, name) && (o->flags & opt_flags) == opt_flags &&
+    جب (o = av_opt_اگلا(obj, o)) {
+        اگر (!strcmp(o->name, name) && (o->flags & opt_flags) == opt_flags &&
             ((!unit && o->type != AV_OPT_TYPE_CONST) ||
              (unit  && o->type == AV_OPT_TYPE_CONST && o->unit && !strcmp(o->unit, unit)))) {
-            if (target_obj) {
-                if (!(search_flags & AV_OPT_SEARCH_FAKE_OBJ))
-                    *target_obj = obj;
-                else
-                    *target_obj = NULL;
+            اگر (ہدف_obj) {
+                اگر (!(تلاش_flags & AV_OPT_تلاش_FAKE_OBJ))
+                    *ہدف_obj = obj;
+                ورنہ
+                    *ہدف_obj = تہی;
             }
-            return o;
+            واپس o;
         }
     }
-    return NULL;
+    واپس تہی;
 }
 
-void *av_opt_child_next(void *obj, void *prev)
+خالی *av_opt_بچہ_اگلا(خالی *obj, خالی *پچھلا)
 {
-    const AVClass *c = *(AVClass **)obj;
-    if (c->child_next)
-        return c->child_next(obj, prev);
-    return NULL;
+    ثابت AVClass *c = *(AVClass **)obj;
+    اگر (c->بچہ_اگلا)
+        واپس c->بچہ_اگلا(obj, پچھلا);
+    واپس تہی;
 }
 
-const AVClass *av_opt_child_class_iterate(const AVClass *parent, void **iter)
+ثابت AVClass *av_opt_بچہ_class_iterate(ثابت AVClass *والد, خالی **iter)
 {
-    if (parent->child_class_iterate)
-        return parent->child_class_iterate(iter);
-    return NULL;
+    اگر (والد->بچہ_class_iterate)
+        واپس والد->بچہ_class_iterate(iter);
+    واپس تہی;
 }
 
-static int opt_copy_elem(void *logctx, enum AVOptionType type,
-                         void *dst, const void *src)
+ساکن صحیح opt_copy_elem(خالی *logctx, شمار AVOptionType type,
+                         خالی *dst, ثابت خالی *src)
 {
-    if (type == AV_OPT_TYPE_STRING) {
-        const char *src_str = *(const char *const *)src;
-        char         **dstp =  (char **)dst;
-        if (*dstp != src_str)
+    اگر (type == AV_OPT_TYPE_STRING) {
+        ثابت حرف *src_str = *(ثابت حرف *ثابت *)src;
+        حرف         **dstp =  (حرف **)dst;
+        اگر (*dstp != src_str)
             av_freep(dstp);
-        if (src_str) {
+        اگر (src_str) {
             *dstp = av_strdup(src_str);
-            if (!*dstp)
-                return AVERROR(ENOMEM);
+            اگر (!*dstp)
+                واپس AVERROR(ENOMEM);
         }
-    } else if (type == AV_OPT_TYPE_BINARY) {
-        const uint8_t *const *src8 = (const uint8_t *const *)src;
+    } ورنہ اگر (type == AV_OPT_TYPE_ثنائی) {
+        ثابت uint8_t *ثابت *src8 = (ثابت uint8_t *ثابت *)src;
         uint8_t             **dst8 = (uint8_t **)dst;
-        int len = *(const int *)(src8 + 1);
-        if (*dst8 != *src8)
+        صحیح len = *(ثابت صحیح *)(src8 + 1);
+        اگر (*dst8 != *src8)
             av_freep(dst8);
         *dst8 = av_memdup(*src8, len);
-        if (len && !*dst8) {
-            *(int *)(dst8 + 1) = 0;
-            return AVERROR(ENOMEM);
+        اگر (len && !*dst8) {
+            *(صحیح *)(dst8 + 1) = 0;
+            واپس AVERROR(ENOMEM);
         }
-        *(int *)(dst8 + 1) = len;
-    } else if (type == AV_OPT_TYPE_CONST) {
+        *(صحیح *)(dst8 + 1) = len;
+    } ورنہ اگر (type == AV_OPT_TYPE_CONST) {
         // do nothing
-    } else if (type == AV_OPT_TYPE_DICT) {
-        const AVDictionary *sdict = *(const AVDictionary * const *)src;
+    } ورنہ اگر (type == AV_OPT_TYPE_DICT) {
+        ثابت AVDictionary *sdict = *(ثابت AVDictionary * ثابت *)src;
         AVDictionary     **ddictp = (AVDictionary **)dst;
-        if (sdict != *ddictp)
+        اگر (sdict != *ddictp)
             av_dict_free(ddictp);
-        *ddictp = NULL;
-        return av_dict_copy(ddictp, sdict, 0);
-    } else if (type == AV_OPT_TYPE_CHLAYOUT) {
-        const AVChannelLayout *slayout = (const AVChannelLayout *)src;
+        *ddictp = تہی;
+        واپس av_dict_copy(ddictp, sdict, 0);
+    } ورنہ اگر (type == AV_OPT_TYPE_CHLAYOUT) {
+        ثابت AVChannelLayout *slayout = (ثابت AVChannelLayout *)src;
         AVChannelLayout *dlayout = (AVChannelLayout *)dst;
-        if (dlayout != slayout) {
-            if (dlayout->order == AV_CHANNEL_ORDER_CUSTOM &&
-                slayout->order == AV_CHANNEL_ORDER_CUSTOM &&
+        اگر (dlayout != slayout) {
+            اگر (dlayout->ترتیب == AV_CHANNEL_ترتیب_CUSTOM &&
+                slayout->ترتیب == AV_CHANNEL_ترتیب_CUSTOM &&
                 dlayout->u.map == slayout->u.map)
-                dlayout->u.map = NULL;
-            return av_channel_layout_copy(dst, src);
+                dlayout->u.map = تہی;
+            واپس av_channel_layout_copy(dst, src);
         }
-    } else if (opt_is_pod(type)) {
-        size_t size = opt_type_desc[type].size;
-        memcpy(dst, src, size);
-    } else {
+    } ورنہ اگر (opt_is_pod(type)) {
+        size_t سائز = opt_type_desc[type].سائز;
+        حافظہ_نقل(dst, src, سائز);
+    } ورنہ {
         av_log(logctx, AV_LOG_ERROR, "Unhandled option type: %d\n", type);
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    return 0;
+    واپس 0;
 }
 
-static int opt_copy_array(void *logctx, const AVOption *o,
-                          void **pdst, const void * const *psrc)
+ساکن صحیح opt_copy_array(خالی *logctx, ثابت AVOption *o,
+                          خالی **pdst, ثابت خالی * ثابت *psrc)
 {
-    unsigned nb_elems = *opt_array_pcount(psrc);
-    void         *dst = NULL;
-    int ret;
+    غیرعلامتی nb_elems = *opt_array_pcount(psrc);
+    خالی         *dst = تہی;
+    صحیح ret;
 
-    if (*pdst == *psrc) {
-        *pdst                   = NULL;
+    اگر (*pdst == *psrc) {
+        *pdst                   = تہی;
         *opt_array_pcount(pdst) = 0;
     }
 
     opt_free_array(o, pdst, opt_array_pcount(pdst));
 
-    dst = av_calloc(nb_elems, opt_type_desc[TYPE_BASE(o->type)].size);
-    if (!dst)
-        return AVERROR(ENOMEM);
+    dst = av_calloc(nb_elems, opt_type_desc[TYPE_بنیاد(o->type)].سائز);
+    اگر (!dst)
+        واپس AVERROR(ENOMEM);
 
-    for (unsigned i = 0; i < nb_elems; i++) {
-        ret = opt_copy_elem(logctx, TYPE_BASE(o->type),
+    برائے (غیرعلامتی i = 0; i < nb_elems; i++) {
+        ret = opt_copy_elem(logctx, TYPE_بنیاد(o->type),
                             opt_array_pelem(o, dst, i),
-                            opt_array_pelem(o, *(void**)psrc, i));
-        if (ret < 0) {
+                            opt_array_pelem(o, *(خالی**)psrc, i));
+        اگر (ret < 0) {
             opt_free_array(o, &dst, &nb_elems);
-            return ret;
+            واپس ret;
         }
     }
 
     *pdst                   = dst;
     *opt_array_pcount(pdst) = nb_elems;
 
-    return 0;
+    واپس 0;
 }
 
-int av_opt_copy(void *dst, const void *src)
+صحیح av_opt_copy(خالی *dst, ثابت خالی *src)
 {
-    const AVOption *o = NULL;
-    const AVClass *c;
-    int ret = 0;
+    ثابت AVOption *o = تہی;
+    ثابت AVClass *c;
+    صحیح ret = 0;
 
-    if (!src)
-        return AVERROR(EINVAL);
+    اگر (!src)
+        واپس AVERROR(EINVAL);
 
     c = *(AVClass **)src;
-    if (!c || c != *(AVClass **)dst)
-        return AVERROR(EINVAL);
+    اگر (!c || c != *(AVClass **)dst)
+        واپس AVERROR(EINVAL);
 
-    while ((o = av_opt_next(src, o))) {
-        void *field_dst = (uint8_t *)dst + o->offset;
-        void *field_src = (uint8_t *)src + o->offset;
+    جب ((o = av_opt_اگلا(src, o))) {
+        خالی *میدان_dst = (uint8_t *)dst + o->انحراف;
+        خالی *میدان_src = (uint8_t *)src + o->انحراف;
 
-        int err = (o->type & AV_OPT_TYPE_FLAG_ARRAY)                 ?
-                  opt_copy_array(dst, o,       field_dst, field_src) :
-                  opt_copy_elem (dst, o->type, field_dst, field_src);
-        if (err < 0)
+        صحیح err = (o->type & AV_OPT_TYPE_FLAG_ARRAY)                 ?
+                  opt_copy_array(dst, o,       میدان_dst, میدان_src) :
+                  opt_copy_elem (dst, o->type, میدان_dst, میدان_src);
+        اگر (err < 0)
             ret = err;
     }
-    return ret;
+    واپس ret;
 }
 
-int av_opt_get_array_size(void *obj, const char *name, int search_flags,
-                          unsigned int *out_val)
+صحیح av_opt_get_array_سائز(خالی *obj, ثابت حرف *name, صحیح تلاش_flags,
+                          غیرعلامتی صحیح *برآمد_val)
 {
-    void *target_obj, *parray;
-    const AVOption *o;
+    خالی *ہدف_obj, *parray;
+    ثابت AVOption *o;
 
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (!(o->type & AV_OPT_TYPE_FLAG_ARRAY))
-        return AVERROR(EINVAL);
+    o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &ہدف_obj);
+    اگر (!o || !ہدف_obj)
+        واپس AVERROR_OPTION_NOT_ملا;
+    اگر (!(o->type & AV_OPT_TYPE_FLAG_ARRAY))
+        واپس AVERROR(EINVAL);
 
-    parray = (uint8_t *)target_obj + o->offset;
-    *out_val = *opt_array_pcount(parray);
+    parray = (uint8_t *)ہدف_obj + o->انحراف;
+    *برآمد_val = *opt_array_pcount(parray);
 
-    return 0;
+    واپس 0;
 }
 
-int av_opt_get_array(void *obj, const char *name, int search_flags,
-                     unsigned int start_elem, unsigned int nb_elems,
-                     enum AVOptionType out_type, void *out_val)
+صحیح av_opt_get_array(خالی *obj, ثابت حرف *name, صحیح تلاش_flags,
+                     غیرعلامتی صحیح آغاز_elem, غیرعلامتی صحیح nb_elems,
+                     شمار AVOptionType برآمد_type, خالی *برآمد_val)
 {
-    const size_t elem_size_out = opt_type_desc[TYPE_BASE(out_type)].size;
+    ثابت size_t elem_سائز_برآمد = opt_type_desc[TYPE_بنیاد(برآمد_type)].سائز;
 
-    const AVOption *o;
-    void *target_obj;
+    ثابت AVOption *o;
+    خالی *ہدف_obj;
 
-    const void *parray;
-    unsigned array_size;
+    ثابت خالی *parray;
+    غیرعلامتی array_سائز;
 
-    int ret;
+    صحیح ret;
 
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
-        (out_type & AV_OPT_TYPE_FLAG_ARRAY))
-        return AVERROR(EINVAL);
+    o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &ہدف_obj);
+    اگر (!o || !ہدف_obj)
+        واپس AVERROR_OPTION_NOT_ملا;
+    اگر (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
+        (برآمد_type & AV_OPT_TYPE_FLAG_ARRAY))
+        واپس AVERROR(EINVAL);
 
-    parray     = (uint8_t *)target_obj + o->offset;
-    array_size = *opt_array_pcount(parray);
+    parray     = (uint8_t *)ہدف_obj + o->انحراف;
+    array_سائز = *opt_array_pcount(parray);
 
-    if (start_elem >= array_size ||
-        array_size - start_elem < nb_elems)
-        return AVERROR(EINVAL);
+    اگر (آغاز_elem >= array_سائز ||
+        array_سائز - آغاز_elem < nb_elems)
+        واپس AVERROR(EINVAL);
 
-    for (unsigned i = 0; i < nb_elems; i++) {
-        const void *src = opt_array_pelem(o, *(void**)parray, start_elem + i);
-        void       *dst = (uint8_t*)out_val + i * elem_size_out;
+    برائے (غیرعلامتی i = 0; i < nb_elems; i++) {
+        ثابت خالی *src = opt_array_pelem(o, *(خالی**)parray, آغاز_elem + i);
+        خالی       *dst = (uint8_t*)برآمد_val + i * elem_سائز_برآمد;
 
-        if (out_type == TYPE_BASE(o->type)) {
-            ret = opt_copy_elem(obj, out_type, dst, src);
-            if (ret < 0)
-                goto fail;
-        } else if (out_type == AV_OPT_TYPE_STRING) {
-            uint8_t buf[128], *out = buf;
+        اگر (برآمد_type == TYPE_بنیاد(o->type)) {
+            ret = opt_copy_elem(obj, برآمد_type, dst, src);
+            اگر (ret < 0)
+                جاؤ fail;
+        } ورنہ اگر (برآمد_type == AV_OPT_TYPE_STRING) {
+            uint8_t buf[128], *برآمد = buf;
 
-            ret = opt_get_elem(o, &out, sizeof(buf), src, search_flags);
-            if (ret < 0)
-                goto fail;
+            ret = opt_get_elem(o, &برآمد, حجم(buf), src, تلاش_flags);
+            اگر (ret < 0)
+                جاؤ fail;
 
-            if (out == buf) {
-                out = av_strdup(buf);
-                if (!out) {
+            اگر (برآمد == buf) {
+                برآمد = av_strdup(buf);
+                اگر (!برآمد) {
                     ret = AVERROR(ENOMEM);
-                    goto fail;
+                    جاؤ fail;
                 }
             }
 
-            *(uint8_t**)dst = out;
-        } else if (out_type == AV_OPT_TYPE_INT64    ||
-                   out_type == AV_OPT_TYPE_DOUBLE   ||
-                   out_type == AV_OPT_TYPE_RATIONAL) {
-            double     num = 1.0;
-            int        den = 1;
+            *(uint8_t**)dst = برآمد;
+        } ورنہ اگر (برآمد_type == AV_OPT_TYPE_INT64    ||
+                   برآمد_type == AV_OPT_TYPE_DOUBLE   ||
+                   برآمد_type == AV_OPT_TYPE_RATIONAL) {
+            دوہرا     عدد = 1.0;
+            صحیح        den = 1;
             int64_t intnum = 1;
 
-            ret = read_number(o, src, &num, &den, &intnum);
-            if (ret < 0)
-                goto fail;
+            ret = read_نمبر(o, src, &عدد, &den, &intnum);
+            اگر (ret < 0)
+                جاؤ fail;
 
-            switch (out_type) {
-            case AV_OPT_TYPE_INT64:
-                *(int64_t*)dst = (num == den) ?  intnum : num * intnum / den;
-                break;
-            case AV_OPT_TYPE_DOUBLE:
-                *(double*)dst = num * intnum / den;
-                break;
-            case AV_OPT_TYPE_RATIONAL:
-                *(AVRational*)dst = (num == 1.0 && (int)intnum == intnum) ?
+            انتخاب (برآمد_type) {
+            حالت AV_OPT_TYPE_INT64:
+                *(int64_t*)dst = (عدد == den) ?  intnum : عدد * intnum / den;
+                توڑو;
+            حالت AV_OPT_TYPE_DOUBLE:
+                *(دوہرا*)dst = عدد * intnum / den;
+                توڑو;
+            حالت AV_OPT_TYPE_RATIONAL:
+                *(AVRational*)dst = (عدد == 1.0 && (صحیح)intnum == intnum) ?
                                     (AVRational){ intnum, den }           :
-                                    double_to_rational(num * intnum / den);
-                break;
-            default: av_assert0(0);
+                                    double_مقصد_rational(عدد * intnum / den);
+                توڑو;
+            طےشدہ: av_assert0(0);
             }
-        } else
-            return AVERROR(ENOSYS);
+        } ورنہ
+            واپس AVERROR(ENOSYS);
     }
 
-    return 0;
+    واپس 0;
 fail:
-    for (unsigned i = 0; i < nb_elems; i++)
-        opt_free_elem(out_type, (uint8_t*)out_val + i * elem_size_out);
-    return ret;
+    برائے (غیرعلامتی i = 0; i < nb_elems; i++)
+        opt_free_elem(برآمد_type, (uint8_t*)برآمد_val + i * elem_سائز_برآمد);
+    واپس ret;
 }
 
-int av_opt_set_array(void *obj, const char *name, int search_flags,
-                     unsigned int start_elem, unsigned int nb_elems,
-                     enum AVOptionType val_type, const void *val)
+صحیح av_opt_سیٹ_array(خالی *obj, ثابت حرف *name, صحیح تلاش_flags,
+                     غیرعلامتی صحیح آغاز_elem, غیرعلامتی صحیح nb_elems,
+                     شمار AVOptionType val_type, ثابت خالی *val)
 {
-    const size_t elem_size_val = opt_type_desc[TYPE_BASE(val_type)].size;
+    ثابت size_t elem_سائز_val = opt_type_desc[TYPE_بنیاد(val_type)].سائز;
 
-    const AVOption *o;
-    const AVOptionArrayDef *arr;
-    void *target_obj;
+    ثابت AVOption *o;
+    ثابت AVOptionArrayDef *arr;
+    خالی *ہدف_obj;
 
-    void *parray;
-    void *new_elems;
-    unsigned *array_size, new_size;
-    size_t elem_size;
+    خالی *parray;
+    خالی *new_elems;
+    غیرعلامتی *array_سائز, new_سائز;
+    size_t elem_سائز;
 
-    int ret = 0;
+    صحیح ret = 0;
 
-    ret = opt_set_init(obj, name, search_flags, 0, &target_obj, &o, &parray);
-    if (ret < 0)
-        return ret;
+    ret = opt_سیٹ_init(obj, name, تلاش_flags, 0, &ہدف_obj, &o, &parray);
+    اگر (ret < 0)
+        واپس ret;
 
-    if (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
+    اگر (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
         (val_type & AV_OPT_TYPE_FLAG_ARRAY))
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
 
     arr        = o->default_val.arr;
-    array_size = opt_array_pcount(parray);
-    elem_size  = opt_type_desc[TYPE_BASE(o->type)].size;
+    array_سائز = opt_array_pcount(parray);
+    elem_سائز  = opt_type_desc[TYPE_بنیاد(o->type)].سائز;
 
-    if (start_elem > *array_size)
-        return AVERROR(EINVAL);
+    اگر (آغاز_elem > *array_سائز)
+        واپس AVERROR(EINVAL);
 
     // compute new array size
-    if (!val) {
-        if (*array_size - start_elem < nb_elems)
-            return AVERROR(EINVAL);
+    اگر (!val) {
+        اگر (*array_سائز - آغاز_elem < nb_elems)
+            واپس AVERROR(EINVAL);
 
-        new_size = *array_size - nb_elems;
-    } else if (search_flags & AV_OPT_ARRAY_REPLACE) {
-        if (start_elem >= UINT_MAX - nb_elems)
-            return AVERROR(EINVAL);
+        new_سائز = *array_سائز - nb_elems;
+    } ورنہ اگر (تلاش_flags & AV_OPT_ARRAY_REPLACE) {
+        اگر (آغاز_elem >= UINT_MAX - nb_elems)
+            واپس AVERROR(EINVAL);
 
-        new_size = FFMAX(*array_size, start_elem + nb_elems);
-    } else {
-        if (nb_elems >= UINT_MAX - *array_size)
-            return AVERROR(EINVAL);
+        new_سائز = FFMAX(*array_سائز, آغاز_elem + nb_elems);
+    } ورنہ {
+        اگر (nb_elems >= UINT_MAX - *array_سائز)
+            واپس AVERROR(EINVAL);
 
-        new_size = *array_size + nb_elems;
+        new_سائز = *array_سائز + nb_elems;
     }
 
-    if (arr &&
-        ((arr->size_max && new_size > arr->size_max) ||
-         (arr->size_min && new_size < arr->size_min)))
-        return AVERROR(EINVAL);
+    اگر (arr &&
+        ((arr->سائز_max && new_سائز > arr->سائز_max) ||
+         (arr->سائز_min && new_سائز < arr->سائز_min)))
+        واپس AVERROR(EINVAL);
 
     // desired operation is shrinking the array
-    if (!val) {
-        void *array = *(void**)parray;
+    اگر (!val) {
+        خالی *array = *(خالی**)parray;
 
-        for (unsigned i = 0; i < nb_elems; i++) {
+        برائے (غیرعلامتی i = 0; i < nb_elems; i++) {
             opt_free_elem(o->type,
-                          opt_array_pelem(o, array, start_elem + i));
+                          opt_array_pelem(o, array, آغاز_elem + i));
         }
 
-        if (new_size > 0) {
-            memmove(opt_array_pelem(o, array, start_elem),
-                    opt_array_pelem(o, array, start_elem + nb_elems),
-                    elem_size * (*array_size - start_elem - nb_elems));
+        اگر (new_سائز > 0) {
+            memmove(opt_array_pelem(o, array, آغاز_elem),
+                    opt_array_pelem(o, array, آغاز_elem + nb_elems),
+                    elem_سائز * (*array_سائز - آغاز_elem - nb_elems));
 
-            array = av_realloc_array(array, new_size, elem_size);
-            if (!array)
-                return AVERROR(ENOMEM);
+            array = av_realloc_array(array, new_سائز, elem_سائز);
+            اگر (!array)
+                واپس AVERROR(ENOMEM);
 
-            *(void**)parray = array;
-        } else
+            *(خالی**)parray = array;
+        } ورنہ
             av_freep(parray);
 
-        *array_size = new_size;
+        *array_سائز = new_سائز;
 
-        return 0;
+        واپس 0;
     }
 
     // otherwise, desired operation is insert/replace;
     // first, store new elements in a separate array to simplify
     // rollback on failure
-    new_elems = av_calloc(nb_elems, elem_size);
-    if (!new_elems)
-        return AVERROR(ENOMEM);
+    new_elems = av_calloc(nb_elems, elem_سائز);
+    اگر (!new_elems)
+        واپس AVERROR(ENOMEM);
 
     // convert/validate each new element
-    for (unsigned i = 0; i < nb_elems; i++) {
-        void       *dst = opt_array_pelem(o, new_elems, i);
-        const void *src = (uint8_t*)val + i * elem_size_val;
+    برائے (غیرعلامتی i = 0; i < nb_elems; i++) {
+        خالی       *dst = opt_array_pelem(o, new_elems, i);
+        ثابت خالی *src = (uint8_t*)val + i * elem_سائز_val;
 
-        double     num = 1.0;
-        int        den = 1;
+        دوہرا     عدد = 1.0;
+        صحیح        den = 1;
         int64_t intnum = 1;
 
-        if (val_type == TYPE_BASE(o->type)) {
-            int err;
+        اگر (val_type == TYPE_بنیاد(o->type)) {
+            صحیح err;
 
             ret = opt_copy_elem(obj, val_type, dst, src);
-            if (ret < 0)
-                goto fail;
+            اگر (ret < 0)
+                جاؤ fail;
 
             // validate the range for numeric options
-            err = read_number(o, dst, &num, &den, &intnum);
-            if (err >= 0 && TYPE_BASE(o->type) != AV_OPT_TYPE_FLAGS &&
-                (!den || o->max * den < num * intnum || o->min * den > num * intnum)) {
-                num = den ? num * intnum / den : (num && intnum ? INFINITY : NAN);
+            err = read_نمبر(o, dst, &عدد, &den, &intnum);
+            اگر (err >= 0 && TYPE_بنیاد(o->type) != AV_OPT_TYPE_FLAGS &&
+                (!den || o->max * den < عدد * intnum || o->min * den > عدد * intnum)) {
+                عدد = den ? عدد * intnum / den : (عدد && intnum ? INFINITY : NAN);
                 av_log(obj, AV_LOG_ERROR, "Cannot set array element %u for "
                        "parameter '%s': value %f out of range [%g - %g]\n",
-                       start_elem + i, o->name, num, o->min, o->max);
+                       آغاز_elem + i, o->name, عدد, o->min, o->max);
                 ret = AVERROR(ERANGE);
-                goto fail;
+                جاؤ fail;
             }
-        } else if (val_type == AV_OPT_TYPE_STRING) {
-            ret = opt_set_elem(obj, target_obj, o, *(const char **)src, dst);
-            if (ret < 0)
-                goto fail;
-        } else if (val_type == AV_OPT_TYPE_INT ||
+        } ورنہ اگر (val_type == AV_OPT_TYPE_STRING) {
+            ret = opt_سیٹ_elem(obj, ہدف_obj, o, *(ثابت حرف **)src, dst);
+            اگر (ret < 0)
+                جاؤ fail;
+        } ورنہ اگر (val_type == AV_OPT_TYPE_INT ||
               val_type == AV_OPT_TYPE_INT64    ||
               val_type == AV_OPT_TYPE_FLOAT    ||
               val_type == AV_OPT_TYPE_DOUBLE   ||
               val_type == AV_OPT_TYPE_RATIONAL) {
 
-            switch (val_type) {
-            case AV_OPT_TYPE_INT:       intnum = *(int*)src;                break;
-            case AV_OPT_TYPE_INT64:     intnum = *(int64_t*)src;            break;
-            case AV_OPT_TYPE_FLOAT:     num    = *(float*)src;              break;
-            case AV_OPT_TYPE_DOUBLE:    num    = *(double*)src;             break;
-            case AV_OPT_TYPE_RATIONAL:  intnum = ((AVRational*)src)->num;
-                                        den    = ((AVRational*)src)->den;   break;
-            default: av_assert0(0);
+            انتخاب (val_type) {
+            حالت AV_OPT_TYPE_INT:       intnum = *(صحیح*)src;                توڑو;
+            حالت AV_OPT_TYPE_INT64:     intnum = *(int64_t*)src;            توڑو;
+            حالت AV_OPT_TYPE_FLOAT:     عدد    = *(اعشاری*)src;              توڑو;
+            حالت AV_OPT_TYPE_DOUBLE:    عدد    = *(دوہرا*)src;             توڑو;
+            حالت AV_OPT_TYPE_RATIONAL:  intnum = ((AVRational*)src)->عدد;
+                                        den    = ((AVRational*)src)->den;   توڑو;
+            طےشدہ: av_assert0(0);
             }
 
-            ret = write_number(obj, o, dst, num, den, intnum, 0);
-            if (ret < 0)
-                goto fail;
-        } else {
+            ret = write_نمبر(obj, o, dst, عدد, den, intnum, 0);
+            اگر (ret < 0)
+                جاؤ fail;
+        } ورنہ {
             ret = AVERROR(ENOSYS);
-            goto fail;
+            جاؤ fail;
         }
     }
 
     // commit new elements to the array
-    if (start_elem == 0 && nb_elems == new_size) {
+    اگر (آغاز_elem == 0 && nb_elems == new_سائز) {
         // replacing the existing array entirely
-        opt_free_array(o, parray, array_size);
-        *(void**)parray = new_elems;
-        *array_size     = nb_elems;
+        opt_free_array(o, parray, array_سائز);
+        *(خالی**)parray = new_elems;
+        *array_سائز     = nb_elems;
 
-        new_elems = NULL;
+        new_elems = تہی;
         nb_elems  = 0;
-    } else {
-        void *array = av_realloc_array(*(void**)parray, new_size, elem_size);
-        if (!array) {
+    } ورنہ {
+        خالی *array = av_realloc_array(*(خالی**)parray, new_سائز, elem_سائز);
+        اگر (!array) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            جاؤ fail;
         }
 
-        if (search_flags & AV_OPT_ARRAY_REPLACE) {
+        اگر (تلاش_flags & AV_OPT_ARRAY_REPLACE) {
             // free the elements being overwritten
-            for (unsigned i = start_elem; i < FFMIN(start_elem + nb_elems, *array_size); i++)
+            برائے (غیرعلامتی i = آغاز_elem; i < FFMIN(آغاز_elem + nb_elems, *array_سائز); i++)
                 opt_free_elem(o->type, opt_array_pelem(o, array, i));
-        } else {
+        } ورنہ {
             // shift existing elements to the end
-            memmove(opt_array_pelem(o, array, start_elem + nb_elems),
-                    opt_array_pelem(o, array, start_elem),
-                    elem_size * (*array_size - start_elem));
+            memmove(opt_array_pelem(o, array, آغاز_elem + nb_elems),
+                    opt_array_pelem(o, array, آغاز_elem),
+                    elem_سائز * (*array_سائز - آغاز_elem));
         }
 
-        memcpy((uint8_t*)array + elem_size * start_elem, new_elems, elem_size * nb_elems);
+        حافظہ_نقل((uint8_t*)array + elem_سائز * آغاز_elem, new_elems, elem_سائز * nb_elems);
 
         av_freep(&new_elems);
         nb_elems = 0;
 
-        *(void**)parray = array;
-        *array_size     = new_size;
+        *(خالی**)parray = array;
+        *array_سائز     = new_سائز;
     }
 
 fail:
     opt_free_array(o, &new_elems, &nb_elems);
 
-    return ret;
+    واپس ret;
 }
 
-int av_opt_query_ranges(AVOptionRanges **ranges_arg, void *obj, const char *key, int flags)
+صحیح av_opt_query_ranges(AVOptionRanges **ranges_arg, خالی *obj, ثابت حرف *کلید, صحیح flags)
 {
-    int ret;
-    const AVClass *c = *(AVClass**)obj;
-    int (*callback)(AVOptionRanges **, void *obj, const char *key, int flags) = c->query_ranges;
+    صحیح ret;
+    ثابت AVClass *c = *(AVClass**)obj;
+    صحیح (*callback)(AVOptionRanges **, خالی *obj, ثابت حرف *کلید, صحیح flags) = c->query_ranges;
 
-    if (!callback)
+    اگر (!callback)
         callback = av_opt_query_ranges_default;
 
-    ret = callback(ranges_arg, obj, key, flags);
-    if (ret >= 0) {
-        if (!(flags & AV_OPT_MULTI_COMPONENT_RANGE))
+    ret = callback(ranges_arg, obj, کلید, flags);
+    اگر (ret >= 0) {
+        اگر (!(flags & AV_OPT_MULTI_COMPONENT_RANGE))
             ret = 1;
         (*ranges_arg)->nb_components = ret;
     }
-    return ret;
+    واپس ret;
 }
 
-int av_opt_query_ranges_default(AVOptionRanges **ranges_arg, void *obj, const char *key, int flags)
+صحیح av_opt_query_ranges_default(AVOptionRanges **ranges_arg, خالی *obj, ثابت حرف *کلید, صحیح flags)
 {
-    AVOptionRanges *ranges = av_mallocz(sizeof(*ranges));
-    AVOptionRange **range_array = av_mallocz(sizeof(void*));
-    AVOptionRange *range = av_mallocz(sizeof(*range));
-    const AVOption *field = av_opt_find(obj, key, NULL, 0, flags);
-    int ret;
+    AVOptionRanges *ranges = av_mallocz(حجم(*ranges));
+    AVOptionRange **range_array = av_mallocz(حجم(خالی*));
+    AVOptionRange *range = av_mallocz(حجم(*range));
+    ثابت AVOption *میدان = av_opt_ڈھونڈو(obj, کلید, تہی, 0, flags);
+    صحیح ret;
 
-    *ranges_arg = NULL;
+    *ranges_arg = تہی;
 
-    if (!ranges || !range || !range_array || !field) {
+    اگر (!ranges || !range || !range_array || !میدان) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        جاؤ fail;
     }
 
     ranges->range = range_array;
@@ -2584,69 +2584,69 @@ int av_opt_query_ranges_default(AVOptionRanges **ranges_arg, void *obj, const ch
     ranges->nb_ranges = 1;
     ranges->nb_components = 1;
     range->is_range = 1;
-    range->value_min = field->min;
-    range->value_max = field->max;
+    range->قدر_min = میدان->min;
+    range->قدر_max = میدان->max;
 
-    switch (field->type) {
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_PIXEL_FMT:
-    case AV_OPT_TYPE_SAMPLE_FMT:
-    case AV_OPT_TYPE_FLOAT:
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_COLOR:
-        break;
-    case AV_OPT_TYPE_STRING:
+    انتخاب (میدان->type) {
+    حالت AV_OPT_TYPE_BOOL:
+    حالت AV_OPT_TYPE_INT:
+    حالت AV_OPT_TYPE_UINT:
+    حالت AV_OPT_TYPE_INT64:
+    حالت AV_OPT_TYPE_UINT64:
+    حالت AV_OPT_TYPE_PIXEL_FMT:
+    حالت AV_OPT_TYPE_SAMPLE_FMT:
+    حالت AV_OPT_TYPE_FLOAT:
+    حالت AV_OPT_TYPE_DOUBLE:
+    حالت AV_OPT_TYPE_DURATION:
+    حالت AV_OPT_TYPE_COLOR:
+        توڑو;
+    حالت AV_OPT_TYPE_STRING:
         range->component_min = 0;
         range->component_max = 0x10FFFF; // max unicode value
-        range->value_min = -1;
-        range->value_max = INT_MAX;
-        break;
-    case AV_OPT_TYPE_RATIONAL:
+        range->قدر_min = -1;
+        range->قدر_max = زیادہ_سے_زیادہ_عدد;
+        توڑو;
+    حالت AV_OPT_TYPE_RATIONAL:
         range->component_min = INT_MIN;
-        range->component_max = INT_MAX;
-        break;
-    case AV_OPT_TYPE_IMAGE_SIZE:
+        range->component_max = زیادہ_سے_زیادہ_عدد;
+        توڑو;
+    حالت AV_OPT_TYPE_IMAGE_سائز:
         range->component_min = 0;
-        range->component_max = INT_MAX/128/8;
-        range->value_min = 0;
-        range->value_max = INT_MAX/8;
-        break;
-    case AV_OPT_TYPE_VIDEO_RATE:
+        range->component_max = زیادہ_سے_زیادہ_عدد/128/8;
+        range->قدر_min = 0;
+        range->قدر_max = زیادہ_سے_زیادہ_عدد/8;
+        توڑو;
+    حالت AV_OPT_TYPE_VIDEO_شرح:
         range->component_min = 1;
-        range->component_max = INT_MAX;
-        range->value_min = 1;
-        range->value_max = INT_MAX;
-        break;
-    default:
+        range->component_max = زیادہ_سے_زیادہ_عدد;
+        range->قدر_min = 1;
+        range->قدر_max = زیادہ_سے_زیادہ_عدد;
+        توڑو;
+    طےشدہ:
         ret = AVERROR(ENOSYS);
-        goto fail;
+        جاؤ fail;
     }
 
     *ranges_arg = ranges;
-    return 1;
+    واپس 1;
 fail:
     av_free(ranges);
     av_free(range);
     av_free(range_array);
-    return ret;
+    واپس ret;
 }
 
-void av_opt_freep_ranges(AVOptionRanges **rangesp)
+خالی av_opt_freep_ranges(AVOptionRanges **rangesp)
 {
-    int i;
+    صحیح i;
     AVOptionRanges *ranges = *rangesp;
 
-    if (!ranges)
-        return;
+    اگر (!ranges)
+        واپس;
 
-    for (i = 0; i < ranges->nb_ranges * ranges->nb_components; i++) {
+    برائے (i = 0; i < ranges->nb_ranges * ranges->nb_components; i++) {
         AVOptionRange *range = ranges->range[i];
-        if (range) {
+        اگر (range) {
             av_freep(&range->str);
             av_freep(&ranges->range[i]);
         }
@@ -2655,234 +2655,234 @@ void av_opt_freep_ranges(AVOptionRanges **rangesp)
     av_freep(rangesp);
 }
 
-int av_opt_is_set_to_default(void *obj, const AVOption *o)
+صحیح av_opt_is_سیٹ_مقصد_default(خالی *obj, ثابت AVOption *o)
 {
     int64_t i64;
-    double d;
+    دوہرا d;
     AVRational q;
-    int ret, w, h;
-    char *str;
-    void *dst;
+    صحیح ret, w, h;
+    حرف *str;
+    خالی *dst;
 
-    if (!o || !obj)
-        return AVERROR(EINVAL);
+    اگر (!o || !obj)
+        واپس AVERROR(EINVAL);
 
-    dst = ((uint8_t*)obj) + o->offset;
+    dst = ((uint8_t*)obj) + o->انحراف;
 
-    if (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
-        const char *def = o->default_val.arr ? o->default_val.arr->def : NULL;
+    اگر (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
+        ثابت حرف *def = o->default_val.arr ? o->default_val.arr->def : تہی;
         uint8_t *val;
 
         ret = opt_get_array(o, dst, &val);
-        if (ret < 0)
-            return ret;
+        اگر (ret < 0)
+            واپس ret;
 
-        if (!!val != !!def)
+        اگر (!!val != !!def)
             ret = 0;
-        else if (val)
+        ورنہ اگر (val)
             ret = !strcmp(val, def);
-        else
+        ورنہ
             ret = 1;
 
         av_freep(&val);
 
-        return ret;
+        واپس ret;
     }
 
-    switch (o->type) {
-    case AV_OPT_TYPE_CONST:
-        return 1;
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_PIXEL_FMT:
-    case AV_OPT_TYPE_SAMPLE_FMT:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
-        read_number(o, dst, NULL, NULL, &i64);
-        return o->default_val.i64 == i64;
-    case AV_OPT_TYPE_CHLAYOUT: {
+    انتخاب (o->type) {
+    حالت AV_OPT_TYPE_CONST:
+        واپس 1;
+    حالت AV_OPT_TYPE_BOOL:
+    حالت AV_OPT_TYPE_FLAGS:
+    حالت AV_OPT_TYPE_PIXEL_FMT:
+    حالت AV_OPT_TYPE_SAMPLE_FMT:
+    حالت AV_OPT_TYPE_INT:
+    حالت AV_OPT_TYPE_UINT:
+    حالت AV_OPT_TYPE_DURATION:
+    حالت AV_OPT_TYPE_INT64:
+    حالت AV_OPT_TYPE_UINT64:
+        read_نمبر(o, dst, تہی, تہی, &i64);
+        واپس o->default_val.i64 == i64;
+    حالت AV_OPT_TYPE_CHLAYOUT: {
         AVChannelLayout ch_layout = { 0 };
-        if (o->default_val.str) {
-            if ((ret = av_channel_layout_from_string(&ch_layout, o->default_val.str)) < 0)
-                return ret;
+        اگر (o->default_val.str) {
+            اگر ((ret = av_channel_layout_from_string(&ch_layout, o->default_val.str)) < 0)
+                واپس ret;
         }
         ret = !av_channel_layout_compare((AVChannelLayout *)dst, &ch_layout);
         av_channel_layout_uninit(&ch_layout);
-        return ret;
+        واپس ret;
     }
-    case AV_OPT_TYPE_STRING:
-        str = *(char **)dst;
-        if (str == o->default_val.str) //2 NULLs
-            return 1;
-        if (!str || !o->default_val.str) //1 NULL
-            return 0;
-        return !strcmp(str, o->default_val.str);
-    case AV_OPT_TYPE_DOUBLE:
-        d = *(double *)dst;
-        return o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
-    case AV_OPT_TYPE_FLOAT:
-        d = *(float *)dst;
-        return (float)o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
-    case AV_OPT_TYPE_RATIONAL: {
+    حالت AV_OPT_TYPE_STRING:
+        str = *(حرف **)dst;
+        اگر (str == o->default_val.str) //2 NULLs
+            واپس 1;
+        اگر (!str || !o->default_val.str) //1 NULL
+            واپس 0;
+        واپس !strcmp(str, o->default_val.str);
+    حالت AV_OPT_TYPE_DOUBLE:
+        d = *(دوہرا *)dst;
+        واپس o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
+    حالت AV_OPT_TYPE_FLOAT:
+        d = *(اعشاری *)dst;
+        واپس (اعشاری)o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
+    حالت AV_OPT_TYPE_RATIONAL: {
         AVRational v = *(AVRational *) dst;
-        q = av_d2q(o->default_val.dbl, INT_MAX);
-        return !av_cmp_q(v, q) || (!q.den && !v.den);
+        q = av_d2q(o->default_val.dbl, زیادہ_سے_زیادہ_عدد);
+        واپس !av_cmp_q(v, q) || (!q.den && !v.den);
     }
-    case AV_OPT_TYPE_BINARY: {
-        struct {
-            uint8_t *data;
-            int size;
+    حالت AV_OPT_TYPE_ثنائی: {
+        ساخت {
+            uint8_t *ڈیٹا;
+            صحیح سائز;
         } tmp = {0};
-        int opt_size = *(int *)((void **)dst + 1);
-        void *opt_ptr = *(void **)dst;
-        if (!opt_size && (!o->default_val.str || !strlen(o->default_val.str)))
-            return 1;
-        if (!opt_size ||  !o->default_val.str || !strlen(o->default_val.str ))
-            return 0;
-        if (opt_size != strlen(o->default_val.str) / 2)
-            return 0;
-        ret = set_string_binary(NULL, NULL, o->default_val.str, &tmp.data);
-        if (!ret)
-            ret = !memcmp(opt_ptr, tmp.data, tmp.size);
-        av_free(tmp.data);
-        return ret;
+        صحیح opt_سائز = *(صحیح *)((خالی **)dst + 1);
+        خالی *opt_ptr = *(خالی **)dst;
+        اگر (!opt_سائز && (!o->default_val.str || !لڑی_لمبائی(o->default_val.str)))
+            واپس 1;
+        اگر (!opt_سائز ||  !o->default_val.str || !لڑی_لمبائی(o->default_val.str ))
+            واپس 0;
+        اگر (opt_سائز != لڑی_لمبائی(o->default_val.str) / 2)
+            واپس 0;
+        ret = سیٹ_string_ثنائی(تہی, تہی, o->default_val.str, &tmp.ڈیٹا);
+        اگر (!ret)
+            ret = !memcmp(opt_ptr, tmp.ڈیٹا, tmp.سائز);
+        av_free(tmp.ڈیٹا);
+        واپس ret;
     }
-    case AV_OPT_TYPE_DICT: {
-        AVDictionary *dict1 = NULL;
+    حالت AV_OPT_TYPE_DICT: {
+        AVDictionary *dict1 = تہی;
         AVDictionary *dict2 = *(AVDictionary **)dst;
-        const AVDictionaryEntry *en1 = NULL;
-        const AVDictionaryEntry *en2 = NULL;
+        ثابت AVDictionary_اندراج *en1 = تہی;
+        ثابت AVDictionary_اندراج *en2 = تہی;
         ret = av_dict_parse_string(&dict1, o->default_val.str, "=", ":", 0);
-        if (ret < 0) {
+        اگر (ret < 0) {
             av_dict_free(&dict1);
-            return ret;
+            واپس ret;
         }
-        do {
+        کرو {
             en1 = av_dict_iterate(dict1, en1);
             en2 = av_dict_iterate(dict2, en2);
-        } while (en1 && en2 && !strcmp(en1->key, en2->key) && !strcmp(en1->value, en2->value));
+        } جب (en1 && en2 && !strcmp(en1->کلید, en2->کلید) && !strcmp(en1->قدر, en2->قدر));
         av_dict_free(&dict1);
-        return (!en1 && !en2);
+        واپس (!en1 && !en2);
     }
-    case AV_OPT_TYPE_IMAGE_SIZE:
-        if (!o->default_val.str || !strcmp(o->default_val.str, "none"))
+    حالت AV_OPT_TYPE_IMAGE_سائز:
+        اگر (!o->default_val.str || !strcmp(o->default_val.str, "none"))
             w = h = 0;
-        else if ((ret = av_parse_video_size(&w, &h, o->default_val.str)) < 0)
-            return ret;
-        return (w == *(int *)dst) && (h == *((int *)dst+1));
-    case AV_OPT_TYPE_VIDEO_RATE:
+        ورنہ اگر ((ret = av_parse_video_سائز(&w, &h, o->default_val.str)) < 0)
+            واپس ret;
+        واپس (w == *(صحیح *)dst) && (h == *((صحیح *)dst+1));
+    حالت AV_OPT_TYPE_VIDEO_شرح:
         q = (AVRational){0, 0};
-        if (o->default_val.str) {
-            if ((ret = av_parse_video_rate(&q, o->default_val.str)) < 0)
-                return ret;
+        اگر (o->default_val.str) {
+            اگر ((ret = av_parse_video_شرح(&q, o->default_val.str)) < 0)
+                واپس ret;
         }
-        return !av_cmp_q(*(AVRational*)dst, q);
-    case AV_OPT_TYPE_COLOR: {
+        واپس !av_cmp_q(*(AVRational*)dst, q);
+    حالت AV_OPT_TYPE_COLOR: {
         uint8_t color[4] = {0, 0, 0, 0};
-        if (o->default_val.str) {
-            if ((ret = av_parse_color(color, o->default_val.str, -1, NULL)) < 0)
-                return ret;
+        اگر (o->default_val.str) {
+            اگر ((ret = av_parse_color(color, o->default_val.str, -1, تہی)) < 0)
+                واپس ret;
         }
-        return !memcmp(color, dst, sizeof(color));
+        واپس !memcmp(color, dst, حجم(color));
     }
-    default:
+    طےشدہ:
         av_log(obj, AV_LOG_WARNING, "Not supported option type: %d, option name: %s\n", o->type, o->name);
-        break;
+        توڑو;
     }
-    return AVERROR_PATCHWELCOME;
+    واپس AVERROR_PATCHWELCOME;
 }
 
-int av_opt_is_set_to_default_by_name(void *obj, const char *name, int search_flags)
+صحیح av_opt_is_سیٹ_مقصد_default_by_name(خالی *obj, ثابت حرف *name, صحیح تلاش_flags)
 {
-    const AVOption *o;
-    void *target;
-    if (!obj)
-        return AVERROR(EINVAL);
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &target);
-    if (!o)
-        return AVERROR_OPTION_NOT_FOUND;
-    return av_opt_is_set_to_default(target, o);
+    ثابت AVOption *o;
+    خالی *ہدف;
+    اگر (!obj)
+        واپس AVERROR(EINVAL);
+    o = av_opt_find2(obj, name, تہی, 0, تلاش_flags, &ہدف);
+    اگر (!o)
+        واپس AVERROR_OPTION_NOT_ملا;
+    واپس av_opt_is_سیٹ_مقصد_default(ہدف, o);
 }
 
-static int opt_serialize(void *obj, int opt_flags, int flags, int *cnt,
-                         AVBPrint *bprint, const char key_val_sep, const char pairs_sep)
+ساکن صحیح opt_serialize(خالی *obj, صحیح opt_flags, صحیح flags, صحیح *cnt,
+                         AVBPrint *bprint, ثابت حرف کلید_val_sep, ثابت حرف جوڑے_sep)
 {
-    const AVOption *o = NULL;
-    void *child = NULL;
+    ثابت AVOption *o = تہی;
+    خالی *بچہ = تہی;
     uint8_t *buf;
-    int ret;
-    const char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    صحیح ret;
+    ثابت حرف special_chars[] = {جوڑے_sep, کلید_val_sep, '\0'};
 
-    if (flags & AV_OPT_SERIALIZE_SEARCH_CHILDREN)
-        while (child = av_opt_child_next(obj, child)) {
-            ret = opt_serialize(child, opt_flags, flags, cnt, bprint,
-                                key_val_sep, pairs_sep);
-            if (ret < 0)
-                return ret;
+    اگر (flags & AV_OPT_SERIALIZE_تلاش_CHILDREN)
+        جب (بچہ = av_opt_بچہ_اگلا(obj, بچہ)) {
+            ret = opt_serialize(بچہ, opt_flags, flags, cnt, bprint,
+                                کلید_val_sep, جوڑے_sep);
+            اگر (ret < 0)
+                واپس ret;
         }
 
-    while (o = av_opt_next(obj, o)) {
-        if (o->type == AV_OPT_TYPE_CONST)
-            continue;
-        if ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE)) {
-            if ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT)) {
-                if (o->flags == opt_flags)
-                    continue;
-            } else if ((o->flags & opt_flags) == opt_flags)
-                continue;
-        } else {
-            if ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT) && o->flags != opt_flags)
-                continue;
-            else if (((o->flags & opt_flags) != opt_flags))
-                continue;
+    جب (o = av_opt_اگلا(obj, o)) {
+        اگر (o->type == AV_OPT_TYPE_CONST)
+            جاری;
+        اگر ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE)) {
+            اگر ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT)) {
+                اگر (o->flags == opt_flags)
+                    جاری;
+            } ورنہ اگر ((o->flags & opt_flags) == opt_flags)
+                جاری;
+        } ورنہ {
+            اگر ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT) && o->flags != opt_flags)
+                جاری;
+            ورنہ اگر (((o->flags & opt_flags) != opt_flags))
+                جاری;
         }
-        if (flags & AV_OPT_SERIALIZE_SKIP_DEFAULTS && av_opt_is_set_to_default(obj, o) > 0)
-            continue;
-        if ((ret = av_opt_get(obj, o->name, 0, &buf)) < 0) {
-            av_bprint_finalize(bprint, NULL);
-            return ret;
+        اگر (flags & AV_OPT_SERIALIZE_SKIP_DEFAULTS && av_opt_is_سیٹ_مقصد_default(obj, o) > 0)
+            جاری;
+        اگر ((ret = av_opt_get(obj, o->name, 0, &buf)) < 0) {
+            av_bprint_finalize(bprint, تہی);
+            واپس ret;
         }
-        if (buf) {
-            if ((*cnt)++)
-                av_bprint_append_data(bprint, &pairs_sep, 1);
-            av_bprint_escape(bprint, o->name, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
-            av_bprint_append_data(bprint, &key_val_sep, 1);
-            av_bprint_escape(bprint, buf, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        اگر (buf) {
+            اگر ((*cnt)++)
+                av_bprint_append_ڈیٹا(bprint, &جوڑے_sep, 1);
+            av_bprint_escape(bprint, o->name, special_chars, AV_ESCAPE_منوال_BACKSLASH, 0);
+            av_bprint_append_ڈیٹا(bprint, &کلید_val_sep, 1);
+            av_bprint_escape(bprint, buf, special_chars, AV_ESCAPE_منوال_BACKSLASH, 0);
             av_freep(&buf);
         }
     }
 
-    return 0;
+    واپس 0;
 }
 
-int av_opt_serialize(void *obj, int opt_flags, int flags, char **buffer,
-                     const char key_val_sep, const char pairs_sep)
+صحیح av_opt_serialize(خالی *obj, صحیح opt_flags, صحیح flags, حرف **بفر,
+                     ثابت حرف کلید_val_sep, ثابت حرف جوڑے_sep)
 {
     AVBPrint bprint;
-    int ret, cnt = 0;
+    صحیح ret, cnt = 0;
 
-    if (pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
-        pairs_sep == '\\' || key_val_sep == '\\') {
+    اگر (جوڑے_sep == '\0' || کلید_val_sep == '\0' || جوڑے_sep == کلید_val_sep ||
+        جوڑے_sep == '\\' || کلید_val_sep == '\\') {
         av_log(obj, AV_LOG_ERROR, "Invalid separator(s) found.");
-        return AVERROR(EINVAL);
+        واپس AVERROR(EINVAL);
     }
 
-    if (!obj || !buffer)
-        return AVERROR(EINVAL);
+    اگر (!obj || !بفر)
+        واپس AVERROR(EINVAL);
 
-    *buffer = NULL;
-    av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
+    *بفر = تہی;
+    av_bprint_init(&bprint, 64, AV_BPRINT_سائز_UNLIMITED);
 
     ret = opt_serialize(obj, opt_flags, flags, &cnt, &bprint,
-                        key_val_sep, pairs_sep);
-    if (ret < 0)
-        return ret;
+                        کلید_val_sep, جوڑے_sep);
+    اگر (ret < 0)
+        واپس ret;
 
-    ret = av_bprint_finalize(&bprint, buffer);
-    if (ret < 0)
-        return ret;
-    return 0;
+    ret = av_bprint_finalize(&bprint, بفر);
+    اگر (ret < 0)
+        واپس ret;
+    واپس 0;
 }

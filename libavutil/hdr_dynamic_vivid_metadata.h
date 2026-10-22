@@ -18,21 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HDR_DYNAMIC_VIVID_METADATA_H
-#define AVUTIL_HDR_DYNAMIC_VIVID_METADATA_H
+#اگر_غیر_تعریف_شدہ AVUTIL_HDR_DYNAMIC_VIVID_METADATA_H
+#تعریف_کرو AVUTIL_HDR_DYNAMIC_VIVID_METADATA_H
 
-#include "frame.h"
-#include "rational.h"
+#شامل "frame.h"
+#شامل "rational.h"
 
 /**
  * HDR Vivid three spline params.
  */
-typedef struct AVHDRVivid3SplineParams {
+قسمتعریف ساخت AVHDRVivid3SplineParams {
     /**
      * The mode of three Spline. the value shall be in the range
      * of 0 to 3, inclusive.
      */
-    int th_mode;
+    صحیح th_منوال;
 
     /**
      * three_Spline_TH_enable_MB is in the range of 0.0 to 1.0, inclusive
@@ -74,67 +74,67 @@ typedef struct AVHDRVivid3SplineParams {
  * Color tone mapping parameters at a processing window in a dynamic metadata for
  * CUVA 005.1:2021.
  */
-typedef struct AVHDRVividColorToneMappingParams {
+قسمتعریف ساخت AVHDRVividColorToneMappingParams {
     /**
      * The nominal maximum display luminance of the targeted system display,
      * in multiples of 1.0/4095 candelas per square metre. The value shall be in
      * the range of 0.0 to 1.0, inclusive.
      */
-    AVRational targeted_system_display_maximum_luminance;
+    AVRational targeted_system_display_زیادہ_سے_زیادہ_luminance;
 
     /**
      * This flag indicates that transfer the base parameter(for value of 1)
      */
-    int base_enable_flag;
+    صحیح بنیاد_enable_flag;
 
     /**
      * base_param_m_p in the base parameter,
      * in multiples of 1.0/16383. The value shall be in
      * the range of 0.0 to 1.0, inclusive.
      */
-    AVRational base_param_m_p;
+    AVRational بنیاد_param_m_p;
 
     /**
      * base_param_m_m in the base parameter,
      * in multiples of 1.0/10. The value shall be in
      * the range of 0.0 to 6.3, inclusive.
      */
-    AVRational base_param_m_m;
+    AVRational بنیاد_param_m_m;
 
     /**
      * base_param_m_a in the base parameter,
      * in multiples of 1.0/1023. The value shall be in
      * the range of 0.0 to 1.0 inclusive.
      */
-    AVRational base_param_m_a;
+    AVRational بنیاد_param_m_a;
 
     /**
      * base_param_m_b in the base parameter,
      * in multiples of 1/1023. The value shall be in
      * the range of 0.0 to 1.0, inclusive.
      */
-    AVRational base_param_m_b;
+    AVRational بنیاد_param_m_b;
 
     /**
      * base_param_m_n in the base parameter,
      * in multiples of 1.0/10. The value shall be in
      * the range of 0.0 to 6.3, inclusive.
      */
-    AVRational base_param_m_n;
+    AVRational بنیاد_param_m_n;
 
     /**
      * indicates k1_0 in the base parameter,
      * base_param_k1 <= 1: k1_0 = base_param_k1
      * base_param_k1 > 1: reserved
      */
-    int base_param_k1;
+    صحیح بنیاد_param_k1;
 
     /**
      * indicates k2_0 in the base parameter,
      * base_param_k2 <= 1: k2_0 = base_param_k2
      * base_param_k2 > 1: reserved
      */
-    int base_param_k2;
+    صحیح بنیاد_param_k2;
 
     /**
      * indicates k3_0 in the base parameter,
@@ -142,31 +142,31 @@ typedef struct AVHDRVividColorToneMappingParams {
      * base_param_k3 == 2: k3_0 = maximum_maxrgb
      * base_param_k3 > 2: reserved
      */
-    int base_param_k3;
+    صحیح بنیاد_param_k3;
 
     /**
      * This flag indicates that delta mode of base parameter(for value of 1)
      */
-    int base_param_Delta_enable_mode;
+    صحیح بنیاد_param_Delta_enable_منوال;
 
     /**
      * base_param_Delta in the base parameter,
      * in multiples of 1.0/127. The value shall be in
      * the range of 0.0 to 1.0, inclusive.
      */
-    AVRational base_param_Delta;
+    AVRational بنیاد_param_Delta;
 
     /**
      * indicates 3Spline_enable_flag in the base parameter,
      * This flag indicates that transfer three Spline of base parameter(for value of 1)
      */
-    int three_Spline_enable_flag;
+    صحیح three_Spline_enable_flag;
 
     /**
      * The number of three Spline. The value shall be in the range
      * of 1 to 2, inclusive.
      */
-    int three_Spline_num;
+    صحیح three_Spline_عدد;
 
     AVHDRVivid3SplineParams three_spline[2];
 } AVHDRVividColorToneMappingParams;
@@ -176,7 +176,7 @@ typedef struct AVHDRVividColorToneMappingParams {
  * Color transform parameters at a processing window in a dynamic metadata for
  * CUVA 005.1:2021.
  */
-typedef struct AVHDRVividColorTransformParams {
+قسمتعریف ساخت AVHDRVividColorTransformParams {
     /**
      * Indicates the minimum brightness of the displayed content.
      * The values should be in the range of 0.0 to 1.0,
@@ -189,7 +189,7 @@ typedef struct AVHDRVividColorTransformParams {
      * The values should be in the range of 0.0 to 1.0,
      * inclusive and in multiples of 1/4095.
      */
-    AVRational average_maxrgb;
+    AVRational اوسط_قدر_maxrgb;
 
     /**
      * Indicates the variance brightness of the displayed content.
@@ -203,19 +203,19 @@ typedef struct AVHDRVividColorTransformParams {
      * The values should be in the range of 0.0 to 1.0, inclusive
      * and in multiples of 1/4095.
      */
-    AVRational maximum_maxrgb;
+    AVRational زیادہ_سے_زیادہ_maxrgb;
 
     /**
      * This flag indicates that the metadata for the tone mapping function in
      * the processing window is present (for value of 1).
      */
-    int tone_mapping_mode_flag;
+    صحیح tone_mapping_منوال_flag;
 
     /**
      * The number of tone mapping param. The value shall be in the range
      * of 1 to 2, inclusive.
      */
-    int tone_mapping_param_num;
+    صحیح tone_mapping_param_عدد;
 
     /**
      * The color tone mapping parameters.
@@ -226,13 +226,13 @@ typedef struct AVHDRVividColorTransformParams {
      * This flag indicates that the metadata for the color saturation mapping in
      * the processing window is present (for value of 1).
      */
-    int color_saturation_mapping_flag;
+    صحیح color_saturation_mapping_flag;
 
     /**
      * The number of color saturation param. The value shall be in the range
      * of 0 to 7, inclusive.
      */
-    int color_saturation_num;
+    صحیح color_saturation_عدد;
 
     /**
      * Indicates the color correction strength parameter.
@@ -253,17 +253,17 @@ typedef struct AVHDRVividColorTransformParams {
  * av_dynamic_hdr_vivid_alloc() and its size is not a part of
  * the public ABI.
  */
-typedef struct AVDynamicHDRVivid {
+قسمتعریف ساخت AVDynamicHDRVivid {
     /**
      * The system start code. The value shall be set to 0x01.
      */
-    uint8_t system_start_code;
+    uint8_t system_آغاز_رمز;
 
     /**
      * The number of processing windows. The value shall be set to 0x01
      * if the system_start_code is 0x01.
      */
-    uint8_t num_windows;
+    uint8_t عدد_windows;
 
     /**
      * The color transform parameters for every processing window.
@@ -278,7 +278,7 @@ typedef struct AVDynamicHDRVivid {
  * @return An AVDynamicHDRVivid filled with default values or NULL
  *         on failure.
  */
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size);
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *سائز);
 
 /**
  * Allocate a complete AVDynamicHDRVivid and add it to the frame.
@@ -287,6 +287,6 @@ AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size);
  * @return The AVDynamicHDRVivid structure to be filled by caller or NULL
  *         on failure.
  */
-AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame);
+AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_ڈیٹا(AVFrame *چوکھٹا);
 
-#endif /* AVUTIL_HDR_DYNAMIC_VIVID_METADATA_H */
+#اگر_ختم /* AVUTIL_HDR_DYNAMIC_VIVID_METADATA_H */

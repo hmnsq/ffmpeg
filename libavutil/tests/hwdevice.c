@@ -16,117 +16,117 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#شامل <stdio.h>
 
-#include "libavutil/hwcontext.h"
+#شامل "libavutil/hwcontext.h"
 
-static int test_derivation(AVBufferRef *src_ref, const char *src_name)
+ساکن صحیح test_derivation(AVBufferRef *src_ref, ثابت حرف *src_name)
 {
-    enum AVHWDeviceType derived_type;
-    const char *derived_name;
-    AVBufferRef *derived_ref = NULL, *back_ref = NULL;
+    شمار AVHWDeviceType derived_type;
+    ثابت حرف *derived_name;
+    AVBufferRef *derived_ref = تہی, *عقب_ref = تہی;
     AVHWDeviceContext *src_dev, *derived_dev;
-    int err;
+    صحیح err;
 
-    src_dev = (AVHWDeviceContext*)src_ref->data;
+    src_dev = (AVHWDeviceContext*)src_ref->ڈیٹا;
 
     derived_type = AV_HWDEVICE_TYPE_NONE;
-    while (1) {
+    جب (1) {
         derived_type = av_hwdevice_iterate_types(derived_type);
-        if (derived_type == AV_HWDEVICE_TYPE_NONE)
-            break;
+        اگر (derived_type == AV_HWDEVICE_TYPE_NONE)
+            توڑو;
 
         derived_name = av_hwdevice_get_type_name(derived_type);
 
         err = av_hwdevice_ctx_create_derived(&derived_ref, derived_type,
                                              src_ref, 0);
-        if (err < 0) {
+        اگر (err < 0) {
             fprintf(stderr, "Unable to derive %s -> %s: %d.\n",
                     src_name, derived_name, err);
-            continue;
+            جاری;
         }
 
-        derived_dev = (AVHWDeviceContext*)derived_ref->data;
-        if (derived_dev->type != derived_type) {
+        derived_dev = (AVHWDeviceContext*)derived_ref->ڈیٹا;
+        اگر (derived_dev->type != derived_type) {
             fprintf(stderr, "Device derived as type %d has type %d.\n",
                     derived_type, derived_dev->type);
-            goto fail;
+            جاؤ fail;
         }
 
-        if (derived_type == src_dev->type) {
-            if (derived_dev != src_dev) {
+        اگر (derived_type == src_dev->type) {
+            اگر (derived_dev != src_dev) {
                 fprintf(stderr, "Derivation of %s from itself succeeded "
                         "but did not return the same device.\n", src_name);
-                goto fail;
+                جاؤ fail;
             }
-            av_buffer_unref(&derived_ref);
-            continue;
+            av_بفر_unref(&derived_ref);
+            جاری;
         }
 
-        err = av_hwdevice_ctx_create_derived(&back_ref, src_dev->type,
+        err = av_hwdevice_ctx_create_derived(&عقب_ref, src_dev->type,
                                              derived_ref, 0);
-        if (err < 0) {
+        اگر (err < 0) {
             fprintf(stderr, "Derivation %s to %s succeeded, but derivation "
                     "back again failed: %d.\n",
                     src_name, derived_name, err);
-            goto fail;
+            جاؤ fail;
         }
 
-        if (back_ref->data != src_ref->data) {
+        اگر (عقب_ref->ڈیٹا != src_ref->ڈیٹا) {
             fprintf(stderr, "Derivation %s to %s succeeded, but derivation "
                     "back again did not return the original device.\n",
                    src_name, derived_name);
-            goto fail;
+            جاؤ fail;
         }
 
         fprintf(stderr, "Successfully tested derivation %s -> %s.\n",
                 src_name, derived_name);
 
-        av_buffer_unref(&derived_ref);
-        av_buffer_unref(&back_ref);
+        av_بفر_unref(&derived_ref);
+        av_بفر_unref(&عقب_ref);
     }
 
-    return 0;
+    واپس 0;
 
 fail:
-    av_buffer_unref(&derived_ref);
-    av_buffer_unref(&back_ref);
-    return -1;
+    av_بفر_unref(&derived_ref);
+    av_بفر_unref(&عقب_ref);
+    واپس -1;
 }
 
-static int test_device(enum AVHWDeviceType type, const char *name,
-                       const char *device, AVDictionary *opts, int flags)
+ساکن صحیح test_device(شمار AVHWDeviceType type, ثابت حرف *name,
+                       ثابت حرف *device, AVDictionary *opts, صحیح flags)
 {
     AVBufferRef *ref;
     AVHWDeviceContext *dev;
-    int err;
+    صحیح err;
 
     err = av_hwdevice_ctx_create(&ref, type, device, opts, flags);
-    if (err < 0) {
+    اگر (err < 0) {
         fprintf(stderr, "Failed to create %s device: %d.\n", name, err);
-        return 1;
+        واپس 1;
     }
 
-    dev = (AVHWDeviceContext*)ref->data;
-    if (dev->type != type) {
+    dev = (AVHWDeviceContext*)ref->ڈیٹا;
+    اگر (dev->type != type) {
         fprintf(stderr, "Device created as type %d has type %d.\n",
                 type, dev->type);
-        av_buffer_unref(&ref);
-        return -1;
+        av_بفر_unref(&ref);
+        واپس -1;
     }
 
     fprintf(stderr, "Device type %s successfully created.\n", name);
 
     err = test_derivation(ref, name);
 
-    av_buffer_unref(&ref);
+    av_بفر_unref(&ref);
 
-    return err;
+    واپس err;
 }
 
-static const struct {
-    enum AVHWDeviceType type;
-    const char *possible_devices[5];
+ساکن ثابت ساخت {
+    شمار AVHWDeviceType type;
+    ثابت حرف *possible_devices[5];
 } test_devices[] = {
     { AV_HWDEVICE_TYPE_CUDA,
       { "0", "1", "2" } },
@@ -145,78 +145,78 @@ static const struct {
       { "/dev/dri/renderD128", "/dev/dri/renderD129", ":0", "0", "1" } },
 };
 
-static int test_device_type(enum AVHWDeviceType type)
+ساکن صحیح test_device_type(شمار AVHWDeviceType type)
 {
-    enum AVHWDeviceType check;
-    const char *name;
-    int i, j, found, err;
+    شمار AVHWDeviceType check;
+    ثابت حرف *name;
+    صحیح i, j, ملا, err;
 
     name = av_hwdevice_get_type_name(type);
-    if (!name) {
+    اگر (!name) {
         fprintf(stderr, "No name available for device type %d.\n", type);
-        return -1;
+        واپس -1;
     }
 
-    check = av_hwdevice_find_type_by_name(name);
-    if (check != type) {
+    check = av_hwdevice_ڈھونڈو_type_by_name(name);
+    اگر (check != type) {
         fprintf(stderr, "Type %d maps to name %s maps to type %d.\n",
                type, name, check);
-        return -1;
+        واپس -1;
     }
 
-    found = 0;
+    ملا = 0;
 
-    err = test_device(type, name, NULL, NULL, 0);
-    if (err < 0) {
+    err = test_device(type, name, تہی, تہی, 0);
+    اگر (err < 0) {
         fprintf(stderr, "Test failed for %s with default options.\n", name);
-        return -1;
+        واپس -1;
     }
-    if (err == 0) {
+    اگر (err == 0) {
         fprintf(stderr, "Test passed for %s with default options.\n", name);
-        ++found;
+        ++ملا;
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(test_devices); i++) {
-        if (test_devices[i].type != type)
-            continue;
+    برائے (i = 0; i < FF_ARRAY_ELEMS(test_devices); i++) {
+        اگر (test_devices[i].type != type)
+            جاری;
 
-        for (j = 0; test_devices[i].possible_devices[j]; j++) {
+        برائے (j = 0; test_devices[i].possible_devices[j]; j++) {
             err = test_device(type, name,
                               test_devices[i].possible_devices[j],
-                              NULL, 0);
-            if (err < 0) {
+                              تہی, 0);
+            اگر (err < 0) {
                 fprintf(stderr, "Test failed for %s with device %s.\n",
                        name, test_devices[i].possible_devices[j]);
-                return -1;
+                واپس -1;
             }
-            if (err == 0) {
+            اگر (err == 0) {
                 fprintf(stderr, "Test passed for %s with device %s.\n",
                         name, test_devices[i].possible_devices[j]);
-                ++found;
+                ++ملا;
             }
         }
     }
 
-    return !found;
+    واپس !ملا;
 }
 
-int main(void)
+صحیح مین(خالی)
 {
-    enum AVHWDeviceType type = AV_HWDEVICE_TYPE_NONE;
-    int pass, fail, skip, err;
+    شمار AVHWDeviceType type = AV_HWDEVICE_TYPE_NONE;
+    صحیح pass, fail, skip, err;
 
     pass = fail = skip = 0;
-    while (1) {
+    جب (1) {
         type = av_hwdevice_iterate_types(type);
-        if (type == AV_HWDEVICE_TYPE_NONE)
-            break;
+        اگر (type == AV_HWDEVICE_TYPE_NONE)
+            توڑو;
 
         err = test_device_type(type);
-        if (err == 0)
+        اگر (err == 0)
             ++pass;
-        else if (err < 0)
+        ورنہ اگر (err < 0)
             ++fail;
-        else
+        ورنہ
             ++skip;
     }
 
@@ -224,5 +224,5 @@ int main(void)
             "%d passed, %d failed, %d skipped.\n",
             pass + fail + skip, pass, fail, skip);
 
-    return fail > 0;
+    واپس fail > 0;
 }

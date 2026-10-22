@@ -60,83 +60,83 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#شامل "attributes_internal.h"
+#شامل "uuid.h"
+#شامل "error.h"
+#شامل "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+صحیح av_uuid_parse(ثابت حرف *اندر, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    اگر (لڑی_لمبائی(اندر) != 36)
+        واپس AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    واپس av_uuid_parse_range(اندر, اندر + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+ساکن صحیح xdigit_مقصد_int(حرف c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    اگر (c >= 'a' && c <= 'f')
+        واپس c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    اگر (c >= '0' && c <= '9')
+        واپس c - '0';
 
-    return -1;
+    واپس -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+صحیح av_uuid_parse_range(ثابت حرف *اندر_آغاز, ثابت حرف *اندر_انتہا, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    صحیح i;
+    ثابت حرف *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    اگر ((اندر_انتہا - اندر_آغاز) != 36)
+        واپس AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    برائے (i = 0, cp = اندر_آغاز; i < 16; i++) {
+        صحیح hi;
+        صحیح lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        اگر (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
-        hi = xdigit_to_int(*cp++);
-        lo = xdigit_to_int(*cp++);
+        hi = xdigit_مقصد_int(*cp++);
+        lo = xdigit_مقصد_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        اگر (hi == -1 || lo == -1)
+            واپس AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    واپس 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+ساکن attribute_nonstring ثابت حرف hexdigits_زیریں[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+خالی av_uuid_unparse(ثابت AVUUID uuid, حرف *برآمد)
 {
-    char *p = out;
+    حرف *p = برآمد;
 
-    for (int i = 0; i < 16; i++) {
+    برائے (صحیح i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        اگر (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
-        *p++ = hexdigits_lower[tmp >> 4];
-        *p++ = hexdigits_lower[tmp & 15];
+        *p++ = hexdigits_زیریں[tmp >> 4];
+        *p++ = hexdigits_زیریں[tmp & 15];
     }
 
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+صحیح av_uuid_urn_parse(ثابت حرف *اندر, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    اگر (av_stristr(اندر, "urn:uuid:") != اندر)
+        واپس AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    واپس av_uuid_parse(اندر + 9, uu);
 }

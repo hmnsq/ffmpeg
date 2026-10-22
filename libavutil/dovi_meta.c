@@ -18,58 +18,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#شامل <string.h>
 
-#include "dovi_meta.h"
-#include "mem.h"
+#شامل "dovi_meta.h"
+#شامل "mem.h"
 
-AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
+AVDOVIDecoder_Configuration_ریکارڈ *av_dovi_alloc(size_t *سائز)
 {
-    AVDOVIDecoderConfigurationRecord *dovi =
-        av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
+    AVDOVIDecoder_Configuration_ریکارڈ *dovi =
+        av_mallocz(حجم(AVDOVIDecoder_Configuration_ریکارڈ));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    اگر (سائز)
+        *سائز = dovi ? حجم(*dovi) : 0;
 
-    return dovi;
+    واپس dovi;
 }
 
-typedef struct AVDOVIMetadataInternal {
+قسمتعریف ساخت AVDOVIMetadata_اندرونی {
     AVDOVIMetadata metadata;
-    AVDOVIRpuDataHeader header;
+    AVDOVIRpu_ڈیٹا_سرخی سرخی;
     AVDOVIDataMapping mapping;
     AVDOVIColorMetadata color;
-    AVDOVIDmData ext_blocks[AV_DOVI_MAX_EXT_BLOCKS];
-} AVDOVIMetadataInternal;
+    AVDOVIDm_ڈیٹا ext_بلاکیں[AV_DOVI_MAX_EXT_بلاکیں];
+} AVDOVIMetadata_اندرونی;
 
-AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
+AVDOVIMetadata *av_dovi_metadata_alloc(size_t *سائز)
 {
-    AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
+    AVDOVIMetadata_اندرونی *dovi = av_mallocz(حجم(AVDOVIMetadata_اندرونی));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    اگر (سائز)
+        *سائز = dovi ? حجم(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    اگر (!dovi)
+        واپس تہی;
 
-    dovi->metadata = (struct AVDOVIMetadata) {
-        .header_offset      = offsetof(AVDOVIMetadataInternal, header),
-        .mapping_offset     = offsetof(AVDOVIMetadataInternal, mapping),
-        .color_offset       = offsetof(AVDOVIMetadataInternal, color),
-        .ext_block_offset   = offsetof(AVDOVIMetadataInternal, ext_blocks),
-        .ext_block_size     = sizeof(AVDOVIDmData),
+    dovi->metadata = (ساخت AVDOVIMetadata) {
+        .سرخی_انحراف      = offsetof(AVDOVIMetadata_اندرونی, سرخی),
+        .mapping_انحراف     = offsetof(AVDOVIMetadata_اندرونی, mapping),
+        .color_انحراف       = offsetof(AVDOVIMetadata_اندرونی, color),
+        .ext_بلاک_انحراف   = offsetof(AVDOVIMetadata_اندرونی, ext_بلاکیں),
+        .ext_بلاک_سائز     = حجم(AVDOVIDm_ڈیٹا),
     };
 
-    return &dovi->metadata;
+    واپس &dovi->metadata;
 }
 
-AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
+AVDOVIDm_ڈیٹا *av_dovi_ڈھونڈو_level(ثابت AVDOVIMetadata *ڈیٹا, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
-        AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+    برائے (صحیح i = 0; i < ڈیٹا->عدد_ext_بلاکیں; i++) {
+        AVDOVIDm_ڈیٹا *ext = av_dovi_get_ext(ڈیٹا, i);
+        اگر (ext->level == level)
+            واپس ext;
     }
 
-    return NULL;
+    واپس تہی;
 }

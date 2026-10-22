@@ -23,10 +23,10 @@
  * simple arithmetic expression evaluator
  */
 
-#ifndef AVUTIL_EVAL_H
-#define AVUTIL_EVAL_H
+#اگر_غیر_تعریف_شدہ AVUTIL_EVAL_H
+#تعریف_کرو AVUTIL_EVAL_H
 
-typedef struct AVExpr AVExpr;
+قسمتعریف ساخت AVExpr AVExpr;
 
 /**
  * Parse and evaluate an expression.
@@ -47,11 +47,11 @@ typedef struct AVExpr AVExpr;
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse_and_eval(double *res, const char *s,
-                           const char * const *const_names, const double *const_values,
-                           const char * const *func1_names, double (* const *funcs1)(void *, double),
-                           const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                           void *opaque, int log_offset, void *log_ctx);
+صحیح av_اظہاریہ_parse_and_eval(دوہرا *res, ثابت حرف *s,
+                           ثابت حرف * ثابت *const_نام, ثابت دوہرا *const_اقدار,
+                           ثابت حرف * ثابت *func1_نام, دوہرا (* ثابت *funcs1)(خالی *, دوہرا),
+                           ثابت حرف * ثابت *func2_نام, دوہرا (* ثابت *funcs2)(خالی *, دوہرا, دوہرا),
+                           خالی *opaque, صحیح log_انحراف, خالی *log_ctx);
 
 /**
  * Parse an expression.
@@ -71,11 +71,11 @@ int av_expr_parse_and_eval(double *res, const char *s,
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse(AVExpr **expr, const char *s,
-                  const char * const *const_names,
-                  const char * const *func1_names, double (* const *funcs1)(void *, double),
-                  const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                  int log_offset, void *log_ctx);
+صحیح av_اظہاریہ_parse(AVExpr **اظہاریہ, ثابت حرف *s,
+                  ثابت حرف * ثابت *const_نام,
+                  ثابت حرف * ثابت *func1_نام, دوہرا (* ثابت *funcs1)(خالی *, دوہرا),
+                  ثابت حرف * ثابت *func2_نام, دوہرا (* ثابت *funcs2)(خالی *, دوہرا, دوہرا),
+                  صحیح log_انحراف, خالی *log_ctx);
 
 /**
  * Evaluate a previously parsed expression.
@@ -85,7 +85,7 @@ int av_expr_parse(AVExpr **expr, const char *s,
  * @param opaque a pointer which will be passed to all functions from funcs1 and funcs2
  * @return the value of the expression
  */
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
+دوہرا av_اظہاریہ_eval(AVExpr *e, ثابت دوہرا *const_اقدار, خالی *opaque);
 
 /**
  * Track the presence of variables and their number of occurrences in a parsed expression
@@ -96,7 +96,7 @@ double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
+صحیح av_اظہاریہ_گنتی_vars(AVExpr *e, غیرعلامتی *شمار_2, صحیح سائز);
 
 /**
  * Track the presence of user provided functions and their number of occurrences
@@ -111,12 +111,12 @@ int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg);
+صحیح av_اظہاریہ_گنتی_func(AVExpr *e, غیرعلامتی *شمار_2, صحیح سائز, صحیح arg);
 
 /**
  * Free a parsed expression previously created with av_expr_parse().
  */
-void av_expr_free(AVExpr *e);
+خالی av_اظہاریہ_free(AVExpr *e);
 
 /**
  * Parse the string in numstr and return its value as a double. If
@@ -135,6 +135,6 @@ void av_expr_free(AVExpr *e);
  * @param tail if non-NULL puts here the pointer to the char next
  * after the last parsed character
  */
-double av_strtod(const char *numstr, char **tail);
+دوہرا av_strtod(ثابت حرف *numstr, حرف **دم);
 
-#endif /* AVUTIL_EVAL_H */
+#اگر_ختم /* AVUTIL_EVAL_H */

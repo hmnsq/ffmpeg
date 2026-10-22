@@ -16,16 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_VULKAN_LOADER_H
-#define AVUTIL_VULKAN_LOADER_H
+#اگر_غیر_تعریف_شدہ AVUTIL_VULKAN_LOADER_H
+#تعریف_کرو AVUTIL_VULKAN_LOADER_H
 
-#include <stdio.h>
+#شامل <stdio.h>
 
-#include "avassert.h"
-#include "vulkan_functions.h"
+#شامل "avassert.h"
+#شامل "vulkan_functions.h"
 
 /* Macro to turn a function name into a loader struct */
-#define PFN_LOAD_INFO(req_inst, req_dev, ext_flag, name) \
+#تعریف_کرو PFN_بھرو_INFO(req_inst, req_dev, ext_flag, name) \
     {                                                    \
         req_inst,                                        \
         req_dev,                                         \
@@ -33,98 +33,98 @@
         ext_flag,                                        \
     },
 
-static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
-                                                int nb_extensions)
+ساکن اندرونی uint64_t ff_vk_extensions_مقصد_نقاب(ثابت حرف * ثابت *extensions,
+                                                صحیح nb_extensions)
 {
-    static const struct ExtensionMap {
-        const char *name;
+    ساکن ثابت ساخت ExtensionMap {
+        ثابت حرف *name;
         FFVulkanExtensions flag;
     } extension_map[] = {
         /* Instance extensions */
         { VK_EXT_DEBUG_UTILS_EXTENSION_NAME,                         FF_VK_EXT_DEBUG_UTILS            },
 
         /* Device extensions */
-#ifdef VK_KHR_shader_relaxed_extended_instruction
+#اگر_تعریف_شدہ VK_KHR_shader_relaxed_extended_instruction
         { VK_KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME, FF_VK_EXT_RELAXED_EXTENDED_INSTR },
-#endif
-        { VK_EXT_EXTERNAL_MEMORY_DMA_BUF_EXTENSION_NAME,   FF_VK_EXT_EXTERNAL_DMABUF_MEMORY },
+#اگر_ختم
+        { VK_EXT_EXTERNAL_حافظہ_DMA_BUF_EXTENSION_NAME,   FF_VK_EXT_EXTERNAL_DMABUF_حافظہ },
         { VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME, FF_VK_EXT_DRM_MODIFIER_FLAGS     },
-        { VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME,        FF_VK_EXT_EXTERNAL_FD_MEMORY     },
+        { VK_KHR_EXTERNAL_حافظہ_FD_EXTENSION_NAME,        FF_VK_EXT_EXTERNAL_FD_حافظہ     },
         { VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,     FF_VK_EXT_EXTERNAL_FD_SEM        },
-        { VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME,      FF_VK_EXT_EXTERNAL_HOST_MEMORY   },
+        { VK_EXT_EXTERNAL_حافظہ_HOST_EXTENSION_NAME,      FF_VK_EXT_EXTERNAL_HOST_حافظہ   },
         { VK_EXT_DEBUG_UTILS_EXTENSION_NAME,               FF_VK_EXT_DEBUG_UTILS            },
         { VK_EXT_PHYSICAL_DEVICE_DRM_EXTENSION_NAME,       FF_VK_EXT_DEVICE_DRM             },
         { VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME,       FF_VK_EXT_ATOMIC_FLOAT           },
-        { VK_KHR_COOPERATIVE_MATRIX_EXTENSION_NAME,        FF_VK_EXT_COOP_MATRIX            },
+        { VK_KHR_COOPERATIVE_میٹرکس_EXTENSION_NAME,        FF_VK_EXT_COOP_میٹرکس            },
         { VK_NV_OPTICAL_FLOW_EXTENSION_NAME,               FF_VK_EXT_OPTICAL_FLOW           },
         { VK_EXT_SHADER_OBJECT_EXTENSION_NAME,             FF_VK_EXT_SHADER_OBJECT          },
         { VK_KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME,    FF_VK_EXT_SUBGROUP_ROTATE        },
         { VK_EXT_HOST_IMAGE_COPY_EXTENSION_NAME,           FF_VK_EXT_HOST_IMAGE_COPY        },
-        { VK_KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME, FF_VK_EXT_EXPLICIT_MEM_LAYOUT },
-#ifdef VK_EXT_shader_long_vector
-        { VK_EXT_SHADER_LONG_VECTOR_EXTENSION_NAME,               FF_VK_EXT_LONG_VECTOR         },
-#endif
-#ifdef VK_EXT_shader_replicated_composites
+        { VK_KHR_WORKGROUP_حافظہ_EXPLICIT_LAYOUT_EXTENSION_NAME, FF_VK_EXT_EXPLICIT_MEM_LAYOUT },
+#اگر_تعریف_شدہ VK_EXT_shader_long_سمتیہ
+        { VK_EXT_SHADER_LONG_سمتیہ_EXTENSION_NAME,               FF_VK_EXT_LONG_سمتیہ         },
+#اگر_ختم
+#اگر_تعریف_شدہ VK_EXT_shader_replicated_composites
         { VK_EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME, FF_VK_EXT_REPLICATED_COMPOSITES   },
-#endif
-#ifdef VK_EXT_zero_initialize_device_memory
-        { VK_EXT_ZERO_INITIALIZE_DEVICE_MEMORY_EXTENSION_NAME, FF_VK_EXT_ZERO_INITIALIZE    },
-#endif
+#اگر_ختم
+#اگر_تعریف_شدہ VK_EXT_zero_initialize_device_حافظہ
+        { VK_EXT_ZERO_INITIALIZE_DEVICE_حافظہ_EXTENSION_NAME, FF_VK_EXT_ZERO_INITIALIZE    },
+#اگر_ختم
         { VK_KHR_VIDEO_MAINTENANCE_1_EXTENSION_NAME,       FF_VK_EXT_VIDEO_MAINTENANCE_1    },
-#ifdef VK_KHR_video_maintenance2
+#اگر_تعریف_شدہ VK_KHR_video_maintenance2
         { VK_KHR_VIDEO_MAINTENANCE_2_EXTENSION_NAME,       FF_VK_EXT_VIDEO_MAINTENANCE_2    },
-#endif
-#ifdef _WIN32
-        { VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME,     FF_VK_EXT_EXTERNAL_WIN32_MEMORY  },
+#اگر_ختم
+#اگر_تعریف_شدہ _WIN32
+        { VK_KHR_EXTERNAL_حافظہ_WIN32_EXTENSION_NAME,     FF_VK_EXT_EXTERNAL_WIN32_حافظہ  },
         { VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME,  FF_VK_EXT_EXTERNAL_WIN32_SEM     },
-#endif
-        { VK_KHR_VIDEO_QUEUE_EXTENSION_NAME,               FF_VK_EXT_VIDEO_QUEUE            },
-        { VK_KHR_VIDEO_ENCODE_QUEUE_EXTENSION_NAME,        FF_VK_EXT_VIDEO_ENCODE_QUEUE     },
-        { VK_KHR_VIDEO_DECODE_QUEUE_EXTENSION_NAME,        FF_VK_EXT_VIDEO_DECODE_QUEUE     },
+#اگر_ختم
+        { VK_KHR_VIDEO_قطار_EXTENSION_NAME,               FF_VK_EXT_VIDEO_قطار            },
+        { VK_KHR_VIDEO_ENCODE_قطار_EXTENSION_NAME,        FF_VK_EXT_VIDEO_ENCODE_قطار     },
+        { VK_KHR_VIDEO_DECODE_قطار_EXTENSION_NAME,        FF_VK_EXT_VIDEO_DECODE_قطار     },
         { VK_KHR_VIDEO_ENCODE_H264_EXTENSION_NAME,         FF_VK_EXT_VIDEO_ENCODE_H264      },
         { VK_KHR_VIDEO_DECODE_H264_EXTENSION_NAME,         FF_VK_EXT_VIDEO_DECODE_H264      },
         { VK_KHR_VIDEO_ENCODE_H265_EXTENSION_NAME,         FF_VK_EXT_VIDEO_ENCODE_H265      },
         { VK_KHR_VIDEO_DECODE_H265_EXTENSION_NAME,         FF_VK_EXT_VIDEO_DECODE_H265      },
-#ifdef VK_KHR_video_decode_vp9
+#اگر_تعریف_شدہ VK_KHR_video_decode_vp9
         { VK_KHR_VIDEO_DECODE_VP9_EXTENSION_NAME,          FF_VK_EXT_VIDEO_DECODE_VP9       },
-#endif
+#اگر_ختم
         { VK_KHR_VIDEO_DECODE_AV1_EXTENSION_NAME,          FF_VK_EXT_VIDEO_DECODE_AV1       },
-        { VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME,           FF_VK_EXT_PUSH_DESCRIPTOR        },
-#ifdef VK_KHR_shader_expect_assume
+        { VK_KHR_ڈالو_DESCRIPTOR_EXTENSION_NAME,           FF_VK_EXT_ڈالو_DESCRIPTOR        },
+#اگر_تعریف_شدہ VK_KHR_shader_expect_assume
         { VK_KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME,      FF_VK_EXT_EXPECT_ASSUME          },
-#endif
-#ifdef VK_KHR_shader_maximal_reconvergence
+#اگر_ختم
+#اگر_تعریف_شدہ VK_KHR_shader_maximal_reconvergence
         { VK_KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME, FF_VK_EXT_MAXIMAL_RECONVERGENCE },
-#endif
-#ifdef VK_KHR_maintenance9
+#اگر_ختم
+#اگر_تعریف_شدہ VK_KHR_maintenance9
         { VK_KHR_MAINTENANCE_9_EXTENSION_NAME,             FF_VK_EXT_MAINTENANCE_9          },
-#endif
-#ifdef VK_KHR_unified_image_layouts
+#اگر_ختم
+#اگر_تعریف_شدہ VK_KHR_unified_image_layouts
         { VK_KHR_UNIFIED_IMAGE_LAYOUTS_EXTENSION_NAME,     FF_VK_EXT_UNIFIED_IMAGE_LAYOUTS  },
-#endif
-#ifdef VK_KHR_video_encode_av1
+#اگر_ختم
+#اگر_تعریف_شدہ VK_KHR_video_encode_av1
         { VK_KHR_VIDEO_ENCODE_AV1_EXTENSION_NAME,          FF_VK_EXT_VIDEO_ENCODE_AV1       },
-#endif
-#ifdef VK_KHR_internally_synchronized_queues
-        { VK_KHR_INTERNALLY_SYNCHRONIZED_QUEUES_EXTENSION_NAME, FF_VK_EXT_INTERNAL_QUEUE_SYNC   },
-#endif
-#ifdef VK_KHR_maintenance11
+#اگر_ختم
+#اگر_تعریف_شدہ VK_KHR_internally_synchronized_queues
+        { VK_KHR_INTERNALLY_SYNCHRONIZED_QUEUES_EXTENSION_NAME, FF_VK_EXT_اندرونی_قطار_SYNC   },
+#اگر_ختم
+#اگر_تعریف_شدہ VK_KHR_maintenance11
         { VK_KHR_MAINTENANCE_11_EXTENSION_NAME,            FF_VK_EXT_MAINTENANCE_11         },
-#endif
+#اگر_ختم
     };
 
-    FFVulkanExtensions mask = 0x0;
+    FFVulkanExtensions نقاب_2 = 0x0;
 
-    for (int i = 0; i < nb_extensions; i++) {
-        for (int j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
-            if (!strcmp(extensions[i], extension_map[j].name)) {
-                mask |= extension_map[j].flag;
-                continue;
+    برائے (صحیح i = 0; i < nb_extensions; i++) {
+        برائے (صحیح j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
+            اگر (!strcmp(extensions[i], extension_map[j].name)) {
+                نقاب_2 |= extension_map[j].flag;
+                جاری;
             }
         }
     }
 
-    return mask;
+    واپس نقاب_2;
 }
 
 /**
@@ -140,74 +140,74 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
  * plus you can be sure that any extensions you've enabled during device
  * initialization will be available.
  */
-static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
+ساکن اندرونی صحیح ff_vk_بھرو_functions(AVHWDeviceContext *ctx,
                                        FFVulkanFunctions *vk,
-                                       uint64_t extensions_mask,
-                                       int has_inst, int has_dev)
+                                       uint64_t extensions_نقاب,
+                                       صحیح has_inst, صحیح has_dev)
 {
     AVVulkanDeviceContext *hwctx = ctx->hwctx;
 
-    static const struct FunctionLoadInfo {
-        char req_inst;
-        char req_dev;
-        uint16_t struct_offset;
+    ساکن ثابت ساخت Function_بھرو_Info {
+        حرف req_inst;
+        حرف req_dev;
+        uint16_t struct_انحراف;
         FFVulkanExtensions ext_flag;
-    } vk_load_info[] = {
-        FN_LIST(PFN_LOAD_INFO)
-#ifdef _WIN32
-        FN_LIST_WIN32(PFN_LOAD_INFO)
-#endif
+    } vk_بھرو_info[] = {
+        FN_LIST(PFN_بھرو_INFO)
+#اگر_تعریف_شدہ _WIN32
+        FN_LIST_WIN32(PFN_بھرو_INFO)
+#اگر_ختم
     };
     // Concatenate the names to avoid relocations. The resulting string
     // will end with \0\0
-#define FUNC_NAME(req_inst, req_dev, ext_flag, name) "vk"#name"\0"
-    const char *name =
+#تعریف_کرو FUNC_NAME(req_inst, req_dev, ext_flag, name) "vk"#name"\0"
+    ثابت حرف *name =
         FN_LIST(FUNC_NAME)
-#ifdef _WIN32
+#اگر_تعریف_شدہ _WIN32
         FN_LIST_WIN32(FUNC_NAME)
-#endif
+#اگر_ختم
     ;
-#undef FUNC_NAME
+#تعریف_منسوخ FUNC_NAME
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
-        const struct FunctionLoadInfo *load = &vk_load_info[i];
-        static const char extensions[][4] = { "", "EXT", "KHR" };
+    برائے (صحیح i = 0; i < FF_ARRAY_ELEMS(vk_بھرو_info); name += لڑی_لمبائی(name) + 1, i++) {
+        ثابت ساخت Function_بھرو_Info *بھرو = &vk_بھرو_info[i];
+        ساکن ثابت حرف extensions[][4] = { "", "EXT", "KHR" };
         PFN_vkVoidFunction fn;
 
-        if (load->req_dev  && !has_dev)
-            continue;
-        if (load->req_inst && !has_inst)
-            continue;
+        اگر (بھرو->req_dev  && !has_dev)
+            جاری;
+        اگر (بھرو->req_inst && !has_inst)
+            جاری;
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
-            char ext_name[128];
-            av_unused int n;
+        برائے (صحیح j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
+            حرف ext_name[128];
+            av_غیر_مستعمل صحیح n;
 
-            n = snprintf(ext_name, sizeof(ext_name), "%s%s", name, extensions[j]);
-            av_assert1(n < sizeof(ext_name));
+            n = snprintf(ext_name, حجم(ext_name), "%s%s", name, extensions[j]);
+            av_assert1(n < حجم(ext_name));
 
-            if (load->req_dev)
+            اگر (بھرو->req_dev)
                 fn = vk->GetDeviceProcAddr(hwctx->act_dev, ext_name);
-            else if (load->req_inst)
+            ورنہ اگر (بھرو->req_inst)
                 fn = hwctx->get_proc_addr(hwctx->inst, ext_name);
-            else
-                fn = hwctx->get_proc_addr(NULL, ext_name);
+            ورنہ
+                fn = hwctx->get_proc_addr(تہی, ext_name);
 
-            if (fn)
-                break;
+            اگر (fn)
+                توڑو;
         }
 
-        if (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
+        اگر (!fn && ((extensions_نقاب &~ FF_VK_EXT_NO_FLAG) & بھرو->ext_flag)) {
             av_log(ctx, AV_LOG_ERROR, "Loader error, function \"%s\" indicated "
                    "as supported, but got NULL function pointer!\n", name);
-            return AVERROR_EXTERNAL;
+            واپس AVERROR_EXTERNAL;
         }
 
-        *(PFN_vkVoidFunction *)((uint8_t *)vk + load->struct_offset) = fn;
+        *(PFN_vkVoidFunction *)((uint8_t *)vk + بھرو->struct_انحراف) = fn;
     }
     av_assert1(*name == '\0');
 
-    return 0;
+    واپس 0;
 }
 
-#endif /* AVUTIL_VULKAN_LOADER_H */
+#اگر_ختم /* AVUTIL_VULKAN_LOADER_H */

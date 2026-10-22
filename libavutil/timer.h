@@ -23,104 +23,104 @@
  * high precision timer, useful to profile code
  */
 
-#ifndef AVUTIL_TIMER_H
-#define AVUTIL_TIMER_H
+#اگر_غیر_تعریف_شدہ AVUTIL_TIMER_H
+#تعریف_کرو AVUTIL_TIMER_H
 
-#include "config.h"
+#شامل "config.h"
 
-#if CONFIG_LINUX_PERF
-# ifndef _GNU_SOURCE
-#  define _GNU_SOURCE
+#اگر CONFIG_LINUX_PERF
+# ifndef GNU_ماخذ
+#  define GNU_ماخذ
 # endif
 # include <unistd.h> // read(3)
 # include <sys/ioctl.h>
 # include <asm/unistd.h>
 # include <linux/perf_event.h>
-#endif
+#اگر_ختم
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <inttypes.h>
+#شامل <stdlib.h>
+#شامل <stdint.h>
+#شامل <inttypes.h>
 
-#if CONFIG_MACOS_KPERF
-#include "macos_kperf.h"
-#endif
+#اگر CONFIG_MACOS_KPERF
+#شامل "macos_kperf.h"
+#اگر_ختم
 
-#if HAVE_MACH_ABSOLUTE_TIME
-#include <mach/mach_time.h>
-#elif HAVE_CLOCK_GETTIME
-#include <time.h>
-#endif
+#اگر HAVE_MACH_ABSOLUTE_وقت
+#شامل <mach/mach_time.h>
+#وگرنہ_اگر HAVE_CLOCK_GETTIME
+#شامل <time.h>
+#اگر_ختم
 
-#include "common.h"
-#include "log.h"
+#شامل "common.h"
+#شامل "log.h"
 
-#if   ARCH_AARCH64
+#اگر   ARCH_AARCH64
 #   include "aarch64/timer.h"
-#elif ARCH_PPC
+#وگرنہ_اگر ARCH_PPC
 #   include "ppc/timer.h"
-#elif ARCH_X86
+#وگرنہ_اگر ARCH_X86
 #   include "x86/timer.h"
-#elif ARCH_LOONGARCH
+#وگرنہ_اگر ARCH_LOONGARCH
 #   include "loongarch/timer.h"
-#endif
+#اگر_ختم
 
-#if !defined(AV_READ_TIME)
-#   if HAVE_GETHRTIME
-#       define AV_READ_TIME gethrtime
-#   elif HAVE_MACH_ABSOLUTE_TIME
-#       define AV_READ_TIME mach_absolute_time
+#اگر !defined(AV_READ_وقت)
+#   اگر HAVE_GETHRTIME
+#       define AV_READ_وقت gethrtime
+#   elif HAVE_MACH_ABSOLUTE_وقت
+#       define AV_READ_وقت mach_absolute_وقت
 #   elif HAVE_CLOCK_GETTIME && defined(CLOCK_MONOTONIC)
-        static inline int64_t ff_read_time(void)
+        ساکن اندرونی int64_t ff_read_وقت(خالی)
         {
-            struct timespec ts;
+            ساخت timespec ts;
             clock_gettime(CLOCK_MONOTONIC, &ts);
-            return ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
+            واپس ts.tv_sec * INT64_C(1000000000) + ts.tv_nsec;
         }
-#       define AV_READ_TIME ff_read_time
+#       define AV_READ_وقت ff_read_وقت
 #       define FF_TIMER_UNITS "ns"
 #   endif
-#endif
+#اگر_ختم
 
-#ifndef FF_TIMER_UNITS
+#اگر_غیر_تعریف_شدہ FF_TIMER_UNITS
 #   define FF_TIMER_UNITS "UNITS"
-#endif
+#اگر_ختم
 
-#define TIMER_REPORT(id, tdiff)                                           \
+#تعریف_کرو TIMER_REPORT(id, tdiff)                                           \
     {                                                                     \
-        static uint64_t tsum   = 0;                                       \
-        static int tcount      = 0;                                       \
-        static int tskip_count = 0;                                       \
-        static int thistogram[32] = {0};                                  \
+        ساکن uint64_t tsum   = 0;                                       \
+        ساکن صحیح tcount      = 0;                                       \
+        ساکن صحیح tskip_گنتی = 0;                                       \
+        ساکن صحیح thistogram[32] = {0};                                  \
         thistogram[av_log2(tdiff)]++;                                     \
-        if (tcount < 2                ||                                  \
+        اگر (tcount < 2                ||                                  \
             (tdiff) < 8 * tsum / tcount ||                                \
             (tdiff) < 2000) {                                             \
             tsum += (tdiff);                                              \
             tcount++;                                                     \
-        } else                                                            \
-            tskip_count++;                                                \
-        if (((tcount + tskip_count) & (tcount + tskip_count - 1)) == 0) { \
-            int i;                                                        \
-            av_log(NULL, AV_LOG_ERROR,                                    \
+        } ورنہ                                                            \
+            tskip_گنتی++;                                                \
+        اگر (((tcount + tskip_گنتی) & (tcount + tskip_گنتی - 1)) == 0) { \
+            صحیح i;                                                        \
+            av_log(تہی, AV_LOG_ERROR,                                    \
                    "%7" PRIu64 " " FF_TIMER_UNITS " in %s,%8d runs,%7d skips",\
-                   tsum * 10 / tcount, id, tcount, tskip_count);          \
-            for (i = 0; i < 32; i++)                                      \
-                av_log(NULL, AV_LOG_VERBOSE, " %2d", av_log2(2*thistogram[i]));\
-            av_log(NULL, AV_LOG_ERROR, "\n");                             \
+                   tsum * 10 / tcount, id, tcount, tskip_گنتی);          \
+            برائے (i = 0; i < 32; i++)                                      \
+                av_log(تہی, AV_LOG_VERBOSE, " %2d", av_log2(2*thistogram[i]));\
+            av_log(تہی, AV_LOG_ERROR, "\n");                             \
         }                                                                 \
     }
 
-#if CONFIG_LINUX_PERF
+#اگر CONFIG_LINUX_PERF
 
-#define START_TIMER                                                         \
-    static int linux_perf_fd = -1;                                          \
+#تعریف_کرو آغاز_TIMER                                                         \
+    ساکن صحیح linux_perf_fd = -1;                                          \
     uint64_t tperf;                                                         \
-    if (linux_perf_fd == -1) {                                              \
-        struct perf_event_attr attr = {                                     \
+    اگر (linux_perf_fd == -1) {                                              \
+        ساخت perf_event_attr attr = {                                     \
             .type           = PERF_TYPE_HARDWARE,                           \
-            .size           = sizeof(struct perf_event_attr),               \
-            .config         = PERF_COUNT_HW_CPU_CYCLES,                     \
+            .سائز           = حجم(ساخت perf_event_attr),               \
+            .config         = PERF_گنتی_HW_CPU_ادوار,                     \
             .disabled       = 1,                                            \
             .exclude_kernel = 1,                                            \
             .exclude_hv     = 1,                                            \
@@ -128,41 +128,41 @@
         linux_perf_fd = syscall(__NR_perf_event_open, &attr,                \
                                 0, -1, -1, 0);                              \
     }                                                                       \
-    if (linux_perf_fd == -1) {                                              \
-        av_log(NULL, AV_LOG_ERROR, "perf_event_open failed: %s\n",          \
+    اگر (linux_perf_fd == -1) {                                              \
+        av_log(تہی, AV_LOG_ERROR, "perf_event_open failed: %s\n",          \
                av_err2str(AVERROR(errno)));                                 \
-    } else {                                                                \
+    } ورنہ {                                                                \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_RESET, 0);                      \
         ioctl(linux_perf_fd, PERF_EVENT_IOC_ENABLE, 0);                     \
     }
 
-#define STOP_TIMER(id)                                                      \
+#تعریف_کرو STOP_TIMER(id)                                                      \
     ioctl(linux_perf_fd, PERF_EVENT_IOC_DISABLE, 0);                        \
-    if (read(linux_perf_fd, &tperf, sizeof(tperf)) != sizeof(tperf))        \
+    اگر (اقرأ(linux_perf_fd, &tperf, حجم(tperf)) != حجم(tperf))        \
         tperf = 0;                                                          \
     TIMER_REPORT(id, tperf)
 
-#elif CONFIG_MACOS_KPERF
+#وگرنہ_اگر CONFIG_MACOS_KPERF
 
-#define START_TIMER                                                         \
+#تعریف_کرو آغاز_TIMER                                                         \
     uint64_t tperf;                                                         \
     ff_kperf_init();                                                        \
-    tperf = ff_kperf_cycles();
+    tperf = ff_kperf_ادوار();
 
-#define STOP_TIMER(id)                                                      \
-    TIMER_REPORT(id, ff_kperf_cycles() - tperf);
+#تعریف_کرو STOP_TIMER(id)                                                      \
+    TIMER_REPORT(id, ff_kperf_ادوار() - tperf);
 
-#elif defined(AV_READ_TIME)
-#define START_TIMER                             \
+#وگرنہ_اگر defined(AV_READ_وقت)
+#تعریف_کرو آغاز_TIMER                             \
     uint64_t tend;                              \
-    uint64_t tstart = AV_READ_TIME();           \
+    uint64_t tstart = AV_READ_وقت();           \
 
-#define STOP_TIMER(id)                                                    \
-    tend = AV_READ_TIME();                                                \
+#تعریف_کرو STOP_TIMER(id)                                                    \
+    tend = AV_READ_وقت();                                                \
     TIMER_REPORT(id, tend - tstart)
-#else
-#define START_TIMER
-#define STOP_TIMER(id) { }
-#endif
+#ورنہ
+#تعریف_کرو آغاز_TIMER
+#تعریف_کرو STOP_TIMER(id) { }
+#اگر_ختم
 
-#endif /* AVUTIL_TIMER_H */
+#اگر_ختم /* AVUTIL_TIMER_H */

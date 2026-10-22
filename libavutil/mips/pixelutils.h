@@ -16,26 +16,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MIPS_PIXELUTILS_H
-#define AVUTIL_MIPS_PIXELUTILS_H
+#اگر_غیر_تعریف_شدہ AVUTIL_MIPS_PIXELUTILS_H
+#تعریف_کرو AVUTIL_MIPS_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#شامل <stddef.h>
+#شامل <stdint.h>
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#شامل "cpu.h"
+#شامل "libavutil/attributes.h"
+#شامل "libavutil/cpu.h"
+#شامل "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_msa(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+صحیح ff_pixelutils_sad16_msa(ثابت uint8_t *src1, ptrdiff_t stride1,
+                            ثابت uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, int aligned)
+ساکن اندرونی av_cold خالی ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, صحیح aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    صحیح cpu_flags = av_get_cpu_flags();
 
-    if (have_msa(cpu_flags)) {
+    اگر (have_msa(cpu_flags)) {
         sad[3] = ff_pixelutils_sad16_msa;
     }
 }
-#endif
+#اگر_ختم

@@ -30,33 +30,33 @@
  * @ingroup lavu_adler32
  */
 
-#include "config.h"
-#include "adler32.h"
-#include "intreadwrite.h"
-#include "macros.h"
+#شامل "config.h"
+#شامل "adler32.h"
+#شامل "intreadwrite.h"
+#شامل "macros.h"
 
-#define BASE 65521L /* largest prime smaller than 65536 */
+#تعریف_کرو بنیاد 65521L /* largest prime smaller than 65536 */
 
-#define DO1(buf)  { s1 += *buf++; s2 += s1; }
-#define DO4(buf)  DO1(buf); DO1(buf); DO1(buf); DO1(buf);
-#define DO16(buf) DO4(buf); DO4(buf); DO4(buf); DO4(buf);
+#تعریف_کرو DO1(buf)  { s1 += *buf++; s2 += s1; }
+#تعریف_کرو DO4(buf)  DO1(buf); DO1(buf); DO1(buf); DO1(buf);
+#تعریف_کرو DO16(buf) DO4(buf); DO4(buf); DO4(buf); DO4(buf);
 
-AVAdler av_adler32_update(AVAdler adler, const uint8_t *buf, size_t len)
+AVAdler av_adler32_update(AVAdler adler, ثابت uint8_t *buf, size_t len)
 {
-    unsigned long s1 = adler & 0xffff;
-    unsigned long s2 = adler >> 16;
+    غیرعلامتی طویل s1 = adler & 0xffff;
+    غیرعلامتی طویل s2 = adler >> 16;
 
-    while (len > 0) {
-#if HAVE_FAST_64BIT && HAVE_FAST_UNALIGNED && !CONFIG_SMALL
-        unsigned len2 = FFMIN((len-1) & ~7, 23*8);
-        if (len2) {
+    جب (len > 0) {
+#اگر HAVE_FAST_64_ثنائی_ہندسہ && HAVE_FAST_UNALIGNED && !CONFIG_SMALL
+        غیرعلامتی len2 = FFMIN((len-1) & ~7, 23*8);
+        اگر (len2) {
             uint64_t a1= 0;
             uint64_t a2= 0;
             uint64_t b1= 0;
             uint64_t b2= 0;
             len -= len2;
             s2 += s1*len2;
-            while (len2 >= 8) {
+            جب (len2 >= 8) {
                 uint64_t v = AV_RN64(buf);
                 a2 += a1;
                 b2 += b1;
@@ -72,25 +72,25 @@ AVAdler av_adler32_update(AVAdler adler, const uint8_t *buf, size_t len)
             //of the inner loop
             s1 += ((a1+b1)*0x1000100010001)>>48;
             s2 += ((((a2&0xFFFF0000FFFF)+(b2&0xFFFF0000FFFF)+((a2>>16)&0xFFFF0000FFFF)+((b2>>16)&0xFFFF0000FFFF))*0x800000008)>>32)
-#if HAVE_BIGENDIAN
+#اگر HAVE_BIGENDIAN
                  + 2*((b1*0x1000200030004)>>48)
                  +   ((a1*0x1000100010001)>>48)
                  + 2*((a1*0x0000100020003)>>48);
-#else
+#ورنہ
                  + 2*((a1*0x4000300020001)>>48)
                  +   ((b1*0x1000100010001)>>48)
                  + 2*((b1*0x3000200010000)>>48);
-#endif
+#اگر_ختم
         }
-#else
-        while (len > 4  && s2 < (1U << 31)) {
+#ورنہ
+        جب (len > 4  && s2 < (1U << 31)) {
             DO4(buf);
             len -= 4;
         }
-#endif
+#اگر_ختم
         DO1(buf); len--;
-        s1 %= BASE;
-        s2 %= BASE;
+        s1 %= بنیاد;
+        s2 %= بنیاد;
     }
-    return (s2 << 16) | s1;
+    واپس (s2 << 16) | s1;
 }

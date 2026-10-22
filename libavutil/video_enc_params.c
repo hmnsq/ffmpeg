@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#شامل <stddef.h>
+#شامل <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#شامل "buffer.h"
+#شامل "frame.h"
+#شامل "mem.h"
+#شامل "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(شمار AVVideoEncParamsType type,
+                                            غیرعلامتی صحیح nb_بلاکیں, size_t *برآمد_سائز)
 {
-    struct TestStruct {
+    ساخت TestStruct {
         AVVideoEncParams   p;
-        AVVideoBlockParams b;
+        AVVideo_بلاک_Params b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
-    size_t size = blocks_offset;
+    ثابت size_t بلاکیں_انحراف = offsetof(ساخت TestStruct, b);
+    size_t سائز = بلاکیں_انحراف;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    اگر (nb_بلاکیں > (SIZE_MAX - سائز) / حجم(AVVideo_بلاک_Params))
+        واپس تہی;
+    سائز += حجم(AVVideo_بلاک_Params) * nb_بلاکیں;
 
-    par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    par = av_mallocz(سائز);
+    اگر (!par)
+        واپس تہی;
 
     par->type          = type;
-    par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
-    par->blocks_offset = blocks_offset;
+    par->nb_بلاکیں     = nb_بلاکیں;
+    par->بلاک_سائز    = حجم(AVVideo_بلاک_Params);
+    par->بلاکیں_انحراف = بلاکیں_انحراف;
 
-    if (out_size)
-        *out_size = size;
+    اگر (برآمد_سائز)
+        *برآمد_سائز = سائز;
 
-    return par;
+    واپس par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_ڈیٹا(AVFrame *چوکھٹا, شمار AVVideoEncParamsType type,
+                                     غیرعلامتی صحیح nb_بلاکیں)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
-    size_t size;
+    size_t سائز;
 
-    par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    par = av_video_enc_params_alloc(type, nb_بلاکیں, &سائز);
+    اگر (!par)
+        واپس تہی;
+    buf = av_بفر_create((uint8_t *)par, سائز, تہی, تہی, 0);
+    اگر (!buf) {
         av_freep(&par);
-        return NULL;
+        واپس تہی;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    اگر (!av_چوکھٹا_new_side_ڈیٹا_from_buf(چوکھٹا, AV_چوکھٹا_ڈیٹا_VIDEO_ENC_PARAMS, buf)) {
+        av_بفر_unref(&buf);
+        واپس تہی;
     }
 
-    return par;
+    واپس par;
 }
