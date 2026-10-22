@@ -20,48 +20,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <string.h>
 
-#include "avassert.h"
-#include "error.h"
-#include "fifo.h"
-#include "macros.h"
-#include "mem.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "fifo.h"
+#अन्तर्भाव "macros.h"
+#अन्तर्भाव "mem.h"
 
 // by default the FIFO can be auto-grown to 1MB
 #define AUTO_GROW_DEFAULT_BYTES (1024 * 1024)
 
-struct AVFifo {
+संरचना AVFifo {
     uint8_t *buffer;
 
-    size_t elem_size, nb_elems;
-    size_t offset_r, offset_w;
+    माप_प्रकार elem_size, nb_elems;
+    माप_प्रकार offset_r, offset_w;
     // distinguishes the ambiguous situation offset_r == offset_w
-    int    is_empty;
+    पूर्णांक    is_empty;
 
-    unsigned int flags;
-    size_t       auto_grow_limit;
+    अचिन्हित पूर्णांक flags;
+    माप_प्रकार       auto_grow_limit;
 };
 
-AVFifo *av_fifo_alloc2(size_t nb_elems, size_t elem_size,
-                       unsigned int flags)
+AVFifo *av_fifo_alloc2(माप_प्रकार nb_elems, माप_प्रकार elem_size,
+                       अचिन्हित पूर्णांक flags)
 {
     AVFifo *f;
-    void *buffer = NULL;
+    शून्य *buffer = रिक्त;
 
-    if (!elem_size)
-        return NULL;
+    जर (!elem_size)
+        परत रिक्त;
 
-    if (nb_elems) {
-        buffer = av_realloc_array(NULL, nb_elems, elem_size);
-        if (!buffer)
-            return NULL;
+    जर (nb_elems) {
+        buffer = av_realloc_array(रिक्त, nb_elems, elem_size);
+        जर (!buffer)
+            परत रिक्त;
     }
-    f = av_mallocz(sizeof(*f));
-    if (!f) {
+    f = av_mallocz(आकार(*f));
+    जर (!f) {
         av_free(buffer);
-        return NULL;
+        परत रिक्त;
     }
     f->buffer    = buffer;
     f->nb_elems  = nb_elems;
@@ -71,221 +71,221 @@ AVFifo *av_fifo_alloc2(size_t nb_elems, size_t elem_size,
     f->flags           = flags;
     f->auto_grow_limit = FFMAX(AUTO_GROW_DEFAULT_BYTES / elem_size, 1);
 
-    return f;
+    परत f;
 }
 
-void av_fifo_auto_grow_limit(AVFifo *f, size_t max_elems)
+शून्य av_fifo_auto_grow_limit(AVFifo *f, माप_प्रकार max_elems)
 {
     f->auto_grow_limit = max_elems;
 }
 
-size_t av_fifo_elem_size(const AVFifo *f)
+माप_प्रकार av_fifo_elem_size(स्थिरांक AVFifo *f)
 {
-    return f->elem_size;
+    परत f->elem_size;
 }
 
-size_t av_fifo_can_read(const AVFifo *f)
+माप_प्रकार av_fifo_can_read(स्थिरांक AVFifo *f)
 {
-    if (f->offset_w <= f->offset_r && !f->is_empty)
-        return f->nb_elems - f->offset_r + f->offset_w;
-    return f->offset_w - f->offset_r;
+    जर (f->offset_w <= f->offset_r && !f->is_empty)
+        परत f->nb_elems - f->offset_r + f->offset_w;
+    परत f->offset_w - f->offset_r;
 }
 
-size_t av_fifo_can_write(const AVFifo *f)
+माप_प्रकार av_fifo_can_write(स्थिरांक AVFifo *f)
 {
-    return f->nb_elems - av_fifo_can_read(f);
+    परत f->nb_elems - av_fifo_can_read(f);
 }
 
-int av_fifo_grow2(AVFifo *f, size_t inc)
+पूर्णांक av_fifo_grow2(AVFifo *f, माप_प्रकार inc)
 {
     uint8_t *tmp;
 
-    if (inc > SIZE_MAX - f->nb_elems)
-        return AVERROR(EINVAL);
+    जर (inc > SIZE_MAX - f->nb_elems)
+        परत AVERROR(EINVAL);
 
     tmp = av_realloc_array(f->buffer, f->nb_elems + inc, f->elem_size);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    जर (!tmp)
+        परत AVERROR(ENOMEM);
     f->buffer = tmp;
 
     // move the data from the beginning of the ring buffer
     // to the newly allocated space
-    if (f->offset_w <= f->offset_r && !f->is_empty) {
-        const size_t copy = FFMIN(inc, f->offset_w);
-        memcpy(tmp + f->nb_elems * f->elem_size, tmp, copy * f->elem_size);
-        if (copy < f->offset_w) {
-            memmove(tmp, tmp + copy * f->elem_size,
+    जर (f->offset_w <= f->offset_r && !f->is_empty) {
+        स्थिरांक माप_प्रकार copy = FFMIN(inc, f->offset_w);
+        स_नकल(tmp + f->nb_elems * f->elem_size, tmp, copy * f->elem_size);
+        जर (copy < f->offset_w) {
+            स_हटाओ(tmp, tmp + copy * f->elem_size,
                     (f->offset_w - copy) * f->elem_size);
             f->offset_w -= copy;
-        } else
+        } अन्यथा
             f->offset_w = copy == inc ? 0 : f->nb_elems + copy;
     }
 
     f->nb_elems += inc;
 
-    return 0;
+    परत 0;
 }
 
-static int fifo_check_space(AVFifo *f, size_t to_write)
+स्थिर पूर्णांक fifo_check_space(AVFifo *f, माप_प्रकार to_write)
 {
-    const size_t can_write = av_fifo_can_write(f);
-    const size_t need_grow = to_write > can_write ? to_write - can_write : 0;
-    size_t can_grow;
+    स्थिरांक माप_प्रकार can_write = av_fifo_can_write(f);
+    स्थिरांक माप_प्रकार need_grow = to_write > can_write ? to_write - can_write : 0;
+    माप_प्रकार can_grow;
 
-    if (!need_grow)
-        return 0;
+    जर (!need_grow)
+        परत 0;
 
     can_grow = f->auto_grow_limit > f->nb_elems ?
                f->auto_grow_limit - f->nb_elems : 0;
-    if ((f->flags & AV_FIFO_FLAG_AUTO_GROW) && need_grow <= can_grow) {
+    जर ((f->flags & AV_FIFO_FLAG_AUTO_GROW) && need_grow <= can_grow) {
         // allocate a bit more than necessary, if we can
-        const size_t inc = (need_grow < can_grow / 2 ) ? need_grow * 2 : can_grow;
-        return av_fifo_grow2(f, inc);
+        स्थिरांक माप_प्रकार inc = (need_grow < can_grow / 2 ) ? need_grow * 2 : can_grow;
+        परत av_fifo_grow2(f, inc);
     }
 
-    return AVERROR(ENOSPC);
+    परत AVERROR(ENOSPC);
 }
 
-static int fifo_write_common(AVFifo *f, const uint8_t *buf, size_t *nb_elems,
-                             AVFifoCB read_cb, void *opaque)
+स्थिर पूर्णांक fifo_write_common(AVFifo *f, स्थिरांक uint8_t *buf, माप_प्रकार *nb_elems,
+                             AVFifoCB read_cb, शून्य *opaque)
 {
-    size_t to_write = *nb_elems;
-    size_t offset_w;
-    int         ret = 0;
+    माप_प्रकार to_write = *nb_elems;
+    माप_प्रकार offset_w;
+    पूर्णांक         ret = 0;
 
     ret = fifo_check_space(f, to_write);
-    if (ret < 0)
-        return ret;
+    जर (ret < 0)
+        परत ret;
 
     offset_w = f->offset_w;
 
-    while (to_write > 0) {
-        size_t    len = FFMIN(f->nb_elems - offset_w, to_write);
+    पर्यंत (to_write > 0) {
+        माप_प्रकार    len = FFMIN(f->nb_elems - offset_w, to_write);
         uint8_t *wptr = f->buffer + offset_w * f->elem_size;
 
-        if (read_cb) {
+        जर (read_cb) {
             ret = read_cb(opaque, wptr, &len);
-            if (ret < 0 || len == 0)
-                break;
-        } else {
-            memcpy(wptr, buf, len * f->elem_size);
+            जर (ret < 0 || len == 0)
+                थांबा;
+        } अन्यथा {
+            स_नकल(wptr, buf, len * f->elem_size);
             buf += len * f->elem_size;
         }
         offset_w += len;
-        if (offset_w >= f->nb_elems)
+        जर (offset_w >= f->nb_elems)
             offset_w = 0;
         to_write -= len;
     }
     f->offset_w = offset_w;
 
-    if (*nb_elems != to_write)
+    जर (*nb_elems != to_write)
         f->is_empty = 0;
     *nb_elems -= to_write;
 
-    return ret;
+    परत ret;
 }
 
-int av_fifo_write(AVFifo *f, const void *buf, size_t nb_elems)
+पूर्णांक av_fifo_write(AVFifo *f, स्थिरांक शून्य *buf, माप_प्रकार nb_elems)
 {
-    return fifo_write_common(f, buf, &nb_elems, NULL, NULL);
+    परत fifo_write_common(f, buf, &nb_elems, रिक्त, रिक्त);
 }
 
-int av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
-                          void *opaque, size_t *nb_elems)
+पूर्णांक av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
+                          शून्य *opaque, माप_प्रकार *nb_elems)
 {
-    return fifo_write_common(f, NULL, nb_elems, read_cb, opaque);
+    परत fifo_write_common(f, रिक्त, nb_elems, read_cb, opaque);
 }
 
-static int fifo_peek_common(const AVFifo *f, uint8_t *buf, size_t *nb_elems,
-                            size_t offset, AVFifoCB write_cb, void *opaque)
+स्थिर पूर्णांक fifo_peek_common(स्थिरांक AVFifo *f, uint8_t *buf, माप_प्रकार *nb_elems,
+                            माप_प्रकार offset, AVFifoCB write_cb, शून्य *opaque)
 {
-    size_t  to_read = *nb_elems;
-    size_t offset_r = f->offset_r;
-    size_t can_read = av_fifo_can_read(f);
-    int         ret = 0;
+    माप_प्रकार  to_read = *nb_elems;
+    माप_प्रकार offset_r = f->offset_r;
+    माप_प्रकार can_read = av_fifo_can_read(f);
+    पूर्णांक         ret = 0;
 
-    if (offset > can_read || to_read > can_read - offset) {
+    जर (offset > can_read || to_read > can_read - offset) {
         *nb_elems = 0;
-        return AVERROR(EINVAL);
+        परत AVERROR(EINVAL);
     }
 
-    if (offset_r >= f->nb_elems - offset)
+    जर (offset_r >= f->nb_elems - offset)
         offset_r -= f->nb_elems - offset;
-    else
+    अन्यथा
         offset_r += offset;
 
-    while (to_read > 0) {
-        size_t    len = FFMIN(f->nb_elems - offset_r, to_read);
+    पर्यंत (to_read > 0) {
+        माप_प्रकार    len = FFMIN(f->nb_elems - offset_r, to_read);
         uint8_t *rptr = f->buffer + offset_r * f->elem_size;
 
-        if (write_cb) {
+        जर (write_cb) {
             ret = write_cb(opaque, rptr, &len);
-            if (ret < 0 || len == 0)
-                break;
-        } else {
-            memcpy(buf, rptr, len * f->elem_size);
+            जर (ret < 0 || len == 0)
+                थांबा;
+        } अन्यथा {
+            स_नकल(buf, rptr, len * f->elem_size);
             buf += len * f->elem_size;
         }
         offset_r += len;
-        if (offset_r >= f->nb_elems)
+        जर (offset_r >= f->nb_elems)
             offset_r = 0;
         to_read -= len;
     }
 
     *nb_elems -= to_read;
 
-    return ret;
+    परत ret;
 }
 
-int av_fifo_read(AVFifo *f, void *buf, size_t nb_elems)
+पूर्णांक av_fifo_read(AVFifo *f, शून्य *buf, माप_प्रकार nb_elems)
 {
-    int ret = fifo_peek_common(f, buf, &nb_elems, 0, NULL, NULL);
+    पूर्णांक ret = fifo_peek_common(f, buf, &nb_elems, 0, रिक्त, रिक्त);
     av_fifo_drain2(f, nb_elems);
-    return ret;
+    परत ret;
 }
 
-int av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
-                       void *opaque, size_t *nb_elems)
+पूर्णांक av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
+                       शून्य *opaque, माप_प्रकार *nb_elems)
 {
-    int ret = fifo_peek_common(f, NULL, nb_elems, 0, write_cb, opaque);
+    पूर्णांक ret = fifo_peek_common(f, रिक्त, nb_elems, 0, write_cb, opaque);
     av_fifo_drain2(f, *nb_elems);
-    return ret;
+    परत ret;
 }
 
-int av_fifo_peek(const AVFifo *f, void *buf, size_t nb_elems, size_t offset)
+पूर्णांक av_fifo_peek(स्थिरांक AVFifo *f, शून्य *buf, माप_प्रकार nb_elems, माप_प्रकार offset)
 {
-    return fifo_peek_common(f, buf, &nb_elems, offset, NULL, NULL);
+    परत fifo_peek_common(f, buf, &nb_elems, offset, रिक्त, रिक्त);
 }
 
-int av_fifo_peek_to_cb(const AVFifo *f, AVFifoCB write_cb, void *opaque,
-                       size_t *nb_elems, size_t offset)
+पूर्णांक av_fifo_peek_to_cb(स्थिरांक AVFifo *f, AVFifoCB write_cb, शून्य *opaque,
+                       माप_प्रकार *nb_elems, माप_प्रकार offset)
 {
-    return fifo_peek_common(f, NULL, nb_elems, offset, write_cb, opaque);
+    परत fifo_peek_common(f, रिक्त, nb_elems, offset, write_cb, opaque);
 }
 
-void av_fifo_drain2(AVFifo *f, size_t size)
+शून्य av_fifo_drain2(AVFifo *f, माप_प्रकार size)
 {
-    const size_t cur_size = av_fifo_can_read(f);
+    स्थिरांक माप_प्रकार cur_size = av_fifo_can_read(f);
 
     av_assert0(cur_size >= size);
-    if (cur_size == size)
+    जर (cur_size == size)
         f->is_empty = 1;
 
-    if (f->offset_r >= f->nb_elems - size)
+    जर (f->offset_r >= f->nb_elems - size)
         f->offset_r -= f->nb_elems - size;
-    else
+    अन्यथा
         f->offset_r += size;
 }
 
-void av_fifo_reset2(AVFifo *f)
+शून्य av_fifo_reset2(AVFifo *f)
 {
     f->offset_r = f->offset_w = 0;
     f->is_empty = 1;
 }
 
-void av_fifo_freep2(AVFifo **f)
+शून्य av_fifo_freep2(AVFifo **f)
 {
-    if (*f) {
+    जर (*f) {
         av_freep(&(*f)->buffer);
         av_freep(f);
     }

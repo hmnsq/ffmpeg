@@ -21,9 +21,9 @@
 #ifndef AVUTIL_AVSTRING_H
 #define AVUTIL_AVSTRING_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "attributes.h"
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "attributes.h"
 
 /**
  * @addtogroup lavu_string
@@ -39,7 +39,7 @@
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_strstart(const char *str, const char *pfx, const char **ptr);
+पूर्णांक av_strstart(स्थिरांक अक्षर *str, स्थिरांक अक्षर *pfx, स्थिरांक अक्षर **ptr);
 
 /**
  * Return non-zero if pfx is a prefix of str independent of case. If
@@ -51,7 +51,7 @@ int av_strstart(const char *str, const char *pfx, const char **ptr);
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_stristart(const char *str, const char *pfx, const char **ptr);
+पूर्णांक av_stristart(स्थिरांक अक्षर *str, स्थिरांक अक्षर *pfx, स्थिरांक अक्षर **ptr);
 
 /**
  * Locate the first case-independent occurrence in the string haystack
@@ -65,7 +65,7 @@ int av_stristart(const char *str, const char *pfx, const char **ptr);
  * @return         pointer to the located match within haystack
  *                 or a null pointer if no match
  */
-char *av_stristr(const char *haystack, const char *needle);
+अक्षर *av_stristr(स्थिरांक अक्षर *haystack, स्थिरांक अक्षर *needle);
 
 /**
  * Locate the first occurrence of the string needle in the string haystack
@@ -80,7 +80,7 @@ char *av_stristr(const char *haystack, const char *needle);
  * @return           pointer to the located match within haystack
  *                   or a null pointer if no match
  */
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length);
+अक्षर *av_strnstr(स्थिरांक अक्षर *haystack, स्थिरांक अक्षर *needle, माप_प्रकार hay_length);
 
 /**
  * Copy the string src to dst, but no more than size - 1 bytes, and
@@ -97,7 +97,7 @@ char *av_strnstr(const char *haystack, const char *needle, size_t hay_length);
  * _must_ be a properly 0-terminated string, otherwise this will read beyond
  * the end of the buffer and possibly crash.
  */
-size_t av_strlcpy(char *dst, const char *src, size_t size);
+माप_प्रकार av_strlcpy(अक्षर *dst, स्थिरांक अक्षर *src, माप_प्रकार size);
 
 /**
  * Append the string src to the string dst, but to a total length of
@@ -115,7 +115,7 @@ size_t av_strlcpy(char *dst, const char *src, size_t size);
  * absolutely _must_ be a properly 0-terminated strings, otherwise this
  * will read beyond the end of the buffer and possibly crash.
  */
-size_t av_strlcat(char *dst, const char *src, size_t size);
+माप_प्रकार av_strlcat(अक्षर *dst, स्थिरांक अक्षर *src, माप_प्रकार size);
 
 /**
  * Append output to a string, according to a format. Never write out of
@@ -129,7 +129,7 @@ size_t av_strlcat(char *dst, const char *src, size_t size);
  * @return the length of the string that would have been generated
  *  if enough space had been available
  */
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...) av_printf_format(3, 4);
+माप_प्रकार av_strlcatf(अक्षर *dst, माप_प्रकार size, स्थिरांक अक्षर *fmt, ...) av_printf_format(3, 4);
 
 /**
  * Get the count of continuous non zero chars starting from the beginning.
@@ -138,12 +138,12 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...) av_printf_forma
  * @param len maximum number of characters to check in the string, that
  *            is the maximum value which is returned by the function
  */
-static inline size_t av_strnlen(const char *s, size_t len)
+स्थिर ओळीत माप_प्रकार av_strnlen(स्थिरांक अक्षर *s, माप_प्रकार len)
 {
-    size_t i;
-    for (i = 0; i < len && s[i]; i++)
+    माप_प्रकार i;
+    साठी (i = 0; i < len && s[i]; i++)
         ;
-    return i;
+    परत i;
 }
 
 /**
@@ -154,7 +154,7 @@ static inline size_t av_strnlen(const char *s, size_t len)
  * @return the allocated string
  * @note You have to free the string yourself with av_free().
  */
-char *av_asprintf(const char *fmt, ...) av_printf_format(1, 2);
+अक्षर *av_asprintf(स्थिरांक अक्षर *fmt, ...) av_printf_format(1, 2);
 
 /**
  * Unescape the given string until a non escaped terminating char,
@@ -170,7 +170,7 @@ char *av_asprintf(const char *fmt, ...) av_printf_format(1, 2);
  * @return the malloced unescaped string, which must be av_freed by
  * the user, NULL in case of allocation failure
  */
-char *av_get_token(const char **buf, const char *term);
+अक्षर *av_get_token(स्थिरांक अक्षर **buf, स्थिरांक अक्षर *term);
 
 /**
  * Split the string into several tokens which can be accessed by
@@ -194,79 +194,79 @@ char *av_get_token(const char **buf, const char *term);
  * first delimiter found, or to NULL if the string was terminated
  * @return the found token, or NULL when no token is found
  */
-char *av_strtok(char *s, const char *delim, char **saveptr);
+अक्षर *av_strtok(अक्षर *s, स्थिरांक अक्षर *delim, अक्षर **saveptr);
 
 /**
  * Locale-independent conversion of ASCII isdigit.
  */
-static inline av_const int av_isdigit(int c)
+स्थिर ओळीत av_const पूर्णांक av_isdigit(पूर्णांक c)
 {
-    return c >= '0' && c <= '9';
+    परत c >= '0' && c <= '9';
 }
 
 /**
  * Locale-independent conversion of ASCII isgraph.
  */
-static inline av_const int av_isgraph(int c)
+स्थिर ओळीत av_const पूर्णांक av_isgraph(पूर्णांक c)
 {
-    return c > 32 && c < 127;
+    परत c > 32 && c < 127;
 }
 
 /**
  * Locale-independent conversion of ASCII isspace.
  */
-static inline av_const int av_isspace(int c)
+स्थिर ओळीत av_const पूर्णांक av_isspace(पूर्णांक c)
 {
-    return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
+    परत c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
            c == '\v';
 }
 
 /**
  * Locale-independent conversion of ASCII characters to uppercase.
  */
-static inline av_const int av_toupper(int c)
+स्थिर ओळीत av_const पूर्णांक av_toupper(पूर्णांक c)
 {
-    if (c >= 'a' && c <= 'z')
+    जर (c >= 'a' && c <= 'z')
         c ^= 0x20;
-    return c;
+    परत c;
 }
 
 /**
  * Locale-independent conversion of ASCII characters to lowercase.
  */
-static inline av_const int av_tolower(int c)
+स्थिर ओळीत av_const पूर्णांक av_tolower(पूर्णांक c)
 {
-    if (c >= 'A' && c <= 'Z')
+    जर (c >= 'A' && c <= 'Z')
         c ^= 0x20;
-    return c;
+    परत c;
 }
 
 /**
  * Locale-independent conversion of ASCII isxdigit.
  */
-static inline av_const int av_isxdigit(int c)
+स्थिर ओळीत av_const पूर्णांक av_isxdigit(पूर्णांक c)
 {
     c = av_tolower(c);
-    return av_isdigit(c) || (c >= 'a' && c <= 'f');
+    परत av_isdigit(c) || (c >= 'a' && c <= 'f');
 }
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strcasecmp(const char *a, const char *b);
+पूर्णांक av_strcasecmp(स्थिरांक अक्षर *a, स्थिरांक अक्षर *b);
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strncasecmp(const char *a, const char *b, size_t n);
+पूर्णांक av_strncasecmp(स्थिरांक अक्षर *a, स्थिरांक अक्षर *b, माप_प्रकार n);
 
 /**
  * Locale-independent strings replace.
  * @note This means only ASCII-range characters are replaced.
  */
-char *av_strireplace(const char *str, const char *from, const char *to);
+अक्षर *av_strireplace(स्थिरांक अक्षर *str, स्थिरांक अक्षर *from, स्थिरांक अक्षर *to);
 
 /**
  * Thread safe basename.
@@ -276,7 +276,7 @@ char *av_strireplace(const char *str, const char *from, const char *to);
  * If path is a NULL pointer or points to an empty string, a pointer
  * to a string "." is returned.
  */
-const char *av_basename(const char *path);
+स्थिरांक अक्षर *av_basename(स्थिरांक अक्षर *path);
 
 /**
  * Thread safe dirname.
@@ -286,7 +286,7 @@ const char *av_basename(const char *path);
  * to a string "." is returned.
  * @note the function may modify the contents of the path, so copies should be passed.
  */
-const char *av_dirname(char *path);
+स्थिरांक अक्षर *av_dirname(अक्षर *path);
 
 /**
  * Match instances of a name in a comma-separated list of names.
@@ -299,7 +299,7 @@ const char *av_dirname(char *path);
  * @param names List of names.
  * @return 1 on match, 0 otherwise.
  */
-int av_match_name(const char *name, const char *names);
+पूर्णांक av_match_name(स्थिरांक अक्षर *name, स्थिरांक अक्षर *names);
 
 /**
  * Append path component to the existing path.
@@ -309,9 +309,9 @@ int av_match_name(const char *name, const char *names);
  * @param component component to be appended
  * @return new path or NULL on error.
  */
-char *av_append_path_component(const char *path, const char *component);
+अक्षर *av_append_path_component(स्थिरांक अक्षर *path, स्थिरांक अक्षर *component);
 
-enum AVEscapeMode {
+गणना AVEscapeMode {
     AV_ESCAPE_MODE_AUTO,      ///< Use auto-selected escaping mode.
     AV_ESCAPE_MODE_BACKSLASH, ///< Use backslash escaping.
     AV_ESCAPE_MODE_QUOTE,     ///< Use single-quote escaping.
@@ -365,8 +365,8 @@ enum AVEscapeMode {
  * @see av_bprint_escape()
  */
 av_warn_unused_result
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags);
+पूर्णांक av_escape(अक्षर **dst, स्थिरांक अक्षर *src, स्थिरांक अक्षर *special_chars,
+              गणना AVEscapeMode mode, पूर्णांक flags);
 
 #define AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES          1 ///< accept codepoints over 0x10FFFF
 #define AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS             2 ///< accept non-characters - 0xFFFE and 0xFFFF
@@ -405,21 +405,21 @@ int av_escape(char **dst, const char *src, const char *special_chars,
  * value in case of invalid sequence
  */
 av_warn_unused_result
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags);
+पूर्णांक av_utf8_decode(int32_t *codep, स्थिरांक uint8_t **bufp, स्थिरांक uint8_t *buf_end,
+                   अचिन्हित पूर्णांक flags);
 
 /**
  * Check if a name is in a list.
  * @returns 0 if not found, or the 1 based index where it has been found in the
  *            list.
  */
-int av_match_list(const char *name, const char *list, char separator);
+पूर्णांक av_match_list(स्थिरांक अक्षर *name, स्थिरांक अक्षर *list, अक्षर separator);
 
 /**
  * See libc sscanf manual for more information.
  * Locale-independent sscanf implementation.
  */
-int av_sscanf(const char *string, const char *format, ...) av_scanf_format(2, 3);
+पूर्णांक av_sscanf(स्थिरांक अक्षर *string, स्थिरांक अक्षर *format, ...) av_scanf_format(2, 3);
 
 /**
  * @}

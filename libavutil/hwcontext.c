@@ -16,67 +16,67 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-#include "avassert.h"
-#include "buffer.h"
-#include "common.h"
-#include "frame_internal.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "log.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "buffer.h"
+#अन्तर्भाव "common.h"
+#अन्तर्भाव "frame_internal.h"
+#अन्तर्भाव "hwcontext.h"
+#अन्तर्भाव "hwcontext_internal.h"
+#अन्तर्भाव "imgutils.h"
+#अन्तर्भाव "log.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "pixdesc.h"
+#अन्तर्भाव "pixfmt.h"
 
-static const HWContextType * const hw_table[] = {
-#if CONFIG_CUDA
+स्थिर स्थिरांक HWContextType * स्थिरांक hw_table[] = {
+#जर CONFIG_CUDA
     &ff_hwcontext_type_cuda,
 #endif
-#if CONFIG_D3D11VA
+#जर CONFIG_D3D11VA
     &ff_hwcontext_type_d3d11va,
 #endif
-#if CONFIG_D3D12VA
+#जर CONFIG_D3D12VA
     &ff_hwcontext_type_d3d12va,
 #endif
-#if CONFIG_LIBDRM
+#जर CONFIG_LIBDRM
     &ff_hwcontext_type_drm,
 #endif
-#if CONFIG_DXVA2
+#जर CONFIG_DXVA2
     &ff_hwcontext_type_dxva2,
 #endif
-#if CONFIG_OPENCL
+#जर CONFIG_OPENCL
     &ff_hwcontext_type_opencl,
 #endif
-#if CONFIG_QSV
+#जर CONFIG_QSV
     &ff_hwcontext_type_qsv,
 #endif
-#if CONFIG_VAAPI
+#जर CONFIG_VAAPI
     &ff_hwcontext_type_vaapi,
 #endif
-#if CONFIG_VDPAU
+#जर CONFIG_VDPAU
     &ff_hwcontext_type_vdpau,
 #endif
-#if CONFIG_VIDEOTOOLBOX
+#जर CONFIG_VIDEOTOOLBOX
     &ff_hwcontext_type_videotoolbox,
 #endif
-#if CONFIG_MEDIACODEC
+#जर CONFIG_MEDIACODEC
     &ff_hwcontext_type_mediacodec,
 #endif
-#if CONFIG_VULKAN
+#जर CONFIG_VULKAN
     &ff_hwcontext_type_vulkan,
 #endif
-#if CONFIG_AMF
+#जर CONFIG_AMF
     &ff_hwcontext_type_amf,
 #endif
-#if CONFIG_OHCODEC
+#जर CONFIG_OHCODEC
     &ff_hwcontext_type_oh,
 #endif
-    NULL,
+    रिक्त,
 };
 
-static const char *const hw_type_names[] = {
+स्थिर स्थिरांक अक्षर *स्थिरांक hw_type_names[] = {
     [AV_HWDEVICE_TYPE_CUDA]   = "cuda",
     [AV_HWDEVICE_TYPE_DRM]    = "drm",
     [AV_HWDEVICE_TYPE_DXVA2]  = "dxva2",
@@ -93,13 +93,13 @@ static const char *const hw_type_names[] = {
     [AV_HWDEVICE_TYPE_OHCODEC] = "ohcodec",
 };
 
-typedef struct FFHWDeviceContext {
+प्रकारव्याख्या संरचना FFHWDeviceContext {
     /**
      * The public AVHWDeviceContext. See hwcontext.h for it.
      */
     AVHWDeviceContext p;
 
-    const HWContextType *hw_type;
+    स्थिरांक HWContextType *hw_type;
 
     /**
      * For a derived device, a reference to the original device
@@ -108,65 +108,65 @@ typedef struct FFHWDeviceContext {
     AVBufferRef *source_device;
 } FFHWDeviceContext;
 
-enum AVHWDeviceType av_hwdevice_find_type_by_name(const char *name)
+गणना AVHWDeviceType av_hwdevice_find_type_by_name(स्थिरांक अक्षर *name)
 {
-    int type;
-    for (type = 0; type < FF_ARRAY_ELEMS(hw_type_names); type++) {
-        if (hw_type_names[type] && !strcmp(hw_type_names[type], name))
-            return type;
+    पूर्णांक type;
+    साठी (type = 0; type < FF_ARRAY_ELEMS(hw_type_names); type++) {
+        जर (hw_type_names[type] && !म_भेद(hw_type_names[type], name))
+            परत type;
     }
-    return AV_HWDEVICE_TYPE_NONE;
+    परत AV_HWDEVICE_TYPE_NONE;
 }
 
-const char *av_hwdevice_get_type_name(enum AVHWDeviceType type)
+स्थिरांक अक्षर *av_hwdevice_get_type_name(गणना AVHWDeviceType type)
 {
-    if (type > AV_HWDEVICE_TYPE_NONE &&
+    जर (type > AV_HWDEVICE_TYPE_NONE &&
         type < FF_ARRAY_ELEMS(hw_type_names))
-        return hw_type_names[type];
-    else
-        return NULL;
+        परत hw_type_names[type];
+    अन्यथा
+        परत रिक्त;
 }
 
-enum AVHWDeviceType av_hwdevice_iterate_types(enum AVHWDeviceType prev)
+गणना AVHWDeviceType av_hwdevice_iterate_types(गणना AVHWDeviceType prev)
 {
-    enum AVHWDeviceType next;
-    int i, set = 0;
-    for (i = 0; hw_table[i]; i++) {
-        if (prev != AV_HWDEVICE_TYPE_NONE && hw_table[i]->type <= prev)
-            continue;
-        if (!set || hw_table[i]->type < next) {
+    गणना AVHWDeviceType next;
+    पूर्णांक i, set = 0;
+    साठी (i = 0; hw_table[i]; i++) {
+        जर (prev != AV_HWDEVICE_TYPE_NONE && hw_table[i]->type <= prev)
+            सुरूठेवा;
+        जर (!set || hw_table[i]->type < next) {
             next = hw_table[i]->type;
             set = 1;
         }
     }
-    return set ? next : AV_HWDEVICE_TYPE_NONE;
+    परत set ? next : AV_HWDEVICE_TYPE_NONE;
 }
 
-static const char *hwdevice_ctx_get_name(void *ptr)
+स्थिर स्थिरांक अक्षर *hwdevice_ctx_get_name(शून्य *ptr)
 {
     FFHWDeviceContext *ctx = ptr;
-    return ctx->hw_type->name;
+    परत ctx->hw_type->name;
 }
 
-static const AVClass hwdevice_ctx_class = {
+स्थिर स्थिरांक AVClass hwdevice_ctx_class = {
     .class_name = "AVHWDeviceContext",
     .item_name  = hwdevice_ctx_get_name,
     .category   = AV_CLASS_CATEGORY_HWDEVICE,
     .version    = LIBAVUTIL_VERSION_INT,
 };
 
-static void hwdevice_ctx_free(void *opaque, uint8_t *data)
+स्थिर शून्य hwdevice_ctx_free(शून्य *opaque, uint8_t *data)
 {
     FFHWDeviceContext *ctxi = (FFHWDeviceContext*)data;
     AVHWDeviceContext *ctx  = &ctxi->p;
 
     /* uninit might still want access the hw context and the user
      * free() callback might destroy it, so uninit has to be called first */
-    if (ctxi->hw_type->device_uninit)
+    जर (ctxi->hw_type->device_uninit)
         ctxi->hw_type->device_uninit(ctx);
 
-    if (ctx->free)
-        ctx->free(ctx);
+    जर (ctx->मुक्त)
+        ctx->मुक्त(ctx);
 
     av_buffer_unref(&ctxi->source_device);
 
@@ -174,87 +174,87 @@ static void hwdevice_ctx_free(void *opaque, uint8_t *data)
     av_freep(&ctx);
 }
 
-AVBufferRef *av_hwdevice_ctx_alloc(enum AVHWDeviceType type)
+AVBufferRef *av_hwdevice_ctx_alloc(गणना AVHWDeviceType type)
 {
     FFHWDeviceContext *ctxi;
     AVHWDeviceContext *ctx;
     AVBufferRef *buf;
-    const HWContextType *hw_type = NULL;
-    int i;
+    स्थिरांक HWContextType *hw_type = रिक्त;
+    पूर्णांक i;
 
-    for (i = 0; hw_table[i]; i++) {
-        if (hw_table[i]->type == type) {
+    साठी (i = 0; hw_table[i]; i++) {
+        जर (hw_table[i]->type == type) {
             hw_type = hw_table[i];
-            break;
+            थांबा;
         }
     }
-    if (!hw_type)
-        return NULL;
+    जर (!hw_type)
+        परत रिक्त;
 
-    ctxi = av_mallocz(sizeof(*ctxi));
-    if (!ctxi)
-        return NULL;
+    ctxi = av_mallocz(आकार(*ctxi));
+    जर (!ctxi)
+        परत रिक्त;
     ctx = &ctxi->p;
 
-    if (hw_type->device_hwctx_size) {
+    जर (hw_type->device_hwctx_size) {
         ctx->hwctx = av_mallocz(hw_type->device_hwctx_size);
-        if (!ctx->hwctx)
-            goto fail;
+        जर (!ctx->hwctx)
+            जा fail;
     }
 
-    buf = av_buffer_create((uint8_t*)ctx, sizeof(*ctx),
-                           hwdevice_ctx_free, NULL,
+    buf = av_buffer_create((uint8_t*)ctx, आकार(*ctx),
+                           hwdevice_ctx_free, रिक्त,
                            AV_BUFFER_FLAG_READONLY);
-    if (!buf)
-        goto fail;
+    जर (!buf)
+        जा fail;
 
     ctx->type     = type;
     ctx->av_class = &hwdevice_ctx_class;
 
     ctxi->hw_type = hw_type;
 
-    return buf;
+    परत buf;
 
 fail:
     av_freep(&ctx->hwctx);
     av_freep(&ctx);
-    return NULL;
+    परत रिक्त;
 }
 
-int av_hwdevice_ctx_init(AVBufferRef *ref)
+पूर्णांक av_hwdevice_ctx_init(AVBufferRef *ref)
 {
     FFHWDeviceContext *ctxi = (FFHWDeviceContext*)ref->data;
     AVHWDeviceContext *ctx  = &ctxi->p;
-    int ret = 0;
+    पूर्णांक ret = 0;
 
-    if (ctxi->hw_type->device_init)
+    जर (ctxi->hw_type->device_init)
         ret = ctxi->hw_type->device_init(ctx);
 
-    return ret;
+    परत ret;
 }
 
-static const AVClass hwframe_ctx_class = {
+स्थिर स्थिरांक AVClass hwframe_ctx_class = {
     .class_name = "AVHWFramesContext",
     .item_name  = av_default_item_name,
     .version    = LIBAVUTIL_VERSION_INT,
 };
 
-static void hwframe_ctx_free(void *opaque, uint8_t *data)
+स्थिर शून्य hwframe_ctx_free(शून्य *opaque, uint8_t *data)
 {
     FFHWFramesContext *ctxi = (FFHWFramesContext*)data;
     AVHWFramesContext *ctx  = &ctxi->p;
 
-    if (ctxi->pool_internal)
+    जर (ctxi->pool_internal)
         av_buffer_pool_uninit(&ctxi->pool_internal);
 
     av_buffer_pool_uninit(&ctxi->transfer_pool);
     ff_mutex_destroy(&ctxi->transfer_pool_lock);
 
-    if (ctxi->hw_type->frames_uninit)
+    जर (ctxi->hw_type->frames_uninit)
         ctxi->hw_type->frames_uninit(ctx);
 
-    if (ctx->free)
-        ctx->free(ctx);
+    जर (ctx->मुक्त)
+        ctx->मुक्त(ctx);
 
     av_buffer_unref(&ctxi->source_frames);
 
@@ -267,36 +267,36 @@ static void hwframe_ctx_free(void *opaque, uint8_t *data)
 AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ref_in)
 {
     FFHWDeviceContext *device_ctx = (FFHWDeviceContext*)device_ref_in->data;
-    const HWContextType  *hw_type = device_ctx->hw_type;
+    स्थिरांक HWContextType  *hw_type = device_ctx->hw_type;
     FFHWFramesContext *ctxi;
     AVHWFramesContext *ctx;
-    AVBufferRef *buf, *device_ref = NULL;
+    AVBufferRef *buf, *device_ref = रिक्त;
 
-    ctxi = av_mallocz(sizeof(*ctxi));
-    if (!ctxi)
-        return NULL;
+    ctxi = av_mallocz(आकार(*ctxi));
+    जर (!ctxi)
+        परत रिक्त;
     ctx  = &ctxi->p;
 
-    if (ff_mutex_init(&ctxi->transfer_pool_lock, NULL)) {
+    जर (ff_mutex_init(&ctxi->transfer_pool_lock, रिक्त)) {
         av_free(ctxi);
-        return NULL;
+        परत रिक्त;
     }
 
-    if (hw_type->frames_hwctx_size) {
+    जर (hw_type->frames_hwctx_size) {
         ctx->hwctx = av_mallocz(hw_type->frames_hwctx_size);
-        if (!ctx->hwctx)
-            goto fail;
+        जर (!ctx->hwctx)
+            जा fail;
     }
 
     device_ref = av_buffer_ref(device_ref_in);
-    if (!device_ref)
-        goto fail;
+    जर (!device_ref)
+        जा fail;
 
-    buf = av_buffer_create((uint8_t*)ctx, sizeof(*ctx),
-                           hwframe_ctx_free, NULL,
+    buf = av_buffer_create((uint8_t*)ctx, आकार(*ctx),
+                           hwframe_ctx_free, रिक्त,
                            AV_BUFFER_FLAG_READONLY);
-    if (!buf)
-        goto fail;
+    जर (!buf)
+        जा fail;
 
     ctx->av_class   = &hwframe_ctx_class;
     ctx->device_ref = device_ref;
@@ -306,171 +306,171 @@ AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ref_in)
 
     ctxi->hw_type = hw_type;
 
-    return buf;
+    परत buf;
 
 fail:
     av_buffer_unref(&device_ref);
     ff_mutex_destroy(&ctxi->transfer_pool_lock);
     av_freep(&ctx->hwctx);
     av_freep(&ctx);
-    return NULL;
+    परत रिक्त;
 }
 
-static int hwframe_pool_prealloc(AVBufferRef *ref)
+स्थिर पूर्णांक hwframe_pool_prealloc(AVBufferRef *ref)
 {
     AVHWFramesContext *ctx = (AVHWFramesContext*)ref->data;
     AVFrame **frames;
-    int i, ret = 0;
+    पूर्णांक i, ret = 0;
 
-    frames = av_calloc(ctx->initial_pool_size, sizeof(*frames));
-    if (!frames)
-        return AVERROR(ENOMEM);
+    frames = av_calloc(ctx->initial_pool_size, आकार(*frames));
+    जर (!frames)
+        परत AVERROR(ENOMEM);
 
-    for (i = 0; i < ctx->initial_pool_size; i++) {
+    साठी (i = 0; i < ctx->initial_pool_size; i++) {
         frames[i] = av_frame_alloc();
-        if (!frames[i])
-            goto fail;
+        जर (!frames[i])
+            जा fail;
 
         ret = av_hwframe_get_buffer(ref, frames[i], 0);
-        if (ret < 0)
-            goto fail;
+        जर (ret < 0)
+            जा fail;
     }
 
 fail:
-    for (i = 0; i < ctx->initial_pool_size; i++)
+    साठी (i = 0; i < ctx->initial_pool_size; i++)
         av_frame_free(&frames[i]);
     av_freep(&frames);
 
-    return ret;
+    परत ret;
 }
 
-int av_hwframe_ctx_init(AVBufferRef *ref)
+पूर्णांक av_hwframe_ctx_init(AVBufferRef *ref)
 {
     FFHWFramesContext *ctxi = (FFHWFramesContext*)ref->data;
     AVHWFramesContext *ctx  = &ctxi->p;
-    const enum AVPixelFormat *pix_fmt;
-    int ret;
+    स्थिरांक गणना AVPixelFormat *pix_fmt;
+    पूर्णांक ret;
 
-    if (ctxi->source_frames) {
+    जर (ctxi->source_frames) {
         /* A derived frame context is already initialised. */
-        return 0;
+        परत 0;
     }
 
     /* validate the pixel format */
-    for (pix_fmt = ctxi->hw_type->pix_fmts; *pix_fmt != AV_PIX_FMT_NONE; pix_fmt++) {
-        if (*pix_fmt == ctx->format)
-            break;
+    साठी (pix_fmt = ctxi->hw_type->pix_fmts; *pix_fmt != AV_PIX_FMT_NONE; pix_fmt++) {
+        जर (*pix_fmt == ctx->format)
+            थांबा;
     }
-    if (*pix_fmt == AV_PIX_FMT_NONE) {
+    जर (*pix_fmt == AV_PIX_FMT_NONE) {
         av_log(ctx, AV_LOG_ERROR,
                "The hardware pixel format '%s' is not supported by the device type '%s'\n",
                av_get_pix_fmt_name(ctx->format), ctxi->hw_type->name);
-        return AVERROR(ENOSYS);
+        परत AVERROR(ENOSYS);
     }
 
     /* validate the dimensions */
     ret = av_image_check_size(ctx->width, ctx->height, 0, ctx);
-    if (ret < 0)
-        return ret;
+    जर (ret < 0)
+        परत ret;
 
     /* format-specific init */
-    if (ctxi->hw_type->frames_init) {
+    जर (ctxi->hw_type->frames_init) {
         ret = ctxi->hw_type->frames_init(ctx);
-        if (ret < 0)
-            return ret;
+        जर (ret < 0)
+            परत ret;
     }
 
-    if (ctxi->pool_internal && !ctx->pool)
+    जर (ctxi->pool_internal && !ctx->pool)
         ctx->pool = ctxi->pool_internal;
 
     /* preallocate the frames in the pool, if requested */
-    if (ctx->initial_pool_size > 0) {
+    जर (ctx->initial_pool_size > 0) {
         ret = hwframe_pool_prealloc(ref);
-        if (ret < 0)
-            return ret;
+        जर (ret < 0)
+            परत ret;
     }
 
-    return 0;
+    परत 0;
 }
 
-int av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ref,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats, int flags)
+पूर्णांक av_hwframe_transfer_get_formats(AVBufferRef *hwframe_ref,
+                                    गणना AVHWFrameTransferDirection dir,
+                                    गणना AVPixelFormat **formats, पूर्णांक flags)
 {
     FFHWFramesContext *ctxi = (FFHWFramesContext*)hwframe_ref->data;
 
-    if (!ctxi->hw_type->transfer_get_formats)
-        return AVERROR(ENOSYS);
+    जर (!ctxi->hw_type->transfer_get_formats)
+        परत AVERROR(ENOSYS);
 
-    return ctxi->hw_type->transfer_get_formats(&ctxi->p, dir, formats);
+    परत ctxi->hw_type->transfer_get_formats(&ctxi->p, dir, formats);
 }
 
-static void transfer_pool_free(void *opaque)
+स्थिर शून्य transfer_pool_free(शून्य *opaque)
 {
     AVBufferRef *device_ref = opaque;
     av_buffer_unref(&device_ref);
 }
 
-static AVBufferRef *transfer_buffer_alloc(void *opaque, size_t size)
+स्थिर AVBufferRef *transfer_buffer_alloc(शून्य *opaque, माप_प्रकार size)
 {
     FFHWFramesContext *ctxi = opaque;
-    AVBufferRef *buf = NULL;
+    AVBufferRef *buf = रिक्त;
 
     ff_mutex_lock(&ctxi->transfer_pool_lock);
-    if (ctxi->transfer_pool_size != size) {
+    जर (ctxi->transfer_pool_size != size) {
         /* buffers of the hardware context type need the device to be freed */
         AVBufferRef *device_ref = ctxi->hw_type->transfer_buffer_alloc ?
-                                  av_buffer_ref(ctxi->p.device_ref) : NULL;
+                                  av_buffer_ref(ctxi->p.device_ref) : रिक्त;
 
         av_buffer_pool_uninit(&ctxi->transfer_pool);
         ctxi->transfer_pool      = device_ref ?
             av_buffer_pool_init2(size, device_ref,
                                  ctxi->hw_type->transfer_buffer_alloc,
                                  transfer_pool_free) :
-            av_buffer_pool_init(size, NULL);
+            av_buffer_pool_init(size, रिक्त);
         ctxi->transfer_pool_size = ctxi->transfer_pool ? size : 0;
-        if (!ctxi->transfer_pool)
+        जर (!ctxi->transfer_pool)
             av_buffer_unref(&device_ref);
     }
-    if (ctxi->transfer_pool)
+    जर (ctxi->transfer_pool)
         buf = av_buffer_pool_get(ctxi->transfer_pool);
     ff_mutex_unlock(&ctxi->transfer_pool_lock);
 
-    return buf ? buf : av_buffer_alloc(size);
+    परत buf ? buf : av_buffer_alloc(size);
 }
 
-int av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame)
+पूर्णांक av_hwframe_get_transfer_buffer(AVBufferRef *hwframe_ctx, AVFrame *frame)
 {
-    return ff_frame_get_video_buffer(frame, 0, transfer_buffer_alloc,
+    परत ff_frame_get_video_buffer(frame, 0, transfer_buffer_alloc,
                                      hwframe_ctx->data);
 }
 
-static int transfer_data_alloc(AVFrame *dst, const AVFrame *src, int flags)
+स्थिर पूर्णांक transfer_data_alloc(AVFrame *dst, स्थिरांक AVFrame *src, पूर्णांक flags)
 {
     AVHWFramesContext *ctx;
     AVFrame *frame_tmp;
-    int ret = 0;
+    पूर्णांक ret = 0;
 
-    if (!src->hw_frames_ctx)
-        return AVERROR(EINVAL);
+    जर (!src->hw_frames_ctx)
+        परत AVERROR(EINVAL);
     ctx = (AVHWFramesContext*)src->hw_frames_ctx->data;
 
     frame_tmp = av_frame_alloc();
-    if (!frame_tmp)
-        return AVERROR(ENOMEM);
+    जर (!frame_tmp)
+        परत AVERROR(ENOMEM);
 
     /* if the format is set, use that
      * otherwise pick the first supported one */
-    if (dst->format >= 0) {
+    जर (dst->format >= 0) {
         frame_tmp->format = dst->format;
-    } else {
-        enum AVPixelFormat *formats;
+    } अन्यथा {
+        गणना AVPixelFormat *formats;
 
         ret = av_hwframe_transfer_get_formats(src->hw_frames_ctx,
                                               AV_HWFRAME_TRANSFER_DIRECTION_FROM,
                                               &formats, 0);
-        if (ret < 0)
-            goto fail;
+        जर (ret < 0)
+            जा fail;
         frame_tmp->format = formats[0];
         av_freep(&formats);
     }
@@ -478,12 +478,12 @@ static int transfer_data_alloc(AVFrame *dst, const AVFrame *src, int flags)
     frame_tmp->height = ctx->height;
 
     ret = av_hwframe_get_transfer_buffer(src->hw_frames_ctx, frame_tmp);
-    if (ret < 0)
-        goto fail;
+    जर (ret < 0)
+        जा fail;
 
     ret = av_hwframe_transfer_data(frame_tmp, src, flags);
-    if (ret < 0)
-        goto fail;
+    जर (ret < 0)
+        जा fail;
 
     frame_tmp->width  = src->width;
     frame_tmp->height = src->height;
@@ -492,15 +492,15 @@ static int transfer_data_alloc(AVFrame *dst, const AVFrame *src, int flags)
 
 fail:
     av_frame_free(&frame_tmp);
-    return ret;
+    परत ret;
 }
 
-int av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, int flags)
+पूर्णांक av_hwframe_transfer_data(AVFrame *dst, स्थिरांक AVFrame *src, पूर्णांक flags)
 {
-    int ret;
+    पूर्णांक ret;
 
-    if (!dst->buf[0])
-        return transfer_data_alloc(dst, src, flags);
+    जर (!dst->buf[0])
+        परत transfer_data_alloc(dst, src, flags);
 
     /*
      * Hardware -> Hardware Transfer.
@@ -508,285 +508,285 @@ int av_hwframe_transfer_data(AVFrame *dst, const AVFrame *src, int flags)
      * function could be provided by either the src or dst, depending on
      * the specific combination of hardware.
      */
-    if (src->hw_frames_ctx && dst->hw_frames_ctx) {
+    जर (src->hw_frames_ctx && dst->hw_frames_ctx) {
         FFHWFramesContext *src_ctx =
             (FFHWFramesContext*)src->hw_frames_ctx->data;
         FFHWFramesContext *dst_ctx =
             (FFHWFramesContext*)dst->hw_frames_ctx->data;
 
-        if (src_ctx->source_frames) {
+        जर (src_ctx->source_frames) {
             av_log(src_ctx, AV_LOG_ERROR,
                    "A device with a derived frame context cannot be used as "
                    "the source of a HW -> HW transfer.");
-            return AVERROR(ENOSYS);
+            परत AVERROR(ENOSYS);
         }
 
-        if (dst_ctx->source_frames) {
+        जर (dst_ctx->source_frames) {
             av_log(src_ctx, AV_LOG_ERROR,
                    "A device with a derived frame context cannot be used as "
                    "the destination of a HW -> HW transfer.");
-            return AVERROR(ENOSYS);
+            परत AVERROR(ENOSYS);
         }
 
         ret = AVERROR(ENOSYS);
-        if (src_ctx->hw_type->transfer_data_from)
+        जर (src_ctx->hw_type->transfer_data_from)
             ret = src_ctx->hw_type->transfer_data_from(&src_ctx->p, dst, src);
-        if (ret == AVERROR(ENOSYS) && dst_ctx->hw_type->transfer_data_to)
+        जर (ret == AVERROR(ENOSYS) && dst_ctx->hw_type->transfer_data_to)
             ret = dst_ctx->hw_type->transfer_data_to(&dst_ctx->p, dst, src);
-        if (ret < 0)
-            return ret;
-    } else {
-        if (src->hw_frames_ctx) {
+        जर (ret < 0)
+            परत ret;
+    } अन्यथा {
+        जर (src->hw_frames_ctx) {
             FFHWFramesContext *ctx = (FFHWFramesContext*)src->hw_frames_ctx->data;
 
-            if (!ctx->hw_type->transfer_data_from)
-                return AVERROR(ENOSYS);
+            जर (!ctx->hw_type->transfer_data_from)
+                परत AVERROR(ENOSYS);
 
             ret = ctx->hw_type->transfer_data_from(&ctx->p, dst, src);
-            if (ret < 0)
-                return ret;
-        } else if (dst->hw_frames_ctx) {
+            जर (ret < 0)
+                परत ret;
+        } अन्यथा जर (dst->hw_frames_ctx) {
             FFHWFramesContext *ctx = (FFHWFramesContext*)dst->hw_frames_ctx->data;
 
-            if (!ctx->hw_type->transfer_data_to)
-                return AVERROR(ENOSYS);
+            जर (!ctx->hw_type->transfer_data_to)
+                परत AVERROR(ENOSYS);
 
             ret = ctx->hw_type->transfer_data_to(&ctx->p, dst, src);
-            if (ret < 0)
-                return ret;
-        } else {
-            return AVERROR(ENOSYS);
+            जर (ret < 0)
+                परत ret;
+        } अन्यथा {
+            परत AVERROR(ENOSYS);
         }
     }
-    return 0;
+    परत 0;
 }
 
-int av_hwframe_get_buffer(AVBufferRef *hwframe_ref, AVFrame *frame, int flags)
+पूर्णांक av_hwframe_get_buffer(AVBufferRef *hwframe_ref, AVFrame *frame, पूर्णांक flags)
 {
     FFHWFramesContext *ctxi = (FFHWFramesContext*)hwframe_ref->data;
     AVHWFramesContext *ctx  = &ctxi->p;
-    int ret;
+    पूर्णांक ret;
 
-    if (ctxi->source_frames) {
+    जर (ctxi->source_frames) {
         // This is a derived frame context, so we allocate in the source
         // and map the frame immediately.
         AVFrame *src_frame;
 
         frame->format = ctx->format;
         frame->hw_frames_ctx = av_buffer_ref(hwframe_ref);
-        if (!frame->hw_frames_ctx)
-            return AVERROR(ENOMEM);
+        जर (!frame->hw_frames_ctx)
+            परत AVERROR(ENOMEM);
 
         src_frame = av_frame_alloc();
-        if (!src_frame)
-            return AVERROR(ENOMEM);
+        जर (!src_frame)
+            परत AVERROR(ENOMEM);
 
         ret = av_hwframe_get_buffer(ctxi->source_frames,
                                     src_frame, 0);
-        if (ret < 0) {
+        जर (ret < 0) {
             av_frame_free(&src_frame);
-            return ret;
+            परत ret;
         }
 
         ret = av_hwframe_map(frame, src_frame,
                              ctxi->source_allocation_map_flags);
-        if (ret) {
+        जर (ret) {
             av_log(ctx, AV_LOG_ERROR, "Failed to map frame into derived "
                    "frame context: %d.\n", ret);
             av_frame_free(&src_frame);
-            return ret;
+            परत ret;
         }
 
         // Free the source frame immediately - the mapped frame still
         // contains a reference to it.
         av_frame_free(&src_frame);
 
-        return 0;
+        परत 0;
     }
 
-    if (!ctxi->hw_type->frames_get_buffer)
-        return AVERROR(ENOSYS);
+    जर (!ctxi->hw_type->frames_get_buffer)
+        परत AVERROR(ENOSYS);
 
-    if (!ctx->pool)
-        return AVERROR(EINVAL);
+    जर (!ctx->pool)
+        परत AVERROR(EINVAL);
 
     frame->hw_frames_ctx = av_buffer_ref(hwframe_ref);
-    if (!frame->hw_frames_ctx)
-        return AVERROR(ENOMEM);
+    जर (!frame->hw_frames_ctx)
+        परत AVERROR(ENOMEM);
 
     ret = ctxi->hw_type->frames_get_buffer(ctx, frame);
-    if (ret < 0) {
+    जर (ret < 0) {
         av_buffer_unref(&frame->hw_frames_ctx);
-        return ret;
+        परत ret;
     }
 
     frame->extended_data = frame->data;
 
-    return 0;
+    परत 0;
 }
 
-void *av_hwdevice_hwconfig_alloc(AVBufferRef *ref)
+शून्य *av_hwdevice_hwconfig_alloc(AVBufferRef *ref)
 {
     FFHWDeviceContext *ctx = (FFHWDeviceContext*)ref->data;
-    const HWContextType  *hw_type = ctx->hw_type;
+    स्थिरांक HWContextType  *hw_type = ctx->hw_type;
 
-    if (hw_type->device_hwconfig_size == 0)
-        return NULL;
+    जर (hw_type->device_hwconfig_size == 0)
+        परत रिक्त;
 
-    return av_mallocz(hw_type->device_hwconfig_size);
+    परत av_mallocz(hw_type->device_hwconfig_size);
 }
 
 AVHWFramesConstraints *av_hwdevice_get_hwframe_constraints(AVBufferRef *ref,
-                                                           const void *hwconfig)
+                                                           स्थिरांक शून्य *hwconfig)
 {
     FFHWDeviceContext *ctx = (FFHWDeviceContext*)ref->data;
-    const HWContextType  *hw_type = ctx->hw_type;
+    स्थिरांक HWContextType  *hw_type = ctx->hw_type;
     AVHWFramesConstraints *constraints;
 
-    if (!hw_type->frames_get_constraints)
-        return NULL;
+    जर (!hw_type->frames_get_constraints)
+        परत रिक्त;
 
-    constraints = av_mallocz(sizeof(*constraints));
-    if (!constraints)
-        return NULL;
+    constraints = av_mallocz(आकार(*constraints));
+    जर (!constraints)
+        परत रिक्त;
 
     constraints->min_width = constraints->min_height = 0;
-    constraints->max_width = constraints->max_height = INT_MAX;
+    constraints->max_width = constraints->max_height = पूर्णांक_उच्च;
 
-    if (hw_type->frames_get_constraints(&ctx->p, hwconfig, constraints) >= 0) {
-        return constraints;
-    } else {
+    जर (hw_type->frames_get_constraints(&ctx->p, hwconfig, constraints) >= 0) {
+        परत constraints;
+    } अन्यथा {
         av_hwframe_constraints_free(&constraints);
-        return NULL;
+        परत रिक्त;
     }
 }
 
-void av_hwframe_constraints_free(AVHWFramesConstraints **constraints)
+शून्य av_hwframe_constraints_free(AVHWFramesConstraints **constraints)
 {
-    if (*constraints) {
+    जर (*constraints) {
         av_freep(&(*constraints)->valid_hw_formats);
         av_freep(&(*constraints)->valid_sw_formats);
     }
     av_freep(constraints);
 }
 
-int av_hwdevice_ctx_create(AVBufferRef **pdevice_ref, enum AVHWDeviceType type,
-                           const char *device, AVDictionary *opts, int flags)
+पूर्णांक av_hwdevice_ctx_create(AVBufferRef **pdevice_ref, गणना AVHWDeviceType type,
+                           स्थिरांक अक्षर *device, AVDictionary *opts, पूर्णांक flags)
 {
-    AVBufferRef *device_ref = NULL;
+    AVBufferRef *device_ref = रिक्त;
     FFHWDeviceContext *device_ctx;
-    int ret = 0;
+    पूर्णांक ret = 0;
 
     device_ref = av_hwdevice_ctx_alloc(type);
-    if (!device_ref) {
+    जर (!device_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        जा fail;
     }
     device_ctx = (FFHWDeviceContext*)device_ref->data;
 
-    if (!device_ctx->hw_type->device_create) {
+    जर (!device_ctx->hw_type->device_create) {
         ret = AVERROR(ENOSYS);
-        goto fail;
+        जा fail;
     }
 
     ret = device_ctx->hw_type->device_create(&device_ctx->p, device,
                                              opts, flags);
-    if (ret < 0)
-        goto fail;
+    जर (ret < 0)
+        जा fail;
 
     ret = av_hwdevice_ctx_init(device_ref);
-    if (ret < 0)
-        goto fail;
+    जर (ret < 0)
+        जा fail;
 
     *pdevice_ref = device_ref;
-    return 0;
+    परत 0;
 fail:
     av_buffer_unref(&device_ref);
-    *pdevice_ref = NULL;
-    return ret;
+    *pdevice_ref = रिक्त;
+    परत ret;
 }
 
-int av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ref_ptr,
-                                        enum AVHWDeviceType type,
+पूर्णांक av_hwdevice_ctx_create_derived_opts(AVBufferRef **dst_ref_ptr,
+                                        गणना AVHWDeviceType type,
                                         AVBufferRef *src_ref,
-                                        AVDictionary *options, int flags)
+                                        AVDictionary *options, पूर्णांक flags)
 {
-    AVBufferRef *dst_ref = NULL, *tmp_ref;
+    AVBufferRef *dst_ref = रिक्त, *tmp_ref;
     FFHWDeviceContext *dst_ctx;
-    int ret = 0;
+    पूर्णांक ret = 0;
 
     tmp_ref = src_ref;
-    while (tmp_ref) {
+    पर्यंत (tmp_ref) {
         FFHWDeviceContext *tmp_ctx = (FFHWDeviceContext*)tmp_ref->data;
-        if (tmp_ctx->p.type == type) {
+        जर (tmp_ctx->p.type == type) {
             dst_ref = av_buffer_ref(tmp_ref);
-            if (!dst_ref) {
+            जर (!dst_ref) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                जा fail;
             }
-            goto done;
+            जा done;
         }
         tmp_ref = tmp_ctx->source_device;
     }
 
     dst_ref = av_hwdevice_ctx_alloc(type);
-    if (!dst_ref) {
+    जर (!dst_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        जा fail;
     }
     dst_ctx = (FFHWDeviceContext*)dst_ref->data;
 
     tmp_ref = src_ref;
-    while (tmp_ref) {
+    पर्यंत (tmp_ref) {
         FFHWDeviceContext *tmp_ctx = (FFHWDeviceContext*)tmp_ref->data;
-        if (dst_ctx->hw_type->device_derive) {
+        जर (dst_ctx->hw_type->device_derive) {
             ret = dst_ctx->hw_type->device_derive(&dst_ctx->p,
                                                   &tmp_ctx->p,
                                                   options, flags);
-            if (ret == 0) {
+            जर (ret == 0) {
                 dst_ctx->source_device = av_buffer_ref(src_ref);
-                if (!dst_ctx->source_device) {
+                जर (!dst_ctx->source_device) {
                     ret = AVERROR(ENOMEM);
-                    goto fail;
+                    जा fail;
                 }
                 ret = av_hwdevice_ctx_init(dst_ref);
-                if (ret < 0)
-                    goto fail;
-                goto done;
+                जर (ret < 0)
+                    जा fail;
+                जा done;
             }
-            if (ret != AVERROR(ENOSYS))
-                goto fail;
+            जर (ret != AVERROR(ENOSYS))
+                जा fail;
         }
         tmp_ref = tmp_ctx->source_device;
     }
 
     ret = AVERROR(ENOSYS);
-    goto fail;
+    जा fail;
 
 done:
     *dst_ref_ptr = dst_ref;
-    return 0;
+    परत 0;
 
 fail:
     av_buffer_unref(&dst_ref);
-    *dst_ref_ptr = NULL;
-    return ret;
+    *dst_ref_ptr = रिक्त;
+    परत ret;
 }
 
-int av_hwdevice_ctx_create_derived(AVBufferRef **dst_ref_ptr,
-                                   enum AVHWDeviceType type,
-                                   AVBufferRef *src_ref, int flags)
+पूर्णांक av_hwdevice_ctx_create_derived(AVBufferRef **dst_ref_ptr,
+                                   गणना AVHWDeviceType type,
+                                   AVBufferRef *src_ref, पूर्णांक flags)
 {
-    return av_hwdevice_ctx_create_derived_opts(dst_ref_ptr, type, src_ref,
-                                               NULL, flags);
+    परत av_hwdevice_ctx_create_derived_opts(dst_ref_ptr, type, src_ref,
+                                               रिक्त, flags);
 }
 
-static void ff_hwframe_unmap(void *opaque, uint8_t *data)
+स्थिर शून्य ff_hwframe_unmap(शून्य *opaque, uint8_t *data)
 {
     HWMapDescriptor *hwmap = (HWMapDescriptor*)data;
     AVHWFramesContext *ctx = opaque;
 
-    if (hwmap->unmap)
+    जर (hwmap->unmap)
         hwmap->unmap(ctx, hwmap);
 
     av_frame_free(&hwmap->source);
@@ -796,70 +796,70 @@ static void ff_hwframe_unmap(void *opaque, uint8_t *data)
     av_free(hwmap);
 }
 
-int ff_hwframe_map_create(AVBufferRef *hwframe_ref,
-                          AVFrame *dst, const AVFrame *src,
-                          void (*unmap)(AVHWFramesContext *ctx,
+पूर्णांक ff_hwframe_map_create(AVBufferRef *hwframe_ref,
+                          AVFrame *dst, स्थिरांक AVFrame *src,
+                          शून्य (*unmap)(AVHWFramesContext *ctx,
                                         HWMapDescriptor *hwmap),
-                          void *priv)
+                          शून्य *priv)
 {
     AVHWFramesContext *ctx = (AVHWFramesContext*)hwframe_ref->data;
     HWMapDescriptor *hwmap;
-    int ret;
+    पूर्णांक ret;
 
-    hwmap = av_mallocz(sizeof(*hwmap));
-    if (!hwmap) {
+    hwmap = av_mallocz(आकार(*hwmap));
+    जर (!hwmap) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        जा fail;
     }
 
     hwmap->source = av_frame_alloc();
-    if (!hwmap->source) {
+    जर (!hwmap->source) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        जा fail;
     }
     ret = av_frame_ref(hwmap->source, src);
-    if (ret < 0)
-        goto fail;
+    जर (ret < 0)
+        जा fail;
 
     hwmap->hw_frames_ctx = av_buffer_ref(hwframe_ref);
-    if (!hwmap->hw_frames_ctx) {
+    जर (!hwmap->hw_frames_ctx) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        जा fail;
     }
 
     hwmap->unmap = unmap;
     hwmap->priv  = priv;
 
-    dst->buf[0] = av_buffer_create((uint8_t*)hwmap, sizeof(*hwmap),
+    dst->buf[0] = av_buffer_create((uint8_t*)hwmap, आकार(*hwmap),
                                    &ff_hwframe_unmap, ctx, 0);
-    if (!dst->buf[0]) {
+    जर (!dst->buf[0]) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        जा fail;
     }
 
-    return 0;
+    परत 0;
 
 fail:
-    if (hwmap) {
+    जर (hwmap) {
         av_buffer_unref(&hwmap->hw_frames_ctx);
         av_frame_free(&hwmap->source);
     }
     av_free(hwmap);
-    return ret;
+    परत ret;
 }
 
-int av_hwframe_map(AVFrame *dst, const AVFrame *src, int flags)
+पूर्णांक av_hwframe_map(AVFrame *dst, स्थिरांक AVFrame *src, पूर्णांक flags)
 {
     AVBufferRef    *orig_dst_frames = dst->hw_frames_ctx;
-    enum AVPixelFormat orig_dst_fmt = dst->format;
+    गणना AVPixelFormat orig_dst_fmt = dst->format;
     HWMapDescriptor *hwmap;
-    int ret;
+    पूर्णांक ret;
 
-    if (src->hw_frames_ctx && dst->hw_frames_ctx) {
+    जर (src->hw_frames_ctx && dst->hw_frames_ctx) {
         FFHWFramesContext *src_frames = (FFHWFramesContext*)src->hw_frames_ctx->data;
         FFHWFramesContext *dst_frames = (FFHWFramesContext*)dst->hw_frames_ctx->data;
 
-        if ((src_frames == dst_frames &&
+        जर ((src_frames == dst_frames &&
              src->format == dst_frames->p.sw_format &&
              dst->format == dst_frames->p.format) ||
             (src_frames->source_frames &&
@@ -869,97 +869,97 @@ int av_hwframe_map(AVFrame *dst, const AVFrame *src, int flags)
             // do anything here other than fill in the original frame,
             // because the real unmap will be invoked when the last
             // reference to the mapped frame disappears.
-            if (!src->buf[0]) {
+            जर (!src->buf[0]) {
                 av_log(src_frames, AV_LOG_ERROR, "Invalid mapping "
                        "found when attempting unmap.\n");
-                return AVERROR(EINVAL);
+                परत AVERROR(EINVAL);
             }
             hwmap = (HWMapDescriptor*)src->buf[0]->data;
-            return av_frame_replace(dst, hwmap->source);
+            परत av_frame_replace(dst, hwmap->source);
         }
     }
 
-    if (src->hw_frames_ctx) {
+    जर (src->hw_frames_ctx) {
         FFHWFramesContext *src_frames = (FFHWFramesContext*)src->hw_frames_ctx->data;
 
-        if (src_frames->p.format == src->format &&
+        जर (src_frames->p.format == src->format &&
             src_frames->hw_type->map_from) {
             ret = src_frames->hw_type->map_from(&src_frames->p,
                                                 dst, src, flags);
-            if (ret >= 0)
-                return ret;
-            else if (ret != AVERROR(ENOSYS))
-                goto fail;
+            जर (ret >= 0)
+                परत ret;
+            अन्यथा जर (ret != AVERROR(ENOSYS))
+                जा fail;
         }
     }
 
-    if (dst->hw_frames_ctx) {
+    जर (dst->hw_frames_ctx) {
         FFHWFramesContext *dst_frames = (FFHWFramesContext*)dst->hw_frames_ctx->data;
 
-        if (dst_frames->p.format == dst->format &&
+        जर (dst_frames->p.format == dst->format &&
             dst_frames->hw_type->map_to) {
             ret = dst_frames->hw_type->map_to(&dst_frames->p,
                                               dst, src, flags);
-            if (ret >= 0)
-                return ret;
-            else if (ret != AVERROR(ENOSYS))
-                goto fail;
+            जर (ret >= 0)
+                परत ret;
+            अन्यथा जर (ret != AVERROR(ENOSYS))
+                जा fail;
         }
     }
 
-    return AVERROR(ENOSYS);
+    परत AVERROR(ENOSYS);
 
 fail:
     // if the caller provided dst frames context, it should be preserved
     // by this function
-    av_assert0(orig_dst_frames == NULL ||
+    av_assert0(orig_dst_frames == रिक्त ||
                orig_dst_frames == dst->hw_frames_ctx);
 
     // preserve user-provided dst frame fields, but clean
     // anything we might have set
-    dst->hw_frames_ctx = NULL;
+    dst->hw_frames_ctx = रिक्त;
     av_frame_unref(dst);
 
     dst->hw_frames_ctx = orig_dst_frames;
     dst->format        = orig_dst_fmt;
 
-    return ret;
+    परत ret;
 }
 
-int av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
-                                  enum AVPixelFormat format,
+पूर्णांक av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
+                                  गणना AVPixelFormat format,
                                   AVBufferRef *derived_device_ctx,
                                   AVBufferRef *source_frame_ctx,
-                                  int flags)
+                                  पूर्णांक flags)
 {
-    AVBufferRef   *dst_ref = NULL;
-    FFHWFramesContext *dsti = NULL;
+    AVBufferRef   *dst_ref = रिक्त;
+    FFHWFramesContext *dsti = रिक्त;
     FFHWFramesContext *srci = (FFHWFramesContext*)source_frame_ctx->data;
     AVHWFramesContext *dst, *src = &srci->p;
-    int ret;
+    पूर्णांक ret;
 
-    if (srci->source_frames) {
+    जर (srci->source_frames) {
         AVHWFramesContext *src_src =
             (AVHWFramesContext*)srci->source_frames->data;
         AVHWDeviceContext *dst_dev =
             (AVHWDeviceContext*)derived_device_ctx->data;
 
-        if (src_src->device_ctx == dst_dev) {
+        जर (src_src->device_ctx == dst_dev) {
             // This is actually an unmapping, so we just return a
             // reference to the source frame context.
             *derived_frame_ctx = av_buffer_ref(srci->source_frames);
-            if (!*derived_frame_ctx) {
+            जर (!*derived_frame_ctx) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                जा fail;
             }
-            return 0;
+            परत 0;
         }
     }
 
     dst_ref = av_hwframe_ctx_alloc(derived_device_ctx);
-    if (!dst_ref) {
+    जर (!dst_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        जा fail;
     }
 
     dsti = (FFHWFramesContext*)dst_ref->data;
@@ -971,9 +971,9 @@ int av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
     dst->height    = src->height;
 
     dsti->source_frames = av_buffer_ref(source_frame_ctx);
-    if (!dsti->source_frames) {
+    जर (!dsti->source_frames) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        जा fail;
     }
 
     dsti->source_allocation_map_flags =
@@ -983,28 +983,28 @@ int av_hwframe_ctx_create_derived(AVBufferRef **derived_frame_ctx,
                  AV_HWFRAME_MAP_DIRECT);
 
     ret = AVERROR(ENOSYS);
-    if (srci->hw_type->frames_derive_from)
+    जर (srci->hw_type->frames_derive_from)
         ret = srci->hw_type->frames_derive_from(dst, src, flags);
-    if (ret == AVERROR(ENOSYS) &&
+    जर (ret == AVERROR(ENOSYS) &&
         dsti->hw_type->frames_derive_to)
         ret = dsti->hw_type->frames_derive_to(dst, src, flags);
-    if (ret == AVERROR(ENOSYS))
+    जर (ret == AVERROR(ENOSYS))
         ret = 0;
-    if (ret)
-        goto fail;
+    जर (ret)
+        जा fail;
 
     *derived_frame_ctx = dst_ref;
-    return 0;
+    परत 0;
 
 fail:
-    if (dsti)
+    जर (dsti)
         av_buffer_unref(&dsti->source_frames);
     av_buffer_unref(&dst_ref);
-    return ret;
+    परत ret;
 }
 
-int ff_hwframe_map_replace(AVFrame *dst, const AVFrame *src)
+पूर्णांक ff_hwframe_map_replace(AVFrame *dst, स्थिरांक AVFrame *src)
 {
     HWMapDescriptor *hwmap = (HWMapDescriptor*)dst->buf[0]->data;
-    return av_frame_replace(hwmap->source, src);
+    परत av_frame_replace(hwmap->source, src);
 }

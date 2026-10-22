@@ -24,13 +24,13 @@
  *
  * Allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVMediaCodecDeviceContext {
+प्रकारव्याख्या संरचना AVMediaCodecDeviceContext {
     /**
      * android/view/Surface handle, to be filled by the user.
      *
      * This is the default surface used by decoders on this device.
      */
-    void *surface;
+    शून्य *surface;
 
     /**
      * Pointer to ANativeWindow.
@@ -42,7 +42,7 @@ typedef struct AVMediaCodecDeviceContext {
      * It can be used as output surface for decoder and input surface for
      * encoder.
      */
-    void *native_window;
+    शून्य *native_window;
 
     /**
      * Enable createPersistentInputSurface automatically.
@@ -55,7 +55,7 @@ typedef struct AVMediaCodecDeviceContext {
      * via:
      *   -init_hw_device mediacodec=mediacodec,create_window=1
      */
-    int create_window;
+    पूर्णांक create_window;
 } AVMediaCodecDeviceContext;
 
 #endif /* AVUTIL_HWCONTEXT_MEDIACODEC_H */

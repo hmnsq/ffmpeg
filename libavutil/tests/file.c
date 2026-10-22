@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#अन्तर्भाव <stdarg.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#अन्तर्भाव "libavutil/file.c"
+#अन्तर्भाव "libavutil/log.h"
 
-static int last_log_level = -1;
+स्थिर पूर्णांक last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+स्थिर शून्य log_callback(शून्य *ctx, पूर्णांक level, स्थिरांक अक्षर *fmt, बहु_सूची args)
 {
-    (void)ctx; (void)fmt; (void)args;
+    (शून्य)ctx; (शून्य)fmt; (शून्य)args;
     last_log_level = level;
 }
 
-int main(int argc, char **argv)
+पूर्णांक main(पूर्णांक argc, अक्षर **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    स्थिरांक अक्षर *path = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
-    size_t size;
+    माप_प्रकार size;
 
     av_log_set_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
+    जर (av_file_map(path, &buf, &size, 0, रिक्त) < 0)
+        परत 1;
     av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    जर (size == 0)
+        परत 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
+    साठी (पूर्णांक i = 0; i < 2; i++) {
         last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
+        जर (av_file_map("no_such_file_xyz", &buf, &size, i, रिक्त) >= 0) {
             av_file_unmap(buf, size);
-            return 2;
+            परत 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
-            fprintf(stderr, "expected level %d with offset=%d, got %d\n",
+        जर (last_log_level != AV_LOG_ERROR + i) {
+            ख_लिखो(मानक_त्रुटि, "expected level %d with offset=%d, got %d\n",
                     AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+            परत 3;
         }
     }
 
-    return 0;
+    परत 0;
 }

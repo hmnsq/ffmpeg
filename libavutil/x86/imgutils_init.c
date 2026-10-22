@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
 
-#include "libavutil/cpu.h"
-#include "libavutil/error.h"
-#include "libavutil/imgutils_internal.h"
-#include "libavutil/macros.h"
+#अन्तर्भाव "libavutil/cpu.h"
+#अन्तर्भाव "libavutil/error.h"
+#अन्तर्भाव "libavutil/imgutils_internal.h"
+#अन्तर्भाव "libavutil/macros.h"
 
-#include "cpu.h"
+#अन्तर्भाव "cpu.h"
 
-void ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
-                                      const uint8_t *src, ptrdiff_t src_linesize,
-                                      ptrdiff_t bytewidth, int height);
+शून्य ff_image_copy_plane_uc_from_sse4(uint8_t *dst, सूचक_भेद_प्रकार dst_linesize,
+                                      स्थिरांक uint8_t *src, सूचक_भेद_प्रकार src_linesize,
+                                      सूचक_भेद_प्रकार bytewidth, पूर्णांक height);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                    const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height)
+पूर्णांक ff_image_copy_plane_uc_from_x86(uint8_t       *dst, सूचक_भेद_प्रकार dst_linesize,
+                                    स्थिरांक uint8_t *src, सूचक_भेद_प्रकार src_linesize,
+                                    सूचक_भेद_प्रकार bytewidth, पूर्णांक height)
 {
-    int cpu_flags = av_get_cpu_flags();
-    ptrdiff_t bw_aligned = FFALIGN(bytewidth, 64);
+    पूर्णांक cpu_flags = av_get_cpu_flags();
+    सूचक_भेद_प्रकार bw_aligned = FFALIGN(bytewidth, 64);
 
-    if (EXTERNAL_SSE4(cpu_flags) &&
+    जर (EXTERNAL_SSE4(cpu_flags) &&
         bw_aligned <= dst_linesize && bw_aligned <= src_linesize)
         ff_image_copy_plane_uc_from_sse4(dst, dst_linesize, src, src_linesize,
                                          bw_aligned, height);
-    else
-        return AVERROR(ENOSYS);
+    अन्यथा
+        परत AVERROR(ENOSYS);
 
-    return 0;
+    परत 0;
 }

@@ -19,29 +19,29 @@
 #ifndef AVUTIL_TIME_INTERNAL_H
 #define AVUTIL_TIME_INTERNAL_H
 
-#include <time.h>
-#include "config.h"
+#अन्तर्भाव <time.h>
+#अन्तर्भाव "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#जर !HAVE_GMTIME_R && !defined(gmtime_r)
+स्थिर ओळीत संरचना पंचांग *ff_gmtime_r(स्थिरांक समय_प्रकार* घड़ी, संरचना पंचांग *result)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
+    संरचना पंचांग *ptr = स_जमट(घड़ी);
+    जर (!ptr)
+        परत रिक्त;
     *result = *ptr;
-    return result;
+    परत result;
 }
 #define gmtime_r ff_gmtime_r
 #endif
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#जर !HAVE_LOCALTIME_R && !defined(localtime_r)
+स्थिर ओळीत संरचना पंचांग *ff_localtime_r(स्थिरांक समय_प्रकार* घड़ी, संरचना पंचांग *result)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
+    संरचना पंचांग *ptr = स_स्थानीय(घड़ी);
+    जर (!ptr)
+        परत रिक्त;
     *result = *ptr;
-    return result;
+    परत result;
 }
 #define localtime_r ff_localtime_r
 #endif

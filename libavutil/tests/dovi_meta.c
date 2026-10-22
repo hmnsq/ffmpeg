@@ -16,90 +16,90 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/dovi_meta.h"
-#include "libavutil/mem.h"
+#अन्तर्भाव "libavutil/dovi_meta.h"
+#अन्तर्भाव "libavutil/mem.h"
 
-int main(void)
+पूर्णांक main(शून्य)
 {
     AVDOVIDecoderConfigurationRecord *cfg;
     AVDOVIMetadata *md;
-    size_t size;
+    माप_प्रकार size;
 
     /* av_dovi_alloc */
-    printf("Testing av_dovi_alloc()\n");
+    म_लिखो("Testing av_dovi_alloc()\n");
     cfg = av_dovi_alloc(&size);
-    if (cfg) {
-        printf("alloc: OK, size>0=%s, dv_profile=%d\n",
+    जर (cfg) {
+        म_लिखो("alloc: OK, size>0=%s, dv_profile=%d\n",
                size > 0 ? "yes" : "no", cfg->dv_profile);
         av_free(cfg);
-    } else {
-        printf("alloc: FAIL\n");
+    } अन्यथा {
+        म_लिखो("alloc: FAIL\n");
     }
 
-    cfg = av_dovi_alloc(NULL);
-    printf("alloc (no size): %s\n", cfg ? "OK" : "FAIL");
+    cfg = av_dovi_alloc(रिक्त);
+    म_लिखो("alloc (no size): %s\n", cfg ? "OK" : "FAIL");
     av_free(cfg);
 
     /* av_dovi_metadata_alloc */
-    printf("\nTesting av_dovi_metadata_alloc()\n");
+    म_लिखो("\nTesting av_dovi_metadata_alloc()\n");
     md = av_dovi_metadata_alloc(&size);
-    if (md) {
+    जर (md) {
         AVDOVIRpuDataHeader *header;
         AVDOVIDataMapping *mapping;
         AVDOVIColorMetadata *color;
 
-        printf("alloc: OK, size>0=%s\n", size > 0 ? "yes" : "no");
-        printf("num_ext_blocks=%d\n", md->num_ext_blocks);
+        म_लिखो("alloc: OK, size>0=%s\n", size > 0 ? "yes" : "no");
+        म_लिखो("num_ext_blocks=%d\n", md->अंक_ext_blocks);
 
         /* pointer consistency checks for inline accessors */
         header = av_dovi_get_header(md);
-        if ((uint8_t *)header != (uint8_t *)md + md->header_offset)
-            printf("header: pointer inconsistent with header_offset\n");
-        printf("header_offset>0=%s, rpu_type=%d\n",
+        जर ((uint8_t *)header != (uint8_t *)md + md->header_offset)
+            म_लिखो("header: pointer inconsistent with header_offset\n");
+        म_लिखो("header_offset>0=%s, rpu_type=%d\n",
                md->header_offset > 0 ? "yes" : "no",
                header->rpu_type);
 
         mapping = av_dovi_get_mapping(md);
-        if ((uint8_t *)mapping != (uint8_t *)md + md->mapping_offset)
-            printf("mapping: pointer inconsistent with mapping_offset\n");
-        printf("mapping_offset>0=%s, nlq_method_idc=%d\n",
+        जर ((uint8_t *)mapping != (uint8_t *)md + md->mapping_offset)
+            म_लिखो("mapping: pointer inconsistent with mapping_offset\n");
+        म_लिखो("mapping_offset>0=%s, nlq_method_idc=%d\n",
                md->mapping_offset > 0 ? "yes" : "no",
                mapping->nlq_method_idc);
 
         color = av_dovi_get_color(md);
-        if ((uint8_t *)color != (uint8_t *)md + md->color_offset)
-            printf("color: pointer inconsistent with color_offset\n");
-        printf("color_offset>0=%s, dm_metadata_id=%d\n",
+        जर ((uint8_t *)color != (uint8_t *)md + md->color_offset)
+            म_लिखो("color: pointer inconsistent with color_offset\n");
+        म_लिखो("color_offset>0=%s, dm_metadata_id=%d\n",
                md->color_offset > 0 ? "yes" : "no",
                color->dm_metadata_id);
 
-        printf("ext_block_size>0=%s\n",
+        म_लिखो("ext_block_size>0=%s\n",
                md->ext_block_size > 0 ? "yes" : "no");
 
         av_free(md);
-    } else {
-        printf("alloc: FAIL\n");
+    } अन्यथा {
+        म_लिखो("alloc: FAIL\n");
     }
 
-    md = av_dovi_metadata_alloc(NULL);
-    printf("alloc (no size): %s\n", md ? "OK" : "FAIL");
+    md = av_dovi_metadata_alloc(रिक्त);
+    म_लिखो("alloc (no size): %s\n", md ? "OK" : "FAIL");
     av_free(md);
 
     /* av_dovi_find_level */
-    printf("\nTesting av_dovi_find_level()\n");
-    md = av_dovi_metadata_alloc(NULL);
-    if (md) {
+    म_लिखो("\nTesting av_dovi_find_level()\n");
+    md = av_dovi_metadata_alloc(रिक्त);
+    जर (md) {
         AVDOVIDmData *ext, *found;
 
         /* set up 3 ext blocks with different levels */
-        md->num_ext_blocks = 3;
+        md->अंक_ext_blocks = 3;
         ext = av_dovi_get_ext(md, 0);
-        if ((uint8_t *)ext != (uint8_t *)md + md->ext_block_offset)
-            printf("ext[0]: pointer inconsistent with ext_block_offset\n");
+        जर ((uint8_t *)ext != (uint8_t *)md + md->ext_block_offset)
+            म_लिखो("ext[0]: pointer inconsistent with ext_block_offset\n");
         ext->level = 1;
         ext = av_dovi_get_ext(md, 1);
         ext->level = 5;
@@ -107,32 +107,32 @@ int main(void)
         ext->level = 1;
 
         found = av_dovi_find_level(md, 1);
-        printf("find level 1: %s\n", found && found->level == 1 ? "OK" : "FAIL");
+        म_लिखो("find level 1: %s\n", found && found->level == 1 ? "OK" : "FAIL");
 
         found = av_dovi_find_level(md, 5);
-        printf("find level 5: %s\n", found && found->level == 5 ? "OK" : "FAIL");
+        म_लिखो("find level 5: %s\n", found && found->level == 5 ? "OK" : "FAIL");
 
         /* first match -- should return ext[0], not ext[2] */
         found = av_dovi_find_level(md, 1);
-        printf("find level 1 first match: %s\n",
+        म_लिखो("find level 1 first match: %s\n",
                found == av_dovi_get_ext(md, 0) ? "OK" : "FAIL");
 
         found = av_dovi_find_level(md, 99);
-        printf("find level 99 (missing): %s\n", found == NULL ? "OK" : "FAIL");
+        म_लिखो("find level 99 (missing): %s\n", found == रिक्त ? "OK" : "FAIL");
 
         av_free(md);
     }
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    म_लिखो("\nTesting OOM paths\n");
     av_max_alloc(1);
     cfg = av_dovi_alloc(&size);
-    printf("av_dovi_alloc OOM: %s\n", cfg ? "FAIL" : "OK");
+    म_लिखो("av_dovi_alloc OOM: %s\n", cfg ? "FAIL" : "OK");
     av_free(cfg);
     md = av_dovi_metadata_alloc(&size);
-    printf("av_dovi_metadata_alloc OOM: %s\n", md ? "FAIL" : "OK");
+    म_लिखो("av_dovi_metadata_alloc OOM: %s\n", md ? "FAIL" : "OK");
     av_free(md);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(पूर्णांक_उच्च);
 
-    return 0;
+    परत 0;
 }

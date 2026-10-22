@@ -30,20 +30,20 @@
  * with the data pointer set to a pointer to IDirect3DSurface9.
  */
 
-#include <d3d9.h>
-#include <dxva2api.h>
+#अन्तर्भाव <d3d9.h>
+#अन्तर्भाव <dxva2api.h>
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVDXVA2DeviceContext {
+प्रकारव्याख्या संरचना AVDXVA2DeviceContext {
     IDirect3DDeviceManager9 *devmgr;
 } AVDXVA2DeviceContext;
 
 /**
  * This struct is allocated as AVHWFramesContext.hwctx
  */
-typedef struct AVDXVA2FramesContext {
+प्रकारव्याख्या संरचना AVDXVA2FramesContext {
     /**
      * The surface type (e.g. DXVA2_VideoProcessorRenderTarget or
      * DXVA2_VideoDecoderRenderTarget). Must be set by the caller.
@@ -56,7 +56,7 @@ typedef struct AVDXVA2FramesContext {
      * libavutil.
      */
     IDirect3DSurface9 **surfaces;
-    int              nb_surfaces;
+    पूर्णांक              nb_surfaces;
 
     /**
      * Certain drivers require the decoder to be destroyed before the surfaces.

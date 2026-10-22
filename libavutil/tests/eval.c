@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#अन्तर्भाव "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#अन्तर्भाव <math.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#अन्तर्भाव "libavutil/mathematics.h"
+#अन्तर्भाव "libavutil/eval.h"
 
-static const double const_values[] = {
+स्थिर स्थिरांक द्विगुण const_मूल्ये[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+स्थिर स्थिरांक अक्षर *स्थिरांक const_names[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+पूर्णांक main(पूर्णांक argc, अक्षर **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    पूर्णांक i;
+    द्विगुण d;
+    स्थिरांक अक्षर *स्थिरांक *अभिव्यक्ती;
+    स्थिर स्थिरांक अक्षर *स्थिरांक exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        रिक्त
     };
-    int ret;
+    पूर्णांक ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
-            printf("av_expr_parse_and_eval failed\n");
+    साठी (अभिव्यक्ती = exprs; *अभिव्यक्ती; अभिव्यक्ती++) {
+        म_लिखो("Evaluating '%s'\n", *अभिव्यक्ती);
+        ret = av_अभिव्यक्ती_parse_and_eval(&d, *अभिव्यक्ती,
+                               const_names, const_मूल्ये,
+                               रिक्त, रिक्त, रिक्त, रिक्त, रिक्त, 0, रिक्त);
+        जर (isnan(d))
+            म_लिखो("'%s' -> nan\n\n", *अभिव्यक्ती);
+        अन्यथा
+            म_लिखो("'%s' -> %f\n\n", *अभिव्यक्ती, d);
+        जर (ret < 0)
+            म_लिखो("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 12.7\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 0.931322575\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
+    ret = av_अभिव्यक्ती_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_मूल्ये,
+                           रिक्त, रिक्त, रिक्त, रिक्त, रिक्त, 0, रिक्त);
+    म_लिखो("%f == 12.7\n", d);
+    जर (ret < 0)
+        म_लिखो("av_expr_parse_and_eval failed\n");
+    ret = av_अभिव्यक्ती_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_मूल्ये,
+                           रिक्त, रिक्त, रिक्त, रिक्त, रिक्त, 0, रिक्त);
+    म_लिखो("%f == 0.931322575\n", d);
+    जर (ret < 0)
+        म_लिखो("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    जर (argc > 1 && !म_भेद(argv[1], "-t")) {
+        साठी (i = 0; i < 1050; i++) {
             START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
-                printf("av_expr_parse_and_eval failed\n");
+            ret = av_अभिव्यक्ती_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_मूल्ये,
+                                   रिक्त, रिक्त, रिक्त, रिक्त, रिक्त, 0, रिक्त);
+            जर (ret < 0)
+                म_लिखो("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    परत 0;
 }

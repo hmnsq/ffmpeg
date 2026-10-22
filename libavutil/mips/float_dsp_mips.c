@@ -51,30 +51,30 @@
  * Reference: libavutil/float_dsp.c
  */
 
-#include "config.h"
-#include "libavutil/float_dsp.h"
-#include "libavutil/mips/asmdefs.h"
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "libavutil/float_dsp.h"
+#अन्तर्भाव "libavutil/mips/asmdefs.h"
 
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
-static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
-                             int len)
+#जर HAVE_INLINE_ASM && HAVE_MIPSFPU
+#जर !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+स्थिर शून्य vector_fmul_mips(दशांश *dst, स्थिरांक दशांश *src0, स्थिरांक दशांश *src1,
+                             पूर्णांक len)
 {
-    int i;
+    पूर्णांक i;
 
-    if (len & 3) {
-        for (i = 0; i < len; i++)
+    जर (len & 3) {
+        साठी (i = 0; i < len; i++)
             dst[i] = src0[i] * src1[i];
-    } else {
-        float *d     = (float *)dst;
-        float *d_end = d + len;
-        float *s0    = (float *)src0;
-        float *s1    = (float *)src1;
+    } अन्यथा {
+        दशांश *d     = (दशांश *)dst;
+        दशांश *d_end = d + len;
+        दशांश *s0    = (दशांश *)src0;
+        दशांश *s1    = (दशांश *)src1;
 
-        float src0_0, src0_1, src0_2, src0_3;
-        float src1_0, src1_1, src1_2, src1_3;
+        दशांश src0_0, src0_1, src0_2, src0_3;
+        दशांश src1_0, src1_1, src1_2, src1_3;
 
-        __asm__ volatile (
+        __asm__ अस्थिर (
             "1:                                         \n\t"
             "lwc1   %[src0_0],  0(%[s0])                \n\t"
             "lwc1   %[src1_0],  0(%[s1])                \n\t"
@@ -108,15 +108,15 @@ static void vector_fmul_mips(float *dst, const float *src0, const float *src1,
     }
 }
 
-static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
-                                 int len)
+स्थिर शून्य vector_fmul_scalar_mips(दशांश *dst, स्थिरांक दशांश *src, दशांश mul,
+                                 पूर्णांक len)
 {
-    float temp0, temp1, temp2, temp3;
-    float *local_src = (float*)src;
-    float *end = local_src + len;
+    दशांश temp0, temp1, temp2, temp3;
+    दशांश *local_src = (दशांश*)src;
+    दशांश *end = local_src + len;
 
     /* loop unrolled 4 times */
-    __asm__ volatile(
+    __asm__ अस्थिर(
         ".set    push                             \n\t"
         ".set    noreorder                        \n\t"
     "1:                                           \n\t"
@@ -145,25 +145,25 @@ static void vector_fmul_scalar_mips(float *dst, const float *src, float mul,
     );
 }
 
-static void vector_fmul_window_mips(float *dst, const float *src0,
-                                    const float *src1, const float *win, int len)
+स्थिर शून्य vector_fmul_window_mips(दशांश *dst, स्थिरांक दशांश *src0,
+                                    स्थिरांक दशांश *src1, स्थिरांक दशांश *win, पूर्णांक len)
 {
-    float * dst_j, *win_j, *src0_i, *src1_j, *dst_i, *win_i;
-    float temp, temp1, temp2, temp3;
-    float s0, s01, s1, s11;
-    float wi, wi1, wi2, wi3;
-    float wj, wj1, wj2, wj3;
-    const float * lp_end = win + len;
+    दशांश * dst_j, *win_j, *src0_i, *src1_j, *dst_i, *win_i;
+    दशांश temp, temp1, temp2, temp3;
+    दशांश s0, s01, s1, s11;
+    दशांश wi, wi1, wi2, wi3;
+    दशांश wj, wj1, wj2, wj3;
+    स्थिरांक दशांश * lp_end = win + len;
 
-    win_i  = (float *)win;
-    win_j  = (float *)(win + 2 * len -1);
-    src1_j = (float *)(src1 + len - 1);
-    src0_i = (float *)src0;
-    dst_i  = (float *)dst;
-    dst_j  = (float *)(dst + 2 * len -1);
+    win_i  = (दशांश *)win;
+    win_j  = (दशांश *)(win + 2 * len -1);
+    src1_j = (दशांश *)(src1 + len - 1);
+    src0_i = (दशांश *)src0;
+    dst_i  = (दशांश *)dst;
+    dst_j  = (दशांश *)(dst + 2 * len -1);
 
     /* loop unrolled 4 times */
-    __asm__ volatile (
+    __asm__ अस्थिर (
         "1:"
         "lwc1    %[s1],     0(%[src1_j])                \n\t"
         "lwc1    %[wi],     0(%[win_i])                 \n\t"
@@ -224,17 +224,17 @@ static void vector_fmul_window_mips(float *dst, const float *src0,
     );
 }
 
-static void butterflies_float_mips(float *restrict v1, float *restrict v2,
-                                int len)
+स्थिर शून्य butterflies_float_mips(दशांश *restrict v1, दशांश *restrict v2,
+                                पूर्णांक len)
 {
-    float temp0, temp1, temp2, temp3, temp4;
-    float temp5, temp6, temp7, temp8, temp9;
-    float temp10, temp11, temp12, temp13, temp14, temp15;
-    int pom;
+    दशांश temp0, temp1, temp2, temp3, temp4;
+    दशांश temp5, temp6, temp7, temp8, temp9;
+    दशांश temp10, temp11, temp12, temp13, temp14, temp15;
+    पूर्णांक pom;
     pom = (len >> 2)-1;
 
     /* loop unrolled 4 times */
-    __asm__ volatile (
+    __asm__ अस्थिर (
         "lwc1     %[temp0],    0(%[v1])                 \n\t"
         "lwc1     %[temp1],    4(%[v1])                 \n\t"
         "lwc1     %[temp2],    8(%[v1])                 \n\t"
@@ -302,15 +302,15 @@ static void butterflies_float_mips(float *restrict v1, float *restrict v2,
     );
 }
 
-static void vector_fmul_reverse_mips(float *dst, const float *src0, const float *src1, int len){
-    int i;
-    float temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
+स्थिर शून्य vector_fmul_reverse_mips(दशांश *dst, स्थिरांक दशांश *src0, स्थिरांक दशांश *src1, पूर्णांक len){
+    पूर्णांक i;
+    दशांश temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
     src1 += len-1;
 
-    for(i=0; i<(len>>2); i++)
+    साठी(i=0; i<(len>>2); i++)
     {
         /* loop unrolled 4 times */
-        __asm__ volatile(
+        __asm__ अस्थिर(
             "lwc1      %[temp0],     0(%[src0])                 \n\t"
             "lwc1      %[temp1],     0(%[src1])                 \n\t"
             "lwc1      %[temp2],     4(%[src0])                 \n\t"
@@ -343,9 +343,9 @@ static void vector_fmul_reverse_mips(float *dst, const float *src0, const float 
 #endif /* !HAVE_MIPS32R6 && !HAVE_MIPS64R6 */
 #endif /* HAVE_INLINE_ASM && HAVE_MIPSFPU */
 
-void ff_float_dsp_init_mips(AVFloatDSPContext *fdsp) {
-#if HAVE_INLINE_ASM && HAVE_MIPSFPU
-#if !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+शून्य ff_float_dsp_init_mips(AVFloatDSPContext *fdsp) {
+#जर HAVE_INLINE_ASM && HAVE_MIPSFPU
+#जर !HAVE_MIPS32R6 && !HAVE_MIPS64R6
     fdsp->vector_fmul = vector_fmul_mips;
     fdsp->vector_fmul_scalar  = vector_fmul_scalar_mips;
     fdsp->vector_fmul_window = vector_fmul_window_mips;

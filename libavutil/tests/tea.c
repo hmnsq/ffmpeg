@@ -22,16 +22,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/mem.h"
-#include "libavutil/tea.h"
+#अन्तर्भाव "libavutil/common.h"
+#अन्तर्भाव "libavutil/mem.h"
+#अन्तर्भाव "libavutil/tea.h"
 
-#define TEA_NUM_TESTS 4
+#define TEA_अंक_TESTS 4
 
 // https://github.com/logandrews/TeaCrypt/blob/master/tea/tea_test.go
-static const uint8_t tea_test_key[TEA_NUM_TESTS][16] = {
+स्थिर स्थिरांक uint8_t tea_test_किल्ली[TEA_अंक_TESTS][16] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     },
@@ -46,71 +46,71 @@ static const uint8_t tea_test_key[TEA_NUM_TESTS][16] = {
     }
 };
 
-static const uint8_t tea_test_pt[TEA_NUM_TESTS][8] = {
+स्थिर स्थिरांक uint8_t tea_test_pt[TEA_अंक_TESTS][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
     { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 },
     { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 },
     { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF }
 };
 
-static const uint8_t tea_test_ct[TEA_NUM_TESTS][8] = {
+स्थिर स्थिरांक uint8_t tea_test_ct[TEA_अंक_TESTS][8] = {
     { 0x41, 0xEA, 0x3A, 0x0A, 0x94, 0xBA, 0xA9, 0x40 },
     { 0x6A, 0x2F, 0x9C, 0xF3, 0xFC, 0xCF, 0x3C, 0x55 },
     { 0xDE, 0xB1, 0xC0, 0xA2, 0x7E, 0x74, 0x5D, 0xB3 },
     { 0x12, 0x6C, 0x6B, 0x92, 0xC0, 0x65, 0x3A, 0x3E }
 };
 
-static void test_tea(struct AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                     const uint8_t *ref, int len, uint8_t *iv, int dir,
-                     const char *test)
+स्थिर शून्य test_tea(संरचना AVTEA *ctx, uint8_t *dst, स्थिरांक uint8_t *src,
+                     स्थिरांक uint8_t *ref, पूर्णांक len, uint8_t *iv, पूर्णांक dir,
+                     स्थिरांक अक्षर *test)
 {
     av_tea_crypt(ctx, dst, src, len, iv, dir);
-    if (memcmp(dst, ref, 8*len)) {
-        int i;
-        printf("%s failed\ngot      ", test);
-        for (i = 0; i < 8*len; i++)
-            printf("%02x ", dst[i]);
-        printf("\nexpected ");
-        for (i = 0; i < 8*len; i++)
-            printf("%02x ", ref[i]);
-        printf("\n");
-        exit(1);
+    जर (स_भेद(dst, ref, 8*len)) {
+        पूर्णांक i;
+        म_लिखो("%s failed\ngot      ", test);
+        साठी (i = 0; i < 8*len; i++)
+            म_लिखो("%02x ", dst[i]);
+        म_लिखो("\nexpected ");
+        साठी (i = 0; i < 8*len; i++)
+            म_लिखो("%02x ", ref[i]);
+        म_लिखो("\n");
+        निकास(1);
     }
 }
 
-int main(void)
+पूर्णांक main(शून्य)
 {
-    struct AVTEA *ctx;
+    संरचना AVTEA *ctx;
     uint8_t buf[8], iv[8];
-    int i;
-    static const uint8_t src[32] = "HelloWorldHelloWorldHelloWorld";
+    पूर्णांक i;
+    स्थिर स्थिरांक uint8_t src[32] = "HelloWorldHelloWorldHelloWorld";
     uint8_t ct[32];
     uint8_t pl[32];
 
     ctx = av_tea_alloc();
-    if (!ctx)
-        return 1;
+    जर (!ctx)
+        परत 1;
 
-    for (i = 0; i < TEA_NUM_TESTS; i++) {
-        av_tea_init(ctx, tea_test_key[i], 64);
+    साठी (i = 0; i < TEA_अंक_TESTS; i++) {
+        av_tea_init(ctx, tea_test_किल्ली[i], 64);
 
-        test_tea(ctx, buf, tea_test_pt[i], tea_test_ct[i], 1, NULL, 0, "encryption");
-        test_tea(ctx, buf, tea_test_ct[i], tea_test_pt[i], 1, NULL, 1, "decryption");
+        test_tea(ctx, buf, tea_test_pt[i], tea_test_ct[i], 1, रिक्त, 0, "encryption");
+        test_tea(ctx, buf, tea_test_ct[i], tea_test_pt[i], 1, रिक्त, 1, "decryption");
 
         /* encrypt */
-        memcpy(iv, "HALLO123", 8);
+        स_नकल(iv, "HALLO123", 8);
         av_tea_crypt(ctx, ct, src, 4, iv, 0);
 
         /* decrypt into pl */
-        memcpy(iv, "HALLO123", 8);
+        स_नकल(iv, "HALLO123", 8);
         test_tea(ctx, pl, ct, src, 4, iv, 1, "CBC decryption");
 
-        memcpy(iv, "HALLO123", 8);
+        स_नकल(iv, "HALLO123", 8);
         test_tea(ctx, ct, ct, src, 4, iv, 1, "CBC inplace decryption");
     }
 
-    printf("Test encryption/decryption success.\n");
+    म_लिखो("Test encryption/decryption success.\n");
     av_free(ctx);
 
-    return 0;
+    परत 0;
 }

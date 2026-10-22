@@ -21,31 +21,31 @@
 #ifndef AVUTIL_X86_INTREADWRITE_H
 #define AVUTIL_X86_INTREADWRITE_H
 
-#include <stdint.h>
-#include "config.h"
-#if HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
-#include <emmintrin.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "config.h"
+#जर HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
+#अन्तर्भाव <emmintrin.h>
 #endif
-#include "libavutil/attributes.h"
+#अन्तर्भाव "libavutil/attributes.h"
 
-#if HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
+#जर HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
 
 #define AV_COPY128 AV_COPY128
-static av_always_inline void AV_COPY128(void *d, const void *s)
+स्थिर av_always_inline शून्य AV_COPY128(शून्य *d, स्थिरांक शून्य *s)
 {
-    __m128i tmp = _mm_load_si128((const __m128i *)s);
+    __m128i tmp = _mm_load_si128((स्थिरांक __m128i *)s);
     _mm_store_si128((__m128i *)d, tmp);
 }
 
 #define AV_COPY128U AV_COPY128U
-static av_always_inline void AV_COPY128U(void *d, const void *s)
+स्थिर av_always_inline शून्य AV_COPY128U(शून्य *d, स्थिरांक शून्य *s)
 {
-    __m128i tmp = _mm_loadu_si128((const __m128i *)s);
+    __m128i tmp = _mm_loadu_si128((स्थिरांक __m128i *)s);
     _mm_storeu_si128((__m128i *)d, tmp);
 }
 
 #define AV_ZERO128 AV_ZERO128
-static av_always_inline void AV_ZERO128(void *d)
+स्थिर av_always_inline शून्य AV_ZERO128(शून्य *d)
 {
     __m128i zero = _mm_setzero_si128();
     _mm_store_si128((__m128i *)d, zero);

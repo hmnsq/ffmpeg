@@ -18,160 +18,160 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#अन्तर्भाव "libavutil/timer.h"
 
-#include <inttypes.h>
+#अन्तर्भाव <inttypes.h>
 
-#include "libavutil/softfloat.h"
-#include "libavutil/common.h"
-#include "libavutil/log.h"
+#अन्तर्भाव "libavutil/softfloat.h"
+#अन्तर्भाव "libavutil/common.h"
+#अन्तर्भाव "libavutil/log.h"
 
-#include <stdio.h>
-#include <string.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <string.h>
 
-static const SoftFloat FLOAT_0_017776489257 = {0x1234, 12};
-static const SoftFloat FLOAT_1374_40625 = {0xabcd, 25};
-static const SoftFloat FLOAT_0_1249694824218 = {0xFFF, 15};
+स्थिर स्थिरांक SoftFloat FLOAT_0_017776489257 = {0x1234, 12};
+स्थिर स्थिरांक SoftFloat FLOAT_1374_40625 = {0xabcd, 25};
+स्थिर स्थिरांक SoftFloat FLOAT_0_1249694824218 = {0xFFF, 15};
 
-static double add_mul(int i)
+स्थिर द्विगुण add_mul(पूर्णांक i)
 {
-    double d1 = i, d2 = i/100.0;
+    द्विगुण d1 = i, d2 = i/100.0;
 
-    for (int j = 0; j < 1000; j++)
+    साठी (पूर्णांक j = 0; j < 1000; j++)
         d1 = (d1+1)*d2;
-    return d1;
+    परत d1;
 }
 
-static SoftFloat add_mul_sf(int i)
+स्थिर SoftFloat add_mul_sf(पूर्णांक i)
 {
     SoftFloat one = av_int2sf(1, 0);
     SoftFloat sf1 = av_int2sf(i, 0);
     SoftFloat sf2 = av_div_sf(av_int2sf(i, 2), av_int2sf(200, 3));
 
-    for (int j = 0; j < 1000; j++)
+    साठी (पूर्णांक j = 0; j < 1000; j++)
         sf1 = av_mul_sf(av_add_sf(sf1, one), sf2);
-    return sf1;
+    परत sf1;
 }
 
-int main(int argc, char **argv){
+पूर्णांक main(पूर्णांक argc, अक्षर **argv){
     SoftFloat one= av_int2sf(1, 0);
     SoftFloat sf1, sf2, sf3;
-    double d1, d2, d3;
-    int i, j;
-    int bench = argc > 1 && !strcmp(argv[1], "-t");
+    द्विगुण d1, d2, d3;
+    पूर्णांक i, j;
+    पूर्णांक bench = argc > 1 && !म_भेद(argv[1], "-t");
     av_log_set_level(AV_LOG_DEBUG);
 
     d1= 1;
-    for(i= 0; i<10; i++){
+    साठी(i= 0; i<10; i++){
         d1= 1/(d1+1);
     }
-    printf("test1 double=%d\n", (int)(d1 * (1<<24)));
+    म_लिखो("test1 double=%d\n", (पूर्णांक)(d1 * (1<<24)));
 
     sf1= one;
-    for(i= 0; i<10; i++){
+    साठी(i= 0; i<10; i++){
         sf1= av_div_sf(one, av_normalize_sf(av_add_sf(one, sf1)));
     }
-    printf("test1 sf    =%d\n", av_sf2int(sf1, 24));
+    म_लिखो("test1 sf    =%d\n", av_sf2int(sf1, 24));
 
 
-    if (bench) {
-        for(i= 0; i<100; i++){
+    जर (bench) {
+        साठी(i= 0; i<100; i++){
             START_TIMER
             d1= add_mul(i);
             STOP_TIMER("float add mul")
         }
-    } else
+    } अन्यथा
         d1= add_mul(99);
-    printf("test2 double=%d\n", (int)(d1 * (1<<24)));
+    म_लिखो("test2 double=%d\n", (पूर्णांक)(d1 * (1<<24)));
 
-    if (bench) {
-        for(i= 0; i<100; i++){
+    जर (bench) {
+        साठी(i= 0; i<100; i++){
             START_TIMER
             sf1= add_mul_sf(i);
             STOP_TIMER("softfloat add mul")
         }
-    } else
+    } अन्यथा
         sf1= add_mul_sf(99);
-    printf("test2 sf    =%d (%d %d)\n", av_sf2int(sf1, 24), sf1.exp, sf1.mant);
+    म_लिखो("test2 sf    =%d (%d %d)\n", av_sf2int(sf1, 24), sf1.exp, sf1.mant);
 
     d1 = 0.0177764893;
     d2 = 1374.40625;
     d3 = 0.1249694824;
     d2 += d1;
     d3 += d2;
-    printf("test3 double: %.10lf\n", d3);
+    म_लिखो("test3 double: %.10lf\n", d3);
 
     sf1 = FLOAT_0_017776489257;
     sf2 = FLOAT_1374_40625;
     sf3 = FLOAT_0_1249694824218;
     sf2 = av_add_sf(sf1, sf2);
     sf3 = av_add_sf(sf3, sf2);
-    printf("test3 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf3), sf3.mant, sf3.exp);
+    म_लिखो("test3 softfloat: %.10lf (0x%08x %d)\n", (द्विगुण)av_sf2double(sf3), sf3.mant, sf3.exp);
 
     sf1 = av_int2sf(0xFFFFFFF0, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    म_लिखो("test4 softfloat: %.10lf (0x%08x %d)\n", (द्विगुण)av_sf2double(sf1), sf1.mant, sf1.exp);
     sf1 = av_int2sf(0x00000010, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    म_लिखो("test4 softfloat: %.10lf (0x%08x %d)\n", (द्विगुण)av_sf2double(sf1), sf1.mant, sf1.exp);
 
     sf1 = av_int2sf(0x1FFFFFFF, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    म_लिखो("test4 softfloat: %.10lf (0x%08x %d)\n", (द्विगुण)av_sf2double(sf1), sf1.mant, sf1.exp);
     sf1 = av_int2sf(0xE0000001, 0);
-    printf("test4 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    म_लिखो("test4 softfloat: %.10lf (0x%08x %d)\n", (द्विगुण)av_sf2double(sf1), sf1.mant, sf1.exp);
 
 
     sf1 = (SoftFloat){ 0x20000000,   MIN_EXP };
     sf1 = av_mul_sf(sf1, sf1);
-    printf("test5 softfloat: %.10lf (0x%08x %d)\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp);
+    म_लिखो("test5 softfloat: %.10lf (0x%08x %d)\n", (द्विगुण)av_sf2double(sf1), sf1.mant, sf1.exp);
 
     sf1 = (SoftFloat){ 0x20000000,   MIN_EXP };
     sf2 = (SoftFloat){ 0x20000000,   MAX_EXP };
     i = av_cmp_sf(sf1, sf2);
     j = av_cmp_sf(sf2, sf1);
     sf1 = av_div_sf(sf1, sf2);
-    printf("test6 softfloat: %.10lf (0x%08x %d) %d %d\n", (double)av_sf2double(sf1), sf1.mant, sf1.exp, i, j);
+    म_लिखो("test6 softfloat: %.10lf (0x%08x %d) %d %d\n", (द्विगुण)av_sf2double(sf1), sf1.mant, sf1.exp, i, j);
 
-    for(i= -50; i<50; i++) {
+    साठी(i= -50; i<50; i++) {
         sf1= av_int2sf(i, 0);
-        for(j= -50; j<50; j++) {
-            int c;
+        साठी(j= -50; j<50; j++) {
+            पूर्णांक c;
             sf2= av_int2sf(j, 0);
             c = av_cmp_sf(sf1, sf2);
-            if (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c)<0) {
-                printf("av_cmp_sf failed at %d %d as %X\n", i, j, c);
+            जर (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c)<0) {
+                म_लिखो("av_cmp_sf failed at %d %d as %X\n", i, j, c);
             }
             c = av_gt_sf(sf1, sf2);
-            if ((i>j) != c) {
-                printf("av_gt_sf failed at %d %d as %X\n", i, j, c);
+            जर ((i>j) != c) {
+                म_लिखो("av_gt_sf failed at %d %d as %X\n", i, j, c);
             }
         }
         sf1 = av_int2sf(1, i);
-        for(j = -50; j < 50; j++) {
-            int c;
+        साठी(j = -50; j < 50; j++) {
+            पूर्णांक c;
             sf2 = av_int2sf(1, j);
             c = av_cmp_sf(sf2, sf1);
-            if (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c) < 0) {
-                printf("av_cmp_sf failed2 at %d %d as %X\n", i, j, c);
+            जर (FFDIFFSIGN(i,j) != c && (FFDIFFSIGN(i,j)^c) < 0) {
+                म_लिखो("av_cmp_sf failed2 at %d %d as %X\n", i, j, c);
             }
             c = av_gt_sf(sf1, sf2);
-            if ((i<j) != c) {
-                printf("av_gt_sf failed2 at %d %d as %X\n", i, j, c);
+            जर ((i<j) != c) {
+                म_लिखो("av_gt_sf failed2 at %d %d as %X\n", i, j, c);
             }
         }
     }
 
 
-    for(i= 0; i<4*36; i++){
-        int s, c;
-        double errs, errc;
+    साठी(i= 0; i<4*36; i++){
+        पूर्णांक s, c;
+        द्विगुण errs, errc;
 
         av_sincos_sf(i*(1ULL<<32)/36/4, &s, &c);
-        errs = (double)s/ (1<<30) - sin(i*M_PI/36);
-        errc = (double)c/ (1<<30) - cos(i*M_PI/36);
-        if (fabs(errs) > 0.000000004 || fabs(errc) >0.000000004) {
-            printf("sincos FAIL %d %f %f %f %f\n", i, (float)s/ (1<<30), (float)c/ (1<<30), sin(i*M_PI/36), cos(i*M_PI/36));
+        errs = (द्विगुण)s/ (1<<30) - sin(i*M_PI/36);
+        errc = (द्विगुण)c/ (1<<30) - cos(i*M_PI/36);
+        जर (भ_असल(errs) > 0.000000004 || भ_असल(errc) >0.000000004) {
+            म_लिखो("sincos FAIL %d %f %f %f %f\n", i, (दशांश)s/ (1<<30), (दशांश)c/ (1<<30), sin(i*M_PI/36), cos(i*M_PI/36));
         }
 
     }
-    return 0;
+    परत 0;
 
 }

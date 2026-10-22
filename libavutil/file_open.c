@@ -16,64 +16,64 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "avutil.h"
-#include "file_open.h"
-#include "mem.h"
-#include <stdarg.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "avutil.h"
+#अन्तर्भाव "file_open.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव <stdarg.h>
+#अन्तर्भाव <fcntl.h>
+#अन्तर्भाव <sys/stat.h>
+#जर HAVE_UNISTD_H
+#अन्तर्भाव <unistd.h>
 #endif
-#if HAVE_IO_H
-#include <io.h>
+#जर HAVE_IO_H
+#अन्तर्भाव <io.h>
 #endif
 
 #ifdef _WIN32
-#undef open
+#undef खोलो
 #undef lseek
 #undef stat
-#undef fstat
-#include <windows.h>
-#include <share.h>
-#include <errno.h>
-#include "wchar_filename.h"
+#undef ख_स्थिति
+#अन्तर्भाव <windows.h>
+#अन्तर्भाव <share.h>
+#अन्तर्भाव <errno.h>
+#अन्तर्भाव "wchar_filename.h"
 
-static int win32_open(const char *filename_utf8, int oflag, int pmode)
+स्थिर पूर्णांक win32_open(स्थिरांक अक्षर *filename_utf8, पूर्णांक oflag, पूर्णांक pmode)
 {
-    int fd;
-    wchar_t *filename_w;
+    पूर्णांक fd;
+    ब_अक्षर_प्रकार *filename_w;
 
     /* convert UTF-8 to wide chars */
-    if (get_extended_win32_path(filename_utf8, &filename_w))
-        return -1;
-    if (!filename_w)
-        goto fallback;
+    जर (get_extended_win32_path(filename_utf8, &filename_w))
+        परत -1;
+    जर (!filename_w)
+        जा fallback;
 
     fd = _wsopen(filename_w, oflag, SH_DENYNO, pmode);
     av_freep(&filename_w);
 
-    if (fd != -1 || (oflag & O_CREAT))
-        return fd;
+    जर (fd != -1 || (oflag & O_CREAT))
+        परत fd;
 
 fallback:
     /* filename may be in CP_ACP */
-    return _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
+    परत _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
 }
-#define open win32_open
+#define खोलो win32_open
 #endif
 
-int avpriv_open(const char *filename, int flags, ...)
+पूर्णांक avpriv_open(स्थिरांक अक्षर *filename, पूर्णांक flags, ...)
 {
-    int fd;
-    unsigned int mode = 0;
-    va_list ap;
+    पूर्णांक fd;
+    अचिन्हित पूर्णांक mode = 0;
+    बहु_सूची ap;
 
-    va_start(ap, flags);
-    if (flags & O_CREAT)
-        mode = va_arg(ap, unsigned int);
-    va_end(ap);
+    बहु_शुरू(ap, flags);
+    जर (flags & O_CREAT)
+        mode = बहु_तर्क(ap, अचिन्हित पूर्णांक);
+    बहु_पूर्ण(ap);
 
 #ifdef O_CLOEXEC
     flags |= O_CLOEXEC;
@@ -82,111 +82,111 @@ int avpriv_open(const char *filename, int flags, ...)
     flags |= O_NOINHERIT;
 #endif
 
-    fd = open(filename, flags, mode);
-#if HAVE_FCNTL
-    if (fd != -1) {
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
-            av_log(NULL, AV_LOG_DEBUG, "Failed to set close on exec\n");
+    fd = खोलो(filename, flags, mode);
+#जर HAVE_FCNTL
+    जर (fd != -1) {
+        जर (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
+            av_log(रिक्त, AV_LOG_DEBUG, "Failed to set close on exec\n");
     }
 #endif
 
-    return fd;
+    परत fd;
 }
 
-typedef struct FileLogContext {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+प्रकारव्याख्या संरचना FileLogContext {
+    स्थिरांक AVClass *class;
+    पूर्णांक   log_offset;
+    शून्य *log_ctx;
 } FileLogContext;
 
-static const AVClass file_log_ctx_class = {
+स्थिर स्थिरांक AVClass file_log_ctx_class = {
     .class_name                = "TEMPFILE",
     .item_name                 = av_default_item_name,
-    .option                    = NULL,
+    .option                    = रिक्त,
     .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(FileLogContext, log_offset),
-    .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
+    .log_level_offset_offset   = दुरत्व(FileLogContext, log_offset),
+    .parent_log_context_offset = दुरत्व(FileLogContext, log_ctx),
 };
 
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx)
+पूर्णांक avpriv_tempfile(स्थिरांक अक्षर *prefix, अक्षर **filename, पूर्णांक log_offset, शून्य *log_ctx)
 {
     FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int fd = -1;
-#if HAVE_MKSTEMP
-    size_t len = strlen(prefix) + 12; /* room for "/tmp/" and "XXXXXX\0" */
+    पूर्णांक fd = -1;
+#जर HAVE_MKSTEMP
+    माप_प्रकार len = म_माप(prefix) + 12; /* room for "/tmp/" and "XXXXXX\0" */
     *filename  = av_malloc(len);
-#elif HAVE_TEMPNAM
-    void *ptr= tempnam(NULL, prefix);
-    if(!ptr)
+#किंवाजर HAVE_TEMPNAM
+    शून्य *ptr= tempnam(रिक्त, prefix);
+    जर(!ptr)
         ptr= tempnam(".", prefix);
     *filename = av_strdup(ptr);
-    free(ptr);
-#else
-    return AVERROR(ENOSYS);
+    मुक्त(ptr);
+#अन्यथा
+    परत AVERROR(ENOSYS);
 #endif
     /* -----common section-----*/
-    if (!*filename) {
+    जर (!*filename) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot allocate file name\n");
-        return AVERROR(ENOMEM);
+        परत AVERROR(ENOMEM);
     }
-#if !HAVE_MKSTEMP
-#   ifndef O_BINARY
-#       define O_BINARY 0
+#जर !HAVE_MKSTEMP
+#   ifndef O_द्विमान
+#       define O_द्विमान 0
 #   endif
 #   ifndef O_EXCL
 #       define O_EXCL 0
 #   endif
-    fd = open(*filename, O_RDWR | O_BINARY | O_CREAT | O_EXCL, 0600);
-#else
+    fd = खोलो(*filename, O_RDWR | O_द्विमान | O_CREAT | O_EXCL, 0600);
+#अन्यथा
     snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
     fd = mkstemp(*filename);
-#if defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
-    if (fd < 0) {
+#जर defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
+    जर (fd < 0) {
         snprintf(*filename, len, "./%sXXXXXX", prefix);
         fd = mkstemp(*filename);
     }
 #endif
 #endif
     /* -----common section-----*/
-    if (fd < 0) {
-        int err = AVERROR(errno);
+    जर (fd < 0) {
+        पूर्णांक err = AVERROR(त्रुटि_सं);
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot open temporary file %s\n", *filename);
         av_freep(filename);
-        return err;
+        परत err;
     }
-    return fd; /* success */
+    परत fd; /* success */
 }
 
-FILE *avpriv_fopen_utf8(const char *path, const char *mode)
+खाता *avpriv_fopen_utf8(स्थिरांक अक्षर *path, स्थिरांक अक्षर *mode)
 {
-    int fd;
-    int access;
-    const char *m = mode;
+    पूर्णांक fd;
+    पूर्णांक access;
+    स्थिरांक अक्षर *m = mode;
 
-    switch (*m++) {
-    case 'r': access = O_RDONLY; break;
-    case 'w': access = O_CREAT|O_WRONLY|O_TRUNC; break;
-    case 'a': access = O_CREAT|O_WRONLY|O_APPEND; break;
-    default :
-        errno = EINVAL;
-        return NULL;
+    निवड (*m++) {
+    स्थिती 'r': access = O_RDONLY; थांबा;
+    स्थिती 'w': access = O_CREAT|O_WRONLY|O_TRUNC; थांबा;
+    स्थिती 'a': access = O_CREAT|O_WRONLY|O_APPEND; थांबा;
+    पूर्वनिर्धारित :
+        त्रुटि_सं = EINVAL;
+        परत रिक्त;
     }
-    while (*m) {
-        if (*m == '+') {
+    पर्यंत (*m) {
+        जर (*m == '+') {
             access &= ~(O_RDONLY | O_WRONLY);
             access |= O_RDWR;
-        } else if (*m == 'b') {
-#ifdef O_BINARY
-            access |= O_BINARY;
+        } अन्यथा जर (*m == 'b') {
+#ifdef O_द्विमान
+            access |= O_द्विमान;
 #endif
-        } else if (*m) {
-            errno = EINVAL;
-            return NULL;
+        } अन्यथा जर (*m) {
+            त्रुटि_सं = EINVAL;
+            परत रिक्त;
         }
         m++;
     }
     fd = avpriv_open(path, access, 0666);
-    if (fd == -1)
-        return NULL;
-    return fdopen(fd, mode);
+    जर (fd == -1)
+        परत रिक्त;
+    परत fdopen(fd, mode);
 }

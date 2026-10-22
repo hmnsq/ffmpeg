@@ -24,11 +24,11 @@
 /**
  * OpenHarmony codec device
  */
-typedef struct AVOHCodecDeviceContext {
+प्रकारव्याख्या संरचना AVOHCodecDeviceContext {
     /**
      * Pointer to OHNativeWindow
      */
-    void *native_window;
+    शून्य *native_window;
 } AVOHCodecDeviceContext;
 
 #endif /* AVUTIL_HWCONTEXT_OH_H */

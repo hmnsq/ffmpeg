@@ -19,11 +19,11 @@
 #ifndef AVUTIL_BUFFER_INTERNAL_H
 #define AVUTIL_BUFFER_INTERNAL_H
 
-#include <stdatomic.h>
-#include <stdint.h>
+#अन्तर्भाव <stdatomic.h>
+#अन्तर्भाव <stdint.h>
 
-#include "buffer.h"
-#include "thread.h"
+#अन्तर्भाव "buffer.h"
+#अन्तर्भाव "thread.h"
 
 /**
  * The buffer was av_realloc()ed, so it is reallocatable.
@@ -35,9 +35,9 @@
  */
 #define BUFFER_FLAG_NO_FREE       (1 << 1)
 
-struct AVBuffer {
+संरचना AVBuffer {
     uint8_t *data; /**< data described by this buffer */
-    size_t size; /**< size of data in bytes */
+    माप_प्रकार size; /**< size of data in bytes */
 
     /**
      *  number of existing AVBufferRef instances referring to this buffer
@@ -47,36 +47,36 @@ struct AVBuffer {
     /**
      * a callback for freeing the data
      */
-    void (*free)(void *opaque, uint8_t *data);
+    शून्य (*मुक्त)(शून्य *opaque, uint8_t *data);
 
     /**
      * an opaque pointer, to be used by the freeing callback
      */
-    void *opaque;
+    शून्य *opaque;
 
     /**
      * A combination of AV_BUFFER_FLAG_*
      */
-    int flags;
+    पूर्णांक flags;
 
     /**
      * A combination of BUFFER_FLAG_*
      */
-    int flags_internal;
+    पूर्णांक flags_internal;
 };
 
-typedef struct BufferPoolEntry {
+प्रकारव्याख्या संरचना BufferPoolEntry {
     uint8_t *data;
 
     /*
      * Backups of the original opaque/free of the AVBuffer corresponding to
      * data. They will be used to free the buffer when the pool is freed.
      */
-    void *opaque;
-    void (*free)(void *opaque, uint8_t *data);
+    शून्य *opaque;
+    शून्य (*मुक्त)(शून्य *opaque, uint8_t *data);
 
     AVBufferPool *pool;
-    struct BufferPoolEntry *next;
+    संरचना BufferPoolEntry *next;
 
     /*
      * An AVBuffer structure to (re)use as AVBuffer for subsequent uses
@@ -85,7 +85,7 @@ typedef struct BufferPoolEntry {
     AVBuffer buffer;
 } BufferPoolEntry;
 
-struct AVBufferPool {
+संरचना AVBufferPool {
     AVMutex mutex;
     BufferPoolEntry *pool;
 
@@ -100,11 +100,11 @@ struct AVBufferPool {
      */
     atomic_uint refcount;
 
-    size_t size;
-    void *opaque;
-    AVBufferRef* (*alloc)(size_t size);
-    AVBufferRef* (*alloc2)(void *opaque, size_t size);
-    void         (*pool_free)(void *opaque);
+    माप_प्रकार size;
+    शून्य *opaque;
+    AVBufferRef* (*alloc)(माप_प्रकार size);
+    AVBufferRef* (*alloc2)(शून्य *opaque, माप_प्रकार size);
+    शून्य         (*pool_free)(शून्य *opaque);
 };
 
 #endif /* AVUTIL_BUFFER_INTERNAL_H */

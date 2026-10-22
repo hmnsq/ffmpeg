@@ -16,77 +16,77 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdint.h>
-#include <stdio.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/mem.h"
-#include "libavutil/tdrdi.h"
+#अन्तर्भाव "libavutil/mem.h"
+#अन्तर्भाव "libavutil/tdrdi.h"
 
-int main(void)
+पूर्णांक main(शून्य)
 {
     AV3DReferenceDisplaysInfo *tdrdi;
     AV3DReferenceDisplay *display;
-    size_t size;
+    माप_प्रकार size;
 
     /* av_tdrdi_alloc with 1 display */
-    printf("Testing av_tdrdi_alloc()\n");
+    म_लिखो("Testing av_tdrdi_alloc()\n");
     tdrdi = av_tdrdi_alloc(1, &size);
-    if (tdrdi) {
-        printf("alloc 1: size>0=%s, num_ref_displays=%u\n",
-               size > 0 ? "yes" : "no", tdrdi->num_ref_displays);
+    जर (tdrdi) {
+        म_लिखो("alloc 1: size>0=%s, num_ref_displays=%u\n",
+               size > 0 ? "yes" : "no", tdrdi->अंक_ref_displays);
 
         display = av_tdrdi_get_display(tdrdi, 0);
         /* pointer consistency check */
-        if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
-            printf("display 0: pointer inconsistent with entries_offset\n");
+        जर ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset)
+            म_लिखो("display 0: pointer inconsistent with entries_offset\n");
 
         /* write and read back */
         display->exponent_ref_display_width = 3;
         display->mantissa_ref_display_width = 100;
-        display->left_view_id = 0;
-        display->right_view_id = 1;
+        display->डावा_view_id = 0;
+        display->उजवा_view_id = 1;
         display = av_tdrdi_get_display(tdrdi, 0);
-        printf("display 0: width_exp=%u width_man=%u left=%u right=%u\n",
+        म_लिखो("display 0: width_exp=%u width_man=%u left=%u right=%u\n",
                display->exponent_ref_display_width,
                display->mantissa_ref_display_width,
-               display->left_view_id, display->right_view_id);
+               display->डावा_view_id, display->उजवा_view_id);
         av_free(tdrdi);
     }
 
     /* alloc with multiple displays */
-    printf("\nTesting multiple displays\n");
+    म_लिखो("\nTesting multiple displays\n");
     tdrdi = av_tdrdi_alloc(3, &size);
-    if (tdrdi) {
-        printf("alloc 3: num_ref_displays=%u\n", tdrdi->num_ref_displays);
-        for (int i = 0; i < 3; i++) {
+    जर (tdrdi) {
+        म_लिखो("alloc 3: num_ref_displays=%u\n", tdrdi->अंक_ref_displays);
+        साठी (पूर्णांक i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
             /* verify stride consistency */
-            if ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
-                                      (size_t)i * tdrdi->entry_size)
-                printf("display %d: pointer inconsistent\n", i);
+            जर ((uint8_t *)display != (uint8_t *)tdrdi + tdrdi->entries_offset +
+                                      (माप_प्रकार)i * tdrdi->entry_size)
+                म_लिखो("display %d: pointer inconsistent\n", i);
             display->exponent_ref_display_width = i + 1;
         }
-        for (int i = 0; i < 3; i++) {
+        साठी (पूर्णांक i = 0; i < 3; i++) {
             display = av_tdrdi_get_display(tdrdi, i);
-            printf("display %d: width_exp=%u\n", i,
+            म_लिखो("display %d: width_exp=%u\n", i,
                    display->exponent_ref_display_width);
         }
         av_free(tdrdi);
     }
 
     /* alloc with NULL size */
-    tdrdi = av_tdrdi_alloc(1, NULL);
-    printf("\nalloc (no size): %s\n", tdrdi ? "OK" : "FAIL");
+    tdrdi = av_tdrdi_alloc(1, रिक्त);
+    म_लिखो("\nalloc (no size): %s\n", tdrdi ? "OK" : "FAIL");
     av_free(tdrdi);
 
     /* OOM paths via av_max_alloc */
-    printf("\nTesting OOM paths\n");
+    म_लिखो("\nTesting OOM paths\n");
     av_max_alloc(1);
     tdrdi = av_tdrdi_alloc(1, &size);
-    printf("alloc OOM: %s\n", tdrdi ? "FAIL" : "OK");
+    म_लिखो("alloc OOM: %s\n", tdrdi ? "FAIL" : "OK");
     av_free(tdrdi);
-    av_max_alloc(INT_MAX);
+    av_max_alloc(पूर्णांक_उच्च);
 
-    return 0;
+    परत 0;
 }

@@ -19,8 +19,8 @@
 #ifndef AVUTIL_HWCONTEXT_DRM_H
 #define AVUTIL_HWCONTEXT_DRM_H
 
-#include <stddef.h>
-#include <stdint.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
 
 /**
  * @file
@@ -32,7 +32,7 @@
  * added in future.
  */
 
-enum {
+गणना {
     /**
      * The maximum number of layers/planes in a DRM frame.
      */
@@ -45,17 +45,17 @@ enum {
  * Describes a single DRM object, addressing it as a PRIME file
  * descriptor.
  */
-typedef struct AVDRMObjectDescriptor {
+प्रकारव्याख्या संरचना AVDRMObjectDescriptor {
     /**
      * DRM PRIME fd for the object.
      */
-    int fd;
+    पूर्णांक fd;
     /**
      * Total size of the object.
      *
      * (This includes any parts not which do not contain image data.)
      */
-    size_t size;
+    माप_प्रकार size;
     /**
      * Format modifier applied to the object (DRM_FORMAT_MOD_*).
      *
@@ -71,20 +71,20 @@ typedef struct AVDRMObjectDescriptor {
  * Describes a single plane of a layer, which is contained within
  * a single object.
  */
-typedef struct AVDRMPlaneDescriptor {
+प्रकारव्याख्या संरचना AVDRMPlaneDescriptor {
     /**
      * Index of the object containing this plane in the objects
      * array of the enclosing frame descriptor.
      */
-    int object_index;
+    पूर्णांक object_index;
     /**
      * Offset within that object of this plane.
      */
-    ptrdiff_t offset;
+    सूचक_भेद_प्रकार offset;
     /**
      * Pitch (linesize) of this plane.
      */
-    ptrdiff_t pitch;
+    सूचक_भेद_प्रकार pitch;
 } AVDRMPlaneDescriptor;
 
 /**
@@ -93,7 +93,7 @@ typedef struct AVDRMPlaneDescriptor {
  * Describes a single layer within a frame.  This has the structure
  * defined by its format, and will contain one or more planes.
  */
-typedef struct AVDRMLayerDescriptor {
+प्रकारव्याख्या संरचना AVDRMLayerDescriptor {
     /**
      * Format of the layer (DRM_FORMAT_*).
      */
@@ -103,7 +103,7 @@ typedef struct AVDRMLayerDescriptor {
      *
      * This must match the number of planes required by format.
      */
-    int nb_planes;
+    पूर्णांक nb_planes;
     /**
      * Array of planes in this layer.
      */
@@ -130,11 +130,11 @@ typedef struct AVDRMLayerDescriptor {
  * increasing plane index must be the same as the order which would
  * be used for the data pointers in the equivalent software format.
  */
-typedef struct AVDRMFrameDescriptor {
+प्रकारव्याख्या संरचना AVDRMFrameDescriptor {
     /**
      * Number of DRM objects making up this frame.
      */
-    int nb_objects;
+    पूर्णांक nb_objects;
     /**
      * Array of objects making up the frame.
      */
@@ -142,7 +142,7 @@ typedef struct AVDRMFrameDescriptor {
     /**
      * Number of layers in the frame.
      */
-    int nb_layers;
+    पूर्णांक nb_layers;
     /**
      * Array of layers in the frame.
      */
@@ -154,7 +154,7 @@ typedef struct AVDRMFrameDescriptor {
  *
  * Allocated as AVHWDeviceContext.hwctx.
  */
-typedef struct AVDRMDeviceContext {
+प्रकारव्याख्या संरचना AVDRMDeviceContext {
     /**
      * File descriptor of DRM device.
      *
@@ -163,7 +163,7 @@ typedef struct AVDRMDeviceContext {
      *
      * If no device is required, set to -1.
      */
-    int fd;
+    पूर्णांक fd;
 } AVDRMDeviceContext;
 
 #endif /* AVUTIL_HWCONTEXT_DRM_H */

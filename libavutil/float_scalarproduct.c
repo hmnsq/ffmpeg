@@ -19,14 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "float_dsp.h"
+#अन्तर्भाव "float_dsp.h"
 
-float ff_scalarproduct_float_c(const float *v1, const float *v2, int len)
+दशांश ff_scalarproduct_float_c(स्थिरांक दशांश *v1, स्थिरांक दशांश *v2, पूर्णांक len)
 {
-    float p = 0.0;
+    दशांश p = 0.0;
 
-    for (int i = 0; i < len; i++)
+    साठी (पूर्णांक i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    परत p;
 }

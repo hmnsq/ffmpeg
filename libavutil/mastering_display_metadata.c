@@ -18,17 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <string.h>
 
-#include "mastering_display_metadata.h"
-#include "mem.h"
+#अन्तर्भाव "mastering_display_metadata.h"
+#अन्तर्भाव "mem.h"
 
-static void get_defaults(AVMasteringDisplayMetadata *mastering)
+स्थिर शून्य get_defaults(AVMasteringDisplayMetadata *mastering)
 {
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 2; j++)
+    साठी (पूर्णांक i = 0; i < 3; i++)
+        साठी (पूर्णांक j = 0; j < 2; j++)
             mastering->display_primaries[i][j] = (AVRational) { 0, 1 };
     mastering->white_point[0] =
     mastering->white_point[1] =
@@ -36,59 +36,59 @@ static void get_defaults(AVMasteringDisplayMetadata *mastering)
     mastering->max_luminance  = (AVRational) { 0, 1 };
 }
 
-AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(void)
+AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(शून्य)
 {
-    return av_mastering_display_metadata_alloc_size(NULL);
+    परत av_mastering_display_metadata_alloc_size(रिक्त);
 }
 
-AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_size(size_t *size)
+AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_size(माप_प्रकार *size)
 {
-    AVMasteringDisplayMetadata *mastering = av_mallocz(sizeof(AVMasteringDisplayMetadata));
+    AVMasteringDisplayMetadata *mastering = av_mallocz(आकार(AVMasteringDisplayMetadata));
 
-    if (size)
-        *size = mastering ? sizeof(*mastering) : 0;
+    जर (size)
+        *size = mastering ? आकार(*mastering) : 0;
 
-    if (!mastering)
-        return NULL;
+    जर (!mastering)
+        परत रिक्त;
 
     get_defaults(mastering);
 
-    return mastering;
+    परत mastering;
 }
 
 AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_MASTERING_DISPLAY_METADATA,
-                                                        sizeof(AVMasteringDisplayMetadata));
-    if (!side_data)
-        return NULL;
+                                                        आकार(AVMasteringDisplayMetadata));
+    जर (!side_data)
+        परत रिक्त;
 
-    memset(side_data->data, 0, sizeof(AVMasteringDisplayMetadata));
+    स_रखो(side_data->data, 0, आकार(AVMasteringDisplayMetadata));
     get_defaults((AVMasteringDisplayMetadata *)side_data->data);
 
-    return (AVMasteringDisplayMetadata *)side_data->data;
+    परत (AVMasteringDisplayMetadata *)side_data->data;
 }
 
-AVContentLightMetadata *av_content_light_metadata_alloc(size_t *size)
+AVContentLightMetadata *av_content_light_metadata_alloc(माप_प्रकार *size)
 {
-    AVContentLightMetadata *metadata = av_mallocz(sizeof(AVContentLightMetadata));
+    AVContentLightMetadata *metadata = av_mallocz(आकार(AVContentLightMetadata));
 
-    if (size)
-        *size = metadata ? sizeof(*metadata) : 0;
+    जर (size)
+        *size = metadata ? आकार(*metadata) : 0;
 
-    return metadata;
+    परत metadata;
 }
 
 AVContentLightMetadata *av_content_light_metadata_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
-                                                        sizeof(AVContentLightMetadata));
-    if (!side_data)
-        return NULL;
+                                                        आकार(AVContentLightMetadata));
+    जर (!side_data)
+        परत रिक्त;
 
-    memset(side_data->data, 0, sizeof(AVContentLightMetadata));
+    स_रखो(side_data->data, 0, आकार(AVContentLightMetadata));
 
-    return (AVContentLightMetadata *)side_data->data;
+    परत (AVContentLightMetadata *)side_data->data;
 }
