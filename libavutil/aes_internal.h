@@ -21,26 +21,26 @@
 #ifndef AVUTIL_AES_INTERNAL_H
 #define AVUTIL_AES_INTERNAL_H
 
-#include "mem_internal.h"
-#include <stdint.h>
+#अन्तर्भाव "mem_internal.h"
+#अन्तर्भाव <stdint.h>
 
-typedef union {
+प्रकारनिर्देश सङ्घ {
     uint64_t u64[2];
     uint32_t u32[4];
     uint8_t u8x4[4][4];
     uint8_t u8[16];
 } av_aes_block;
 
-typedef struct AVAES {
+प्रकारनिर्देश संरचना AVAES {
     // Note: round_key[16] is accessed in the init code, but this only
     // overwrites state, which does not matter (see also commit ba554c0).
-    DECLARE_ALIGNED(16, av_aes_block, round_key)[15];
+    DECLARE_ALIGNED(16, av_aes_block, round_कुंजी)[15];
     DECLARE_ALIGNED(16, av_aes_block, state)[2];
-    int rounds;
-    void (*crypt)(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int rounds);
+    पूर्णाङ्क rounds;
+    शून्य (*crypt)(संरचना AVAES *a, uint8_t *dst, ध्रुव uint8_t *src, पूर्णाङ्क गिनती, uint8_t *iv, पूर्णाङ्क rounds);
 } AVAES;
 
-void ff_init_aes_x86(AVAES *a, int decrypt);
-void ff_init_aes_aarch64(AVAES *a, int decrypt);
+शून्य ff_init_aes_x86(AVAES *a, पूर्णाङ्क decrypt);
+शून्य ff_init_aes_aarch64(AVAES *a, पूर्णाङ्क decrypt);
 
 #endif /* AVUTIL_AES_INTERNAL_H */
