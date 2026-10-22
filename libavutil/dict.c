@@ -18,295 +18,295 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
-#include <string.h>
+#ضمن <inttypes.h>
+#ضمن <stdio.h>
+#ضمن <string.h>
 
-#include "avassert.h"
-#include "avstring.h"
-#include "dict.h"
-#include "error.h"
-#include "mem.h"
-#include "bprint.h"
+#ضمن "avassert.h"
+#ضمن "avstring.h"
+#ضمن "dict.h"
+#ضمن "error.h"
+#ضمن "mem.h"
+#ضمن "bprint.h"
 
-struct AVDictionary {
-    int count;
+بنية AVDictionary {
+    صحيح كدي;
     AVDictionaryEntry *elems;
-    int duplicate_keys;
+    صحيح duplicate_مبوداي;
 };
 
-int av_dict_count(const AVDictionary *m)
+صحيح av_dict_كدي(ثابت AVDictionary *m)
 {
-    return m ? m->count : 0;
+    أرجع m ? m->كدي : 0;
 }
 
-const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
-                                         const AVDictionaryEntry *prev)
+ثابت AVDictionaryEntry *av_dict_iterate(ثابت AVDictionary *m,
+                                         ثابت AVDictionaryEntry *prev)
 {
-    int i = 0;
+    صحيح i = 0;
 
-    if (!m)
-        return NULL;
+    إذا (!m)
+        أرجع عدم;
 
-    if (prev)
+    إذا (prev)
         i = prev - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    إذا (i >= m->كدي)
+        أرجع عدم;
 
-    return &m->elems[i];
+    أرجع &m->elems[i];
 }
 
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+AVDictionaryEntry *av_dict_get(ثابت AVDictionary *m, ثابت حرف *مبودي,
+                               ثابت AVDictionaryEntry *prev, صحيح flags)
 {
-    const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    ثابت AVDictionaryEntry *entry = prev;
+    unsigned صحيح j;
 
-    if (!key)
-        return NULL;
+    إذا (!مبودي)
+        أرجع عدم;
 
-    while ((entry = av_dict_iterate(m, entry))) {
-        const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+    طالما ((entry = av_dict_iterate(m, entry))) {
+        ثابت حرف *s = entry->مبودي;
+        إذا (flags & AV_DICT_MATCH_CASE)
+            لكل (j = 0; s[j] == مبودي[j] && مبودي[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        وإلا
+            لكل (j = 0; av_toupper(s[j]) == av_toupper(مبودي[j]) && مبودي[j]; j++)
                 ;
-        if (key[j])
-            continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
-            continue;
-        return (AVDictionaryEntry *)entry;
+        إذا (مبودي[j])
+            استمر;
+        إذا (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+            استمر;
+        أرجع (AVDictionaryEntry *)entry;
     }
-    return NULL;
+    أرجع عدم;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+صحيح av_dict_set(AVDictionary **pm, ثابت حرف *مبودي, ثابت حرف *درج,
+                صحيح flags)
 {
     AVDictionary *m = *pm;
-    AVDictionaryEntry *tag = NULL;
-    char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    AVDictionaryEntry *tag = عدم;
+    حرف *copy_مبودي = عدم, *copy_درج = عدم;
+    صحيح err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
-        copy_value = (void *)value;
-    else if (value)
-        copy_value = av_strdup(value);
-    if (!key) {
+    إذا (flags & AV_DICT_DONT_STRDUP_VAL)
+        copy_درج = (فراغ *)درج;
+    وإلا إذا (درج)
+        copy_درج = av_strdup(درج);
+    إذا (!مبودي) {
         err = AVERROR(EINVAL);
-        goto err_out;
+        اذهب err_out;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
-        copy_key = (void *)key;
-    else
-        copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
-        goto enomem;
+    إذا (flags & AV_DICT_DONT_STRDUP_مبودي)
+        copy_مبودي = (فراغ *)مبودي;
+    وإلا
+        copy_مبودي = av_strdup(مبودي);
+    إذا (!copy_مبودي || (درج && !copy_درج))
+        اذهب enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
-        tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
-                (value && tag->value && !strcmp(value, tag->value))) {
-                av_free(copy_key);
-                av_free(copy_value);
-                return 0;
+    إذا (!(flags & AV_DICT_MULTIKEY)) {
+        tag = av_dict_get(m, مبودي, عدم, flags);
+    } وإلا إذا (flags & AV_DICT_DEDUP) {
+        طالما ((tag = av_dict_get(m, مبودي, tag, flags))) {
+            إذا ((!درج && !tag->درج) ||
+                (درج && tag->درج && !strcmp(درج, tag->درج))) {
+                av_free(copy_مبودي);
+                av_free(copy_درج);
+                أرجع 0;
             }
         }
     }
-    if (!m)
-        m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
-        goto enomem;
+    إذا (!m)
+        m = *pm = av_mallocz(حجم(*m));
+    إذا (!m)
+        اذهب enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
-            av_free(copy_key);
-            av_free(copy_value);
-            return 0;
+    إذا (tag) {
+        إذا (flags & AV_DICT_DONT_OVERWRITE) {
+            av_free(copy_مبودي);
+            av_free(copy_درج);
+            أرجع 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
-            size_t oldlen = strlen(tag->value);
-            size_t new_part_len = strlen(copy_value);
+        إذا (copy_درج && flags & AV_DICT_APPEND) {
+            size_t oldlen = strlen(tag->درج);
+            size_t new_part_len = strlen(copy_درج);
             size_t len = oldlen + new_part_len + 1;
-            char *newval = av_realloc(tag->value, len);
-            if (!newval)
-                goto enomem;
-            memcpy(newval + oldlen, copy_value, new_part_len + 1);
-            av_freep(&copy_value);
-            copy_value = newval;
-        } else
-            av_free(tag->value);
-        av_free(tag->key);
-        *tag = m->elems[--m->count];
-    } else if (copy_value) {
+            حرف *newval = av_realloc(tag->درج, len);
+            إذا (!newval)
+                اذهب enomem;
+            memcpy(newval + oldlen, copy_درج, new_part_len + 1);
+            av_freep(&copy_درج);
+            copy_درج = newval;
+        } وإلا
+            av_free(tag->درج);
+        av_free(tag->مبودي);
+        *tag = m->elems[--m->كدي];
+    } وإلا إذا (copy_درج) {
         AVDictionaryEntry *tmp = av_realloc_array(m->elems,
-                                                  m->count + 1, sizeof(*m->elems));
-        if (!tmp)
-            goto enomem;
+                                                  m->كدي + 1, حجم(*m->elems));
+        إذا (!tmp)
+            اذهب enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
-        m->elems[m->count].key = copy_key;
-        m->elems[m->count].value = copy_value;
-        m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
-            m->duplicate_keys = 1;
-    } else {
+    إذا (copy_درج) {
+        m->elems[m->كدي].مبودي = copy_مبودي;
+        m->elems[m->كدي].درج = copy_درج;
+        m->كدي++;
+        إذا (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+            m->duplicate_مبوداي = 1;
+    } وإلا {
         err = 0;
-        goto end;
+        اذهب end;
     }
 
-    return 0;
+    أرجع 0;
 
 enomem:
     err = AVERROR(ENOMEM);
 err_out:
-    av_free(copy_value);
+    av_free(copy_درج);
 end:
-    if (m && !m->count) {
+    إذا (m && !m->كدي) {
         av_freep(&m->elems);
         av_freep(pm);
     }
-    av_free(copy_key);
-    return err;
+    av_free(copy_مبودي);
+    أرجع err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+صحيح av_dict_set_int(AVDictionary **pm, ثابت حرف *مبودي, int64_t درج,
+                صحيح flags)
 {
-    char valuestr[22];
-    snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
+    حرف valuestr[22];
+    snprintf(valuestr, حجم(valuestr), "%"PRId64, درج);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    أرجع av_dict_set(pm, مبودي, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+ساكن صحيح parse_مبودي_درج_pair(AVDictionary **pm, ثابت حرف **buf,
+                                ثابت حرف *مبودي_val_sep, ثابت حرف *pairs_sep,
+                                صحيح flags)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val = NULL;
-    int ret;
+    حرف *مبودي = av_get_token(buf, مبودي_val_sep);
+    حرف *val = عدم;
+    صحيح ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    إذا (مبودي && *مبودي && strspn(*buf, مبودي_val_sep)) {
         (*buf)++;
         val = av_get_token(buf, pairs_sep);
     }
 
-    if (key && *key && val && *val)
-        ret = av_dict_set(pm, key, val, flags);
-    else
+    إذا (مبودي && *مبودي && val && *val)
+        ret = av_dict_set(pm, مبودي, val, flags);
+    وإلا
         ret = AVERROR(EINVAL);
 
-    av_freep(&key);
+    av_freep(&مبودي);
     av_freep(&val);
 
-    return ret;
+    أرجع ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+صحيح av_dict_parse_string(AVDictionary **pm, ثابت حرف *str,
+                         ثابت حرف *مبودي_val_sep, ثابت حرف *pairs_sep,
+                         صحيح flags)
 {
-    int ret;
+    صحيح ret;
 
-    if (!str)
-        return 0;
+    إذا (!str)
+        أرجع 0;
 
     /* ignore STRDUP flags */
-    flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
+    flags &= ~(AV_DICT_DONT_STRDUP_مبودي | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    طالما (*str) {
+        إذا ((ret = parse_مبودي_درج_pair(pm, &str, مبودي_val_sep, pairs_sep, flags)) < 0)
+            أرجع ret;
 
-        if (*str)
+        إذا (*str)
             str++;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-void av_dict_free(AVDictionary **pm)
+فراغ av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
-            av_freep(&m->elems[m->count].key);
-            av_freep(&m->elems[m->count].value);
+    إذا (m) {
+        طالما (m->كدي--) {
+            av_freep(&m->elems[m->كدي].مبودي);
+            av_freep(&m->elems[m->كدي].درج);
         }
         av_freep(&m->elems);
     }
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+صحيح av_dict_copy(AVDictionary **dst, ثابت AVDictionary *src, صحيح flags)
 {
-    const AVDictionaryEntry *t = NULL;
+    ثابت AVDictionaryEntry *t = عدم;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    إذا (!*dst && src && src->كدي && !src->duplicate_مبوداي &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
-        AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
-        m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        AVDictionary *m = av_mallocz(حجم(*m));
+        إذا (!m)
+            أرجع AVERROR(ENOMEM);
+        m->elems = av_calloc(src->كدي, حجم(*m->elems));
+        إذا (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            أرجع AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
-            m->elems[i].key   = av_strdup(src->elems[i].key);
-            m->elems[i].value = av_strdup(src->elems[i].value);
-            m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+        لكل (صحيح i = 0; i < src->كدي; i++) {
+            m->elems[i].مبودي   = av_strdup(src->elems[i].مبودي);
+            m->elems[i].درج = av_strdup(src->elems[i].درج);
+            m->كدي++;
+            إذا (!m->elems[i].مبودي || !m->elems[i].درج) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                أرجع AVERROR(ENOMEM);
             }
         }
-        return 0;
+        أرجع 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    طالما ((t = av_dict_iterate(src, t))) {
+        صحيح ret = av_dict_set(dst, t->مبودي, t->درج, flags);
+        إذا (ret < 0)
+            أرجع ret;
     }
 
-    return 0;
+    أرجع 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep)
+صحيح av_dict_get_string(ثابت AVDictionary *m, حرف **buffer,
+                       ثابت حرف مبودي_val_sep, ثابت حرف pairs_sep)
 {
-    const AVDictionaryEntry *t = NULL;
+    ثابت AVDictionaryEntry *t = عدم;
     AVBPrint bprint;
-    int cnt = 0;
-    char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    صحيح cnt = 0;
+    حرف special_chars[] = {pairs_sep, مبودي_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
-        pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+    إذا (!buffer || pairs_sep == '\0' || مبودي_val_sep == '\0' || pairs_sep == مبودي_val_sep ||
+        pairs_sep == '\\' || مبودي_val_sep == '\\')
+        أرجع AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
+    إذا (!av_dict_كدي(m)) {
         *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+        أرجع *buffer ? 0 : AVERROR(ENOMEM);
     }
 
     av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
+    طالما ((t = av_dict_iterate(m, t))) {
+        إذا (cnt++)
             av_bprint_append_data(&bprint, &pairs_sep, 1);
-        av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
-        av_bprint_append_data(&bprint, &key_val_sep, 1);
-        av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        av_bprint_escape(&bprint, t->مبودي, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
+        av_bprint_append_data(&bprint, &مبودي_val_sep, 1);
+        av_bprint_escape(&bprint, t->درج, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    أرجع av_bprint_finalize(&bprint, buffer);
 }
