@@ -19,43 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include "cpu.h"
-#include <sys/auxv.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "cpu.h"
+#अन्तर्भाव <sys/auxv.h>
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+स्थिर पूर्णाङ्क cpu_flags_getauxval(शून्य)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    पूर्णाङ्क flags = 0;
+    पूर्णाङ्क flag  = (पूर्णाङ्क)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    सचे (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    सचे (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    पटिनिवत्त flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+पूर्णाङ्क ff_get_cpu_flags_loongarch(शून्य)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#सचे defined __linux__
+    पटिनिवत्त cpu_flags_getauxval();
+#अञ्ञथा
     /* Assume no SIMD ASE supported */
-    return 0;
+    पटिनिवत्त 0;
 #endif
 }
 
-size_t ff_get_cpu_max_align_loongarch(void)
+size_t ff_get_cpu_max_align_loongarch(शून्य)
 {
-    int flags = av_get_cpu_flags();
+    पूर्णाङ्क flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    सचे (flags & AV_CPU_FLAG_LASX)
+        पटिनिवत्त 32;
+    सचे (flags & AV_CPU_FLAG_LSX)
+        पटिनिवत्त 16;
 
-    return 8;
+    पटिनिवत्त 8;
 }

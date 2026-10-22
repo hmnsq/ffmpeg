@@ -27,9 +27,9 @@
 #ifndef AVUTIL_MIPS_ASMDEFS_H
 #define AVUTIL_MIPS_ASMDEFS_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
-#if defined(_ABI64) && _MIPS_SIM == _ABI64
+#सचे defined(_ABI64) && _MIPS_SIM == _ABI64
 # define mips_reg       int64_t
 # define PTRSIZE        " 8 "
 # define PTRLOG         " 3 "
@@ -42,7 +42,7 @@
 # define PTR_SRA        "dsra "
 # define PTR_SRL        "dsrl "
 # define PTR_SLL        "dsll "
-#else
+#अञ्ञथा
 # define mips_reg       int32_t
 # define PTRSIZE        " 4 "
 # define PTRLOG         " 2 "
@@ -100,9 +100,9 @@ __asm__(".macro        parse_r var r\n\t"
         ".endm");
 
 /* General union structure for clang adaption */
-union mmi_intfloat64 {
+सङ्घ mmi_intfloat64 {
     int64_t i;
-    double  f;
+    द्विगुण  f;
 };
 
 #endif /* AVCODEC_MIPS_ASMDEFS_H */

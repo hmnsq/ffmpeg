@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
 
-#include "libavutil/cpu.h"
-#include "libavutil/error.h"
-#include "libavutil/imgutils_internal.h"
-#include "libavutil/macros.h"
+#अन्तर्भाव "libavutil/cpu.h"
+#अन्तर्भाव "libavutil/error.h"
+#अन्तर्भाव "libavutil/imgutils_internal.h"
+#अन्तर्भाव "libavutil/macros.h"
 
-#include "cpu.h"
+#अन्तर्भाव "cpu.h"
 
-void ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
-                                      const uint8_t *src, ptrdiff_t src_linesize,
-                                      ptrdiff_t bytewidth, int height);
+शून्य ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
+                                      ध्रुव uint8_t *src, ptrdiff_t src_linesize,
+                                      ptrdiff_t bytewidth, पूर्णाङ्क height);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                    const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height)
+पूर्णाङ्क ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
+                                    ध्रुव uint8_t *src, ptrdiff_t src_linesize,
+                                    ptrdiff_t bytewidth, पूर्णाङ्क height)
 {
-    int cpu_flags = av_get_cpu_flags();
+    पूर्णाङ्क cpu_flags = av_get_cpu_flags();
     ptrdiff_t bw_aligned = FFALIGN(bytewidth, 64);
 
-    if (EXTERNAL_SSE4(cpu_flags) &&
+    सचे (EXTERNAL_SSE4(cpu_flags) &&
         bw_aligned <= dst_linesize && bw_aligned <= src_linesize)
         ff_image_copy_plane_uc_from_sse4(dst, dst_linesize, src, src_linesize,
                                          bw_aligned, height);
-    else
-        return AVERROR(ENOSYS);
+    अञ्ञथा
+        पटिनिवत्त AVERROR(ENOSYS);
 
-    return 0;
+    पटिनिवत्त 0;
 }

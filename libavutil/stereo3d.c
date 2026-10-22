@@ -18,134 +18,134 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#अन्तर्भाव <string.h>
 
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "stereo3d.h"
+#अन्तर्भाव "frame.h"
+#अन्तर्भाव "macros.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "stereo3d.h"
 
-static void get_defaults(AVStereo3D *stereo)
+स्थिर शून्य get_defaults(AVStereo3D *stereo)
 {
     stereo->horizontal_disparity_adjustment = (AVRational) { 0, 1 };
     stereo->horizontal_field_of_view = (AVRational) { 0, 1 };
 }
 
-AVStereo3D *av_stereo3d_alloc(void)
+AVStereo3D *av_stereo3d_alloc(शून्य)
 {
-    return av_stereo3d_alloc_size(NULL);
+    पटिनिवत्त av_stereo3d_alloc_size(रिक्त);
 }
 
 AVStereo3D *av_stereo3d_alloc_size(size_t *size)
 {
-    AVStereo3D *stereo = av_mallocz(sizeof(AVStereo3D));
+    AVStereo3D *stereo = av_mallocz(परिमाण(AVStereo3D));
 
-    if (size)
-        *size = stereo ? sizeof(*stereo) : 0;
+    सचे (size)
+        *size = stereo ? परिमाण(*stereo) : 0;
 
-    if (!stereo)
-        return NULL;
+    सचे (!stereo)
+        पटिनिवत्त रिक्त;
 
     get_defaults(stereo);
 
-    return stereo;
+    पटिनिवत्त stereo;
 }
 
 AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_STEREO3D,
-                                                        sizeof(AVStereo3D));
-    if (!side_data)
-        return NULL;
+                                                        परिमाण(AVStereo3D));
+    सचे (!side_data)
+        पटिनिवत्त रिक्त;
 
-    memset(side_data->data, 0, sizeof(AVStereo3D));
+    memset(side_data->data, 0, परिमाण(AVStereo3D));
     get_defaults((AVStereo3D *)side_data->data);
 
-    return (AVStereo3D *)side_data->data;
+    पटिनिवत्त (AVStereo3D *)side_data->data;
 }
 
-static const char * const stereo3d_type_names[] = {
+स्थिर ध्रुव वर्ण * ध्रुव stereo3d_type_names[] = {
     [AV_STEREO3D_2D]                  = "2D",
     [AV_STEREO3D_SIDEBYSIDE]          = "side by side",
     [AV_STEREO3D_TOPBOTTOM]           = "top and bottom",
     [AV_STEREO3D_FRAMESEQUENCE]       = "frame alternate",
     [AV_STEREO3D_CHECKERBOARD]        = "checkerboard",
     [AV_STEREO3D_SIDEBYSIDE_QUINCUNX] = "side by side (quincunx subsampling)",
-    [AV_STEREO3D_LINES]               = "interleaved lines",
+    [AV_STEREO3_D_पङ्क्तयः]               = "interleaved lines",
     [AV_STEREO3D_COLUMNS]             = "interleaved columns",
     [AV_STEREO3D_UNSPEC]              = "unspecified",
 };
 
-static const char * const stereo3d_view_names[] = {
+स्थिर ध्रुव वर्ण * ध्रुव stereo3d_view_names[] = {
     [AV_STEREO3D_VIEW_PACKED] = "packed",
-    [AV_STEREO3D_VIEW_LEFT]   = "left",
-    [AV_STEREO3D_VIEW_RIGHT]  = "right",
+    [AV_STEREO3_D_VIEW_वामः]   = "left",
+    [AV_STEREO3_D_VIEW_दक्षिणः]  = "right",
     [AV_STEREO3D_VIEW_UNSPEC] = "unspecified",
 };
 
-static const char * const stereo3d_primary_eye_names[] = {
+स्थिर ध्रुव वर्ण * ध्रुव stereo3d_primary_eye_names[] = {
     [AV_PRIMARY_EYE_NONE]  = "none",
-    [AV_PRIMARY_EYE_LEFT]  = "left",
-    [AV_PRIMARY_EYE_RIGHT] = "right",
+    [AV_PRIMARY_EYE_वामः]  = "left",
+    [AV_PRIMARY_EYE_दक्षिणः] = "right",
 };
 
-const char *av_stereo3d_type_name(unsigned int type)
+ध्रुव वर्ण *av_stereo3d_type_name(unsigned पूर्णाङ्क type)
 {
-    if (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
-        return "unknown";
+    सचे (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
+        पटिनिवत्त "unknown";
 
-    return stereo3d_type_names[type];
+    पटिनिवत्त stereo3d_type_names[type];
 }
 
-int av_stereo3d_from_name(const char *name)
+पूर्णाङ्क av_stereo3d_from_name(ध्रुव वर्ण *name)
 {
-    int i;
+    पूर्णाङ्क i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
-        if (!strcmp(name, stereo3d_type_names[i]))
-            return i;
+    अत्थाय (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
+        सचे (!strcmp(name, stereo3d_type_names[i]))
+            पटिनिवत्त i;
     }
 
-    return -1;
+    पटिनिवत्त -1;
 }
 
-const char *av_stereo3d_view_name(unsigned int view)
+ध्रुव वर्ण *av_stereo3d_view_name(unsigned पूर्णाङ्क view)
 {
-    if (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
-        return "unknown";
+    सचे (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
+        पटिनिवत्त "unknown";
 
-    return stereo3d_view_names[view];
+    पटिनिवत्त stereo3d_view_names[view];
 }
 
-int av_stereo3d_view_from_name(const char *name)
+पूर्णाङ्क av_stereo3d_view_from_name(ध्रुव वर्ण *name)
 {
-    int i;
+    पूर्णाङ्क i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
-        if (!strcmp(name, stereo3d_view_names[i]))
-            return i;
+    अत्थाय (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
+        सचे (!strcmp(name, stereo3d_view_names[i]))
+            पटिनिवत्त i;
     }
 
-    return -1;
+    पटिनिवत्त -1;
 }
 
-const char *av_stereo3d_primary_eye_name(unsigned int eye)
+ध्रुव वर्ण *av_stereo3d_primary_eye_name(unsigned पूर्णाङ्क eye)
 {
-    if (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
-        return "unknown";
+    सचे (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
+        पटिनिवत्त "unknown";
 
-    return stereo3d_primary_eye_names[eye];
+    पटिनिवत्त stereo3d_primary_eye_names[eye];
 }
 
-int av_stereo3d_primary_eye_from_name(const char *name)
+पूर्णाङ्क av_stereo3d_primary_eye_from_name(ध्रुव वर्ण *name)
 {
-    int i;
+    पूर्णाङ्क i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
-        if (!strcmp(name, stereo3d_primary_eye_names[i]))
-            return i;
+    अत्थाय (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
+        सचे (!strcmp(name, stereo3d_primary_eye_names[i]))
+            पटिनिवत्त i;
     }
 
-    return -1;
+    पटिनिवत्त -1;
 }

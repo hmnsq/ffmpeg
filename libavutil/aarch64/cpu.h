@@ -19,8 +19,8 @@
 #ifndef AVUTIL_AARCH64_CPU_H
 #define AVUTIL_AARCH64_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#अन्तर्भाव "libavutil/cpu.h"
+#अन्तर्भाव "libavutil/cpu_internal.h"
 
 #define have_armv8(flags)   CPUEXT(flags, ARMV8)
 #define have_neon(flags)    CPUEXT(flags, NEON)
@@ -37,12 +37,12 @@
 #define have_sme_i16i64(flags) CPUEXT(flags, SME_I16I64)
 #define have_sme2(flags)    CPUEXT(flags, SME2)
 
-#if HAVE_SVE
-int ff_aarch64_sve_length(void);
+#सचे HAVE_SVE
+पूर्णाङ्क ff_aarch64_sve_length(शून्य);
 #endif
 
-#if HAVE_SME
-int ff_aarch64_sme_length(void);
+#सचे HAVE_SME
+पूर्णाङ्क ff_aarch64_sme_length(शून्य);
 #endif
 
 #endif /* AVUTIL_AARCH64_CPU_H */

@@ -16,45 +16,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/error.c"
+#अन्तर्भाव "libavutil/error.c"
 
 /* errno descriptions depend on the C library, so those are only looked up */
-static const struct {
-    int num;
-    const char *tag;
+स्थिर ध्रुव संरचना {
+    पूर्णाङ्क अङ्कः;
+    ध्रुव वर्ण *tag;
 } ffmpeg_codes[] = {
 #define ERROR_TAG(CODE, DESC)         { AVERROR_ ## CODE, #CODE },
 #define ERROR_TAG2(CODE, CODE2, DESC) { AVERROR_ ## CODE, #CODE },
     AVERROR_LIST(ERROR_TAG, ERROR_TAG2)
 };
 
-static const int errno_codes[] = {
+स्थिर ध्रुव पूर्णाङ्क errno_codes[] = {
 #define ERRNO_CODE(CODE, DESC) AVERROR(CODE),
     STRERROR_LIST(ERRNO_CODE)
 };
 
-int main(void)
+पूर्णाङ्क main(शून्य)
 {
-    char buf[AV_ERROR_MAX_STRING_SIZE];
-    int ret = 0;
+    वर्ण buf[AV_ERROR_MAX_STRING_SIZE];
+    पूर्णाङ्क ret = 0;
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
-        int num = ffmpeg_codes[i].num;
+    अत्थाय (size_t i = 0; i < FF_ARRAY_ELEMS(ffmpeg_codes); i++) {
+        पूर्णाङ्क अङ्कः = ffmpeg_codes[i].अङ्कः;
 
-        if (av_strerror(num, buf, sizeof(buf)) < 0) {
-            printf("%d: lookup failed [%s]\n", num, ffmpeg_codes[i].tag);
+        सचे (av_strerror(अङ्कः, buf, परिमाण(buf)) < 0) {
+            printf("%d: lookup failed [%s]\n", अङ्कः, ffmpeg_codes[i].tag);
             ret = 1;
-            continue;
+            अनुवर्त;
         }
-        printf("%d: %s [%s]\n", num, buf, ffmpeg_codes[i].tag);
+        printf("%d: %s [%s]\n", अङ्कः, buf, ffmpeg_codes[i].tag);
     }
 
-    for (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
-        if (av_strerror(errno_codes[i], buf, sizeof(buf)) < 0) {
+    अत्थाय (size_t i = 0; i < FF_ARRAY_ELEMS(errno_codes); i++) {
+        सचे (av_strerror(errno_codes[i], buf, परिमाण(buf)) < 0) {
             printf("errno %d: lookup failed\n", AVUNERROR(errno_codes[i]));
             ret = 1;
         }
     }
 
-    return ret;
+    पटिनिवत्त ret;
 }

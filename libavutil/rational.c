@@ -25,111 +25,111 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#include "avassert.h"
-#include <limits.h>
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव <limits.h>
 
-#include "common.h"
-#include "mathematics.h"
-#include "rational.h"
+#अन्तर्भाव "common.h"
+#अन्तर्भाव "mathematics.h"
+#अन्तर्भाव "rational.h"
 
-int av_reduce(int *dst_num, int *dst_den,
-              int64_t num, int64_t den, int64_t max)
+पूर्णाङ्क av_reduce(पूर्णाङ्क *dst_अङ्कः, पूर्णाङ्क *dst_den,
+              int64_t अङ्कः, int64_t den, int64_t max)
 {
     AVRational a0 = { 0, 1 }, a1 = { 1, 0 };
-    int sign = (num < 0) ^ (den < 0);
-    int64_t gcd = av_gcd(FFABS(num), FFABS(den));
+    पूर्णाङ्क sign = (अङ्कः < 0) ^ (den < 0);
+    int64_t gcd = av_gcd(FFABS(अङ्कः), FFABS(den));
 
-    if (gcd) {
-        num = FFABS(num) / gcd;
+    सचे (gcd) {
+        अङ्कः = FFABS(अङ्कः) / gcd;
         den = FFABS(den) / gcd;
     }
-    if (num <= max && den <= max) {
-        a1 = (AVRational) { num, den };
+    सचे (अङ्कः <= max && den <= max) {
+        a1 = (AVRational) { अङ्कः, den };
         den = 0;
     }
 
-    while (den) {
-        uint64_t x        = num / den;
-        int64_t next_den  = num - den * x;
-        int64_t a2n       = x * a1.num + a0.num;
+    याव (den) {
+        uint64_t x        = अङ्कः / den;
+        int64_t next_den  = अङ्कः - den * x;
+        int64_t a2n       = x * a1.अङ्कः + a0.अङ्कः;
         int64_t a2d       = x * a1.den + a0.den;
 
-        if (a2n > max || a2d > max) {
-            if (a1.num) x =          (max - a0.num) / a1.num;
-            if (a1.den) x = FFMIN(x, (max - a0.den) / a1.den);
+        सचे (a2n > max || a2d > max) {
+            सचे (a1.अङ्कः) x =          (max - a0.अङ्कः) / a1.अङ्कः;
+            सचे (a1.den) x = FFMIN(x, (max - a0.den) / a1.den);
 
-            if (den * (2 * x * a1.den + a0.den) > num * a1.den)
-                a1 = (AVRational) { x * a1.num + a0.num, x * a1.den + a0.den };
-            break;
+            सचे (den * (2 * x * a1.den + a0.den) > अङ्कः * a1.den)
+                a1 = (AVRational) { x * a1.अङ्कः + a0.अङ्कः, x * a1.den + a0.den };
+            भङ्ग;
         }
 
         a0  = a1;
         a1  = (AVRational) { a2n, a2d };
-        num = den;
+        अङ्कः = den;
         den = next_den;
     }
-    av_assert2(av_gcd(a1.num, a1.den) <= 1U);
-    av_assert2(a1.num <= max && a1.den <= max);
+    av_assert2(av_gcd(a1.अङ्कः, a1.den) <= 1U);
+    av_assert2(a1.अङ्कः <= max && a1.den <= max);
 
-    *dst_num = sign ? -a1.num : a1.num;
+    *dst_अङ्कः = sign ? -a1.अङ्कः : a1.अङ्कः;
     *dst_den = a1.den;
 
-    return den == 0;
+    पटिनिवत्त den == 0;
 }
 
 AVRational av_mul_q(AVRational b, AVRational c)
 {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.num,
+    av_reduce(&b.अङ्कः, &b.den,
+               b.अङ्कः * (int64_t) c.अङ्कः,
                b.den * (int64_t) c.den, INT_MAX);
-    return b;
+    पटिनिवत्त b;
 }
 
 AVRational av_div_q(AVRational b, AVRational c)
 {
-    return av_mul_q(b, (AVRational) { c.den, c.num });
+    पटिनिवत्त av_mul_q(b, (AVRational) { c.den, c.अङ्कः });
 }
 
 AVRational av_add_q(AVRational b, AVRational c) {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.den +
-               c.num * (int64_t) b.den,
+    av_reduce(&b.अङ्कः, &b.den,
+               b.अङ्कः * (int64_t) c.den +
+               c.अङ्कः * (int64_t) b.den,
                b.den * (int64_t) c.den, INT_MAX);
-    return b;
+    पटिनिवत्त b;
 }
 
 AVRational av_sub_q(AVRational b, AVRational c)
 {
-    av_reduce(&b.num, &b.den,
-               b.num * (int64_t) c.den -
-               c.num * (int64_t) b.den,
+    av_reduce(&b.अङ्कः, &b.den,
+               b.अङ्कः * (int64_t) c.den -
+               c.अङ्कः * (int64_t) b.den,
                b.den * (int64_t) c.den, INT_MAX);
-    return b;
+    पटिनिवत्त b;
 }
 
-AVRational av_d2q(double d, int max)
+AVRational av_d2q(द्विगुण d, पूर्णाङ्क max)
 {
     AVRational a;
-    int exponent;
+    पूर्णाङ्क exponent;
     int64_t den;
-    if (isnan(d))
-        return (AVRational) { 0,0 };
-    if (fabs(d) > INT_MAX + 3LL)
-        return (AVRational) { d < 0 ? -1 : 1, 0 };
+    सचे (isnan(d))
+        पटिनिवत्त (AVRational) { 0,0 };
+    सचे (fabs(d) > INT_MAX + 3LL)
+        पटिनिवत्त (AVRational) { d < 0 ? -1 : 1, 0 };
     frexp(d, &exponent);
     exponent = FFMAX(exponent-1, 0);
     den = 1LL << (62 - exponent);
     // (int64_t)rint() and llrint() do not work with gcc on ia64 and sparc64,
     // see Ticket2713 for affected gcc/glibc versions
-    av_reduce(&a.num, &a.den, floor(d * den + 0.5), den, max);
+    av_reduce(&a.अङ्कः, &a.den, floor(d * den + 0.5), den, max);
 
-    return a;
+    पटिनिवत्त a;
 }
 
-int av_nearer_q(AVRational q, AVRational q1, AVRational q2)
+पूर्णाङ्क av_nearer_q(AVRational q, AVRational q1, AVRational q2)
 {
     /* n/d is q, a/b is the median between q1 and q2 */
-    int64_t a = q1.num * (int64_t)q2.den + q2.num * (int64_t)q1.den;
+    int64_t a = q1.अङ्कः * (int64_t)q2.den + q2.अङ्कः * (int64_t)q1.den;
     int64_t b = 2 * (int64_t)q1.den * q2.den;
 
     /* rnd_up(a*d/b) > n => a*d/b > n */
@@ -138,58 +138,58 @@ int av_nearer_q(AVRational q, AVRational q1, AVRational q2)
     /* rnd_down(a*d/b) < n => a*d/b < n */
     int64_t x_down = av_rescale_rnd(a, q.den, b, AV_ROUND_DOWN);
 
-    return ((x_up > q.num) - (x_down < q.num)) * av_cmp_q(q2, q1);
+    पटिनिवत्त ((x_up > q.अङ्कः) - (x_down < q.अङ्कः)) * av_cmp_q(q2, q1);
 }
 
-int av_find_nearest_q_idx(AVRational q, const AVRational* q_list)
+पूर्णाङ्क av_find_nearest_q_idx(AVRational q, ध्रुव AVRational* q_list)
 {
-    int i, nearest_q_idx = 0;
-    for (i = 0; q_list[i].den; i++)
-        if (av_nearer_q(q, q_list[i], q_list[nearest_q_idx]) > 0)
+    पूर्णाङ्क i, nearest_q_idx = 0;
+    अत्थाय (i = 0; q_list[i].den; i++)
+        सचे (av_nearer_q(q, q_list[i], q_list[nearest_q_idx]) > 0)
             nearest_q_idx = i;
 
-    return nearest_q_idx;
+    पटिनिवत्त nearest_q_idx;
 }
 
 uint32_t av_q2intfloat(AVRational q) {
-    int64_t n, num = q.num, den = q.den;
-    int shift;
+    int64_t n, अङ्कः = q.अङ्कः, den = q.den;
+    पूर्णाङ्क shift;
     uint32_t sign = 0;
 
-    if (den < 0) {
+    सचे (den < 0) {
         den = -den;
-        num = -num;
+        अङ्कः = -अङ्कः;
     }
-    if (num < 0) {
-        num = -num;
+    सचे (अङ्कः < 0) {
+        अङ्कः = -अङ्कः;
         sign = 1U << 31;
     }
 
-    if (!num && !den) return 0xFFC00000;
-    if (!num) return 0;
-    if (!den) return sign | 0x7F800000;
+    सचे (!अङ्कः && !den) पटिनिवत्त 0xFFC00000;
+    सचे (!अङ्कः) पटिनिवत्त 0;
+    सचे (!den) पटिनिवत्त sign | 0x7F800000;
 
-    shift = 23 + av_log2(den) - av_log2(num);
-    if (shift >= 0) n = av_rescale(num, 1LL<<shift, den);
-    else            n = av_rescale(num, 1, den << -shift);
+    shift = 23 + av_log2(den) - av_log2(अङ्कः);
+    सचे (shift >= 0) n = av_rescale(अङ्कः, 1LL<<shift, den);
+    अञ्ञथा            n = av_rescale(अङ्कः, 1, den << -shift);
 
     shift -= n >= (1<<24);
     shift += n <  (1<<23);
 
-    if (shift >= 0) n = av_rescale(num, 1LL<<shift, den);
-    else            n = av_rescale(num, 1, den << -shift);
+    सचे (shift >= 0) n = av_rescale(अङ्कः, 1LL<<shift, den);
+    अञ्ञथा            n = av_rescale(अङ्कः, 1, den << -shift);
 
     av_assert1(n <  (1<<24));
     av_assert1(n >= (1<<23));
 
-    return sign | (150-shift)<<23 | (n - (1<<23));
+    पटिनिवत्त sign | (150-shift)<<23 | (n - (1<<23));
 }
 
-AVRational av_gcd_q(AVRational a, AVRational b, int max_den, AVRational def)
+AVRational av_gcd_q(AVRational a, AVRational b, पूर्णाङ्क max_den, AVRational def)
 {
     int64_t gcd, lcm;
 
     gcd = av_gcd(a.den, b.den);
     lcm = (a.den / gcd) * b.den;
-    return lcm < max_den ? av_make_q(av_gcd(a.num, b.num), lcm) : def;
+    पटिनिवत्त lcm < max_den ? av_make_q(av_gcd(a.अङ्कः, b.अङ्कः), lcm) : def;
 }

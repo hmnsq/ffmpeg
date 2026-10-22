@@ -19,124 +19,124 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "attributes.h"
-#include "float_dsp.h"
-#include "mem.h"
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "attributes.h"
+#अन्तर्भाव "float_dsp.h"
+#अन्तर्भाव "mem.h"
 
-static void vector_fmul_c(float *dst, const float *src0, const float *src1,
-                          int len)
+स्थिर शून्य vector_fmul_c(भिन्न *dst, ध्रुव भिन्न *src0, ध्रुव भिन्न *src1,
+                          पूर्णाङ्क len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    पूर्णाङ्क i;
+    अत्थाय (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_dmul_c(double *dst, const double *src0, const double *src1,
-                          int len)
+स्थिर शून्य vector_dmul_c(द्विगुण *dst, ध्रुव द्विगुण *src0, ध्रुव द्विगुण *src1,
+                          पूर्णाङ्क len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    पूर्णाङ्क i;
+    अत्थाय (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_fmac_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+स्थिर शून्य vector_fmac_scalar_c(भिन्न *dst, ध्रुव भिन्न *src, भिन्न mul,
+                                 पूर्णाङ्क len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    पूर्णाङ्क i;
+    अत्थाय (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_dmac_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+स्थिर शून्य vector_dmac_scalar_c(द्विगुण *dst, ध्रुव द्विगुण *src, द्विगुण mul,
+                                 पूर्णाङ्क len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    पूर्णाङ्क i;
+    अत्थाय (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+स्थिर शून्य vector_fmul_scalar_c(भिन्न *dst, ध्रुव भिन्न *src, भिन्न mul,
+                                 पूर्णाङ्क len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    पूर्णाङ्क i;
+    अत्थाय (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_dmul_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+स्थिर शून्य vector_dmul_scalar_c(द्विगुण *dst, ध्रुव द्विगुण *src, द्विगुण mul,
+                                 पूर्णाङ्क len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    पूर्णाङ्क i;
+    अत्थाय (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_fmul_window_c(float *dst, const float *src0,
-                                 const float *src1, const float *win, int len)
+स्थिर शून्य vector_fmul_window_c(भिन्न *dst, ध्रुव भिन्न *src0,
+                                 ध्रुव भिन्न *src1, ध्रुव भिन्न *win, पूर्णाङ्क len)
 {
-    int i, j;
+    पूर्णाङ्क i, j;
 
     dst  += len;
     win  += len;
     src0 += len;
 
-    for (i = -len, j = len - 1; i < 0; i++, j--) {
-        float s0 = src0[i];
-        float s1 = src1[j];
-        float wi = win[i];
-        float wj = win[j];
+    अत्थाय (i = -len, j = len - 1; i < 0; i++, j--) {
+        भिन्न s0 = src0[i];
+        भिन्न s1 = src1[j];
+        भिन्न wi = win[i];
+        भिन्न wj = win[j];
         dst[i] = s0 * wj - s1 * wi;
         dst[j] = s0 * wi + s1 * wj;
     }
 }
 
-static void vector_fmul_add_c(float *dst, const float *src0, const float *src1,
-                              const float *src2, int len){
-    int i;
+स्थिर शून्य vector_fmul_add_c(भिन्न *dst, ध्रुव भिन्न *src0, ध्रुव भिन्न *src1,
+                              ध्रुव भिन्न *src2, पूर्णाङ्क len){
+    पूर्णाङ्क i;
 
-    for (i = 0; i < len; i++)
+    अत्थाय (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i] + src2[i];
 }
 
-static void vector_fmul_reverse_c(float *dst, const float *src0,
-                                  const float *src1, int len)
+स्थिर शून्य vector_fmul_reverse_c(भिन्न *dst, ध्रुव भिन्न *src0,
+                                  ध्रुव भिन्न *src1, पूर्णाङ्क len)
 {
-    int i;
+    पूर्णाङ्क i;
 
     src1 += len-1;
-    for (i = 0; i < len; i++)
+    अत्थाय (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[-i];
 }
 
-static void butterflies_float_c(float *restrict v1, float *restrict v2,
-                                int len)
+स्थिर शून्य butterflies_float_c(भिन्न *restrict v1, भिन्न *restrict v2,
+                                पूर्णाङ्क len)
 {
-    int i;
+    पूर्णाङ्क i;
 
-    for (i = 0; i < len; i++) {
-        float t = v1[i] - v2[i];
+    अत्थाय (i = 0; i < len; i++) {
+        भिन्न t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+द्विगुण ff_scalarproduct_double_c(ध्रुव द्विगुण *v1, ध्रुव द्विगुण *v2,
                                  size_t len)
 {
-    double p = 0.0;
+    द्विगुण p = 0.0;
 
-    for (size_t i = 0; i < len; i++)
+    अत्थाय (size_t i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    पटिनिवत्त p;
 }
 
-av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
+av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(पूर्णाङ्क bit_exact)
 {
-    AVFloatDSPContext *fdsp = av_mallocz(sizeof(AVFloatDSPContext));
-    if (!fdsp)
-        return NULL;
+    AVFloatDSPContext *fdsp = av_mallocz(परिमाण(AVFloatDSPContext));
+    सचे (!fdsp)
+        पटिनिवत्त रिक्त;
 
     fdsp->vector_fmul = vector_fmul_c;
     fdsp->vector_dmul = vector_dmul_c;
@@ -151,18 +151,18 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
     fdsp->scalarproduct_float = ff_scalarproduct_float_c;
     fdsp->scalarproduct_double = ff_scalarproduct_double_c;
 
-#if ARCH_AARCH64
+#सचे ARCH_AARCH64
     ff_float_dsp_init_aarch64(fdsp);
-#elif ARCH_ARM
+#नोचेद्यदि ARCH_ARM
     ff_float_dsp_init_arm(fdsp);
-#elif ARCH_PPC
+#नोचेद्यदि ARCH_PPC
     ff_float_dsp_init_ppc(fdsp, bit_exact);
-#elif ARCH_RISCV
+#नोचेद्यदि ARCH_RISCV
     ff_float_dsp_init_riscv(fdsp);
-#elif ARCH_X86 && HAVE_X86ASM
+#नोचेद्यदि ARCH_X86 && HAVE_X86ASM
     ff_float_dsp_init_x86(fdsp);
-#elif ARCH_MIPS
+#नोचेद्यदि ARCH_MIPS
     ff_float_dsp_init_mips(fdsp);
 #endif
-    return fdsp;
+    पटिनिवत्त fdsp;
 }

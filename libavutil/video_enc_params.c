@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#अन्तर्भाव "buffer.h"
+#अन्तर्भाव "frame.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(गणना AVVideoEncParamsType type,
+                                            unsigned पूर्णाङ्क nb_blocks, size_t *out_size)
 {
-    struct TestStruct {
+    संरचना TestStruct {
         AVVideoEncParams   p;
         AVVideoBlockParams b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
+    ध्रुव size_t blocks_offset = offsetof(संरचना TestStruct, b);
     size_t size = blocks_offset;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    सचे (nb_blocks > (SIZE_MAX - size) / परिमाण(AVVideoBlockParams))
+        पटिनिवत्त रिक्त;
+    size += परिमाण(AVVideoBlockParams) * nb_blocks;
 
     par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    सचे (!par)
+        पटिनिवत्त रिक्त;
 
     par->type          = type;
     par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
+    par->block_size    = परिमाण(AVVideoBlockParams);
     par->blocks_offset = blocks_offset;
 
-    if (out_size)
+    सचे (out_size)
         *out_size = size;
 
-    return par;
+    पटिनिवत्त par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_data(AVFrame *frame, गणना AVVideoEncParamsType type,
+                                     unsigned पूर्णाङ्क nb_blocks)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
     size_t size;
 
     par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    सचे (!par)
+        पटिनिवत्त रिक्त;
+    buf = av_buffer_create((uint8_t *)par, size, रिक्त, रिक्त, 0);
+    सचे (!buf) {
         av_freep(&par);
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
+    सचे (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
-    return par;
+    पटिनिवत्त par;
 }

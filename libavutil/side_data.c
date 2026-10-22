@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avassert.h"
-#include "buffer.h"
-#include "common.h"
-#include "dict.h"
-#include "frame.h"
-#include "mem.h"
-#include "side_data.h"
+#अन्तर्भाव "avassert.h"
+#अन्तर्भाव "buffer.h"
+#अन्तर्भाव "common.h"
+#अन्तर्भाव "dict.h"
+#अन्तर्भाव "frame.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "side_data.h"
 
-static const AVSideDataDescriptor sd_props[] = {
+स्थिर ध्रुव AVSideDataDescriptor sd_props[] = {
     [AV_FRAME_DATA_PANSCAN]                     = { "AVPanScan",                                    AV_SIDE_DATA_PROP_SIZE_DEPENDENT },
     [AV_FRAME_DATA_A53_CC]                      = { "ATSC A53 Part 4 Closed Captions" },
     [AV_FRAME_DATA_MATRIXENCODING]              = { "AVMatrixEncoding",                             AV_SIDE_DATA_PROP_CHANNEL_DEPENDENT },
@@ -66,21 +66,21 @@ static const AVSideDataDescriptor sd_props[] = {
     [AV_FRAME_DATA_GAIN_MAP_PARAMS]             = { "Gain map parameters",                          AV_SIDE_DATA_PROP_GLOBAL | AV_SIDE_DATA_PROP_COLOR_DEPENDENT },
 };
 
-const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type)
+ध्रुव AVSideDataDescriptor *av_frame_side_data_desc(गणना AVFrameSideDataType type)
 {
     unsigned t = type;
-    if (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
-        return &sd_props[t];
-    return NULL;
+    सचे (t < FF_ARRAY_ELEMS(sd_props) && sd_props[t].name)
+        पटिनिवत्त &sd_props[t];
+    पटिनिवत्त रिक्त;
 }
 
-const char *av_frame_side_data_name(enum AVFrameSideDataType type)
+ध्रुव वर्ण *av_frame_side_data_name(गणना AVFrameSideDataType type)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    return desc ? desc->name : NULL;
+    ध्रुव AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
+    पटिनिवत्त desc ? desc->name : रिक्त;
 }
 
-static void free_side_data_entry(AVFrameSideData **ptr_sd)
+स्थिर शून्य free_side_data_entry(AVFrameSideData **ptr_sd)
 {
     AVFrameSideData *sd = *ptr_sd;
 
@@ -89,46 +89,30 @@ static void free_side_data_entry(AVFrameSideData **ptr_sd)
     av_freep(ptr_sd);
 }
 
-static void remove_side_data_by_entry(AVFrameSideData ***sd, int *nb_sd,
-                                      const AVFrameSideData *target)
+स्थिर शून्य remove_side_data_by_entry(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                                      ध्रुव AVFrameSideData *target)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    अत्थाय (पूर्णाङ्क i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry != target)
-            continue;
+        सचे (entry != target)
+            अनुवर्त;
 
         free_side_data_entry(&entry);
 
         ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
         (*nb_sd)--;
 
-        return;
+        पटिनिवत्त;
     }
 }
 
-void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
-                               enum AVFrameSideDataType type)
+शून्य av_frame_side_data_remove(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                               गणना AVFrameSideDataType type)
 {
-    for (int i = *nb_sd - 1; i >= 0; i--) {
+    अत्थाय (पूर्णाङ्क i = *nb_sd - 1; i >= 0; i--) {
         AVFrameSideData *entry = ((*sd)[i]);
-        if (entry->type != type)
-            continue;
-
-        free_side_data_entry(&entry);
-
-        ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
-        (*nb_sd)--;
-    }
-}
-
-void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
-                                        int props)
-{
-    for (int i = *nb_sd - 1; i >= 0; i--) {
-        AVFrameSideData *entry = ((*sd)[i]);
-        const AVSideDataDescriptor *desc = av_frame_side_data_desc(entry->type);
-        if (!desc || !(desc->props & props))
-            continue;
+        सचे (entry->type != type)
+            अनुवर्त;
 
         free_side_data_entry(&entry);
 
@@ -137,35 +121,51 @@ void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
     }
 }
 
-void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd)
+शून्य av_frame_side_data_remove_by_props(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                                        पूर्णाङ्क props)
 {
-    for (int i = 0; i < *nb_sd; i++)
+    अत्थाय (पूर्णाङ्क i = *nb_sd - 1; i >= 0; i--) {
+        AVFrameSideData *entry = ((*sd)[i]);
+        ध्रुव AVSideDataDescriptor *desc = av_frame_side_data_desc(entry->type);
+        सचे (!desc || !(desc->props & props))
+            अनुवर्त;
+
+        free_side_data_entry(&entry);
+
+        ((*sd)[i]) = ((*sd)[*nb_sd - 1]);
+        (*nb_sd)--;
+    }
+}
+
+शून्य av_frame_side_data_free(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd)
+{
+    अत्थाय (पूर्णाङ्क i = 0; i < *nb_sd; i++)
         free_side_data_entry(&((*sd)[i]));
     *nb_sd = 0;
 
     av_freep(sd);
 }
 
-static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
-                                                   int *nb_sd,
-                                                   enum AVFrameSideDataType type,
+स्थिर AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
+                                                   पूर्णाङ्क *nb_sd,
+                                                   गणना AVFrameSideDataType type,
                                                    AVBufferRef *buf, uint8_t *data,
                                                    size_t size)
 {
     AVFrameSideData *ret, **tmp;
 
     // *nb_sd + 1 needs to fit into an int and a size_t.
-    if ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
-        return NULL;
+    सचे ((unsigned)*nb_sd >= FFMIN(INT_MAX, SIZE_MAX))
+        पटिनिवत्त रिक्त;
 
-    tmp = av_realloc_array(*sd, *nb_sd + 1, sizeof(**sd));
-    if (!tmp)
-        return NULL;
+    tmp = av_realloc_array(*sd, *nb_sd + 1, परिमाण(**sd));
+    सचे (!tmp)
+        पटिनिवत्त रिक्त;
     *sd = tmp;
 
-    ret = av_mallocz(sizeof(*ret));
-    if (!ret)
-        return NULL;
+    ret = av_mallocz(परिमाण(*ret));
+    सचे (!ret)
+        पटिनिवत्त रिक्त;
 
     ret->buf = buf;
     ret->data = data;
@@ -174,149 +174,149 @@ static AVFrameSideData *add_side_data_from_buf_ext(AVFrameSideData ***sd,
 
     (*sd)[(*nb_sd)++] = ret;
 
-    return ret;
+    पटिनिवत्त ret;
 }
 
 AVFrameSideData *ff_frame_side_data_add_from_buf(AVFrameSideData ***sd,
-                                                 int *nb_sd,
-                                                 enum AVFrameSideDataType type,
+                                                 पूर्णाङ्क *nb_sd,
+                                                 गणना AVFrameSideDataType type,
                                                  AVBufferRef *buf)
 {
-    if (!buf)
-        return NULL;
+    सचे (!buf)
+        पटिनिवत्त रिक्त;
 
-    return add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
+    पटिनिवत्त add_side_data_from_buf_ext(sd, nb_sd, type, buf, buf->data, buf->size);
 }
 
-static AVFrameSideData *replace_side_data_from_buf(AVFrameSideData *dst,
-                                                   AVBufferRef *buf, int flags)
+स्थिर AVFrameSideData *replace_side_data_from_buf(AVFrameSideData *dst,
+                                                   AVBufferRef *buf, पूर्णाङ्क flags)
 {
-    if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-        return NULL;
+    सचे (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+        पटिनिवत्त रिक्त;
 
     av_dict_free(&dst->metadata);
     av_buffer_unref(&dst->buf);
     dst->buf  = buf;
     dst->data = buf->data;
     dst->size = buf->size;
-    return dst;
+    पटिनिवत्त dst;
 }
 
-AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        size_t size, unsigned int flags)
+AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                                        गणना AVFrameSideDataType type,
+                                        size_t size, unsigned पूर्णाङ्क flags)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
+    ध्रुव AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
     AVBufferRef     *buf = av_buffer_alloc(size);
-    AVFrameSideData *ret = NULL;
+    AVFrameSideData *ret = रिक्त;
 
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    सचे (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    सचे ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (ret = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         ret = replace_side_data_from_buf(ret, buf, flags);
-        if (!ret)
+        सचे (!ret)
             av_buffer_unref(&buf);
-        return ret;
+        पटिनिवत्त ret;
     }
 
     ret = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
-    if (!ret)
+    सचे (!ret)
         av_buffer_unref(&buf);
 
-    return ret;
+    पटिनिवत्त ret;
 }
 
-AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        AVBufferRef **pbuf, unsigned int flags)
+AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                                        गणना AVFrameSideDataType type,
+                                        AVBufferRef **pbuf, unsigned पूर्णाङ्क flags)
 {
-    const AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
-    AVFrameSideData *sd_dst  = NULL;
+    ध्रुव AVSideDataDescriptor *desc = av_frame_side_data_desc(type);
+    AVFrameSideData *sd_dst  = रिक्त;
     AVBufferRef *buf = *pbuf;
 
-    if ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
-        return NULL;
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    सचे ((flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF) && !(buf = av_buffer_ref(*pbuf)))
+        पटिनिवत्त रिक्त;
+    सचे (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    सचे ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, type))) {
         sd_dst = replace_side_data_from_buf(sd_dst, buf, flags);
-    } else
+    } अञ्ञथा
         sd_dst = ff_frame_side_data_add_from_buf(sd, nb_sd, type, buf);
 
-    if (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
-        *pbuf = NULL;
-    else if (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+    सचे (sd_dst && !(flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
+        *pbuf = रिक्त;
+    अञ्ञथा सचे (!sd_dst && (flags & AV_FRAME_SIDE_DATA_FLAG_NEW_REF))
         av_buffer_unref(&buf);
-    return sd_dst;
+    पटिनिवत्त sd_dst;
 }
 
-int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
-                             const AVFrameSideData *src, unsigned int flags)
+पूर्णाङ्क av_frame_side_data_clone(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                             ध्रुव AVFrameSideData *src, unsigned पूर्णाङ्क flags)
 {
-    const AVSideDataDescriptor *desc;
-    AVBufferRef     *buf    = NULL;
-    AVFrameSideData *sd_dst = NULL;
-    int              ret    = AVERROR_BUG;
+    ध्रुव AVSideDataDescriptor *desc;
+    AVBufferRef     *buf    = रिक्त;
+    AVFrameSideData *sd_dst = रिक्त;
+    पूर्णाङ्क              ret    = AVERROR_BUG;
 
-    if (!sd || !src || !nb_sd || (*nb_sd && !*sd))
-        return AVERROR(EINVAL);
+    सचे (!sd || !src || !nb_sd || (*nb_sd && !*sd))
+        पटिनिवत्त AVERROR(EINVAL);
 
     desc = av_frame_side_data_desc(src->type);
-    if (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
+    सचे (flags & AV_FRAME_SIDE_DATA_FLAG_UNIQUE)
         av_frame_side_data_remove(sd, nb_sd, src->type);
-    if ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
+    सचे ((!desc || !(desc->props & AV_SIDE_DATA_PROP_MULTI)) &&
         (sd_dst = (AVFrameSideData *)av_frame_side_data_get(*sd, *nb_sd, src->type))) {
-        AVDictionary *dict = NULL;
+        AVDictionary *dict = रिक्त;
 
-        if (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
-            return AVERROR(EEXIST);
+        सचे (!(flags & AV_FRAME_SIDE_DATA_FLAG_REPLACE))
+            पटिनिवत्त AVERROR(EEXIST);
 
         ret = av_dict_copy(&dict, src->metadata, 0);
-        if (ret < 0)
-            return ret;
+        सचे (ret < 0)
+            पटिनिवत्त ret;
 
         ret = av_buffer_replace(&sd_dst->buf, src->buf);
-        if (ret < 0) {
+        सचे (ret < 0) {
             av_dict_free(&dict);
-            return ret;
+            पटिनिवत्त ret;
         }
 
         av_dict_free(&sd_dst->metadata);
         sd_dst->metadata = dict;
         sd_dst->data     = src->data;
         sd_dst->size     = src->size;
-        return 0;
+        पटिनिवत्त 0;
     }
 
     buf = av_buffer_ref(src->buf);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    सचे (!buf)
+        पटिनिवत्त AVERROR(ENOMEM);
 
     sd_dst = add_side_data_from_buf_ext(sd, nb_sd, src->type, buf,
                                         src->data, src->size);
-    if (!sd_dst) {
+    सचे (!sd_dst) {
         av_buffer_unref(&buf);
-        return AVERROR(ENOMEM);
+        पटिनिवत्त AVERROR(ENOMEM);
     }
 
     ret = av_dict_copy(&sd_dst->metadata, src->metadata, 0);
-    if (ret < 0) {
+    सचे (ret < 0) {
         remove_side_data_by_entry(sd, nb_sd, sd_dst);
-        return ret;
+        पटिनिवत्त ret;
     }
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
-                                                const int nb_sd,
-                                                enum AVFrameSideDataType type)
+ध्रुव AVFrameSideData *av_frame_side_data_get_c(ध्रुव AVFrameSideData * ध्रुव *sd,
+                                                ध्रुव पूर्णाङ्क nb_sd,
+                                                गणना AVFrameSideDataType type)
 {
-    for (int i = 0; i < nb_sd; i++) {
-        if (sd[i]->type == type)
-            return sd[i];
+    अत्थाय (पूर्णाङ्क i = 0; i < nb_sd; i++) {
+        सचे (sd[i]->type == type)
+            पटिनिवत्त sd[i];
     }
-    return NULL;
+    पटिनिवत्त रिक्त;
 }

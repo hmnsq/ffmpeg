@@ -19,30 +19,30 @@
 #ifndef AVUTIL_ARM_BSWAP_H
 #define AVUTIL_ARM_BSWAP_H
 
-#include <stdint.h>
-#include "config.h"
-#include "libavutil/attributes.h"
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "config.h"
+#अन्तर्भाव "libavutil/attributes.h"
 
 #ifdef __ARMCC_VERSION
 
-#if HAVE_ARMV6
+#सचे HAVE_ARMV6
 #define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+स्थिर av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return __rev(x);
+    पटिनिवत्त __rev(x);
 }
 #endif /* HAVE_ARMV6 */
 
-#elif HAVE_INLINE_ASM
+#नोचेद्यदि HAVE_INLINE_ASM
 
-#if HAVE_ARMV6_INLINE
+#सचे HAVE_ARMV6_INLINE
 #define av_bswap16 av_bswap16
-static av_always_inline av_const unsigned av_bswap16(unsigned x)
+स्थिर av_always_inline av_const unsigned av_bswap16(unsigned x)
 {
     unsigned y;
 
     __asm__("rev16 %0, %1" : "=r"(y) : "r"(x));
-    return y;
+    पटिनिवत्त y;
 }
 #endif
 #endif /* __ARMCC_VERSION */

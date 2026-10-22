@@ -21,41 +21,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "rc4.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "macros.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "rc4.h"
 
-AVRC4 *av_rc4_alloc(void)
+AVRC4 *av_rc4_alloc(शून्य)
 {
-    return av_mallocz(sizeof(struct AVRC4));
+    पटिनिवत्त av_mallocz(परिमाण(संरचना AVRC4));
 }
 
-int av_rc4_init(AVRC4 *r, const uint8_t *key, int key_bits, int decrypt) {
-    int i, j;
+पूर्णाङ्क av_rc4_init(AVRC4 *r, ध्रुव uint8_t *कुञ्चिका, पूर्णाङ्क कुञ्चिका_bits, पूर्णाङ्क decrypt) {
+    पूर्णाङ्क i, j;
     uint8_t y;
     uint8_t *state = r->state;
-    int keylen = key_bits >> 3;
-    if (key_bits & 7)
-        return AVERROR(EINVAL);
-    for (i = 0; i < 256; i++)
+    पूर्णाङ्क keylen = कुञ्चिका_bits >> 3;
+    सचे (कुञ्चिका_bits & 7)
+        पटिनिवत्त AVERROR(EINVAL);
+    अत्थाय (i = 0; i < 256; i++)
         state[i] = i;
     y = 0;
     // j is i % keylen
-    for (j = 0, i = 0; i < 256; i++, j++) {
-        if (j == keylen) j = 0;
-        y += state[i] + key[j];
+    अत्थाय (j = 0, i = 0; i < 256; i++, j++) {
+        सचे (j == keylen) j = 0;
+        y += state[i] + कुञ्चिका[j];
         FFSWAP(uint8_t, state[i], state[y]);
     }
     r->x = 1;
     r->y = state[1];
-    return 0;
+    पटिनिवत्त 0;
 }
 
-void av_rc4_crypt(AVRC4 *r, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt) {
+शून्य av_rc4_crypt(AVRC4 *r, uint8_t *dst, ध्रुव uint8_t *src, पूर्णाङ्क गणनम्, uint8_t *iv, पूर्णाङ्क decrypt) {
     uint8_t x = r->x, y = r->y;
     uint8_t *state = r->state;
-    while (count-- > 0) {
+    याव (गणनम्-- > 0) {
         uint8_t sum = state[x] + state[y];
         FFSWAP(uint8_t, state[x], state[y]);
         *dst++ = src ? *src++ ^ state[sum] : state[sum];

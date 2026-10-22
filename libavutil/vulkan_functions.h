@@ -22,11 +22,11 @@
 #define VK_NO_PROTOTYPES
 #define VK_ENABLE_BETA_EXTENSIONS
 
-#include "hwcontext.h"
-#include "hwcontext_vulkan.h"
+#अन्तर्भाव "hwcontext.h"
+#अन्तर्भाव "hwcontext_vulkan.h"
 
 /* An enum of bitflags for every optional extension we need */
-typedef uint64_t FFVulkanExtensions;
+प्रकारनिर्देश uint64_t FFVulkanExtensions;
 
 /* NOTE: when adding new entries, make sure to update ff_vk_extensions_to_mask */
 #define FF_VK_EXT_EXTERNAL_DMABUF_MEMORY (1ULL <<  0) /* VK_EXT_external_memory_dma_buf */
@@ -44,7 +44,7 @@ typedef uint64_t FFVulkanExtensions;
 #define FF_VK_EXT_COOP_MATRIX            (1ULL << 11) /* VK_KHR_cooperative_matrix */
 #define FF_VK_EXT_OPTICAL_FLOW           (1ULL << 12) /* VK_NV_optical_flow */
 #define FF_VK_EXT_SHADER_OBJECT          (1ULL << 13) /* VK_EXT_shader_object */
-#define FF_VK_EXT_PUSH_DESCRIPTOR        (1ULL << 14) /* VK_KHR_push_descriptor */
+#define FF_VK_EXT_प्रक्षिप_DESCRIPTOR        (1ULL << 14) /* VK_KHR_push_descriptor */
 #define FF_VK_EXT_RELAXED_EXTENDED_INSTR (1ULL << 15) /* VK_KHR_shader_relaxed_extended_instruction */
 #define FF_VK_EXT_EXPECT_ASSUME          (1ULL << 16) /* VK_KHR_shader_expect_assume */
 #define FF_VK_EXT_SUBGROUP_ROTATE        (1ULL << 17) /* VK_KHR_shader_subgroup_rotate */
@@ -136,7 +136,7 @@ typedef uint64_t FFVulkanExtensions;
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CreateSemaphore)                         \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              WaitSemaphores)                          \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              SignalSemaphore)                         \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              GetSemaphoreCounterValue)                \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Get_Semaphore_Counter_मानम्)                \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              DestroySemaphore)                        \
                                                                                          \
     /* Memory */                                                                         \
@@ -152,7 +152,7 @@ typedef uint64_t FFVulkanExtensions;
                                                                                          \
     /* Commands */                                                                       \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdBindDescriptorSets)                   \
-    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdPushConstants)                        \
+    MACRO(1, 1, FF_VK_EXT_NO_FLAG,              Cmd_प्रक्षिप_Constants)                        \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdBindPipeline)                         \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdPipelineBarrier)                      \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CmdCopyBufferToImage)                    \
@@ -197,7 +197,7 @@ typedef uint64_t FFVulkanExtensions;
                                                                                                        \
     /* Descriptors */                                                                                  \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              UpdateDescriptorSets)                                  \
-    MACRO(1, 1, FF_VK_EXT_PUSH_DESCRIPTOR,      CmdPushDescriptorSetKHR)                               \
+    MACRO(1, 1, FF_VK_EXT_प्रक्षिप_DESCRIPTOR,      Cmd_प्रक्षिप_Descriptor_Set_KHR)                               \
                                                                                            \
     /* Queries */                                                                          \
     MACRO(1, 1, FF_VK_EXT_NO_FLAG,              CreateQueryPool)                           \
@@ -262,7 +262,7 @@ typedef uint64_t FFVulkanExtensions;
     MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        CmdBindShadersEXT)                         \
     MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        CreateShadersEXT)                          \
     MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        DestroyShaderEXT)                          \
-    MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        GetShaderBinaryDataEXT)
+    MACRO(1, 1, FF_VK_EXT_SHADER_OBJECT,        Get_Shader_द्विमान_Data_EXT)
 
 /* Macro containing every win32 specific function that we utilize in our codebase */
 #define FN_LIST_WIN32(MACRO)                                                             \
@@ -274,7 +274,7 @@ typedef uint64_t FFVulkanExtensions;
     PFN_vk##name name;
 
 /* Structure with the definition of all listed functions */
-typedef struct FFVulkanFunctions {
+प्रकारनिर्देश संरचना FFVulkanFunctions {
     FN_LIST(PFN_DEF)
 #ifdef _WIN32
     FN_LIST_WIN32(PFN_DEF)

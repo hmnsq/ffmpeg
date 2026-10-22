@@ -16,25 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#अन्तर्भाव "config.h"
 
-#include <stdint.h>
-#include <string.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <string.h>
 
-#include <VideoToolbox/VideoToolbox.h>
+#अन्तर्भाव <VideoToolbox/VideoToolbox.h>
 
-#include "buffer.h"
-#include "buffer_internal.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_videotoolbox.h"
-#include "attributes.h"
-#include "mem.h"
-#include "pixfmt.h"
-#include "pixdesc.h"
+#अन्तर्भाव "buffer.h"
+#अन्तर्भाव "buffer_internal.h"
+#अन्तर्भाव "common.h"
+#अन्तर्भाव "hwcontext.h"
+#अन्तर्भाव "hwcontext_internal.h"
+#अन्तर्भाव "hwcontext_videotoolbox.h"
+#अन्तर्भाव "attributes.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "pixfmt.h"
+#अन्तर्भाव "pixdesc.h"
 
-typedef struct VTFramesContext {
+प्रकारनिर्देश संरचना VTFramesContext {
     /**
      * The public AVVTFramesContext. See hwcontext_videotoolbox.h for it.
      */
@@ -42,10 +42,10 @@ typedef struct VTFramesContext {
     CVPixelBufferPoolRef pool;
 } VTFramesContext;
 
-static const struct {
+स्थिर ध्रुव संरचना {
     uint32_t cv_fmt;
     bool full_range;
-    enum AVPixelFormat pix_fmt;
+    गणना AVPixelFormat pix_fmt;
 } cv_pix_fmts[] = {
     { kCVPixelFormatType_420YpCbCr8Planar,              false, AV_PIX_FMT_YUV420P },
     { kCVPixelFormatType_420YpCbCr8PlanarFullRange,     true,  AV_PIX_FMT_YUV420P },
@@ -57,39 +57,39 @@ static const struct {
     { kCVPixelFormatType_4444AYpCbCr8,                  false, AV_PIX_FMT_AYUV },
     { kCVPixelFormatType_4444AYpCbCr16,                 false, AV_PIX_FMT_AYUV64 },
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_420YPCBCR10BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_420YPCBCR10BIPLANARVIDEORANGE
     { kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange, false, AV_PIX_FMT_P010 },
     { kCVPixelFormatType_420YpCbCr10BiPlanarFullRange,  true,  AV_PIX_FMT_P010 },
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_422YPCBCR8BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_422YPCBCR8BIPLANARVIDEORANGE
     { kCVPixelFormatType_422YpCbCr8BiPlanarVideoRange,  false, AV_PIX_FMT_NV16 },
     { kCVPixelFormatType_422YpCbCr8BiPlanarFullRange,   true,  AV_PIX_FMT_NV16 },
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_422YPCBCR10BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_422YPCBCR10BIPLANARVIDEORANGE
     { kCVPixelFormatType_422YpCbCr10BiPlanarVideoRange, false, AV_PIX_FMT_P210 },
     { kCVPixelFormatType_422YpCbCr10BiPlanarFullRange,  true,  AV_PIX_FMT_P210 },
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_422YPCBCR16BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_422YPCBCR16BIPLANARVIDEORANGE
     { kCVPixelFormatType_422YpCbCr16BiPlanarVideoRange, false, AV_PIX_FMT_P216 },
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_444YPCBCR8BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_444YPCBCR8BIPLANARVIDEORANGE
     { kCVPixelFormatType_444YpCbCr8BiPlanarVideoRange,  false, AV_PIX_FMT_NV24 },
     { kCVPixelFormatType_444YpCbCr8BiPlanarFullRange,   true,  AV_PIX_FMT_NV24 },
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_444YPCBCR10BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_444YPCBCR10BIPLANARVIDEORANGE
     { kCVPixelFormatType_444YpCbCr10BiPlanarVideoRange, false, AV_PIX_FMT_P410 },
     { kCVPixelFormatType_444YpCbCr10BiPlanarFullRange,  true,  AV_PIX_FMT_P410 },
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_444YPCBCR16BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_444YPCBCR16BIPLANARVIDEORANGE
     { kCVPixelFormatType_444YpCbCr16BiPlanarVideoRange, false, AV_PIX_FMT_P416 },
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_422YPCBCR8_YUVS
+#सचे HAVE_KCVPIXELFORMATTYPE_422YPCBCR8_YUVS
     { kCVPixelFormatType_422YpCbCr8_yuvs,               false, AV_PIX_FMT_YUYV422 },
 #endif
     { 'bp16'/*kCVPixelFormatType_16VersatileBayer*/,    false, AV_PIX_FMT_BAYER_RGGB16},
 };
 
-static const enum AVPixelFormat supported_formats[] = {
+स्थिर ध्रुव गणना AVPixelFormat supported_formats[] = {
 #ifdef kCFCoreFoundationVersionNumber10_7
     AV_PIX_FMT_NV12,
     AV_PIX_FMT_AYUV,
@@ -97,99 +97,99 @@ static const enum AVPixelFormat supported_formats[] = {
 #endif
     AV_PIX_FMT_YUV420P,
     AV_PIX_FMT_UYVY422,
-#if HAVE_KCVPIXELFORMATTYPE_420YPCBCR10BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_420YPCBCR10BIPLANARVIDEORANGE
     AV_PIX_FMT_P010,
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_422YPCBCR8BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_422YPCBCR8BIPLANARVIDEORANGE
     AV_PIX_FMT_NV16,
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_422YPCBCR10BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_422YPCBCR10BIPLANARVIDEORANGE
     AV_PIX_FMT_P210,
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_422YPCBCR16BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_422YPCBCR16BIPLANARVIDEORANGE
     AV_PIX_FMT_P216,
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_444YPCBCR8BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_444YPCBCR8BIPLANARVIDEORANGE
     AV_PIX_FMT_NV24,
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_444YPCBCR10BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_444YPCBCR10BIPLANARVIDEORANGE
     AV_PIX_FMT_P410,
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_444YPCBCR16BIPLANARVIDEORANGE
+#सचे HAVE_KCVPIXELFORMATTYPE_444YPCBCR16BIPLANARVIDEORANGE
     AV_PIX_FMT_P416,
 #endif
-#if HAVE_KCVPIXELFORMATTYPE_422YPCBCR8_YUVS
+#सचे HAVE_KCVPIXELFORMATTYPE_422YPCBCR8_YUVS
     AV_PIX_FMT_YUYV422,
 #endif
     AV_PIX_FMT_BGRA,
     AV_PIX_FMT_BAYER_RGGB16,
 };
 
-static int vt_frames_get_constraints(AVHWDeviceContext *ctx,
-                                     const void *hwconfig,
+स्थिर पूर्णाङ्क vt_frames_get_constraints(AVHWDeviceContext *ctx,
+                                     ध्रुव शून्य *hwconfig,
                                      AVHWFramesConstraints *constraints)
 {
-    int i;
+    पूर्णाङ्क i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    परिमाण(*constraints->valid_sw_formats));
+    सचे (!constraints->valid_sw_formats)
+        पटिनिवत्त AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++)
+    अत्थाय (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++)
         constraints->valid_sw_formats[i] = supported_formats[i];
     constraints->valid_sw_formats[FF_ARRAY_ELEMS(supported_formats)] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, परिमाण(*constraints->valid_hw_formats));
+    सचे (!constraints->valid_hw_formats)
+        पटिनिवत्त AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_VIDEOTOOLBOX;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-enum AVPixelFormat av_map_videotoolbox_format_to_pixfmt(uint32_t cv_fmt)
+गणना AVPixelFormat av_map_videotoolbox_format_to_pixfmt(uint32_t cv_fmt)
 {
-    int i;
-    for (i = 0; i < FF_ARRAY_ELEMS(cv_pix_fmts); i++) {
-        if (cv_pix_fmts[i].cv_fmt == cv_fmt)
-            return cv_pix_fmts[i].pix_fmt;
+    पूर्णाङ्क i;
+    अत्थाय (i = 0; i < FF_ARRAY_ELEMS(cv_pix_fmts); i++) {
+        सचे (cv_pix_fmts[i].cv_fmt == cv_fmt)
+            पटिनिवत्त cv_pix_fmts[i].pix_fmt;
     }
-    return AV_PIX_FMT_NONE;
+    पटिनिवत्त AV_PIX_FMT_NONE;
 }
 
-static uint32_t vt_format_from_pixfmt(enum AVPixelFormat pix_fmt,
-                                      enum AVColorRange range)
+स्थिर uint32_t vt_format_from_pixfmt(गणना AVPixelFormat pix_fmt,
+                                      गणना AVColorRange range)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(cv_pix_fmts); i++) {
-        if (cv_pix_fmts[i].pix_fmt == pix_fmt) {
-            int full_range = (range == AVCOL_RANGE_JPEG);
+    अत्थाय (पूर्णाङ्क i = 0; i < FF_ARRAY_ELEMS(cv_pix_fmts); i++) {
+        सचे (cv_pix_fmts[i].pix_fmt == pix_fmt) {
+            पूर्णाङ्क full_range = (range == AVCOL_RANGE_JPEG);
 
             // Don't care if unspecified
-            if (range == AVCOL_RANGE_UNSPECIFIED)
-                return cv_pix_fmts[i].cv_fmt;
+            सचे (range == AVCOL_RANGE_UNSPECIFIED)
+                पटिनिवत्त cv_pix_fmts[i].cv_fmt;
 
-            if (cv_pix_fmts[i].full_range == full_range)
-                return cv_pix_fmts[i].cv_fmt;
+            सचे (cv_pix_fmts[i].full_range == full_range)
+                पटिनिवत्त cv_pix_fmts[i].cv_fmt;
         }
     }
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-uint32_t av_map_videotoolbox_format_from_pixfmt(enum AVPixelFormat pix_fmt)
+uint32_t av_map_videotoolbox_format_from_pixfmt(गणना AVPixelFormat pix_fmt)
 {
-    return av_map_videotoolbox_format_from_pixfmt2(pix_fmt, false);
+    पटिनिवत्त av_map_videotoolbox_format_from_pixfmt2(pix_fmt, false);
 }
 
-uint32_t av_map_videotoolbox_format_from_pixfmt2(enum AVPixelFormat pix_fmt, bool full_range)
+uint32_t av_map_videotoolbox_format_from_pixfmt2(गणना AVPixelFormat pix_fmt, bool full_range)
 {
-    return vt_format_from_pixfmt(pix_fmt, full_range ? AVCOL_RANGE_JPEG : AVCOL_RANGE_MPEG);
+    पटिनिवत्त vt_format_from_pixfmt(pix_fmt, full_range ? AVCOL_RANGE_JPEG : AVCOL_RANGE_MPEG);
 }
 
-static int vt_pool_alloc(AVHWFramesContext *ctx)
+स्थिर पूर्णाङ्क vt_pool_alloc(AVHWFramesContext *ctx)
 {
     VTFramesContext *fctx = ctx->hwctx;
     AVVTFramesContext *hw_ctx = &fctx->p;
@@ -199,54 +199,54 @@ static int vt_pool_alloc(AVHWFramesContext *ctx)
     CFMutableDictionaryRef attributes, iosurface_properties;
 
     attributes = CFDictionaryCreateMutable(
-        NULL,
+        रिक्त,
         2,
-        &kCFTypeDictionaryKeyCallBacks,
-        &kCFTypeDictionaryValueCallBacks);
+        &k_CFType_Dictionary_कुञ्चिका_Call_Backs,
+        &k_CFType_Dictionary_मानम्_Call_Backs);
 
     cv_pixfmt = vt_format_from_pixfmt(ctx->sw_format, hw_ctx->color_range);
-    pixfmt = CFNumberCreate(NULL, kCFNumberSInt32Type, &cv_pixfmt);
-    CFDictionarySetValue(
+    pixfmt = CFNumberCreate(रिक्त, kCFNumberSInt32Type, &cv_pixfmt);
+    CFDictionary_Set_मानम्(
         attributes,
-        kCVPixelBufferPixelFormatTypeKey,
+        k_CVPixel_Buffer_Pixel_Format_Type_कुञ्चिका,
         pixfmt);
     CFRelease(pixfmt);
 
     iosurface_properties = CFDictionaryCreateMutable(
-        NULL,
+        रिक्त,
         0,
-        &kCFTypeDictionaryKeyCallBacks,
-        &kCFTypeDictionaryValueCallBacks);
-    CFDictionarySetValue(attributes, kCVPixelBufferIOSurfacePropertiesKey, iosurface_properties);
+        &k_CFType_Dictionary_कुञ्चिका_Call_Backs,
+        &k_CFType_Dictionary_मानम्_Call_Backs);
+    CFDictionary_Set_मानम्(attributes, k_CVPixel_Buffer_IOSurface_Properties_कुञ्चिका, iosurface_properties);
     CFRelease(iosurface_properties);
 
-    w = CFNumberCreate(NULL, kCFNumberSInt32Type, &ctx->width);
-    h = CFNumberCreate(NULL, kCFNumberSInt32Type, &ctx->height);
-    CFDictionarySetValue(attributes, kCVPixelBufferWidthKey, w);
-    CFDictionarySetValue(attributes, kCVPixelBufferHeightKey, h);
+    w = CFNumberCreate(रिक्त, kCFNumberSInt32Type, &ctx->width);
+    h = CFNumberCreate(रिक्त, kCFNumberSInt32Type, &ctx->height);
+    CFDictionary_Set_मानम्(attributes, k_CVPixel_Buffer_Width_कुञ्चिका, w);
+    CFDictionary_Set_मानम्(attributes, k_CVPixel_Buffer_Height_कुञ्चिका, h);
     CFRelease(w);
     CFRelease(h);
 
     err = CVPixelBufferPoolCreate(
-        NULL,
-        NULL,
+        रिक्त,
+        रिक्त,
         attributes,
         &fctx->pool);
     CFRelease(attributes);
 
-    if (err == kCVReturnSuccess)
-        return 0;
+    सचे (err == kCVReturnSuccess)
+        पटिनिवत्त 0;
 
     av_log(ctx, AV_LOG_ERROR, "Error creating CVPixelBufferPool: %d\n", err);
-    return AVERROR_EXTERNAL;
+    पटिनिवत्त AVERROR_EXTERNAL;
 }
 
-static void videotoolbox_buffer_release(void *opaque, uint8_t *data)
+स्थिर शून्य videotoolbox_buffer_release(शून्य *opaque, uint8_t *data)
 {
     CVPixelBufferRelease((CVPixelBufferRef)data);
 }
 
-static AVBufferRef *vt_pool_alloc_buffer(void *opaque, size_t size)
+स्थिर AVBufferRef *vt_pool_alloc_buffer(शून्य *opaque, size_t size)
 {
     CVPixelBufferRef pixbuf;
     AVBufferRef *buf;
@@ -255,116 +255,116 @@ static AVBufferRef *vt_pool_alloc_buffer(void *opaque, size_t size)
     VTFramesContext *fctx = ctx->hwctx;
 
     err = CVPixelBufferPoolCreatePixelBuffer(
-        NULL,
+        रिक्त,
         fctx->pool,
         &pixbuf
     );
-    if (err != kCVReturnSuccess) {
+    सचे (err != kCVReturnSuccess) {
         av_log(ctx, AV_LOG_ERROR, "Failed to create pixel buffer from pool: %d\n", err);
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
 
     buf = av_buffer_create((uint8_t *)pixbuf, size,
-                           videotoolbox_buffer_release, NULL, 0);
-    if (!buf) {
+                           videotoolbox_buffer_release, रिक्त, 0);
+    सचे (!buf) {
         CVPixelBufferRelease(pixbuf);
-        return NULL;
+        पटिनिवत्त रिक्त;
     }
-    return buf;
+    पटिनिवत्त buf;
 }
 
-static void vt_frames_uninit(AVHWFramesContext *ctx)
+स्थिर शून्य vt_frames_uninit(AVHWFramesContext *ctx)
 {
     VTFramesContext *fctx = ctx->hwctx;
-    if (fctx->pool) {
+    सचे (fctx->pool) {
         CVPixelBufferPoolRelease(fctx->pool);
-        fctx->pool = NULL;
+        fctx->pool = रिक्त;
     }
 }
 
-static int vt_frames_init(AVHWFramesContext *ctx)
+स्थिर पूर्णाङ्क vt_frames_init(AVHWFramesContext *ctx)
 {
-    int i, ret;
+    पूर्णाङ्क i, ret;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i])
-            break;
+    अत्थाय (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        सचे (ctx->sw_format == supported_formats[i])
+            भङ्ग;
     }
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    सचे (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Pixel format '%s' is not supported\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(ENOSYS);
+        पटिनिवत्त AVERROR(ENOSYS);
     }
 
-    if (!ctx->pool) {
+    सचे (!ctx->pool) {
         ffhwframesctx(ctx)->pool_internal = av_buffer_pool_init2(
-                sizeof(CVPixelBufferRef), ctx, vt_pool_alloc_buffer, NULL);
-        if (!ffhwframesctx(ctx)->pool_internal)
-            return AVERROR(ENOMEM);
+                परिमाण(CVPixelBufferRef), ctx, vt_pool_alloc_buffer, रिक्त);
+        सचे (!ffhwframesctx(ctx)->pool_internal)
+            पटिनिवत्त AVERROR(ENOMEM);
     }
 
     ret = vt_pool_alloc(ctx);
-    if (ret < 0)
-        return ret;
+    सचे (ret < 0)
+        पटिनिवत्त ret;
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-static int vt_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+स्थिर पूर्णाङ्क vt_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    सचे (!frame->buf[0])
+        पटिनिवत्त AVERROR(ENOMEM);
 
     frame->data[3] = frame->buf[0]->data;
     frame->format  = AV_PIX_FMT_VIDEOTOOLBOX;
     frame->width   = ctx->width;
     frame->height  = ctx->height;
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-static int vt_transfer_get_formats(AVHWFramesContext *ctx,
-                                   enum AVHWFrameTransferDirection dir,
-                                   enum AVPixelFormat **formats)
+स्थिर पूर्णाङ्क vt_transfer_get_formats(AVHWFramesContext *ctx,
+                                   गणना AVHWFrameTransferDirection dir,
+                                   गणना AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    गणना AVPixelFormat *fmts = av_malloc_array(2, परिमाण(*fmts));
+    सचे (!fmts)
+        पटिनिवत्त AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
-    return 0;
+    पटिनिवत्त 0;
 }
 
-static void vt_unmap(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
+स्थिर शून्य vt_unmap(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
 {
     CVPixelBufferRef pixbuf = (CVPixelBufferRef)hwmap->source->data[3];
 
     CVPixelBufferUnlockBaseAddress(pixbuf, (uintptr_t)hwmap->priv);
 }
 
-static int vt_pixbuf_set_par(void *log_ctx,
-                             CVPixelBufferRef pixbuf, const AVFrame *src)
+स्थिर पूर्णाङ्क vt_pixbuf_set_par(शून्य *log_ctx,
+                             CVPixelBufferRef pixbuf, ध्रुव AVFrame *src)
 {
-    CFMutableDictionaryRef par = NULL;
-    CFNumberRef num = NULL, den = NULL;
+    CFMutableDictionaryRef par = रिक्त;
+    CFNumberRef अङ्कः = रिक्त, den = रिक्त;
     AVRational avpar = src->sample_aspect_ratio;
 
-    if (avpar.num == 0) {
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferPixelAspectRatioKey);
-        return 0;
+    सचे (avpar.अङ्कः == 0) {
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_Pixel_Aspect_Ratio_कुञ्चिका);
+        पटिनिवत्त 0;
     }
 
-    av_reduce(&avpar.num, &avpar.den,
-                avpar.num, avpar.den,
+    av_reduce(&avpar.अङ्कः, &avpar.den,
+                avpar.अङ्कः, avpar.den,
                 0xFFFFFFFF);
 
-    num = CFNumberCreate(kCFAllocatorDefault,
+    अङ्कः = CFNumberCreate(kCFAllocatorDefault,
                             kCFNumberIntType,
-                            &avpar.num);
+                            &avpar.अङ्कः);
 
     den = CFNumberCreate(kCFAllocatorDefault,
                             kCFNumberIntType,
@@ -372,272 +372,272 @@ static int vt_pixbuf_set_par(void *log_ctx,
 
     par = CFDictionaryCreateMutable(kCFAllocatorDefault,
                                     2,
-                                    &kCFCopyStringDictionaryKeyCallBacks,
-                                    &kCFTypeDictionaryValueCallBacks);
+                                    &k_CFCopy_String_Dictionary_कुञ्चिका_Call_Backs,
+                                    &k_CFType_Dictionary_मानम्_Call_Backs);
 
-    if (!par || !num || !den) {
-        if (par) CFRelease(par);
-        if (num) CFRelease(num);
-        if (den) CFRelease(den);
-        return AVERROR(ENOMEM);
+    सचे (!par || !अङ्कः || !den) {
+        सचे (par) CFRelease(par);
+        सचे (अङ्कः) CFRelease(अङ्कः);
+        सचे (den) CFRelease(den);
+        पटिनिवत्त AVERROR(ENOMEM);
     }
 
-    CFDictionarySetValue(
+    CFDictionary_Set_मानम्(
         par,
-        kCVImageBufferPixelAspectRatioHorizontalSpacingKey,
-        num);
-    CFDictionarySetValue(
+        k_CVImage_Buffer_Pixel_Aspect_Ratio_Horizontal_Spacing_कुञ्चिका,
+        अङ्कः);
+    CFDictionary_Set_मानम्(
         par,
-        kCVImageBufferPixelAspectRatioVerticalSpacingKey,
+        k_CVImage_Buffer_Pixel_Aspect_Ratio_Vertical_Spacing_कुञ्चिका,
         den);
 
     CVBufferSetAttachment(
         pixbuf,
-        kCVImageBufferPixelAspectRatioKey,
+        k_CVImage_Buffer_Pixel_Aspect_Ratio_कुञ्चिका,
         par,
         kCVAttachmentMode_ShouldPropagate
     );
 
     CFRelease(par);
-    CFRelease(num);
+    CFRelease(अङ्कः);
     CFRelease(den);
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-CFStringRef av_map_videotoolbox_chroma_loc_from_av(enum AVChromaLocation loc)
+CFStringRef av_map_videotoolbox_chroma_loc_from_av(गणना AVChromaLocation loc)
 {
-    switch (loc) {
-    case AVCHROMA_LOC_LEFT:
-        return kCVImageBufferChromaLocation_Left;
-    case AVCHROMA_LOC_CENTER:
-        return kCVImageBufferChromaLocation_Center;
-    case AVCHROMA_LOC_TOP:
-        return kCVImageBufferChromaLocation_Top;
-    case AVCHROMA_LOC_BOTTOM:
-        return kCVImageBufferChromaLocation_Bottom;
-    case AVCHROMA_LOC_TOPLEFT:
-        return kCVImageBufferChromaLocation_TopLeft;
-    case AVCHROMA_LOC_BOTTOMLEFT:
-        return kCVImageBufferChromaLocation_BottomLeft;
-    default:
-        return NULL;
+    विकल्प (loc) {
+    पक्ष AVCHROMA_LOC_वामः:
+        पटिनिवत्त k_CVImage_Buffer_Chroma_Location_वामः;
+    पक्ष AVCHROMA_LOC_CENTER:
+        पटिनिवत्त kCVImageBufferChromaLocation_Center;
+    पक्ष AVCHROMA_LOC_शिखरम्:
+        पटिनिवत्त k_CVImage_Buffer_Chroma_Location_शिखरम्;
+    पक्ष AVCHROMA_LOC_BOTTOM:
+        पटिनिवत्त kCVImageBufferChromaLocation_Bottom;
+    पक्ष AVCHROMA_LOC_TOPLEFT:
+        पटिनिवत्त k_CVImage_Buffer_Chroma_Location_शिखरम्_वामः;
+    पक्ष AVCHROMA_LOC_BOTTOMLEFT:
+        पटिनिवत्त k_CVImage_Buffer_Chroma_Location_Bottom_वामः;
+    स्वभाव:
+        पटिनिवत्त रिक्त;
     }
 }
 
-static int vt_pixbuf_set_chromaloc(void *log_ctx,
-                                   CVPixelBufferRef pixbuf, const AVFrame *src)
+स्थिर पूर्णाङ्क vt_pixbuf_set_chromaloc(शून्य *log_ctx,
+                                   CVPixelBufferRef pixbuf, ध्रुव AVFrame *src)
 {
     CFStringRef loc = av_map_videotoolbox_chroma_loc_from_av(src->chroma_location);
 
-    if (loc) {
+    सचे (loc) {
         CVBufferSetAttachment(
             pixbuf,
-            kCVImageBufferChromaLocationTopFieldKey,
+            k_CVImage_Buffer_Chroma_Location_शिखरम्_Field_कुञ्चिका,
             loc,
             kCVAttachmentMode_ShouldPropagate);
-    } else
+    } अञ्ञथा
         CVBufferRemoveAttachment(
             pixbuf,
-            kCVImageBufferChromaLocationTopFieldKey);
+            k_CVImage_Buffer_Chroma_Location_शिखरम्_Field_कुञ्चिका);
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-CFStringRef av_map_videotoolbox_color_matrix_from_av(enum AVColorSpace space)
+CFStringRef av_map_videotoolbox_color_matrix_from_av(गणना AVColorSpace space)
 {
-    switch (space) {
-    case AVCOL_SPC_BT2020_CL:
-    case AVCOL_SPC_BT2020_NCL:
-#if HAVE_KCVIMAGEBUFFERYCBCRMATRIX_ITU_R_2020
-        if (__builtin_available(macOS 10.11, iOS 9, *))
-            return kCVImageBufferYCbCrMatrix_ITU_R_2020;
+    विकल्प (space) {
+    पक्ष AVCOL_SPC_BT2020_CL:
+    पक्ष AVCOL_SPC_BT2020_NCL:
+#सचे HAVE_KCVIMAGEBUFFERYCBCRMATRIX_ITU_R_2020
+        सचे (__builtin_available(macOS 10.11, iOS 9, *))
+            पटिनिवत्त kCVImageBufferYCbCrMatrix_ITU_R_2020;
 #endif
-        return CFSTR("ITU_R_2020");
-    case AVCOL_SPC_BT470BG:
-    case AVCOL_SPC_SMPTE170M:
-        return kCVImageBufferYCbCrMatrix_ITU_R_601_4;
-    case AVCOL_SPC_BT709:
-        return kCVImageBufferYCbCrMatrix_ITU_R_709_2;
-    case AVCOL_SPC_SMPTE240M:
-        return kCVImageBufferYCbCrMatrix_SMPTE_240M_1995;
-    default:
-#if HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2100_HLG
-        if (__builtin_available(macOS 10.13, iOS 11, tvOS 11, watchOS 4, *))
-            return CVYCbCrMatrixGetStringForIntegerCodePoint(space);
+        पटिनिवत्त CFSTR("ITU_R_2020");
+    पक्ष AVCOL_SPC_BT470BG:
+    पक्ष AVCOL_SPC_SMPTE170M:
+        पटिनिवत्त kCVImageBufferYCbCrMatrix_ITU_R_601_4;
+    पक्ष AVCOL_SPC_BT709:
+        पटिनिवत्त kCVImageBufferYCbCrMatrix_ITU_R_709_2;
+    पक्ष AVCOL_SPC_SMPTE240M:
+        पटिनिवत्त kCVImageBufferYCbCrMatrix_SMPTE_240M_1995;
+    स्वभाव:
+#सचे HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2100_HLG
+        सचे (__builtin_available(macOS 10.13, iOS 11, tvOS 11, watchOS 4, *))
+            पटिनिवत्त CVYCbCrMatrixGetStringForIntegerCodePoint(space);
         av_fallthrough;
 #endif
-    case AVCOL_SPC_UNSPECIFIED:
-        return NULL;
+    पक्ष AVCOL_SPC_UNSPECIFIED:
+        पटिनिवत्त रिक्त;
     }
 }
 
-CFStringRef av_map_videotoolbox_color_primaries_from_av(enum AVColorPrimaries pri)
+CFStringRef av_map_videotoolbox_color_primaries_from_av(गणना AVColorPrimaries pri)
 {
-    switch (pri) {
-    case AVCOL_PRI_BT2020:
-#if HAVE_KCVIMAGEBUFFERCOLORPRIMARIES_ITU_R_2020
-        if (__builtin_available(macOS 10.11, iOS 9, *))
-            return kCVImageBufferColorPrimaries_ITU_R_2020;
+    विकल्प (pri) {
+    पक्ष AVCOL_PRI_BT2020:
+#सचे HAVE_KCVIMAGEBUFFERCOLORPRIMARIES_ITU_R_2020
+        सचे (__builtin_available(macOS 10.11, iOS 9, *))
+            पटिनिवत्त kCVImageBufferColorPrimaries_ITU_R_2020;
 #endif
-        return CFSTR("ITU_R_2020");
-    case AVCOL_PRI_BT709:
-        return kCVImageBufferColorPrimaries_ITU_R_709_2;
-    case AVCOL_PRI_SMPTE170M:
-        return kCVImageBufferColorPrimaries_SMPTE_C;
-    case AVCOL_PRI_BT470BG:
-        return kCVImageBufferColorPrimaries_EBU_3213;
-    default:
-#if HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2100_HLG
-        if (__builtin_available(macOS 10.13, iOS 11, tvOS 11, watchOS 4, *))
-            return CVColorPrimariesGetStringForIntegerCodePoint(pri);
+        पटिनिवत्त CFSTR("ITU_R_2020");
+    पक्ष AVCOL_PRI_BT709:
+        पटिनिवत्त kCVImageBufferColorPrimaries_ITU_R_709_2;
+    पक्ष AVCOL_PRI_SMPTE170M:
+        पटिनिवत्त kCVImageBufferColorPrimaries_SMPTE_C;
+    पक्ष AVCOL_PRI_BT470BG:
+        पटिनिवत्त kCVImageBufferColorPrimaries_EBU_3213;
+    स्वभाव:
+#सचे HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2100_HLG
+        सचे (__builtin_available(macOS 10.13, iOS 11, tvOS 11, watchOS 4, *))
+            पटिनिवत्त CVColorPrimariesGetStringForIntegerCodePoint(pri);
         av_fallthrough;
 #endif
-    case AVCOL_PRI_UNSPECIFIED:
-        return NULL;
+    पक्ष AVCOL_PRI_UNSPECIFIED:
+        पटिनिवत्त रिक्त;
     }
 }
 
-CFStringRef av_map_videotoolbox_color_trc_from_av(enum AVColorTransferCharacteristic trc)
+CFStringRef av_map_videotoolbox_color_trc_from_av(गणना AVColorTransferCharacteristic trc)
 {
 
-    switch (trc) {
-    case AVCOL_TRC_SMPTE2084:
-#if HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_SMPTE_ST_2084_PQ
-        if (__builtin_available(macOS 10.13, iOS 11, *))
-            return kCVImageBufferTransferFunction_SMPTE_ST_2084_PQ;
+    विकल्प (trc) {
+    पक्ष AVCOL_TRC_SMPTE2084:
+#सचे HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_SMPTE_ST_2084_PQ
+        सचे (__builtin_available(macOS 10.13, iOS 11, *))
+            पटिनिवत्त kCVImageBufferTransferFunction_SMPTE_ST_2084_PQ;
 #endif
-        return CFSTR("SMPTE_ST_2084_PQ");
-    case AVCOL_TRC_BT2020_10:
-    case AVCOL_TRC_BT2020_12:
-#if HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2020
-        if (__builtin_available(macOS 10.11, iOS 9, *))
-            return kCVImageBufferTransferFunction_ITU_R_2020;
+        पटिनिवत्त CFSTR("SMPTE_ST_2084_PQ");
+    पक्ष AVCOL_TRC_BT2020_10:
+    पक्ष AVCOL_TRC_BT2020_12:
+#सचे HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2020
+        सचे (__builtin_available(macOS 10.11, iOS 9, *))
+            पटिनिवत्त kCVImageBufferTransferFunction_ITU_R_2020;
 #endif
-        return CFSTR("ITU_R_2020");
-    case AVCOL_TRC_BT709:
-        return kCVImageBufferTransferFunction_ITU_R_709_2;
-    case AVCOL_TRC_SMPTE240M:
-        return kCVImageBufferTransferFunction_SMPTE_240M_1995;
-    case AVCOL_TRC_SMPTE428:
-#if HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_SMPTE_ST_428_1
-        if (__builtin_available(macOS 10.12, iOS 10, *))
-            return kCVImageBufferTransferFunction_SMPTE_ST_428_1;
+        पटिनिवत्त CFSTR("ITU_R_2020");
+    पक्ष AVCOL_TRC_BT709:
+        पटिनिवत्त kCVImageBufferTransferFunction_ITU_R_709_2;
+    पक्ष AVCOL_TRC_SMPTE240M:
+        पटिनिवत्त kCVImageBufferTransferFunction_SMPTE_240M_1995;
+    पक्ष AVCOL_TRC_SMPTE428:
+#सचे HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_SMPTE_ST_428_1
+        सचे (__builtin_available(macOS 10.12, iOS 10, *))
+            पटिनिवत्त kCVImageBufferTransferFunction_SMPTE_ST_428_1;
 #endif
-        return CFSTR("SMPTE_ST_428_1");
-    case AVCOL_TRC_ARIB_STD_B67:
-#if HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2100_HLG
-        if (__builtin_available(macOS 10.13, iOS 11, *))
-            return kCVImageBufferTransferFunction_ITU_R_2100_HLG;
+        पटिनिवत्त CFSTR("SMPTE_ST_428_1");
+    पक्ष AVCOL_TRC_ARIB_STD_B67:
+#सचे HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2100_HLG
+        सचे (__builtin_available(macOS 10.13, iOS 11, *))
+            पटिनिवत्त kCVImageBufferTransferFunction_ITU_R_2100_HLG;
 #endif
-        return CFSTR("ITU_R_2100_HLG");
-    case AVCOL_TRC_GAMMA22:
-        return kCVImageBufferTransferFunction_UseGamma;
-    case AVCOL_TRC_GAMMA28:
-        return kCVImageBufferTransferFunction_UseGamma;
-    default:
-#if HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2100_HLG
-        if (__builtin_available(macOS 10.13, iOS 11, tvOS 11, watchOS 4, *))
-            return CVTransferFunctionGetStringForIntegerCodePoint(trc);
+        पटिनिवत्त CFSTR("ITU_R_2100_HLG");
+    पक्ष AVCOL_TRC_GAMMA22:
+        पटिनिवत्त kCVImageBufferTransferFunction_UseGamma;
+    पक्ष AVCOL_TRC_GAMMA28:
+        पटिनिवत्त kCVImageBufferTransferFunction_UseGamma;
+    स्वभाव:
+#सचे HAVE_KCVIMAGEBUFFERTRANSFERFUNCTION_ITU_R_2100_HLG
+        सचे (__builtin_available(macOS 10.13, iOS 11, tvOS 11, watchOS 4, *))
+            पटिनिवत्त CVTransferFunctionGetStringForIntegerCodePoint(trc);
         av_fallthrough;
 #endif
-    case AVCOL_TRC_UNSPECIFIED:
-        return NULL;
+    पक्ष AVCOL_TRC_UNSPECIFIED:
+        पटिनिवत्त रिक्त;
     }
 }
 
 /**
  * Copy all attachments for the specified mode from the given buffer.
  */
-static CFDictionaryRef vt_cv_buffer_copy_attachments(CVBufferRef buffer,
+स्थिर CFDictionaryRef vt_cv_buffer_copy_attachments(CVBufferRef buffer,
                                                      CVAttachmentMode attachment_mode)
 {
     // Check that our SDK is at least macOS 12 / iOS 15 / tvOS 15
-    #if (TARGET_OS_OSX  && defined(__MAC_12_0)    && __MAC_OS_X_VERSION_MAX_ALLOWED  >= __MAC_12_0)     || \
+    #सचे (TARGET_OS_OSX  && defined(__MAC_12_0)    && __MAC_OS_X_VERSION_MAX_ALLOWED  >= __MAC_12_0)     || \
         (TARGET_OS_IOS  && defined(__IPHONE_15_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_15_0)  || \
         (TARGET_OS_TV   && defined(__TVOS_15_0)   && __TV_OS_VERSION_MAX_ALLOWED     >= __TVOS_15_0)
         // On recent enough versions, just use the respective API
-        if (__builtin_available(macOS 12.0, iOS 15.0, tvOS 15.0, *))
-            return CVBufferCopyAttachments(buffer, attachment_mode);
+        सचे (__builtin_available(macOS 12.0, iOS 15.0, tvOS 15.0, *))
+            पटिनिवत्त CVBufferCopyAttachments(buffer, attachment_mode);
     #endif
 
     // Check that the target is lower than macOS 12 / iOS 15 / tvOS 15
     // else this would generate a deprecation warning and anyway never run because
     // the runtime availability check above would be always true.
-    #if (TARGET_OS_OSX  && (!defined(__MAC_12_0)    || __MAC_OS_X_VERSION_MIN_REQUIRED  < __MAC_12_0))     || \
+    #सचे (TARGET_OS_OSX  && (!defined(__MAC_12_0)    || __MAC_OS_X_VERSION_MIN_REQUIRED  < __MAC_12_0))     || \
         (TARGET_OS_IOS  && (!defined(__IPHONE_15_0) || __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_15_0))  || \
         (TARGET_OS_TV   && (!defined(__TVOS_15_0)   || __TV_OS_VERSION_MIN_REQUIRED     < __TVOS_15_0))
         // Fallback on SDKs or runtime versions < macOS 12 / iOS 15 / tvOS 15
         CFDictionaryRef dict = CVBufferGetAttachments(buffer, attachment_mode);
-        return (dict) ? CFDictionaryCreateCopy(NULL, dict) : NULL;
-    #else
-        return NULL; // Impossible, just make the compiler happy
+        पटिनिवत्त (dict) ? CFDictionaryCreateCopy(रिक्त, dict) : रिक्त;
+    #अञ्ञथा
+        पटिनिवत्त रिक्त; // Impossible, just make the compiler happy
     #endif
 }
 
-static int vt_pixbuf_set_colorspace(void *log_ctx,
-                                    CVPixelBufferRef pixbuf, const AVFrame *src)
+स्थिर पूर्णाङ्क vt_pixbuf_set_colorspace(शून्य *log_ctx,
+                                    CVPixelBufferRef pixbuf, ध्रुव AVFrame *src)
 {
-    CGColorSpaceRef colorspace = NULL;
-    CFStringRef colormatrix = NULL, colorpri = NULL, colortrc = NULL;
+    CGColorSpaceRef colorspace = रिक्त;
+    CFStringRef colormatrix = रिक्त, colorpri = रिक्त, colortrc = रिक्त;
     Float32 gamma = 0;
 
     colormatrix = av_map_videotoolbox_color_matrix_from_av(src->colorspace);
-    if (colormatrix)
-        CVBufferSetAttachment(pixbuf, kCVImageBufferYCbCrMatrixKey,
+    सचे (colormatrix)
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_YCb_Cr_Matrix_कुञ्चिका,
             colormatrix, kCVAttachmentMode_ShouldPropagate);
-    else {
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferYCbCrMatrixKey);
-        if (src->colorspace != AVCOL_SPC_UNSPECIFIED && src->colorspace != AVCOL_SPC_RGB)
+    अञ्ञथा {
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_YCb_Cr_Matrix_कुञ्चिका);
+        सचे (src->colorspace != AVCOL_SPC_UNSPECIFIED && src->colorspace != AVCOL_SPC_RGB)
             av_log(log_ctx, AV_LOG_WARNING,
                 "Color space %s is not supported.\n",
                 av_color_space_name(src->colorspace));
     }
 
     colorpri = av_map_videotoolbox_color_primaries_from_av(src->color_primaries);
-    if (colorpri)
-        CVBufferSetAttachment(pixbuf, kCVImageBufferColorPrimariesKey,
+    सचे (colorpri)
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_Color_Primaries_कुञ्चिका,
             colorpri, kCVAttachmentMode_ShouldPropagate);
-    else {
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferColorPrimariesKey);
-        if (src->color_primaries != AVCOL_PRI_UNSPECIFIED)
+    अञ्ञथा {
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_Color_Primaries_कुञ्चिका);
+        सचे (src->color_primaries != AVCOL_PRI_UNSPECIFIED)
             av_log(log_ctx, AV_LOG_WARNING,
                 "Color primaries %s is not supported.\n",
                 av_color_primaries_name(src->color_primaries));
     }
 
     colortrc = av_map_videotoolbox_color_trc_from_av(src->color_trc);
-    if (colortrc)
-        CVBufferSetAttachment(pixbuf, kCVImageBufferTransferFunctionKey,
+    सचे (colortrc)
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_Transfer_Function_कुञ्चिका,
             colortrc, kCVAttachmentMode_ShouldPropagate);
-    else {
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferTransferFunctionKey);
-        if (src->color_trc != AVCOL_TRC_UNSPECIFIED)
+    अञ्ञथा {
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_Transfer_Function_कुञ्चिका);
+        सचे (src->color_trc != AVCOL_TRC_UNSPECIFIED)
             av_log(log_ctx, AV_LOG_WARNING,
                 "Color transfer function %s is not supported.\n",
                 av_color_transfer_name(src->color_trc));
     }
 
-    if (src->color_trc == AVCOL_TRC_GAMMA22)
+    सचे (src->color_trc == AVCOL_TRC_GAMMA22)
         gamma = 2.2;
-    else if (src->color_trc == AVCOL_TRC_GAMMA28)
+    अञ्ञथा सचे (src->color_trc == AVCOL_TRC_GAMMA28)
         gamma = 2.8;
 
-    if (gamma != 0) {
-        CFNumberRef gamma_level = CFNumberCreate(NULL, kCFNumberFloat32Type, &gamma);
-        CVBufferSetAttachment(pixbuf, kCVImageBufferGammaLevelKey,
+    सचे (gamma != 0) {
+        CFNumberRef gamma_level = CFNumberCreate(रिक्त, kCFNumberFloat32Type, &gamma);
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_Gamma_Level_कुञ्चिका,
             gamma_level, kCVAttachmentMode_ShouldPropagate);
         CFRelease(gamma_level);
-    } else
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferGammaLevelKey);
+    } अञ्ञथा
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_Gamma_Level_कुञ्चिका);
 
-#if (TARGET_OS_OSX && __MAC_OS_X_VERSION_MAX_ALLOWED >= 100800) || \
+#सचे (TARGET_OS_OSX && __MAC_OS_X_VERSION_MAX_ALLOWED >= 100800) || \
     (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000)
-    if (__builtin_available(macOS 10.8, iOS 10, *)) {
+    सचे (__builtin_available(macOS 10.8, iOS 10, *)) {
         CFDictionaryRef attachments =
             vt_cv_buffer_copy_attachments(pixbuf, kCVAttachmentMode_ShouldPropagate);
 
-        if (attachments) {
+        सचे (attachments) {
             colorspace =
                 CVImageBufferCreateColorSpaceFromAttachments(attachments);
             CFRelease(attachments);
@@ -648,200 +648,200 @@ static int vt_pixbuf_set_colorspace(void *log_ctx,
     // Done outside the above preprocessor code and if's so that
     // in any case a wrong kCVImageBufferCGColorSpaceKey is removed
     // if the above code is not used or fails.
-    if (colorspace) {
-        CVBufferSetAttachment(pixbuf, kCVImageBufferCGColorSpaceKey,
+    सचे (colorspace) {
+        CVBufferSetAttachment(pixbuf, k_CVImage_Buffer_CGColor_Space_कुञ्चिका,
             colorspace, kCVAttachmentMode_ShouldPropagate);
         CFRelease(colorspace);
-    } else
-        CVBufferRemoveAttachment(pixbuf, kCVImageBufferCGColorSpaceKey);
+    } अञ्ञथा
+        CVBufferRemoveAttachment(pixbuf, k_CVImage_Buffer_CGColor_Space_कुञ्चिका);
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-static int vt_pixbuf_set_attachments(void *log_ctx,
-                                     CVPixelBufferRef pixbuf, const AVFrame *src)
+स्थिर पूर्णाङ्क vt_pixbuf_set_attachments(शून्य *log_ctx,
+                                     CVPixelBufferRef pixbuf, ध्रुव AVFrame *src)
 {
-    int ret;
+    पूर्णाङ्क ret;
     ret = vt_pixbuf_set_par(log_ctx, pixbuf, src);
-    if (ret < 0)
-        return ret;
+    सचे (ret < 0)
+        पटिनिवत्त ret;
     ret = vt_pixbuf_set_colorspace(log_ctx, pixbuf, src);
-    if (ret < 0)
-        return ret;
+    सचे (ret < 0)
+        पटिनिवत्त ret;
     ret = vt_pixbuf_set_chromaloc(log_ctx, pixbuf, src);
-    if (ret < 0)
-        return ret;
-    return 0;
+    सचे (ret < 0)
+        पटिनिवत्त ret;
+    पटिनिवत्त 0;
 }
 
-int av_vt_pixbuf_set_attachments(void *log_ctx,
-                                 CVPixelBufferRef pixbuf, const AVFrame *src)
+पूर्णाङ्क av_vt_pixbuf_set_attachments(शून्य *log_ctx,
+                                 CVPixelBufferRef pixbuf, ध्रुव AVFrame *src)
 {
-    return vt_pixbuf_set_attachments(log_ctx, pixbuf, src);
+    पटिनिवत्त vt_pixbuf_set_attachments(log_ctx, pixbuf, src);
 }
 
-static int vt_map_frame(AVHWFramesContext *ctx, AVFrame *dst, const AVFrame *src,
-                        int flags)
+स्थिर पूर्णाङ्क vt_map_frame(AVHWFramesContext *ctx, AVFrame *dst, ध्रुव AVFrame *src,
+                        पूर्णाङ्क flags)
 {
     CVPixelBufferRef pixbuf = (CVPixelBufferRef)src->data[3];
     OSType pixel_format = CVPixelBufferGetPixelFormatType(pixbuf);
     CVReturn err;
     uint32_t map_flags = 0;
-    int ret;
-    int i;
-    enum AVPixelFormat format;
+    पूर्णाङ्क ret;
+    पूर्णाङ्क i;
+    गणना AVPixelFormat format;
 
     format = av_map_videotoolbox_format_to_pixfmt(pixel_format);
-    if (dst->format != format) {
+    सचे (dst->format != format) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported or mismatching pixel format: %s\n",
                av_fourcc2str(pixel_format));
-        return AVERROR_UNKNOWN;
+        पटिनिवत्त AVERROR_UNKNOWN;
     }
 
-    if (CVPixelBufferGetWidth(pixbuf) != ctx->width ||
+    सचे (CVPixelBufferGetWidth(pixbuf) != ctx->width ||
         CVPixelBufferGetHeight(pixbuf) != ctx->height) {
         av_log(ctx, AV_LOG_ERROR, "Inconsistent frame dimensions.\n");
-        return AVERROR_UNKNOWN;
+        पटिनिवत्त AVERROR_UNKNOWN;
     }
 
-    if (flags == AV_HWFRAME_MAP_READ)
+    सचे (flags == AV_HWFRAME_MAP_READ)
         map_flags = kCVPixelBufferLock_ReadOnly;
 
     err = CVPixelBufferLockBaseAddress(pixbuf, map_flags);
-    if (err != kCVReturnSuccess) {
+    सचे (err != kCVReturnSuccess) {
         av_log(ctx, AV_LOG_ERROR, "Error locking the pixel buffer.\n");
-        return AVERROR_UNKNOWN;
+        पटिनिवत्त AVERROR_UNKNOWN;
     }
 
-    if (CVPixelBufferIsPlanar(pixbuf)) {
-        int planes = CVPixelBufferGetPlaneCount(pixbuf);
-        for (i = 0; i < planes; i++) {
+    सचे (CVPixelBufferIsPlanar(pixbuf)) {
+        पूर्णाङ्क planes = CVPixel_Buffer_Get_Plane_गणनम्(pixbuf);
+        अत्थाय (i = 0; i < planes; i++) {
             dst->data[i]     = CVPixelBufferGetBaseAddressOfPlane(pixbuf, i);
             dst->linesize[i] = CVPixelBufferGetBytesPerRowOfPlane(pixbuf, i);
         }
-    } else {
+    } अञ्ञथा {
         dst->data[0]     = CVPixelBufferGetBaseAddress(pixbuf);
         dst->linesize[0] = CVPixelBufferGetBytesPerRow(pixbuf);
     }
 
     ret = ff_hwframe_map_create(src->hw_frames_ctx, dst, src, vt_unmap,
-                                (void *)(uintptr_t)map_flags);
-    if (ret < 0)
-        goto unlock;
+                                (शून्य *)(uintptr_t)map_flags);
+    सचे (ret < 0)
+        गच्छ unlock;
 
-    return 0;
+    पटिनिवत्त 0;
 
 unlock:
     CVPixelBufferUnlockBaseAddress(pixbuf, map_flags);
-    return ret;
+    पटिनिवत्त ret;
 }
 
-static int vt_transfer_data_from(AVHWFramesContext *hwfc,
-                                 AVFrame *dst, const AVFrame *src)
+स्थिर पूर्णाङ्क vt_transfer_data_from(AVHWFramesContext *hwfc,
+                                 AVFrame *dst, ध्रुव AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    पूर्णाङ्क err;
 
-    if (dst->width > hwfc->width || dst->height > hwfc->height)
-        return AVERROR(EINVAL);
+    सचे (dst->width > hwfc->width || dst->height > hwfc->height)
+        पटिनिवत्त AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    सचे (!map)
+        पटिनिवत्त AVERROR(ENOMEM);
     map->format = dst->format;
 
     err = vt_map_frame(hwfc, map, src, AV_HWFRAME_MAP_READ);
-    if (err)
-        goto fail;
+    सचे (err)
+        गच्छ fail;
 
     map->width  = dst->width;
     map->height = dst->height;
 
     err = av_frame_copy(dst, map);
-    if (err)
-        goto fail;
+    सचे (err)
+        गच्छ fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    पटिनिवत्त err;
 }
 
-static int vt_transfer_data_to(AVHWFramesContext *hwfc,
-                               AVFrame *dst, const AVFrame *src)
+स्थिर पूर्णाङ्क vt_transfer_data_to(AVHWFramesContext *hwfc,
+                               AVFrame *dst, ध्रुव AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    पूर्णाङ्क err;
 
-    if (src->width > hwfc->width || src->height > hwfc->height)
-        return AVERROR(EINVAL);
+    सचे (src->width > hwfc->width || src->height > hwfc->height)
+        पटिनिवत्त AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    सचे (!map)
+        पटिनिवत्त AVERROR(ENOMEM);
     map->format = src->format;
 
     err = vt_map_frame(hwfc, map, dst, AV_HWFRAME_MAP_WRITE | AV_HWFRAME_MAP_OVERWRITE);
-    if (err)
-        goto fail;
+    सचे (err)
+        गच्छ fail;
 
     map->width  = src->width;
     map->height = src->height;
 
     err = av_frame_copy(map, src);
-    if (err)
-        goto fail;
+    सचे (err)
+        गच्छ fail;
 
     err = vt_pixbuf_set_attachments(hwfc, (CVPixelBufferRef)dst->data[3], src);
-    if (err)
-        goto fail;
+    सचे (err)
+        गच्छ fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    पटिनिवत्त err;
 }
 
-static int vt_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                       const AVFrame *src, int flags)
+स्थिर पूर्णाङ्क vt_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                       ध्रुव AVFrame *src, पूर्णाङ्क flags)
 {
-    int err;
+    पूर्णाङ्क err;
 
-    if (dst->format == AV_PIX_FMT_NONE)
+    सचे (dst->format == AV_PIX_FMT_NONE)
         dst->format = hwfc->sw_format;
-    else if (dst->format != hwfc->sw_format)
-        return AVERROR(ENOSYS);
+    अञ्ञथा सचे (dst->format != hwfc->sw_format)
+        पटिनिवत्त AVERROR(ENOSYS);
 
     err = vt_map_frame(hwfc, dst, src, flags);
-    if (err)
-        return err;
+    सचे (err)
+        पटिनिवत्त err;
 
     dst->width  = src->width;
     dst->height = src->height;
 
     err = av_frame_copy_props(dst, src);
-    if (err)
-        return err;
+    सचे (err)
+        पटिनिवत्त err;
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-static int vt_device_create(AVHWDeviceContext *ctx, const char *device,
-                            AVDictionary *opts, int flags)
+स्थिर पूर्णाङ्क vt_device_create(AVHWDeviceContext *ctx, ध्रुव वर्ण *device,
+                            AVDictionary *opts, पूर्णाङ्क flags)
 {
-    if (device && device[0]) {
+    सचे (device && device[0]) {
         av_log(ctx, AV_LOG_ERROR, "Device selection unsupported.\n");
-        return AVERROR_UNKNOWN;
+        पटिनिवत्त AVERROR_UNKNOWN;
     }
 
-    return 0;
+    पटिनिवत्त 0;
 }
 
-const HWContextType ff_hwcontext_type_videotoolbox = {
+ध्रुव HWContextType ff_hwcontext_type_videotoolbox = {
     .type                 = AV_HWDEVICE_TYPE_VIDEOTOOLBOX,
     .name                 = "videotoolbox",
 
-    .frames_hwctx_size    = sizeof(VTFramesContext),
+    .frames_hwctx_size    = परिमाण(VTFramesContext),
 
     .device_create        = vt_device_create,
     .frames_init          = vt_frames_init,
@@ -853,5 +853,5 @@ const HWContextType ff_hwcontext_type_videotoolbox = {
     .transfer_data_from   = vt_transfer_data_from,
     .map_from             = vt_map_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]){ AV_PIX_FMT_VIDEOTOOLBOX, AV_PIX_FMT_NONE },
+    .pix_fmts = (ध्रुव गणना AVPixelFormat[]){ AV_PIX_FMT_VIDEOTOOLBOX, AV_PIX_FMT_NONE },
 };
