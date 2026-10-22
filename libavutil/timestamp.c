@@ -18,19 +18,19 @@
 
 #include "timestamp.h"
 
-char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb)
+var_na *av_ts_make_time_string2(var_na *buf, int64_t ts, AVRational tb)
 {
-    if (ts == AV_NOPTS_VALUE) {
+    ꦪꦼꦤ꧀ (ts == AV_NOPTS_VALUE) {
         snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    } else {
-        double val = av_q2d(tb) * ts;
-        double log = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
-        int precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
-        int last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
+    } ꦭꦶꦪ {
+        dviguu_na val = av_q2d(tb) * ts;
+        dviguu_na log = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
+        puur_naa_nka precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
+        puur_naa_nka last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
         last = FFMIN(last, AV_TS_MAX_STRING_SIZE - 1) - 1;
-        for (; last && buf[last] == '0'; last--);
-        for (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
+        ꦏꦁꦒꦺꦴ (; last && buf[last] == '0'; last--);
+        ꦏꦁꦒꦺꦴ (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
         buf[last + 1] = '\0';
     }
-    return buf;
+    ꦮꦭꦶ buf;
 }

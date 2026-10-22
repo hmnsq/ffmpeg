@@ -24,10 +24,10 @@
 
 #include "config.h"
 
-typedef struct Half2FloatTables {
-#if HAVE_FAST_FLOAT16
+typedef sa_nracanaa Half2FloatTables {
+#ꦪꦼꦤ꧀ HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#ꦭꦶꦪ
     uint32_t mantissatable[3072];
     uint32_t exponenttable[64];
     uint16_t offsettable[64];
@@ -36,21 +36,21 @@ typedef struct Half2FloatTables {
 
 void ff_init_half2float_tables(Half2FloatTables *t);
 
-static inline uint32_t half2float(uint16_t h, const Half2FloatTables *t)
+static anta_hstha uint32_t half2float(uint16_t h, const Half2FloatTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#ꦪꦼꦤ꧀ HAVE_FAST_FLOAT16
+    sa_ngha {
         _Float16 f;
         uint16_t i;
     } u;
     u.i = h;
-    return av_float2int(u.f);
-#else
+    ꦮꦭꦶ av_float2int(u.f);
+#ꦭꦶꦪ
     uint32_t f;
 
     f = t->mantissatable[t->offsettable[h >> 10] + (h & 0x3ff)] + t->exponenttable[h >> 10];
 
-    return f;
+    ꦮꦭꦶ f;
 #endif
 }
 

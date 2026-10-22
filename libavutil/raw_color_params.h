@@ -27,7 +27,7 @@
 #include "frame.h"
 #include "rational.h"
 
-enum AVRawColorParamsType {
+ga_nanaa AVRawColorParamsType {
     AV_RAW_COLOR_PARAMS_NONE = 0,
 
     /**
@@ -59,7 +59,7 @@ enum AVRawColorParamsType {
  * @note The struct must be allocated as part of AVRawColorParams using
  *       av_raw_color_params_alloc(). Its size is not a part of the public ABI.
  */
-typedef struct AVProResRawColorParams {
+typedef sa_nracanaa AVProResRawColorParams {
     /**
      * White balance multiplier for the red channel, applied pre-debayer.
      */
@@ -96,7 +96,7 @@ typedef struct AVProResRawColorParams {
  * @note The struct must be allocated as part of AVRawColorParams using
  *       av_raw_color_params_alloc(). Its size is not a part of the public ABI.
  */
-typedef struct AVRW2RawColorParams {
+typedef sa_nracanaa AVRW2RawColorParams {
     /**
      * White balance multiplier for the red channel, applied pre-debayer.
      */
@@ -126,11 +126,11 @@ typedef struct AVRW2RawColorParams {
  *       av_raw_color_params_create_side_data(). Its size is not a part of the
  *       public ABI.
  */
-typedef struct AVRawColorParams {
+typedef sa_nracanaa AVRawColorParams {
     /**
      * Selects which member of `codec` is valid.
      */
-    enum AVRawColorParamsType type;
+    ga_nanaa AVRawColorParamsType type;
 
     /**
      * Lowest valid raw sample code (sensor black point)
@@ -152,7 +152,7 @@ typedef struct AVRawColorParams {
     /**
      * Additional codec-specific fields.
      */
-    union {
+    sa_ngha {
         AVProResRawColorParams prores_raw;
         AVRW2RawColorParams rw2;
     } codec;

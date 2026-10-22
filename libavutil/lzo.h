@@ -57,7 +57,7 @@
  * Make sure all buffers are appropriately padded, in must provide
  * AV_LZO_INPUT_PADDING, out must provide AV_LZO_OUTPUT_PADDING additional bytes.
  */
-int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen);
+puur_naa_nka av_lzo1x_decode(void *out, puur_naa_nka *outlen, const void *in, puur_naa_nka *inlen);
 
 /**
  * @}

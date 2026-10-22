@@ -28,35 +28,35 @@
 #include "mem.h"
 #include "pca.h"
 
-typedef struct PCA{
-    int count;
-    int n;
-    double *covariance;
-    double *mean;
-    double *z;
+typedef sa_nracanaa PCA{
+    puur_naa_nka count;
+    puur_naa_nka n;
+    dviguu_na *covariance;
+    dviguu_na *mean;
+    dviguu_na *z;
 }PCA;
 
-PCA *ff_pca_init(int n){
+PCA *ff_pca_init(puur_naa_nka n){
     PCA *pca;
-    if(n<=0)
-        return NULL;
+    ꦪꦼꦤ꧀(n<=0)
+        ꦮꦭꦶ NULL;
 
-    pca= av_mallocz(sizeof(*pca));
-    if (!pca)
-        return NULL;
+    pca= av_mallocz(parimaa_na(*pca));
+    ꦪꦼꦤ꧀ (!pca)
+        ꦮꦭꦶ NULL;
 
     pca->n= n;
-    pca->z = av_malloc_array(n, sizeof(*pca->z));
+    pca->z = av_malloc_array(n, parimaa_na(*pca->z));
     pca->count=0;
-    pca->covariance= av_calloc(n*n, sizeof(double));
-    pca->mean= av_calloc(n, sizeof(double));
+    pca->covariance= av_calloc(n*n, parimaa_na(dviguu_na));
+    pca->mean= av_calloc(n, parimaa_na(dviguu_na));
 
-    if (!pca->z || !pca->covariance || !pca->mean) {
+    ꦪꦼꦤ꧀ (!pca->z || !pca->covariance || !pca->mean) {
         ff_pca_free(pca);
-        return NULL;
+        ꦮꦭꦶ NULL;
     }
 
-    return pca;
+    ꦮꦭꦶ pca;
 }
 
 void ff_pca_free(PCA *pca){
@@ -66,30 +66,30 @@ void ff_pca_free(PCA *pca){
     av_free(pca);
 }
 
-void ff_pca_add(PCA *pca, const double *v){
-    int i, j;
-    const int n= pca->n;
+void ff_pca_add(PCA *pca, const dviguu_na *v){
+    puur_naa_nka i, j;
+    const puur_naa_nka n= pca->n;
 
-    for(i=0; i<n; i++){
+    ꦏꦁꦒꦺꦴ(i=0; i<n; i++){
         pca->mean[i] += v[i];
-        for(j=i; j<n; j++)
+        ꦏꦁꦒꦺꦴ(j=i; j<n; j++)
             pca->covariance[j + i*n] += v[i]*v[j];
     }
     pca->count++;
 }
 
-int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
-    int i, j, pass;
-    int k=0;
-    const int n= pca->n;
-    double *z = pca->z;
+puur_naa_nka ff_pca(PCA *pca, dviguu_na *eigenvector, dviguu_na *eigenvalue){
+    puur_naa_nka i, j, pass;
+    puur_naa_nka k=0;
+    const puur_naa_nka n= pca->n;
+    dviguu_na *z = pca->z;
 
-    memset(eigenvector, 0, sizeof(double)*n*n);
+    memset(eigenvector, 0, parimaa_na(dviguu_na)*n*n);
 
-    for(j=0; j<n; j++){
+    ꦏꦁꦒꦺꦴ(j=0; j<n; j++){
         pca->mean[j] /= pca->count;
         eigenvector[j + j*n] = 1.0;
-        for(i=0; i<=j; i++){
+        ꦏꦁꦒꦺꦴ(i=0; i<=j; i++){
             pca->covariance[j + i*n] /= pca->count;
             pca->covariance[j + i*n] -= pca->mean[i] * pca->mean[j];
             pca->covariance[i + j*n] = pca->covariance[j + i*n];
@@ -98,43 +98,43 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
         z[j]= 0;
     }
 
-    for(pass=0; pass < 50; pass++){
-        double sum=0;
+    ꦏꦁꦒꦺꦴ(pass=0; pass < 50; pass++){
+        dviguu_na sum=0;
 
-        for(i=0; i<n; i++)
-            for(j=i+1; j<n; j++)
+        ꦏꦁꦒꦺꦴ(i=0; i<n; i++)
+            ꦏꦁꦒꦺꦴ(j=i+1; j<n; j++)
                 sum += fabs(pca->covariance[j + i*n]);
 
-        if(sum == 0){
-            for(i=0; i<n; i++){
-                double maxvalue= -1;
-                for(j=i; j<n; j++){
-                    if(eigenvalue[j] > maxvalue){
+        ꦪꦼꦤ꧀(sum == 0){
+            ꦏꦁꦒꦺꦴ(i=0; i<n; i++){
+                dviguu_na maxvalue= -1;
+                ꦏꦁꦒꦺꦴ(j=i; j<n; j++){
+                    ꦪꦼꦤ꧀(eigenvalue[j] > maxvalue){
                         maxvalue= eigenvalue[j];
                         k= j;
                     }
                 }
                 eigenvalue[k]= eigenvalue[i];
                 eigenvalue[i]= maxvalue;
-                for(j=0; j<n; j++){
-                    double tmp= eigenvector[k + j*n];
+                ꦏꦁꦒꦺꦴ(j=0; j<n; j++){
+                    dviguu_na tmp= eigenvector[k + j*n];
                     eigenvector[k + j*n]= eigenvector[i + j*n];
                     eigenvector[i + j*n]= tmp;
                 }
             }
-            return pass;
+            ꦮꦭꦶ pass;
         }
 
-        for(i=0; i<n; i++){
-            for(j=i+1; j<n; j++){
-                double covar= pca->covariance[j + i*n];
-                double t,c,s,tau,theta, h;
+        ꦏꦁꦒꦺꦴ(i=0; i<n; i++){
+            ꦏꦁꦒꦺꦴ(j=i+1; j<n; j++){
+                dviguu_na covar= pca->covariance[j + i*n];
+                dviguu_na t,c,s,tau,theta, h;
 
-                if(pass < 3 && fabs(covar) < sum / (5*n*n)) //FIXME why pass < 3
+                ꦪꦼꦤ꧀(pass < 3 && fabs(covar) < sum / (5*n*n)) //FIXME why pass < 3
                     continue;
-                if(fabs(covar) == 0.0) //FIXME should not be needed
+                ꦪꦼꦤ꧀(fabs(covar) == 0.0) //FIXME should not be needed
                     continue;
-                if(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
+                ꦪꦼꦤ꧀(pass >=3 && fabs((eigenvalue[j]+z[j])/covar) > (1LL<<32) && fabs((eigenvalue[i]+z[i])/covar) > (1LL<<32)){
                     pca->covariance[j + i*n]=0.0;
                     continue;
                 }
@@ -142,7 +142,7 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 h= (eigenvalue[j]+z[j]) - (eigenvalue[i]+z[i]);
                 theta=0.5*h/covar;
                 t=1.0/(fabs(theta)+sqrt(1.0+theta*theta));
-                if(theta < 0.0) t = -t;
+                ꦪꦼꦤ꧀(theta < 0.0) t = -t;
 
                 c=1.0/sqrt(1+t*t);
                 s=t*c;
@@ -151,12 +151,12 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 z[j] += t*covar;
 
 #define ROTATE(a,i,j,k,l) {\
-    double g=a[j + i*n];\
-    double h=a[l + k*n];\
+    dviguu_na g=a[j + i*n];\
+    dviguu_na h=a[l + k*n];\
     a[j + i*n]=g-s*(h+g*tau);\
     a[l + k*n]=h+s*(g-h*tau); }
-                for(k=0; k<n; k++) {
-                    if(k!=i && k!=j){
+                ꦏꦁꦒꦺꦴ(k=0; k<n; k++) {
+                    ꦪꦼꦤ꧀(k!=i && k!=j){
                         ROTATE(pca->covariance,FFMIN(k,i),FFMAX(k,i),FFMIN(k,j),FFMAX(k,j))
                     }
                     ROTATE(eigenvector,k,i,k,j)
@@ -164,11 +164,11 @@ int ff_pca(PCA *pca, double *eigenvector, double *eigenvalue){
                 pca->covariance[j + i*n]=0.0;
             }
         }
-        for (i=0; i<n; i++) {
+        ꦏꦁꦒꦺꦴ (i=0; i<n; i++) {
             eigenvalue[i] += z[i];
             z[i]=0.0;
         }
     }
 
-    return -1;
+    ꦮꦭꦶ -1;
 }

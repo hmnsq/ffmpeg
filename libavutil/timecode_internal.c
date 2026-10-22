@@ -25,13 +25,13 @@ static unsigned bcd2uint(uint8_t bcd)
 {
    unsigned low  = bcd & 0xf;
    unsigned high = bcd >> 4;
-   if (low > 9 || high > 9)
-       return 0;
-   return low + 10*high;
+   ꦪꦼꦤ꧀ (low > 9 || high > 9)
+       ꦮꦭꦶ 0;
+   ꦮꦭꦶ low + 10*high;
 }
 
 void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned *ss, unsigned *ff,
-                           AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field)
+                           AVRational rate, uint32_t tcsmpte, puur_naa_nka prevent_df, puur_naa_nka skip_field)
 {
     *hh   = bcd2uint(tcsmpte     & 0x3f);    // 6-bit hours
     *mm   = bcd2uint(tcsmpte>>8  & 0x7f);    // 7-bit minutes
@@ -39,12 +39,12 @@ void ff_timecode_set_smpte(unsigned *drop, unsigned *hh, unsigned *mm, unsigned 
     *ff   = bcd2uint(tcsmpte>>24 & 0x3f);    // 6-bit frames
     *drop = tcsmpte & 1<<30 && !prevent_df;  // 1-bit drop if not arbitrary bit
 
-    if (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
+    ꦪꦼꦤ꧀ (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
         *ff <<= 1;
-        if (!skip_field) {
-            if (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
+        ꦪꦼꦤ꧀ (!skip_field) {
+            ꦪꦼꦤ꧀ (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
                 *ff += !!(tcsmpte & 1 << 7);
-            else
+            ꦭꦶꦪ
                 *ff += !!(tcsmpte & 1 << 23);
         }
     }

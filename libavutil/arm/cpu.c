@@ -31,14 +31,14 @@
      CORE_FLAG(VFPV3)   |                       \
      CORE_FLAG(NEON))
 
-#if defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
+#ꦪꦼꦤ꧀ defined __linux__ || defined __ANDROID__ || HAVE_ELF_AUX_INFO
 
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include "libavutil/avstring.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#ꦪꦼꦤ꧀ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
 #include <sys/auxv.h>
 #endif
 
@@ -66,90 +66,90 @@
 #define HWCAP_ARM_TLS     (1 << 15)
 #endif
 
-static int get_auxval(uint32_t *hwcap)
+static puur_naa_nka get_auxval(uint32_t *hwcap)
 {
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#ꦪꦼꦤ꧀ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
     unsigned long ret = ff_getauxval(AT_HWCAP);
-    if (ret == 0)
-        return -1;
+    ꦪꦼꦤ꧀ (ret == 0)
+        ꦮꦭꦶ -1;
     *hwcap = ret;
-    return 0;
-#else
-    return -1;
+    ꦮꦭꦶ 0;
+#ꦭꦶꦪ
+    ꦮꦭꦶ -1;
 #endif
 }
 
-#if defined __linux__ || defined __ANDROID__
-static int get_hwcap(uint32_t *hwcap)
+#ꦪꦼꦤ꧀ defined __linux__ || defined __ANDROID__
+static puur_naa_nka get_hwcap(uint32_t *hwcap)
 {
-    struct { uint32_t a_type; uint32_t a_val; } auxv;
+    sa_nracanaa { uint32_t a_type; uint32_t a_val; } auxv;
     FILE *f = fopen("/proc/self/auxv", "r");
-    int err = -1;
+    puur_naa_nka err = -1;
 
-    if (!f)
-        return -1;
+    ꦪꦼꦤ꧀ (!f)
+        ꦮꦭꦶ -1;
 
-    while (fread(&auxv, sizeof(auxv), 1, f) > 0) {
-        if (auxv.a_type == AT_HWCAP) {
+    ꦱꦼꦢꦼꦭ (fread(&auxv, parimaa_na(auxv), 1, f) > 0) {
+        ꦪꦼꦤ꧀ (auxv.a_type == AT_HWCAP) {
             *hwcap = auxv.a_val;
             err = 0;
-            break;
+            bha_nga;
         }
     }
 
     fclose(f);
-    return err;
+    ꦮꦭꦶ err;
 }
 
-static int get_cpuinfo(uint32_t *hwcap)
+static puur_naa_nka get_cpuinfo(uint32_t *hwcap)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
+    var_na buf[200];
 
-    if (!f)
-        return -1;
+    ꦪꦼꦤ꧀ (!f)
+        ꦮꦭꦶ -1;
 
     *hwcap = 0;
-    while (fgets(buf, sizeof(buf), f)) {
-        if (av_strstart(buf, "Features", NULL)) {
-            if (strstr(buf, " edsp "))
+    ꦱꦼꦢꦼꦭ (fgets(buf, parimaa_na(buf), f)) {
+        ꦪꦼꦤ꧀ (av_strstart(buf, "Features", NULL)) {
+            ꦪꦼꦤ꧀ (strstr(buf, " edsp "))
                 *hwcap |= HWCAP_ARM_EDSP;
-            if (strstr(buf, " tls "))
+            ꦪꦼꦤ꧀ (strstr(buf, " tls "))
                 *hwcap |= HWCAP_ARM_TLS;
-            if (strstr(buf, " thumbee "))
+            ꦪꦼꦤ꧀ (strstr(buf, " thumbee "))
                 *hwcap |= HWCAP_ARM_THUMBEE;
-            if (strstr(buf, " vfp "))
+            ꦪꦼꦤ꧀ (strstr(buf, " vfp "))
                 *hwcap |= HWCAP_ARM_VFP;
-            if (strstr(buf, " vfpv3 "))
+            ꦪꦼꦤ꧀ (strstr(buf, " vfpv3 "))
                 *hwcap |= HWCAP_ARM_VFPv3;
-            if (strstr(buf, " neon ") || strstr(buf, " asimd "))
+            ꦪꦼꦤ꧀ (strstr(buf, " neon ") || strstr(buf, " asimd "))
                 *hwcap |= HWCAP_ARM_NEON;
-            if (strstr(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
+            ꦪꦼꦤ꧀ (strstr(buf, " fp ")) // Listed on 64 bit ARMv8 kernels
                 *hwcap |= HWCAP_ARM_VFP | HWCAP_ARM_VFPv3;
-            break;
+            bha_nga;
         }
     }
     fclose(f);
-    return 0;
+    ꦮꦭꦶ 0;
 }
 #endif
 
-int ff_get_cpu_flags_arm(void)
+puur_naa_nka ff_get_cpu_flags_arm(void)
 {
-    int flags = CORE_CPU_FLAGS;
+    puur_naa_nka flags = CORE_CPU_FLAGS;
     uint32_t hwcap;
 
-    if (get_auxval(&hwcap) < 0)
-#if defined __linux__ || defined __ANDROID__
-        if (get_hwcap(&hwcap) < 0)
-            if (get_cpuinfo(&hwcap) < 0)
+    ꦪꦼꦤ꧀ (get_auxval(&hwcap) < 0)
+#ꦪꦼꦤ꧀ defined __linux__ || defined __ANDROID__
+        ꦪꦼꦤ꧀ (get_hwcap(&hwcap) < 0)
+            ꦪꦼꦤ꧀ (get_cpuinfo(&hwcap) < 0)
 #endif
-                return flags;
+                ꦮꦭꦶ flags;
 
 #define check_cap(cap, flag) do {               \
-        if (hwcap & HWCAP_ARM_ ## cap)          \
+        ꦪꦼꦤ꧀ (hwcap & HWCAP_ARM_ ## cap)          \
             flags |= AV_CPU_FLAG_ ## flag;      \
-    } while (0)
+    } ꦱꦼꦢꦼꦭ (0)
 
     /* No flags explicitly indicate v6 or v6T2 so check others which
        imply support. */
@@ -162,29 +162,29 @@ int ff_get_cpu_flags_arm(void)
 
     /* The v6 checks above are not reliable so let higher flags
        trickle down. */
-    if (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
+    ꦪꦼꦤ꧀ (flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON))
         flags |= AV_CPU_FLAG_ARMV6T2;
-    else if (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
+    ꦭꦶꦪ ꦪꦼꦤ꧀ (flags & (AV_CPU_FLAG_ARMV6T2 | AV_CPU_FLAG_ARMV6))
     /* Some functions use the 'setend' instruction which is deprecated on ARMv8
      * and serializing on some ARMv7 cores. This ensures such functions
      * are only enabled on ARMv6. */
         flags |= AV_CPU_FLAG_SETEND;
 
-    if (flags & AV_CPU_FLAG_ARMV6T2)
+    ꦪꦼꦤ꧀ (flags & AV_CPU_FLAG_ARMV6T2)
         flags |= AV_CPU_FLAG_ARMV6;
 
     /* set the virtual VFPv2 vector mode flag */
-    if ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
+    ꦪꦼꦤ꧀ ((flags & AV_CPU_FLAG_VFP) && !(flags & (AV_CPU_FLAG_VFPV3 | AV_CPU_FLAG_NEON)))
         flags |= AV_CPU_FLAG_VFP_VM;
 
-    return flags;
+    ꦮꦭꦶ flags;
 }
 
-#else
+#ꦭꦶꦪ
 
-int ff_get_cpu_flags_arm(void)
+puur_naa_nka ff_get_cpu_flags_arm(void)
 {
-    return AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
+    ꦮꦭꦶ AV_CPU_FLAG_ARMV5TE * HAVE_ARMV5TE |
            AV_CPU_FLAG_ARMV6   * HAVE_ARMV6   |
            AV_CPU_FLAG_ARMV6T2 * HAVE_ARMV6T2 |
            AV_CPU_FLAG_VFP     * HAVE_VFP     |
@@ -197,10 +197,10 @@ int ff_get_cpu_flags_arm(void)
 
 size_t ff_get_cpu_max_align_arm(void)
 {
-    int flags = av_get_cpu_flags();
+    puur_naa_nka flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_NEON)
-        return 16;
+    ꦪꦼꦤ꧀ (flags & AV_CPU_FLAG_NEON)
+        ꦮꦭꦶ 16;
 
-    return 8;
+    ꦮꦭꦶ 8;
 }

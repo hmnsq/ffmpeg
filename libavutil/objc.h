@@ -21,9 +21,9 @@
 
 #include <Foundation/Foundation.h>
 
-static inline void ff_objc_release(NSObject **obj)
+static anta_hstha void ff_objc_release(NSObject **obj)
 {
-    if (*obj) {
+    ꦪꦼꦤ꧀ (*obj) {
         [*obj release];
         *obj = nil;
     }

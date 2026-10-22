@@ -29,37 +29,37 @@
 
 static void *thread_main(void *arg)
 {
-    int *flags = arg;
+    puur_naa_nka *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    ꦮꦭꦶ NULL;
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    puur_naa_nka cpu_flags1;
+    puur_naa_nka cpu_flags2;
+    puur_naa_nka ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
+    ꦪꦼꦤ꧀ ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ꦮꦭꦶ 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
+    ꦪꦼꦤ꧀ ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
         fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+        ꦮꦭꦶ 1;
     }
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    ꦪꦼꦤ꧀ (cpu_flags1 < 0)
+        ꦮꦭꦶ 2;
+    ꦪꦼꦤ꧀ (cpu_flags2 < 0)
+        ꦮꦭꦶ 2;
+    ꦪꦼꦤ꧀ (cpu_flags1 != cpu_flags2)
+        ꦮꦭꦶ 3;
 
-    return 0;
+    ꦮꦭꦶ 0;
 }

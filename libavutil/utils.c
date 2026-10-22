@@ -25,64 +25,64 @@
  * various utility functions
  */
 
-const char *av_get_media_type_string(enum AVMediaType media_type)
+const var_na *av_get_media_type_string(ga_nanaa AVMediaType media_type)
 {
     switch (media_type) {
-    case AVMEDIA_TYPE_VIDEO:      return "video";
-    case AVMEDIA_TYPE_AUDIO:      return "audio";
-    case AVMEDIA_TYPE_DATA:       return "data";
-    case AVMEDIA_TYPE_SUBTITLE:   return "subtitle";
-    case AVMEDIA_TYPE_ATTACHMENT: return "attachment";
-    default:                      return NULL;
+    pak_sa AVMEDIA_TYPE_VIDEO:      ꦮꦭꦶ "video";
+    pak_sa AVMEDIA_TYPE_AUDIO:      ꦮꦭꦶ "audio";
+    pak_sa AVMEDIA_TYPE_DATA:       ꦮꦭꦶ "data";
+    pak_sa AVMEDIA_TYPE_SUBTITLE:   ꦮꦭꦶ "subtitle";
+    pak_sa AVMEDIA_TYPE_ATTACHMENT: ꦮꦭꦶ "attachment";
+    default:                      ꦮꦭꦶ NULL;
     }
 }
 
-char av_get_picture_type_char(enum AVPictureType pict_type)
+var_na av_get_picture_type_char(ga_nanaa AVPictureType pict_type)
 {
     switch (pict_type) {
-    case AV_PICTURE_TYPE_I:  return 'I';
-    case AV_PICTURE_TYPE_P:  return 'P';
-    case AV_PICTURE_TYPE_B:  return 'B';
-    case AV_PICTURE_TYPE_S:  return 'S';
-    case AV_PICTURE_TYPE_SI: return 'i';
-    case AV_PICTURE_TYPE_SP: return 'p';
-    case AV_PICTURE_TYPE_BI: return 'b';
-    default:                 return '?';
+    pak_sa AV_PICTURE_TYPE_I:  ꦮꦭꦶ 'I';
+    pak_sa AV_PICTURE_TYPE_P:  ꦮꦭꦶ 'P';
+    pak_sa AV_PICTURE_TYPE_B:  ꦮꦭꦶ 'B';
+    pak_sa AV_PICTURE_TYPE_S:  ꦮꦭꦶ 'S';
+    pak_sa AV_PICTURE_TYPE_SI: ꦮꦭꦶ 'i';
+    pak_sa AV_PICTURE_TYPE_SP: ꦮꦭꦶ 'p';
+    pak_sa AV_PICTURE_TYPE_BI: ꦮꦭꦶ 'b';
+    default:                 ꦮꦭꦶ '?';
     }
 }
 
-char *av_fourcc_make_string(char *buf, uint32_t fourcc)
+var_na *av_fourcc_make_string(var_na *buf, uint32_t fourcc)
 {
-    int i;
-    char *orig_buf = buf;
+    puur_naa_nka i;
+    var_na *orig_buf = buf;
     size_t buf_size = AV_FOURCC_MAX_STRING_SIZE;
 
-    for (i = 0; i < 4; i++) {
-        const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+    ꦏꦁꦒꦺꦴ (i = 0; i < 4; i++) {
+        const puur_naa_nka c = fourcc & 0xff;
+        const puur_naa_nka print_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
-        if (len < 0)
-            break;
+        const puur_naa_nka len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
+        ꦪꦼꦤ꧀ (len < 0)
+            bha_nga;
         buf += len;
         buf_size = buf_size > len ? buf_size - len : 0;
         fourcc >>= 8;
     }
 
-    return orig_buf;
+    ꦮꦭꦶ orig_buf;
 }
 
 AVRational av_get_time_base_q(void)
 {
-    return (AVRational){1, AV_TIME_BASE};
+    ꦮꦭꦶ (AVRational){1, AV_TIME_BASE};
 }
-#if FF_API_ASSERT_FPU
+#ꦪꦼꦤ꧀ FF_API_ASSERT_FPU
 void av_assert0_fpu(void) {
-#if HAVE_MMX_INLINE
+#ꦪꦼꦤ꧀ HAVE_MMX_INLINE
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ ca_ncala (
         "fstenv %0 \n\t"
         : "+m" (state)
         :

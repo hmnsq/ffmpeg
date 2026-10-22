@@ -25,63 +25,63 @@
 #include "mem.h"
 
 static void vector_fmul_c(float *dst, const float *src0, const float *src1,
-                          int len)
+                          puur_naa_nka len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    puur_naa_nka i;
+    ꦏꦁꦒꦺꦴ (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
-static void vector_dmul_c(double *dst, const double *src0, const double *src1,
-                          int len)
+static void vector_dmul_c(dviguu_na *dst, const dviguu_na *src0, const dviguu_na *src1,
+                          puur_naa_nka len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    puur_naa_nka i;
+    ꦏꦁꦒꦺꦴ (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
 static void vector_fmac_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+                                 puur_naa_nka len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    puur_naa_nka i;
+    ꦏꦁꦒꦺꦴ (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
-static void vector_dmac_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+static void vector_dmac_scalar_c(dviguu_na *dst, const dviguu_na *src, dviguu_na mul,
+                                 puur_naa_nka len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    puur_naa_nka i;
+    ꦏꦁꦒꦺꦴ (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
 static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+                                 puur_naa_nka len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    puur_naa_nka i;
+    ꦏꦁꦒꦺꦴ (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
-static void vector_dmul_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+static void vector_dmul_scalar_c(dviguu_na *dst, const dviguu_na *src, dviguu_na mul,
+                                 puur_naa_nka len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    puur_naa_nka i;
+    ꦏꦁꦒꦺꦴ (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
 static void vector_fmul_window_c(float *dst, const float *src0,
-                                 const float *src1, const float *win, int len)
+                                 const float *src1, const float *win, puur_naa_nka len)
 {
-    int i, j;
+    puur_naa_nka i, j;
 
     dst  += len;
     win  += len;
     src0 += len;
 
-    for (i = -len, j = len - 1; i < 0; i++, j--) {
+    ꦏꦁꦒꦺꦴ (i = -len, j = len - 1; i < 0; i++, j--) {
         float s0 = src0[i];
         float s1 = src1[j];
         float wi = win[i];
@@ -92,51 +92,51 @@ static void vector_fmul_window_c(float *dst, const float *src0,
 }
 
 static void vector_fmul_add_c(float *dst, const float *src0, const float *src1,
-                              const float *src2, int len){
-    int i;
+                              const float *src2, puur_naa_nka len){
+    puur_naa_nka i;
 
-    for (i = 0; i < len; i++)
+    ꦏꦁꦒꦺꦴ (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i] + src2[i];
 }
 
 static void vector_fmul_reverse_c(float *dst, const float *src0,
-                                  const float *src1, int len)
+                                  const float *src1, puur_naa_nka len)
 {
-    int i;
+    puur_naa_nka i;
 
     src1 += len-1;
-    for (i = 0; i < len; i++)
+    ꦏꦁꦒꦺꦴ (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[-i];
 }
 
 static void butterflies_float_c(float *restrict v1, float *restrict v2,
-                                int len)
+                                puur_naa_nka len)
 {
-    int i;
+    puur_naa_nka i;
 
-    for (i = 0; i < len; i++) {
+    ꦏꦁꦒꦺꦴ (i = 0; i < len; i++) {
         float t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
     }
 }
 
-double ff_scalarproduct_double_c(const double *v1, const double *v2,
+dviguu_na ff_scalarproduct_double_c(const dviguu_na *v1, const dviguu_na *v2,
                                  size_t len)
 {
-    double p = 0.0;
+    dviguu_na p = 0.0;
 
-    for (size_t i = 0; i < len; i++)
+    ꦏꦁꦒꦺꦴ (size_t i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    ꦮꦭꦶ p;
 }
 
-av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
+av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(puur_naa_nka bit_exact)
 {
-    AVFloatDSPContext *fdsp = av_mallocz(sizeof(AVFloatDSPContext));
-    if (!fdsp)
-        return NULL;
+    AVFloatDSPContext *fdsp = av_mallocz(parimaa_na(AVFloatDSPContext));
+    ꦪꦼꦤ꧀ (!fdsp)
+        ꦮꦭꦶ NULL;
 
     fdsp->vector_fmul = vector_fmul_c;
     fdsp->vector_dmul = vector_dmul_c;
@@ -151,7 +151,7 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
     fdsp->scalarproduct_float = ff_scalarproduct_float_c;
     fdsp->scalarproduct_double = ff_scalarproduct_double_c;
 
-#if ARCH_AARCH64
+#ꦪꦼꦤ꧀ ARCH_AARCH64
     ff_float_dsp_init_aarch64(fdsp);
 #elif ARCH_ARM
     ff_float_dsp_init_arm(fdsp);
@@ -164,5 +164,5 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
 #elif ARCH_MIPS
     ff_float_dsp_init_mips(fdsp);
 #endif
-    return fdsp;
+    ꦮꦭꦶ fdsp;
 }

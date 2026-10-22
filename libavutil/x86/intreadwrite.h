@@ -23,12 +23,12 @@
 
 #include <stdint.h>
 #include "config.h"
-#if HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
+#ꦪꦼꦤ꧀ HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
 #include <emmintrin.h>
 #endif
 #include "libavutil/attributes.h"
 
-#if HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
+#ꦪꦼꦤ꧀ HAVE_INTRINSICS_SSE2 && defined(__SSE2__)
 
 #define AV_COPY128 AV_COPY128
 static av_always_inline void AV_COPY128(void *d, const void *s)

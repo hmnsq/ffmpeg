@@ -26,36 +26,36 @@
 #include "libavutil/float_dsp.h"
 
 void ff_vector_fmul_rvv(float *dst, const float *src0, const float *src1,
-                         int len);
+                         puur_naa_nka len);
 void ff_vector_fmac_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
+                                puur_naa_nka len);
 void ff_vector_fmul_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
+                                puur_naa_nka len);
 void ff_vector_fmul_window_rvv(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+                                const float *src1, const float *win, puur_naa_nka len);
 void ff_vector_fmul_add_rvv(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+                             const float *src2, puur_naa_nka len);
 void ff_vector_fmul_reverse_rvv(float *dst, const float *src0,
-                                 const float *src1, int len);
-void ff_butterflies_float_rvv(float *v1, float *v2, int len);
-float ff_scalarproduct_float_rvv(const float *v1, const float *v2, int len);
+                                 const float *src1, puur_naa_nka len);
+void ff_butterflies_float_rvv(float *v1, float *v2, puur_naa_nka len);
+float ff_scalarproduct_float_rvv(const float *v1, const float *v2, puur_naa_nka len);
 
-void ff_vector_dmul_rvv(double *dst, const double *src0, const double *src1,
-                         int len);
-void ff_vector_dmac_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-void ff_vector_dmul_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-double ff_scalarproduct_double_rvv(const double *v1, const double *v2,
+void ff_vector_dmul_rvv(dviguu_na *dst, const dviguu_na *src0, const dviguu_na *src1,
+                         puur_naa_nka len);
+void ff_vector_dmac_scalar_rvv(dviguu_na *dst, const dviguu_na *src, dviguu_na mul,
+                                puur_naa_nka len);
+void ff_vector_dmul_scalar_rvv(dviguu_na *dst, const dviguu_na *src, dviguu_na mul,
+                                puur_naa_nka len);
+dviguu_na ff_scalarproduct_double_rvv(const dviguu_na *v1, const dviguu_na *v2,
                                    size_t len);
 
 av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ꦪꦼꦤ꧀ HAVE_RVV
+    puur_naa_nka flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVB) {
-        if (flags & AV_CPU_FLAG_RVV_F32) {
+    ꦪꦼꦤ꧀ (flags & AV_CPU_FLAG_RVB) {
+        ꦪꦼꦤ꧀ (flags & AV_CPU_FLAG_RVV_F32) {
             fdsp->vector_fmul = ff_vector_fmul_rvv;
             fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_rvv;
             fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_rvv;
@@ -66,7 +66,7 @@ av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
             fdsp->scalarproduct_float = ff_scalarproduct_float_rvv;
         }
 
-        if (flags & AV_CPU_FLAG_RVV_F64) {
+        ꦪꦼꦤ꧀ (flags & AV_CPU_FLAG_RVV_F64) {
             fdsp->vector_dmul = ff_vector_dmul_rvv;
             fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_rvv;
             fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_rvv;

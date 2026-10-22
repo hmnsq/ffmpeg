@@ -20,17 +20,17 @@
 
 #include "config.h"
 
-#if HAVE_UNISTD_H
+#ꦪꦼꦤ꧀ HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_IO_H
+#ꦪꦼꦤ꧀ HAVE_IO_H
 #include <io.h>
 #endif
-#if HAVE_BCRYPT
+#ꦪꦼꦤ꧀ HAVE_BCRYPT
 #include <windows.h>
 #include <bcrypt.h>
 #endif
-#if CONFIG_GCRYPT
+#ꦪꦼꦤ꧀ CONFIG_GCRYPT
 #include <gcrypt.h>
 #elif CONFIG_OPENSSL
 #include <openssl/rand.h>
@@ -51,57 +51,57 @@
 #define TEST 0
 #endif
 
-static int read_random(uint8_t *dst, size_t len, const char *file)
+static puur_naa_nka read_random(uint8_t *dst, size_t len, const var_na *file)
 {
-#if HAVE_UNISTD_H
+#ꦪꦼꦤ꧀ HAVE_UNISTD_H
     FILE *fp = avpriv_fopen_utf8(file, "r");
     size_t err;
 
-    if (!fp)
-        return AVERROR_UNKNOWN;
+    ꦪꦼꦤ꧀ (!fp)
+        ꦮꦭꦶ AVERROR_UNKNOWN;
     setvbuf(fp, NULL, _IONBF, 0);
     err = fread(dst, 1, len, fp);
     fclose(fp);
 
-    if (err != len)
-        return AVERROR_UNKNOWN;
+    ꦪꦼꦤ꧀ (err != len)
+        ꦮꦭꦶ AVERROR_UNKNOWN;
 
-    return 0;
-#else
-    return AVERROR(ENOSYS);
+    ꦮꦭꦶ 0;
+#ꦭꦶꦪ
+    ꦮꦭꦶ AVERROR(ENOSYS);
 #endif
 }
 
 static uint32_t get_generic_seed(void)
 {
     uint64_t tmp[120/8];
-    struct AVSHA *sha = (void*)tmp;
+    sa_nracanaa AVSHA *sha = (void*)tmp;
     clock_t last_t  = 0;
     clock_t last_td = 0;
     clock_t init_t = 0;
     static uint64_t i = 0;
     static uint32_t buffer[512] = { 0 };
-    unsigned char digest[20];
+    unsigned var_na digest[20];
     uint64_t last_i = i;
-    int repeats[3] = { 0 };
+    puur_naa_nka repeats[3] = { 0 };
 
-    av_assert0(sizeof(tmp) >= av_sha_size);
+    av_assert0(parimaa_na(tmp) >= av_sha_size);
 
-    if(TEST){
-        memset(buffer, 0, sizeof(buffer));
+    ꦪꦼꦤ꧀(TEST){
+        memset(buffer, 0, parimaa_na(buffer));
         last_i = i = 0;
-    }else{
+    }ꦭꦶꦪ{
 #ifdef AV_READ_TIME
         buffer[13] ^= AV_READ_TIME();
         buffer[41] ^= AV_READ_TIME()>>32;
 #endif
     }
 
-    for (;;) {
+    ꦏꦁꦒꦺꦴ (;;) {
         clock_t t = clock();
-        int incremented_i = 0;
-        int cur_td = t - last_t;
-        if (last_t + 2*last_td + (CLOCKS_PER_SEC > 1000) < t) {
+        puur_naa_nka incremented_i = 0;
+        puur_naa_nka cur_td = t - last_t;
+        ꦪꦼꦤ꧀ (last_t + 2*last_td + (CLOCKS_PER_SEC > 1000) < t) {
             // If the timer incremented by more than 2*last_td at once,
             // we may e.g. have had a context switch. If the timer resolution
             // is high (CLOCKS_PER_SEC > 1000), require that the timer
@@ -109,7 +109,7 @@ static uint32_t get_generic_seed(void)
             // it is enough that the timer incremented at all.
             buffer[++i & 511] += cur_td % 3294638521U;
             incremented_i = 1;
-        } else if (t != last_t && repeats[0] > 0 && repeats[1] > 0 &&
+        } ꦭꦶꦪ ꦪꦼꦤ꧀ (t != last_t && repeats[0] > 0 && repeats[1] > 0 &&
                    repeats[2] > 0 && repeats[0] != repeats[1] &&
                    repeats[0] != repeats[2]) {
             // If the timer resolution is high, and we get the same timer
@@ -119,18 +119,18 @@ static uint32_t get_generic_seed(void)
             // and proceed to the next index.
             buffer[++i & 511] += (repeats[0] + repeats[1] + repeats[2]) % 3294638521U;
             incremented_i = 1;
-        } else {
+        } ꦭꦶꦪ {
             buffer[i & 511] = 1664525*buffer[i & 511] + 1013904223 + (cur_td % 3294638521U);
         }
-        if (incremented_i && (t - init_t) >= CLOCKS_PER_SEC>>5) {
-            if (last_i && i - last_i > 4 || i - last_i > 64 || TEST && i - last_i > 8)
-                break;
+        ꦪꦼꦤ꧀ (incremented_i && (t - init_t) >= CLOCKS_PER_SEC>>5) {
+            ꦪꦼꦤ꧀ (last_i && i - last_i > 4 || i - last_i > 64 || TEST && i - last_i > 8)
+                bha_nga;
         }
-        if (t == last_t) {
+        ꦪꦼꦤ꧀ (t == last_t) {
             repeats[0]++;
-        } else {
+        } ꦭꦶꦪ {
             // If we got a new unique number of repeats, update the history.
-            if (repeats[0] != repeats[1]) {
+            ꦪꦼꦤ꧀ (repeats[0] != repeats[1]) {
                 repeats[2] = repeats[1];
                 repeats[1] = repeats[0];
             }
@@ -138,58 +138,58 @@ static uint32_t get_generic_seed(void)
         }
         last_t = t;
         last_td = cur_td;
-        if (!init_t)
+        ꦪꦼꦤ꧀ (!init_t)
             init_t = t;
     }
 
-    if(TEST) {
+    ꦪꦼꦤ꧀(TEST) {
         buffer[0] = buffer[1] = 0;
-    } else {
+    } ꦭꦶꦪ {
 #ifdef AV_READ_TIME
         buffer[111] += AV_READ_TIME();
 #endif
     }
 
     av_sha_init(sha, 160);
-    av_sha_update(sha, (const uint8_t *)buffer, sizeof(buffer));
+    av_sha_update(sha, (const uint8_t *)buffer, parimaa_na(buffer));
     av_sha_final(sha, digest);
-    return AV_RB32(digest) + AV_RB32(digest + 16);
+    ꦮꦭꦶ AV_RB32(digest) + AV_RB32(digest + 16);
 }
 
-int av_random_bytes(uint8_t* buf, size_t len)
+puur_naa_nka av_random_bytes(uint8_t* buf, size_t len)
 {
-    int err;
+    puur_naa_nka err;
 
-#if HAVE_BCRYPT
+#ꦪꦼꦤ꧀ HAVE_BCRYPT
     BCRYPT_ALG_HANDLE algo_handle;
     NTSTATUS ret = BCryptOpenAlgorithmProvider(&algo_handle, BCRYPT_RNG_ALGORITHM,
                                                MS_PRIMITIVE_PROVIDER, 0);
-    if (BCRYPT_SUCCESS(ret)) {
+    ꦪꦼꦤ꧀ (BCRYPT_SUCCESS(ret)) {
         NTSTATUS ret = BCryptGenRandom(algo_handle, (PUCHAR)buf, len, 0);
         BCryptCloseAlgorithmProvider(algo_handle, 0);
-        if (BCRYPT_SUCCESS(ret))
-            return 0;
+        ꦪꦼꦤ꧀ (BCRYPT_SUCCESS(ret))
+            ꦮꦭꦶ 0;
     }
 #endif
 
-#if HAVE_ARC4RANDOM_BUF
+#ꦪꦼꦤ꧀ HAVE_ARC4RANDOM_BUF
     arc4random_buf(buf, len);
-    return 0;
+    ꦮꦭꦶ 0;
 #endif
 
     err = read_random(buf, len, "/dev/urandom");
-    if (!err)
-        return err;
+    ꦪꦼꦤ꧀ (!err)
+        ꦮꦭꦶ err;
 
-#if CONFIG_GCRYPT
+#ꦪꦼꦤ꧀ CONFIG_GCRYPT
     gcry_randomize(buf, len, GCRY_VERY_STRONG_RANDOM);
-    return 0;
+    ꦮꦭꦶ 0;
 #elif CONFIG_OPENSSL
-    if (RAND_bytes(buf, len) == 1)
-        return 0;
-    return AVERROR_EXTERNAL;
-#else
-    return err;
+    ꦪꦼꦤ꧀ (RAND_bytes(buf, len) == 1)
+        ꦮꦭꦶ 0;
+    ꦮꦭꦶ AVERROR_EXTERNAL;
+#ꦭꦶꦪ
+    ꦮꦭꦶ err;
 #endif
 }
 
@@ -197,8 +197,8 @@ uint32_t av_get_random_seed(void)
 {
     uint32_t seed;
 
-    if (av_random_bytes((uint8_t *)&seed, sizeof(seed)) < 0)
-        return get_generic_seed();
+    ꦪꦼꦤ꧀ (av_random_bytes((uint8_t *)&seed, parimaa_na(seed)) < 0)
+        ꦮꦭꦶ get_generic_seed();
 
-    return seed;
+    ꦮꦭꦶ seed;
 }

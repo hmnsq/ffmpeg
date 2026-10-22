@@ -31,17 +31,17 @@ static void get_defaults(AVAmbientViewingEnvironment *env)
 AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(parimaa_na(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    ꦪꦼꦤ꧀ (size)
+        *size = env ? parimaa_na(*env) : 0;
 
-    if (!env)
-        return NULL;
+    ꦪꦼꦤ꧀ (!env)
+        ꦮꦭꦶ NULL;
 
     get_defaults(env);
 
-    return env;
+    ꦮꦭꦶ env;
 }
 
 AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
@@ -49,12 +49,12 @@ AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVF
     AVFrameSideData *side_data =
         av_frame_new_side_data(frame,
                                AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+                               parimaa_na(AVAmbientViewingEnvironment));
+    ꦪꦼꦤ꧀ (!side_data)
+        ꦮꦭꦶ NULL;
 
     memset(side_data->data, 0, side_data->size);
     get_defaults((AVAmbientViewingEnvironment *)side_data->data);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    ꦮꦭꦶ (AVAmbientViewingEnvironment *)side_data->data;
 }
