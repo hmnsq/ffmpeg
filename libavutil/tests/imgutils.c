@@ -16,112 +16,112 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/imgutils.c"
-#include "libavutil/crc.h"
-#include "libavutil/mem.h"
+#अन्तर्भाव "libavutil/imgutils.c"
+#अन्तर्भाव "libavutil/crc.h"
+#अन्तर्भाव "libavutil/mem.h"
 
-static int check_image_fill(enum AVPixelFormat pix_fmt, int w, int h) {
+स्थिर पूर्णाङ्क check_image_fill(गणना AVPixelFormat pix_fmt, पूर्णाङ्क w, पूर्णाङ्क h) {
     uint8_t *data[4];
     size_t sizes[4];
     ptrdiff_t linesizes1[4], offsets[3] = { 0 };
-    int i, total_size, linesizes[4];
+    पूर्णाङ्क i, total_size, linesizes[4];
 
-    if (av_image_fill_linesizes(linesizes, pix_fmt, w) < 0)
-        return -1;
-    for (i = 0; i < 4; i++)
+    यदि (av_image_fill_linesizes(linesizes, pix_fmt, w) < 0)
+        प्रत्यागम -1;
+    प्रति (i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
-    if (av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1) < 0)
-        return -1;
-    total_size = av_image_fill_pointers(data, pix_fmt, h, (void *)1, linesizes);
-    if (total_size < 0)
-        return -1;
-    for (i = 0; i < 4 && data[i]; i++);
+    यदि (av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1) < 0)
+        प्रत्यागम -1;
+    total_size = av_image_fill_pointers(data, pix_fmt, h, (शून्य *)1, linesizes);
+    यदि (total_size < 0)
+        प्रत्यागम -1;
+    प्रति (i = 0; i < 4 && data[i]; i++);
     printf("planes: %d", i);
     // Test the output of av_image_fill_linesizes()
     printf(", linesizes:");
-    for (i = 0; i < 4; i++)
+    प्रति (i = 0; i < 4; i++)
         printf(" %3d", linesizes[i]);
     // Test the output of av_image_fill_plane_sizes()
     printf(", plane_sizes:");
-    for (i = 0; i < 4; i++)
+    प्रति (i = 0; i < 4; i++)
         printf(" %5zu", sizes[i]);
     // Test the output of av_image_fill_pointers()
-    for (i = 0; i < 3 && data[i + 1]; i++)
+    प्रति (i = 0; i < 3 && data[i + 1]; i++)
         offsets[i] = data[i + 1] - data[i];
     printf(", plane_offsets:");
-    for (i = 0; i < 3; i++)
+    प्रति (i = 0; i < 3; i++)
         printf(" %5td", offsets[i]);
     printf(", total_size: %d", total_size);
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static int check_image_fill_black(const AVPixFmtDescriptor *desc, enum AVPixelFormat pix_fmt, int w, int h)
+स्थिर पूर्णाङ्क check_image_fill_black(ध्रुव AVPixFmtDescriptor *desc, गणना AVPixelFormat pix_fmt, पूर्णाङ्क w, पूर्णाङ्क h)
 {
     uint8_t *data[4];
     ptrdiff_t linesizes1[4];
-    int ret, total_size, linesizes[4];
+    पूर्णाङ्क ret, total_size, linesizes[4];
 
     ret = av_image_fill_linesizes(linesizes, pix_fmt, w);
-    if (ret < 0)
-        return ret;
+    यदि (ret < 0)
+        प्रत्यागम ret;
     total_size = av_image_alloc(data, linesizes, w, h, pix_fmt, 4);
-    if (total_size < 0) {
+    यदि (total_size < 0) {
         printf("alloc failure");
-        return total_size;
+        प्रत्यागम total_size;
     }
     printf("total_size: %6d", total_size);
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL)
+    यदि (desc->flags & AV_PIX_FMT_FLAG_PAL)
         total_size -= 256 * 4;
     // Make it non-black by default...
     memset(data[0], 0xA3, total_size);
-    for (int i = 0; i < 4; i++)
+    प्रति (पूर्णाङ्क i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
-    for (enum AVColorRange range = 0; range < AVCOL_RANGE_NB; range++) {
+    प्रति (गणना AVColorRange range = 0; range < AVCOL_RANGE_NB; range++) {
         ret = av_image_fill_black(data, linesizes1, pix_fmt, range, w, h);
         printf(",  black_%s_crc: ", av_color_range_name(range));
-        if (ret < 0) {
+        यदि (ret < 0) {
             printf("----------");
-        } else {
-            const AVCRC *crc = av_crc_get_table(AV_CRC_32_IEEE_LE);
+        } अन्यथा {
+            ध्रुव AVCRC *crc = av_crc_get_table(AV_CRC_32_IEEE_LE);
             printf("0x%08"PRIx32, av_crc(crc, 0, data[0], total_size));
         }
     }
     av_freep(&data[0]);
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-int main(void)
+पूर्णाङ्क main(शून्य)
 {
     int64_t x, y;
 
-    for (y = -1; y<UINT_MAX; y+= y/2 + 1) {
-        for (x = -1; x<UINT_MAX; x+= x/2 + 1) {
-            int ret = av_image_check_size(x, y, 0, NULL);
+    प्रति (y = -1; y<UINT_MAX; y+= y/2 + 1) {
+        प्रति (x = -1; x<UINT_MAX; x+= x/2 + 1) {
+            पूर्णाङ्क ret = av_image_check_size(x, y, 0, रिक्त);
             printf("%d", ret >= 0);
         }
         printf("\n");
     }
     printf("\n");
 
-    for (int i = 0; i < 2; i++) {
+    प्रति (पूर्णाङ्क i = 0; i < 2; i++) {
         printf(i ? "\nimage_fill_black tests\n" : "image_fill tests\n");
-        for (const AVPixFmtDescriptor *desc = NULL; desc = av_pix_fmt_desc_next(desc);) {
-            int w = 64, h = 48;
-            enum AVPixelFormat pix_fmt = av_pix_fmt_desc_get_id(desc);
+        प्रति (ध्रुव AVPixFmtDescriptor *desc = रिक्त; desc = av_pix_fmt_desc_next(desc);) {
+            पूर्णाङ्क w = 64, h = 48;
+            गणना AVPixelFormat pix_fmt = av_pix_fmt_desc_get_id(desc);
 
-            if (desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-                continue;
+            यदि (desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+                अनुवर्त;
 
             printf("%-16s", desc->name);
-            if (i == 0)
+            यदि (i == 0)
                 check_image_fill(pix_fmt, w, h);
-            else
+            अन्यथा
                 check_image_fill_black(desc, pix_fmt, w, h);
             printf("\n");
         }
     }
 
-    return 0;
+    प्रत्यागम 0;
 }

@@ -22,7 +22,7 @@
 #ifndef AVUTIL_TEA_H
 #define AVUTIL_TEA_H
 
-#include <stdint.h>
+#अन्तर्भाव <stdint.h>
 
 /**
  * @file
@@ -32,15 +32,15 @@
  * @{
  */
 
-extern const int av_tea_size;
+बाह्य ध्रुव पूर्णाङ्क av_tea_size;
 
-struct AVTEA;
+संरचना AVTEA;
 
 /**
   * Allocate an AVTEA context
   * To free the struct: av_free(ptr)
   */
-struct AVTEA *av_tea_alloc(void);
+संरचना AVTEA *av_tea_alloc(शून्य);
 
 /**
  * Initialize an AVTEA context.
@@ -49,7 +49,7 @@ struct AVTEA *av_tea_alloc(void);
  * @param key a key of 16 bytes used for encryption/decryption
  * @param rounds the number of rounds in TEA (64 is the "standard")
  */
-void av_tea_init(struct AVTEA *ctx, const uint8_t key[16], int rounds);
+शून्य av_tea_init(संरचना AVTEA *ctx, ध्रुव uint8_t कुंजी[16], पूर्णाङ्क rounds);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -61,8 +61,8 @@ void av_tea_init(struct AVTEA *ctx, const uint8_t key[16], int rounds);
  * @param iv initialization vector for CBC mode, if NULL then ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_tea_crypt(struct AVTEA *ctx, uint8_t *dst, const uint8_t *src,
-                  int count, uint8_t *iv, int decrypt);
+शून्य av_tea_crypt(संरचना AVTEA *ctx, uint8_t *dst, ध्रुव uint8_t *src,
+                  पूर्णाङ्क गिनती, uint8_t *iv, पूर्णाङ्क decrypt);
 
 /**
  * @}
