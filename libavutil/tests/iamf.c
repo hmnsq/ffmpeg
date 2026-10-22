@@ -16,37 +16,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ضمن <stdio.h>
 
-#include "libavutil/iamf.h"
-#include "libavutil/log.h"
-#include "libavutil/opt.h"
+#ضمن "libavutil/iamf.h"
+#ضمن "libavutil/log.h"
+#ضمن "libavutil/opt.h"
 
-static void print_class_tree(const AVClass *class, int depth)
+ساكن فراغ print_class_tree(ثابت AVClass *class, صحيح depth)
 {
-    const AVClass *child;
-    void *iter = NULL;
+    ثابت AVClass *child;
+    فراغ *iter = عدم;
 
     printf("%*s%s\n", depth * 2, "", class->class_name);
-    if (depth >= 8)
-        return;
-    while ((child = av_opt_child_class_iterate(class, &iter)))
+    𐡄𐡍 (depth >= 8)
+        أرجع;
+    طالما ((child = av_opt_child_class_iterate(class, &iter)))
         print_class_tree(child, depth + 1);
 }
 
-static void find_option(const AVClass *class, const char *name)
+ساكن فراغ find_option(ثابت AVClass *class, ثابت حرف *name)
 {
-    const AVOption *o = av_opt_find2(&class, name, NULL, 0,
+    ثابت AVOption *o = av_opt_find2(&class, name, عدم, 0,
                                      AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ,
-                                     NULL);
+                                     عدم);
     printf("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
 }
 
-int main(void)
+صحيح main(فراغ)
 {
-    const AVClass *audio_element = av_iamf_audio_element_get_class();
-    const AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
-    const AVClass *param_definition = av_iamf_param_definition_get_class();
+    ثابت AVClass *audio_element = av_iamf_audio_element_get_class();
+    ثابت AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
+    ثابت AVClass *param_definition = av_iamf_param_definition_get_class();
 
     printf("Testing av_opt_child_class_iterate()\n");
     print_class_tree(audio_element, 0);
@@ -64,5 +64,5 @@ int main(void)
     find_option(param_definition, "parameter_rate");
     find_option(param_definition, "subblock_duration");
 
-    return 0;
+    أرجع 0;
 }

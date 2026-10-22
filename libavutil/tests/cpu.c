@@ -16,31 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ضمن <stdio.h>
 
-#include "config.h"
+#ضمن "config.h"
 
-#include "libavutil/cpu.h"
-#include "libavutil/avstring.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/avstring.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#elif ARCH_RISCV
-#include "libavutil/riscv/cpu.h"
+#𐡄𐡍 ARCH_AARCH64
+#ضمن "libavutil/aarch64/cpu.h"
+#وإلاإذا ARCH_RISCV
+#ضمن "libavutil/riscv/cpu.h"
 #endif
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#𐡄𐡍 HAVE_UNISTD_H
+#ضمن <unistd.h>
 #endif
-#if !HAVE_GETOPT
-#include "compat/getopt.c"
+#𐡄𐡍 !HAVE_GETOPT
+#ضمن "compat/getopt.c"
 #endif
 
-static const struct {
-    int flag;
-    const char *name;
+ساكن ثابت بنية {
+    صحيح flag;
+    ثابت حرف *name;
 } cpu_flag_tab[] = {
-#if   ARCH_AARCH64
+#𐡄𐡍   ARCH_AARCH64
     { AV_CPU_FLAG_ARMV8,     "armv8"      },
     { AV_CPU_FLAG_NEON,      "neon"       },
     { AV_CPU_FLAG_VFP,       "vfp"        },
@@ -55,7 +55,7 @@ static const struct {
     { AV_CPU_FLAG_PMULL,     "pmull"      },
     { AV_CPU_FLAG_EOR3,      "eor3"       },
     { AV_CPU_FLAG_ARM_AES,   "aes"        },
-#elif ARCH_ARM
+#وإلاإذا ARCH_ARM
     { AV_CPU_FLAG_ARMV5TE,   "armv5te"    },
     { AV_CPU_FLAG_ARMV6,     "armv6"      },
     { AV_CPU_FLAG_ARMV6T2,   "armv6t2"    },
@@ -64,14 +64,14 @@ static const struct {
     { AV_CPU_FLAG_VFPV3,     "vfpv3"      },
     { AV_CPU_FLAG_NEON,      "neon"       },
     { AV_CPU_FLAG_SETEND,    "setend"     },
-#elif ARCH_PPC
+#وإلاإذا ARCH_PPC
     { AV_CPU_FLAG_ALTIVEC,   "altivec"    },
     { AV_CPU_FLAG_VSX,       "vsx"        },
     { AV_CPU_FLAG_POWER8,    "power8"     },
-#elif ARCH_MIPS
+#وإلاإذا ARCH_MIPS
     { AV_CPU_FLAG_MMI,       "mmi"        },
     { AV_CPU_FLAG_MSA,       "msa"        },
-#elif ARCH_X86
+#وإلاإذا ARCH_X86
     { AV_CPU_FLAG_MMX,       "mmx"        },
     { AV_CPU_FLAG_MMXEXT,    "mmxext"     },
     { AV_CPU_FLAG_SSE,       "sse"        },
@@ -99,10 +99,10 @@ static const struct {
     { AV_CPU_FLAG_AVX512,    "avx512"     },
     { AV_CPU_FLAG_AVX512ICL, "avx512icl"  },
     { AV_CPU_FLAG_SLOW_GATHER, "slowgather" },
-#elif ARCH_LOONGARCH
+#وإلاإذا ARCH_LOONGARCH
     { AV_CPU_FLAG_LSX,       "lsx"        },
     { AV_CPU_FLAG_LASX,      "lasx"       },
-#elif ARCH_RISCV
+#وإلاإذا ARCH_RISCV
     { AV_CPU_FLAG_RVI,       "rvi"        },
     { AV_CPU_FLAG_RVB_BASIC, "zbb"        },
     { AV_CPU_FLAG_RVB,       "rvb"        },
@@ -112,59 +112,59 @@ static const struct {
     { AV_CPU_FLAG_RVV_F64,   "zve64d"     },
     { AV_CPU_FLAG_RV_ZVBB,   "zvbb"       },
     { AV_CPU_FLAG_RV_MISALIGNED, "misaligned" },
-#elif ARCH_WASM
+#وإلاإذا ARCH_WASM
     { AV_CPU_FLAG_SIMD128,   "simd128"    },
 #endif
     { 0 }
 };
 
-static void print_cpu_flags(int cpu_flags, const char *type)
+ساكن فراغ print_cpu_flags(صحيح cpu_flags, ثابت حرف *type)
 {
-    int i;
+    صحيح i;
 
     printf("cpu_flags(%s) = 0x%08X\n", type, cpu_flags);
     printf("cpu_flags_str(%s) =", type);
-    for (i = 0; cpu_flag_tab[i].flag; i++)
-        if (cpu_flags & cpu_flag_tab[i].flag)
+    لكل (i = 0; cpu_flag_tab[i].flag; i++)
+        𐡄𐡍 (cpu_flags & cpu_flag_tab[i].flag)
             printf(" %s", cpu_flag_tab[i].name);
     printf("\n");
 }
 
 
-int main(int argc, char **argv)
+صحيح main(صحيح argc, حرف **argv)
 {
-    int cpu_flags_raw = av_get_cpu_flags();
-    int cpu_flags_eff;
-    int cpu_count = av_cpu_count();
-    const char *threads = "auto";
-    int i;
+    صحيح cpu_flags_raw = av_get_cpu_flags();
+    صحيح cpu_flags_eff;
+    صحيح cpu_count = av_cpu_count();
+    ثابت حرف *threads = "auto";
+    صحيح i;
 
-    for(i = 0; cpu_flag_tab[i].flag; i++) {
+    لكل(i = 0; cpu_flag_tab[i].flag; i++) {
         unsigned tmp = 0;
-        if (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
+        𐡄𐡍 (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
             fprintf(stderr, "Table missing %s\n", cpu_flag_tab[i].name);
-            return 4;
+            أرجع 4;
         }
     }
 
-    if (cpu_flags_raw < 0)
-        return 1;
+    𐡄𐡍 (cpu_flags_raw < 0)
+        أرجع 1;
 
-    for (;;) {
-        int c = getopt(argc, argv, "c:t:");
-        if (c == -1)
-            break;
-        switch (c) {
-        case 'c':
+    لكل (;;) {
+        صحيح c = getopt(argc, argv, "c:t:");
+        𐡄𐡍 (c == -1)
+            اكسر;
+        بدل (c) {
+        حالة 'c':
         {
             unsigned flags = av_get_cpu_flags();
-            if (av_parse_cpu_caps(&flags, optarg) < 0)
-                return 2;
+            𐡄𐡍 (av_parse_cpu_caps(&flags, optarg) < 0)
+                أرجع 2;
 
             av_force_cpu_flags(flags);
-            break;
+            اكسر;
         }
-        case 't':
+        حالة 't':
         {
             threads = optarg;
         }
@@ -173,27 +173,27 @@ int main(int argc, char **argv)
 
     cpu_flags_eff = av_get_cpu_flags();
 
-    if (cpu_flags_eff < 0)
-        return 3;
+    𐡄𐡍 (cpu_flags_eff < 0)
+        أرجع 3;
 
     print_cpu_flags(cpu_flags_raw, "raw");
     print_cpu_flags(cpu_flags_eff, "effective");
     printf("threads = %s (cpu_count = %d)\n", threads, cpu_count);
-#if ARCH_AARCH64 && HAVE_SVE
-    if (cpu_flags_raw & AV_CPU_FLAG_SVE)
+#𐡄𐡍 ARCH_AARCH64 && HAVE_SVE
+    𐡄𐡍 (cpu_flags_raw & AV_CPU_FLAG_SVE)
         printf("sve_vector_length = %d\n", 8 * ff_aarch64_sve_length());
 #endif
-#if ARCH_AARCH64 && HAVE_SME
-    if (cpu_flags_raw & AV_CPU_FLAG_SME)
+#𐡄𐡍 ARCH_AARCH64 && HAVE_SME
+    𐡄𐡍 (cpu_flags_raw & AV_CPU_FLAG_SME)
         printf("sme_vector_length = %d\n", 8 * ff_aarch64_sme_length());
 #endif
-#if ARCH_RISCV && HAVE_RVV
-    if (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
+#𐡄𐡍 ARCH_RISCV && HAVE_RVV
+    𐡄𐡍 (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
         size_t bytes = ff_get_rv_vlenb();
 
         printf("rv_vlenb = %zu (%zu bits)\n", bytes, 8 * bytes);
     }
 #endif
 
-    return 0;
+    أرجع 0;
 }

@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stdint.h>
+#ضمن <assert.h>
+#ضمن <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/lls.h"
+#ضمن "config.h"
+#ضمن "libavutil/attributes.h"
+#ضمن "libavutil/cpu.h"
+#ضمن "libavutil/riscv/cpu.h"
+#ضمن "libavutil/lls.h"
 
-void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
-double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
+فراغ ff_lls_update_covariance_rvv(مزدوج covar[][36], ثابت مزدوج *var,
+                                  صحيح count);
+مزدوج ff_scalarproduct_double_rvv(ثابت مزدوج *, ثابت مزدوج *, size_t);
 
-static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
+ساكن فراغ ff_lls_update_rvv(بنية LLSModel *m, ثابت مزدوج *var)
 {
     ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
 }
 
-static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
-                                  int order)
+ساكن مزدوج ff_lls_evaluate_rvv(بنية LLSModel *m, ثابت مزدوج *var,
+                                  صحيح order)
 {
-    return ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
+    أرجع ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
 }
 
-av_cold void ff_init_lls_riscv(LLSModel *m)
+av_cold فراغ ff_init_lls_riscv(LLSModel *m)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#𐡄𐡍 HAVE_RVV
+    صحيح flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+    𐡄𐡍 ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
+        𐡄𐡍 (ff_get_rv_vlenb() > m->indep_count)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }

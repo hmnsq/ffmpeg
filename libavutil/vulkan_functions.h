@@ -22,11 +22,11 @@
 #define VK_NO_PROTOTYPES
 #define VK_ENABLE_BETA_EXTENSIONS
 
-#include "hwcontext.h"
-#include "hwcontext_vulkan.h"
+#ضمن "hwcontext.h"
+#ضمن "hwcontext_vulkan.h"
 
 /* An enum of bitflags for every optional extension we need */
-typedef uint64_t FFVulkanExtensions;
+تعريفنوع uint64_t FFVulkanExtensions;
 
 /* NOTE: when adding new entries, make sure to update ff_vk_extensions_to_mask */
 #define FF_VK_EXT_EXTERNAL_DMABUF_MEMORY (1ULL <<  0) /* VK_EXT_external_memory_dma_buf */
@@ -274,7 +274,7 @@ typedef uint64_t FFVulkanExtensions;
     PFN_vk##name name;
 
 /* Structure with the definition of all listed functions */
-typedef struct FFVulkanFunctions {
+تعريفنوع بنية FFVulkanFunctions {
     FN_LIST(PFN_DEF)
 #ifdef _WIN32
     FN_LIST_WIN32(PFN_DEF)
