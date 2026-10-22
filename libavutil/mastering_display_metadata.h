@@ -21,8 +21,8 @@
 #ifndef AVUTIL_MASTERING_DISPLAY_METADATA_H
 #define AVUTIL_MASTERING_DISPLAY_METADATA_H
 
-#include "frame.h"
-#include "rational.h"
+#অন্তর্ভাৱ "frame.h"
+#অন্তর্ভাৱ "rational.h"
 
 
 /**
@@ -35,7 +35,7 @@
  * @note The struct should be allocated with av_mastering_display_metadata_alloc()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVMasteringDisplayMetadata {
+প্রকারনির্দেশ সংরচনা AVMasteringDisplayMetadata {
     /**
      * CIE 1931 xy chromaticity coords of color primaries (r, g, b order).
      */
@@ -59,12 +59,12 @@ typedef struct AVMasteringDisplayMetadata {
     /**
      * Flag indicating whether the display primaries (and white point) are set.
      */
-    int has_primaries;
+    পূর্ণাঙ্ক has_primaries;
 
     /**
      * Flag indicating whether the luminance (min_ and max_) have been set.
      */
-    int has_luminance;
+    পূর্ণাঙ্ক has_luminance;
 
 } AVMasteringDisplayMetadata;
 
@@ -75,7 +75,7 @@ typedef struct AVMasteringDisplayMetadata {
  * @return An AVMasteringDisplayMetadata filled with default values or NULL
  *         on failure.
  */
-AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(void);
+AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(শূন্য);
 
 /**
  * Allocate an AVMasteringDisplayMetadata structure and set its fields to
@@ -104,7 +104,7 @@ AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFra
  * @note The struct should be allocated with av_content_light_metadata_alloc()
  *       and its size is not a part of the public ABI.
  */
-typedef struct AVContentLightMetadata {
+প্রকারনির্দেশ সংরচনা AVContentLightMetadata {
     /**
      * Max content light level (cd/m^2).
      */

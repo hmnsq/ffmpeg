@@ -19,66 +19,66 @@
 #ifndef AVUTIL_GETENV_UTF8_H
 #define AVUTIL_GETENV_UTF8_H
 
-#include <stdlib.h>
+#অন্তর্ভাৱ <stdlib.h>
 
-#include "config.h"
-#include "mem.h"
+#অন্তর্ভাৱ "config.h"
+#অন্তর্ভাৱ "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#যদি HAVE_GETENV && defined(_WIN32)
 
-#include "libavutil/wchar_filename.h"
+#অন্তর্ভাৱ "libavutil/wchar_filename.h"
 
-static inline char *getenv_utf8(const char *varname)
+স্থির অন্তঃস্থ ৱর্ণ *getenv_utf8(ধ্রুৱ ৱর্ণ *varname)
 {
     wchar_t *varname_w, *var_w;
-    char *var;
+    ৱর্ণ *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    যদি (utf8towchar(varname, &varname_w))
+        ঘূৰাই রিক্ত;
+    যদি (!varname_w)
+        ঘূৰাই রিক্ত;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    যদি (!var_w)
+        ঘূৰাই রিক্ত;
+    যদি (wchartoutf8(var_w, &var))
+        ঘূৰাই রিক্ত;
 
-    return var;
+    ঘূৰাই var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
 }
 
-static inline void freeenv_utf8(char *var)
+স্থির অন্তঃস্থ শূন্য freeenv_utf8(ৱর্ণ *var)
 {
     av_free(var);
 }
 
-static inline char *getenv_dup(const char *varname)
+স্থির অন্তঃস্থ ৱর্ণ *getenv_dup(ধ্রুৱ ৱর্ণ *varname)
 {
-    return getenv_utf8(varname);
+    ঘূৰাই getenv_utf8(varname);
 }
 
-#else
+#অন্যথা
 
-static inline char *getenv_utf8(const char *varname)
+স্থির অন্তঃস্থ ৱর্ণ *getenv_utf8(ধ্রুৱ ৱর্ণ *varname)
 {
-    return getenv(varname);
+    ঘূৰাই getenv(varname);
 }
 
-static inline void freeenv_utf8(char *var)
+স্থির অন্তঃস্থ শূন্য freeenv_utf8(ৱর্ণ *var)
 {
 }
 
-static inline char *getenv_dup(const char *varname)
+স্থির অন্তঃস্থ ৱর্ণ *getenv_dup(ধ্রুৱ ৱর্ণ *varname)
 {
-    char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    ৱর্ণ *var = getenv(varname);
+    যদি (!var)
+        ঘূৰাই রিক্ত;
+    ঘূৰাই av_strdup(var);
 }
 
 #endif // HAVE_GETENV && defined(_WIN32)

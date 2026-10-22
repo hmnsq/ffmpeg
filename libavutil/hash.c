@@ -18,26 +18,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include "hash.h"
+#অন্তর্ভাৱ <assert.h>
+#অন্তর্ভাৱ <stddef.h>
+#অন্তর্ভাৱ <stdint.h>
+#অন্তর্ভাৱ <stdio.h>
+#অন্তর্ভাৱ <string.h>
+#অন্তর্ভাৱ "hash.h"
 
-#include "adler32.h"
-#include "crc.h"
-#include "md5.h"
-#include "murmur3.h"
-#include "ripemd.h"
-#include "sha.h"
-#include "sha512.h"
+#অন্তর্ভাৱ "adler32.h"
+#অন্তর্ভাৱ "crc.h"
+#অন্তর্ভাৱ "md5.h"
+#অন্তর্ভাৱ "murmur3.h"
+#অন্তর্ভাৱ "ripemd.h"
+#অন্তর্ভাৱ "sha.h"
+#অন্তর্ভাৱ "sha512.h"
 
-#include "avstring.h"
-#include "base64.h"
-#include "error.h"
-#include "intreadwrite.h"
-#include "mem.h"
+#অন্তর্ভাৱ "avstring.h"
+#অন্তর্ভাৱ "base64.h"
+#অন্তর্ভাৱ "error.h"
+#অন্তর্ভাৱ "intreadwrite.h"
+#অন্তর্ভাৱ "mem.h"
 
 // ENTRY(HASH_TYPE, HASH_NAME, HASH_SIZE)
 #define HASHES(ENTRY)                   \
@@ -57,23 +57,23 @@
     ENTRY(CRC32,      "CRC32",       4) \
     ENTRY(ADLER32,    "adler32",     4) \
 
-enum hashtype {
+গণনা hashtype {
 #define HASH_TYPE(TYPE, NAME, SIZE) TYPE,
     HASHES(HASH_TYPE)
-    NUM_HASHES
+    অঙ্ক_HASHES
 };
 
-typedef struct AVHashContext {
-    void *ctx;
-    enum hashtype type;
-    const AVCRC *crctab;
+প্রকারনির্দেশ সংরচনা AVHashContext {
+    শূন্য *ctx;
+    গণনা hashtype type;
+    ধ্রুৱ AVCRC *crctab;
     uint32_t crc;
 } AVHashContext;
 
 #define HASH_MAX_SIZE(TYPE, NAME, SIZE) \
     HASH_MAX_SIZE_BEFORE_ ## TYPE,      \
     HASH_MAX_SIZE_UNTIL_ ## TYPE ## _MINUS_ONE = FFMAX(SIZE, HASH_MAX_SIZE_BEFORE_ ## TYPE) - 1,
-enum {
+গণনা {
     HASHES(HASH_MAX_SIZE)
     MAX_HASH_SIZE
 };
@@ -81,173 +81,173 @@ static_assert(AV_HASH_MAX_SIZE >= MAX_HASH_SIZE, "AV_HASH_MAX_SIZE needs to be u
 
 #define HASH_MAX_NAME_SIZE(TYPE, NAME, SIZE) \
     HASH_MAX_NAME_SIZE_BEFORE_ ## TYPE,      \
-    HASH_MAX_NAME_SIZE_UNTIL_ ## TYPE ## _MINUS_ONE = FFMAX(sizeof(NAME), HASH_MAX_NAME_SIZE_BEFORE_ ## TYPE) - 1,
-enum {
+    HASH_MAX_NAME_SIZE_UNTIL_ ## TYPE ## _MINUS_ONE = FFMAX(পরিমাণ(NAME), HASH_MAX_NAME_SIZE_BEFORE_ ## TYPE) - 1,
+গণনা {
     HASHES(HASH_MAX_NAME_SIZE)
     MAX_HASH_NAME_SIZE
 };
 
-static const struct {
-    const char name[MAX_HASH_NAME_SIZE];
-    int size;
+স্থির ধ্রুৱ সংরচনা {
+    ধ্রুৱ ৱর্ণ name[MAX_HASH_NAME_SIZE];
+    পূর্ণাঙ্ক size;
 } hashdesc[] = {
 #define HASH_DESC(TYPE, NAME, SIZE) [TYPE] = { NAME, SIZE },
     HASHES(HASH_DESC)
 };
 
-const char *av_hash_names(int i)
+ধ্রুৱ ৱর্ণ *av_hash_names(পূর্ণাঙ্ক i)
 {
-    if (i < 0 || i >= NUM_HASHES) return NULL;
-    return hashdesc[i].name;
+    যদি (i < 0 || i >= অঙ্ক_HASHES) ঘূৰাই রিক্ত;
+    ঘূৰাই hashdesc[i].name;
 }
 
-const char *av_hash_get_name(const AVHashContext *ctx)
+ধ্রুৱ ৱর্ণ *av_hash_get_name(ধ্রুৱ AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].name;
+    ঘূৰাই hashdesc[ctx->type].name;
 }
 
-int av_hash_get_size(const AVHashContext *ctx)
+পূর্ণাঙ্ক av_hash_get_size(ধ্রুৱ AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].size;
+    ঘূৰাই hashdesc[ctx->type].size;
 }
 
-int av_hash_alloc(AVHashContext **ctx, const char *name)
+পূর্ণাঙ্ক av_hash_alloc(AVHashContext **ctx, ধ্রুৱ ৱর্ণ *name)
 {
     AVHashContext *res;
-    int i;
-    *ctx = NULL;
-    for (i = 0; i < NUM_HASHES; i++)
-        if (av_strcasecmp(name, hashdesc[i].name) == 0)
-            break;
-    if (i >= NUM_HASHES) return AVERROR(EINVAL);
-    res = av_mallocz(sizeof(*res));
-    if (!res) return AVERROR(ENOMEM);
+    পূর্ণাঙ্ক i;
+    *ctx = রিক্ত;
+    বাবে (i = 0; i < অঙ্ক_HASHES; i++)
+        যদি (av_strcasecmp(name, hashdesc[i].name) == 0)
+            ভঙ্গ;
+    যদি (i >= অঙ্ক_HASHES) ঘূৰাই AVERROR(EINVAL);
+    res = av_mallocz(পরিমাণ(*res));
+    যদি (!res) ঘূৰাই AVERROR(ENOMEM);
     res->type = i;
-    switch (i) {
-    case MD5:     res->ctx = av_md5_alloc(); break;
-    case MURMUR3: res->ctx = av_murmur3_alloc(); break;
-    case RIPEMD128:
-    case RIPEMD160:
-    case RIPEMD256:
-    case RIPEMD320: res->ctx = av_ripemd_alloc(); break;
-    case SHA160:
-    case SHA224:
-    case SHA256:  res->ctx = av_sha_alloc(); break;
-    case SHA512_224:
-    case SHA512_256:
-    case SHA384:
-    case SHA512:  res->ctx = av_sha512_alloc(); break;
-    case CRC32:   res->crctab = av_crc_get_table(AV_CRC_32_IEEE_LE); break;
-    case ADLER32: break;
+    ৱিকল্প (i) {
+    পক্ষ MD5:     res->ctx = av_md5_alloc(); ভঙ্গ;
+    পক্ষ MURMUR3: res->ctx = av_murmur3_alloc(); ভঙ্গ;
+    পক্ষ RIPEMD128:
+    পক্ষ RIPEMD160:
+    পক্ষ RIPEMD256:
+    পক্ষ RIPEMD320: res->ctx = av_ripemd_alloc(); ভঙ্গ;
+    পক্ষ SHA160:
+    পক্ষ SHA224:
+    পক্ষ SHA256:  res->ctx = av_sha_alloc(); ভঙ্গ;
+    পক্ষ SHA512_224:
+    পক্ষ SHA512_256:
+    পক্ষ SHA384:
+    পক্ষ SHA512:  res->ctx = av_sha512_alloc(); ভঙ্গ;
+    পক্ষ CRC32:   res->crctab = av_crc_get_table(AV_CRC_32_IEEE_LE); ভঙ্গ;
+    পক্ষ ADLER32: ভঙ্গ;
     }
-    if (i != ADLER32 && i != CRC32 && !res->ctx) {
+    যদি (i != ADLER32 && i != CRC32 && !res->ctx) {
         av_free(res);
-        return AVERROR(ENOMEM);
+        ঘূৰাই AVERROR(ENOMEM);
     }
     *ctx = res;
-    return 0;
+    ঘূৰাই 0;
 }
 
-void av_hash_init(AVHashContext *ctx)
+শূন্য av_hash_init(AVHashContext *ctx)
 {
-    switch (ctx->type) {
-    case MD5:     av_md5_init(ctx->ctx); break;
-    case MURMUR3: av_murmur3_init(ctx->ctx); break;
-    case RIPEMD128: av_ripemd_init(ctx->ctx, 128); break;
-    case RIPEMD160: av_ripemd_init(ctx->ctx, 160); break;
-    case RIPEMD256: av_ripemd_init(ctx->ctx, 256); break;
-    case RIPEMD320: av_ripemd_init(ctx->ctx, 320); break;
-    case SHA160:  av_sha_init(ctx->ctx, 160); break;
-    case SHA224:  av_sha_init(ctx->ctx, 224); break;
-    case SHA256:  av_sha_init(ctx->ctx, 256); break;
-    case SHA512_224:  av_sha512_init(ctx->ctx, 224); break;
-    case SHA512_256:  av_sha512_init(ctx->ctx, 256); break;
-    case SHA384:  av_sha512_init(ctx->ctx, 384); break;
-    case SHA512:  av_sha512_init(ctx->ctx, 512); break;
-    case CRC32:   ctx->crc = UINT32_MAX; break;
-    case ADLER32: ctx->crc = 1; break;
+    ৱিকল্প (ctx->type) {
+    পক্ষ MD5:     av_md5_init(ctx->ctx); ভঙ্গ;
+    পক্ষ MURMUR3: av_murmur3_init(ctx->ctx); ভঙ্গ;
+    পক্ষ RIPEMD128: av_ripemd_init(ctx->ctx, 128); ভঙ্গ;
+    পক্ষ RIPEMD160: av_ripemd_init(ctx->ctx, 160); ভঙ্গ;
+    পক্ষ RIPEMD256: av_ripemd_init(ctx->ctx, 256); ভঙ্গ;
+    পক্ষ RIPEMD320: av_ripemd_init(ctx->ctx, 320); ভঙ্গ;
+    পক্ষ SHA160:  av_sha_init(ctx->ctx, 160); ভঙ্গ;
+    পক্ষ SHA224:  av_sha_init(ctx->ctx, 224); ভঙ্গ;
+    পক্ষ SHA256:  av_sha_init(ctx->ctx, 256); ভঙ্গ;
+    পক্ষ SHA512_224:  av_sha512_init(ctx->ctx, 224); ভঙ্গ;
+    পক্ষ SHA512_256:  av_sha512_init(ctx->ctx, 256); ভঙ্গ;
+    পক্ষ SHA384:  av_sha512_init(ctx->ctx, 384); ভঙ্গ;
+    পক্ষ SHA512:  av_sha512_init(ctx->ctx, 512); ভঙ্গ;
+    পক্ষ CRC32:   ctx->crc = UINT32_MAX; ভঙ্গ;
+    পক্ষ ADLER32: ctx->crc = 1; ভঙ্গ;
     }
 }
 
-void av_hash_update(AVHashContext *ctx, const uint8_t *src, size_t len)
+শূন্য av_hash_update(AVHashContext *ctx, ধ্রুৱ uint8_t *src, size_t len)
 {
-    switch (ctx->type) {
-    case MD5:     av_md5_update(ctx->ctx, src, len); break;
-    case MURMUR3: av_murmur3_update(ctx->ctx, src, len); break;
-    case RIPEMD128:
-    case RIPEMD160:
-    case RIPEMD256:
-    case RIPEMD320: av_ripemd_update(ctx->ctx, src, len); break;
-    case SHA160:
-    case SHA224:
-    case SHA256:  av_sha_update(ctx->ctx, src, len); break;
-    case SHA512_224:
-    case SHA512_256:
-    case SHA384:
-    case SHA512:  av_sha512_update(ctx->ctx, src, len); break;
-    case CRC32:   ctx->crc = av_crc(ctx->crctab, ctx->crc, src, len); break;
-    case ADLER32: ctx->crc = av_adler32_update(ctx->crc, src, len); break;
+    ৱিকল্প (ctx->type) {
+    পক্ষ MD5:     av_md5_update(ctx->ctx, src, len); ভঙ্গ;
+    পক্ষ MURMUR3: av_murmur3_update(ctx->ctx, src, len); ভঙ্গ;
+    পক্ষ RIPEMD128:
+    পক্ষ RIPEMD160:
+    পক্ষ RIPEMD256:
+    পক্ষ RIPEMD320: av_ripemd_update(ctx->ctx, src, len); ভঙ্গ;
+    পক্ষ SHA160:
+    পক্ষ SHA224:
+    পক্ষ SHA256:  av_sha_update(ctx->ctx, src, len); ভঙ্গ;
+    পক্ষ SHA512_224:
+    পক্ষ SHA512_256:
+    পক্ষ SHA384:
+    পক্ষ SHA512:  av_sha512_update(ctx->ctx, src, len); ভঙ্গ;
+    পক্ষ CRC32:   ctx->crc = av_crc(ctx->crctab, ctx->crc, src, len); ভঙ্গ;
+    পক্ষ ADLER32: ctx->crc = av_adler32_update(ctx->crc, src, len); ভঙ্গ;
     }
 }
 
-void av_hash_final(AVHashContext *ctx, uint8_t *dst)
+শূন্য av_hash_final(AVHashContext *ctx, uint8_t *dst)
 {
-    switch (ctx->type) {
-    case MD5:     av_md5_final(ctx->ctx, dst); break;
-    case MURMUR3: av_murmur3_final(ctx->ctx, dst); break;
-    case RIPEMD128:
-    case RIPEMD160:
-    case RIPEMD256:
-    case RIPEMD320: av_ripemd_final(ctx->ctx, dst); break;
-    case SHA160:
-    case SHA224:
-    case SHA256:  av_sha_final(ctx->ctx, dst); break;
-    case SHA512_224:
-    case SHA512_256:
-    case SHA384:
-    case SHA512:  av_sha512_final(ctx->ctx, dst); break;
-    case CRC32:   AV_WB32(dst, ctx->crc ^ UINT32_MAX); break;
-    case ADLER32: AV_WB32(dst, ctx->crc); break;
+    ৱিকল্প (ctx->type) {
+    পক্ষ MD5:     av_md5_final(ctx->ctx, dst); ভঙ্গ;
+    পক্ষ MURMUR3: av_murmur3_final(ctx->ctx, dst); ভঙ্গ;
+    পক্ষ RIPEMD128:
+    পক্ষ RIPEMD160:
+    পক্ষ RIPEMD256:
+    পক্ষ RIPEMD320: av_ripemd_final(ctx->ctx, dst); ভঙ্গ;
+    পক্ষ SHA160:
+    পক্ষ SHA224:
+    পক্ষ SHA256:  av_sha_final(ctx->ctx, dst); ভঙ্গ;
+    পক্ষ SHA512_224:
+    পক্ষ SHA512_256:
+    পক্ষ SHA384:
+    পক্ষ SHA512:  av_sha512_final(ctx->ctx, dst); ভঙ্গ;
+    পক্ষ CRC32:   AV_WB32(dst, ctx->crc ^ UINT32_MAX); ভঙ্গ;
+    পক্ষ ADLER32: AV_WB32(dst, ctx->crc); ভঙ্গ;
     }
 }
 
-void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size)
+শূন্য av_hash_final_bin(সংরচনা AVHashContext *ctx, uint8_t *dst, পূর্ণাঙ্ক size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE];
     unsigned rsize = av_hash_get_size(ctx);
 
     av_hash_final(ctx, buf);
     memcpy(dst, buf, FFMIN(size, rsize));
-    if (size > rsize)
+    যদি (size > rsize)
         memset(dst + rsize, 0, size - rsize);
 }
 
-void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size)
+শূন্য av_hash_final_hex(সংরচনা AVHashContext *ctx, uint8_t *dst, পূর্ণাঙ্ক size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE];
     unsigned rsize = av_hash_get_size(ctx), i;
 
     av_hash_final(ctx, buf);
-    for (i = 0; i < FFMIN(rsize, size / 2); i++)
+    বাবে (i = 0; i < FFMIN(rsize, size / 2); i++)
         snprintf(dst + i * 2, size - i * 2, "%02x", buf[i]);
 }
 
-void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size)
+শূন্য av_hash_final_b64(সংরচনা AVHashContext *ctx, uint8_t *dst, পূর্ণাঙ্ক size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE], b64[AV_BASE64_SIZE(AV_HASH_MAX_SIZE)];
     unsigned rsize = av_hash_get_size(ctx), osize;
 
     av_hash_final(ctx, buf);
-    av_base64_encode(b64, sizeof(b64), buf, rsize);
+    av_base64_encode(b64, পরিমাণ(b64), buf, rsize);
     osize = AV_BASE64_SIZE(rsize);
     memcpy(dst, b64, FFMIN(osize, size));
-    if (size < osize)
+    যদি (size < osize)
         dst[size - 1] = 0;
 }
 
-void av_hash_freep(AVHashContext **ctx)
+শূন্য av_hash_freep(AVHashContext **ctx)
 {
-    if (*ctx)
+    যদি (*ctx)
         av_freep(&(*ctx)->ctx);
     av_freep(ctx);
 }

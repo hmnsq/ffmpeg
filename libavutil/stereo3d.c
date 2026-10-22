@@ -18,134 +18,134 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#অন্তর্ভাৱ <string.h>
 
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "stereo3d.h"
+#অন্তর্ভাৱ "frame.h"
+#অন্তর্ভাৱ "macros.h"
+#অন্তর্ভাৱ "mem.h"
+#অন্তর্ভাৱ "stereo3d.h"
 
-static void get_defaults(AVStereo3D *stereo)
+স্থির শূন্য get_defaults(AVStereo3D *stereo)
 {
     stereo->horizontal_disparity_adjustment = (AVRational) { 0, 1 };
     stereo->horizontal_field_of_view = (AVRational) { 0, 1 };
 }
 
-AVStereo3D *av_stereo3d_alloc(void)
+AVStereo3D *av_stereo3d_alloc(শূন্য)
 {
-    return av_stereo3d_alloc_size(NULL);
+    ঘূৰাই av_stereo3d_alloc_size(রিক্ত);
 }
 
 AVStereo3D *av_stereo3d_alloc_size(size_t *size)
 {
-    AVStereo3D *stereo = av_mallocz(sizeof(AVStereo3D));
+    AVStereo3D *stereo = av_mallocz(পরিমাণ(AVStereo3D));
 
-    if (size)
-        *size = stereo ? sizeof(*stereo) : 0;
+    যদি (size)
+        *size = stereo ? পরিমাণ(*stereo) : 0;
 
-    if (!stereo)
-        return NULL;
+    যদি (!stereo)
+        ঘূৰাই রিক্ত;
 
     get_defaults(stereo);
 
-    return stereo;
+    ঘূৰাই stereo;
 }
 
 AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_STEREO3D,
-                                                        sizeof(AVStereo3D));
-    if (!side_data)
-        return NULL;
+                                                        পরিমাণ(AVStereo3D));
+    যদি (!side_data)
+        ঘূৰাই রিক্ত;
 
-    memset(side_data->data, 0, sizeof(AVStereo3D));
+    memset(side_data->data, 0, পরিমাণ(AVStereo3D));
     get_defaults((AVStereo3D *)side_data->data);
 
-    return (AVStereo3D *)side_data->data;
+    ঘূৰাই (AVStereo3D *)side_data->data;
 }
 
-static const char * const stereo3d_type_names[] = {
+স্থির ধ্রুৱ ৱর্ণ * ধ্রুৱ stereo3d_type_names[] = {
     [AV_STEREO3D_2D]                  = "2D",
     [AV_STEREO3D_SIDEBYSIDE]          = "side by side",
     [AV_STEREO3D_TOPBOTTOM]           = "top and bottom",
     [AV_STEREO3D_FRAMESEQUENCE]       = "frame alternate",
     [AV_STEREO3D_CHECKERBOARD]        = "checkerboard",
     [AV_STEREO3D_SIDEBYSIDE_QUINCUNX] = "side by side (quincunx subsampling)",
-    [AV_STEREO3D_LINES]               = "interleaved lines",
+    [AV_STEREO3_D_সাৰিগুলি]               = "interleaved lines",
     [AV_STEREO3D_COLUMNS]             = "interleaved columns",
     [AV_STEREO3D_UNSPEC]              = "unspecified",
 };
 
-static const char * const stereo3d_view_names[] = {
+স্থির ধ্রুৱ ৱর্ণ * ধ্রুৱ stereo3d_view_names[] = {
     [AV_STEREO3D_VIEW_PACKED] = "packed",
-    [AV_STEREO3D_VIEW_LEFT]   = "left",
-    [AV_STEREO3D_VIEW_RIGHT]  = "right",
+    [AV_STEREO3_D_VIEW_বাম]   = "left",
+    [AV_STEREO3_D_VIEW_ডান]  = "right",
     [AV_STEREO3D_VIEW_UNSPEC] = "unspecified",
 };
 
-static const char * const stereo3d_primary_eye_names[] = {
+স্থির ধ্রুৱ ৱর্ণ * ধ্রুৱ stereo3d_primary_eye_names[] = {
     [AV_PRIMARY_EYE_NONE]  = "none",
-    [AV_PRIMARY_EYE_LEFT]  = "left",
-    [AV_PRIMARY_EYE_RIGHT] = "right",
+    [AV_PRIMARY_EYE_বাম]  = "left",
+    [AV_PRIMARY_EYE_ডান] = "right",
 };
 
-const char *av_stereo3d_type_name(unsigned int type)
+ধ্রুৱ ৱর্ণ *av_stereo3d_type_name(unsigned পূর্ণাঙ্ক type)
 {
-    if (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
-        return "unknown";
+    যদি (type >= FF_ARRAY_ELEMS(stereo3d_type_names))
+        ঘূৰাই "unknown";
 
-    return stereo3d_type_names[type];
+    ঘূৰাই stereo3d_type_names[type];
 }
 
-int av_stereo3d_from_name(const char *name)
+পূর্ণাঙ্ক av_stereo3d_from_name(ধ্রুৱ ৱর্ণ *name)
 {
-    int i;
+    পূর্ণাঙ্ক i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
-        if (!strcmp(name, stereo3d_type_names[i]))
-            return i;
+    বাবে (i = 0; i < FF_ARRAY_ELEMS(stereo3d_type_names); i++) {
+        যদি (!strcmp(name, stereo3d_type_names[i]))
+            ঘূৰাই i;
     }
 
-    return -1;
+    ঘূৰাই -1;
 }
 
-const char *av_stereo3d_view_name(unsigned int view)
+ধ্রুৱ ৱর্ণ *av_stereo3d_view_name(unsigned পূর্ণাঙ্ক view)
 {
-    if (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
-        return "unknown";
+    যদি (view >= FF_ARRAY_ELEMS(stereo3d_view_names))
+        ঘূৰাই "unknown";
 
-    return stereo3d_view_names[view];
+    ঘূৰাই stereo3d_view_names[view];
 }
 
-int av_stereo3d_view_from_name(const char *name)
+পূর্ণাঙ্ক av_stereo3d_view_from_name(ধ্রুৱ ৱর্ণ *name)
 {
-    int i;
+    পূর্ণাঙ্ক i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
-        if (!strcmp(name, stereo3d_view_names[i]))
-            return i;
+    বাবে (i = 0; i < FF_ARRAY_ELEMS(stereo3d_view_names); i++) {
+        যদি (!strcmp(name, stereo3d_view_names[i]))
+            ঘূৰাই i;
     }
 
-    return -1;
+    ঘূৰাই -1;
 }
 
-const char *av_stereo3d_primary_eye_name(unsigned int eye)
+ধ্রুৱ ৱর্ণ *av_stereo3d_primary_eye_name(unsigned পূর্ণাঙ্ক eye)
 {
-    if (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
-        return "unknown";
+    যদি (eye >= FF_ARRAY_ELEMS(stereo3d_primary_eye_names))
+        ঘূৰাই "unknown";
 
-    return stereo3d_primary_eye_names[eye];
+    ঘূৰাই stereo3d_primary_eye_names[eye];
 }
 
-int av_stereo3d_primary_eye_from_name(const char *name)
+পূর্ণাঙ্ক av_stereo3d_primary_eye_from_name(ধ্রুৱ ৱর্ণ *name)
 {
-    int i;
+    পূর্ণাঙ্ক i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
-        if (!strcmp(name, stereo3d_primary_eye_names[i]))
-            return i;
+    বাবে (i = 0; i < FF_ARRAY_ELEMS(stereo3d_primary_eye_names); i++) {
+        যদি (!strcmp(name, stereo3d_primary_eye_names[i]))
+            ঘূৰাই i;
     }
 
-    return -1;
+    ঘূৰাই -1;
 }

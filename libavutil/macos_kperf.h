@@ -19,9 +19,9 @@
 #ifndef AVUTIL_MACOS_KPERF_H
 #define AVUTIL_MACOS_KPERF_H
 
-#include <stdint.h>
+#অন্তর্ভাৱ <stdint.h>
 
-void ff_kperf_init(void);
-uint64_t ff_kperf_cycles(void);
+শূন্য ff_kperf_init(শূন্য);
+uint64_t ff_kperf_cycles(শূন্য);
 
 #endif /* AVUTIL_MACOS_KPERF_H */

@@ -24,53 +24,53 @@
 #ifndef AVUTIL_X86_BSWAP_H
 #define AVUTIL_X86_BSWAP_H
 
-#include <stdint.h>
-#if defined(_MSC_VER)
-#include <stdlib.h>
-#include <intrin.h>
+#অন্তর্ভাৱ <stdint.h>
+#যদি defined(_MSC_VER)
+#অন্তর্ভাৱ <stdlib.h>
+#অন্তর্ভাৱ <intrin.h>
 #endif
-#include "config.h"
-#include "libavutil/attributes.h"
+#অন্তর্ভাৱ "config.h"
+#অন্তর্ভাৱ "libavutil/attributes.h"
 
-#if defined(_MSC_VER)
+#যদি defined(_MSC_VER)
 
 #define av_bswap16 av_bswap16
-static av_always_inline av_const uint16_t av_bswap16(uint16_t x)
+স্থির av_always_inline av_const uint16_t av_bswap16(uint16_t x)
 {
-    return _rotr16(x, 8);
+    ঘূৰাই _rotr16(x, 8);
 }
 
 #define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+স্থির av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return _byteswap_ulong(x);
+    ঘূৰাই _byteswap_ulong(x);
 }
 
-#if ARCH_X86_64
+#যদি ARCH_X86_64
 #define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+স্থির অন্তঃস্থ uint64_t av_const av_bswap64(uint64_t x)
 {
-    return _byteswap_uint64(x);
+    ঘূৰাই _byteswap_uint64(x);
 }
 #endif
 
 
-#elif HAVE_INLINE_ASM
+#নোচেদ্যদি HAVE_INLINE_ASM
 
 #ifdef __INTEL_COMPILER
 #define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+স্থির av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
     __asm__("bswap   %0" : "+r" (x));
-    return x;
+    ঘূৰাই x;
 }
 
-#if ARCH_X86_64
+#যদি ARCH_X86_64
 #define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+স্থির অন্তঃস্থ uint64_t av_const av_bswap64(uint64_t x)
 {
     __asm__("bswap  %0": "=r" (x) : "0" (x));
-    return x;
+    ঘূৰাই x;
 }
 #endif
 #endif /* __INTEL_COMPILER */

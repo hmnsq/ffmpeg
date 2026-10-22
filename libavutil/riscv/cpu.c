@@ -21,100 +21,100 @@
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
 #endif
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "libavutil/macros.h"
-#include "libavutil/log.h"
-#include "config.h"
+#অন্তর্ভাৱ "libavutil/cpu.h"
+#অন্তর্ভাৱ "libavutil/riscv/cpu.h"
+#অন্তর্ভাৱ "libavutil/cpu_internal.h"
+#অন্তর্ভাৱ "libavutil/macros.h"
+#অন্তর্ভাৱ "libavutil/log.h"
+#অন্তর্ভাৱ "config.h"
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#include <sys/auxv.h>
+#যদি HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#অন্তর্ভাৱ <sys/auxv.h>
 #define HWCAP_RV(letter) (1ul << ((letter) - 'A'))
 #endif
-#if HAVE_SYS_HWPROBE_H
-#include <sys/hwprobe.h>
-#elif HAVE_ASM_HWPROBE_H
-#include <asm/hwprobe.h>
-#include <asm/unistd.h>
-#include <sys/syscall.h>
-#include <unistd.h>
+#যদি HAVE_SYS_HWPROBE_H
+#অন্তর্ভাৱ <sys/hwprobe.h>
+#নোচেদ্যদি HAVE_ASM_HWPROBE_H
+#অন্তর্ভাৱ <asm/hwprobe.h>
+#অন্তর্ভাৱ <asm/unistd.h>
+#অন্তর্ভাৱ <sys/syscall.h>
+#অন্তর্ভাৱ <unistd.h>
 
-static int __riscv_hwprobe(struct riscv_hwprobe *pairs, size_t pair_count,
-                           size_t cpu_count, unsigned long *cpus,
-                           unsigned int flags)
+স্থির পূর্ণাঙ্ক __riscv_hwprobe(সংরচনা riscv_hwprobe *pairs, size_t pair_গুনতি,
+                           size_t cpu_গুনতি, unsigned long *cpus,
+                           unsigned পূর্ণাঙ্ক flags)
 {
-        return syscall(__NR_riscv_hwprobe, pairs, pair_count, cpu_count, cpus,
+        ঘূৰাই syscall(__NR_riscv_hwprobe, pairs, pair_গুনতি, cpu_গুনতি, cpus,
                        flags);
 }
 #endif
 
-int ff_get_cpu_flags_riscv(void)
+পূর্ণাঙ্ক ff_get_cpu_flags_riscv(শূন্য)
 {
-    int ret = 0;
-#if HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
-    struct riscv_hwprobe pairs[] = {
-        { RISCV_HWPROBE_KEY_BASE_BEHAVIOR, 0 },
-        { RISCV_HWPROBE_KEY_IMA_EXT_0, 0 },
-        { RISCV_HWPROBE_KEY_CPUPERF_0, 0 },
+    পূর্ণাঙ্ক ret = 0;
+#যদি HAVE_SYS_HWPROBE_H || HAVE_ASM_HWPROBE_H
+    সংরচনা riscv_hwprobe pairs[] = {
+        { RISCV_HWPROBE_চাবি_BASE_BEHAVIOR, 0 },
+        { RISCV_HWPROBE_চাবি_IMA_EXT_0, 0 },
+        { RISCV_HWPROBE_চাবি_CPUPERF_0, 0 },
     };
 
-    if (__riscv_hwprobe(pairs, FF_ARRAY_ELEMS(pairs), 0, NULL, 0) == 0) {
-        if (pairs[0].value & RISCV_HWPROBE_BASE_BEHAVIOR_IMA)
+    যদি (__riscv_hwprobe(pairs, FF_ARRAY_ELEMS(pairs), 0, রিক্ত, 0) == 0) {
+        যদি (pairs[0].মান & RISCV_HWPROBE_BASE_BEHAVIOR_IMA)
             ret |= AV_CPU_FLAG_RVI;
 #ifdef RISCV_HWPROBE_IMA_V
-        if (pairs[1].value & RISCV_HWPROBE_IMA_V)
+        যদি (pairs[1].মান & RISCV_HWPROBE_IMA_V)
             ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                  | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
 #ifdef RISCV_HWPROBE_EXT_ZVE32X
-        else if ((pairs[1].value & RISCV_HWPROBE_EXT_ZVE32X) &&
+        অন্যথা যদি ((pairs[1].মান & RISCV_HWPROBE_EXT_ZVE32X) &&
                  ff_get_rv_vlenb() >= 16) { // runtime detect assumes 128+ bits
             ret |= AV_CPU_FLAG_RVV_I32;
 
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE32F)
+            যদি (pairs[1].মান & RISCV_HWPROBE_EXT_ZVE32F)
                 ret |= AV_CPU_FLAG_RVV_F32;
-            if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64X) {
+            যদি (pairs[1].মান & RISCV_HWPROBE_EXT_ZVE64X) {
                 ret |= AV_CPU_FLAG_RVV_I64;
 
-                if (pairs[1].value & RISCV_HWPROBE_EXT_ZVE64D)
+                যদি (pairs[1].মান & RISCV_HWPROBE_EXT_ZVE64D)
                     ret |= AV_CPU_FLAG_RVV_F64;
             }
         }
 #endif
 #endif
 #ifdef RISCV_HWPROBE_EXT_ZBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZBB)
+        যদি (pairs[1].মান & RISCV_HWPROBE_EXT_ZBB)
             ret |= AV_CPU_FLAG_RVB_BASIC;
-#if defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
-        if ((pairs[1].value & RISCV_HWPROBE_EXT_ZBA) &&
-            (pairs[1].value & RISCV_HWPROBE_EXT_ZBB) &&
-            (pairs[1].value & RISCV_HWPROBE_EXT_ZBS))
+#যদি defined (RISCV_HWPROBE_EXT_ZBA) && defined (RISCV_HWPROBE_EXT_ZBS)
+        যদি ((pairs[1].মান & RISCV_HWPROBE_EXT_ZBA) &&
+            (pairs[1].মান & RISCV_HWPROBE_EXT_ZBB) &&
+            (pairs[1].মান & RISCV_HWPROBE_EXT_ZBS))
             ret |= AV_CPU_FLAG_RVB;
 #endif
 #endif
 #ifdef RISCV_HWPROBE_EXT_ZVBB
-        if (pairs[1].value & RISCV_HWPROBE_EXT_ZVBB)
+        যদি (pairs[1].মান & RISCV_HWPROBE_EXT_ZVBB)
             ret |= AV_CPU_FLAG_RV_ZVBB;
 #endif
-        switch (pairs[2].value & RISCV_HWPROBE_MISALIGNED_MASK) {
-            case RISCV_HWPROBE_MISALIGNED_FAST:
+        ৱিকল্প (pairs[2].মান & RISCV_HWPROBE_MISALIGNED_MASK) {
+            পক্ষ RISCV_HWPROBE_MISALIGNED_FAST:
                 ret |= AV_CPU_FLAG_RV_MISALIGNED;
-                break;
-            default:
+                ভঙ্গ;
+            স্ৱভাৱ:
                 ; /* do nothing */
         }
     }
-#elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#নোচেদ্যদি HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
     {
-        const unsigned long hwcap = ff_getauxval(AT_HWCAP);
+        ধ্রুৱ unsigned long hwcap = ff_getauxval(AT_HWCAP);
 
-        if (hwcap & HWCAP_RV('I'))
+        যদি (hwcap & HWCAP_RV('I'))
             ret |= AV_CPU_FLAG_RVI;
-        if (hwcap & HWCAP_RV('B'))
+        যদি (hwcap & HWCAP_RV('B'))
             ret |= AV_CPU_FLAG_RVB_BASIC | AV_CPU_FLAG_RVB;
 
         /* The V extension implies all Zve* functional subsets */
-        if (hwcap & HWCAP_RV('V'))
+        যদি (hwcap & HWCAP_RV('V'))
              ret |= AV_CPU_FLAG_RVV_I32 | AV_CPU_FLAG_RVV_I64
                   | AV_CPU_FLAG_RVV_F32 | AV_CPU_FLAG_RVV_F64;
     }
@@ -127,7 +127,7 @@ int ff_get_cpu_flags_riscv(void)
 #ifdef __riscv_zbb
     ret |= AV_CPU_FLAG_RVB_BASIC;
 #endif
-#if defined (__riscv_b) || \
+#যদি defined (__riscv_b) || \
     (defined (__riscv_zba) && defined (__riscv_zbb) && defined (__riscv_zbs))
     ret |= AV_CPU_FLAG_RVB;
 #endif
@@ -135,12 +135,12 @@ int ff_get_cpu_flags_riscv(void)
     /* If RV-V is enabled statically at compile-time, check the details. */
 #ifdef __riscv_vector
     ret |= AV_CPU_FLAG_RVV_I32;
-#if __riscv_v_elen >= 64
+#যদি __riscv_v_elen >= 64
     ret |= AV_CPU_FLAG_RVV_I64;
 #endif
-#if __riscv_v_elen_fp >= 32
+#যদি __riscv_v_elen_fp >= 32
     ret |= AV_CPU_FLAG_RVV_F32;
-#if __riscv_v_elen_fp >= 64
+#যদি __riscv_v_elen_fp >= 64
     ret |= AV_CPU_FLAG_RVV_F64;
 #endif
 #endif
@@ -149,5 +149,5 @@ int ff_get_cpu_flags_riscv(void)
     ret |= AV_CPU_FLAG_RV_ZVBB;
 #endif
 
-    return ret;
+    ঘূৰাই ret;
 }

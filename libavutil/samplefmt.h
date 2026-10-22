@@ -19,7 +19,7 @@
 #ifndef AVUTIL_SAMPLEFMT_H
 #define AVUTIL_SAMPLEFMT_H
 
-#include <stdint.h>
+#অন্তর্ভাৱ <stdint.h>
 
 /**
  * @addtogroup lavu_audio
@@ -52,7 +52,7 @@
  * linesize is the buffer size, in bytes, for the 1 plane.
  *
  */
-enum AVSampleFormat {
+গণনা AVSampleFormat {
     AV_SAMPLE_FMT_NONE = -1,
     AV_SAMPLE_FMT_U8,          ///< unsigned 8 bits
     AV_SAMPLE_FMT_S16,         ///< signed 16 bits
@@ -83,13 +83,13 @@ enum AVSampleFormat {
  * Return the name of sample_fmt, or NULL if sample_fmt is not
  * recognized.
  */
-const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt);
+ধ্রুৱ ৱর্ণ *av_get_sample_fmt_name(গণনা AVSampleFormat sample_fmt);
 
 /**
  * Return a sample format corresponding to name, or AV_SAMPLE_FMT_NONE
  * on error.
  */
-enum AVSampleFormat av_get_sample_fmt(const char *name);
+গণনা AVSampleFormat av_get_sample_fmt(ধ্রুৱ ৱর্ণ *name);
 
 /**
  * Return the planar<->packed alternative form of the given sample format, or
@@ -97,7 +97,7 @@ enum AVSampleFormat av_get_sample_fmt(const char *name);
  * requested planar/packed format, the format returned is the same as the
  * input.
  */
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar);
+গণনা AVSampleFormat av_get_alt_sample_fmt(গণনা AVSampleFormat sample_fmt, পূর্ণাঙ্ক planar);
 
 /**
  * Get the packed alternative form of the given sample format.
@@ -108,7 +108,7 @@ enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int pl
  * @return  the packed alternative form of the given sample format or
             AV_SAMPLE_FMT_NONE on error.
  */
-enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt);
+গণনা AVSampleFormat av_get_packed_sample_fmt(গণনা AVSampleFormat sample_fmt);
 
 /**
  * Get the planar alternative form of the given sample format.
@@ -119,7 +119,7 @@ enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt);
  * @return  the planar alternative form of the given sample format or
             AV_SAMPLE_FMT_NONE on error.
  */
-enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt);
+গণনা AVSampleFormat av_get_planar_sample_fmt(গণনা AVSampleFormat sample_fmt);
 
 /**
  * Generate a string corresponding to the sample format with
@@ -132,7 +132,7 @@ enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt);
  * corresponding header.
  * @return the pointer to the filled buffer or NULL in case of other errors
  */
-char *av_get_sample_fmt_string(char *buf, int buf_size, enum AVSampleFormat sample_fmt);
+ৱর্ণ *av_get_sample_fmt_string(ৱর্ণ *buf, পূর্ণাঙ্ক buf_size, গণনা AVSampleFormat sample_fmt);
 
 /**
  * Return number of bytes per sample.
@@ -141,7 +141,7 @@ char *av_get_sample_fmt_string(char *buf, int buf_size, enum AVSampleFormat samp
  * @return number of bytes per sample or zero if unknown for the given
  * sample format
  */
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt);
+পূর্ণাঙ্ক av_get_bytes_per_sample(গণনা AVSampleFormat sample_fmt);
 
 /**
  * Check if the sample format is planar.
@@ -149,7 +149,7 @@ int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt);
  * @param sample_fmt the sample format to inspect
  * @return 1 if the sample format is planar, 0 if it is interleaved
  */
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt);
+পূর্ণাঙ্ক av_sample_fmt_is_planar(গণনা AVSampleFormat sample_fmt);
 
 /**
  * Get the required buffer size for the given audio parameters.
@@ -161,8 +161,8 @@ int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt);
  * @param align         buffer size alignment (0 = default, 1 = no alignment)
  * @return              required buffer size, or negative error code on failure
  */
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align);
+পূর্ণাঙ্ক av_samples_get_buffer_size(পূর্ণাঙ্ক *linesize, পূর্ণাঙ্ক nb_channels, পূর্ণাঙ্ক nb_samples,
+                               গণনা AVSampleFormat sample_fmt, পূর্ণাঙ্ক align);
 
 /**
  * @}
@@ -202,10 +202,10 @@ int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
  * @return                 minimum size in bytes required for the buffer on success,
  *                         or a negative error code on failure
  */
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
-                           const uint8_t *buf,
-                           int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align);
+পূর্ণাঙ্ক av_samples_fill_arrays(uint8_t **audio_data, পূর্ণাঙ্ক *linesize,
+                           ধ্রুৱ uint8_t *buf,
+                           পূর্ণাঙ্ক nb_channels, পূর্ণাঙ্ক nb_samples,
+                           গণনা AVSampleFormat sample_fmt, পূর্ণাঙ্ক align);
 
 /**
  * Allocate a samples buffer for nb_samples samples, and fill data pointers and
@@ -227,8 +227,8 @@ int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
  * @see av_samples_fill_arrays()
  * @see av_samples_alloc_array_and_samples()
  */
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align);
+পূর্ণাঙ্ক av_samples_alloc(uint8_t **audio_data, পূর্ণাঙ্ক *linesize, পূর্ণাঙ্ক nb_channels,
+                     পূর্ণাঙ্ক nb_samples, গণনা AVSampleFormat sample_fmt, পূর্ণাঙ্ক align);
 
 /**
  * Allocate a data pointers array, samples buffer for nb_samples
@@ -239,8 +239,8 @@ int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
  *
  * @see av_samples_alloc()
  */
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align);
+পূর্ণাঙ্ক av_samples_alloc_array_and_samples(uint8_t ***audio_data, পূর্ণাঙ্ক *linesize, পূর্ণাঙ্ক nb_channels,
+                                       পূর্ণাঙ্ক nb_samples, গণনা AVSampleFormat sample_fmt, পূর্ণাঙ্ক align);
 
 /**
  * Copy samples from src to dst.
@@ -253,9 +253,9 @@ int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int
  * @param nb_channels number of audio channels
  * @param sample_fmt audio sample format
  */
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
-                    enum AVSampleFormat sample_fmt);
+পূর্ণাঙ্ক av_samples_copy(uint8_t * ধ্রুৱ *dst, uint8_t * ধ্রুৱ *src, পূর্ণাঙ্ক dst_offset,
+                    পূর্ণাঙ্ক src_offset, পূর্ণাঙ্ক nb_samples, পূর্ণাঙ্ক nb_channels,
+                    গণনা AVSampleFormat sample_fmt);
 
 /**
  * Fill an audio buffer with silence.
@@ -266,8 +266,8 @@ int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
  * @param nb_channels number of audio channels
  * @param sample_fmt  audio sample format
  */
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt);
+পূর্ণাঙ্ক av_samples_set_silence(uint8_t * ধ্রুৱ *audio_data, পূর্ণাঙ্ক offset, পূর্ণাঙ্ক nb_samples,
+                           পূর্ণাঙ্ক nb_channels, গণনা AVSampleFormat sample_fmt);
 
 /**
  * @}

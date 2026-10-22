@@ -18,35 +18,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#অন্তর্ভাৱ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/fixed_dsp.h"
+#অন্তর্ভাৱ "config.h"
+#অন্তর্ভাৱ "libavutil/attributes.h"
+#অন্তর্ভাৱ "libavutil/cpu.h"
+#অন্তর্ভাৱ "libavutil/fixed_dsp.h"
 
-void ff_vector_fmul_window_scaled_rvv(int16_t *dst, const int32_t *src0,
-                                      const int32_t *src1, const int32_t *win,
-                                      int len, uint8_t bits);
-void ff_vector_fmul_window_fixed_rvv(int32_t *dst, const int32_t *src0,
-                                     const int32_t *src1, const int32_t *win,
-                                     int len);
-void ff_vector_fmul_fixed_rvv(int *dst, const int *src0, const int *src1,
-                              int len);
-void ff_vector_fmul_reverse_fixed_rvv(int *dst, const int *src0,
-                                      const int *src1, int len);
-void ff_vector_fmul_add_fixed_rvv(int *dst, const int *src0, const int *src1,
-                                  const int *src2, int len);
-int ff_scalarproduct_fixed_rvv(const int *v1, const int *v2, int len);
-void ff_butterflies_fixed_rvv(int *v1, int *v2, int len);
+শূন্য ff_vector_fmul_window_scaled_rvv(int16_t *dst, ধ্রুৱ int32_t *src0,
+                                      ধ্রুৱ int32_t *src1, ধ্রুৱ int32_t *win,
+                                      পূর্ণাঙ্ক len, uint8_t bits);
+শূন্য ff_vector_fmul_window_fixed_rvv(int32_t *dst, ধ্রুৱ int32_t *src0,
+                                     ধ্রুৱ int32_t *src1, ধ্রুৱ int32_t *win,
+                                     পূর্ণাঙ্ক len);
+শূন্য ff_vector_fmul_fixed_rvv(পূর্ণাঙ্ক *dst, ধ্রুৱ পূর্ণাঙ্ক *src0, ধ্রুৱ পূর্ণাঙ্ক *src1,
+                              পূর্ণাঙ্ক len);
+শূন্য ff_vector_fmul_reverse_fixed_rvv(পূর্ণাঙ্ক *dst, ধ্রুৱ পূর্ণাঙ্ক *src0,
+                                      ধ্রুৱ পূর্ণাঙ্ক *src1, পূর্ণাঙ্ক len);
+শূন্য ff_vector_fmul_add_fixed_rvv(পূর্ণাঙ্ক *dst, ধ্রুৱ পূর্ণাঙ্ক *src0, ধ্রুৱ পূর্ণাঙ্ক *src1,
+                                  ধ্রুৱ পূর্ণাঙ্ক *src2, পূর্ণাঙ্ক len);
+পূর্ণাঙ্ক ff_scalarproduct_fixed_rvv(ধ্রুৱ পূর্ণাঙ্ক *v1, ধ্রুৱ পূর্ণাঙ্ক *v2, পূর্ণাঙ্ক len);
+শূন্য ff_butterflies_fixed_rvv(পূর্ণাঙ্ক *v1, পূর্ণাঙ্ক *v2, পূর্ণাঙ্ক len);
 
-av_cold void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
+av_cold শূন্য ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#যদি HAVE_RVV
+    পূর্ণাঙ্ক flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
-        if (flags & AV_CPU_FLAG_RVV_I64) {
+    যদি ((flags & AV_CPU_FLAG_RVV_I32) && (flags & AV_CPU_FLAG_RVB)) {
+        যদি (flags & AV_CPU_FLAG_RVV_I64) {
             fdsp->vector_fmul_window_scaled = ff_vector_fmul_window_scaled_rvv;
             fdsp->vector_fmul_window = ff_vector_fmul_window_fixed_rvv;
         }
@@ -55,7 +55,7 @@ av_cold void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp)
         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_fixed_rvv;
         fdsp->vector_fmul_add = ff_vector_fmul_add_fixed_rvv;
 
-        if (flags & AV_CPU_FLAG_RVV_I64)
+        যদি (flags & AV_CPU_FLAG_RVV_I64)
             fdsp->scalarproduct_fixed = ff_scalarproduct_fixed_rvv;
 
         fdsp->butterflies_fixed = ff_butterflies_fixed_rvv;

@@ -21,8 +21,8 @@
 #ifndef AVUTIL_DOWNMIX_INFO_H
 #define AVUTIL_DOWNMIX_INFO_H
 
-#include "avassert.h"
-#include "frame.h"
+#অন্তর্ভাৱ "avassert.h"
+#অন্তর্ভাৱ "frame.h"
 
 /**
  * @file
@@ -42,7 +42,7 @@
 /**
  * Possible downmix types.
  */
-enum AVDownmixType {
+গণনা AVDownmixType {
     AV_DOWNMIX_TYPE_UNKNOWN, /**< Not indicated. */
     AV_DOWNMIX_TYPE_LORO,    /**< Lo/Ro 2-channel downmix (Stereo). */
     AV_DOWNMIX_TYPE_LTRT,    /**< Lt/Rt 2-channel downmix, Dolby Surround compatible. */
@@ -56,41 +56,41 @@ enum AVDownmixType {
  * All fields are set by the decoder to the value indicated in the audio
  * bitstream (if present), or to a "sane" default otherwise.
  */
-typedef struct AVDownmixInfo {
+প্রকারনির্দেশ সংরচনা AVDownmixInfo {
     /**
      * Type of downmix preferred by the mastering engineer.
      */
-    enum AVDownmixType preferred_downmix_type;
+    গণনা AVDownmixType preferred_downmix_type;
 
     /**
      * Absolute scale factor representing the nominal level of the center
      * channel during a regular downmix.
      */
-    double center_mix_level;
+    দ্ৱিগুণ center_mix_level;
 
     /**
      * Absolute scale factor representing the nominal level of the center
      * channel during an Lt/Rt compatible downmix.
      */
-    double center_mix_level_ltrt;
+    দ্ৱিগুণ center_mix_level_ltrt;
 
     /**
      * Absolute scale factor representing the nominal level of the surround
      * channels during a regular downmix.
      */
-    double surround_mix_level;
+    দ্ৱিগুণ surround_mix_level;
 
     /**
      * Absolute scale factor representing the nominal level of the surround
      * channels during an Lt/Rt compatible downmix.
      */
-    double surround_mix_level_ltrt;
+    দ্ৱিগুণ surround_mix_level_ltrt;
 
     /**
      * Absolute scale factor representing the level at which the LFE data is
      * mixed into L/R channels during downmixing.
      */
-    double lfe_mix_level;
+    দ্ৱিগুণ lfe_mix_level;
 } AVDownmixInfo;
 
 /**
@@ -113,22 +113,22 @@ AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame);
  * sizeof(AVDownmixMatrix) is not a part of the ABI and new fields may be
  * added to it.
  */
-typedef struct AVDownmixMatrix {
+প্রকারনির্দেশ সংরচনা AVDownmixMatrix {
     /**
      * Type of downmix the coeffs will produce.
      * Output channel count is derived from this value.
      */
-    enum AVDownmixType downmix_type;
+    গণনা AVDownmixType downmix_type;
 
     /**
      * Input channel count.
      */
-    int in_ch_count;
+    পূর্ণাঙ্ক in_ch_গুনতি;
 
     /**
      * Amount of coefficients in the matrix.
      */
-    unsigned int nb_coeffs;
+    unsigned পূর্ণাঙ্ক nb_coeffs;
 
     /**
      * Offset in bytes from the beginning of this structure at which the array
@@ -141,7 +141,7 @@ typedef struct AVDownmixMatrix {
  * Data type for storing coefficients, which are allocated as a part of
  * AVDownmixMatrix and should be retrieved with @ref av_downmix_matrix_coeff.
  */
-typedef double AVDownmixCoeff;
+প্রকারনির্দেশ দ্ৱিগুণ AVDownmixCoeff;
 
 /**
  * Get a pointer to the coeff that represents the weight of input channel
@@ -150,11 +150,11 @@ typedef double AVDownmixCoeff;
  * out must be between 0 and the implicit output channel count from
  * @ref AVDownmixMatrix.downmix_type "downmix_type" - 1.
  */
-static av_always_inline AVDownmixCoeff*
-av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
+স্থির av_always_inline AVDownmixCoeff*
+av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned পূর্ণাঙ্ক out, unsigned পূর্ণাঙ্ক in)
 {
     AVDownmixCoeff *coeff = (AVDownmixCoeff *)((uint8_t *)dm + dm->coeffs_offset);
-    return &coeff[in + dm->in_ch_count * out];
+    ঘূৰাই &coeff[in + dm->in_ch_গুনতি * out];
 }
 
 /**
@@ -166,8 +166,8 @@ av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
  * @param out_size if non-NULL, the size in bytes of the resulting data array is
  * written here.
  */
-AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size);
+AVDownmixMatrix *av_downmix_matrix_alloc(গণনা AVDownmixType type,
+                                         পূর্ণাঙ্ক in_ch_গুনতি, size_t *out_size);
 
 /**
  * @}

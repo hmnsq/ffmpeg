@@ -16,84 +16,84 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "mem.h"
-#include "buffer.h"
-#include "pixfmt.h"
-#include "pixdesc.h"
-#include "imgutils.h"
-#include "hwcontext.h"
-#include "hwcontext_amf.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_amf_internal.h"
+#অন্তর্ভাৱ "mem.h"
+#অন্তর্ভাৱ "buffer.h"
+#অন্তর্ভাৱ "pixfmt.h"
+#অন্তর্ভাৱ "pixdesc.h"
+#অন্তর্ভাৱ "imgutils.h"
+#অন্তর্ভাৱ "hwcontext.h"
+#অন্তর্ভাৱ "hwcontext_amf.h"
+#অন্তর্ভাৱ "hwcontext_internal.h"
+#অন্তর্ভাৱ "hwcontext_amf_internal.h"
 
-#include "libavutil/thread.h"
-#include "libavutil/avassert.h"
+#অন্তর্ভাৱ "libavutil/thread.h"
+#অন্তর্ভাৱ "libavutil/avassert.h"
 
-#include <AMF/core/Surface.h>
-#include <AMF/core/Trace.h>
+#অন্তর্ভাৱ <AMF/core/Surface.h>
+#অন্তর্ভাৱ <AMF/core/Trace.h>
 
-#if CONFIG_VULKAN
-#include "hwcontext_vulkan.h"
+#যদি CONFIG_VULKAN
+#অন্তর্ভাৱ "hwcontext_vulkan.h"
 #endif
-#if CONFIG_D3D11VA
-#include "libavutil/hwcontext_d3d11va.h"
+#যদি CONFIG_D3D11VA
+#অন্তর্ভাৱ "libavutil/hwcontext_d3d11va.h"
 #endif
-#if CONFIG_D3D12VA
-#include "libavutil/hwcontext_d3d12va.h"
+#যদি CONFIG_D3D12VA
+#অন্তর্ভাৱ "libavutil/hwcontext_d3d12va.h"
 #endif
-#if CONFIG_DXVA2
+#যদি CONFIG_DXVA2
 #define COBJMACROS
-#include "libavutil/hwcontext_dxva2.h"
+#অন্তর্ভাৱ "libavutil/hwcontext_dxva2.h"
 #endif
 #ifdef _WIN32
-#include "compat/w32dlfcn.h"
-#else
-#include <dlfcn.h>
+#অন্তর্ভাৱ "compat/w32dlfcn.h"
+#অন্যথা
+#অন্তর্ভাৱ <dlfcn.h>
 #endif
 #define FFMPEG_AMF_WRITER_ID L"ffmpeg_amf"
 
-static void amf_lock_default(void *opaque)
+স্থির শূন্য amf_lock_default(শূন্য *opaque)
 {
     ff_mutex_lock((AVMutex*)opaque);
 }
 
-static void amf_unlock_default(void *opaque)
+স্থির শূন্য amf_unlock_default(শূন্য *opaque)
 {
     ff_mutex_unlock((AVMutex*)opaque);
 }
 
-typedef struct AmfTraceWriter {
+প্রকারনির্দেশ সংরচনা AmfTraceWriter {
     AMFTraceWriterVtbl *vtblp;
-    void               *avctx;
+    শূন্য               *avctx;
     AMFTraceWriterVtbl  vtbl;
 } AmfTraceWriter;
 
-static void AMF_CDECL_CALL AMFTraceWriter_Write(AMFTraceWriter *pThis,
-    const wchar_t *scope, const wchar_t *message)
+স্থির শূন্য AMF_CDECL_CALL AMFTraceWriter_Write(AMFTraceWriter *pThis,
+    ধ্রুৱ wchar_t *scope, ধ্রুৱ wchar_t *message)
 {
     AmfTraceWriter *tracer = (AmfTraceWriter*)pThis;
     av_log(tracer->avctx, AV_LOG_DEBUG, "%ls: %ls", scope, message); // \n is provided from AMF
 }
 
-static void AMF_CDECL_CALL AMFTraceWriter_Flush(AMFTraceWriter *pThis)
+স্থির শূন্য AMF_CDECL_CALL AMFTraceWriter_Flush(AMFTraceWriter *pThis)
 {
 }
 
-static AmfTraceWriter * amf_writer_alloc(void  *avctx)
+স্থির AmfTraceWriter * amf_writer_alloc(শূন্য  *avctx)
 {
-    AmfTraceWriter * writer = av_mallocz(sizeof(AmfTraceWriter));
-    if (!writer)
-        return NULL;
+    AmfTraceWriter * writer = av_mallocz(পরিমাণ(AmfTraceWriter));
+    যদি (!writer)
+        ঘূৰাই রিক্ত;
 
     writer->vtblp = &writer->vtbl;
     writer->vtblp->Write = AMFTraceWriter_Write;
     writer->vtblp->Flush = AMFTraceWriter_Flush;
     writer->avctx = avctx;
 
-    return writer;
+    ঘূৰাই writer;
 }
 
-static void amf_writer_free(void  *opaque)
+স্থির শূন্য amf_writer_free(শূন্য  *opaque)
 {
     AmfTraceWriter *writer = (AmfTraceWriter *)opaque;
     av_freep(&writer);
@@ -104,16 +104,16 @@ static void amf_writer_free(void  *opaque)
  * otherwise, we will receive the error "HW format requires hw_frames_ctx to be non-NULL".
  * (libavfilter\buffersrc.c function query_formats)
 */
-typedef struct {
-    void *dummy;
+প্রকারনির্দেশ সংরচনা {
+    শূন্য *dummy;
 } AMFFramesContext;
 
-typedef struct AVAMFFormatMap {
-    enum AVPixelFormat       av_format;
-    enum AMF_SURFACE_FORMAT  amf_format;
+প্রকারনির্দেশ সংরচনা AVAMFFormatMap {
+    গণনা AVPixelFormat       av_format;
+    গণনা AMF_SURFACE_FORMAT  amf_format;
 } FormatMap;
 
-const FormatMap format_map[] =
+ধ্রুৱ FormatMap format_map[] =
 {
     { AV_PIX_FMT_NONE,          AMF_SURFACE_UNKNOWN },
     { AV_PIX_FMT_NV12,          AMF_SURFACE_NV12 },
@@ -130,74 +130,74 @@ const FormatMap format_map[] =
     { AV_PIX_FMT_RGBAF16,       AMF_SURFACE_RGBA_F16},
 };
 
-enum AMF_SURFACE_FORMAT av_av_to_amf_format(enum AVPixelFormat fmt)
+গণনা AMF_SURFACE_FORMAT av_av_to_amf_format(গণনা AVPixelFormat fmt)
 {
-    int i;
-    for (i = 0; i < amf_countof(format_map); i++) {
-        if (format_map[i].av_format == fmt) {
-            return format_map[i].amf_format;
+    পূর্ণাঙ্ক i;
+    বাবে (i = 0; i < amf_countof(format_map); i++) {
+        যদি (format_map[i].av_format == fmt) {
+            ঘূৰাই format_map[i].amf_format;
         }
     }
-    return AMF_SURFACE_UNKNOWN;
+    ঘূৰাই AMF_SURFACE_UNKNOWN;
 }
 
-enum AVPixelFormat av_amf_to_av_format(enum AMF_SURFACE_FORMAT fmt)
+গণনা AVPixelFormat av_amf_to_av_format(গণনা AMF_SURFACE_FORMAT fmt)
 {
-    int i;
-    for (i = 0; i < amf_countof(format_map); i++) {
-        if (format_map[i].amf_format == fmt) {
-            return format_map[i].av_format;
+    পূর্ণাঙ্ক i;
+    বাবে (i = 0; i < amf_countof(format_map); i++) {
+        যদি (format_map[i].amf_format == fmt) {
+            ঘূৰাই format_map[i].av_format;
         }
     }
-    return AV_PIX_FMT_NONE;
+    ঘূৰাই AV_PIX_FMT_NONE;
 }
 
-enum AMF_VIDEO_CONVERTER_COLOR_PROFILE_ENUM av_amf_get_color_profile(enum AVColorRange color_range, enum AVColorSpace color_space)
+গণনা AMF_VIDEO_CONVERTER_COLOR_PROFILE_ENUM av_amf_get_color_profile(গণনা AVColorRange color_range, গণনা AVColorSpace color_space)
 {
-    switch (color_space) {
-    case AVCOL_SPC_SMPTE170M:
-        if (color_range == AVCOL_RANGE_JPEG) {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_601;
-        } else {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_601;
+    ৱিকল্প (color_space) {
+    পক্ষ AVCOL_SPC_SMPTE170M:
+        যদি (color_range == AVCOL_RANGE_JPEG) {
+            ঘূৰাই AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_601;
+        } অন্যথা {
+            ঘূৰাই AMF_VIDEO_CONVERTER_COLOR_PROFILE_601;
         }
-        break;
-    case AVCOL_SPC_BT709:
-        if (color_range == AVCOL_RANGE_JPEG) {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_709;
-        } else {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_709;
+        ভঙ্গ;
+    পক্ষ AVCOL_SPC_BT709:
+        যদি (color_range == AVCOL_RANGE_JPEG) {
+            ঘূৰাই AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_709;
+        } অন্যথা {
+            ঘূৰাই AMF_VIDEO_CONVERTER_COLOR_PROFILE_709;
         }
-        break;
-    case AVCOL_SPC_BT2020_NCL:
-    case AVCOL_SPC_BT2020_CL:
-        if (color_range == AVCOL_RANGE_JPEG) {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_2020;
-        } else {
-            return AMF_VIDEO_CONVERTER_COLOR_PROFILE_2020;
+        ভঙ্গ;
+    পক্ষ AVCOL_SPC_BT2020_NCL:
+    পক্ষ AVCOL_SPC_BT2020_CL:
+        যদি (color_range == AVCOL_RANGE_JPEG) {
+            ঘূৰাই AMF_VIDEO_CONVERTER_COLOR_PROFILE_FULL_2020;
+        } অন্যথা {
+            ঘূৰাই AMF_VIDEO_CONVERTER_COLOR_PROFILE_2020;
         }
-        break;
+        ভঙ্গ;
 
-    default:
-        return AMF_VIDEO_CONVERTER_COLOR_PROFILE_UNKNOWN;
+    স্ৱভাৱ:
+        ঘূৰাই AMF_VIDEO_CONVERTER_COLOR_PROFILE_UNKNOWN;
     }
 }
 
-int av_amf_display_mastering_meta_to_hdrmeta(const AVMasteringDisplayMetadata *display_meta, AMFHDRMetadata *hdrmeta)
+পূর্ণাঙ্ক av_amf_display_mastering_meta_to_hdrmeta(ধ্রুৱ AVMasteringDisplayMetadata *display_meta, AMFHDRMetadata *hdrmeta)
 {
-    if (!display_meta || !hdrmeta)
-        return AVERROR(EINVAL);
+    যদি (!display_meta || !hdrmeta)
+        ঘূৰাই AVERROR(EINVAL);
 
-    if (display_meta->has_luminance) {
-        const unsigned int luma_den = 10000;
+    যদি (display_meta->has_luminance) {
+        ধ্রুৱ unsigned পূর্ণাঙ্ক luma_den = 10000;
         hdrmeta->maxMasteringLuminance =
             (amf_uint32)(luma_den * av_q2d(display_meta->max_luminance));
         hdrmeta->minMasteringLuminance =
             FFMIN((amf_uint32)(luma_den * av_q2d(display_meta->min_luminance)), hdrmeta->maxMasteringLuminance);
     }
 
-    if (display_meta->has_primaries) {
-        const unsigned int chroma_den = 50000;
+    যদি (display_meta->has_primaries) {
+        ধ্রুৱ unsigned পূর্ণাঙ্ক chroma_den = 50000;
         hdrmeta->redPrimary[0] =
             FFMIN((amf_uint16)(chroma_den * av_q2d(display_meta->display_primaries[0][0])), chroma_den);
         hdrmeta->redPrimary[1] =
@@ -216,60 +216,60 @@ int av_amf_display_mastering_meta_to_hdrmeta(const AVMasteringDisplayMetadata *d
             FFMIN((amf_uint16)(chroma_den * av_q2d(display_meta->white_point[1])), chroma_den);
     }
 
-    return 0;
+    ঘূৰাই 0;
 }
 
-int av_amf_light_metadata_to_hdrmeta(const AVContentLightMetadata *light_meta, AMFHDRMetadata *hdrmeta)
+পূর্ণাঙ্ক av_amf_light_metadata_to_hdrmeta(ধ্রুৱ AVContentLightMetadata *light_meta, AMFHDRMetadata *hdrmeta)
 {
-    if (!light_meta || !hdrmeta)
-        return AVERROR(EINVAL);
+    যদি (!light_meta || !hdrmeta)
+        ঘূৰাই AVERROR(EINVAL);
 
     hdrmeta->maxContentLightLevel = (amf_uint16)light_meta->MaxCLL;
     hdrmeta->maxFrameAverageLightLevel = (amf_uint16)light_meta->MaxFALL;
 
-    return 0;
+    ঘূৰাই 0;
 }
 
-int av_amf_extract_hdr_metadata(const AVFrame *frame, AMFHDRMetadata *hdrmeta)
+পূর্ণাঙ্ক av_amf_extract_hdr_metadata(ধ্রুৱ AVFrame *frame, AMFHDRMetadata *hdrmeta)
 {
     AVFrameSideData *sidedata;
-    AVContentLightMetadata *content_light = NULL;
-    AVMasteringDisplayMetadata *mastering_display = NULL;
+    AVContentLightMetadata *content_light = রিক্ত;
+    AVMasteringDisplayMetadata *mastering_display = রিক্ত;
 
-    if (!frame || !hdrmeta)
-        return AVERROR(EINVAL);
+    যদি (!frame || !hdrmeta)
+        ঘূৰাই AVERROR(EINVAL);
 
     sidedata = av_frame_get_side_data(frame, AV_FRAME_DATA_MASTERING_DISPLAY_METADATA);
-    if (sidedata) {
+    যদি (sidedata) {
         mastering_display = (AVMasteringDisplayMetadata *)sidedata->data;
-        if (av_amf_display_mastering_meta_to_hdrmeta(mastering_display, hdrmeta) != 0)
-            mastering_display = NULL;
+        যদি (av_amf_display_mastering_meta_to_hdrmeta(mastering_display, hdrmeta) != 0)
+            mastering_display = রিক্ত;
     }
 
     sidedata = av_frame_get_side_data(frame, AV_FRAME_DATA_CONTENT_LIGHT_LEVEL);
-    if (sidedata) {
+    যদি (sidedata) {
         content_light = (AVContentLightMetadata *)sidedata->data;
-        if (av_amf_light_metadata_to_hdrmeta(content_light, hdrmeta) != 0)
-            content_light = NULL;
+        যদি (av_amf_light_metadata_to_hdrmeta(content_light, hdrmeta) != 0)
+            content_light = রিক্ত;
     }
 
-    if (!mastering_display && !content_light)
-        return AVERROR(ENODATA);
+    যদি (!mastering_display && !content_light)
+        ঘূৰাই AVERROR(ENODATA);
 
-    return 0;
+    ঘূৰাই 0;
 }
 
-int av_amf_attach_hdr_metadata(AVFrame *frame, const AMFHDRMetadata *hdrmeta) {
-    if (!hdrmeta || !frame)
-        return AVERROR(EINVAL);
+পূর্ণাঙ্ক av_amf_attach_hdr_metadata(AVFrame *frame, ধ্রুৱ AMFHDRMetadata *hdrmeta) {
+    যদি (!hdrmeta || !frame)
+        ঘূৰাই AVERROR(EINVAL);
 
     AVMasteringDisplayMetadata *mastering =
         av_mastering_display_metadata_create_side_data(frame);
-    const int chroma_den = 50000;
-    const int luma_den = 10000;
+    ধ্রুৱ পূর্ণাঙ্ক chroma_den = 50000;
+    ধ্রুৱ পূর্ণাঙ্ক luma_den = 10000;
 
-    if (!mastering)
-      return AVERROR(ENOMEM);
+    যদি (!mastering)
+      ঘূৰাই AVERROR(ENOMEM);
 
     mastering->display_primaries[0][0] =
         av_make_q(hdrmeta->redPrimary[0], chroma_den);
@@ -296,21 +296,21 @@ int av_amf_attach_hdr_metadata(AVFrame *frame, const AMFHDRMetadata *hdrmeta) {
 
     mastering->has_luminance = 1;
     mastering->has_primaries = 1;
-    if (hdrmeta->maxContentLightLevel) {
+    যদি (hdrmeta->maxContentLightLevel) {
       AVContentLightMetadata *light =
           av_content_light_metadata_create_side_data(frame);
 
-      if (!light)
-        return AVERROR(ENOMEM);
+      যদি (!light)
+        ঘূৰাই AVERROR(ENOMEM);
 
       light->MaxCLL = hdrmeta->maxContentLightLevel;
       light->MaxFALL = hdrmeta->maxFrameAverageLightLevel;
     }
 
-    return 0;
+    ঘূৰাই 0;
 }
 
-static const enum AVPixelFormat supported_formats[] = {
+স্থির ধ্রুৱ গণনা AVPixelFormat supported_formats[] = {
     AV_PIX_FMT_NV12,
     AV_PIX_FMT_YUV420P,
     AV_PIX_FMT_BGRA,
@@ -319,18 +319,18 @@ static const enum AVPixelFormat supported_formats[] = {
     AV_PIX_FMT_P010,
     AV_PIX_FMT_X2BGR10,
     AV_PIX_FMT_RGBAF16,
-#if CONFIG_D3D11VA
+#যদি CONFIG_D3D11VA
     AV_PIX_FMT_D3D11,
 #endif
-#if CONFIG_D3D12VA
+#যদি CONFIG_D3D12VA
     AV_PIX_FMT_D3D12,
 #endif
-#if CONFIG_DXVA2
+#যদি CONFIG_DXVA2
     AV_PIX_FMT_DXVA2_VLD,
 #endif
 };
 
-static const enum AVPixelFormat supported_transfer_formats[] = {
+স্থির ধ্রুৱ গণনা AVPixelFormat supported_transfer_formats[] = {
     AV_PIX_FMT_NV12,
     AV_PIX_FMT_YUV420P,
     AV_PIX_FMT_BGRA,
@@ -341,144 +341,144 @@ static const enum AVPixelFormat supported_transfer_formats[] = {
     AV_PIX_FMT_NONE,
 };
 
-static int amf_frames_get_constraints(AVHWDeviceContext *ctx,
-                                       const void *hwconfig,
+স্থির পূর্ণাঙ্ক amf_frames_get_constraints(AVHWDeviceContext *ctx,
+                                       ধ্রুৱ শূন্য *hwconfig,
                                        AVHWFramesConstraints *constraints)
 {
-    int i;
+    পূর্ণাঙ্ক i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    পরিমাণ(*constraints->valid_sw_formats));
+    যদি (!constraints->valid_sw_formats)
+        ঘূৰাই AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++)
+    বাবে (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++)
         constraints->valid_sw_formats[i] = supported_formats[i];
     constraints->valid_sw_formats[FF_ARRAY_ELEMS(supported_formats)] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, পরিমাণ(*constraints->valid_hw_formats));
+    যদি (!constraints->valid_hw_formats)
+        ঘূৰাই AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_AMF_SURFACE;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    ঘূৰাই 0;
 }
 
-static void amf_dummy_free(void *opaque, uint8_t *data)
+স্থির শূন্য amf_dummy_free(শূন্য *opaque, uint8_t *data)
 {
 
 }
 
-static AVBufferRef *amf_pool_alloc(void *opaque, size_t size)
+স্থির AVBufferRef *amf_pool_alloc(শূন্য *opaque, size_t size)
 {
     AVHWFramesContext *hwfc = (AVHWFramesContext *)opaque;
     AVBufferRef *buf;
 
-    buf = av_buffer_create(NULL, 0, amf_dummy_free, hwfc, AV_BUFFER_FLAG_READONLY);
-    if (!buf) {
+    buf = av_buffer_create(রিক্ত, 0, amf_dummy_free, hwfc, AV_BUFFER_FLAG_READONLY);
+    যদি (!buf) {
         av_log(hwfc, AV_LOG_ERROR, "Failed to create buffer for AMF context.\n");
-        return NULL;
+        ঘূৰাই রিক্ত;
     }
-    return buf;
+    ঘূৰাই buf;
 }
 
-static int amf_frames_init(AVHWFramesContext *ctx)
+স্থির পূর্ণাঙ্ক amf_frames_init(AVHWFramesContext *ctx)
 {
-    int i;
+    পূর্ণাঙ্ক i;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i])
-            break;
+    বাবে (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        যদি (ctx->sw_format == supported_formats[i])
+            ভঙ্গ;
     }
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    যদি (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Pixel format '%s' is not supported\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(ENOSYS);
+        ঘূৰাই AVERROR(ENOSYS);
     }
 
     ffhwframesctx(ctx)->pool_internal =
-            av_buffer_pool_init2(sizeof(AMFSurface), ctx,
-                                 &amf_pool_alloc, NULL);
+            av_buffer_pool_init2(পরিমাণ(AMFSurface), ctx,
+                                 &amf_pool_alloc, রিক্ত);
 
-    return 0;
+    ঘূৰাই 0;
 }
 
 
-static int amf_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+স্থির পূর্ণাঙ্ক amf_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    যদি (!frame->buf[0])
+        ঘূৰাই AVERROR(ENOMEM);
 
     frame->data[0] = frame->buf[0]->data;
     frame->format  = AV_PIX_FMT_AMF_SURFACE;
     frame->width   = ctx->width;
     frame->height  = ctx->height;
-    return 0;
+    ঘূৰাই 0;
 }
 
-static int amf_transfer_get_formats(AVHWFramesContext *ctx,
-                                     enum AVHWFrameTransferDirection dir,
-                                     enum AVPixelFormat **formats)
+স্থির পূর্ণাঙ্ক amf_transfer_get_formats(AVHWFramesContext *ctx,
+                                     গণনা AVHWFrameTransferDirection dir,
+                                     গণনা AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
-    int i;
+    গণনা AVPixelFormat *fmts;
+    পূর্ণাঙ্ক i;
 
-    fmts = av_malloc_array(FF_ARRAY_ELEMS(supported_transfer_formats), sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_transfer_formats); i++)
+    fmts = av_malloc_array(FF_ARRAY_ELEMS(supported_transfer_formats), পরিমাণ(*fmts));
+    যদি (!fmts)
+        ঘূৰাই AVERROR(ENOMEM);
+    বাবে (i = 0; i < FF_ARRAY_ELEMS(supported_transfer_formats); i++)
         fmts[i] = supported_transfer_formats[i];
 
     *formats = fmts;
 
-    return 0;
+    ঘূৰাই 0;
 }
 
-static void amf_free_amfsurface(void *opaque, uint8_t *data)
+স্থির শূন্য amf_free_amfsurface(শূন্য *opaque, uint8_t *data)
 {
-    if(!!data){
+    যদি(!!data){
         AMFSurface *surface = (AMFSurface*)(data);
         surface->pVtbl->Release(surface);
     }
 }
 
-static int amf_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+স্থির পূর্ণাঙ্ক amf_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ধ্রুৱ AVFrame *src)
 {
     AMFSurface* surface = (AMFSurface*)dst->data[0];
     AMFPlane *plane;
     uint8_t  *dst_data[4];
-    int       dst_linesize[4];
-    int       planes;
-    int       i;
-    int       res;
-    int w = FFMIN(dst->width,  src->width);
-    int h = FFMIN(dst->height, src->height);
+    পূর্ণাঙ্ক       dst_linesize[4];
+    পূর্ণাঙ্ক       planes;
+    পূর্ণাঙ্ক       i;
+    পূর্ণাঙ্ক       res;
+    পূর্ণাঙ্ক w = FFMIN(dst->width,  src->width);
+    পূর্ণাঙ্ক h = FFMIN(dst->height, src->height);
 
-    if (dst->hw_frames_ctx->data != (uint8_t *)ctx || src->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    যদি (dst->hw_frames_ctx->data != (uint8_t *)ctx || src->format != ctx->sw_format)
+        ঘূৰাই AVERROR(EINVAL);
 
-    if (!surface) {
+    যদি (!surface) {
         AVHWDeviceContext   *hwdev_ctx = ctx->device_ctx;
         AVAMFDeviceContext  *amf_device_ctx = (AVAMFDeviceContext *)hwdev_ctx->hwctx;
         AMF_SURFACE_FORMAT  format = av_av_to_amf_format(ctx->sw_format);
         res = amf_device_ctx->context->pVtbl->AllocSurface(amf_device_ctx->context, AMF_MEMORY_HOST, format, dst->width, dst->height, &surface);
         AMF_RETURN_IF_FALSE(ctx, res == AMF_OK, AVERROR(ENOMEM), "AllocSurface() failed  with error %d\n", res);
         dst->data[0] = (uint8_t *)surface;
-        dst->buf[1] = av_buffer_create((uint8_t *)surface, sizeof(surface),
+        dst->buf[1] = av_buffer_create((uint8_t *)surface, পরিমাণ(surface),
                                             amf_free_amfsurface,
-                                            NULL,
+                                            রিক্ত,
                                             AV_BUFFER_FLAG_READONLY);
     AMF_RETURN_IF_FALSE(ctx, !!dst->buf[1], AVERROR(ENOMEM), "av_buffer_create for amf surface failed.");
     }
 
-    planes = (int)surface->pVtbl->GetPlanesCount(surface);
+    planes = (পূর্ণাঙ্ক)surface->pVtbl->Get_Planes_গুনতি(surface);
     av_assert0(planes < FF_ARRAY_ELEMS(dst_data));
 
-    for (i = 0; i < planes; i++) {
+    বাবে (i = 0; i < planes; i++) {
         plane = surface->pVtbl->GetPlaneAt(surface, i);
         dst_data[i] = plane->pVtbl->GetNative(plane);
         dst_linesize[i] = plane->pVtbl->GetHPitch(plane);
@@ -487,32 +487,32 @@ static int amf_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
                    src->data, src->linesize, src->format,
                    w, h);
 
-    return 0;
+    ঘূৰাই 0;
 }
 
-static int amf_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
-                                    const AVFrame *src)
+স্থির পূর্ণাঙ্ক amf_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
+                                    ধ্রুৱ AVFrame *src)
 {
     AMFSurface* surface = (AMFSurface*)src->data[0];
     AMFPlane *plane;
     uint8_t  *src_data[4];
-    int       src_linesize[4];
-    int       planes;
-    int       i;
-    int w = FFMIN(dst->width,  src->width);
-    int h = FFMIN(dst->height, src->height);
-    int ret;
+    পূর্ণাঙ্ক       src_linesize[4];
+    পূর্ণাঙ্ক       planes;
+    পূর্ণাঙ্ক       i;
+    পূর্ণাঙ্ক w = FFMIN(dst->width,  src->width);
+    পূর্ণাঙ্ক h = FFMIN(dst->height, src->height);
+    পূর্ণাঙ্ক ret;
 
-    if (src->hw_frames_ctx->data != (uint8_t *)ctx || dst->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    যদি (src->hw_frames_ctx->data != (uint8_t *)ctx || dst->format != ctx->sw_format)
+        ঘূৰাই AVERROR(EINVAL);
 
     ret = surface->pVtbl->Convert(surface, AMF_MEMORY_HOST);
     AMF_RETURN_IF_FALSE(ctx, ret == AMF_OK, AVERROR_UNKNOWN, "Convert(amf::AMF_MEMORY_HOST) failed with error %d\n", AVERROR_UNKNOWN);
 
-    planes = (int)surface->pVtbl->GetPlanesCount(surface);
+    planes = (পূর্ণাঙ্ক)surface->pVtbl->Get_Planes_গুনতি(surface);
     av_assert0(planes < FF_ARRAY_ELEMS(src_data));
 
-    for (i = 0; i < planes; i++) {
+    বাবে (i = 0; i < planes; i++) {
         plane = surface->pVtbl->GetPlaneAt(surface, i);
         src_data[i] = plane->pVtbl->GetNative(plane);
         src_linesize[i] = plane->pVtbl->GetHPitch(plane);
@@ -520,58 +520,58 @@ static int amf_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
     av_image_copy2(dst->data, dst->linesize,
                    src_data, src_linesize, dst->format,
                    w, h);
-    return 0;
+    ঘূৰাই 0;
 }
 
 
 
-static void amf_device_uninit(AVHWDeviceContext *device_ctx)
+স্থির শূন্য amf_device_uninit(AVHWDeviceContext *device_ctx)
 {
     AVAMFDeviceContext *amf_ctx = device_ctx->hwctx;
     AMF_RESULT          res = AMF_NOT_INITIALIZED;
     AMFTrace           *trace;
 
-    if (amf_ctx->context) {
+    যদি (amf_ctx->context) {
         amf_ctx->context->pVtbl->Terminate(amf_ctx->context);
         amf_ctx->context->pVtbl->Release(amf_ctx->context);
-        amf_ctx->context = NULL;
+        amf_ctx->context = রিক্ত;
     }
 
-    if (amf_ctx->factory)
+    যদি (amf_ctx->factory)
         res = amf_ctx->factory->pVtbl->GetTrace(amf_ctx->factory, &trace);
 
-    if (res == AMF_OK) {
+    যদি (res == AMF_OK) {
         trace->pVtbl->UnregisterWriter(trace, FFMPEG_AMF_WRITER_ID);
     }
 
-    if(amf_ctx->library) {
+    যদি(amf_ctx->library) {
         dlclose(amf_ctx->library);
-        amf_ctx->library = NULL;
+        amf_ctx->library = রিক্ত;
     }
-    if (amf_ctx->trace_writer) {
+    যদি (amf_ctx->trace_writer) {
         amf_writer_free(amf_ctx->trace_writer);
     }
 
-    if (amf_ctx->lock_ctx == amf_lock_default) {
+    যদি (amf_ctx->lock_ctx == amf_lock_default) {
         ff_mutex_destroy((AVMutex*)amf_ctx->lock_ctx);
         av_freep(&amf_ctx->lock_ctx);
-        amf_ctx->lock = NULL;
-        amf_ctx->unlock = NULL;
+        amf_ctx->lock = রিক্ত;
+        amf_ctx->unlock = রিক্ত;
     }
 
     amf_ctx->version = 0;
 }
 
-enum AMF_MEMORY_TYPE av_amf_get_memory_type(AVAMFDeviceContext *amf_ctx)
+গণনা AMF_MEMORY_TYPE av_amf_get_memory_type(AVAMFDeviceContext *amf_ctx)
 {
     AMFContext  *context = amf_ctx->context;
-    AMFContext1 *context1 = NULL;
+    AMFContext1 *context1 = রিক্ত;
     AMFGuid guid1 = IID_AMFContext1();
-    void * device = NULL;
+    শূন্য * device = রিক্ত;
 
 #ifdef _WIN32
     // At the moment used only for DX12.
-    AMFContext2 *context2 = NULL;
+    AMFContext2 *context2 = রিক্ত;
 
     /*
     Work around the incorrect C Context2 IID in unpatched AMF 1.5.2 headers;
@@ -579,140 +579,140 @@ enum AMF_MEMORY_TYPE av_amf_get_memory_type(AVAMFDeviceContext *amf_ctx)
     TODO: replace with AMFGuid guid2 = IID_AMFContext2()
     once AMF 1.5.3 is available to public and marked as required version in ffmpeg.
     */
-    static const AMFGuid guid2 = {
+    স্থির ধ্রুৱ AMFGuid guid2 = {
         0x726241d3, 0xbd46, 0x4e90,
         0x99, 0x68, 0x93, 0xe0, 0x7e, 0xa2, 0x98, 0x4d
     };
 #endif
 
-    if (!amf_ctx)
-        return AMF_MEMORY_UNKNOWN;
+    যদি (!amf_ctx)
+        ঘূৰাই AMF_MEMORY_UNKNOWN;
 
 #ifdef _WIN32
-    if (AMF_IFACE_CALL(context, QueryInterface, &guid2, (void**)&context2) == AMF_OK)
+    যদি (AMF_IFACE_CALL(context, QueryInterface, &guid2, (শূন্য**)&context2) == AMF_OK)
     {
         device = AMF_IFACE_CALL(context2, GetDX12Device, AMF_DX12);
         AMF_IFACE_CALL(context2, Release);
 
-        if (device)
-            return AMF_MEMORY_DX12;
+        যদি (device)
+            ঘূৰাই AMF_MEMORY_DX12;
     }
 
-    if (AMF_IFACE_CALL(context, GetDX11Device, AMF_DX11_1))
-        return AMF_MEMORY_DX11;
+    যদি (AMF_IFACE_CALL(context, GetDX11Device, AMF_DX11_1))
+        ঘূৰাই AMF_MEMORY_DX11;
 
-    if (AMF_IFACE_CALL(context, GetDX9Device, AMF_DX9))
-        return AMF_MEMORY_DX9;
+    যদি (AMF_IFACE_CALL(context, GetDX9Device, AMF_DX9))
+        ঘূৰাই AMF_MEMORY_DX9;
 #endif
 
-    if (AMF_IFACE_CALL(context, QueryInterface, &guid1, (void**)&context1) != AMF_OK)
-        return AMF_MEMORY_UNKNOWN;
+    যদি (AMF_IFACE_CALL(context, QueryInterface, &guid1, (শূন্য**)&context1) != AMF_OK)
+        ঘূৰাই AMF_MEMORY_UNKNOWN;
 
     device = AMF_IFACE_CALL(context1, GetVulkanDevice);
     AMF_IFACE_CALL(context1, Release);
-    if (device)
-        return AMF_MEMORY_VULKAN;
+    যদি (device)
+        ঘূৰাই AMF_MEMORY_VULKAN;
 
-    return AMF_MEMORY_UNKNOWN;
+    ঘূৰাই AMF_MEMORY_UNKNOWN;
 }
 
-static int amf_device_init(AVHWDeviceContext *ctx)
+স্থির পূর্ণাঙ্ক amf_device_init(AVHWDeviceContext *ctx)
 {
     AVAMFDeviceContext *amf_ctx = ctx->hwctx;
     AMFContext  *context = amf_ctx->context;
-    AMFContext1 *context1 = NULL;
+    AMFContext1 *context1 = রিক্ত;
     AMFGuid guid1 = IID_AMFContext1();
     AMF_RESULT res;
 
 #ifdef _WIN32
-    AMFContext2 *context2 = NULL;
-    static const AMFGuid guid2 = {
+    AMFContext2 *context2 = রিক্ত;
+    স্থির ধ্রুৱ AMFGuid guid2 = {
         0x726241d3, 0xbd46, 0x4e90,
         0x99, 0x68, 0x93, 0xe0, 0x7e, 0xa2, 0x98, 0x4d
     };
 #endif
 
-    if (!amf_ctx->lock) {
-        amf_ctx->lock_ctx = av_mallocz(sizeof(AVMutex));
-        if (!amf_ctx->lock_ctx) {
-            return AVERROR(ENOMEM);
+    যদি (!amf_ctx->lock) {
+        amf_ctx->lock_ctx = av_mallocz(পরিমাণ(AVMutex));
+        যদি (!amf_ctx->lock_ctx) {
+            ঘূৰাই AVERROR(ENOMEM);
         }
-        ff_mutex_init((AVMutex*)amf_ctx->lock_ctx, NULL);
+        ff_mutex_init((AVMutex*)amf_ctx->lock_ctx, রিক্ত);
         amf_ctx->lock   = amf_lock_default;
         amf_ctx->unlock = amf_unlock_default;
     }
 
-    if (av_amf_get_memory_type(amf_ctx) != AMF_MEMORY_UNKNOWN) {
+    যদি (av_amf_get_memory_type(amf_ctx) != AMF_MEMORY_UNKNOWN) {
         av_log(ctx, AV_LOG_VERBOSE, "AMF is already initialized, skipping init.\n");
-        return 0;
+        ঘূৰাই 0;
     }
 
 #ifdef _WIN32
-    res = AMF_IFACE_CALL(context, InitDX11, NULL, AMF_DX11_1);
-    if (res == AMF_OK) {
+    res = AMF_IFACE_CALL(context, InitDX11, রিক্ত, AMF_DX11_1);
+    যদি (res == AMF_OK) {
         av_log(ctx, AV_LOG_VERBOSE, "Successfully initialized AMF via D3D11.\n");
-        return 0;
+        ঘূৰাই 0;
     }
 
-    res = AMF_IFACE_CALL(context, QueryInterface, &guid2, (void**)&context2);
-    if (res == AMF_OK) {
-        res = AMF_IFACE_CALL(context2, InitDX12, NULL, AMF_DX12);
+    res = AMF_IFACE_CALL(context, QueryInterface, &guid2, (শূন্য**)&context2);
+    যদি (res == AMF_OK) {
+        res = AMF_IFACE_CALL(context2, InitDX12, রিক্ত, AMF_DX12);
         AMF_IFACE_CALL(context2, Release);
-        if (res == AMF_OK) {
+        যদি (res == AMF_OK) {
             av_log(ctx, AV_LOG_VERBOSE, "Successfully initialized AMF via D3D12.\n");
-            return 0;
+            ঘূৰাই 0;
         }
-    } else {
+    } অন্যথা {
         av_log(ctx, AV_LOG_VERBOSE, "QueryInterface(AMFContext2) failed with error %d, trying older D3D APIs...\n", res);
     }
 
-    res = AMF_IFACE_CALL(context, InitDX9, NULL);
-    if (res == AMF_OK) {
+    res = AMF_IFACE_CALL(context, InitDX9, রিক্ত);
+    যদি (res == AMF_OK) {
         av_log(ctx, AV_LOG_VERBOSE, "Successfully initialized AMF via D3D9.\n");
-        return 0;
+        ঘূৰাই 0;
     }
 
     av_log(ctx, AV_LOG_WARNING, "AMF failed to initialize with any of supported versions of DirectX, trying Vulkan instead...\n");
 #endif
 
-    res = AMF_IFACE_CALL(context, QueryInterface, &guid1, (void**)&context1);
-    if (res != AMF_OK) {
+    res = AMF_IFACE_CALL(context, QueryInterface, &guid1, (শূন্য**)&context1);
+    যদি (res != AMF_OK) {
         av_log(ctx, AV_LOG_ERROR, "QueryInterface(AMFContext1) failed with error %d\n", res);
-        return AVERROR_UNKNOWN;
+        ঘূৰাই AVERROR_UNKNOWN;
     }
 
-    res = AMF_IFACE_CALL(context1, InitVulkan, NULL);
+    res = AMF_IFACE_CALL(context1, InitVulkan, রিক্ত);
     AMF_IFACE_CALL(context1, Release);
 
-    if (res == AMF_OK) {
+    যদি (res == AMF_OK) {
         av_log(ctx, AV_LOG_VERBOSE, "Successfully initialized AMF via Vulkan.\n");
-    } else {
-        if (res == AMF_NOT_SUPPORTED)
+    } অন্যথা {
+        যদি (res == AMF_NOT_SUPPORTED)
             av_log(ctx, AV_LOG_ERROR, "AMF via Vulkan is not supported on the given device.\n");
-        else
+        অন্যথা
             av_log(ctx, AV_LOG_ERROR, "Failed to initialize AMF via Vulkan, error %d\n", res);
 
-        return AVERROR(ENOSYS);
+        ঘূৰাই AVERROR(ENOSYS);
     }
 
-    return 0;
+    ঘূৰাই 0;
 }
 
-static int amf_load_library(AVAMFDeviceContext* amf_ctx,  void* avcl)
+স্থির পূর্ণাঙ্ক amf_load_library(AVAMFDeviceContext* amf_ctx,  শূন্য* avcl)
 {
     AMFInit_Fn         init_fun;
     AMFQueryVersion_Fn version_fun;
     AMF_RESULT         res;
 
     amf_ctx->library = dlopen(AMF_DLL_NAMEA, RTLD_NOW | RTLD_LOCAL);
-    AMF_RETURN_IF_FALSE(avcl, amf_ctx->library != NULL,
+    AMF_RETURN_IF_FALSE(avcl, amf_ctx->library != রিক্ত,
         AVERROR_UNKNOWN, "DLL %s failed to open\n", AMF_DLL_NAMEA);
 
     init_fun = (AMFInit_Fn)dlsym(amf_ctx->library, AMF_INIT_FUNCTION_NAME);
-    AMF_RETURN_IF_FALSE(avcl, init_fun != NULL, AVERROR_UNKNOWN, "DLL %s failed to find function %s\n", AMF_DLL_NAMEA, AMF_INIT_FUNCTION_NAME);
+    AMF_RETURN_IF_FALSE(avcl, init_fun != রিক্ত, AVERROR_UNKNOWN, "DLL %s failed to find function %s\n", AMF_DLL_NAMEA, AMF_INIT_FUNCTION_NAME);
 
     version_fun = (AMFQueryVersion_Fn)dlsym(amf_ctx->library, AMF_QUERY_VERSION_FUNCTION_NAME);
-    AMF_RETURN_IF_FALSE(avcl, version_fun != NULL, AVERROR_UNKNOWN, "DLL %s failed to find function %s\n", AMF_DLL_NAMEA, AMF_QUERY_VERSION_FUNCTION_NAME);
+    AMF_RETURN_IF_FALSE(avcl, version_fun != রিক্ত, AVERROR_UNKNOWN, "DLL %s failed to find function %s\n", AMF_DLL_NAMEA, AMF_QUERY_VERSION_FUNCTION_NAME);
 
     amf_uint64 version;
     res = version_fun(&version);
@@ -720,48 +720,48 @@ static int amf_load_library(AVAMFDeviceContext* amf_ctx,  void* avcl)
     amf_ctx->version = version;
     res = init_fun(AMF_FULL_VERSION, &amf_ctx->factory);
     AMF_RETURN_IF_FALSE(avcl, res == AMF_OK, AVERROR_UNKNOWN, "%s failed with error %d\n", AMF_INIT_FUNCTION_NAME, res);
-    return 0;
+    ঘূৰাই 0;
 }
 
-static int amf_device_create(AVHWDeviceContext *device_ctx,
-                              const char *device,
-                              AVDictionary *opts, int flags)
+স্থির পূর্ণাঙ্ক amf_device_create(AVHWDeviceContext *device_ctx,
+                              ধ্রুৱ ৱর্ণ *device,
+                              AVDictionary *opts, পূর্ণাঙ্ক flags)
 {
     AVAMFDeviceContext        *ctx = device_ctx->hwctx;
     AMFTrace           *trace;
-    int ret;
-    if ((ret = amf_load_library(ctx, device_ctx)) == 0) {
+    পূর্ণাঙ্ক ret;
+    যদি ((ret = amf_load_library(ctx, device_ctx)) == 0) {
         ret = ctx->factory->pVtbl->GetTrace(ctx->factory, &trace);
-        if (ret == AMF_OK) {
-            int level_ff = av_log_get_level();
-            int level_amf = AMF_TRACE_TRACE;
+        যদি (ret == AMF_OK) {
+            পূর্ণাঙ্ক level_ff = av_log_get_level();
+            পূর্ণাঙ্ক level_amf = AMF_TRACE_TRACE;
             amf_bool enable_log = true;
-            switch(level_ff)
+            ৱিকল্প(level_ff)
             {
-            case AV_LOG_QUIET:
+            পক্ষ AV_LOG_QUIET:
                 level_amf = AMF_TRACE_ERROR;
                 enable_log = false;
-                break;
-            case AV_LOG_PANIC:
-            case AV_LOG_FATAL:
-            case AV_LOG_ERROR:
+                ভঙ্গ;
+            পক্ষ AV_LOG_PANIC:
+            পক্ষ AV_LOG_FATAL:
+            পক্ষ AV_LOG_ERROR:
                 level_amf = AMF_TRACE_ERROR;
-                break;
-            case AV_LOG_WARNING:
-            case AV_LOG_INFO:
+                ভঙ্গ;
+            পক্ষ AV_LOG_WARNING:
+            পক্ষ AV_LOG_INFO:
                 level_amf = AMF_TRACE_WARNING;
-                break;
-            case AV_LOG_VERBOSE:
+                ভঙ্গ;
+            পক্ষ AV_LOG_VERBOSE:
                 level_amf = AMF_TRACE_INFO;
-                break;
-            case AV_LOG_DEBUG:
+                ভঙ্গ;
+            পক্ষ AV_LOG_DEBUG:
                 level_amf = AMF_TRACE_DEBUG;
-                break;
-            case AV_LOG_TRACE:
+                ভঙ্গ;
+            পক্ষ AV_LOG_TRACE:
                 level_amf = AMF_TRACE_TRACE;
-                break;
+                ভঙ্গ;
             }
-            if(ctx->version == AMF_MAKE_FULL_VERSION(1, 4, 35, 0)){// get around a bug in trace in AMF runtime driver 24.20
+            যদি(ctx->version == AMF_MAKE_FULL_VERSION(1, 4, 35, 0)){// get around a bug in trace in AMF runtime driver 24.20
                 level_amf = AMF_TRACE_WARNING;
             }
 
@@ -779,37 +779,37 @@ static int amf_device_create(AVHWDeviceContext *device_ctx,
 
 
         ret = ctx->factory->pVtbl->CreateContext(ctx->factory, &ctx->context);
-        if (ret == AMF_OK) {
+        যদি (ret == AMF_OK) {
             AMF_ASSIGN_PROPERTY_INT64(ret, ctx->context, L"DeviceSurfaceCacheSize", 50 );
-            return 0;
+            ঘূৰাই 0;
         }
         av_log(device_ctx, AV_LOG_ERROR, "CreateContext() failed with error %d.\n", ret);
     }
     amf_device_uninit(device_ctx);
-    return ret;
+    ঘূৰাই ret;
 }
 
-#if CONFIG_DXVA2
-static int amf_init_from_dxva2_device(AVAMFDeviceContext * amf_ctx, AVHWDeviceContext *child_device_ctx)
+#যদি CONFIG_DXVA2
+স্থির পূর্ণাঙ্ক amf_init_from_dxva2_device(AVAMFDeviceContext * amf_ctx, AVHWDeviceContext *child_device_ctx)
 {
     AVDXVA2DeviceContext *hwctx = child_device_ctx->hwctx;
     IDirect3DDevice9    *device;
     HANDLE              device_handle;
     HRESULT             hr;
     AMF_RESULT          res;
-    int ret;
+    পূর্ণাঙ্ক ret;
 
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(hwctx->devmgr, &device_handle);
-    if (FAILED(hr)) {
+    যদি (FAILED(hr)) {
         av_log(child_device_ctx, AV_LOG_ERROR, "Failed to open device handle for Direct3D9 device: %lx.\n", (unsigned long)hr);
-        return AVERROR_EXTERNAL;
+        ঘূৰাই AVERROR_EXTERNAL;
     }
 
     hr = IDirect3DDeviceManager9_LockDevice(hwctx->devmgr, device_handle, &device, FALSE);
-    if (SUCCEEDED(hr)) {
+    যদি (SUCCEEDED(hr)) {
         IDirect3DDeviceManager9_UnlockDevice(hwctx->devmgr, device_handle, FALSE);
         ret = 0;
-    } else {
+    } অন্যথা {
         av_log(child_device_ctx, AV_LOG_ERROR, "Failed to lock device handle for Direct3D9 device: %lx.\n", (unsigned long)hr);
         ret = AVERROR_EXTERNAL;
     }
@@ -817,141 +817,141 @@ static int amf_init_from_dxva2_device(AVAMFDeviceContext * amf_ctx, AVHWDeviceCo
 
     IDirect3DDeviceManager9_CloseDeviceHandle(hwctx->devmgr, device_handle);
 
-    if (ret < 0)
-        return ret;
+    যদি (ret < 0)
+        ঘূৰাই ret;
 
     res = amf_ctx->context->pVtbl->InitDX9(amf_ctx->context, device);
 
     IDirect3DDevice9_Release(device);
 
-    if (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
-        if (res == AMF_NOT_SUPPORTED)
+    যদি (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
+        যদি (res == AMF_NOT_SUPPORTED)
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF via D3D9 is not supported on the given device.\n");
-        else
+        অন্যথা
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF failed to initialise on given D3D9 device: %d.\n", res);
-        return AVERROR(ENODEV);
+        ঘূৰাই AVERROR(ENODEV);
     }
     av_log(child_device_ctx, AV_LOG_INFO, "AMF via DXVA2.\n");
-    return 0;
+    ঘূৰাই 0;
 }
 #endif
 
-#if CONFIG_D3D11VA
-static int amf_init_from_d3d11_device(AVAMFDeviceContext* amf_ctx, AVHWDeviceContext *child_device_ctx)
+#যদি CONFIG_D3D11VA
+স্থির পূর্ণাঙ্ক amf_init_from_d3d11_device(AVAMFDeviceContext* amf_ctx, AVHWDeviceContext *child_device_ctx)
 {
     AMF_RESULT res;
     AVD3D11VADeviceContext *hwctx = child_device_ctx->hwctx;
     res = amf_ctx->context->pVtbl->InitDX11(amf_ctx->context, hwctx->device, AMF_DX11_1);
-    if (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
-        if (res == AMF_NOT_SUPPORTED)
+    যদি (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
+        যদি (res == AMF_NOT_SUPPORTED)
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF via D3D11 is not supported on the given device.\n");
-        else
+        অন্যথা
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF failed to initialise on the given D3D11 device: %d.\n", res);
-        return AVERROR(ENODEV);
+        ঘূৰাই AVERROR(ENODEV);
     }
     av_log(child_device_ctx, AV_LOG_INFO, "AMF via D3D11.\n");
     hwctx->BindFlags |= D3D11_BIND_SHADER_RESOURCE;
-    return 0;
+    ঘূৰাই 0;
 }
 #endif
 
-#if CONFIG_D3D12VA
-static int amf_init_from_d3d12_device(AVAMFDeviceContext* amf_ctx, AVHWDeviceContext *child_device_ctx)
+#যদি CONFIG_D3D12VA
+স্থির পূর্ণাঙ্ক amf_init_from_d3d12_device(AVAMFDeviceContext* amf_ctx, AVHWDeviceContext *child_device_ctx)
 {
     AVD3D12VADeviceContext *hwctx = child_device_ctx->hwctx;
     AMF_RESULT res;
-    AMFContext2 *context2 = NULL;
+    AMFContext2 *context2 = রিক্ত;
     AMFGuid guid = IID_AMFContext2();
-    res = amf_ctx->context->pVtbl->QueryInterface(amf_ctx->context, &guid, (void**)&context2);
+    res = amf_ctx->context->pVtbl->QueryInterface(amf_ctx->context, &guid, (শূন্য**)&context2);
     AMF_RETURN_IF_FALSE(child_device_ctx, res == AMF_OK, AVERROR_UNKNOWN, "CreateContext2() failed with error %d\n", res);
     res = context2->pVtbl->InitDX12(context2, hwctx->device, AMF_DX12);
     context2->pVtbl->Release(context2);
-    if (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
-        if (res == AMF_NOT_SUPPORTED)
+    যদি (res != AMF_OK && res != AMF_ALREADY_INITIALIZED) {
+        যদি (res == AMF_NOT_SUPPORTED)
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF via D3D12 is not supported on the given device.\n");
-        else
+        অন্যথা
             av_log(child_device_ctx, AV_LOG_ERROR, "AMF failed to initialise on the given D3D12 device: %d.\n", res);
-        return AVERROR(ENODEV);
+        ঘূৰাই AVERROR(ENODEV);
     }
     av_log(child_device_ctx, AV_LOG_INFO, "AMF via D3D12.\n");
-    return 0;
+    ঘূৰাই 0;
 }
 #endif
 
 
-static int amf_device_derive(AVHWDeviceContext *device_ctx,
+স্থির পূর্ণাঙ্ক amf_device_derive(AVHWDeviceContext *device_ctx,
                               AVHWDeviceContext *child_device_ctx, AVDictionary *opts,
-                              int flags)
+                              পূর্ণাঙ্ক flags)
 {
-#if CONFIG_DXVA2 || CONFIG_D3D11VA || CONFIG_D3D12VA
+#যদি CONFIG_DXVA2 || CONFIG_D3D11VA || CONFIG_D3D12VA
     AVAMFDeviceContext        *amf_ctx = device_ctx->hwctx;
 #endif
-    int ret;
+    পূর্ণাঙ্ক ret;
 
     ret = amf_device_create(device_ctx, "", opts, flags);
-    if(ret < 0)
-        return ret;
+    যদি(ret < 0)
+        ঘূৰাই ret;
 
-    switch (child_device_ctx->type) {
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
-        return amf_init_from_dxva2_device(amf_ctx, child_device_ctx);
+    ৱিকল্প (child_device_ctx->type) {
+#যদি CONFIG_DXVA2
+    পক্ষ AV_HWDEVICE_TYPE_DXVA2:
+        ঘূৰাই amf_init_from_dxva2_device(amf_ctx, child_device_ctx);
 #endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
-        return amf_init_from_d3d11_device(amf_ctx, child_device_ctx);
+#যদি CONFIG_D3D11VA
+    পক্ষ AV_HWDEVICE_TYPE_D3D11VA:
+        ঘূৰাই amf_init_from_d3d11_device(amf_ctx, child_device_ctx);
 #endif
-#if CONFIG_D3D12VA
-    case AV_HWDEVICE_TYPE_D3D12VA:
-        return amf_init_from_d3d12_device(amf_ctx, child_device_ctx);
+#যদি CONFIG_D3D12VA
+    পক্ষ AV_HWDEVICE_TYPE_D3D12VA:
+        ঘূৰাই amf_init_from_d3d12_device(amf_ctx, child_device_ctx);
 #endif
-    default:
+    স্ৱভাৱ:
         av_log(child_device_ctx, AV_LOG_ERROR, "AMF initialisation from a %s device is not supported.\n",
                av_hwdevice_get_type_name(child_device_ctx->type));
-        return AVERROR(ENOSYS);
+        ঘূৰাই AVERROR(ENOSYS);
     }
 }
 
-static void amf_unmap_frame(av_unused AVHWFramesContext *unused, HWMapDescriptor *hwmap)
+স্থির শূন্য amf_unmap_frame(av_unused AVHWFramesContext *unused, HWMapDescriptor *hwmap)
 {
     AMFSurface1 *surface1 = hwmap->priv;
     AMF_IFACE_CALL(surface1, Unmap);
     AMF_IFACE_CALL(surface1, Release);
 }
 
-static int amf_map_frame(AVHWFramesContext *device_ctx, AVFrame *dst, const AVFrame *src, int flags)
+স্থির পূর্ণাঙ্ক amf_map_frame(AVHWFramesContext *device_ctx, AVFrame *dst, ধ্রুৱ AVFrame *src, পূর্ণাঙ্ক flags)
 {
     AMFSurface *surface = (AMFSurface *)src->data[0];
-    AMFSurface1 *surface1 = NULL;
-    size_t *linesizes = NULL;
-    uint8_t **map = NULL;
-    int amf_mem_flags = AMF_MEMORY_CPU_NONE;
-    const AMFGuid guid = IID_AMFSurface1();
+    AMFSurface1 *surface1 = রিক্ত;
+    size_t *linesizes = রিক্ত;
+    uint8_t **map = রিক্ত;
+    পূর্ণাঙ্ক amf_mem_flags = AMF_MEMORY_CPU_NONE;
+    ধ্রুৱ AMFGuid guid = IID_AMFSurface1();
     AMF_RESULT res = AMF_FAIL;
-    size_t plane_count = 0;
-    int ret = -1;
+    size_t plane_গুনতি = 0;
+    পূর্ণাঙ্ক ret = -1;
 
-    AMF_RETURN_IF_FALSE(device_ctx, surface != NULL, AVERROR(EINVAL) , "Source surface is null");
+    AMF_RETURN_IF_FALSE(device_ctx, surface != রিক্ত, AVERROR(EINVAL) , "Source surface is null");
 
-    res = AMF_IFACE_CALL(surface, QueryInterface, &guid, (void**)&surface1);
+    res = AMF_IFACE_CALL(surface, QueryInterface, &guid, (শূন্য**)&surface1);
     AMF_RETURN_IF_FALSE(device_ctx, res == AMF_OK, AVERROR_UNKNOWN, "QueryInterface(AMFSurface1) failed with error %d\n", res);
 
-    if (flags & AV_HWFRAME_MAP_READ)
+    যদি (flags & AV_HWFRAME_MAP_READ)
         amf_mem_flags |= AMF_MEMORY_CPU_READ;
 
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    যদি (flags & AV_HWFRAME_MAP_WRITE)
         amf_mem_flags |= AMF_MEMORY_CPU_WRITE;
 
-    plane_count = AMF_IFACE_CALL(surface, GetPlanesCount);
-    linesizes = av_malloc_array(sizeof(size_t), plane_count);
+    plane_গুনতি = AMF_IFACE_CALL(surface, Get_Planes_গুনতি);
+    linesizes = av_malloc_array(পরিমাণ(size_t), plane_গুনতি);
     AMF_GOTO_FAIL_IF_FALSE(device_ctx, linesizes, AVERROR(ENOMEM), "Unable to allocate line sizes array\n");
 
-    map = av_malloc_array(sizeof(uint8_t *), plane_count);
+    map = av_malloc_array(পরিমাণ(uint8_t *), plane_গুনতি);
     AMF_GOTO_FAIL_IF_FALSE(device_ctx, map, AVERROR(ENOMEM), "Unable to allocate mapping buffer\n");
 
     dst->format = av_amf_to_av_format(AMF_IFACE_CALL(surface, GetFormat));
 
-    res = AMF_IFACE_CALL(surface1, Map, amf_mem_flags, plane_count, linesizes, (void**)map);
+    res = AMF_IFACE_CALL(surface1, Map, amf_mem_flags, plane_গুনতি, linesizes, (শূন্য**)map);
     AMF_GOTO_FAIL_IF_FALSE(device_ctx, res == AMF_OK, AVERROR_UNKNOWN, "AMFSurface1->Map() failed with error %d\n", res);
 
     ret = ff_hwframe_map_create(src->hw_frames_ctx, dst, src, &amf_unmap_frame, surface1);
@@ -964,31 +964,31 @@ static int amf_map_frame(AVHWFramesContext *device_ctx, AVFrame *dst, const AVFr
     // The dst frame is no longer a hardware frame, from the perspective of any dst frame consumer.
     av_buffer_unref(&dst->hw_frames_ctx);
 
-    for (int plane = 0; plane < plane_count; ++plane)
+    বাবে (পূর্ণাঙ্ক plane = 0; plane < plane_গুনতি; ++plane)
     {
         dst->data[plane] = map[plane];
         dst->linesize[plane] = linesizes[plane];
     }
 
 fail:
-    if (map)
+    যদি (map)
         av_free(map);
 
-    if (linesizes)
+    যদি (linesizes)
         av_free(linesizes);
 
-    if (ret < 0 && surface1 != NULL)
+    যদি (ret < 0 && surface1 != রিক্ত)
         AMF_IFACE_CALL(surface1, Release);
 
-    return ret;
+    ঘূৰাই ret;
 }
 
-const HWContextType ff_hwcontext_type_amf = {
+ধ্রুৱ HWContextType ff_hwcontext_type_amf = {
     .type                 = AV_HWDEVICE_TYPE_AMF,
     .name                 = "AMF",
 
-    .device_hwctx_size    = sizeof(AVAMFDeviceContext),
-    .frames_hwctx_size    = sizeof(AMFFramesContext),
+    .device_hwctx_size    = পরিমাণ(AVAMFDeviceContext),
+    .frames_hwctx_size    = পরিমাণ(AMFFramesContext),
 
     .device_create        = amf_device_create,
     .device_derive        = amf_device_derive,
@@ -1002,5 +1002,5 @@ const HWContextType ff_hwcontext_type_amf = {
     .transfer_data_from   = amf_transfer_data_from,
     .map_from             = amf_map_frame,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_AMF_SURFACE, AV_PIX_FMT_NONE },
+    .pix_fmts             = (ধ্রুৱ গণনা AVPixelFormat[]){ AV_PIX_FMT_AMF_SURFACE, AV_PIX_FMT_NONE },
 };

@@ -16,18 +16,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "film_grain_params.h"
-#include "mem.h"
-#include "pixdesc.h"
+#অন্তর্ভাৱ "film_grain_params.h"
+#অন্তর্ভাৱ "mem.h"
+#অন্তর্ভাৱ "pixdesc.h"
 
 AVFilmGrainParams *av_film_grain_params_alloc(size_t *size)
 {
-    AVFilmGrainParams *params = av_mallocz(sizeof(AVFilmGrainParams));
+    AVFilmGrainParams *params = av_mallocz(পরিমাণ(AVFilmGrainParams));
 
-    if (size)
-        *size = params ? sizeof(*params) : 0;
+    যদি (size)
+        *size = params ? পরিমাণ(*params) : 0;
 
-    return params;
+    ঘূৰাই params;
 }
 
 AVFilmGrainParams *av_film_grain_params_create_side_data(AVFrame *frame)
@@ -35,9 +35,9 @@ AVFilmGrainParams *av_film_grain_params_create_side_data(AVFrame *frame)
     AVFilmGrainParams *fgp;
     AVFrameSideData *side_data = av_frame_new_side_data(frame,
                                                         AV_FRAME_DATA_FILM_GRAIN_PARAMS,
-                                                        sizeof(AVFilmGrainParams));
-    if (!side_data)
-        return NULL;
+                                                        পরিমাণ(AVFilmGrainParams));
+    যদি (!side_data)
+        ঘূৰাই রিক্ত;
 
     fgp = (AVFilmGrainParams *) side_data->data;
     *fgp = (AVFilmGrainParams) {
@@ -47,32 +47,32 @@ AVFilmGrainParams *av_film_grain_params_create_side_data(AVFrame *frame)
         .color_space     = AVCOL_SPC_UNSPECIFIED,
     };
 
-    return fgp;
+    ঘূৰাই fgp;
 }
 
-const AVFilmGrainParams *av_film_grain_params_select(const AVFrame *frame)
+ধ্রুৱ AVFilmGrainParams *av_film_grain_params_select(ধ্রুৱ AVFrame *frame)
 {
-    const AVFilmGrainParams *fgp, *best = NULL;
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int bit_depth_luma, bit_depth_chroma;
-    if (!desc)
-        return NULL;
+    ধ্রুৱ AVFilmGrainParams *fgp, *best = রিক্ত;
+    ধ্রুৱ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
+    পূর্ণাঙ্ক bit_depth_luma, bit_depth_chroma;
+    যদি (!desc)
+        ঘূৰাই রিক্ত;
 
     /* There are no YUV formats with different bit depth per component,
      * so just check both against the first component for simplicity */
     bit_depth_luma = bit_depth_chroma = desc->comp[0].depth;
 
-    for (int i = 0; i < frame->nb_side_data; i++) {
-        if (frame->side_data[i]->type != AV_FRAME_DATA_FILM_GRAIN_PARAMS)
-            continue;
-        fgp = (const AVFilmGrainParams*)frame->side_data[i]->data;
-        if (fgp->width  && fgp->width  > frame->width ||
+    বাবে (পূর্ণাঙ্ক i = 0; i < frame->nb_side_data; i++) {
+        যদি (frame->side_data[i]->type != AV_FRAME_DATA_FILM_GRAIN_PARAMS)
+            অনুৱর্ত;
+        fgp = (ধ্রুৱ AVFilmGrainParams*)frame->side_data[i]->data;
+        যদি (fgp->width  && fgp->width  > frame->width ||
             fgp->height && fgp->height > frame->height)
-            continue;
+            অনুৱর্ত;
 
 #define CHECK(a, b, unspec)                                     \
-        if ((a) != (unspec) && (b) != (unspec) && (a) != (b))   \
-            continue
+        যদি ((a) != (unspec) && (b) != (unspec) && (a) != (b))   \
+            অনুৱর্ত
 
         CHECK(fgp->bit_depth_luma,   bit_depth_luma,         0);
         CHECK(fgp->bit_depth_chroma, bit_depth_chroma,       0);
@@ -81,26 +81,26 @@ const AVFilmGrainParams *av_film_grain_params_select(const AVFrame *frame)
         CHECK(fgp->color_trc,        frame->color_trc,       AVCOL_TRC_UNSPECIFIED);
         CHECK(fgp->color_space,      frame->colorspace,      AVCOL_SPC_UNSPECIFIED);
 
-        switch (fgp->type) {
-        case AV_FILM_GRAIN_PARAMS_NONE:
-            continue;
-        case AV_FILM_GRAIN_PARAMS_AV1:
+        ৱিকল্প (fgp->type) {
+        পক্ষ AV_FILM_GRAIN_PARAMS_NONE:
+            অনুৱর্ত;
+        পক্ষ AV_FILM_GRAIN_PARAMS_AV1:
             /* AOM FGS needs an exact match for the chroma resolution */
-            if (fgp->subsampling_x != desc->log2_chroma_w ||
+            যদি (fgp->subsampling_x != desc->log2_chroma_w ||
                 fgp->subsampling_y != desc->log2_chroma_h)
-                continue;
-            break;
-        case AV_FILM_GRAIN_PARAMS_H274:
+                অনুৱর্ত;
+            ভঙ্গ;
+        পক্ষ AV_FILM_GRAIN_PARAMS_H274:
             /* H.274 FGS can be adapted to any lower chroma resolution */
-            if (fgp->subsampling_x > desc->log2_chroma_w ||
+            যদি (fgp->subsampling_x > desc->log2_chroma_w ||
                 fgp->subsampling_y > desc->log2_chroma_h)
-                continue;
-            break;
+                অনুৱর্ত;
+            ভঙ্গ;
         }
 
-        if (!best || best->width < fgp->width || best->height < fgp->height)
+        যদি (!best || best->width < fgp->width || best->height < fgp->height)
             best = fgp;
     }
 
-    return best;
+    ঘূৰাই best;
 }

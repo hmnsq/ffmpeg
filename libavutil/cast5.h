@@ -22,7 +22,7 @@
 #ifndef AVUTIL_CAST5_H
 #define AVUTIL_CAST5_H
 
-#include <stdint.h>
+#অন্তর্ভাৱ <stdint.h>
 
 
 /**
@@ -33,15 +33,15 @@
   * @{
   */
 
-extern const int av_cast5_size;
+বাহ্য ধ্রুৱ পূর্ণাঙ্ক av_cast5_size;
 
-struct AVCAST5;
+সংরচনা AVCAST5;
 
 /**
   * Allocate an AVCAST5 context
   * To free the struct: av_free(ptr)
   */
-struct AVCAST5 *av_cast5_alloc(void);
+সংরচনা AVCAST5 *av_cast5_alloc(শূন্য);
 /**
   * Initialize an AVCAST5 context.
   *
@@ -50,7 +50,7 @@ struct AVCAST5 *av_cast5_alloc(void);
   * @param key_bits number of keybits: possible are 40,48,...,128
   * @return 0 on success, less than 0 on failure
  */
-int av_cast5_init(struct AVCAST5 *ctx, const uint8_t *key, int key_bits);
+পূর্ণাঙ্ক av_cast5_init(সংরচনা AVCAST5 *ctx, ধ্রুৱ uint8_t *চাবি, পূর্ণাঙ্ক চাবি_bits);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context, ECB mode only
@@ -61,7 +61,7 @@ int av_cast5_init(struct AVCAST5 *ctx, const uint8_t *key, int key_bits);
   * @param count number of 8 byte blocks
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_cast5_crypt(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int count, int decrypt);
+শূন্য av_cast5_crypt(সংরচনা AVCAST5 *ctx, uint8_t *dst, ধ্রুৱ uint8_t *src, পূর্ণাঙ্ক গুনতি, পূর্ণাঙ্ক decrypt);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context
@@ -73,7 +73,7 @@ void av_cast5_crypt(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int c
   * @param iv initialization vector for CBC mode, NULL for ECB mode
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_cast5_crypt2(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+শূন্য av_cast5_crypt2(সংরচনা AVCAST5 *ctx, uint8_t *dst, ধ্রুৱ uint8_t *src, পূর্ণাঙ্ক গুনতি, uint8_t *iv, পূর্ণাঙ্ক decrypt);
 /**
  * @}
  */

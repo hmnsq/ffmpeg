@@ -16,37 +16,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "detection_bbox.h"
-#include "mem.h"
+#অন্তর্ভাৱ "detection_bbox.h"
+#অন্তর্ভাৱ "mem.h"
 
 AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size)
 {
     size_t size;
-    struct BBoxContext {
+    সংরচনা BBoxContext {
         AVDetectionBBoxHeader header;
         AVDetectionBBox boxes;
     };
-    const size_t bboxes_offset = offsetof(struct BBoxContext, boxes);
-    const size_t bbox_size = sizeof(AVDetectionBBox);
+    ধ্রুৱ size_t bboxes_offset = offsetof(সংরচনা BBoxContext, boxes);
+    ধ্রুৱ size_t bbox_size = পরিমাণ(AVDetectionBBox);
     AVDetectionBBoxHeader *header;
 
     size = bboxes_offset;
-    if (nb_bboxes > (SIZE_MAX - size) / bbox_size)
-        return NULL;
+    যদি (nb_bboxes > (SIZE_MAX - size) / bbox_size)
+        ঘূৰাই রিক্ত;
     size += bbox_size * nb_bboxes;
 
     header = av_mallocz(size);
-    if (!header)
-        return NULL;
+    যদি (!header)
+        ঘূৰাই রিক্ত;
 
     header->nb_bboxes     = nb_bboxes;
     header->bbox_size     = bbox_size;
     header->bboxes_offset = bboxes_offset;
 
-    if (out_size)
+    যদি (out_size)
         *out_size = size;
 
-    return header;
+    ঘূৰাই header;
 }
 
 AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes)
@@ -56,18 +56,18 @@ AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32
     size_t size;
 
     header = av_detection_bbox_alloc(nb_bboxes, &size);
-    if (!header)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)header, size, NULL, NULL, 0);
-    if (!buf) {
+    যদি (!header)
+        ঘূৰাই রিক্ত;
+    buf = av_buffer_create((uint8_t *)header, size, রিক্ত, রিক্ত, 0);
+    যদি (!buf) {
         av_freep(&header);
-        return NULL;
+        ঘূৰাই রিক্ত;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
+    যদি (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_DETECTION_BBOXES, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        ঘূৰাই রিক্ত;
     }
 
-    return header;
+    ঘূৰাই header;
 }

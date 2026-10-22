@@ -19,50 +19,50 @@
 #ifndef AVUTIL_CRC_INTERNAL_H
 #define AVUTIL_CRC_INTERNAL_H
 
-#include <stdint.h>
-#include "libavutil/attributes.h"
-#include "libavutil/reverse.h"
+#অন্তর্ভাৱ <stdint.h>
+#অন্তর্ভাৱ "libavutil/attributes.h"
+#অন্তর্ভাৱ "libavutil/reverse.h"
 
-static uint64_t reverse(uint64_t p, unsigned int deg)
+স্থির uint64_t reverse(uint64_t p, unsigned পূর্ণাঙ্ক deg)
 {
     uint64_t ret = 0;
-    int i;
-    for (i = 0; i < (deg / 8); i += 1) {
+    পূর্ণাঙ্ক i;
+    বাবে (i = 0; i < (deg / 8); i += 1) {
         ret = (ret << 8) | (ff_reverse[p & 0xff]);
         p >>= 8;
     }
-    int rem = (deg + 1) - 8 * i;
+    পূর্ণাঙ্ক rem = (deg + 1) - 8 * i;
     ret = (ret << rem) | (ff_reverse[p & 0xff] >> (8 - rem));
-    return ret;
+    ঘূৰাই ret;
 }
 
-av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
-                                 uint64_t *div, int bitreverse)
+av_unused স্থির uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
+                                 uint64_t *div, পূর্ণাঙ্ক bitreverse)
 {
-    uint64_t mod, mask, high;
+    uint64_t mod, mask, উপৰেৰ;
 
-    if (n < deg) {
+    যদি (n < deg) {
         *div = 0;
-        return poly;
+        ঘূৰাই poly;
     }
     mask = ((uint64_t)1 << deg) - 1;
     poly &= mask;
     mod = poly;
     *div = 1;
     deg--;
-    while (--n > deg) {
-        high = (mod >> deg) & 1;
-        *div = (*div << 1) | high;
+    যেতিয়ালৈ (--n > deg) {
+        উপৰেৰ = (mod >> deg) & 1;
+        *div = (*div << 1) | উপৰেৰ;
         mod <<= 1;
-        if (high)
+        যদি (উপৰেৰ)
             mod ^= poly;
     }
     uint64_t ret = mod & mask;
-    if (bitreverse) {
+    যদি (bitreverse) {
         *div = reverse(*div, deg) << 1;
-        return reverse(ret, deg) << 1;
+        ঘূৰাই reverse(ret, deg) << 1;
     }
-    return ret;
+    ঘূৰাই ret;
 }
 
 #endif /* AVUTIL_CRC_INTERNAL_H */

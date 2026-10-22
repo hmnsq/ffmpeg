@@ -20,48 +20,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
+#অন্তর্ভাৱ <stdint.h>
+#অন্তর্ভাৱ <string.h>
 
-#include "avassert.h"
-#include "error.h"
-#include "fifo.h"
-#include "macros.h"
-#include "mem.h"
+#অন্তর্ভাৱ "avassert.h"
+#অন্তর্ভাৱ "error.h"
+#অন্তর্ভাৱ "fifo.h"
+#অন্তর্ভাৱ "macros.h"
+#অন্তর্ভাৱ "mem.h"
 
 // by default the FIFO can be auto-grown to 1MB
 #define AUTO_GROW_DEFAULT_BYTES (1024 * 1024)
 
-struct AVFifo {
+সংরচনা AVFifo {
     uint8_t *buffer;
 
     size_t elem_size, nb_elems;
     size_t offset_r, offset_w;
     // distinguishes the ambiguous situation offset_r == offset_w
-    int    is_empty;
+    পূর্ণাঙ্ক    is_empty;
 
-    unsigned int flags;
+    unsigned পূর্ণাঙ্ক flags;
     size_t       auto_grow_limit;
 };
 
 AVFifo *av_fifo_alloc2(size_t nb_elems, size_t elem_size,
-                       unsigned int flags)
+                       unsigned পূর্ণাঙ্ক flags)
 {
     AVFifo *f;
-    void *buffer = NULL;
+    শূন্য *buffer = রিক্ত;
 
-    if (!elem_size)
-        return NULL;
+    যদি (!elem_size)
+        ঘূৰাই রিক্ত;
 
-    if (nb_elems) {
-        buffer = av_realloc_array(NULL, nb_elems, elem_size);
-        if (!buffer)
-            return NULL;
+    যদি (nb_elems) {
+        buffer = av_realloc_array(রিক্ত, nb_elems, elem_size);
+        যদি (!buffer)
+            ঘূৰাই রিক্ত;
     }
-    f = av_mallocz(sizeof(*f));
-    if (!f) {
+    f = av_mallocz(পরিমাণ(*f));
+    যদি (!f) {
         av_free(buffer);
-        return NULL;
+        ঘূৰাই রিক্ত;
     }
     f->buffer    = buffer;
     f->nb_elems  = nb_elems;
@@ -71,221 +71,221 @@ AVFifo *av_fifo_alloc2(size_t nb_elems, size_t elem_size,
     f->flags           = flags;
     f->auto_grow_limit = FFMAX(AUTO_GROW_DEFAULT_BYTES / elem_size, 1);
 
-    return f;
+    ঘূৰাই f;
 }
 
-void av_fifo_auto_grow_limit(AVFifo *f, size_t max_elems)
+শূন্য av_fifo_auto_grow_limit(AVFifo *f, size_t max_elems)
 {
     f->auto_grow_limit = max_elems;
 }
 
-size_t av_fifo_elem_size(const AVFifo *f)
+size_t av_fifo_elem_size(ধ্রুৱ AVFifo *f)
 {
-    return f->elem_size;
+    ঘূৰাই f->elem_size;
 }
 
-size_t av_fifo_can_read(const AVFifo *f)
+size_t av_fifo_can_read(ধ্রুৱ AVFifo *f)
 {
-    if (f->offset_w <= f->offset_r && !f->is_empty)
-        return f->nb_elems - f->offset_r + f->offset_w;
-    return f->offset_w - f->offset_r;
+    যদি (f->offset_w <= f->offset_r && !f->is_empty)
+        ঘূৰাই f->nb_elems - f->offset_r + f->offset_w;
+    ঘূৰাই f->offset_w - f->offset_r;
 }
 
-size_t av_fifo_can_write(const AVFifo *f)
+size_t av_fifo_can_write(ধ্রুৱ AVFifo *f)
 {
-    return f->nb_elems - av_fifo_can_read(f);
+    ঘূৰাই f->nb_elems - av_fifo_can_read(f);
 }
 
-int av_fifo_grow2(AVFifo *f, size_t inc)
+পূর্ণাঙ্ক av_fifo_grow2(AVFifo *f, size_t inc)
 {
     uint8_t *tmp;
 
-    if (inc > SIZE_MAX - f->nb_elems)
-        return AVERROR(EINVAL);
+    যদি (inc > SIZE_MAX - f->nb_elems)
+        ঘূৰাই AVERROR(EINVAL);
 
     tmp = av_realloc_array(f->buffer, f->nb_elems + inc, f->elem_size);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    যদি (!tmp)
+        ঘূৰাই AVERROR(ENOMEM);
     f->buffer = tmp;
 
     // move the data from the beginning of the ring buffer
     // to the newly allocated space
-    if (f->offset_w <= f->offset_r && !f->is_empty) {
-        const size_t copy = FFMIN(inc, f->offset_w);
+    যদি (f->offset_w <= f->offset_r && !f->is_empty) {
+        ধ্রুৱ size_t copy = FFMIN(inc, f->offset_w);
         memcpy(tmp + f->nb_elems * f->elem_size, tmp, copy * f->elem_size);
-        if (copy < f->offset_w) {
+        যদি (copy < f->offset_w) {
             memmove(tmp, tmp + copy * f->elem_size,
                     (f->offset_w - copy) * f->elem_size);
             f->offset_w -= copy;
-        } else
+        } অন্যথা
             f->offset_w = copy == inc ? 0 : f->nb_elems + copy;
     }
 
     f->nb_elems += inc;
 
-    return 0;
+    ঘূৰাই 0;
 }
 
-static int fifo_check_space(AVFifo *f, size_t to_write)
+স্থির পূর্ণাঙ্ক fifo_check_space(AVFifo *f, size_t to_write)
 {
-    const size_t can_write = av_fifo_can_write(f);
-    const size_t need_grow = to_write > can_write ? to_write - can_write : 0;
+    ধ্রুৱ size_t can_write = av_fifo_can_write(f);
+    ধ্রুৱ size_t need_grow = to_write > can_write ? to_write - can_write : 0;
     size_t can_grow;
 
-    if (!need_grow)
-        return 0;
+    যদি (!need_grow)
+        ঘূৰাই 0;
 
     can_grow = f->auto_grow_limit > f->nb_elems ?
                f->auto_grow_limit - f->nb_elems : 0;
-    if ((f->flags & AV_FIFO_FLAG_AUTO_GROW) && need_grow <= can_grow) {
+    যদি ((f->flags & AV_FIFO_FLAG_AUTO_GROW) && need_grow <= can_grow) {
         // allocate a bit more than necessary, if we can
-        const size_t inc = (need_grow < can_grow / 2 ) ? need_grow * 2 : can_grow;
-        return av_fifo_grow2(f, inc);
+        ধ্রুৱ size_t inc = (need_grow < can_grow / 2 ) ? need_grow * 2 : can_grow;
+        ঘূৰাই av_fifo_grow2(f, inc);
     }
 
-    return AVERROR(ENOSPC);
+    ঘূৰাই AVERROR(ENOSPC);
 }
 
-static int fifo_write_common(AVFifo *f, const uint8_t *buf, size_t *nb_elems,
-                             AVFifoCB read_cb, void *opaque)
+স্থির পূর্ণাঙ্ক fifo_write_common(AVFifo *f, ধ্রুৱ uint8_t *buf, size_t *nb_elems,
+                             AVFifoCB read_cb, শূন্য *opaque)
 {
     size_t to_write = *nb_elems;
     size_t offset_w;
-    int         ret = 0;
+    পূর্ণাঙ্ক         ret = 0;
 
     ret = fifo_check_space(f, to_write);
-    if (ret < 0)
-        return ret;
+    যদি (ret < 0)
+        ঘূৰাই ret;
 
     offset_w = f->offset_w;
 
-    while (to_write > 0) {
+    যেতিয়ালৈ (to_write > 0) {
         size_t    len = FFMIN(f->nb_elems - offset_w, to_write);
         uint8_t *wptr = f->buffer + offset_w * f->elem_size;
 
-        if (read_cb) {
+        যদি (read_cb) {
             ret = read_cb(opaque, wptr, &len);
-            if (ret < 0 || len == 0)
-                break;
-        } else {
+            যদি (ret < 0 || len == 0)
+                ভঙ্গ;
+        } অন্যথা {
             memcpy(wptr, buf, len * f->elem_size);
             buf += len * f->elem_size;
         }
         offset_w += len;
-        if (offset_w >= f->nb_elems)
+        যদি (offset_w >= f->nb_elems)
             offset_w = 0;
         to_write -= len;
     }
     f->offset_w = offset_w;
 
-    if (*nb_elems != to_write)
+    যদি (*nb_elems != to_write)
         f->is_empty = 0;
     *nb_elems -= to_write;
 
-    return ret;
+    ঘূৰাই ret;
 }
 
-int av_fifo_write(AVFifo *f, const void *buf, size_t nb_elems)
+পূর্ণাঙ্ক av_fifo_write(AVFifo *f, ধ্রুৱ শূন্য *buf, size_t nb_elems)
 {
-    return fifo_write_common(f, buf, &nb_elems, NULL, NULL);
+    ঘূৰাই fifo_write_common(f, buf, &nb_elems, রিক্ত, রিক্ত);
 }
 
-int av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
-                          void *opaque, size_t *nb_elems)
+পূর্ণাঙ্ক av_fifo_write_from_cb(AVFifo *f, AVFifoCB read_cb,
+                          শূন্য *opaque, size_t *nb_elems)
 {
-    return fifo_write_common(f, NULL, nb_elems, read_cb, opaque);
+    ঘূৰাই fifo_write_common(f, রিক্ত, nb_elems, read_cb, opaque);
 }
 
-static int fifo_peek_common(const AVFifo *f, uint8_t *buf, size_t *nb_elems,
-                            size_t offset, AVFifoCB write_cb, void *opaque)
+স্থির পূর্ণাঙ্ক fifo_peek_common(ধ্রুৱ AVFifo *f, uint8_t *buf, size_t *nb_elems,
+                            size_t offset, AVFifoCB write_cb, শূন্য *opaque)
 {
     size_t  to_read = *nb_elems;
     size_t offset_r = f->offset_r;
     size_t can_read = av_fifo_can_read(f);
-    int         ret = 0;
+    পূর্ণাঙ্ক         ret = 0;
 
-    if (offset > can_read || to_read > can_read - offset) {
+    যদি (offset > can_read || to_read > can_read - offset) {
         *nb_elems = 0;
-        return AVERROR(EINVAL);
+        ঘূৰাই AVERROR(EINVAL);
     }
 
-    if (offset_r >= f->nb_elems - offset)
+    যদি (offset_r >= f->nb_elems - offset)
         offset_r -= f->nb_elems - offset;
-    else
+    অন্যথা
         offset_r += offset;
 
-    while (to_read > 0) {
+    যেতিয়ালৈ (to_read > 0) {
         size_t    len = FFMIN(f->nb_elems - offset_r, to_read);
         uint8_t *rptr = f->buffer + offset_r * f->elem_size;
 
-        if (write_cb) {
+        যদি (write_cb) {
             ret = write_cb(opaque, rptr, &len);
-            if (ret < 0 || len == 0)
-                break;
-        } else {
+            যদি (ret < 0 || len == 0)
+                ভঙ্গ;
+        } অন্যথা {
             memcpy(buf, rptr, len * f->elem_size);
             buf += len * f->elem_size;
         }
         offset_r += len;
-        if (offset_r >= f->nb_elems)
+        যদি (offset_r >= f->nb_elems)
             offset_r = 0;
         to_read -= len;
     }
 
     *nb_elems -= to_read;
 
-    return ret;
+    ঘূৰাই ret;
 }
 
-int av_fifo_read(AVFifo *f, void *buf, size_t nb_elems)
+পূর্ণাঙ্ক av_fifo_read(AVFifo *f, শূন্য *buf, size_t nb_elems)
 {
-    int ret = fifo_peek_common(f, buf, &nb_elems, 0, NULL, NULL);
+    পূর্ণাঙ্ক ret = fifo_peek_common(f, buf, &nb_elems, 0, রিক্ত, রিক্ত);
     av_fifo_drain2(f, nb_elems);
-    return ret;
+    ঘূৰাই ret;
 }
 
-int av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
-                       void *opaque, size_t *nb_elems)
+পূর্ণাঙ্ক av_fifo_read_to_cb(AVFifo *f, AVFifoCB write_cb,
+                       শূন্য *opaque, size_t *nb_elems)
 {
-    int ret = fifo_peek_common(f, NULL, nb_elems, 0, write_cb, opaque);
+    পূর্ণাঙ্ক ret = fifo_peek_common(f, রিক্ত, nb_elems, 0, write_cb, opaque);
     av_fifo_drain2(f, *nb_elems);
-    return ret;
+    ঘূৰাই ret;
 }
 
-int av_fifo_peek(const AVFifo *f, void *buf, size_t nb_elems, size_t offset)
+পূর্ণাঙ্ক av_fifo_peek(ধ্রুৱ AVFifo *f, শূন্য *buf, size_t nb_elems, size_t offset)
 {
-    return fifo_peek_common(f, buf, &nb_elems, offset, NULL, NULL);
+    ঘূৰাই fifo_peek_common(f, buf, &nb_elems, offset, রিক্ত, রিক্ত);
 }
 
-int av_fifo_peek_to_cb(const AVFifo *f, AVFifoCB write_cb, void *opaque,
+পূর্ণাঙ্ক av_fifo_peek_to_cb(ধ্রুৱ AVFifo *f, AVFifoCB write_cb, শূন্য *opaque,
                        size_t *nb_elems, size_t offset)
 {
-    return fifo_peek_common(f, NULL, nb_elems, offset, write_cb, opaque);
+    ঘূৰাই fifo_peek_common(f, রিক্ত, nb_elems, offset, write_cb, opaque);
 }
 
-void av_fifo_drain2(AVFifo *f, size_t size)
+শূন্য av_fifo_drain2(AVFifo *f, size_t size)
 {
-    const size_t cur_size = av_fifo_can_read(f);
+    ধ্রুৱ size_t cur_size = av_fifo_can_read(f);
 
     av_assert0(cur_size >= size);
-    if (cur_size == size)
+    যদি (cur_size == size)
         f->is_empty = 1;
 
-    if (f->offset_r >= f->nb_elems - size)
+    যদি (f->offset_r >= f->nb_elems - size)
         f->offset_r -= f->nb_elems - size;
-    else
+    অন্যথা
         f->offset_r += size;
 }
 
-void av_fifo_reset2(AVFifo *f)
+শূন্য av_fifo_reset2(AVFifo *f)
 {
     f->offset_r = f->offset_w = 0;
     f->is_empty = 1;
 }
 
-void av_fifo_freep2(AVFifo **f)
+শূন্য av_fifo_freep2(AVFifo **f)
 {
-    if (*f) {
+    যদি (*f) {
         av_freep(&(*f)->buffer);
         av_freep(f);
     }

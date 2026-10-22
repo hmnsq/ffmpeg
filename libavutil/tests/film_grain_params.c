@@ -16,31 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#অন্তর্ভাৱ <stdio.h>
 
-#include "libavutil/film_grain_params.h"
-#include "libavutil/mem.h"
+#অন্তর্ভাৱ "libavutil/film_grain_params.h"
+#অন্তর্ভাৱ "libavutil/mem.h"
 
-static AVFrame *create_frame(enum AVPixelFormat format, int width, int height)
+স্থির AVFrame *create_frame(গণনা AVPixelFormat format, পূর্ণাঙ্ক width, পূর্ণাঙ্ক height)
 {
     AVFrame *frame = av_frame_alloc();
-    if (!frame)
-        return NULL;
+    যদি (!frame)
+        ঘূৰাই রিক্ত;
     frame->format = format;
     frame->width  = width;
     frame->height = height;
-    return frame;
+    ঘূৰাই frame;
 }
 
-static AVFilmGrainParams *add_grain(AVFrame *frame,
-                                     enum AVFilmGrainParamsType type,
-                                     int width, int height,
-                                     int sub_x, int sub_y,
-                                     int bd_luma, int bd_chroma)
+স্থির AVFilmGrainParams *add_grain(AVFrame *frame,
+                                     গণনা AVFilmGrainParamsType type,
+                                     পূর্ণাঙ্ক width, পূর্ণাঙ্ক height,
+                                     পূর্ণাঙ্ক sub_x, পূর্ণাঙ্ক sub_y,
+                                     পূর্ণাঙ্ক bd_luma, পূর্ণাঙ্ক bd_chroma)
 {
     AVFilmGrainParams *fgp = av_film_grain_params_create_side_data(frame);
-    if (!fgp)
-        return NULL;
+    যদি (!fgp)
+        ঘূৰাই রিক্ত;
     fgp->type             = type;
     fgp->width            = width;
     fgp->height           = height;
@@ -48,13 +48,13 @@ static AVFilmGrainParams *add_grain(AVFrame *frame,
     fgp->subsampling_y    = sub_y;
     fgp->bit_depth_luma   = bd_luma;
     fgp->bit_depth_chroma = bd_chroma;
-    return fgp;
+    ঘূৰাই fgp;
 }
 
-int main(void)
+পূর্ণাঙ্ক main(শূন্য)
 {
     AVFilmGrainParams *fgp;
-    const AVFilmGrainParams *sel;
+    ধ্রুৱ AVFilmGrainParams *sel;
     AVFrame *frame;
     size_t size;
 
@@ -64,7 +64,7 @@ int main(void)
     printf("alloc with size: %s\n", (fgp && size > 0) ? "OK" : "FAIL");
     av_free(fgp);
 
-    fgp = av_film_grain_params_alloc(NULL);
+    fgp = av_film_grain_params_alloc(রিক্ত);
     printf("alloc without size: %s\n", fgp ? "OK" : "FAIL");
     av_free(fgp);
 
@@ -72,11 +72,11 @@ int main(void)
 
     frame = av_frame_alloc();
     fgp = av_film_grain_params_create_side_data(frame);
-    if (fgp)
+    যদি (fgp)
         printf("create: OK\ndefaults: range=%d pri=%d trc=%d space=%d\n",
                fgp->color_range, fgp->color_primaries,
                fgp->color_trc, fgp->color_space);
-    else
+    অন্যথা
         printf("create: FAIL\n");
     av_frame_free(&frame);
 
@@ -239,5 +239,5 @@ int main(void)
            sel ? sel->width : -1, sel ? sel->height : -1);
     av_frame_free(&frame);
 
-    return 0;
+    ঘূৰাই 0;
 }

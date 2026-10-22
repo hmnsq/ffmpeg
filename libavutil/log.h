@@ -21,13 +21,13 @@
 #ifndef AVUTIL_LOG_H
 #define AVUTIL_LOG_H
 
-#include <stdarg.h>
-#include "attributes.h"
-#include "version.h"
+#অন্তর্ভাৱ <stdarg.h>
+#অন্তর্ভাৱ "attributes.h"
+#অন্তর্ভাৱ "version.h"
 
-typedef enum {
+প্রকারনির্দেশ গণনা {
     AV_CLASS_CATEGORY_NA = 0,
-    AV_CLASS_CATEGORY_INPUT,
+    AV_CLASS_CATEGORY_প্ৰবেশ,
     AV_CLASS_CATEGORY_OUTPUT,
     AV_CLASS_CATEGORY_MUXER,
     AV_CLASS_CATEGORY_DEMUXER,
@@ -39,15 +39,15 @@ typedef enum {
     AV_CLASS_CATEGORY_SWRESAMPLER,
     AV_CLASS_CATEGORY_HWDEVICE,
     AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT = 40,
-    AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT,
+    AV_CLASS_CATEGORY_DEVICE_VIDEO_প্ৰবেশ,
     AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT,
-    AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT,
+    AV_CLASS_CATEGORY_DEVICE_AUDIO_প্ৰবেশ,
     AV_CLASS_CATEGORY_DEVICE_OUTPUT,
-    AV_CLASS_CATEGORY_DEVICE_INPUT,
+    AV_CLASS_CATEGORY_DEVICE_প্ৰবেশ,
     AV_CLASS_CATEGORY_NB  ///< not part of ABI/API
 }AVClassCategory;
 
-enum AVClassStateFlags {
+গণনা AVClassStateFlags {
     /**
      * Object initialization has finished and it is now in the 'runtime' stage.
      * This affects e.g. what options can be set on the object (only
@@ -56,35 +56,35 @@ enum AVClassStateFlags {
     AV_CLASS_STATE_INITIALIZED         = (1 << 0),
 };
 
-#define AV_IS_INPUT_DEVICE(category) \
-    (((category) == AV_CLASS_CATEGORY_DEVICE_VIDEO_INPUT) || \
-     ((category) == AV_CLASS_CATEGORY_DEVICE_AUDIO_INPUT) || \
-     ((category) == AV_CLASS_CATEGORY_DEVICE_INPUT))
+#define AV_IS_প্ৰবেশ_DEVICE(category) \
+    (((category) == AV_CLASS_CATEGORY_DEVICE_VIDEO_প্ৰবেশ) || \
+     ((category) == AV_CLASS_CATEGORY_DEVICE_AUDIO_প্ৰবেশ) || \
+     ((category) == AV_CLASS_CATEGORY_DEVICE_প্ৰবেশ))
 
 #define AV_IS_OUTPUT_DEVICE(category) \
     (((category) == AV_CLASS_CATEGORY_DEVICE_VIDEO_OUTPUT) || \
      ((category) == AV_CLASS_CATEGORY_DEVICE_AUDIO_OUTPUT) || \
      ((category) == AV_CLASS_CATEGORY_DEVICE_OUTPUT))
 
-struct AVOptionRanges;
+সংরচনা AVOptionRanges;
 
 /**
  * Describe the class of an AVClass context structure. That is an
  * arbitrary struct of which the first field is a pointer to an
  * AVClass struct (e.g. AVCodecContext, AVFormatContext etc.).
  */
-typedef struct AVClass {
+প্রকারনির্দেশ সংরচনা AVClass {
     /**
      * The name of the class; usually it is the same name as the
      * context structure type to which the AVClass is associated.
      */
-    const char* class_name;
+    ধ্রুৱ ৱর্ণ* class_name;
 
     /**
      * A pointer to a function which returns the name of a context
      * instance ctx associated with the class.
      */
-    const char* (*item_name)(void* ctx);
+    ধ্রুৱ ৱর্ণ* (*item_name)(শূন্য* ctx);
 
     /**
      * An array of options for the structure or NULL.
@@ -93,7 +93,7 @@ typedef struct AVClass {
      *
      * @see av_set_default_options()
      */
-    const struct AVOption *option;
+    ধ্রুৱ সংরচনা AVOption *option;
 
     /**
      * LIBAVUTIL_VERSION with which this structure was created.
@@ -101,7 +101,7 @@ typedef struct AVClass {
      * major version bumps everywhere.
      */
 
-    int version;
+    পূর্ণাঙ্ক version;
 
     /**
      * Offset in the structure where the log level offset is stored. The log
@@ -110,7 +110,7 @@ typedef struct AVClass {
      *
      * 0 means there is no such variable.
      */
-    int log_level_offset_offset;
+    পূর্ণাঙ্ক log_level_offset_offset;
 
     /**
      * Offset in the structure where a pointer to the parent context for
@@ -121,7 +121,7 @@ typedef struct AVClass {
      * When the pointer is NULL, or this offset is zero, the object is assumed
      * to have no parent.
      */
-    int parent_log_context_offset;
+    পূর্ণাঙ্ক parent_log_context_offset;
 
     /**
      * Category used for visualization (like color).
@@ -137,17 +137,17 @@ typedef struct AVClass {
      * different instances of this class may have different categories,
      * ::category otherwise.
      */
-    AVClassCategory (*get_category)(void* ctx);
+    AVClassCategory (*get_category)(শূন্য* ctx);
 
     /**
      * Callback to return the supported/allowed ranges.
      */
-    int (*query_ranges)(struct AVOptionRanges **, void *obj, const char *key, int flags);
+    পূর্ণাঙ্ক (*query_ranges)(সংরচনা AVOptionRanges **, শূন্য *obj, ধ্রুৱ ৱর্ণ *চাবি, পূর্ণাঙ্ক flags);
 
     /**
      * Return next AVOptions-enabled child or NULL
      */
-    void* (*child_next)(void *obj, void *prev);
+    শূন্য* (*child_next)(শূন্য *obj, শূন্য *prev);
 
     /**
      * Iterate over the AVClasses corresponding to potential AVOptions-enabled
@@ -164,7 +164,7 @@ typedef struct AVClass {
      *       over the classes of all _potential_ children of any possible
      *       instance of this class.
      */
-    const struct AVClass* (*child_class_iterate)(void **iter);
+    ধ্রুৱ সংরচনা AVClass* (*child_class_iterate)(শূন্য **iter);
 
     /**
      * When non-zero, offset in the object to an unsigned int holding object
@@ -173,7 +173,7 @@ typedef struct AVClass {
      *
      * Added in version 59.41.100.
      */
-    int state_flags_offset;
+    পূর্ণাঙ্ক state_flags_offset;
 } AVClass;
 
 /**
@@ -265,7 +265,7 @@ typedef struct AVClass {
  * @param fmt The format string (printf-compatible) that specifies how
  *        subsequent arguments are converted to output.
  */
-void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
+শূন্য av_log(শূন্য *avcl, পূর্ণাঙ্ক level, ধ্রুৱ ৱর্ণ *fmt, ...) av_printf_format(3, 4);
 
 /**
  * Send the specified message to the log once with the initial_level and then with
@@ -286,7 +286,7 @@ void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
  *        this must be initialized to 0 before the first use. The same state
  *        must not be accessed by 2 Threads simultaneously.
  */
-void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state, const char *fmt, ...) av_printf_format(5, 6);
+শূন্য av_log_once(শূন্য* avcl, পূর্ণাঙ্ক initial_level, পূর্ণাঙ্ক subsequent_level, পূর্ণাঙ্ক *state, ধ্রুৱ ৱর্ণ *fmt, ...) av_printf_format(5, 6);
 
 
 /**
@@ -304,7 +304,7 @@ void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state
  *        subsequent arguments are converted to output.
  * @param vl The arguments referenced by the format string.
  */
-void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
+শূন্য av_vlog(শূন্য *avcl, পূর্ণাঙ্ক level, ধ্রুৱ ৱর্ণ *fmt, va_list vl);
 
 /**
  * Get the current log level
@@ -313,7 +313,7 @@ void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
  *
  * @return Current log level
  */
-int av_log_get_level(void);
+পূর্ণাঙ্ক av_log_get_level(শূন্য);
 
 /**
  * Set the log level
@@ -322,7 +322,7 @@ int av_log_get_level(void);
  *
  * @param level Logging level
  */
-void av_log_set_level(int level);
+শূন্য av_log_set_level(পূর্ণাঙ্ক level);
 
 /**
  * Set the logging callback
@@ -334,7 +334,7 @@ void av_log_set_level(int level);
  *
  * @param callback A logging function with a compatible signature.
  */
-void av_log_set_callback(void (*callback)(void*, int, const char*, va_list));
+শূন্য av_log_set_callback(শূন্য (*callback)(শূন্য*, পূর্ণাঙ্ক, ধ্রুৱ ৱর্ণ*, va_list));
 
 /**
  * Default logging callback
@@ -349,7 +349,7 @@ void av_log_set_callback(void (*callback)(void*, int, const char*, va_list));
  *        subsequent arguments are converted to output.
  * @param vl The arguments referenced by the format string.
  */
-void av_log_default_callback(void *avcl, int level, const char *fmt,
+শূন্য av_log_default_callback(শূন্য *avcl, পূর্ণাঙ্ক level, ধ্রুৱ ৱর্ণ *fmt,
                              va_list vl);
 
 /**
@@ -359,8 +359,8 @@ void av_log_default_callback(void *avcl, int level, const char *fmt,
  *
  * @return The AVClass class_name
  */
-const char* av_default_item_name(void* ctx);
-AVClassCategory av_default_get_category(void *ptr);
+ধ্রুৱ ৱর্ণ* av_default_item_name(শূন্য* ctx);
+AVClassCategory av_default_get_category(শূন্য *ptr);
 
 /**
  * Format a line of log the same way as the default callback.
@@ -369,8 +369,8 @@ AVClassCategory av_default_get_category(void *ptr);
  * @param print_prefix  used to store whether the prefix must be printed;
  *                      must point to a persistent integer initially set to 1
  */
-void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
+শূন্য av_log_format_সাৰি(শূন্য *ptr, পূর্ণাঙ্ক level, ধ্রুৱ ৱর্ণ *fmt, va_list vl,
+                        ৱর্ণ *সাৰি, পূর্ণাঙ্ক সাৰি_size, পূর্ণাঙ্ক *print_prefix);
 
 /**
  * Format a line of log the same way as the default callback.
@@ -386,8 +386,8 @@ void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
  *         character. If the return value is not less than line_size, it means
  *         that the log message was truncated to fit the buffer.
  */
-int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
+পূর্ণাঙ্ক av_log_format_line2(শূন্য *ptr, পূর্ণাঙ্ক level, ধ্রুৱ ৱর্ণ *fmt, va_list vl,
+                        ৱর্ণ *সাৰি, পূর্ণাঙ্ক সাৰি_size, পূর্ণাঙ্ক *print_prefix);
 
 /**
  * Skip repeated messages, this requires the user app to use av_log() instead of
@@ -417,8 +417,8 @@ int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
  */
 #define AV_LOG_PRINT_DATETIME 8
 
-void av_log_set_flags(int arg);
-int av_log_get_flags(void);
+শূন্য av_log_set_flags(পূর্ণাঙ্ক arg);
+পূর্ণাঙ্ক av_log_get_flags(শূন্য);
 
 /**
  * @}

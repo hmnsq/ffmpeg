@@ -18,42 +18,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
-#include <math.h>
+#অন্তর্ভাৱ <stdint.h>
+#অন্তর্ভাৱ <string.h>
+#অন্তর্ভাৱ <math.h>
 
-#include "display.h"
-#include "mathematics.h"
+#অন্তর্ভাৱ "display.h"
+#অন্তর্ভাৱ "mathematics.h"
 
 // fixed point to double
-#define CONV_FP(x) ((double) (x)) / (1 << 16)
+#define CONV_FP(x) ((দ্ৱিগুণ) (x)) / (1 << 16)
 
 // double to fixed point
 #define CONV_DB(x) (int32_t) ((x) * (1 << 16))
 
-double av_display_rotation_get(const int32_t matrix[9])
+দ্ৱিগুণ av_display_rotation_get(ধ্রুৱ int32_t matrix[9])
 {
-    double rotation, scale[2];
+    দ্ৱিগুণ rotation, scale[2];
 
     scale[0] = hypot(CONV_FP(matrix[0]), CONV_FP(matrix[3]));
     scale[1] = hypot(CONV_FP(matrix[1]), CONV_FP(matrix[4]));
 
-    if (scale[0] == 0.0 || scale[1] == 0.0)
-        return NAN;
+    যদি (scale[0] == 0.0 || scale[1] == 0.0)
+        ঘূৰাই NAN;
 
     rotation = atan2(CONV_FP(matrix[1]) / scale[1],
                      CONV_FP(matrix[0]) / scale[0]) * 180 / M_PI;
 
-    return -rotation;
+    ঘূৰাই -rotation;
 }
 
-void av_display_rotation_set(int32_t matrix[9], double angle)
+শূন্য av_display_rotation_set(int32_t matrix[9], দ্ৱিগুণ angle)
 {
-    double radians = -angle * M_PI / 180.0f;
-    double c = cos(radians);
-    double s = sin(radians);
+    দ্ৱিগুণ radians = -angle * M_PI / 180.0f;
+    দ্ৱিগুণ c = cos(radians);
+    দ্ৱিগুণ s = sin(radians);
 
-    memset(matrix, 0, 9 * sizeof(int32_t));
+    memset(matrix, 0, 9 * পরিমাণ(int32_t));
 
     matrix[0] = CONV_DB(c);
     matrix[1] = CONV_DB(-s);
@@ -62,12 +62,12 @@ void av_display_rotation_set(int32_t matrix[9], double angle)
     matrix[8] = 1 << 30;
 }
 
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip)
+শূন্য av_display_matrix_flip(int32_t matrix[9], পূর্ণাঙ্ক hflip, পূর্ণাঙ্ক vflip)
 {
-    int i;
-    const int flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
+    পূর্ণাঙ্ক i;
+    ধ্রুৱ পূর্ণাঙ্ক flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
 
-    if (hflip || vflip)
-        for (i = 0; i < 9; i++)
+    যদি (hflip || vflip)
+        বাবে (i = 0; i < 9; i++)
             matrix[i] *= flip[i % 3];
 }

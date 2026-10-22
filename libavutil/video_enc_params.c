@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#অন্তর্ভাৱ <stddef.h>
+#অন্তর্ভাৱ <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#অন্তর্ভাৱ "buffer.h"
+#অন্তর্ভাৱ "frame.h"
+#অন্তর্ভাৱ "mem.h"
+#অন্তর্ভাৱ "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(গণনা AVVideoEncParamsType type,
+                                            unsigned পূর্ণাঙ্ক nb_blocks, size_t *out_size)
 {
-    struct TestStruct {
+    সংরচনা TestStruct {
         AVVideoEncParams   p;
         AVVideoBlockParams b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
+    ধ্রুৱ size_t blocks_offset = offsetof(সংরচনা TestStruct, b);
     size_t size = blocks_offset;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    যদি (nb_blocks > (SIZE_MAX - size) / পরিমাণ(AVVideoBlockParams))
+        ঘূৰাই রিক্ত;
+    size += পরিমাণ(AVVideoBlockParams) * nb_blocks;
 
     par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    যদি (!par)
+        ঘূৰাই রিক্ত;
 
     par->type          = type;
     par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
+    par->block_size    = পরিমাণ(AVVideoBlockParams);
     par->blocks_offset = blocks_offset;
 
-    if (out_size)
+    যদি (out_size)
         *out_size = size;
 
-    return par;
+    ঘূৰাই par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_data(AVFrame *frame, গণনা AVVideoEncParamsType type,
+                                     unsigned পূর্ণাঙ্ক nb_blocks)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
     size_t size;
 
     par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    যদি (!par)
+        ঘূৰাই রিক্ত;
+    buf = av_buffer_create((uint8_t *)par, size, রিক্ত, রিক্ত, 0);
+    যদি (!buf) {
         av_freep(&par);
-        return NULL;
+        ঘূৰাই রিক্ত;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
+    যদি (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        ঘূৰাই রিক্ত;
     }
 
-    return par;
+    ঘূৰাই par;
 }

@@ -88,7 +88,7 @@
   }
 
 #ifdef __loongarch_sx
-#include <lsxintrin.h>
+#অন্তর্ভাৱ <lsxintrin.h>
 /*
  * =============================================================================
  * Description : Dot product & addition of byte vector elements
@@ -106,13 +106,13 @@
  *         out : 23,40,41,26, 23,40,41,26
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2add_h_b(__m128i in_c, __m128i in_h,
+স্থির অন্তঃস্থ __m128i __lsx_vdp2add_h_b(__m128i in_c, __m128i in_h,
                                         __m128i in_l) {
   __m128i out;
 
   out = __lsx_vmaddwev_h_b(in_c, in_h, in_l);
   out = __lsx_vmaddwod_h_b(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -132,13 +132,13 @@ static inline __m128i __lsx_vdp2add_h_b(__m128i in_c, __m128i in_h,
  *         out : 23,40,41,26, 23,40,41,26
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2add_h_bu(__m128i in_c, __m128i in_h,
+স্থির অন্তঃস্থ __m128i __lsx_vdp2add_h_bu(__m128i in_c, __m128i in_h,
                                          __m128i in_l) {
   __m128i out;
 
   out = __lsx_vmaddwev_h_bu(in_c, in_h, in_l);
   out = __lsx_vmaddwod_h_bu(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -158,13 +158,13 @@ static inline __m128i __lsx_vdp2add_h_bu(__m128i in_c, __m128i in_h,
  *         out : -4,-24,-60,-112, 6,26,62,114
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2add_h_bu_b(__m128i in_c, __m128i in_h,
+স্থির অন্তঃস্থ __m128i __lsx_vdp2add_h_bu_b(__m128i in_c, __m128i in_h,
                                            __m128i in_l) {
   __m128i out;
 
   out = __lsx_vmaddwev_h_bu_b(in_c, in_h, in_l);
   out = __lsx_vmaddwod_h_bu_b(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -184,13 +184,13 @@ static inline __m128i __lsx_vdp2add_h_bu_b(__m128i in_c, __m128i in_h,
  *         out : 23,40,41,26
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2add_w_h(__m128i in_c, __m128i in_h,
+স্থির অন্তঃস্থ __m128i __lsx_vdp2add_w_h(__m128i in_c, __m128i in_h,
                                         __m128i in_l) {
   __m128i out;
 
   out = __lsx_vmaddwev_w_h(in_c, in_h, in_l);
   out = __lsx_vmaddwod_w_h(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -208,12 +208,12 @@ static inline __m128i __lsx_vdp2add_w_h(__m128i in_c, __m128i in_h,
  *         out : 22,38,38,22, 22,38,38,22
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2_h_b(__m128i in_h, __m128i in_l) {
+স্থির অন্তঃস্থ __m128i __lsx_vdp2_h_b(__m128i in_h, __m128i in_l) {
   __m128i out;
 
   out = __lsx_vmulwev_h_b(in_h, in_l);
   out = __lsx_vmaddwod_h_b(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -231,12 +231,12 @@ static inline __m128i __lsx_vdp2_h_b(__m128i in_h, __m128i in_l) {
  *         out : 22,38,38,22, 22,38,38,22
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2_h_bu(__m128i in_h, __m128i in_l) {
+স্থির অন্তঃস্থ __m128i __lsx_vdp2_h_bu(__m128i in_h, __m128i in_l) {
   __m128i out;
 
   out = __lsx_vmulwev_h_bu(in_h, in_l);
   out = __lsx_vmaddwod_h_bu(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -254,12 +254,12 @@ static inline __m128i __lsx_vdp2_h_bu(__m128i in_h, __m128i in_l) {
  *         out : 22,38,38,22, 22,38,38,6
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2_h_bu_b(__m128i in_h, __m128i in_l) {
+স্থির অন্তঃস্থ __m128i __lsx_vdp2_h_bu_b(__m128i in_h, __m128i in_l) {
   __m128i out;
 
   out = __lsx_vmulwev_h_bu_b(in_h, in_l);
   out = __lsx_vmaddwod_h_bu_b(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -277,12 +277,12 @@ static inline __m128i __lsx_vdp2_h_bu_b(__m128i in_h, __m128i in_l) {
  *         out : 22,38,38,22
  * =============================================================================
  */
-static inline __m128i __lsx_vdp2_w_h(__m128i in_h, __m128i in_l) {
+স্থির অন্তঃস্থ __m128i __lsx_vdp2_w_h(__m128i in_h, __m128i in_l) {
   __m128i out;
 
   out = __lsx_vmulwev_w_h(in_h, in_l);
   out = __lsx_vmaddwod_w_h(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -302,12 +302,12 @@ static inline __m128i __lsx_vdp2_w_h(__m128i in_h, __m128i in_l) {
  *         out : 1,2,9,9, 1,9,9,9
  * =============================================================================
  */
-static inline __m128i __lsx_vclip_h(__m128i _in, __m128i min, __m128i max) {
+স্থির অন্তঃস্থ __m128i __lsx_vclip_h(__m128i _in, __m128i min, __m128i max) {
   __m128i out;
 
   out = __lsx_vmax_h(min, _in);
   out = __lsx_vmin_h(max, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -322,12 +322,12 @@ static inline __m128i __lsx_vclip_h(__m128i _in, __m128i min, __m128i max) {
  *         out : 0,255,255,249, 0,255,255,249
  * =============================================================================
  */
-static inline __m128i __lsx_vclip255_h(__m128i _in) {
+স্থির অন্তঃস্থ __m128i __lsx_vclip255_h(__m128i _in) {
   __m128i out;
 
   out = __lsx_vmaxi_h(_in, 0);
   out = __lsx_vsat_hu(out, 7);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -342,12 +342,12 @@ static inline __m128i __lsx_vclip255_h(__m128i _in) {
  *         out : 0,255,255,249
  * =============================================================================
  */
-static inline __m128i __lsx_vclip255_w(__m128i _in) {
+স্থির অন্তঃস্থ __m128i __lsx_vclip255_w(__m128i _in) {
   __m128i out;
 
   out = __lsx_vmaxi_w(_in, 0);
   out = __lsx_vsat_wu(out, 7);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -715,7 +715,7 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
 #endif  // LSX
 
 #ifdef __loongarch_asx
-#include <lasxintrin.h>
+#অন্তর্ভাৱ <lasxintrin.h>
 /*
  * =============================================================================
  * Description : Dot product of byte vector elements
@@ -730,12 +730,12 @@ static inline __m128i __lsx_vclip255_w(__m128i _in) {
  * Example     : See out = __lasx_xvdp2_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_h_bu(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2_h_bu(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmulwev_h_bu(in_h, in_l);
   out = __lasx_xvmaddwod_h_bu(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -752,12 +752,12 @@ static inline __m256i __lasx_xvdp2_h_bu(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvdp2_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_h_b(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2_h_b(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmulwev_h_b(in_h, in_l);
   out = __lasx_xvmaddwod_h_b(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -777,12 +777,12 @@ static inline __m256i __lasx_xvdp2_h_b(__m256i in_h, __m256i in_l) {
  *         out : 22,38,38,22, 22,38,38,22
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_w_h(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2_w_h(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmulwev_w_h(in_h, in_l);
   out = __lasx_xvmaddwod_w_h(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -799,12 +799,12 @@ static inline __m256i __lasx_xvdp2_w_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvdp2_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_d_w(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2_d_w(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmulwev_d_w(in_h, in_l);
   out = __lasx_xvmaddwod_d_w(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -821,12 +821,12 @@ static inline __m256i __lasx_xvdp2_d_w(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvdp2_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2_w_hu_h(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2_w_hu_h(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmulwev_w_hu_h(in_h, in_l);
   out = __lasx_xvmaddwod_w_hu_h(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -843,13 +843,13 @@ static inline __m256i __lasx_xvdp2_w_hu_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_h_b(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2add_h_b(__m256i in_c, __m256i in_h,
                                           __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmaddwev_h_b(in_c, in_h, in_l);
   out = __lasx_xvmaddwod_h_b(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -866,13 +866,13 @@ static inline __m256i __lasx_xvdp2add_h_b(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_h_bu(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2add_h_bu(__m256i in_c, __m256i in_h,
                                            __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmaddwev_h_bu(in_c, in_h, in_l);
   out = __lasx_xvmaddwod_h_bu(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -889,13 +889,13 @@ static inline __m256i __lasx_xvdp2add_h_bu(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_h_bu_b(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2add_h_bu_b(__m256i in_c, __m256i in_h,
                                              __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmaddwev_h_bu_b(in_c, in_h, in_l);
   out = __lasx_xvmaddwod_h_bu_b(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -916,13 +916,13 @@ static inline __m256i __lasx_xvdp2add_h_bu_b(__m256i in_c, __m256i in_h,
  *         out : 23,40,41,26, 23,40,41,26
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_w_h(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2add_w_h(__m256i in_c, __m256i in_h,
                                           __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmaddwev_w_h(in_c, in_h, in_l);
   out = __lasx_xvmaddwod_w_h(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -939,13 +939,13 @@ static inline __m256i __lasx_xvdp2add_w_h(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_w_hu(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2add_w_hu(__m256i in_c, __m256i in_h,
                                            __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmaddwev_w_hu(in_c, in_h, in_l);
   out = __lasx_xvmaddwod_w_hu(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -962,13 +962,13 @@ static inline __m256i __lasx_xvdp2add_w_hu(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2add_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2add_w_hu_h(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2add_w_hu_h(__m256i in_c, __m256i in_h,
                                              __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmaddwev_w_hu_h(in_c, in_h, in_l);
   out = __lasx_xvmaddwod_w_hu_h(out, in_h, in_l);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -986,14 +986,14 @@ static inline __m256i __lasx_xvdp2add_w_hu_h(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvdp2sub_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2sub_h_bu(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2sub_h_bu(__m256i in_c, __m256i in_h,
                                            __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmulwev_h_bu(in_h, in_l);
   out = __lasx_xvmaddwod_h_bu(out, in_h, in_l);
   out = __lasx_xvsub_h(in_c, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1015,14 +1015,14 @@ static inline __m256i __lasx_xvdp2sub_h_bu(__m256i in_c, __m256i in_h,
  *         out : -7,-3,0,0, 0,-1,0,-1
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp2sub_w_h(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvdp2sub_w_h(__m256i in_c, __m256i in_h,
                                           __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmulwev_w_h(in_h, in_l);
   out = __lasx_xvmaddwod_w_h(out, in_h, in_l);
   out = __lasx_xvsub_w(in_c, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1042,13 +1042,13 @@ static inline __m256i __lasx_xvdp2sub_w_h(__m256i in_c, __m256i in_h,
  *         out : -2,0,1,1
  * =============================================================================
  */
-static inline __m256i __lasx_xvdp4_d_h(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvdp4_d_h(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvmulwev_w_h(in_h, in_l);
   out = __lasx_xvmaddwod_w_h(out, in_h, in_l);
   out = __lasx_xvhaddw_d_w(out, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1063,12 +1063,12 @@ static inline __m256i __lasx_xvdp4_d_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvaddwh_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwh_h_b(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvaddwh_h_b(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvilvh_b(in_h, in_l);
   out = __lasx_xvhaddw_h_b(out, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1086,12 +1086,12 @@ static inline __m256i __lasx_xvaddwh_h_b(__m256i in_h, __m256i in_l) {
  *         out : 1,0,0,-1, 1,0,0, 2
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwh_w_h(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvaddwh_w_h(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvilvh_h(in_h, in_l);
   out = __lasx_xvhaddw_w_h(out, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1106,12 +1106,12 @@ static inline __m256i __lasx_xvaddwh_w_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvaddwl_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwl_h_b(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvaddwl_h_b(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvilvl_b(in_h, in_l);
   out = __lasx_xvhaddw_h_b(out, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1129,12 +1129,12 @@ static inline __m256i __lasx_xvaddwl_h_b(__m256i in_h, __m256i in_l) {
  *         out : 5,-1,4,2, 1,0,2,-1
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwl_w_h(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvaddwl_w_h(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvilvl_h(in_h, in_l);
   out = __lasx_xvhaddw_w_h(out, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1149,12 +1149,12 @@ static inline __m256i __lasx_xvaddwl_w_h(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvaddwl_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddwl_h_bu(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvaddwl_h_bu(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvilvl_b(in_h, in_l);
   out = __lasx_xvhaddw_hu_bu(out, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1168,12 +1168,12 @@ static inline __m256i __lasx_xvaddwl_h_bu(__m256i in_h, __m256i in_l) {
  * Example     : See out = __lasx_xvaddw_w_w_h(in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddw_h_h_bu(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvaddw_h_h_bu(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvsllwil_hu_bu(in_l, 0);
   out = __lasx_xvadd_h(in_h, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1190,12 +1190,12 @@ static inline __m256i __lasx_xvaddw_h_h_bu(__m256i in_h, __m256i in_l) {
  *         out : 2, 0,1,2, -1,0,1,1,
  * =============================================================================
  */
-static inline __m256i __lasx_xvaddw_w_w_h(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvaddw_w_w_h(__m256i in_h, __m256i in_l) {
   __m256i out;
 
   out = __lasx_xvsllwil_w_h(in_l, 0);
   out = __lasx_xvadd_w(in_h, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1216,7 +1216,7 @@ static inline __m256i __lasx_xvaddw_w_w_h(__m256i in_h, __m256i in_l) {
  *         out : 201, 602,1203,2004, -995, -1794,-2793,-3992
  * =============================================================================
  */
-static inline __m256i __lasx_xvmaddwl_w_h(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvmaddwl_w_h(__m256i in_c, __m256i in_h,
                                           __m256i in_l) {
   __m256i tmp0, tmp1, out;
 
@@ -1224,7 +1224,7 @@ static inline __m256i __lasx_xvmaddwl_w_h(__m256i in_c, __m256i in_h,
   tmp1 = __lasx_xvsllwil_w_h(in_l, 0);
   tmp0 = __lasx_xvmul_w(tmp0, tmp1);
   out = __lasx_xvadd_w(tmp0, in_c);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1240,7 +1240,7 @@ static inline __m256i __lasx_xvmaddwl_w_h(__m256i in_c, __m256i in_h,
  * Example     : See out = __lasx_xvmaddwl_w_h(in_c, in_h, in_l)
  * =============================================================================
  */
-static inline __m256i __lasx_xvmaddwh_w_h(__m256i in_c, __m256i in_h,
+স্থির অন্তঃস্থ __m256i __lasx_xvmaddwh_w_h(__m256i in_c, __m256i in_h,
                                           __m256i in_l) {
   __m256i tmp0, tmp1, out;
 
@@ -1248,7 +1248,7 @@ static inline __m256i __lasx_xvmaddwh_w_h(__m256i in_c, __m256i in_h,
   tmp1 = __lasx_xvilvh_h(in_l, in_l);
   tmp0 = __lasx_xvmulwev_w_h(tmp0, tmp1);
   out = __lasx_xvadd_w(tmp0, in_c);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1266,13 +1266,13 @@ static inline __m256i __lasx_xvmaddwh_w_h(__m256i in_c, __m256i in_h,
  *         out : 6,1,3,0, 0,0,1,0
  * =============================================================================
  */
-static inline __m256i __lasx_xvmulwl_w_h(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvmulwl_w_h(__m256i in_h, __m256i in_l) {
   __m256i tmp0, tmp1, out;
 
   tmp0 = __lasx_xvsllwil_w_h(in_h, 0);
   tmp1 = __lasx_xvsllwil_w_h(in_l, 0);
   out = __lasx_xvmul_w(tmp0, tmp1);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1290,13 +1290,13 @@ static inline __m256i __lasx_xvmulwl_w_h(__m256i in_h, __m256i in_l) {
  *         out : 0,0,0,0, 0,0,0,1
  * =============================================================================
  */
-static inline __m256i __lasx_xvmulwh_w_h(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvmulwh_w_h(__m256i in_h, __m256i in_l) {
   __m256i tmp0, tmp1, out;
 
   tmp0 = __lasx_xvilvh_h(in_h, in_h);
   tmp1 = __lasx_xvilvh_h(in_l, in_l);
   out = __lasx_xvmulwev_w_h(tmp0, tmp1);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1316,13 +1316,13 @@ static inline __m256i __lasx_xvmulwh_w_h(__m256i in_h, __m256i in_l) {
  *        out  : 5,65535,4,2, 1,0,0,1, 3,18,4,0, 1,0,0,2,
  * =============================================================================
  */
-static inline __m256i __lasx_xvsaddw_hu_hu_bu(__m256i in_h, __m256i in_l) {
+স্থির অন্তঃস্থ __m256i __lasx_xvsaddw_hu_hu_bu(__m256i in_h, __m256i in_l) {
   __m256i tmp1, out;
   __m256i zero = { 0 };
 
   tmp1 = __lasx_xvilvl_b(zero, in_l);
   out = __lasx_xvsadd_hu(in_h, tmp1);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1341,12 +1341,12 @@ static inline __m256i __lasx_xvsaddw_hu_hu_bu(__m256i in_h, __m256i in_l) {
  *         out : 1,2,9,9, 1,9,9,9, 4,4,4,4, 5,5,5,5
  * =============================================================================
  */
-static inline __m256i __lasx_xvclip_h(__m256i in, __m256i min, __m256i max) {
+স্থির অন্তঃস্থ __m256i __lasx_xvclip_h(__m256i in, __m256i min, __m256i max) {
   __m256i out;
 
   out = __lasx_xvmax_h(min, in);
   out = __lasx_xvmin_h(max, out);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1359,12 +1359,12 @@ static inline __m256i __lasx_xvclip_h(__m256i in, __m256i min, __m256i max) {
  * Example     : See out = __lasx_xvclip255_w(in)
  * =============================================================================
  */
-static inline __m256i __lasx_xvclip255_h(__m256i in) {
+স্থির অন্তঃস্থ __m256i __lasx_xvclip255_h(__m256i in) {
   __m256i out;
 
   out = __lasx_xvmaxi_h(in, 0);
   out = __lasx_xvsat_hu(out, 7);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1379,12 +1379,12 @@ static inline __m256i __lasx_xvclip255_h(__m256i in) {
  *         out :  0,255,255,249,  0,255,255,249
  * =============================================================================
  */
-static inline __m256i __lasx_xvclip255_w(__m256i in) {
+স্থির অন্তঃস্থ __m256i __lasx_xvclip255_w(__m256i in) {
   __m256i out;
 
   out = __lasx_xvmaxi_w(in, 0);
   out = __lasx_xvsat_wu(out, 7);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1403,12 +1403,12 @@ static inline __m256i __lasx_xvclip255_w(__m256i in) {
  *         out : 11,11,11,11, 11,11,11,11, 11,11,11,11, 11,11,11,11
  * =============================================================================
  */
-static inline __m256i __lasx_xvsplati_l_h(__m256i in, int idx) {
+স্থির অন্তঃস্থ __m256i __lasx_xvsplati_l_h(__m256i in, পূর্ণাঙ্ক idx) {
   __m256i out;
 
   out = __lasx_xvpermi_q(in, in, 0x02);
   out = __lasx_xvreplve_h(out, idx);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1427,12 +1427,12 @@ static inline __m256i __lasx_xvsplati_l_h(__m256i in, int idx) {
  *         out : 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2
  * =============================================================================
  */
-static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
+স্থির অন্তঃস্থ __m256i __lasx_xvsplati_h_h(__m256i in, পূর্ণাঙ্ক idx) {
   __m256i out;
 
   out = __lasx_xvpermi_q(in, in, 0x13);
   out = __lasx_xvreplve_h(out, idx);
-  return out;
+  ঘূৰাই out;
 }
 
 /*
@@ -1936,12 +1936,12 @@ static inline __m256i __lasx_xvsplati_h_h(__m256i in, int idx) {
  *               VP:1,2,3,4,
  * =============================================================================
  */
-#define VECT_PRINT(RTYPE, element_num, in0, enter)                 \
+#define VECT_PRINT(RTYPE, element_অঙ্ক, in0, enter)                 \
   {                                                                \
     RTYPE _tmp0 = (RTYPE)in0;                                      \
-    int _i = 0;                                                    \
-    if (enter) printf("\nVP:");                                    \
-    for (_i = 0; _i < element_num; _i++) printf("%d,", _tmp0[_i]); \
+    পূর্ণাঙ্ক _i = 0;                                                    \
+    যদি (enter) printf("\nVP:");                                    \
+    বাবে (_i = 0; _i < element_অঙ্ক; _i++) printf("%d,", _tmp0[_i]); \
   }
 
 #endif /* LOONGSON_INTRINSICS_H */
