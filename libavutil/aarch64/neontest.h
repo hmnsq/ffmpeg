@@ -23,16 +23,16 @@
 #ifndef AVUTIL_AARCH64_NEONTEST_H
 #define AVUTIL_AARCH64_NEONTEST_H
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#अन्तर्भाव <inttypes.h>
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <stdarg.h>
+#अन्तर्भाव <string.h>
 
-#include "libavutil/bswap.h"
+#अन्तर्भाव "libavutil/bswap.h"
 
 #define storeneonregs(mem)                \
-    __asm__ volatile(                     \
+    __asm__ चञ्चल(                     \
         "stp d8,  d9,  [%0]\n\t"          \
         "stp d10, d11, [%0, #16]\n\t"     \
         "stp d12, d13, [%0, #32]\n\t"     \
@@ -41,16 +41,16 @@
 
 #define testneonclobbers(func, ctx, ...)                        \
     uint64_t neon[2][8];                                        \
-    int ret;                                                    \
+    पूर्णाङ्क ret;                                                    \
     storeneonregs(neon[0]);                                     \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storeneonregs(neon[1]);                                     \
-    if (memcmp(neon[0], neon[1], sizeof(neon[0]))) {            \
-        int i;                                                  \
+    यदि (memcmp(neon[0], neon[1], परिमाण(neon[0]))) {            \
+        पूर्णाङ्क i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "NEON REGS CLOBBERED IN %s!\n", #func);          \
-        for (i = 0; i < 8; i ++)                                \
-            if (neon[0][i] != neon[1][i]) {                     \
+        प्रति (i = 0; i < 8; i ++)                                \
+            यदि (neon[0][i] != neon[1][i]) {                     \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "d%-2d = %016"PRIx64"\n",                \
                        8 + i, av_bswap64(neon[0][i]));          \
@@ -60,11 +60,11 @@
             }                                                   \
         abort();                                                \
     }                                                           \
-    return ret
+    प्रत्यागम ret
 
 #define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+पूर्णाङ्क __real_ ## func;    \
+पूर्णाङ्क __wrap_ ## func;    \
+पूर्णाङ्क __wrap_ ## func
 
 #endif /* AVUTIL_AARCH64_NEONTEST_H */
