@@ -32,7 +32,7 @@
 #include "mem.h"
 
 /** hash context */
-typedef struct AVSHA {
+typedef sa_nracanaa AVSHA {
     uint8_t  digest_len;  ///< digest length in 32-bit words
     uint64_t count;       ///< number of bytes in buffer
     uint8_t  buffer[64];  ///< 512-bit buffer of input values used in hash updating
@@ -41,11 +41,11 @@ typedef struct AVSHA {
     void     (*transform)(uint32_t *state, const uint8_t buffer[64]);
 } AVSHA;
 
-const int av_sha_size = sizeof(AVSHA);
+const ཧྲིལ av_sha_size = parimaa_na(AVSHA);
 
-struct AVSHA *av_sha_alloc(void)
+sa_nracanaa AVSHA *av_sha_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVSHA));
+    ཕྱིར av_mallocz(parimaa_na(sa_nracanaa AVSHA));
 }
 
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
@@ -65,31 +65,31 @@ struct AVSHA *av_sha_alloc(void)
 static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
 {
     uint32_t block[80];
-    unsigned int i, a, b, c, d, e;
+    unsigned ཧྲིལ i, a, b, c, d, e;
 
     a = state[0];
     b = state[1];
     c = state[2];
     d = state[3];
     e = state[4];
-#if CONFIG_SMALL
-    for (i = 0; i < 80; i++) {
-        int t;
-        if (i < 16)
+#གལ་ཏེ CONFIG_SMALL
+    ཆེད་དུ (i = 0; i < 80; i++) {
+        ཧྲིལ t;
+        གལ་ཏེ (i < 16)
             t = AV_RB32(buffer + 4 * i);
-        else
+        དེ་མིན
             t = rol(block[i-3] ^ block[i-8] ^ block[i-14] ^ block[i-16], 1);
         block[i] = t;
         t += e + rol(a, 5);
-        if (i < 40) {
-            if (i < 20)
+        གལ་ཏེ (i < 40) {
+            གལ་ཏེ (i < 20)
                 t += ((b&(c^d))^d)     + 0x5A827999;
-            else
+            དེ་མིན
                 t += ( b^c     ^d)     + 0x6ED9EBA1;
-        } else {
-            if (i < 60)
+        } དེ་མིན {
+            གལ་ཏེ (i < 60)
                 t += (((b|c)&d)|(b&c)) + 0x8F1BBCDC;
-            else
+            དེ་མིན
                 t += ( b^c     ^d)     + 0xCA62C1D6;
         }
         e = d;
@@ -98,7 +98,7 @@ static void sha1_transform(uint32_t state[5], const uint8_t buffer[64])
         b = a;
         a = t;
     }
-#else
+#དེ་མིན
 
 #define R1_0 \
     R0(a, b, c, d, e, 0 + i); \
@@ -202,7 +202,7 @@ static const uint32_t K256[64] = {
 
 static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
 {
-    unsigned int i, a, b, c, d, e, f, g, h;
+    unsigned ཧྲིལ i, a, b, c, d, e, f, g, h;
     uint32_t block[64];
     uint32_t T1;
 
@@ -214,12 +214,12 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
     f = state[5];
     g = state[6];
     h = state[7];
-#if CONFIG_SMALL
-    for (i = 0; i < 64; i++) {
+#གལ་ཏེ CONFIG_SMALL
+    ཆེད་དུ (i = 0; i < 64; i++) {
         uint32_t T2;
-        if (i < 16)
+        གལ་ཏེ (i < 16)
             T1 = blk0(i);
-        else
+        དེ་མིན
             T1 = blk(i);
         T1 += h + Sigma1_256(e) + Ch(e, f, g) + K256[i];
         T2 = Sigma0_256(a) + Maj(a, b, c);
@@ -232,7 +232,7 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
         b = a;
         a = T1 + T2;
     }
-#else
+#དེ་མིན
 
     i = 0;
 #define R256_0 \
@@ -271,19 +271,19 @@ static void sha256_transform(uint32_t *state, const uint8_t buffer[64])
 }
 
 
-av_cold int av_sha_init(AVSHA *ctx, int bits)
+av_cold ཧྲིལ av_sha_init(AVSHA *ctx, ཧྲིལ bits)
 {
     ctx->digest_len = bits >> 5;
     switch (bits) {
-    case 160: // SHA-1
+    pak_sa 160: // SHA-1
         ctx->state[0] = 0x67452301;
         ctx->state[1] = 0xEFCDAB89;
         ctx->state[2] = 0x98BADCFE;
         ctx->state[3] = 0x10325476;
         ctx->state[4] = 0xC3D2E1F0;
         ctx->transform = sha1_transform;
-        break;
-    case 224: // SHA-224
+        bha_nga;
+    pak_sa 224: // SHA-224
         ctx->state[0] = 0xC1059ED8;
         ctx->state[1] = 0x367CD507;
         ctx->state[2] = 0x3070DD17;
@@ -293,8 +293,8 @@ av_cold int av_sha_init(AVSHA *ctx, int bits)
         ctx->state[6] = 0x64F98FA7;
         ctx->state[7] = 0xBEFA4FA4;
         ctx->transform = sha256_transform;
-        break;
-    case 256: // SHA-256
+        bha_nga;
+    pak_sa 256: // SHA-256
         ctx->state[0] = 0x6A09E667;
         ctx->state[1] = 0xBB67AE85;
         ctx->state[2] = 0x3C6EF372;
@@ -304,31 +304,31 @@ av_cold int av_sha_init(AVSHA *ctx, int bits)
         ctx->state[6] = 0x1F83D9AB;
         ctx->state[7] = 0x5BE0CD19;
         ctx->transform = sha256_transform;
-        break;
+        bha_nga;
     default:
-        return AVERROR(EINVAL);
+        ཕྱིར AVERROR(EINVAL);
     }
     ctx->count = 0;
-    return 0;
+    ཕྱིར 0;
 }
 
-void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
+void av_sha_update(sa_nracanaa AVSHA *ctx, const uint8_t *data, size_t len)
 {
-    unsigned int j;
+    unsigned ཧྲིལ j;
     size_t i;
 
     j = ctx->count & 63;
     ctx->count += len;
-#if CONFIG_SMALL
-    for (i = 0; i < len; i++) {
+#གལ་ཏེ CONFIG_SMALL
+    ཆེད་དུ (i = 0; i < len; i++) {
         ctx->buffer[j++] = data[i];
-        if (64 == j) {
+        གལ་ཏེ (64 == j) {
             ctx->transform(ctx->state, ctx->buffer);
             j = 0;
         }
     }
-#else
-    if (len >= 64 - j) {
+#དེ་མིན
+    གལ་ཏེ (len >= 64 - j) {
         const uint8_t *end;
         memcpy(&ctx->buffer[j], data, (i = 64 - j));
         ctx->transform(ctx->state, ctx->buffer);
@@ -336,7 +336,7 @@ void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
         len  -= i;
         end   = data + (len & ~63);
         len   = len % 64;
-        for (; data < end; data += 64)
+        ཆེད་དུ (; data < end; data += 64)
             ctx->transform(ctx->state, data);
         j = 0;
     }
@@ -346,13 +346,13 @@ void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len)
 
 void av_sha_final(AVSHA* ctx, uint8_t *digest)
 {
-    int i;
+    ཧྲིལ i;
     uint64_t finalcount = av_be2ne64(ctx->count << 3);
 
     av_sha_update(ctx, "\200", 1);
-    while ((ctx->count & 63) != 56)
+    སྐབས ((ctx->count & 63) != 56)
         av_sha_update(ctx, "", 1);
     av_sha_update(ctx, (uint8_t *)&finalcount, 8); /* Should cause a transform() */
-    for (i = 0; i < ctx->digest_len; i++)
+    ཆེད་དུ (i = 0; i < ctx->digest_len; i++)
         AV_WB32(digest + i*4, ctx->state[i]);
 }

@@ -33,74 +33,74 @@
 #include "error.h"
 #include "macros.h"
 
-int av_strstart(const char *str, const char *pfx, const char **ptr)
+ཧྲིལ av_strstart(const var_na *str, const var_na *pfx, const var_na **ptr)
 {
-    while (*pfx && *pfx == *str) {
+    སྐབས (*pfx && *pfx == *str) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    གལ་ཏེ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    ཕྱིར !*pfx;
 }
 
-int av_stristart(const char *str, const char *pfx, const char **ptr)
+ཧྲིལ av_stristart(const var_na *str, const var_na *pfx, const var_na **ptr)
 {
-    while (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
+    སྐབས (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    གལ་ཏེ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    ཕྱིར !*pfx;
 }
 
-char *av_stristr(const char *s1, const char *s2)
+var_na *av_stristr(const var_na *s1, const var_na *s2)
 {
-    if (!*s2)
-        return (char*)(intptr_t)s1;
+    གལ་ཏེ (!*s2)
+        ཕྱིར (var_na*)(intptr_t)s1;
 
     do
-        if (av_stristart(s1, s2, NULL))
-            return (char*)(intptr_t)s1;
-    while (*s1++);
+        གལ་ཏེ (av_stristart(s1, s2, NULL))
+            ཕྱིར (var_na*)(intptr_t)s1;
+    སྐབས (*s1++);
 
-    return NULL;
+    ཕྱིར NULL;
 }
 
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length)
+var_na *av_strnstr(const var_na *haystack, const var_na *needle, size_t hay_length)
 {
     size_t needle_len = strlen(needle);
-    if (!needle_len)
-        return (char*)haystack;
-    while (hay_length >= needle_len) {
+    གལ་ཏེ (!needle_len)
+        ཕྱིར (var_na*)haystack;
+    སྐབས (hay_length >= needle_len) {
         hay_length--;
-        if (!memcmp(haystack, needle, needle_len))
-            return (char*)haystack;
+        གལ་ཏེ (!memcmp(haystack, needle, needle_len))
+            ཕྱིར (var_na*)haystack;
         haystack++;
     }
-    return NULL;
+    ཕྱིར NULL;
 }
 
-size_t av_strlcpy(char *dst, const char *src, size_t size)
+size_t av_strlcpy(var_na *dst, const var_na *src, size_t size)
 {
     size_t len = 0;
-    while (++len < size && *src)
+    སྐབས (++len < size && *src)
         *dst++ = *src++;
-    if (len <= size)
+    གལ་ཏེ (len <= size)
         *dst = 0;
-    return len + strlen(src) - 1;
+    ཕྱིར len + strlen(src) - 1;
 }
 
-size_t av_strlcat(char *dst, const char *src, size_t size)
+size_t av_strlcat(var_na *dst, const var_na *src, size_t size)
 {
     size_t len = strlen(dst);
-    if (size <= len + 1)
-        return len + strlen(src);
-    return len + av_strlcpy(dst + len, src, size - len);
+    གལ་ཏེ (size <= len + 1)
+        ཕྱིར len + strlen(src);
+    ཕྱིར len + av_strlcpy(dst + len, src, size - len);
 }
 
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
+size_t av_strlcatf(var_na *dst, size_t size, const var_na *fmt, ...)
 {
     size_t len = strlen(dst);
     va_list vl;
@@ -109,299 +109,299 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
     len += vsnprintf(dst + len, size > len ? size - len : 0, fmt, vl);
     va_end(vl);
 
-    return len;
+    ཕྱིར len;
 }
 
-char *av_asprintf(const char *fmt, ...)
+var_na *av_asprintf(const var_na *fmt, ...)
 {
-    char *p = NULL;
+    var_na *p = NULL;
     va_list va;
-    int len;
+    ཧྲིལ len;
 
     va_start(va, fmt);
     len = vsnprintf(NULL, 0, fmt, va);
     va_end(va);
-    if (len < 0)
+    གལ་ཏེ (len < 0)
         goto end;
 
     p = av_malloc(len + 1);
-    if (!p)
+    གལ་ཏེ (!p)
         goto end;
 
     va_start(va, fmt);
     len = vsnprintf(p, len + 1, fmt, va);
     va_end(va);
-    if (len < 0)
+    གལ་ཏེ (len < 0)
         av_freep(&p);
 
 end:
-    return p;
+    ཕྱིར p;
 }
 
 #define WHITESPACES " \n\t\r"
 
-char *av_get_token(const char **buf, const char *term)
+var_na *av_get_token(const var_na **buf, const var_na *term)
 {
-    char *out     = av_realloc(NULL, strlen(*buf) + 1);
-    char *ret     = out, *end = out;
-    const char *p = *buf;
-    if (!out)
-        return NULL;
+    var_na *out     = av_realloc(NULL, strlen(*buf) + 1);
+    var_na *ret     = out, *end = out;
+    const var_na *p = *buf;
+    གལ་ཏེ (!out)
+        ཕྱིར NULL;
     p += strspn(p, WHITESPACES);
 
-    while (*p && !strspn(p, term)) {
-        char c = *p++;
-        if (c == '\\' && *p) {
+    སྐབས (*p && !strspn(p, term)) {
+        var_na c = *p++;
+        གལ་ཏེ (c == '\\' && *p) {
             *out++ = *p++;
             end    = out;
-        } else if (c == '\'') {
-            while (*p && *p != '\'')
+        } དེ་མིན གལ་ཏེ (c == '\'') {
+            སྐབས (*p && *p != '\'')
                 *out++ = *p++;
-            if (*p) {
+            གལ་ཏེ (*p) {
                 p++;
                 end = out;
             }
-        } else {
+        } དེ་མིན {
             *out++ = c;
         }
     }
 
     do
         *out-- = 0;
-    while (out >= end && strspn(out, WHITESPACES));
+    སྐབས (out >= end && strspn(out, WHITESPACES));
 
     *buf = p;
 
-    char *small_ret = av_realloc(ret, out - ret + 2);
-    return small_ret ? small_ret : ret;
+    var_na *small_ret = av_realloc(ret, out - ret + 2);
+    ཕྱིར small_ret ? small_ret : ret;
 }
 
-char *av_strtok(char *s, const char *delim, char **saveptr)
+var_na *av_strtok(var_na *s, const var_na *delim, var_na **saveptr)
 {
-    char *tok;
+    var_na *tok;
 
-    if (!s && !(s = *saveptr))
-        return NULL;
+    གལ་ཏེ (!s && !(s = *saveptr))
+        ཕྱིར NULL;
 
     /* skip leading delimiters */
     s += strspn(s, delim);
 
     /* s now points to the first non delimiter char, or to the end of the string */
-    if (!*s) {
+    གལ་ཏེ (!*s) {
         *saveptr = NULL;
-        return NULL;
+        ཕྱིར NULL;
     }
     tok = s++;
 
     /* skip non delimiters */
     s += strcspn(s, delim);
-    if (*s) {
+    གལ་ཏེ (*s) {
         *s = 0;
         *saveptr = s+1;
-    } else {
+    } དེ་མིན {
         *saveptr = NULL;
     }
 
-    return tok;
+    ཕྱིར tok;
 }
 
-int av_strcasecmp(const char *a, const char *b)
+ཧྲིལ av_strcasecmp(const var_na *a, const var_na *b)
 {
     uint8_t c1, c2;
     do {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (c1 && c1 == c2);
-    return c1 - c2;
+    } སྐབས (c1 && c1 == c2);
+    ཕྱིར c1 - c2;
 }
 
-int av_strncasecmp(const char *a, const char *b, size_t n)
+ཧྲིལ av_strncasecmp(const var_na *a, const var_na *b, size_t n)
 {
     uint8_t c1, c2;
-    if (n <= 0)
-        return 0;
+    གལ་ཏེ (n <= 0)
+        ཕྱིར 0;
     do {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (--n && c1 && c1 == c2);
-    return c1 - c2;
+    } སྐབས (--n && c1 && c1 == c2);
+    ཕྱིར c1 - c2;
 }
 
-char *av_strireplace(const char *str, const char *from, const char *to)
+var_na *av_strireplace(const var_na *str, const var_na *from, const var_na *to)
 {
-    char *ret = NULL;
-    const char *pstr2, *pstr = str;
+    var_na *ret = NULL;
+    const var_na *pstr2, *pstr = str;
     size_t tolen = strlen(to), fromlen = strlen(from);
     AVBPrint pbuf;
 
-    if (!fromlen)
-        return av_strdup(str);
+    གལ་ཏེ (!fromlen)
+        ཕྱིར av_strdup(str);
 
     av_bprint_init(&pbuf, 1, AV_BPRINT_SIZE_UNLIMITED);
-    while ((pstr2 = av_stristr(pstr, from))) {
+    སྐབས ((pstr2 = av_stristr(pstr, from))) {
         av_bprint_append_data(&pbuf, pstr, pstr2 - pstr);
         pstr = pstr2 + fromlen;
         av_bprint_append_data(&pbuf, to, tolen);
     }
     av_bprint_append_data(&pbuf, pstr, strlen(pstr));
-    if (!av_bprint_is_complete(&pbuf)) {
+    གལ་ཏེ (!av_bprint_is_complete(&pbuf)) {
         av_bprint_finalize(&pbuf, NULL);
-    } else {
+    } དེ་མིན {
         av_bprint_finalize(&pbuf, &ret);
     }
 
-    return ret;
+    ཕྱིར ret;
 }
 
-const char *av_basename(const char *path)
+const var_na *av_basename(const var_na *path)
 {
-    if (!path || *path == '\0')
-        return ".";
+    གལ་ཏེ (!path || *path == '\0')
+        ཕྱིར ".";
 
-    const char *p = strrchr(path, '/');
-#if HAVE_DOS_PATHS
-    const char *q = strrchr(path, '\\');
-    const char *d = strchr(path, ':');
+    const var_na *p = strrchr(path, '/');
+#གལ་ཏེ HAVE_DOS_PATHS
+    const var_na *q = strrchr(path, '\\');
+    const var_na *d = strchr(path, ':');
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return path;
+    གལ་ཏེ (!p)
+        ཕྱིར path;
 
-    return p + 1;
+    ཕྱིར p + 1;
 }
 
-const char *av_dirname(char *path)
+const var_na *av_dirname(var_na *path)
 {
-    char *p = path ? strrchr(path, '/') : NULL;
+    var_na *p = path ? strrchr(path, '/') : NULL;
 
-#if HAVE_DOS_PATHS
-    char *q = path ? strrchr(path, '\\') : NULL;
-    char *d = path ? strchr(path, ':')  : NULL;
+#གལ་ཏེ HAVE_DOS_PATHS
+    var_na *q = path ? strrchr(path, '\\') : NULL;
+    var_na *d = path ? strchr(path, ':')  : NULL;
 
     d = d ? d + 1 : d;
 
     p = FFMAX3(p, q, d);
 #endif
 
-    if (!p)
-        return ".";
+    གལ་ཏེ (!p)
+        ཕྱིར ".";
 
     *p = '\0';
 
-    return path;
+    ཕྱིར path;
 }
 
-char *av_append_path_component(const char *path, const char *component)
+var_na *av_append_path_component(const var_na *path, const var_na *component)
 {
     size_t p_len, c_len;
-    char *fullpath;
+    var_na *fullpath;
 
-    if (!path)
-        return av_strdup(component);
-    if (!component)
-        return av_strdup(path);
+    གལ་ཏེ (!path)
+        ཕྱིར av_strdup(component);
+    གལ་ཏེ (!component)
+        ཕྱིར av_strdup(path);
 
     p_len = strlen(path);
     c_len = strlen(component);
-    if (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
-        return NULL;
+    གལ་ཏེ (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
+        ཕྱིར NULL;
     fullpath = av_malloc(p_len + c_len + 2);
-    if (fullpath) {
-        if (p_len) {
+    གལ་ཏེ (fullpath) {
+        གལ་ཏེ (p_len) {
             av_strlcpy(fullpath, path, p_len + 1);
-            if (c_len) {
-                if (fullpath[p_len - 1] != '/' && component[0] != '/')
+            གལ་ཏེ (c_len) {
+                གལ་ཏེ (fullpath[p_len - 1] != '/' && component[0] != '/')
                     fullpath[p_len++] = '/';
-                else if (fullpath[p_len - 1] == '/' && component[0] == '/')
+                དེ་མིན གལ་ཏེ (fullpath[p_len - 1] == '/' && component[0] == '/')
                     p_len--;
             }
         }
         av_strlcpy(&fullpath[p_len], component, c_len + 1);
         fullpath[p_len + c_len] = 0;
     }
-    return fullpath;
+    ཕྱིར fullpath;
 }
 
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags)
+ཧྲིལ av_escape(var_na **dst, const var_na *src, const var_na *special_chars,
+              ga_nanaa AVEscapeMode mode, ཧྲིལ flags)
 {
     AVBPrint dstbuf;
-    int ret;
+    ཧྲིལ ret;
 
     av_bprint_init(&dstbuf, 1, INT_MAX); /* (int)dstbuf.len must be >= 0 */
     av_bprint_escape(&dstbuf, src, special_chars, mode, flags);
 
-    if (!av_bprint_is_complete(&dstbuf)) {
+    གལ་ཏེ (!av_bprint_is_complete(&dstbuf)) {
         av_bprint_finalize(&dstbuf, NULL);
-        return AVERROR(ENOMEM);
+        ཕྱིར AVERROR(ENOMEM);
     }
-    if ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
-        return ret;
-    return dstbuf.len;
+    གལ་ཏེ ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
+        ཕྱིར ret;
+    ཕྱིར dstbuf.len;
 }
 
-int av_match_name(const char *name, const char *names)
+ཧྲིལ av_match_name(const var_na *name, const var_na *names)
 {
-    const char *p;
+    const var_na *p;
     size_t len, namelen;
 
-    if (!name || !names)
-        return 0;
+    གལ་ཏེ (!name || !names)
+        ཕྱིར 0;
 
     namelen = strlen(name);
-    while (*names) {
-        int negate = '-' == *names;
+    སྐབས (*names) {
+        ཧྲིལ negate = '-' == *names;
         p = strchr(names, ',');
-        if (!p)
+        གལ་ཏེ (!p)
             p = names + strlen(names);
         names += negate;
         len = FFMAX(p - names, namelen);
-        if (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
-            return !negate;
+        གལ་ཏེ (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
+            ཕྱིར !negate;
         names = p + (*p == ',');
     }
-    return 0;
+    ཕྱིར 0;
 }
 
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags)
+ཧྲིལ av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
+                   unsigned ཧྲིལ flags)
 {
     const uint8_t *p = *bufp;
     uint32_t top;
     uint64_t code;
-    int ret = 0, tail_len;
+    ཧྲིལ ret = 0, tail_len;
     uint32_t overlong_encoding_mins[6] = {
         0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000,
     };
 
-    if (p >= buf_end)
-        return 0;
+    གལ་ཏེ (p >= buf_end)
+        ཕྱིར 0;
 
     code = *p++;
 
     /* first sequence byte starts with 10, or is 1111-1110 or 1111-1111,
        which is not admitted */
-    if ((code & 0xc0) == 0x80 || code >= 0xFE) {
+    གལ་ཏེ ((code & 0xc0) == 0x80 || code >= 0xFE) {
         ret = AVERROR(EILSEQ);
         goto end;
     }
     top = (code & 128) >> 1;
 
     tail_len = 0;
-    while (code & top) {
-        int tmp;
+    སྐབས (code & top) {
+        ཧྲིལ tmp;
         tail_len++;
-        if (p >= buf_end) {
+        གལ་ཏེ (p >= buf_end) {
             (*bufp) ++;
-            return AVERROR(EILSEQ); /* incomplete sequence */
+            ཕྱིར AVERROR(EILSEQ); /* incomplete sequence */
         }
 
         /* we assume the byte to be in the form 10xx-xxxx */
         tmp = *p++ - 128;   /* strip leading 1 */
-        if (tmp>>6) {
+        གལ་ཏེ (tmp>>6) {
             (*bufp) ++;
-            return AVERROR(EILSEQ);
+            ཕྱིར AVERROR(EILSEQ);
         }
         code = (code<<6) + tmp;
         top <<= 5;
@@ -410,54 +410,54 @@ int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
 
     /* check for overlong encodings */
     av_assert0(tail_len <= 5);
-    if (code < overlong_encoding_mins[tail_len]) {
+    གལ་ཏེ (code < overlong_encoding_mins[tail_len]) {
         ret = AVERROR(EILSEQ);
         goto end;
     }
 
-    if (code >= 1U<<31) {
+    གལ་ཏེ (code >= 1U<<31) {
         ret = AVERROR(EILSEQ);  /* out-of-range value */
         goto end;
     }
 
     *codep = code;
 
-    if (code > 0x10FFFF &&
+    གལ་ཏེ (code > 0x10FFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES))
         ret = AVERROR(EILSEQ);
-    if (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
+    གལ་ཏེ (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
         flags & AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES)
         ret = AVERROR(EILSEQ);
-    if (code >= 0xD800 && code <= 0xDFFF &&
+    གལ་ཏེ (code >= 0xD800 && code <= 0xDFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_SURROGATES))
         ret = AVERROR(EILSEQ);
-    if ((code == 0xFFFE || code == 0xFFFF) &&
+    གལ་ཏེ ((code == 0xFFFE || code == 0xFFFF) &&
         !(flags & AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS))
         ret = AVERROR(EILSEQ);
 
 end:
     *bufp = p;
-    return ret;
+    ཕྱིར ret;
 }
 
-int av_match_list(const char *name, const char *list, char separator)
+ཧྲིལ av_match_list(const var_na *name, const var_na *list, var_na separator)
 {
-    const char *p, *q;
+    const var_na *p, *q;
 
-    for (p = name; p && *p; ) {
-        for (q = list; q && *q; ) {
-            int k;
-            for (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
-                if (k && (!p[k] || p[k] == separator))
-                    return 1;
+    ཆེད་དུ (p = name; p && *p; ) {
+        ཆེད་དུ (q = list; q && *q; ) {
+            ཧྲིལ k;
+            ཆེད་དུ (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
+                གལ་ཏེ (k && (!p[k] || p[k] == separator))
+                    ཕྱིར 1;
             q = strchr(q, separator);
-            if(q)
+            གལ་ཏེ(q)
                 q++;
         }
         p = strchr(p, separator);
-        if (p)
+        གལ་ཏེ (p)
             p++;
     }
 
-    return 0;
+    ཕྱིར 0;
 }

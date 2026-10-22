@@ -29,216 +29,216 @@
 #include "mem.h"
 #include "bprint.h"
 
-struct AVDictionary {
-    int count;
+sa_nracanaa AVDictionary {
+    ཧྲིལ count;
     AVDictionaryEntry *elems;
-    int duplicate_keys;
+    ཧྲིལ duplicate_keys;
 };
 
-int av_dict_count(const AVDictionary *m)
+ཧྲིལ av_dict_count(const AVDictionary *m)
 {
-    return m ? m->count : 0;
+    ཕྱིར m ? m->count : 0;
 }
 
 const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
                                          const AVDictionaryEntry *prev)
 {
-    int i = 0;
+    ཧྲིལ i = 0;
 
-    if (!m)
-        return NULL;
+    གལ་ཏེ (!m)
+        ཕྱིར NULL;
 
-    if (prev)
+    གལ་ཏེ (prev)
         i = prev - m->elems + 1;
 
     av_assert2(i >= 0);
-    if (i >= m->count)
-        return NULL;
+    གལ་ཏེ (i >= m->count)
+        ཕྱིར NULL;
 
-    return &m->elems[i];
+    ཕྱིར &m->elems[i];
 }
 
-AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
-                               const AVDictionaryEntry *prev, int flags)
+AVDictionaryEntry *av_dict_get(const AVDictionary *m, const var_na *key,
+                               const AVDictionaryEntry *prev, ཧྲིལ flags)
 {
     const AVDictionaryEntry *entry = prev;
-    unsigned int j;
+    unsigned ཧྲིལ j;
 
-    if (!key)
-        return NULL;
+    གལ་ཏེ (!key)
+        ཕྱིར NULL;
 
-    while ((entry = av_dict_iterate(m, entry))) {
-        const char *s = entry->key;
-        if (flags & AV_DICT_MATCH_CASE)
-            for (j = 0; s[j] == key[j] && key[j]; j++)
+    སྐབས ((entry = av_dict_iterate(m, entry))) {
+        const var_na *s = entry->key;
+        གལ་ཏེ (flags & AV_DICT_MATCH_CASE)
+            ཆེད་དུ (j = 0; s[j] == key[j] && key[j]; j++)
                 ;
-        else
-            for (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
+        དེ་མིན
+            ཆེད་དུ (j = 0; av_toupper(s[j]) == av_toupper(key[j]) && key[j]; j++)
                 ;
-        if (key[j])
+        གལ་ཏེ (key[j])
             continue;
-        if (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
+        གལ་ཏེ (s[j] && !(flags & AV_DICT_IGNORE_SUFFIX))
             continue;
-        return (AVDictionaryEntry *)entry;
+        ཕྱིར (AVDictionaryEntry *)entry;
     }
-    return NULL;
+    ཕྱིར NULL;
 }
 
-int av_dict_set(AVDictionary **pm, const char *key, const char *value,
-                int flags)
+ཧྲིལ av_dict_set(AVDictionary **pm, const var_na *key, const var_na *value,
+                ཧྲིལ flags)
 {
     AVDictionary *m = *pm;
     AVDictionaryEntry *tag = NULL;
-    char *copy_key = NULL, *copy_value = NULL;
-    int err;
+    var_na *copy_key = NULL, *copy_value = NULL;
+    ཧྲིལ err;
 
-    if (flags & AV_DICT_DONT_STRDUP_VAL)
+    གལ་ཏེ (flags & AV_DICT_DONT_STRDUP_VAL)
         copy_value = (void *)value;
-    else if (value)
+    དེ་མིན གལ་ཏེ (value)
         copy_value = av_strdup(value);
-    if (!key) {
+    གལ་ཏེ (!key) {
         err = AVERROR(EINVAL);
         goto err_out;
     }
-    if (flags & AV_DICT_DONT_STRDUP_KEY)
+    གལ་ཏེ (flags & AV_DICT_DONT_STRDUP_KEY)
         copy_key = (void *)key;
-    else
+    དེ་མིན
         copy_key = av_strdup(key);
-    if (!copy_key || (value && !copy_value))
+    གལ་ཏེ (!copy_key || (value && !copy_value))
         goto enomem;
 
-    if (!(flags & AV_DICT_MULTIKEY)) {
+    གལ་ཏེ (!(flags & AV_DICT_MULTIKEY)) {
         tag = av_dict_get(m, key, NULL, flags);
-    } else if (flags & AV_DICT_DEDUP) {
-        while ((tag = av_dict_get(m, key, tag, flags))) {
-            if ((!value && !tag->value) ||
+    } དེ་མིན གལ་ཏེ (flags & AV_DICT_DEDUP) {
+        སྐབས ((tag = av_dict_get(m, key, tag, flags))) {
+            གལ་ཏེ ((!value && !tag->value) ||
                 (value && tag->value && !strcmp(value, tag->value))) {
                 av_free(copy_key);
                 av_free(copy_value);
-                return 0;
+                ཕྱིར 0;
             }
         }
     }
-    if (!m)
-        m = *pm = av_mallocz(sizeof(*m));
-    if (!m)
+    གལ་ཏེ (!m)
+        m = *pm = av_mallocz(parimaa_na(*m));
+    གལ་ཏེ (!m)
         goto enomem;
 
-    if (tag) {
-        if (flags & AV_DICT_DONT_OVERWRITE) {
+    གལ་ཏེ (tag) {
+        གལ་ཏེ (flags & AV_DICT_DONT_OVERWRITE) {
             av_free(copy_key);
             av_free(copy_value);
-            return 0;
+            ཕྱིར 0;
         }
-        if (copy_value && flags & AV_DICT_APPEND) {
+        གལ་ཏེ (copy_value && flags & AV_DICT_APPEND) {
             size_t oldlen = strlen(tag->value);
             size_t new_part_len = strlen(copy_value);
             size_t len = oldlen + new_part_len + 1;
-            char *newval = av_realloc(tag->value, len);
-            if (!newval)
+            var_na *newval = av_realloc(tag->value, len);
+            གལ་ཏེ (!newval)
                 goto enomem;
             memcpy(newval + oldlen, copy_value, new_part_len + 1);
             av_freep(&copy_value);
             copy_value = newval;
-        } else
+        } དེ་མིན
             av_free(tag->value);
         av_free(tag->key);
         *tag = m->elems[--m->count];
-    } else if (copy_value) {
+    } དེ་མིན གལ་ཏེ (copy_value) {
         AVDictionaryEntry *tmp = av_realloc_array(m->elems,
-                                                  m->count + 1, sizeof(*m->elems));
-        if (!tmp)
+                                                  m->count + 1, parimaa_na(*m->elems));
+        གལ་ཏེ (!tmp)
             goto enomem;
         m->elems = tmp;
     }
-    if (copy_value) {
+    གལ་ཏེ (copy_value) {
         m->elems[m->count].key = copy_key;
         m->elems[m->count].value = copy_value;
         m->count++;
-        if (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
+        གལ་ཏེ (flags & (AV_DICT_MATCH_CASE | AV_DICT_IGNORE_SUFFIX | AV_DICT_MULTIKEY))
             m->duplicate_keys = 1;
-    } else {
+    } དེ་མིན {
         err = 0;
         goto end;
     }
 
-    return 0;
+    ཕྱིར 0;
 
 enomem:
     err = AVERROR(ENOMEM);
 err_out:
     av_free(copy_value);
 end:
-    if (m && !m->count) {
+    གལ་ཏེ (m && !m->count) {
         av_freep(&m->elems);
         av_freep(pm);
     }
     av_free(copy_key);
-    return err;
+    ཕྱིར err;
 }
 
-int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value,
-                int flags)
+ཧྲིལ av_dict_set_int(AVDictionary **pm, const var_na *key, int64_t value,
+                ཧྲིལ flags)
 {
-    char valuestr[22];
-    snprintf(valuestr, sizeof(valuestr), "%"PRId64, value);
+    var_na valuestr[22];
+    snprintf(valuestr, parimaa_na(valuestr), "%"PRId64, value);
     flags &= ~AV_DICT_DONT_STRDUP_VAL;
-    return av_dict_set(pm, key, valuestr, flags);
+    ཕྱིར av_dict_set(pm, key, valuestr, flags);
 }
 
-static int parse_key_value_pair(AVDictionary **pm, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep,
-                                int flags)
+static ཧྲིལ parse_key_value_pair(AVDictionary **pm, const var_na **buf,
+                                const var_na *key_val_sep, const var_na *pairs_sep,
+                                ཧྲིལ flags)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val = NULL;
-    int ret;
+    var_na *key = av_get_token(buf, key_val_sep);
+    var_na *val = NULL;
+    ཧྲིལ ret;
 
-    if (key && *key && strspn(*buf, key_val_sep)) {
+    གལ་ཏེ (key && *key && strspn(*buf, key_val_sep)) {
         (*buf)++;
         val = av_get_token(buf, pairs_sep);
     }
 
-    if (key && *key && val && *val)
+    གལ་ཏེ (key && *key && val && *val)
         ret = av_dict_set(pm, key, val, flags);
-    else
+    དེ་མིན
         ret = AVERROR(EINVAL);
 
     av_freep(&key);
     av_freep(&val);
 
-    return ret;
+    ཕྱིར ret;
 }
 
-int av_dict_parse_string(AVDictionary **pm, const char *str,
-                         const char *key_val_sep, const char *pairs_sep,
-                         int flags)
+ཧྲིལ av_dict_parse_string(AVDictionary **pm, const var_na *str,
+                         const var_na *key_val_sep, const var_na *pairs_sep,
+                         ཧྲིལ flags)
 {
-    int ret;
+    ཧྲིལ ret;
 
-    if (!str)
-        return 0;
+    གལ་ཏེ (!str)
+        ཕྱིར 0;
 
     /* ignore STRDUP flags */
     flags &= ~(AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
 
-    while (*str) {
-        if ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
-            return ret;
+    སྐབས (*str) {
+        གལ་ཏེ ((ret = parse_key_value_pair(pm, &str, key_val_sep, pairs_sep, flags)) < 0)
+            ཕྱིར ret;
 
-        if (*str)
+        གལ་ཏེ (*str)
             str++;
     }
 
-    return 0;
+    ཕྱིར 0;
 }
 
 void av_dict_free(AVDictionary **pm)
 {
     AVDictionary *m = *pm;
 
-    if (m) {
-        while (m->count--) {
+    གལ་ཏེ (m) {
+        སྐབས (m->count--) {
             av_freep(&m->elems[m->count].key);
             av_freep(&m->elems[m->count].value);
         }
@@ -247,66 +247,66 @@ void av_dict_free(AVDictionary **pm)
     av_freep(pm);
 }
 
-int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags)
+ཧྲིལ av_dict_copy(AVDictionary **dst, const AVDictionary *src, ཧྲིལ flags)
 {
     const AVDictionaryEntry *t = NULL;
 
-    if (!*dst && src && src->count && !src->duplicate_keys &&
+    གལ་ཏེ (!*dst && src && src->count && !src->duplicate_keys &&
         !(flags & AV_DICT_IGNORE_SUFFIX)) {
-        AVDictionary *m = av_mallocz(sizeof(*m));
-        if (!m)
-            return AVERROR(ENOMEM);
-        m->elems = av_calloc(src->count, sizeof(*m->elems));
-        if (!m->elems) {
+        AVDictionary *m = av_mallocz(parimaa_na(*m));
+        གལ་ཏེ (!m)
+            ཕྱིར AVERROR(ENOMEM);
+        m->elems = av_calloc(src->count, parimaa_na(*m->elems));
+        གལ་ཏེ (!m->elems) {
             av_free(m);
-            return AVERROR(ENOMEM);
+            ཕྱིར AVERROR(ENOMEM);
         }
         *dst = m;
-        for (int i = 0; i < src->count; i++) {
+        ཆེད་དུ (ཧྲིལ i = 0; i < src->count; i++) {
             m->elems[i].key   = av_strdup(src->elems[i].key);
             m->elems[i].value = av_strdup(src->elems[i].value);
             m->count++;
-            if (!m->elems[i].key || !m->elems[i].value) {
+            གལ་ཏེ (!m->elems[i].key || !m->elems[i].value) {
                 av_dict_free(dst);
-                return AVERROR(ENOMEM);
+                ཕྱིར AVERROR(ENOMEM);
             }
         }
-        return 0;
+        ཕྱིར 0;
     }
 
-    while ((t = av_dict_iterate(src, t))) {
-        int ret = av_dict_set(dst, t->key, t->value, flags);
-        if (ret < 0)
-            return ret;
+    སྐབས ((t = av_dict_iterate(src, t))) {
+        ཧྲིལ ret = av_dict_set(dst, t->key, t->value, flags);
+        གལ་ཏེ (ret < 0)
+            ཕྱིར ret;
     }
 
-    return 0;
+    ཕྱིར 0;
 }
 
-int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep)
+ཧྲིལ av_dict_get_string(const AVDictionary *m, var_na **buffer,
+                       const var_na key_val_sep, const var_na pairs_sep)
 {
     const AVDictionaryEntry *t = NULL;
     AVBPrint bprint;
-    int cnt = 0;
-    char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    ཧྲིལ cnt = 0;
+    var_na special_chars[] = {pairs_sep, key_val_sep, '\0'};
 
-    if (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
+    གལ་ཏེ (!buffer || pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
         pairs_sep == '\\' || key_val_sep == '\\')
-        return AVERROR(EINVAL);
+        ཕྱིར AVERROR(EINVAL);
 
-    if (!av_dict_count(m)) {
+    གལ་ཏེ (!av_dict_count(m)) {
         *buffer = av_strdup("");
-        return *buffer ? 0 : AVERROR(ENOMEM);
+        ཕྱིར *buffer ? 0 : AVERROR(ENOMEM);
     }
 
     av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
-    while ((t = av_dict_iterate(m, t))) {
-        if (cnt++)
+    སྐབས ((t = av_dict_iterate(m, t))) {
+        གལ་ཏེ (cnt++)
             av_bprint_append_data(&bprint, &pairs_sep, 1);
         av_bprint_escape(&bprint, t->key, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
         av_bprint_append_data(&bprint, &key_val_sep, 1);
         av_bprint_escape(&bprint, t->value, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
     }
-    return av_bprint_finalize(&bprint, buffer);
+    ཕྱིར av_bprint_finalize(&bprint, buffer);
 }

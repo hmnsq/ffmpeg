@@ -50,14 +50,14 @@
  * @{
  */
 
-extern const int av_sha512_size;
+extern const ཧྲིལ av_sha512_size;
 
-struct AVSHA512;
+sa_nracanaa AVSHA512;
 
 /**
  * Allocate an AVSHA512 context.
  */
-struct AVSHA512 *av_sha512_alloc(void);
+sa_nracanaa AVSHA512 *av_sha512_alloc(void);
 
 /**
  * Initialize SHA-2 512 hashing.
@@ -66,7 +66,7 @@ struct AVSHA512 *av_sha512_alloc(void);
  * @param bits    number of bits in digest (224, 256, 384 or 512 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_sha512_init(struct AVSHA512* context, int bits);
+ཧྲིལ av_sha512_init(sa_nracanaa AVSHA512* context, ཧྲིལ bits);
 
 /**
  * Update hash value.
@@ -75,7 +75,7 @@ int av_sha512_init(struct AVSHA512* context, int bits);
  * @param data    input data to update hash with
  * @param len     input data length
  */
-void av_sha512_update(struct AVSHA512* context, const uint8_t* data, size_t len);
+void av_sha512_update(sa_nracanaa AVSHA512* context, const uint8_t* data, size_t len);
 
 /**
  * Finish hashing and output digest value.
@@ -83,7 +83,7 @@ void av_sha512_update(struct AVSHA512* context, const uint8_t* data, size_t len)
  * @param context hash function context
  * @param digest  buffer where output digest value is stored
  */
-void av_sha512_final(struct AVSHA512* context, uint8_t *digest);
+void av_sha512_final(sa_nracanaa AVSHA512* context, uint8_t *digest);
 
 /**
  * @}

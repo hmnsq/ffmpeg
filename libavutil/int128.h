@@ -35,7 +35,7 @@
 #include "config.h"
 #include "integer.h"
 
-#if HAVE_INT128
+#གལ་ཏེ HAVE_INT128
 #define AV_INT128_NATIVE 1
 typedef unsigned __int128 av_uint128;
 typedef          __int128 av_int128;
@@ -47,11 +47,11 @@ typedef          _BitInt(128) av_int128;
 #define AV_INT128_NATIVE 0
 typedef AVInteger av_uint128;
 typedef AVInteger av_int128;
-#else
+#དེ་མིན
 #error "128-bit integer type not available"
 #endif
 
-#if AV_INT128_NATIVE
+#གལ་ཏེ AV_INT128_NATIVE
 #  define av_add128(a, b)   ((a) + (b))
 #  define av_sub128(a, b)   ((a) - (b))
 #  define av_mul128(a, b)   ((a) * (b))
@@ -67,7 +67,7 @@ typedef AVInteger av_int128;
 #  define av_from128i(a)    ((int64_t) (a))
 #  define av_from128u(a)    ((uint64_t) (a))
 #  define av_test128(a)     (!!(a))
-#else
+#དེ་མིན
 #  define av_add128(a, b)   av_add_i(a, b)
 #  define av_sub128(a, b)   av_sub_i(a, b)
 #  define av_mul128(a, b)   av_mul_i(a, b)
@@ -85,7 +85,7 @@ typedef AVInteger av_int128;
 
 static av_always_inline av_uint128 av_to128u(uint64_t a)
 {
-    return (AVInteger) {{ a, a >> 16, a >> 32, a >> 48 }};
+    ཕྱིར (AVInteger) {{ a, a >> 16, a >> 32, a >> 48 }};
 }
 #endif
 

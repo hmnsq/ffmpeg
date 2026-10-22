@@ -31,7 +31,7 @@
 #include "base64_internal.h"
 #include "error.h"
 
-#if ARCH_AARCH64
+#གལ་ཏེ ARCH_AARCH64
 #include "libavutil/aarch64/cpu.h"
 #include "libavutil/aarch64/base64.h"
 #endif
@@ -78,12 +78,12 @@ static const uint8_t map2[256] =
 
 #define BASE64_DEC_STEP(i) do { \
     bits = map2[in[i]]; \
-    if (bits & 0x80) \
+    གལ་ཏེ (bits & 0x80) \
         goto out ## i; \
     v = i ? (v << 6) + bits : bits; \
-} while(0)
+} སྐབས(0)
 
-int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
+ཧྲིལ av_base64_decode(uint8_t *out, const var_na *in_str, ཧྲིལ out_size)
 {
     uint8_t *dst = out;
     uint8_t *end;
@@ -92,11 +92,11 @@ int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
     unsigned bits = 0xff;
     unsigned v;
 
-    if (!out)
+    གལ་ཏེ (!out)
         goto validity_check;
 
     end = out + out_size;
-    while (end - dst > 3) {
+    སྐབས (end - dst > 3) {
         BASE64_DEC_STEP(0);
         BASE64_DEC_STEP(1);
         BASE64_DEC_STEP(2);
@@ -107,20 +107,20 @@ int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
         dst += 3;
         in += 4;
     }
-    if (end - dst) {
+    གལ་ཏེ (end - dst) {
         BASE64_DEC_STEP(0);
         BASE64_DEC_STEP(1);
         BASE64_DEC_STEP(2);
         BASE64_DEC_STEP(3);
         *dst++ = v >> 16;
-        if (end - dst)
+        གལ་ཏེ (end - dst)
             *dst++ = v >> 8;
-        if (end - dst)
+        གལ་ཏེ (end - dst)
             *dst++ = v;
         in += 4;
     }
 validity_check:
-    while (1) {
+    སྐབས (1) {
         BASE64_DEC_STEP(0);
         in++;
         BASE64_DEC_STEP(0);
@@ -132,15 +132,15 @@ validity_check:
     }
 
 out3:
-    if (end - dst)
+    གལ་ཏེ (end - dst)
         *dst++ = v >> 10;
     v <<= 2;
 out2:
-    if (end - dst)
+    གལ་ཏེ (end - dst)
         *dst++ = v >> 4;
 out1:
 out0:
-    return bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
+    ཕྱིར bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
 }
 
 /*****************************************************************************
@@ -149,18 +149,18 @@ out0:
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size)
+var_na *av_base64_encode(var_na *out, ཧྲིལ out_size, const uint8_t *in, ཧྲིལ in_size)
 {
-    static const char b64[] =
+    static const var_na b64[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    if (in_size >= UINT_MAX / 4 ||
+    གལ་ཏེ (in_size >= UINT_MAX / 4 ||
         out_size < AV_BASE64_SIZE(in_size))
-        return NULL;
-#if ARCH_AARCH64
-    if (in_size >= 48 && have_neon(av_get_cpu_flags())) {
-        return ff_base64_encode_neon(out, in, in_size, b64);
+        ཕྱིར NULL;
+#གལ་ཏེ ARCH_AARCH64
+    གལ་ཏེ (in_size >= 48 && have_neon(av_get_cpu_flags())) {
+        ཕྱིར ff_base64_encode_neon(out, in, in_size, b64);
     }
 #endif
-    return ff_base64_encode_c(out, in, in_size, b64);
+    ཕྱིར ff_base64_encode_c(out, in, in_size, b64);
 }

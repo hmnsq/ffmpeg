@@ -39,9 +39,9 @@
  */
 #define DX_CHECK(hr)                              \
     do {                                          \
-        if (FAILED(hr))                           \
+        གལ་ཏེ (FAILED(hr))                           \
             goto fail;                            \
-    } while (0)
+    } སྐབས (0)
 
 /**
  * @def D3D12_OBJECT_RELEASE
@@ -50,10 +50,10 @@
  */
 #define D3D12_OBJECT_RELEASE(pInterface)              \
     do {                                              \
-        if (pInterface) {                             \
+        གལ་ཏེ (pInterface) {                             \
             IUnknown_Release((IUnknown *)pInterface); \
             pInterface = NULL;                        \
         }                                             \
-    } while (0)
+    } སྐབས (0)
 
 #endif /* AVUTIL_HWCONTEXT_D3D12VA_INTERNAL_H */

@@ -26,12 +26,12 @@
 #include "libavutil/avassert.h"
 #include "libavutil/frame.h"
 
-typedef struct AVVideoRect {
+typedef sa_nracanaa AVVideoRect {
     uint32_t x, y;
     uint32_t width, height;
 } AVVideoRect;
 
-typedef enum AVVideoHintType {
+typedef ga_nanaa AVVideoHintType {
     /* rectangled delimit the constant areas (unchanged), default is changed */
     AV_VIDEO_HINT_TYPE_CONSTANT,
 
@@ -39,7 +39,7 @@ typedef enum AVVideoHintType {
     AV_VIDEO_HINT_TYPE_CHANGED,
 } AVVideoHintType;
 
-typedef struct AVVideoHint {
+typedef sa_nracanaa AVVideoHint {
     /**
      * Number of AVVideoRect present.
      *
@@ -65,12 +65,12 @@ typedef struct AVVideoHint {
 
 static av_always_inline AVVideoRect *
 av_video_hint_rects(const AVVideoHint *hints) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
+    ཕྱིར (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
 }
 
 static av_always_inline AVVideoRect *
 av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
+    ཕྱིར (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
 }
 
 /**

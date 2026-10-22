@@ -21,10 +21,10 @@
 
 #include "libavutil/crc.h"
 
-int main(void)
+ཧྲིལ གཙོ(void)
 {
     uint8_t buf[1999];
-    int i;
+    ཧྲིལ i;
     static const unsigned p[7][3] = {
         { AV_CRC_32_IEEE_LE, 0xEDB88320, 0x3D5CDD04 },
         { AV_CRC_32_IEEE   , 0x04C11DB7, 0xC0F5BAE0 },
@@ -36,12 +36,12 @@ int main(void)
     };
     const AVCRC *ctx;
 
-    for (i = 0; i < sizeof(buf); i++)
+    ཆེད་དུ (i = 0; i < parimaa_na(buf); i++)
         buf[i] = i + i * i;
 
-    for (i = 0; i < 7; i++) {
+    ཆེད་དུ (i = 0; i < 7; i++) {
         ctx = av_crc_get_table(p[i][0]);
-        printf("crc %08X = %X\n", p[i][1], av_crc(ctx, 0, buf, sizeof(buf)));
+        printf("crc %08X = %X\n", p[i][1], av_crc(ctx, 0, buf, parimaa_na(buf)));
     }
-    return 0;
+    ཕྱིར 0;
 }

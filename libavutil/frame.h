@@ -46,7 +46,7 @@
  * AVFrame is an abstraction for reference-counted raw multimedia data.
  */
 
-enum AVFrameSideDataType {
+ga_nanaa AVFrameSideDataType {
     /**
      * The data is the AVPanScan struct defined in libavcodec.
      */
@@ -314,7 +314,7 @@ enum AVFrameSideDataType {
     AV_FRAME_DATA_GAIN_MAP_PARAMS,
 };
 
-enum AVActiveFormatDescription {
+ga_nanaa AVActiveFormatDescription {
     AV_AFD_SAME         = 8,
     AV_AFD_4_3          = 9,
     AV_AFD_16_9         = 10,
@@ -331,15 +331,15 @@ enum AVActiveFormatDescription {
  * sizeof(AVFrameSideData) is not a part of the public ABI, so new fields may be added
  * to the end with a minor bump.
  */
-typedef struct AVFrameSideData {
-    enum AVFrameSideDataType type;
+typedef sa_nracanaa AVFrameSideData {
+    ga_nanaa AVFrameSideDataType type;
     uint8_t *data;
     size_t   size;
     AVDictionary *metadata;
     AVBufferRef *buf;
 } AVFrameSideData;
 
-enum AVSideDataProps {
+ga_nanaa AVSideDataProps {
     /**
      * The side data type can be used in stream-global structures.
      * Side data types without this property are only meaningful on per-frame
@@ -379,11 +379,11 @@ enum AVSideDataProps {
  * This struct describes the properties of a side data type. Its instance
  * corresponding to a given type can be obtained from av_frame_side_data_desc().
  */
-typedef struct AVSideDataDescriptor {
+typedef sa_nracanaa AVSideDataDescriptor {
     /**
      * Human-readable side data description.
      */
-    const char      *name;
+    const var_na      *name;
 
     /**
      * Side data property flags, a combination of AVSideDataProps values.
@@ -402,7 +402,7 @@ typedef struct AVSideDataDescriptor {
  * When overlapping regions are defined, the first region containing a given
  * area of the frame applies.
  */
-typedef struct AVRegionOfInterest {
+typedef sa_nracanaa AVRegionOfInterest {
     /**
      * Must be set to the size of this data structure (that is,
      * sizeof(AVRegionOfInterest)).
@@ -417,10 +417,10 @@ typedef struct AVRegionOfInterest {
      * actually affected may be slightly larger for alignment or other
      * reasons.
      */
-    int top;
-    int bottom;
-    int left;
-    int right;
+    ཧྲིལ top;
+    ཧྲིལ bottom;
+    ཧྲིལ left;
+    ཧྲིལ right;
     /**
      * Quantisation offset.
      *
@@ -476,7 +476,7 @@ typedef struct AVRegionOfInterest {
  * Fields can be accessed through AVOptions, the name string used, matches the
  * C structure field name for fields accessible through AVOptions.
  */
-typedef struct AVFrame {
+typedef sa_nracanaa AVFrame {
 #define AV_NUM_DATA_POINTERS 8
     /**
      * pointer to the picture/channel planes.
@@ -521,7 +521,7 @@ typedef struct AVFrame {
      * @attention In case of video, line size values can be negative to achieve
      * a vertically inverted iteration over image lines.
      */
-    int linesize[AV_NUM_DATA_POINTERS];
+    ཧྲིལ linesize[AV_NUM_DATA_POINTERS];
 
     /**
      * pointers to the data planes/channels.
@@ -548,7 +548,7 @@ typedef struct AVFrame {
      * restricted by the @ref cropping "Cropping rectangle".
      * @{
      */
-    int width, height;
+    ཧྲིལ width, height;
     /**
      * @}
      */
@@ -556,19 +556,19 @@ typedef struct AVFrame {
     /**
      * number of audio samples (per channel) described by this frame
      */
-    int nb_samples;
+    ཧྲིལ nb_samples;
 
     /**
      * format of the frame, -1 if unknown or unset
      * Values correspond to enum AVPixelFormat for video frames,
      * enum AVSampleFormat for audio)
      */
-    int format;
+    ཧྲིལ format;
 
     /**
      * Picture type of the frame.
      */
-    enum AVPictureType pict_type;
+    ga_nanaa AVPictureType pict_type;
 
     /**
      * Sample aspect ratio for the video frame, 0/1 if unknown/unspecified.
@@ -598,7 +598,7 @@ typedef struct AVFrame {
     /**
      * quality (between 1 (good) and FF_LAMBDA_MAX (bad))
      */
-    int quality;
+    ཧྲིལ quality;
 
     /**
      * Frame owner's private data.
@@ -634,12 +634,12 @@ typedef struct AVFrame {
      * their analogues in other codecs. Typically it should only be used when
      * higher-layer timing information is not available.
      */
-    int repeat_pict;
+    ཧྲིལ repeat_pict;
 
     /**
      * Sample rate of the audio data.
      */
-    int sample_rate;
+    ཧྲིལ sample_rate;
 
     /**
      * AVBuffer references backing the data for this frame. All the pointers in
@@ -671,10 +671,10 @@ typedef struct AVFrame {
     /**
      * Number of elements in extended_buf.
      */
-    int        nb_extended_buf;
+    ཧྲིལ        nb_extended_buf;
 
     AVFrameSideData **side_data;
-    int            nb_side_data;
+    ཧྲིལ            nb_side_data;
 
 /**
  * @defgroup lavu_frame_flags AV_FRAME_FLAGS
@@ -720,27 +720,27 @@ typedef struct AVFrame {
     /**
      * Frame flags, a combination of @ref lavu_frame_flags
      */
-    int flags;
+    ཧྲིལ flags;
 
     /**
      * MPEG vs JPEG YUV range.
      * - encoding: Set by user
      * - decoding: Set by libavcodec
      */
-    enum AVColorRange color_range;
+    ga_nanaa AVColorRange color_range;
 
-    enum AVColorPrimaries color_primaries;
+    ga_nanaa AVColorPrimaries color_primaries;
 
-    enum AVColorTransferCharacteristic color_trc;
+    ga_nanaa AVColorTransferCharacteristic color_trc;
 
     /**
      * YUV colorspace type.
      * - encoding: Set by user
      * - decoding: Set by libavcodec
      */
-    enum AVColorSpace colorspace;
+    ga_nanaa AVColorSpace colorspace;
 
-    enum AVChromaLocation chroma_location;
+    ga_nanaa AVChromaLocation chroma_location;
 
     /**
      * frame timestamp estimated using various heuristics, in stream time base
@@ -763,7 +763,7 @@ typedef struct AVFrame {
      * - encoding: unused
      * - decoding: set by libavcodec, read by user.
      */
-    int decode_error_flags;
+    ཧྲིལ decode_error_flags;
 #define FF_DECODE_ERROR_INVALID_BITSTREAM   1
 #define FF_DECODE_ERROR_MISSING_REFERENCE   2
 #define FF_DECODE_ERROR_CONCEALMENT_ACTIVE  4
@@ -831,7 +831,7 @@ typedef struct AVFrame {
      * - encoding: Set by user
      * - decoding: Set by libavcodec
      */
-    enum AVAlphaMode alpha_mode;
+    ga_nanaa AVAlphaMode alpha_mode;
 } AVFrame;
 
 
@@ -871,7 +871,7 @@ void av_frame_free(AVFrame **frame);
  *
  * @return 0 on success, a negative AVERROR on error
  */
-int av_frame_ref(AVFrame *dst, const AVFrame *src);
+ཧྲིལ av_frame_ref(AVFrame *dst, const AVFrame *src);
 
 /**
  * Ensure the destination frame refers to the same data described by the source
@@ -884,7 +884,7 @@ int av_frame_ref(AVFrame *dst, const AVFrame *src);
  * @return 0 on success, a negative AVERROR on error. On error, dst is
  *         unreferenced.
  */
-int av_frame_replace(AVFrame *dst, const AVFrame *src);
+ཧྲིལ av_frame_replace(AVFrame *dst, const AVFrame *src);
 
 /**
  * Create a new frame that references the same data as src.
@@ -933,7 +933,7 @@ void av_frame_move_ref(AVFrame *dst, AVFrame *src);
  *
  * @return 0 on success, a negative AVERROR on error.
  */
-int av_frame_get_buffer(AVFrame *frame, int align);
+ཧྲིལ av_frame_get_buffer(AVFrame *frame, ཧྲིལ align);
 
 /**
  * Check if the frame data is writable.
@@ -947,7 +947,7 @@ int av_frame_get_buffer(AVFrame *frame, int align);
  *
  * @see av_frame_make_writable(), av_buffer_is_writable()
  */
-int av_frame_is_writable(AVFrame *frame);
+ཧྲིལ av_frame_is_writable(AVFrame *frame);
 
 /**
  * Ensure that the frame data is writable, avoiding data copy if possible.
@@ -961,7 +961,7 @@ int av_frame_is_writable(AVFrame *frame);
  * @see av_frame_is_writable(), av_buffer_is_writable(),
  * av_buffer_make_writable()
  */
-int av_frame_make_writable(AVFrame *frame);
+ཧྲིལ av_frame_make_writable(AVFrame *frame);
 
 /**
  * Copy the frame data from src to dst.
@@ -974,7 +974,7 @@ int av_frame_make_writable(AVFrame *frame);
  *
  * @return >= 0 on success, a negative AVERROR on error.
  */
-int av_frame_copy(AVFrame *dst, const AVFrame *src);
+ཧྲིལ av_frame_copy(AVFrame *dst, const AVFrame *src);
 
 /**
  * Copy only "metadata" fields from src to dst.
@@ -984,7 +984,7 @@ int av_frame_copy(AVFrame *dst, const AVFrame *src);
  * aspect ratio (for video), but not width/height or channel layout.
  * Side data is also copied.
  */
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src);
+ཧྲིལ av_frame_copy_props(AVFrame *dst, const AVFrame *src);
 
 /**
  * Get the buffer reference a given data plane is stored in.
@@ -995,7 +995,7 @@ int av_frame_copy_props(AVFrame *dst, const AVFrame *src);
  * @return the buffer reference that contains the plane or NULL if the input
  * frame is not valid.
  */
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane);
+AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, ཧྲིལ plane);
 
 /**
  * Add a new side data to a frame.
@@ -1007,7 +1007,7 @@ AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane);
  * @return newly added side data on success, NULL on error
  */
 AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
+                                        ga_nanaa AVFrameSideDataType type,
                                         size_t size);
 
 /**
@@ -1023,7 +1023,7 @@ AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
  *         the caller.
  */
 AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+                                                 ga_nanaa AVFrameSideDataType type,
                                                  AVBufferRef *buf);
 
 /**
@@ -1031,18 +1031,18 @@ AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
  * is no side data with such type in this frame.
  */
 AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type);
+                                        ga_nanaa AVFrameSideDataType type);
 
 /**
  * Remove and free all side data instances of the given type.
  */
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type);
+void av_frame_remove_side_data(AVFrame *frame, ga_nanaa AVFrameSideDataType type);
 
 
 /**
  * Flags for frame cropping.
  */
-enum {
+ga_nanaa {
     /**
      * Apply the maximum possible cropping, even if it requires setting the
      * AVFrame.data[] entries to unaligned pointers. Passing unaligned data
@@ -1070,18 +1070,18 @@ enum {
  * @return >= 0 on success, a negative AVERROR on error. If the cropping fields
  * were invalid, AVERROR(ERANGE) is returned, and nothing is changed.
  */
-int av_frame_apply_cropping(AVFrame *frame, int flags);
+ཧྲིལ av_frame_apply_cropping(AVFrame *frame, ཧྲིལ flags);
 
 /**
  * @return a string identifying the side data type
  */
-const char *av_frame_side_data_name(enum AVFrameSideDataType type);
+const var_na *av_frame_side_data_name(ga_nanaa AVFrameSideDataType type);
 
 /**
  * @return side data descriptor corresponding to a given side data type, NULL
  *         when not available.
  */
-const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type);
+const AVSideDataDescriptor *av_frame_side_data_desc(ga_nanaa AVFrameSideDataType type);
 
 /**
  * Free all side data entries and their contents, then zeroes out the
@@ -1092,7 +1092,7 @@ const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType typ
  * @param nb_sd pointer to an integer containing the number of entries in
  *              the array. Will be set to 0 upon return.
  */
-void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd);
+void av_frame_side_data_free(AVFrameSideData ***sd, ཧྲིལ *nb_sd);
 
 /**
  * Remove existing entries before adding new ones.
@@ -1127,9 +1127,9 @@ void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd);
  * @note In case of AV_FRAME_SIDE_DATA_FLAG_REPLACE being set, if an
  *       entry of the same type already exists, it will be replaced instead.
  */
-AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        size_t size, unsigned int flags);
+AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, ཧྲིལ *nb_sd,
+                                        ga_nanaa AVFrameSideDataType type,
+                                        size_t size, unsigned ཧྲིལ flags);
 
 /**
  * Add a new side data entry to an array from an existing AVBufferRef.
@@ -1153,9 +1153,9 @@ AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
  *       entry of the same type already exists, it will be replaced instead.
  *
  */
-AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        AVBufferRef **buf, unsigned int flags);
+AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, ཧྲིལ *nb_sd,
+                                        ga_nanaa AVFrameSideDataType type,
+                                        AVBufferRef **buf, unsigned ཧྲིལ flags);
 
 /**
  * Add a new side data entry to an array based on existing side data, taking
@@ -1176,8 +1176,8 @@ AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
  * @note In case of AV_FRAME_SIDE_DATA_FLAG_REPLACE being set, if an
  *       entry of the same type already exists, it will be replaced instead.
  */
-int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
-                             const AVFrameSideData *src, unsigned int flags);
+ཧྲིལ av_frame_side_data_clone(AVFrameSideData ***sd, ཧྲིལ *nb_sd,
+                             const AVFrameSideData *src, unsigned ཧྲིལ flags);
 
 /**
  * Get a side data entry of a specific type from an array.
@@ -1190,8 +1190,8 @@ int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
  *         is no side data with such type in this set.
  */
 const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
-                                                const int nb_sd,
-                                                enum AVFrameSideDataType type);
+                                                const ཧྲིལ nb_sd,
+                                                ga_nanaa AVFrameSideDataType type);
 
 /**
  * Wrapper around av_frame_side_data_get_c() to workaround the limitation
@@ -1199,27 +1199,27 @@ const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *s
  * is not performed automatically in C.
  * @see av_frame_side_data_get_c()
  */
-static inline
+static anta_hstha
 const AVFrameSideData *av_frame_side_data_get(AVFrameSideData * const *sd,
-                                              const int nb_sd,
-                                              enum AVFrameSideDataType type)
+                                              const ཧྲིལ nb_sd,
+                                              ga_nanaa AVFrameSideDataType type)
 {
-    return av_frame_side_data_get_c((const AVFrameSideData * const *)sd,
+    ཕྱིར av_frame_side_data_get_c((const AVFrameSideData * const *)sd,
                                     nb_sd, type);
 }
 
 /**
  * Remove and free all side data instances of the given type from an array.
  */
-void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
-                               enum AVFrameSideDataType type);
+void av_frame_side_data_remove(AVFrameSideData ***sd, ཧྲིལ *nb_sd,
+                               ga_nanaa AVFrameSideDataType type);
 
 /**
  * Remove and free all side data instances that match any of the given
  * side data properties. (See enum AVSideDataProps)
  */
-void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
-                                        int props);
+void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, ཧྲིལ *nb_sd,
+                                        ཧྲིལ props);
 
 /**
  * @}

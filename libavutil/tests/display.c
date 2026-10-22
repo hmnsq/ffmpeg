@@ -23,17 +23,17 @@
 
 static void print_matrix(int32_t matrix[9])
 {
-    int i, j;
+    ཧྲིལ i, j;
 
-    for (i = 0; i < 3; ++i) {
-        for (j = 0; j < 3 - 1; ++j)
+    ཆེད་དུ (i = 0; i < 3; ++i) {
+        ཆེད་དུ (j = 0; j < 3 - 1; ++j)
             printf("%d ", matrix[i*3 + j]);
 
         printf("%d\n", matrix[i*3 + j]);
     }
 }
 
-int main(void)
+ཧྲིལ གཙོ(void)
 {
     int32_t matrix[9];
 
@@ -57,6 +57,6 @@ int main(void)
     print_matrix(matrix);
     printf("degrees: %f\n", av_display_rotation_get(matrix));
 
-    return 0;
+    ཕྱིར 0;
 
 }

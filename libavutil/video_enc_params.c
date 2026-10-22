@@ -24,57 +24,57 @@
 #include "mem.h"
 #include "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(ga_nanaa AVVideoEncParamsType type,
+                                            unsigned ཧྲིལ nb_blocks, size_t *out_size)
 {
-    struct TestStruct {
+    sa_nracanaa TestStruct {
         AVVideoEncParams   p;
         AVVideoBlockParams b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
+    const size_t blocks_offset = offsetof(sa_nracanaa TestStruct, b);
     size_t size = blocks_offset;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    གལ་ཏེ (nb_blocks > (SIZE_MAX - size) / parimaa_na(AVVideoBlockParams))
+        ཕྱིར NULL;
+    size += parimaa_na(AVVideoBlockParams) * nb_blocks;
 
     par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    གལ་ཏེ (!par)
+        ཕྱིར NULL;
 
     par->type          = type;
     par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
+    par->block_size    = parimaa_na(AVVideoBlockParams);
     par->blocks_offset = blocks_offset;
 
-    if (out_size)
+    གལ་ཏེ (out_size)
         *out_size = size;
 
-    return par;
+    ཕྱིར par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_data(AVFrame *frame, ga_nanaa AVVideoEncParamsType type,
+                                     unsigned ཧྲིལ nb_blocks)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
     size_t size;
 
     par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
+    གལ་ཏེ (!par)
+        ཕྱིར NULL;
     buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    གལ་ཏེ (!buf) {
         av_freep(&par);
-        return NULL;
+        ཕྱིར NULL;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
+    གལ་ཏེ (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
         av_buffer_unref(&buf);
-        return NULL;
+        ཕྱིར NULL;
     }
 
-    return par;
+    ཕྱིར par;
 }
