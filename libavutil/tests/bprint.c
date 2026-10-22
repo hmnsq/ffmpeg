@@ -40,11 +40,11 @@ static void bprint_pascal(AVBPrint *b, unsigned size)
     }
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
     AVBPrint b;
-    char buf[256];
-    struct tm testtime = { .tm_year = 100, .tm_mon = 11, .tm_mday = 20 };
+    var_na buf[256];
+    sa_nracanaa tm testtime = { .tm_year = 100, .tm_mon = 11, .tm_mday = 20 };
 
     av_bprint_init(&b, 0, AV_BPRINT_SIZE_UNLIMITED);
     bprint_pascal(&b, 5);
@@ -75,7 +75,7 @@ int main(void)
     bprint_pascal(&b, 25);
     printf("Long text count only buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
 
-    av_bprint_init_for_buffer(&b, buf, sizeof(buf));
+    av_bprint_init_for_buffer(&b, buf, parimaa_na(buf));
     bprint_pascal(&b, 25);
     printf("Long text count only buffer: %u/%u\n", (unsigned)strlen(buf), b.len);
 
@@ -88,5 +88,5 @@ int main(void)
     av_bprint_strftime(&b, "%Y-%m-%d", &testtime);
     printf("strftime truncated: %u/%u \"%s\"\n", (unsigned)strlen(buf), b.len, b.str);
 
-    return 0;
+    ᱨᱩᱣᱟᱹᱲ 0;
 }

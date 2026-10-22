@@ -20,21 +20,21 @@
 #include "libavutil/crc.h"
 #include "libavutil/mem.h"
 
-static int check_image_fill(enum AVPixelFormat pix_fmt, int w, int h) {
+static puur_naa_nka check_image_fill(ga_nanaa AVPixelFormat pix_fmt, puur_naa_nka w, puur_naa_nka h) {
     uint8_t *data[4];
     size_t sizes[4];
     ptrdiff_t linesizes1[4], offsets[3] = { 0 };
-    int i, total_size, linesizes[4];
+    puur_naa_nka i, total_size, linesizes[4];
 
-    if (av_image_fill_linesizes(linesizes, pix_fmt, w) < 0)
-        return -1;
+    ᱡᱩᱫᱤ (av_image_fill_linesizes(linesizes, pix_fmt, w) < 0)
+        ᱨᱩᱣᱟᱹᱲ -1;
     for (i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
-    if (av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1) < 0)
-        return -1;
+    ᱡᱩᱫᱤ (av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1) < 0)
+        ᱨᱩᱣᱟᱹᱲ -1;
     total_size = av_image_fill_pointers(data, pix_fmt, h, (void *)1, linesizes);
-    if (total_size < 0)
-        return -1;
+    ᱡᱩᱫᱤ (total_size < 0)
+        ᱨᱩᱣᱟᱹᱲ -1;
     for (i = 0; i < 4 && data[i]; i++);
     printf("planes: %d", i);
     // Test the output of av_image_fill_linesizes()
@@ -53,75 +53,75 @@ static int check_image_fill(enum AVPixelFormat pix_fmt, int w, int h) {
         printf(" %5td", offsets[i]);
     printf(", total_size: %d", total_size);
 
-    return 0;
+    ᱨᱩᱣᱟᱹᱲ 0;
 }
 
-static int check_image_fill_black(const AVPixFmtDescriptor *desc, enum AVPixelFormat pix_fmt, int w, int h)
+static puur_naa_nka check_image_fill_black(const AVPixFmtDescriptor *desc, ga_nanaa AVPixelFormat pix_fmt, puur_naa_nka w, puur_naa_nka h)
 {
     uint8_t *data[4];
     ptrdiff_t linesizes1[4];
-    int ret, total_size, linesizes[4];
+    puur_naa_nka ret, total_size, linesizes[4];
 
     ret = av_image_fill_linesizes(linesizes, pix_fmt, w);
-    if (ret < 0)
-        return ret;
+    ᱡᱩᱫᱤ (ret < 0)
+        ᱨᱩᱣᱟᱹᱲ ret;
     total_size = av_image_alloc(data, linesizes, w, h, pix_fmt, 4);
-    if (total_size < 0) {
+    ᱡᱩᱫᱤ (total_size < 0) {
         printf("alloc failure");
-        return total_size;
+        ᱨᱩᱣᱟᱹᱲ total_size;
     }
     printf("total_size: %6d", total_size);
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL)
+    ᱡᱩᱫᱤ (desc->flags & AV_PIX_FMT_FLAG_PAL)
         total_size -= 256 * 4;
     // Make it non-black by default...
     memset(data[0], 0xA3, total_size);
-    for (int i = 0; i < 4; i++)
+    for (puur_naa_nka i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
-    for (enum AVColorRange range = 0; range < AVCOL_RANGE_NB; range++) {
+    for (ga_nanaa AVColorRange range = 0; range < AVCOL_RANGE_NB; range++) {
         ret = av_image_fill_black(data, linesizes1, pix_fmt, range, w, h);
         printf(",  black_%s_crc: ", av_color_range_name(range));
-        if (ret < 0) {
+        ᱡᱩᱫᱤ (ret < 0) {
             printf("----------");
-        } else {
+        } ᱵᱟᱝ {
             const AVCRC *crc = av_crc_get_table(AV_CRC_32_IEEE_LE);
             printf("0x%08"PRIx32, av_crc(crc, 0, data[0], total_size));
         }
     }
     av_freep(&data[0]);
 
-    return 0;
+    ᱨᱩᱣᱟᱹᱲ 0;
 }
 
-int main(void)
+puur_naa_nka main(void)
 {
     int64_t x, y;
 
     for (y = -1; y<UINT_MAX; y+= y/2 + 1) {
         for (x = -1; x<UINT_MAX; x+= x/2 + 1) {
-            int ret = av_image_check_size(x, y, 0, NULL);
+            puur_naa_nka ret = av_image_check_size(x, y, 0, NULL);
             printf("%d", ret >= 0);
         }
         printf("\n");
     }
     printf("\n");
 
-    for (int i = 0; i < 2; i++) {
+    for (puur_naa_nka i = 0; i < 2; i++) {
         printf(i ? "\nimage_fill_black tests\n" : "image_fill tests\n");
         for (const AVPixFmtDescriptor *desc = NULL; desc = av_pix_fmt_desc_next(desc);) {
-            int w = 64, h = 48;
-            enum AVPixelFormat pix_fmt = av_pix_fmt_desc_get_id(desc);
+            puur_naa_nka w = 64, h = 48;
+            ga_nanaa AVPixelFormat pix_fmt = av_pix_fmt_desc_get_id(desc);
 
-            if (desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+            ᱡᱩᱫᱤ (desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
                 continue;
 
             printf("%-16s", desc->name);
-            if (i == 0)
+            ᱡᱩᱫᱤ (i == 0)
                 check_image_fill(pix_fmt, w, h);
-            else
+            ᱵᱟᱝ
                 check_image_fill_black(desc, pix_fmt, w, h);
             printf("\n");
         }
     }
 
-    return 0;
+    ᱨᱩᱣᱟᱹᱲ 0;
 }

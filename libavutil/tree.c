@@ -23,69 +23,69 @@
 #include "mem.h"
 #include "tree.h"
 
-typedef struct AVTreeNode {
-    struct AVTreeNode *child[2];
+typedef sa_nracanaa AVTreeNode {
+    sa_nracanaa AVTreeNode *child[2];
     void *elem;
-    int state;
+    puur_naa_nka state;
 } AVTreeNode;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+const puur_naa_nka av_tree_node_size = parimaa_na(AVTreeNode);
 
-struct AVTreeNode *av_tree_node_alloc(void)
+sa_nracanaa AVTreeNode *av_tree_node_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    ᱨᱩᱣᱟᱹᱲ av_mallocz(parimaa_na(sa_nracanaa AVTreeNode));
 }
 
 void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+                   puur_naa_nka (*cmp)(const void *key, const void *b), void *next[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
+    ᱡᱩᱫᱤ (t) {
+        unsigned puur_naa_nka v = cmp(key, t->elem);
+        ᱡᱩᱫᱤ (v) {
+            ᱡᱩᱫᱤ (next)
                 next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
+            ᱨᱩᱣᱟᱹᱲ av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
+        } ᱵᱟᱝ {
+            ᱡᱩᱫᱤ (next) {
                 av_tree_find(t->child[0], key, cmp, next);
                 av_tree_find(t->child[1], key, cmp, next);
             }
-            return t->elem;
+            ᱨᱩᱣᱟᱹᱲ t->elem;
         }
     }
-    return NULL;
+    ᱨᱩᱣᱟᱹᱲ NULL;
 }
 
 void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+                     puur_naa_nka (*cmp)(const void *key, const void *b), AVTreeNode **next)
 {
     AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
+    ᱡᱩᱫᱤ (t) {
+        unsigned puur_naa_nka v = cmp(t->elem, key);
         void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
+        ᱡᱩᱫᱤ (!v) {
+            ᱡᱩᱫᱤ (*next)
+                ᱨᱩᱣᱟᱹᱲ t->elem;
+            ᱵᱟᱝ ᱡᱩᱫᱤ (t->child[0] || t->child[1]) {
+                puur_naa_nka i = !t->child[0];
                 void *next_elem[2];
                 av_tree_find(t->child[i], key, cmp, next_elem);
                 key = t->elem = next_elem[i];
                 v   = -i;
-            } else {
+            } ᱵᱟᱝ {
                 *next = t;
                 *tp   = NULL;
-                return NULL;
+                ᱨᱩᱣᱟᱹᱲ NULL;
             }
         }
         ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
+        ᱡᱩᱫᱤ (!ret) {
+            puur_naa_nka i              = (v >> 31) ^ !!*next;
             AVTreeNode **child = &t->child[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            ᱡᱩᱫᱤ (!(t->state & 1)) {
+                ᱡᱩᱫᱤ (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,7 +106,7 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
+                    ᱡᱩᱫᱤ ((*child)->state * 2 == -t->state) {
                         *tp                    = (*child)->child[i ^ 1];
                         (*child)->child[i ^ 1] = (*tp)->child[i];
                         (*tp)->child[i]        = *child;
@@ -116,36 +116,36 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                         (*tp)->child[0]->state = -((*tp)->state > 0);
                         (*tp)->child[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
+                    } ᱵᱟᱝ {
                         *tp                 = *child;
                         *child              = (*child)->child[i ^ 1];
                         (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                        ᱡᱩᱫᱤ ((*tp)->state)
                             t->state = 0;
-                        else
+                        ᱵᱟᱝ
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            ᱡᱩᱫᱤ (!(*tp)->state ^ !!*next)
+                ᱨᱩᱣᱟᱹᱲ key;
         }
-        return ret;
-    } else {
+        ᱨᱩᱣᱟᱹᱲ ret;
+    } ᱵᱟᱝ {
         *tp   = *next;
         *next = NULL;
-        if (*tp) {
+        ᱡᱩᱫᱤ (*tp) {
             (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+            ᱨᱩᱣᱟᱹᱲ NULL;
+        } ᱵᱟᱝ
+            ᱨᱩᱣᱟᱹᱲ key;
     }
 }
 
 void av_tree_destroy(AVTreeNode *t)
 {
-    if (t) {
+    ᱡᱩᱫᱤ (t) {
         av_tree_destroy(t->child[0]);
         av_tree_destroy(t->child[1]);
         av_free(t);
@@ -153,16 +153,16 @@ void av_tree_destroy(AVTreeNode *t)
 }
 
 void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+                       puur_naa_nka (*cmp)(void *opaque, void *elem),
+                       puur_naa_nka (*enu)(void *opaque, void *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
+    ᱡᱩᱫᱤ (t) {
+        puur_naa_nka v = cmp ? cmp(opaque, t->elem) : 0;
+        ᱡᱩᱫᱤ (v >= 0)
             av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+        ᱡᱩᱫᱤ (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
+        ᱡᱩᱫᱤ (v <= 0)
             av_tree_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

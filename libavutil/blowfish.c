@@ -304,22 +304,22 @@ static const uint32_t orig_s[4][256] = {
 
 AVBlowfish *av_blowfish_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVBlowfish));
+    ᱨᱩᱣᱟᱹᱲ av_mallocz(parimaa_na(sa_nracanaa AVBlowfish));
 }
 
-av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
+av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, puur_naa_nka key_len)
 {
     uint32_t data, data_l, data_r;
-    int i, j, k;
+    puur_naa_nka i, j, k;
 
-    memcpy(ctx->s, orig_s, sizeof(orig_s));
+    memcpy(ctx->s, orig_s, parimaa_na(orig_s));
 
     j = 0;
     for (i = 0; i < AV_BF_ROUNDS + 2; ++i) {
         data = 0;
         for (k = 0; k < 4; k++) {
             data = (data << 8) | key[j];
-            if (++j >= key_len)
+            ᱡᱩᱫᱤ (++j >= key_len)
                 j = 0;
         }
         ctx->p[i] = orig_p[i] ^ data;
@@ -343,15 +343,15 @@ av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
 }
 
 void av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt)
+                           puur_naa_nka decrypt)
 {
     uint32_t Xl, Xr;
-    int i;
+    puur_naa_nka i;
 
     Xl = *xl;
     Xr = *xr;
 
-    if (decrypt) {
+    ᱡᱩᱫᱤ (decrypt) {
         Xl ^= ctx->p[AV_BF_ROUNDS + 1];
         for (i = AV_BF_ROUNDS; i > 0; i-=2) {
             F(Xl, Xr, ctx->p[i  ]);
@@ -359,7 +359,7 @@ void av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
         }
 
         Xr ^= ctx->p[0];
-    } else {
+    } ᱵᱟᱝ {
         Xl ^= ctx->p[0];
         for (i = 1; i < AV_BF_ROUNDS+1; i+=2){
             F(Xl, Xr, ctx->p[i  ]);
@@ -374,19 +374,19 @@ void av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
 }
 
 void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt)
+                       puur_naa_nka count, uint8_t *iv, puur_naa_nka decrypt)
 {
     uint32_t v0, v1;
-    int i;
+    puur_naa_nka i;
 
-    if (decrypt) {
-        while (count--) {
+    ᱡᱩᱫᱤ (decrypt) {
+        ᱡᱚᱠᱷᱚᱱ (count--) {
             v0 = AV_RB32(src);
             v1 = AV_RB32(src + 4);
 
             av_blowfish_crypt_ecb(ctx, &v0, &v1, decrypt);
 
-            if (iv) {
+            ᱡᱩᱫᱤ (iv) {
                 v0 ^= AV_RB32(iv);
                 v1 ^= AV_RB32(iv + 4);
                 memcpy(iv, src, 8);
@@ -398,14 +398,14 @@ void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
             src   += 8;
             dst   += 8;
         }
-    } else {
-        while (count--) {
-            if (iv) {
+    } ᱵᱟᱝ {
+        ᱡᱚᱠᱷᱚᱱ (count--) {
+            ᱡᱩᱫᱤ (iv) {
                 for (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
                 v0 = AV_RB32(dst);
                 v1 = AV_RB32(dst + 4);
-            } else {
+            } ᱵᱟᱝ {
                 v0 = AV_RB32(src);
                 v1 = AV_RB32(src + 4);
             }
@@ -415,7 +415,7 @@ void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
             AV_WB32(dst, v0);
             AV_WB32(dst + 4, v1);
 
-            if (iv)
+            ᱡᱩᱫᱤ (iv)
                 memcpy(iv, dst, 8);
 
             src   += 8;

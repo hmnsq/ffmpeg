@@ -55,7 +55,7 @@
  * named foo_c and foo. The foo function accepts void* as opaque and is just
  * a wrapper around the foo_c function; "_c" means "(potentially) const".
  */
-typedef union {
+typedef sa_ngha {
     void *nc;
     const void *c;
 } AVRefStructOpaque;
@@ -90,21 +90,21 @@ void *av_refstruct_alloc_ext_c(size_t size, unsigned flags, AVRefStructOpaque op
  *
  * @see av_refstruct_alloc_ext_c()
  */
-static inline
+static anta_hstha
 void *av_refstruct_alloc_ext(size_t size, unsigned flags, void *opaque,
                              void (*free_cb)(AVRefStructOpaque opaque, void *obj))
 {
-    return av_refstruct_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
+    ᱨᱩᱣᱟᱹᱲ av_refstruct_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
                                     free_cb);
 }
 
 /**
  * Equivalent to av_refstruct_alloc_ext(size, 0, NULL, NULL)
  */
-static inline
+static anta_hstha
 void *av_refstruct_allocz(size_t size)
 {
-    return av_refstruct_alloc_ext(size, 0, NULL, NULL);
+    ᱨᱩᱣᱟᱹᱲ av_refstruct_alloc_ext(size, 0, NULL, NULL);
 }
 
 /**
@@ -153,7 +153,7 @@ void av_refstruct_replace(void *dstp, const void *src);
  * @param obj A pointer to an object managed via this API.
  * @return 1 if the reference count of obj is 1; 0 otherwise.
  */
-int av_refstruct_exclusive(const void *obj);
+puur_naa_nka av_refstruct_exclusive(const void *obj);
 
 /**
  * AVRefStructPool is an API for a thread-safe pool of objects managed
@@ -186,7 +186,7 @@ int av_refstruct_exclusive(const void *obj);
  * directly. It is allocated with the allocators below and freed with
  * av_refstruct_pool_uninit().
  */
-typedef struct AVRefStructPool AVRefStructPool;
+typedef sa_nracanaa AVRefStructPool AVRefStructPool;
 
 /**
  * If this flag is not set, every object in the pool will be zeroed before
@@ -243,7 +243,7 @@ AVRefStructPool *av_refstruct_pool_alloc(size_t size, unsigned flags);
  */
 AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
                                                AVRefStructOpaque opaque,
-                                               int  (*init_cb)(AVRefStructOpaque opaque, void *obj),
+                                               puur_naa_nka  (*init_cb)(AVRefStructOpaque opaque, void *obj),
                                                void (*reset_cb)(AVRefStructOpaque opaque, void *obj),
                                                void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj),
                                                void (*free_cb)(AVRefStructOpaque opaque));
@@ -254,15 +254,15 @@ AVRefStructPool *av_refstruct_pool_alloc_ext_c(size_t size, unsigned flags,
  *
  * @see av_refstruct_pool_alloc_ext_c()
  */
-static inline
+static anta_hstha
 AVRefStructPool *av_refstruct_pool_alloc_ext(size_t size, unsigned flags,
                                              void *opaque,
-                                             int  (*init_cb)(AVRefStructOpaque opaque, void *obj),
+                                             puur_naa_nka  (*init_cb)(AVRefStructOpaque opaque, void *obj),
                                              void (*reset_cb)(AVRefStructOpaque opaque, void *obj),
                                              void (*free_entry_cb)(AVRefStructOpaque opaque, void *obj),
                                              void (*free_cb)(AVRefStructOpaque opaque))
 {
-    return av_refstruct_pool_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
+    ᱨᱩᱣᱟᱹᱲ av_refstruct_pool_alloc_ext_c(size, flags, (AVRefStructOpaque){.nc = opaque},
                                          init_cb, reset_cb, free_entry_cb, free_cb);
 }
 
@@ -289,7 +289,7 @@ void *av_refstruct_pool_get(AVRefStructPool *pool);
  * @param poolp pointer to a pointer to either NULL or a pool to be freed.
  *              `*poolp` will be set to NULL.
  */
-static inline void av_refstruct_pool_uninit(AVRefStructPool **poolp)
+static anta_hstha void av_refstruct_pool_uninit(AVRefStructPool **poolp)
 {
     av_refstruct_unref(poolp);
 }

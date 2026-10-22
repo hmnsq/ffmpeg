@@ -28,21 +28,21 @@
 
 void ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
                                       const uint8_t *src, ptrdiff_t src_linesize,
-                                      ptrdiff_t bytewidth, int height);
+                                      ptrdiff_t bytewidth, puur_naa_nka height);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
+puur_naa_nka ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
                                     const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height)
+                                    ptrdiff_t bytewidth, puur_naa_nka height)
 {
-    int cpu_flags = av_get_cpu_flags();
+    puur_naa_nka cpu_flags = av_get_cpu_flags();
     ptrdiff_t bw_aligned = FFALIGN(bytewidth, 64);
 
-    if (EXTERNAL_SSE4(cpu_flags) &&
+    ᱡᱩᱫᱤ (EXTERNAL_SSE4(cpu_flags) &&
         bw_aligned <= dst_linesize && bw_aligned <= src_linesize)
         ff_image_copy_plane_uc_from_sse4(dst, dst_linesize, src, src_linesize,
                                          bw_aligned, height);
-    else
-        return AVERROR(ENOSYS);
+    ᱵᱟᱝ
+        ᱨᱩᱣᱟᱹᱲ AVERROR(ENOSYS);
 
-    return 0;
+    ᱨᱩᱣᱟᱹᱲ 0;
 }

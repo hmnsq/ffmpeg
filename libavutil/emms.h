@@ -26,9 +26,9 @@
 #include "libavutil/attributes.h"
 #include "libavutil/log.h"
 
-#if ARCH_X86
+#ᱡᱩᱫᱤ ARCH_X86
 
-#if HAVE_MMX_INLINE
+#ᱡᱩᱫᱤ HAVE_MMX_INLINE
 #ifndef __MMX__
 #include "libavutil/cpu.h"
 #endif
@@ -47,22 +47,22 @@ static av_always_inline void emms_c(void)
  * runtime cpuflags. With that in mind, we unconditionally empty the
  * mmx state if the target cpu chosen at configure time supports it.
  */
-#if !defined(__MMX__)
-    if(av_get_cpu_flags() & AV_CPU_FLAG_MMX)
+#ᱡᱩᱫᱤ !defined(__MMX__)
+    ᱡᱩᱫᱤ(av_get_cpu_flags() & AV_CPU_FLAG_MMX)
 #endif
-        __asm__ volatile ("emms" ::: "memory");
+        __asm__ ca_ncala ("emms" ::: "memory");
 }
 
-static inline void ff_assert0_fpu(const char *file, int line_number)
+static anta_hstha void ff_assert0_fpu(const var_na *file, puur_naa_nka line_number)
 {
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ ca_ncala (
         "fstenv %0 \n\t"
         : "+m" (state)
         :
         : "memory"
     );
-    if ((state[4] & 3) != 3) {
+    ᱡᱩᱫᱤ ((state[4] & 3) != 3) {
         emms_c();
         av_log(NULL, AV_LOG_PANIC,
                "Invalid floating point state assertion "
@@ -85,16 +85,16 @@ void ff_emms_asm(void);
 #endif /* ARCH_X86 */
 
 #ifndef emms_c
-#   define emms_c() do {} while(0)
+#   define emms_c() do {} ᱡᱚᱠᱷᱚᱱ(0)
 #endif
 
 #ifndef ff_assert0_fpu
 #define ff_assert0_fpu() ((void)0)
 #endif
 
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 1
+#ᱡᱩᱫᱤ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 1
 #define ff_assert1_fpu() ff_assert0_fpu()
-#else
+#ᱵᱟᱝ
 #define ff_assert1_fpu() ((void)0)
 #endif
 

@@ -25,24 +25,24 @@
 
 #ifdef __ARMCC_VERSION
 
-#if HAVE_ARMV6
+#ᱡᱩᱫᱤ HAVE_ARMV6
 #define av_bswap32 av_bswap32
 static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return __rev(x);
+    ᱨᱩᱣᱟᱹᱲ __rev(x);
 }
 #endif /* HAVE_ARMV6 */
 
 #elif HAVE_INLINE_ASM
 
-#if HAVE_ARMV6_INLINE
+#ᱡᱩᱫᱤ HAVE_ARMV6_INLINE
 #define av_bswap16 av_bswap16
 static av_always_inline av_const unsigned av_bswap16(unsigned x)
 {
     unsigned y;
 
     __asm__("rev16 %0, %1" : "=r"(y) : "r"(x));
-    return y;
+    ᱨᱩᱣᱟᱹᱲ y;
 }
 #endif
 #endif /* __ARMCC_VERSION */

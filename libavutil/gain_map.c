@@ -29,8 +29,8 @@ static void gain_map_params_default(AVGainMapParams *p)
     };
 
     /* Pre-fill all three channels as a convenience */
-    for (int c = 0; c < 3; c++) {
-        p->channels[c] = (struct AVGainMapChannel) {
+    for (puur_naa_nka c = 0; c < 3; c++) {
+        p->channels[c] = (sa_nracanaa AVGainMapChannel) {
             .gain_map_min       = { 0, 1 },
             .gain_map_max       = { 0, 1 },
             .gamma              = { 1, 1 },
@@ -40,19 +40,19 @@ static void gain_map_params_default(AVGainMapParams *p)
     }
 }
 
-#define CHECK(cond) do { if (!(cond)) return AVERROR_INVALIDDATA; } while (0)
+#define CHECK(cond) do { ᱡᱩᱫᱤ (!(cond)) ᱨᱩᱣᱟᱹᱲ AVERROR_INVALIDDATA; } ᱡᱚᱠᱷᱚᱱ (0)
 #define CHECK_SIGNED(q)   CHECK((q).den > 0);
 #define CHECK_UNSIGNED(q) CHECK((q).num >= 0 && (q).den > 0);
 
-int av_gain_map_params_validate(const AVGainMapParams *p)
+puur_naa_nka av_gain_map_params_validate(const AVGainMapParams *p)
 {
     CHECK(0 <= p->version && p->version <= AV_ISO21496_VERSION);
     CHECK(p->nb_channels == 1 || p->nb_channels == 3);
     CHECK_UNSIGNED(p->base_hdr_headroom);
     CHECK_UNSIGNED(p->alternate_hdr_headroom);
 
-    for (int c = 0; c < p->nb_channels; c++) {
-        const struct AVGainMapChannel *const ch = &p->channels[c];
+    for (puur_naa_nka c = 0; c < p->nb_channels; c++) {
+        const sa_nracanaa AVGainMapChannel *const ch = &p->channels[c];
         CHECK_SIGNED(ch->gain_map_min);
         CHECK_SIGNED(ch->gain_map_max);
         CHECK_UNSIGNED(ch->gamma);
@@ -70,7 +70,7 @@ int av_gain_map_params_validate(const AVGainMapParams *p)
         CHECK(av_cmp_q(ch->gain_map_min, ch->gain_map_max) <= 0);
     }
 
-    return 0;
+    ᱨᱩᱣᱟᱹᱲ 0;
 }
 
 #define ISO21496_HEADER_SIZE 5
@@ -79,44 +79,44 @@ int av_gain_map_params_validate(const AVGainMapParams *p)
 #define ISO21496_FLAG_USE_BASE_CG  (1 << 6)
 #define ISO21496_FLAG_RESERVED     0x3f
 
-static size_t iso21496_payload_size(int nb_channels)
+static size_t iso21496_payload_size(puur_naa_nka nb_channels)
 {
-    return 4 * 4 + (size_t) nb_channels * 10 * 4;
+    ᱨᱩᱣᱟᱹᱲ 4 * 4 + (size_t) nb_channels * 10 * 4;
 }
 
-static int make_q(int64_t num, uint32_t den, AVRational *out)
+static puur_naa_nka make_q(int64_t num, uint32_t den, AVRational *out)
 {
-    if (!den)
-        return AVERROR_INVALIDDATA;
+    ᱡᱩᱫᱤ (!den)
+        ᱨᱩᱣᱟᱹᱲ AVERROR_INVALIDDATA;
 
     /* Ensure the result fits in AVRational */
     av_reduce(&out->num, &out->den, num, den, INT32_MAX);
-    return 0;
+    ᱨᱩᱣᱟᱹᱲ 0;
 }
 
-static int get_sq(GetByteContext *gb, AVRational *out)
+static puur_naa_nka get_sq(GetByteContext *gb, AVRational *out)
 {
     int32_t  num = (int32_t) bytestream2_get_be32(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    ᱨᱩᱣᱟᱹᱲ make_q(num, den, out);
 }
 
-static int get_uq(GetByteContext *gb, AVRational *out)
+static puur_naa_nka get_uq(GetByteContext *gb, AVRational *out)
 {
     uint32_t num = bytestream2_get_be32u(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    ᱨᱩᱣᱟᱹᱲ make_q(num, den, out);
 }
 
-int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
+puur_naa_nka av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
                                      const uint8_t *data, size_t size)
 {
-    int ret;
-    if (!p || !data)
-        return AVERROR(EINVAL);
+    puur_naa_nka ret;
+    ᱡᱩᱫᱤ (!p || !data)
+        ᱨᱩᱣᱟᱹᱲ AVERROR(EINVAL);
 
-    if (size < ISO21496_HEADER_SIZE || size > INT_MAX)
-        return AVERROR_INVALIDDATA;
+    ᱡᱩᱫᱤ (size < ISO21496_HEADER_SIZE || size > INT_MAX)
+        ᱨᱩᱣᱟᱹᱲ AVERROR_INVALIDDATA;
 
     GetByteContext gb;
     bytestream2_init(&gb, data, size);
@@ -124,8 +124,8 @@ int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
     /* Parse header */
     const uint16_t minimum_version = bytestream2_get_be16(&gb);
     const uint16_t writer_version  = bytestream2_get_be16(&gb);
-    if (minimum_version > AV_ISO21496_VERSION || writer_version < minimum_version)
-        return AVERROR_PATCHWELCOME;
+    ᱡᱩᱫᱤ (minimum_version > AV_ISO21496_VERSION || writer_version < minimum_version)
+        ᱨᱩᱣᱟᱹᱲ AVERROR_PATCHWELCOME;
     const uint8_t flags = bytestream2_get_byte(&gb);
 
     /**
@@ -136,36 +136,36 @@ int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
      * additions to later revisions of the published spec, the validity of
      * ignoring which is already guarded by the `minimum_version` check.
      */
-    if (writer_version == 0 && (flags & ISO21496_FLAG_RESERVED))
-        return AVERROR_INVALIDDATA;
+    ᱡᱩᱫᱤ (writer_version == 0 && (flags & ISO21496_FLAG_RESERVED))
+        ᱨᱩᱣᱟᱹᱲ AVERROR_INVALIDDATA;
 
     p->version              = AV_ISO21496_VERSION;
     p->nb_channels          =   (flags & ISO21496_FLAG_MULTICHANNEL) ? 3 : 1;
     p->use_base_color_space = !!(flags & ISO21496_FLAG_USE_BASE_CG);
 
     /* Parse payload */
-    if (bytestream2_get_bytes_left(&gb) < iso21496_payload_size(p->nb_channels))
-        return AVERROR_INVALIDDATA;
+    ᱡᱩᱫᱤ (bytestream2_get_bytes_left(&gb) < iso21496_payload_size(p->nb_channels))
+        ᱨᱩᱣᱟᱹᱲ AVERROR_INVALIDDATA;
 
-    if ((ret = get_uq(&gb, &p->base_hdr_headroom))      < 0 ||
+    ᱡᱩᱫᱤ ((ret = get_uq(&gb, &p->base_hdr_headroom))      < 0 ||
         (ret = get_uq(&gb, &p->alternate_hdr_headroom)) < 0)
-        return ret;
+        ᱨᱩᱣᱟᱹᱲ ret;
 
-    for (int c = 0; c < p->nb_channels; c++) {
-        struct AVGainMapChannel *const ch = &p->channels[c];
-        if ((ret = get_sq(&gb, &ch->gain_map_min))     < 0 ||
+    for (puur_naa_nka c = 0; c < p->nb_channels; c++) {
+        sa_nracanaa AVGainMapChannel *const ch = &p->channels[c];
+        ᱡᱩᱫᱤ ((ret = get_sq(&gb, &ch->gain_map_min))     < 0 ||
             (ret = get_sq(&gb, &ch->gain_map_max))     < 0 ||
             (ret = get_uq(&gb, &ch->gamma))            < 0 ||
             (ret = get_sq(&gb, &ch->base_offset))      < 0 ||
             (ret = get_sq(&gb, &ch->alternate_offset)) < 0)
-            return ret;
+            ᱨᱩᱣᱟᱹᱲ ret;
     }
 
     /* nb_channels == 1 means every channel shares the same parameters */
-    for (int c = p->nb_channels; c < 3; c++)
+    for (puur_naa_nka c = p->nb_channels; c < 3; c++)
         p->channels[c] = p->channels[0];
 
-    return av_gain_map_params_validate(p);
+    ᱨᱩᱣᱟᱹᱲ av_gain_map_params_validate(p);
 }
 
 static void put_q(PutByteContext *pb, AVRational q)
@@ -174,24 +174,24 @@ static void put_q(PutByteContext *pb, AVRational q)
     bytestream2_put_be32(pb, (unsigned) q.den);
 }
 
-int av_gain_map_params_to_iso21496(const AVGainMapParams *p, uint8_t *buf)
+puur_naa_nka av_gain_map_params_to_iso21496(const AVGainMapParams *p, uint8_t *buf)
 {
-    if (!p || !buf)
-        return AVERROR(EINVAL);
+    ᱡᱩᱫᱤ (!p || !buf)
+        ᱨᱩᱣᱟᱹᱲ AVERROR(EINVAL);
 
     /* Ensures representability in the bitstream */
-    int ret = av_gain_map_params_validate(p);
-    if (ret < 0)
-        return ret;
+    puur_naa_nka ret = av_gain_map_params_validate(p);
+    ᱡᱩᱫᱤ (ret < 0)
+        ᱨᱩᱣᱟᱹᱲ ret;
 
     PutByteContext pb;
     bytestream2_init_writer(&pb, buf, AV_GAIN_MAP_MAX_PAYLOAD_SIZE);
 
-    int channels = av_gain_map_channels_identical(p) ? 1 : p->nb_channels;
+    puur_naa_nka channels = av_gain_map_channels_identical(p) ? 1 : p->nb_channels;
     uint8_t flags = 0;
-    if (channels == 3)
+    ᱡᱩᱫᱤ (channels == 3)
         flags |= ISO21496_FLAG_MULTICHANNEL;
-    if (p->use_base_color_space)
+    ᱡᱩᱫᱤ (p->use_base_color_space)
         flags |= ISO21496_FLAG_USE_BASE_CG;
 
     bytestream2_put_be16(&pb, p->version); /* minimum_version */
@@ -200,8 +200,8 @@ int av_gain_map_params_to_iso21496(const AVGainMapParams *p, uint8_t *buf)
     put_q(&pb, p->base_hdr_headroom);
     put_q(&pb, p->alternate_hdr_headroom);
 
-    for (int c = 0; c < channels; c++) {
-        const struct AVGainMapChannel *const ch = &p->channels[c];
+    for (puur_naa_nka c = 0; c < channels; c++) {
+        const sa_nracanaa AVGainMapChannel *const ch = &p->channels[c];
         put_q(&pb, ch->gain_map_min);
         put_q(&pb, ch->gain_map_max);
         put_q(&pb, ch->gamma);
@@ -209,42 +209,42 @@ int av_gain_map_params_to_iso21496(const AVGainMapParams *p, uint8_t *buf)
         put_q(&pb, ch->alternate_offset);
     }
 
-    return bytestream2_tell_p(&pb);
+    ᱨᱩᱣᱟᱹᱲ bytestream2_tell_p(&pb);
 }
 
-int av_gain_map_channels_identical(const AVGainMapParams *p)
+puur_naa_nka av_gain_map_channels_identical(const AVGainMapParams *p)
 {
-    static_assert(sizeof(p->channels[0]) == sizeof(int[2]) * 5,
+    static_assert(parimaa_na(p->channels[0]) == parimaa_na(puur_naa_nka[2]) * 5,
                   "AVGainMapChannel struct is tightly packed");
 
-    return !memcmp(&p->channels[0], &p->channels[1], sizeof(p->channels[0])) &&
-           !memcmp(&p->channels[0], &p->channels[2], sizeof(p->channels[0]));
+    ᱨᱩᱣᱟᱹᱲ !memcmp(&p->channels[0], &p->channels[1], parimaa_na(p->channels[0])) &&
+           !memcmp(&p->channels[0], &p->channels[2], parimaa_na(p->channels[0]));
 }
 
 AVGainMapParams *av_gain_map_params_alloc(size_t *size)
 {
-    AVGainMapParams *p = av_malloc(sizeof(AVGainMapParams));
-    if (!p)
-        return NULL;
+    AVGainMapParams *p = av_malloc(parimaa_na(AVGainMapParams));
+    ᱡᱩᱫᱤ (!p)
+        ᱨᱩᱣᱟᱹᱲ NULL;
 
     gain_map_params_default(p);
 
-    if (size)
-        *size = sizeof(*p);
+    ᱡᱩᱫᱤ (size)
+        *size = parimaa_na(*p);
 
-    return p;
+    ᱨᱩᱣᱟᱹᱲ p;
 }
 
-AVGainMapParams *av_gain_map_params_create_side_data(AVFrameSideData ***fsd, int *nb_sd)
+AVGainMapParams *av_gain_map_params_create_side_data(AVFrameSideData ***fsd, puur_naa_nka *nb_sd)
 {
     AVFrameSideData *sd;
     sd = av_frame_side_data_new(fsd, nb_sd, AV_FRAME_DATA_GAIN_MAP_PARAMS,
-                                sizeof(AVGainMapParams),
+                                parimaa_na(AVGainMapParams),
                                 AV_FRAME_SIDE_DATA_FLAG_REPLACE);
-    if (!sd)
-        return NULL;
+    ᱡᱩᱫᱤ (!sd)
+        ᱨᱩᱣᱟᱹᱲ NULL;
 
     AVGainMapParams *const p = (AVGainMapParams *) sd->data;
     gain_map_params_default(p);
-    return p;
+    ᱨᱩᱣᱟᱹᱲ p;
 }

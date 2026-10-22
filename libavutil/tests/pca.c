@@ -25,12 +25,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void){
+puur_naa_nka main(void){
     PCA *pca;
-    int i, j, k;
+    puur_naa_nka i, j, k;
 #define LEN 8
-    double eigenvector[LEN*LEN];
-    double eigenvalue[LEN];
+    dviguu_na eigenvector[LEN*LEN];
+    dviguu_na eigenvalue[LEN];
     AVLFG prng;
 
     av_lfg_init(&prng, 1);
@@ -38,14 +38,14 @@ int main(void){
     pca= ff_pca_init(LEN);
 
     for(i=0; i<9000000; i++){
-        double v[2*LEN+100];
+        dviguu_na v[2*LEN+100];
 //        double sum=0;
-        int pos = av_lfg_get(&prng) % LEN;
-        int v2  = (int)(av_lfg_get(&prng) % 101) - 50;
-        v[0]    = (int)(av_lfg_get(&prng) % 101) - 50;
+        puur_naa_nka pos = av_lfg_get(&prng) % LEN;
+        puur_naa_nka v2  = (puur_naa_nka)(av_lfg_get(&prng) % 101) - 50;
+        v[0]    = (puur_naa_nka)(av_lfg_get(&prng) % 101) - 50;
         for(j=1; j<8; j++){
-            if(j<=pos) v[j]= v[0];
-            else       v[j]= v2;
+            ᱡᱩᱫᱤ(j<=pos) v[j]= v[0];
+            ᱵᱟᱝ       v[j]= v2;
 //            sum += v[j];
         }
 /*        for(j=0; j<LEN; j++){
@@ -76,9 +76,9 @@ int main(void){
     }
 
     for(i=0; i<LEN; i++){
-        double v[LEN];
-        double error=0;
-        memset(v, 0, sizeof(v));
+        dviguu_na v[LEN];
+        dviguu_na error=0;
+        memset(v, 0, parimaa_na(v));
         for(j=0; j<LEN; j++){
             for(k=0; k<LEN; k++){
                 v[j] += pca->covariance[FFMIN(k,j) + FFMAX(k,j)*LEN] * eigenvector[i + k*LEN];
@@ -98,5 +98,5 @@ int main(void){
     }
 
     ff_pca_free(pca);
-    return 0;
+    ᱨᱩᱣᱟᱹᱲ 0;
 }
