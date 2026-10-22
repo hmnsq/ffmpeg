@@ -21,59 +21,59 @@
  * byte swapping routines
  */
 
-#ifndef AVUTIL_X86_BSWAP_H
-#define AVUTIL_X86_BSWAP_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_X86_BSWAP_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_X86_BSWAP_H
 
-#include <stdint.h>
-#if defined(_MSC_VER)
-#include <stdlib.h>
-#include <intrin.h>
-#endif
-#include "config.h"
-#include "libavutil/attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਜੇ defined(_MSC_VER)
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <intrin.h>
+#ਜੇ_ਅੰਤ
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/attributes.h"
 
-#if defined(_MSC_VER)
+#ਜੇ defined(_MSC_VER)
 
-#define av_bswap16 av_bswap16
-static av_always_inline av_const uint16_t av_bswap16(uint16_t x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_bswap16 av_bswap16
+ਸਥਿਰ av_always_inline av_const uint16_t av_bswap16(uint16_t x)
 {
-    return _rotr16(x, 8);
+    ਵਾਪਸ _rotr16(x, 8);
 }
 
-#define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_bswap32 av_bswap32
+ਸਥਿਰ av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return _byteswap_ulong(x);
+    ਵਾਪਸ _byteswap_ulong(x);
 }
 
-#if ARCH_X86_64
-#define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+#ਜੇ ARCH_X86_64
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_bswap64 av_bswap64
+ਸਥਿਰ ਸਤਰਅੰਦਰ uint64_t av_const av_bswap64(uint64_t x)
 {
-    return _byteswap_uint64(x);
+    ਵਾਪਸ _byteswap_uint64(x);
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 
-#elif HAVE_INLINE_ASM
+#ਜਾਂਜੇ HAVE_INLINE_ASM
 
-#ifdef __INTEL_COMPILER
-#define av_bswap32 av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ __INTEL_COMPILER
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_bswap32 av_bswap32
+ਸਥਿਰ av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
     __asm__("bswap   %0" : "+r" (x));
-    return x;
+    ਵਾਪਸ x;
 }
 
-#if ARCH_X86_64
-#define av_bswap64 av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+#ਜੇ ARCH_X86_64
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_bswap64 av_bswap64
+ਸਥਿਰ ਸਤਰਅੰਦਰ uint64_t av_const av_bswap64(uint64_t x)
 {
     __asm__("bswap  %0": "=r" (x) : "0" (x));
-    return x;
+    ਵਾਪਸ x;
 }
-#endif
-#endif /* __INTEL_COMPILER */
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ /* __INTEL_COMPILER */
 
-#endif /* HAVE_INLINE_ASM */
-#endif /* AVUTIL_X86_BSWAP_H */
+#ਜੇ_ਅੰਤ /* HAVE_INLINE_ASM */
+#ਜੇ_ਅੰਤ /* AVUTIL_X86_BSWAP_H */

@@ -23,79 +23,79 @@
  * common internal API header
  */
 
-#ifndef AVUTIL_INTERNAL_H
-#define AVUTIL_INTERNAL_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_ਅੰਦਰੂਨੀ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_ਅੰਦਰੂਨੀ_H
 
-#if !defined(DEBUG) && !defined(NDEBUG)
+#ਜੇ !defined(DEBUG) && !defined(NDEBUG)
 #    define NDEBUG
-#endif
+#ਜੇ_ਅੰਤ
 
 // This can be enabled to allow detection of additional integer overflows with ubsan
 //#define CHECKED
 
-#include <limits.h>
-#include <math.h>
-#include <stdint.h>
-#include <stddef.h>
-#include <assert.h>
-#include <stdio.h>
-#include "config.h"
-#include "attributes.h"
-#include "mathematics.h"
-#include "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <math.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <assert.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mathematics.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
 
-#ifndef attribute_align_arg
-#if ARCH_X86_32 && defined(__GNUC__)
-#    define attribute_align_arg __attribute__((force_align_arg_pointer))
-#else
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ attribute_align_arg
+#ਜੇ ARCH_X86_32 && defined(__GNUC__)
+#    define attribute_align_arg __attribute__((force_align_arg_ਸੂਚਕ))
+#ਨਹੀਂਤਾਂ
 #    define attribute_align_arg
-#endif
-#endif
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ
 
-#if HAVE_MIPSFPU && HAVE_INLINE_ASM
+#ਜੇ HAVE_MIPSFPU && HAVE_INLINE_ASM
 #   include "mips/libm_mips.h"
-#endif
+#ਜੇ_ਅੰਤ
 
-#if HAVE_PRAGMA_DEPRECATED
-#    if defined(__ICL) || defined (__INTEL_COMPILER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:1478))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
+#ਜੇ HAVE_PRAGMA_DEPRECATED
+#    ਜੇ defined(__ICL) || defined (__INTEL_COMPILER)
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(ਧੱਕੋ)) __pragma(warning(disable:1478))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(ਕੱਢੋ))
 #    elif defined(_MSC_VER)
-#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(push)) __pragma(warning(disable:4996))
-#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(pop))
-#    else
+#        define FF_DISABLE_DEPRECATION_WARNINGS __pragma(warning(ਧੱਕੋ)) __pragma(warning(disable:4996))
+#        define FF_ENABLE_DEPRECATION_WARNINGS  __pragma(warning(ਕੱਢੋ))
+#    ਨਹੀਂਤਾਂ
 #        define FF_DISABLE_DEPRECATION_WARNINGS _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #        define FF_ENABLE_DEPRECATION_WARNINGS  _Pragma("GCC diagnostic pop")
 #    endif
-#else
+#ਨਹੀਂਤਾਂ
 #    define FF_DISABLE_DEPRECATION_WARNINGS
 #    define FF_ENABLE_DEPRECATION_WARNINGS
-#endif
+#ਜੇ_ਅੰਤ
 
 
-#ifdef __ANDROID__
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ __ANDROID__
 #   include "compat/android/math.h"
-#endif
+#ਜੇ_ਅੰਤ
 
-#define FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, sizeof(*p)))
-#define FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, sizeof(*p)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_ALLOC_TYPED_ARRAY(p, nelem)  (p = av_malloc_array(nelem, ਆਕਾਰ(*p)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_ALLOCZ_TYPED_ARRAY(p, nelem) (p = av_calloc(nelem, ਆਕਾਰ(*p)))
 
-#define FF_PTR_ADD(ptr, off) ((off) ? (ptr) + (off) : (ptr))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_PTR_ਜੋੜੋ(ptr, off) ((off) ? (ptr) + (off) : (ptr))
 
 /**
  * Access a field in a structure by its offset.
  */
-#define FF_FIELD_AT(type, off, obj) (*(type *)((char *)&(obj) + (off)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_ਖੇਤਰ_AT(type, off, obj) (*(type *)((ਅੱਖਰ *)&(obj) + (off)))
 
 /**
  * Return NULL if CONFIG_SMALL is true, otherwise the argument
  * without modification. Used to disable the definition of strings.
  */
-#if CONFIG_SMALL
-#   define NULL_IF_CONFIG_SMALL(x) NULL
-#else
+#ਜੇ CONFIG_SMALL
+#   define NULL_IF_CONFIG_SMALL(x) ਨਿਰਾ
+#ਨਹੀਂਤਾਂ
 #   define NULL_IF_CONFIG_SMALL(x) x
-#endif
+#ਜੇ_ਅੰਤ
 
 /**
  * Log a generic warning message about a missing feature.
@@ -104,8 +104,8 @@
  *                field is a pointer to an AVClass struct
  * @param[in] msg string containing the name of the missing feature
  */
-void avpriv_report_missing_feature(void *avc,
-                                   const char *msg, ...) av_printf_format(2, 3);
+ਖਾਲੀ avpriv_report_missing_feature(ਖਾਲੀ *avc,
+                                   ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ, ...) av_printf_format(2, 3);
 
 /**
  * Log a generic warning message about a missing feature.
@@ -115,42 +115,42 @@ void avpriv_report_missing_feature(void *avc,
  *                a pointer to an AVClass struct
  * @param[in] msg string containing the name of the missing feature
  */
-void avpriv_request_sample(void *avc,
-                           const char *msg, ...) av_printf_format(2, 3);
+ਖਾਲੀ avpriv_request_sample(ਖਾਲੀ *avc,
+                           ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ, ...) av_printf_format(2, 3);
 
-#ifdef DEBUG
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ DEBUG
 #   define ff_dlog(ctx, ...) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__)
-#else
-#   define ff_dlog(ctx, ...) do { if (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } while (0)
-#endif
+#ਨਹੀਂਤਾਂ
+#   define ff_dlog(ctx, ...) ਕਰੋ { ਜੇ (0) av_log(ctx, AV_LOG_DEBUG, __VA_ARGS__); } ਜਦੋਂ (0)
+#ਜੇ_ਅੰਤ
 
-#ifdef TRACE
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ TRACE
 #   define ff_tlog(ctx, ...) av_log(ctx, AV_LOG_TRACE, __VA_ARGS__)
-#else
-#   define ff_tlog(ctx, ...) do { } while(0)
-#endif
+#ਨਹੀਂਤਾਂ
+#   define ff_tlog(ctx, ...) ਕਰੋ { } ਜਦੋਂ(0)
+#ਜੇ_ਅੰਤ
 
 // For debugging we use signed operations so overflows can be detected (by ubsan)
 // For production we use unsigned so there are no undefined operations
-#ifdef CHECKED
-#define SUINT   int
-#define SUINT32 int32_t
-#else
-#define SUINT   unsigned
-#define SUINT32 uint32_t
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ CHECKED
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SUINT   ਪੂਰਨ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SUINT32 int32_t
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SUINT   ਬਿਨਾਨਿਸ਼ਾਨੀ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SUINT32 uint32_t
+#ਜੇ_ਅੰਤ
 
-static av_always_inline av_const int avpriv_mirror(int x, int w)
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ avpriv_mirror(ਪੂਰਨ x, ਪੂਰਨ w)
 {
-    if (!w)
-        return 0;
+    ਜੇ (!w)
+        ਵਾਪਸ 0;
 
-    while ((unsigned)x > (unsigned)w) {
+    ਜਦੋਂ ((ਬਿਨਾਨਿਸ਼ਾਨੀ)x > (ਬਿਨਾਨਿਸ਼ਾਨੀ)w) {
         x = -x;
-        if (x < 0)
+        ਜੇ (x < 0)
             x += 2 * w;
     }
-    return x;
+    ਵਾਪਸ x;
 }
 
-#endif /* AVUTIL_INTERNAL_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_INTERNAL_H */

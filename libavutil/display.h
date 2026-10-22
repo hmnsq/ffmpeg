@@ -24,10 +24,10 @@
  * Display matrix
  */
 
-#ifndef AVUTIL_DISPLAY_H
-#define AVUTIL_DISPLAY_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_DISPLAY_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_DISPLAY_H
 
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
 /**
  * @defgroup lavu_video_display Display transformation matrix functions
@@ -81,7 +81,7 @@
  * @note floating point numbers are inherently inexact, so callers are
  *       recommended to round the return value to nearest integer before use.
  */
-double av_display_rotation_get(const int32_t matrix[9]);
+ਦੁੱਗਣਾ av_display_rotation_get(ਅਚਲ int32_t ਮੈਟ੍ਰਿਕਸ[9]);
 
 /**
  * Initialize a transformation matrix describing a pure clockwise
@@ -91,7 +91,7 @@ double av_display_rotation_get(const int32_t matrix[9]);
  *                    by this function)
  * @param angle rotation angle in degrees.
  */
-void av_display_rotation_set(int32_t matrix[9], double angle);
+ਖਾਲੀ av_display_rotation_ਸੈੱਟ(int32_t ਮੈਟ੍ਰਿਕਸ[9], ਦੁੱਗਣਾ angle);
 
 /**
  * Flip the input matrix horizontally and/or vertically.
@@ -100,10 +100,10 @@ void av_display_rotation_set(int32_t matrix[9], double angle);
  * @param hflip whether the matrix should be flipped horizontally
  * @param vflip whether the matrix should be flipped vertically
  */
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip);
+ਖਾਲੀ av_display_ਮੈਟ੍ਰਿਕਸ_flip(int32_t ਮੈਟ੍ਰਿਕਸ[9], ਪੂਰਨ hflip, ਪੂਰਨ vflip);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_DISPLAY_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_DISPLAY_H */

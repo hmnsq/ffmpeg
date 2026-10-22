@@ -16,11 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_DRM_H
-#define AVUTIL_HWCONTEXT_DRM_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_HWCONTEXT_DRM_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_HWCONTEXT_DRM_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
 /**
  * @file
@@ -32,7 +32,7 @@
  * added in future.
  */
 
-enum {
+ਗਿਣਤੀ {
     /**
      * The maximum number of layers/planes in a DRM frame.
      */
@@ -45,17 +45,17 @@ enum {
  * Describes a single DRM object, addressing it as a PRIME file
  * descriptor.
  */
-typedef struct AVDRMObjectDescriptor {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVDRMObjectDescriptor {
     /**
      * DRM PRIME fd for the object.
      */
-    int fd;
+    ਪੂਰਨ fd;
     /**
      * Total size of the object.
      *
      * (This includes any parts not which do not contain image data.)
      */
-    size_t size;
+    size_t ਮਾਪ;
     /**
      * Format modifier applied to the object (DRM_FORMAT_MOD_*).
      *
@@ -71,16 +71,16 @@ typedef struct AVDRMObjectDescriptor {
  * Describes a single plane of a layer, which is contained within
  * a single object.
  */
-typedef struct AVDRMPlaneDescriptor {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVDRMPlaneDescriptor {
     /**
      * Index of the object containing this plane in the objects
      * array of the enclosing frame descriptor.
      */
-    int object_index;
+    ਪੂਰਨ object_ਸੂਚਕਾਂਕ;
     /**
      * Offset within that object of this plane.
      */
-    ptrdiff_t offset;
+    ptrdiff_t ਵਿੱਥ;
     /**
      * Pitch (linesize) of this plane.
      */
@@ -93,7 +93,7 @@ typedef struct AVDRMPlaneDescriptor {
  * Describes a single layer within a frame.  This has the structure
  * defined by its format, and will contain one or more planes.
  */
-typedef struct AVDRMLayerDescriptor {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVDRMLayerDescriptor {
     /**
      * Format of the layer (DRM_FORMAT_*).
      */
@@ -103,7 +103,7 @@ typedef struct AVDRMLayerDescriptor {
      *
      * This must match the number of planes required by format.
      */
-    int nb_planes;
+    ਪੂਰਨ nb_planes;
     /**
      * Array of planes in this layer.
      */
@@ -130,11 +130,11 @@ typedef struct AVDRMLayerDescriptor {
  * increasing plane index must be the same as the order which would
  * be used for the data pointers in the equivalent software format.
  */
-typedef struct AVDRMFrameDescriptor {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVDRMFrameDescriptor {
     /**
      * Number of DRM objects making up this frame.
      */
-    int nb_objects;
+    ਪੂਰਨ nb_objects;
     /**
      * Array of objects making up the frame.
      */
@@ -142,7 +142,7 @@ typedef struct AVDRMFrameDescriptor {
     /**
      * Number of layers in the frame.
      */
-    int nb_layers;
+    ਪੂਰਨ nb_layers;
     /**
      * Array of layers in the frame.
      */
@@ -154,7 +154,7 @@ typedef struct AVDRMFrameDescriptor {
  *
  * Allocated as AVHWDeviceContext.hwctx.
  */
-typedef struct AVDRMDeviceContext {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVDRMDeviceContext {
     /**
      * File descriptor of DRM device.
      *
@@ -163,7 +163,7 @@ typedef struct AVDRMDeviceContext {
      *
      * If no device is required, set to -1.
      */
-    int fd;
+    ਪੂਰਨ fd;
 } AVDRMDeviceContext;
 
-#endif /* AVUTIL_HWCONTEXT_DRM_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_HWCONTEXT_DRM_H */

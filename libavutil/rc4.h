@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RC4_H
-#define AVUTIL_RC4_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_RC4_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_RC4_H
 
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
 /**
  * @defgroup lavu_rc4 RC4
@@ -29,15 +29,15 @@
  * @{
  */
 
-typedef struct AVRC4 {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVRC4 {
     uint8_t state[256];
-    int x, y;
+    ਪੂਰਨ x, y;
 } AVRC4;
 
 /**
  * Allocate an AVRC4 context.
  */
-AVRC4 *av_rc4_alloc(void);
+AVRC4 *av_rc4_alloc(ਖਾਲੀ);
 
 /**
  * @brief Initializes an AVRC4 context.
@@ -48,7 +48,7 @@ AVRC4 *av_rc4_alloc(void);
  * @param decrypt 0 for encryption, 1 for decryption, currently has no effect
  * @return zero on success, negative value otherwise
  */
-int av_rc4_init(struct AVRC4 *d, const uint8_t *key, int key_bits, int decrypt);
+ਪੂਰਨ av_rc4_init(ਬਣਤਰ AVRC4 *d, ਅਚਲ uint8_t *ਕੁੰਜੀ, ਪੂਰਨ ਕੁੰਜੀ_ਬਿੱਟ, ਪੂਰਨ decrypt);
 
 /**
  * @brief Encrypts / decrypts using the RC4 algorithm.
@@ -60,10 +60,10 @@ int av_rc4_init(struct AVRC4 *d, const uint8_t *key, int key_bits, int decrypt);
  * @param iv not (yet) used for RC4, should be NULL
  * @param decrypt 0 for encryption, 1 for decryption, not (yet) used
  */
-void av_rc4_crypt(struct AVRC4 *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+ਖਾਲੀ av_rc4_crypt(ਬਣਤਰ AVRC4 *d, uint8_t *dst, ਅਚਲ uint8_t *src, ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ decrypt);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_RC4_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_RC4_H */

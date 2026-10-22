@@ -16,102 +16,102 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "avassert.h"
-#include "macos_kperf.h"
-#include "thread.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macos_kperf.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "thread.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <dlfcn.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <dlfcn.h>
 
-#define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
-    F(uint32_t, kpc_get_counter_count, uint32_t)               \
-    F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ KPERF_LIST                                             \
+    F(ਪੂਰਨ, kpc_get_counting, ਖਾਲੀ)                             \
+    F(ਪੂਰਨ, kpc_force_all_ctrs_ਸੈੱਟ, ਪੂਰਨ)                        \
+    F(ਪੂਰਨ, kpc_ਸੈੱਟ_counting, uint32_t)                         \
+    F(ਪੂਰਨ, kpc_ਸੈੱਟ_thread_counting, uint32_t)                  \
+    F(ਪੂਰਨ, kpc_ਸੈੱਟ_config, uint32_t, ਖਾਲੀ *)                   \
+    F(ਪੂਰਨ, kpc_get_config, uint32_t, ਖਾਲੀ *)                   \
+    F(ਪੂਰਨ, kpc_ਸੈੱਟ_period, uint32_t, ਖਾਲੀ *)                   \
+    F(ਪੂਰਨ, kpc_get_period, uint32_t, ਖਾਲੀ *)                   \
+    F(uint32_t, kpc_get_counter_ਗਿਣਤੀ, uint32_t)               \
+    F(uint32_t, kpc_get_config_ਗਿਣਤੀ, uint32_t)                \
+    F(ਪੂਰਨ, kperf_sample_get, ਪੂਰਨ *)                            \
+    F(ਪੂਰਨ, kpc_get_thread_counters, ਪੂਰਨ, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ, ਖਾਲੀ *)
 
-#define F(ret, name, ...)                                      \
-    typedef ret name##proc(__VA_ARGS__);                       \
-    static name##proc *name = NULL;
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ F(ret, name, ...)                                      \
+    ਕਿਸਮਪਰਿਭਾਸ਼ਾ ret name##proc(__VA_ARGS__);                       \
+    ਸਥਿਰ name##proc *name = ਨਿਰਾ;
 KPERF_LIST
-#undef F
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ F
 
-#define CFGWORD_EL0A32EN_MASK (0x10000)
-#define CFGWORD_EL0A64EN_MASK (0x20000)
-#define CFGWORD_EL1EN_MASK    (0x40000)
-#define CFGWORD_EL3EN_MASK    (0x80000)
-#define CFGWORD_ALLMODES_MASK (0xf0000)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CFGWORD_EL0_A32_EN_ਨਕਾਬ (0x10000)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CFGWORD_EL0_A64_EN_ਨਕਾਬ (0x20000)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CFGWORD_EL1_EN_ਨਕਾਬ    (0x40000)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CFGWORD_EL3_EN_ਨਕਾਬ    (0x80000)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CFGWORD_ALLMODES_ਨਕਾਬ (0xf0000)
 
-#define CPMU_NONE 0
-#define CPMU_CORE_CYCLE 0x02
-#define CPMU_INST_A64 0x8c
-#define CPMU_INST_BRANCH 0x8d
-#define CPMU_SYNC_DC_LOAD_MISS 0xbf
-#define CPMU_SYNC_DC_STORE_MISS 0xc0
-#define CPMU_SYNC_DTLB_MISS 0xc1
-#define CPMU_SYNC_ST_HIT_YNGR_LD 0xc4
-#define CPMU_SYNC_BR_ANY_MISP 0xcb
-#define CPMU_FED_IC_MISS_DEM 0xd3
-#define CPMU_FED_ITLB_MISS 0xd4
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_NONE 0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_CORE_ਚੱਕਰ 0x02
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_INST_A64 0x8c
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_INST_BRANCH 0x8d
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_SYNC_DC_ਲੱਦੋ_ਖੁੰਝ 0xbf
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_SYNC_DC_STORE_ਖੁੰਝ 0xc0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_SYNC_DTLB_ਖੁੰਝ 0xc1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_SYNC_ST_ਪ੍ਰਾਪਤੀ_YNGR_LD 0xc4
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_SYNC_BR_ANY_MISP 0xcb
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_FED_IC_ਖੁੰਝ_DEM 0xd3
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPMU_FED_ITLB_ਖੁੰਝ 0xd4
 
-#define KPC_CLASS_FIXED_MASK        (1 << 0)
-#define KPC_CLASS_CONFIGURABLE_MASK (1 << 1)
-#define KPC_CLASS_POWER_MASK        (1 << 2)
-#define KPC_CLASS_RAWPMU_MASK       (1 << 3)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ KPC_CLASS_FIXED_ਨਕਾਬ        (1 << 0)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ KPC_CLASS_CONFIGURABLE_ਨਕਾਬ (1 << 1)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ KPC_CLASS_POWER_ਨਕਾਬ        (1 << 2)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ KPC_CLASS_RAWPMU_ਨਕਾਬ       (1 << 3)
 
-#define KPC_MAX_COUNTERS 32
-#define CONFIG_COUNT 8
-#define KPC_MASK (KPC_CLASS_CONFIGURABLE_MASK | KPC_CLASS_FIXED_MASK)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ KPC_MAX_COUNTERS 32
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CONFIG_ਗਿਣਤੀ 8
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ KPC_ਨਕਾਬ (KPC_CLASS_CONFIGURABLE_ਨਕਾਬ | KPC_CLASS_FIXED_ਨਕਾਬ)
 
-static void kperf_init(void)
+ਸਥਿਰ ਖਾਲੀ kperf_init(ਖਾਲੀ)
 {
-    uint64_t config[CONFIG_COUNT] = {0};
-    void *kperf = NULL;
+    uint64_t config[CONFIG_ਗਿਣਤੀ] = {0};
+    ਖਾਲੀ *kperf = ਨਿਰਾ;
     uint32_t n;
 
     av_assert0(kperf = dlopen("/System/Library/PrivateFrameworks/kperf.framework/Versions/A/kperf", RTLD_LAZY));
 
-#define F(ret, name, ...) av_assert0(name = (name##proc *)(dlsym(kperf, #name)));
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ F(ret, name, ...) av_assert0(name = (name##proc *)(dlsym(kperf, #name)));
     KPERF_LIST
-#undef F
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ F
 
-    n = kpc_get_counter_count(KPC_MASK);
+    n = kpc_get_counter_ਗਿਣਤੀ(KPC_ਨਕਾਬ);
     av_assert0(n <= KPC_MAX_COUNTERS);
-    n = kpc_get_config_count(KPC_MASK);
-    av_assert0(n <= CONFIG_COUNT);
+    n = kpc_get_config_ਗਿਣਤੀ(KPC_ਨਕਾਬ);
+    av_assert0(n <= CONFIG_ਗਿਣਤੀ);
 
-    config[0] = CPMU_CORE_CYCLE | CFGWORD_EL0A64EN_MASK;
+    config[0] = CPMU_CORE_ਚੱਕਰ | CFGWORD_EL0_A64_EN_ਨਕਾਬ;
     // config[3] = CPMU_INST_BRANCH | CFGWORD_EL0A64EN_MASK;
     // config[4] = CPMU_SYNC_BR_ANY_MISP | CFGWORD_EL0A64EN_MASK;
     // config[5] = CPMU_INST_A64 | CFGWORD_EL0A64EN_MASK;
 
-    av_assert0(kpc_set_config(KPC_MASK, config) == 0 || !"the kperf API needs to be run as root");
-    av_assert0(kpc_force_all_ctrs_set(1) == 0);
-    av_assert0(kpc_set_counting(KPC_MASK) == 0);
-    av_assert0(kpc_set_thread_counting(KPC_MASK) == 0);
+    av_assert0(kpc_ਸੈੱਟ_config(KPC_ਨਕਾਬ, config) == 0 || !"the kperf API needs to be run as root");
+    av_assert0(kpc_force_all_ctrs_ਸੈੱਟ(1) == 0);
+    av_assert0(kpc_ਸੈੱਟ_counting(KPC_ਨਕਾਬ) == 0);
+    av_assert0(kpc_ਸੈੱਟ_thread_counting(KPC_ਨਕਾਬ) == 0);
 }
 
-void ff_kperf_init(void)
+ਖਾਲੀ ff_kperf_init(ਖਾਲੀ)
 {
-    static AVOnce init_static_once = AV_ONCE_INIT;
+    ਸਥਿਰ AVOnce init_static_once = AV_ONCE_INIT;
     ff_thread_once(&init_static_once, kperf_init);
 }
 
-uint64_t ff_kperf_cycles(void)
+uint64_t ff_kperf_ਚੱਕਰਾਂ(ਖਾਲੀ)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    ਜੇ (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        ਵਾਪਸ -1;
     }
 
-    return counters[0];
+    ਵਾਪਸ counters[0];
 }

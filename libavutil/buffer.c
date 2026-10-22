@@ -16,299 +16,299 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include <stdint.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdatomic.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "avassert.h"
-#include "buffer_internal.h"
-#include "common.h"
-#include "mem.h"
-#include "sanitizer.h"
-#include "thread.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "buffer_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "common.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "sanitizer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "thread.h"
 
-static AVBufferRef *buffer_create(AVBuffer *buf, uint8_t *data, size_t size,
-                                  void (*free)(void *opaque, uint8_t *data),
-                                  void *opaque, int flags)
+ਸਥਿਰ AVBufferRef *ਬਫਰ_create(AVBuffer *buf, uint8_t *ਅੰਕੜੇ, size_t ਮਾਪ,
+                                  ਖਾਲੀ (*ਮੁਕਤ)(ਖਾਲੀ *opaque, uint8_t *ਅੰਕੜੇ),
+                                  ਖਾਲੀ *opaque, ਪੂਰਨ flags)
 {
-    AVBufferRef *ref = NULL;
+    AVBufferRef *ref = ਨਿਰਾ;
 
-    buf->data     = data;
-    buf->size     = size;
-    buf->free     = free ? free : av_buffer_default_free;
+    buf->ਅੰਕੜੇ     = ਅੰਕੜੇ;
+    buf->ਮਾਪ     = ਮਾਪ;
+    buf->ਮੁਕਤ     = ਮੁਕਤ ? ਮੁਕਤ : av_ਬਫਰ_default_free;
     buf->opaque   = opaque;
 
     atomic_init(&buf->refcount, 1);
 
     buf->flags = flags;
 
-    ref = av_mallocz(sizeof(*ref));
-    if (!ref)
-        return NULL;
+    ref = av_mallocz(ਆਕਾਰ(*ref));
+    ਜੇ (!ref)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    ref->buffer = buf;
-    ref->data   = data;
-    ref->size   = size;
+    ref->ਬਫਰ = buf;
+    ref->ਅੰਕੜੇ   = ਅੰਕੜੇ;
+    ref->ਮਾਪ   = ਮਾਪ;
 
-    return ref;
+    ਵਾਪਸ ref;
 }
 
-AVBufferRef *av_buffer_create(uint8_t *data, size_t size,
-                              void (*free)(void *opaque, uint8_t *data),
-                              void *opaque, int flags)
+AVBufferRef *av_ਬਫਰ_create(uint8_t *ਅੰਕੜੇ, size_t ਮਾਪ,
+                              ਖਾਲੀ (*ਮੁਕਤ)(ਖਾਲੀ *opaque, uint8_t *ਅੰਕੜੇ),
+                              ਖਾਲੀ *opaque, ਪੂਰਨ flags)
 {
     AVBufferRef *ret;
-    AVBuffer *buf = av_mallocz(sizeof(*buf));
-    if (!buf)
-        return NULL;
+    AVBuffer *buf = av_mallocz(ਆਕਾਰ(*buf));
+    ਜੇ (!buf)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    ret = buffer_create(buf, data, size, free, opaque, flags);
-    if (!ret) {
+    ret = ਬਫਰ_create(buf, ਅੰਕੜੇ, ਮਾਪ, ਮੁਕਤ, opaque, flags);
+    ਜੇ (!ret) {
         av_free(buf);
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-void av_buffer_default_free(void *opaque, uint8_t *data)
+ਖਾਲੀ av_ਬਫਰ_default_free(ਖਾਲੀ *opaque, uint8_t *ਅੰਕੜੇ)
 {
-    av_free(data);
+    av_free(ਅੰਕੜੇ);
 }
 
-AVBufferRef *av_buffer_alloc(size_t size)
+AVBufferRef *av_ਬਫਰ_alloc(size_t ਮਾਪ)
 {
-    AVBufferRef *ret = NULL;
-    uint8_t    *data = NULL;
+    AVBufferRef *ret = ਨਿਰਾ;
+    uint8_t    *ਅੰਕੜੇ = ਨਿਰਾ;
 
-    data = av_malloc(size);
-    if (!data)
-        return NULL;
+    ਅੰਕੜੇ = av_malloc(ਮਾਪ);
+    ਜੇ (!ਅੰਕੜੇ)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    ret = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-    if (!ret)
-        av_freep(&data);
+    ret = av_ਬਫਰ_create(ਅੰਕੜੇ, ਮਾਪ, av_ਬਫਰ_default_free, ਨਿਰਾ, 0);
+    ਜੇ (!ret)
+        av_freep(&ਅੰਕੜੇ);
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-AVBufferRef *av_buffer_allocz(size_t size)
+AVBufferRef *av_ਬਫਰ_allocz(size_t ਮਾਪ)
 {
-    AVBufferRef *ret = av_buffer_alloc(size);
-    if (!ret)
-        return NULL;
+    AVBufferRef *ret = av_ਬਫਰ_alloc(ਮਾਪ);
+    ਜੇ (!ret)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    memset(ret->data, 0, size);
-    return ret;
+    memset(ret->ਅੰਕੜੇ, 0, ਮਾਪ);
+    ਵਾਪਸ ret;
 }
 
-AVBufferRef *av_buffer_ref(const AVBufferRef *buf)
+AVBufferRef *av_ਬਫਰ_ref(ਅਚਲ AVBufferRef *buf)
 {
-    AVBufferRef *ret = av_mallocz(sizeof(*ret));
+    AVBufferRef *ret = av_mallocz(ਆਕਾਰ(*ret));
 
-    if (!ret)
-        return NULL;
+    ਜੇ (!ret)
+        ਵਾਪਸ ਨਿਰਾ;
 
     *ret = *buf;
 
-    atomic_fetch_add_explicit(&buf->buffer->refcount, 1, memory_order_relaxed);
+    atomic_fetch_add_explicit(&buf->ਬਫਰ->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-static void buffer_replace(AVBufferRef **dst, AVBufferRef **src)
+ਸਥਿਰ ਖਾਲੀ ਬਫਰ_replace(AVBufferRef **dst, AVBufferRef **src)
 {
     AVBuffer *b;
 
-    b = (*dst)->buffer;
+    b = (*dst)->ਬਫਰ;
 
-    if (src) {
+    ਜੇ (src) {
         **dst = **src;
         av_freep(src);
-    } else
+    } ਨਹੀਂਤਾਂ
         av_freep(dst);
 
-    if (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
+    ਜੇ (atomic_fetch_sub_explicit(&b->refcount, 1, memory_order_acq_rel) == 1) {
         /* b->free below might already free the structure containing *b,
          * so we have to read the flag now to avoid use-after-free. */
-        int free_avbuffer = !(b->flags_internal & BUFFER_FLAG_NO_FREE);
-        b->free(b->opaque, b->data);
-        if (free_avbuffer)
+        ਪੂਰਨ free_avbuffer = !(b->flags_ਅੰਦਰੂਨੀ & ਬਫਰ_FLAG_NO_FREE);
+        b->ਮੁਕਤ(b->opaque, b->ਅੰਕੜੇ);
+        ਜੇ (free_avbuffer)
             av_free(b);
     }
 }
 
-void av_buffer_unref(AVBufferRef **buf)
+ਖਾਲੀ av_ਬਫਰ_unref(AVBufferRef **buf)
 {
-    if (!buf || !*buf)
-        return;
+    ਜੇ (!buf || !*buf)
+        ਵਾਪਸ;
 
-    buffer_replace(buf, NULL);
+    ਬਫਰ_replace(buf, ਨਿਰਾ);
 }
 
-int av_buffer_is_writable(const AVBufferRef *buf)
+ਪੂਰਨ av_ਬਫਰ_is_writable(ਅਚਲ AVBufferRef *buf)
 {
-    if (buf->buffer->flags & AV_BUFFER_FLAG_READONLY)
-        return 0;
+    ਜੇ (buf->ਬਫਰ->flags & AV_ਬਫਰ_FLAG_READONLY)
+        ਵਾਪਸ 0;
 
-    return atomic_load(&buf->buffer->refcount) == 1;
+    ਵਾਪਸ atomic_load(&buf->ਬਫਰ->refcount) == 1;
 }
 
-void *av_buffer_get_opaque(const AVBufferRef *buf)
+ਖਾਲੀ *av_ਬਫਰ_get_opaque(ਅਚਲ AVBufferRef *buf)
 {
-    return buf->buffer->opaque;
+    ਵਾਪਸ buf->ਬਫਰ->opaque;
 }
 
-int av_buffer_get_ref_count(const AVBufferRef *buf)
+ਪੂਰਨ av_ਬਫਰ_get_ref_ਗਿਣਤੀ(ਅਚਲ AVBufferRef *buf)
 {
-    return atomic_load(&buf->buffer->refcount);
+    ਵਾਪਸ atomic_load(&buf->ਬਫਰ->refcount);
 }
 
-int av_buffer_make_writable(AVBufferRef **pbuf)
+ਪੂਰਨ av_ਬਫਰ_make_writable(AVBufferRef **pbuf)
 {
     AVBufferRef *newbuf, *buf = *pbuf;
 
-    if (av_buffer_is_writable(buf))
-        return 0;
+    ਜੇ (av_ਬਫਰ_is_writable(buf))
+        ਵਾਪਸ 0;
 
-    newbuf = av_buffer_alloc(buf->size);
-    if (!newbuf)
-        return AVERROR(ENOMEM);
+    newbuf = av_ਬਫਰ_alloc(buf->ਮਾਪ);
+    ਜੇ (!newbuf)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    memcpy(newbuf->data, buf->data, buf->size);
+    ਸਮ੍ਰਿਤੀ_ਨਕਲ(newbuf->ਅੰਕੜੇ, buf->ਅੰਕੜੇ, buf->ਮਾਪ);
 
-    buffer_replace(pbuf, &newbuf);
+    ਬਫਰ_replace(pbuf, &newbuf);
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-int av_buffer_realloc(AVBufferRef **pbuf, size_t size)
+ਪੂਰਨ av_ਬਫਰ_realloc(AVBufferRef **pbuf, size_t ਮਾਪ)
 {
     AVBufferRef *buf = *pbuf;
     uint8_t *tmp;
-    int ret;
+    ਪੂਰਨ ret;
 
-    if (!buf) {
+    ਜੇ (!buf) {
         /* allocate a new buffer with av_realloc(), so it will be reallocatable
          * later */
-        uint8_t *data = av_realloc(NULL, size);
-        if (!data)
-            return AVERROR(ENOMEM);
+        uint8_t *ਅੰਕੜੇ = av_realloc(ਨਿਰਾ, ਮਾਪ);
+        ਜੇ (!ਅੰਕੜੇ)
+            ਵਾਪਸ AVERROR(ENOMEM);
 
-        buf = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
-        if (!buf) {
-            av_freep(&data);
-            return AVERROR(ENOMEM);
+        buf = av_ਬਫਰ_create(ਅੰਕੜੇ, ਮਾਪ, av_ਬਫਰ_default_free, ਨਿਰਾ, 0);
+        ਜੇ (!buf) {
+            av_freep(&ਅੰਕੜੇ);
+            ਵਾਪਸ AVERROR(ENOMEM);
         }
 
-        buf->buffer->flags_internal |= BUFFER_FLAG_REALLOCATABLE;
+        buf->ਬਫਰ->flags_ਅੰਦਰੂਨੀ |= ਬਫਰ_FLAG_REALLOCATABLE;
         *pbuf = buf;
 
-        return 0;
-    } else if (buf->size == size)
-        return 0;
+        ਵਾਪਸ 0;
+    } ਨਹੀਂਤਾਂ ਜੇ (buf->ਮਾਪ == ਮਾਪ)
+        ਵਾਪਸ 0;
 
-    if (!(buf->buffer->flags_internal & BUFFER_FLAG_REALLOCATABLE) ||
-        !av_buffer_is_writable(buf) || buf->data != buf->buffer->data) {
+    ਜੇ (!(buf->ਬਫਰ->flags_ਅੰਦਰੂਨੀ & ਬਫਰ_FLAG_REALLOCATABLE) ||
+        !av_ਬਫਰ_is_writable(buf) || buf->ਅੰਕੜੇ != buf->ਬਫਰ->ਅੰਕੜੇ) {
         /* cannot realloc, allocate a new reallocable buffer and copy data */
-        AVBufferRef *new = NULL;
+        AVBufferRef *new = ਨਿਰਾ;
 
-        ret = av_buffer_realloc(&new, size);
-        if (ret < 0)
-            return ret;
+        ret = av_ਬਫਰ_realloc(&new, ਮਾਪ);
+        ਜੇ (ret < 0)
+            ਵਾਪਸ ret;
 
-        memcpy(new->data, buf->data, FFMIN(size, buf->size));
+        ਸਮ੍ਰਿਤੀ_ਨਕਲ(new->ਅੰਕੜੇ, buf->ਅੰਕੜੇ, FFMIN(ਮਾਪ, buf->ਮਾਪ));
 
-        buffer_replace(pbuf, &new);
-        return 0;
+        ਬਫਰ_replace(pbuf, &new);
+        ਵਾਪਸ 0;
     }
 
-    tmp = av_realloc(buf->buffer->data, size);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    tmp = av_realloc(buf->ਬਫਰ->ਅੰਕੜੇ, ਮਾਪ);
+    ਜੇ (!tmp)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    buf->buffer->data = buf->data = tmp;
-    buf->buffer->size = buf->size = size;
-    return 0;
+    buf->ਬਫਰ->ਅੰਕੜੇ = buf->ਅੰਕੜੇ = tmp;
+    buf->ਬਫਰ->ਮਾਪ = buf->ਮਾਪ = ਮਾਪ;
+    ਵਾਪਸ 0;
 }
 
-int av_buffer_replace(AVBufferRef **pdst, const AVBufferRef *src)
+ਪੂਰਨ av_ਬਫਰ_replace(AVBufferRef **pdst, ਅਚਲ AVBufferRef *src)
 {
     AVBufferRef *dst = *pdst;
     AVBufferRef *tmp;
 
-    if (!src) {
-        av_buffer_unref(pdst);
-        return 0;
+    ਜੇ (!src) {
+        av_ਬਫਰ_unref(pdst);
+        ਵਾਪਸ 0;
     }
 
-    if (dst && dst->buffer == src->buffer) {
+    ਜੇ (dst && dst->ਬਫਰ == src->ਬਫਰ) {
         /* make sure the data pointers match */
-        dst->data = src->data;
-        dst->size = src->size;
-        return 0;
+        dst->ਅੰਕੜੇ = src->ਅੰਕੜੇ;
+        dst->ਮਾਪ = src->ਮਾਪ;
+        ਵਾਪਸ 0;
     }
 
-    tmp = av_buffer_ref(src);
-    if (!tmp)
-        return AVERROR(ENOMEM);
+    tmp = av_ਬਫਰ_ref(src);
+    ਜੇ (!tmp)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    av_buffer_unref(pdst);
+    av_ਬਫਰ_unref(pdst);
     *pdst = tmp;
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-AVBufferPool *av_buffer_pool_init2(size_t size, void *opaque,
-                                   AVBufferRef* (*alloc)(void *opaque, size_t size),
-                                   void (*pool_free)(void *opaque))
+AVBufferPool *av_ਬਫਰ_pool_init2(size_t ਮਾਪ, ਖਾਲੀ *opaque,
+                                   AVBufferRef* (*alloc)(ਖਾਲੀ *opaque, size_t ਮਾਪ),
+                                   ਖਾਲੀ (*pool_free)(ਖਾਲੀ *opaque))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(ਆਕਾਰ(*pool));
+    ਜੇ (!pool)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    ਜੇ (ff_mutex_init(&pool->mutex, ਨਿਰਾ)) {
         av_free(pool);
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    pool->size      = size;
+    pool->ਮਾਪ      = ਮਾਪ;
     pool->opaque    = opaque;
     pool->alloc2    = alloc;
-    pool->alloc     = av_buffer_alloc; // fallback
+    pool->alloc     = av_ਬਫਰ_alloc; // fallback
     pool->pool_free = pool_free;
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    ਵਾਪਸ pool;
 }
 
-AVBufferPool *av_buffer_pool_init(size_t size, AVBufferRef* (*alloc)(size_t size))
+AVBufferPool *av_ਬਫਰ_pool_init(size_t ਮਾਪ, AVBufferRef* (*alloc)(size_t ਮਾਪ))
 {
-    AVBufferPool *pool = av_mallocz(sizeof(*pool));
-    if (!pool)
-        return NULL;
+    AVBufferPool *pool = av_mallocz(ਆਕਾਰ(*pool));
+    ਜੇ (!pool)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    if (ff_mutex_init(&pool->mutex, NULL)) {
+    ਜੇ (ff_mutex_init(&pool->mutex, ਨਿਰਾ)) {
         av_free(pool);
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    pool->size     = size;
-    pool->alloc    = alloc ? alloc : av_buffer_alloc;
+    pool->ਮਾਪ     = ਮਾਪ;
+    pool->alloc    = alloc ? alloc : av_ਬਫਰ_alloc;
 
     atomic_init(&pool->refcount, 1);
 
-    return pool;
+    ਵਾਪਸ pool;
 }
 
-static void buffer_pool_flush(AVBufferPool *pool)
+ਸਥਿਰ ਖਾਲੀ ਬਫਰ_pool_flush(AVBufferPool *pool)
 {
-    while (pool->pool) {
-        BufferPoolEntry *buf = pool->pool;
-        pool->pool = buf->next;
+    ਜਦੋਂ (pool->pool) {
+        ਬਫਰ_Pool_ਇੰਦਰਾਜ *buf = pool->pool;
+        pool->pool = buf->ਅਗਲਾ;
 
-        if (buf->free == av_buffer_default_free)
-            FF_ASAN_UNPOISON(buf->data, pool->size);
-        buf->free(buf->opaque, buf->data);
+        ਜੇ (buf->ਮੁਕਤ == av_ਬਫਰ_default_free)
+            FF_ASAN_UNPOISON(buf->ਅੰਕੜੇ, pool->ਮਾਪ);
+        buf->ਮੁਕਤ(buf->opaque, buf->ਅੰਕੜੇ);
         av_freep(&buf);
     }
 }
@@ -317,120 +317,120 @@ static void buffer_pool_flush(AVBufferPool *pool)
  * This function gets called when the pool has been uninited and
  * all the buffers returned to it.
  */
-static void buffer_pool_free(AVBufferPool *pool)
+ਸਥਿਰ ਖਾਲੀ ਬਫਰ_pool_free(AVBufferPool *pool)
 {
-    buffer_pool_flush(pool);
+    ਬਫਰ_pool_flush(pool);
     ff_mutex_destroy(&pool->mutex);
 
-    if (pool->pool_free)
+    ਜੇ (pool->pool_free)
         pool->pool_free(pool->opaque);
 
     av_freep(&pool);
 }
 
-void av_buffer_pool_uninit(AVBufferPool **ppool)
+ਖਾਲੀ av_ਬਫਰ_pool_uninit(AVBufferPool **ppool)
 {
     AVBufferPool *pool;
 
-    if (!ppool || !*ppool)
-        return;
+    ਜੇ (!ppool || !*ppool)
+        ਵਾਪਸ;
     pool   = *ppool;
-    *ppool = NULL;
+    *ppool = ਨਿਰਾ;
 
-    ff_mutex_lock(&pool->mutex);
-    buffer_pool_flush(pool);
+    ff_mutex_ਤਾਲਾ(&pool->mutex);
+    ਬਫਰ_pool_flush(pool);
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
-        buffer_pool_free(pool);
+    ਜੇ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+        ਬਫਰ_pool_free(pool);
 }
 
-static void pool_release_buffer(void *opaque, uint8_t *data)
+ਸਥਿਰ ਖਾਲੀ pool_release_ਬਫਰ(ਖਾਲੀ *opaque, uint8_t *ਅੰਕੜੇ)
 {
-    BufferPoolEntry *buf = opaque;
+    ਬਫਰ_Pool_ਇੰਦਰਾਜ *buf = opaque;
     AVBufferPool *pool = buf->pool;
 
-    if (buf->free == av_buffer_default_free)
-        FF_ASAN_POISON(buf->data, pool->size);
+    ਜੇ (buf->ਮੁਕਤ == av_ਬਫਰ_default_free)
+        FF_ASAN_POISON(buf->ਅੰਕੜੇ, pool->ਮਾਪ);
 
-    ff_mutex_lock(&pool->mutex);
-    buf->next = pool->pool;
+    ff_mutex_ਤਾਲਾ(&pool->mutex);
+    buf->ਅਗਲਾ = pool->pool;
     pool->pool = buf;
     ff_mutex_unlock(&pool->mutex);
 
-    if (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
-        buffer_pool_free(pool);
+    ਜੇ (atomic_fetch_sub_explicit(&pool->refcount, 1, memory_order_acq_rel) == 1)
+        ਬਫਰ_pool_free(pool);
 }
 
 /* allocate a new buffer and override its free() callback so that
  * it is returned to the pool on free */
-static AVBufferRef *pool_alloc_buffer(AVBufferPool *pool)
+ਸਥਿਰ AVBufferRef *pool_alloc_ਬਫਰ(AVBufferPool *pool)
 {
-    BufferPoolEntry *buf;
+    ਬਫਰ_Pool_ਇੰਦਰਾਜ *buf;
     AVBufferRef     *ret;
 
     av_assert0(pool->alloc || pool->alloc2);
 
-    ret = pool->alloc2 ? pool->alloc2(pool->opaque, pool->size) :
-                         pool->alloc(pool->size);
-    if (!ret)
-        return NULL;
+    ret = pool->alloc2 ? pool->alloc2(pool->opaque, pool->ਮਾਪ) :
+                         pool->alloc(pool->ਮਾਪ);
+    ਜੇ (!ret)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    buf = av_mallocz(sizeof(*buf));
-    if (!buf) {
-        av_buffer_unref(&ret);
-        return NULL;
+    buf = av_mallocz(ਆਕਾਰ(*buf));
+    ਜੇ (!buf) {
+        av_ਬਫਰ_unref(&ret);
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    buf->data   = ret->buffer->data;
-    buf->opaque = ret->buffer->opaque;
-    buf->free   = ret->buffer->free;
+    buf->ਅੰਕੜੇ   = ret->ਬਫਰ->ਅੰਕੜੇ;
+    buf->opaque = ret->ਬਫਰ->opaque;
+    buf->ਮੁਕਤ   = ret->ਬਫਰ->ਮੁਕਤ;
     buf->pool   = pool;
 
-    ret->buffer->opaque = buf;
-    ret->buffer->free   = pool_release_buffer;
+    ret->ਬਫਰ->opaque = buf;
+    ret->ਬਫਰ->ਮੁਕਤ   = pool_release_ਬਫਰ;
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-AVBufferRef *av_buffer_pool_get(AVBufferPool *pool)
+AVBufferRef *av_ਬਫਰ_pool_get(AVBufferPool *pool)
 {
     AVBufferRef *ret;
-    BufferPoolEntry *buf;
+    ਬਫਰ_Pool_ਇੰਦਰਾਜ *buf;
 
-    ff_mutex_lock(&pool->mutex);
+    ff_mutex_ਤਾਲਾ(&pool->mutex);
     buf = pool->pool;
-    if (buf) {
-        memset(&buf->buffer, 0, sizeof(buf->buffer));
-        ret = buffer_create(&buf->buffer, buf->data, pool->size,
-                            pool_release_buffer, buf, 0);
-        if (ret) {
-            pool->pool = buf->next;
-            buf->next = NULL;
-            buf->buffer.flags_internal |= BUFFER_FLAG_NO_FREE;
-            if (buf->free == av_buffer_default_free) {
-                FF_ASAN_UNPOISON(buf->data, pool->size);
+    ਜੇ (buf) {
+        memset(&buf->ਬਫਰ, 0, ਆਕਾਰ(buf->ਬਫਰ));
+        ret = ਬਫਰ_create(&buf->ਬਫਰ, buf->ਅੰਕੜੇ, pool->ਮਾਪ,
+                            pool_release_ਬਫਰ, buf, 0);
+        ਜੇ (ret) {
+            pool->pool = buf->ਅਗਲਾ;
+            buf->ਅਗਲਾ = ਨਿਰਾ;
+            buf->ਬਫਰ.flags_ਅੰਦਰੂਨੀ |= ਬਫਰ_FLAG_NO_FREE;
+            ਜੇ (buf->ਮੁਕਤ == av_ਬਫਰ_default_free) {
+                FF_ASAN_UNPOISON(buf->ਅੰਕੜੇ, pool->ਮਾਪ);
                 /* A pool that zeroes its buffers may be relied upon for never
                  * written regions staying zero, so only mark a reused buffer
                  * undefined when nothing was ever promised about its contents. */
-                if (!pool->alloc2 && pool->alloc == av_buffer_alloc)
-                    FF_MEM_UNDEFINED(buf->data, pool->size);
+                ਜੇ (!pool->alloc2 && pool->alloc == av_ਬਫਰ_alloc)
+                    FF_MEM_UNDEFINED(buf->ਅੰਕੜੇ, pool->ਮਾਪ);
             }
         }
-    } else {
-        ret = pool_alloc_buffer(pool);
+    } ਨਹੀਂਤਾਂ {
+        ret = pool_alloc_ਬਫਰ(pool);
     }
     ff_mutex_unlock(&pool->mutex);
 
-    if (ret)
+    ਜੇ (ret)
         atomic_fetch_add_explicit(&pool->refcount, 1, memory_order_relaxed);
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-void *av_buffer_pool_buffer_get_opaque(const AVBufferRef *ref)
+ਖਾਲੀ *av_ਬਫਰ_pool_ਬਫਰ_get_opaque(ਅਚਲ AVBufferRef *ref)
 {
-    BufferPoolEntry *buf = ref->buffer->opaque;
+    ਬਫਰ_Pool_ਇੰਦਰਾਜ *buf = ref->ਬਫਰ->opaque;
     av_assert0(buf);
-    return buf->opaque;
+    ਵਾਪਸ buf->opaque;
 }

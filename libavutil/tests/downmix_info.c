@@ -16,28 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
 
-#include "libavutil/downmix_info.h"
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/downmix_info.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/frame.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/mem.h"
 
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
-    AVFrame *frame;
+    AVFrame *ਚੌਖਟਾ;
     AVDownmixInfo *info, *info2;
 
     /* First call: allocates side data, zero-initialized. */
-    printf("Testing av_downmix_info_update_side_data()\n");
-    frame = av_frame_alloc();
-    if (!frame)
-        return 1;
+    ਲਿਖੋ("Testing av_downmix_info_update_side_data()\n");
+    ਚੌਖਟਾ = av_ਚੌਖਟਾ_alloc();
+    ਜੇ (!ਚੌਖਟਾ)
+        ਵਾਪਸ 1;
 
-    info = av_downmix_info_update_side_data(frame);
-    if (info) {
-        printf("create: OK\n");
-        printf("defaults: type=%d center=%.3f center_ltrt=%.3f surround=%.3f"
+    info = av_downmix_info_update_side_ਅੰਕੜੇ(ਚੌਖਟਾ);
+    ਜੇ (info) {
+        ਲਿਖੋ("create: OK\n");
+        ਲਿਖੋ("defaults: type=%d center=%.3f center_ltrt=%.3f surround=%.3f"
                " surround_ltrt=%.3f lfe=%.3f\n",
                info->preferred_downmix_type,
                info->center_mix_level, info->center_mix_level_ltrt,
@@ -54,36 +54,36 @@ int main(void)
         info->surround_mix_level      = 0.25;
         info->surround_mix_level_ltrt = 0.375;
         info->lfe_mix_level           = 0.125;
-        printf("write: type=%d center=%.3f center_ltrt=%.3f surround=%.3f"
+        ਲਿਖੋ("write: type=%d center=%.3f center_ltrt=%.3f surround=%.3f"
                " surround_ltrt=%.3f lfe=%.3f\n",
                info->preferred_downmix_type,
                info->center_mix_level, info->center_mix_level_ltrt,
                info->surround_mix_level, info->surround_mix_level_ltrt,
                info->lfe_mix_level);
-    } else {
-        printf("create: FAIL\n");
+    } ਨਹੀਂਤਾਂ {
+        ਲਿਖੋ("create: FAIL\n");
     }
 
     /* Second call must reuse the existing side data (same pointer, values kept). */
-    info2 = av_downmix_info_update_side_data(frame);
-    if (info && info2) {
-        printf("reuse: same_pointer=%s preserved_type=%d preserved_center=%.3f\n",
+    info2 = av_downmix_info_update_side_ਅੰਕੜੇ(ਚੌਖਟਾ);
+    ਜੇ (info && info2) {
+        ਲਿਖੋ("reuse: same_pointer=%s preserved_type=%d preserved_center=%.3f\n",
                info == info2 ? "yes" : "no",
                info2->preferred_downmix_type, info2->center_mix_level);
     }
 
-    av_frame_free(&frame);
+    av_ਚੌਖਟਾ_free(&ਚੌਖਟਾ);
 
     /* OOM path: av_max_alloc(1) forces the internal side data allocation to fail. */
-    printf("\nTesting OOM path\n");
-    frame = av_frame_alloc();
-    if (frame) {
+    ਲਿਖੋ("\nTesting OOM path\n");
+    ਚੌਖਟਾ = av_ਚੌਖਟਾ_alloc();
+    ਜੇ (ਚੌਖਟਾ) {
         av_max_alloc(1);
-        info = av_downmix_info_update_side_data(frame);
-        printf("OOM: %s\n", info ? "FAIL" : "OK");
-        av_max_alloc(INT_MAX);
-        av_frame_free(&frame);
+        info = av_downmix_info_update_side_ਅੰਕੜੇ(ਚੌਖਟਾ);
+        ਲਿਖੋ("OOM: %s\n", info ? "FAIL" : "OK");
+        av_max_alloc(ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ);
+        av_ਚੌਖਟਾ_free(&ਚੌਖਟਾ);
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }

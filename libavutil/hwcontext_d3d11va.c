@@ -16,44 +16,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#include <windows.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <windows.h>
 
-#define COBJMACROS
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ COBJMACROS
 
-#include <initguid.h>
-#include <d3d11.h>
-#include <dxgi1_2.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <initguid.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <d3d11.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <dxgi1_2.h>
 
-#if HAVE_DXGIDEBUG_H
-#include <dxgidebug.h>
-#endif
+#ਜੇ HAVE_DXGIDEBUG_H
+#ਅਨ੍ਤਰ੍ਭਾਵ <dxgidebug.h>
+#ਜੇ_ਅੰਤ
 
-#include "avassert.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_d3d11va.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "thread.h"
-#include "compat/w32dlfcn.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "common.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext_d3d11va.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "imgutils.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "pixdesc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "pixfmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "thread.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "compat/w32dlfcn.h"
 
-#define MAX_ARRAY_SIZE 64 // Driver specification limits ArraySize to 64 for decoder-bound resources
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_ARRAY_ਮਾਪ 64 // Driver specification limits ArraySize to 64 for decoder-bound resources
 
-typedef HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, void **ppFactory);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, ਖਾਲੀ **ppFactory);
 
-static AVOnce functions_loaded = AV_ONCE_INIT;
+ਸਥਿਰ AVOnce functions_loaded = AV_ONCE_INIT;
 
-static PFN_CREATE_DXGI_FACTORY mCreateDXGIFactory;
-static PFN_D3D11_CREATE_DEVICE mD3D11CreateDevice;
+ਸਥਿਰ PFN_CREATE_DXGI_FACTORY mCreateDXGIFactory;
+ਸਥਿਰ PFN_D3D11_CREATE_DEVICE mD3D11CreateDevice;
 
-static av_cold void load_functions(void)
+ਸਥਿਰ av_cold ਖਾਲੀ ਲੱਦੋ_functions(ਖਾਲੀ)
 {
-#if !HAVE_UWP
+#ਜੇ !HAVE_UWP
     // We let these "leak" - this is fine, as unloading has no great benefit, and
     // Windows will mark a DLL as loaded forever if its internal refcount overflows
     // from too many LoadLibrary calls.
@@ -61,38 +61,38 @@ static av_cold void load_functions(void)
 
     d3dlib  = dlopen("d3d11.dll", 0);
     dxgilib = dlopen("dxgi.dll", 0);
-    if (!d3dlib || !dxgilib)
-        return;
+    ਜੇ (!d3dlib || !dxgilib)
+        ਵਾਪਸ;
 
-    mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) GetProcAddress(d3dlib, "D3D11CreateDevice");
-    mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) GetProcAddress(dxgilib, "CreateDXGIFactory1");
-    if (!mCreateDXGIFactory)
-        mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) GetProcAddress(dxgilib, "CreateDXGIFactory");
-#else
+    mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) Get_Proc_ਪਤਾ(d3dlib, "D3D11CreateDevice");
+    mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) Get_Proc_ਪਤਾ(dxgilib, "CreateDXGIFactory1");
+    ਜੇ (!mCreateDXGIFactory)
+        mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) Get_Proc_ਪਤਾ(dxgilib, "CreateDXGIFactory");
+#ਨਹੀਂਤਾਂ
     // In UWP (which lacks LoadLibrary), CreateDXGIFactory isn't available,
     // only CreateDXGIFactory1
     mD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE) D3D11CreateDevice;
     mCreateDXGIFactory = (PFN_CREATE_DXGI_FACTORY) CreateDXGIFactory1;
-#endif
+#ਜੇ_ਅੰਤ
 }
 
-typedef struct D3D11VAFramesContext {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ D3D11VAFramesContext {
     /**
      * The public AVD3D11VAFramesContext. See hwcontext_d3d11va.h for it.
      */
     AVD3D11VAFramesContext p;
 
-    int nb_surfaces;
-    int nb_surfaces_used;
+    ਪੂਰਨ nb_surfaces;
+    ਪੂਰਨ nb_surfaces_ਵਰਤਿਆ;
 
     DXGI_FORMAT format;
 
     ID3D11Texture2D *staging_texture;
 } D3D11VAFramesContext;
 
-static const struct {
+ਸਥਿਰ ਅਚਲ ਬਣਤਰ {
     DXGI_FORMAT d3d_format;
-    enum AVPixelFormat pix_fmt;
+    ਗਿਣਤੀ AVPixelFormat pix_fmt;
 } supported_formats[] = {
     { DXGI_FORMAT_NV12,         AV_PIX_FMT_NV12 },
     { DXGI_FORMAT_P010,         AV_PIX_FMT_P010 },
@@ -116,111 +116,111 @@ static const struct {
     { DXGI_FORMAT_420_OPAQUE,   AV_PIX_FMT_YUV420P },
 };
 
-static void d3d11va_default_lock(void *ctx)
+ਸਥਿਰ ਖਾਲੀ d3d11va_default_ਤਾਲਾ(ਖਾਲੀ *ctx)
 {
     WaitForSingleObjectEx(ctx, INFINITE, FALSE);
 }
 
-static void d3d11va_default_unlock(void *ctx)
+ਸਥਿਰ ਖਾਲੀ d3d11va_default_unlock(ਖਾਲੀ *ctx)
 {
     ReleaseMutex(ctx);
 }
 
-static void d3d11va_frames_uninit(AVHWFramesContext *ctx)
+ਸਥਿਰ ਖਾਲੀ d3d11va_ਚੌਖਟੇ_uninit(AVHWFramesContext *ctx)
 {
     D3D11VAFramesContext *s = ctx->hwctx;
-    AVD3D11VAFramesContext *frames_hwctx = &s->p;
+    AVD3D11VAFramesContext *ਚੌਖਟੇ_hwctx = &s->p;
 
-    if (frames_hwctx->texture)
-        ID3D11Texture2D_Release(frames_hwctx->texture);
-    frames_hwctx->texture = NULL;
+    ਜੇ (ਚੌਖਟੇ_hwctx->texture)
+        ID3D11Texture2D_Release(ਚੌਖਟੇ_hwctx->texture);
+    ਚੌਖਟੇ_hwctx->texture = ਨਿਰਾ;
 
-    if (s->staging_texture)
+    ਜੇ (s->staging_texture)
         ID3D11Texture2D_Release(s->staging_texture);
-    s->staging_texture = NULL;
+    s->staging_texture = ਨਿਰਾ;
 
-    av_freep(&frames_hwctx->texture_infos);
+    av_freep(&ਚੌਖਟੇ_hwctx->texture_infos);
 }
 
-static int d3d11va_frames_get_constraints(AVHWDeviceContext *ctx,
-                                          const void *hwconfig,
+ਸਥਿਰ ਪੂਰਨ d3d11va_ਚੌਖਟੇ_get_constraints(AVHWDeviceContext *ctx,
+                                          ਅਚਲ ਖਾਲੀ *hwconfig,
                                           AVHWFramesConstraints *constraints)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->hwctx;
-    int nb_sw_formats = 0;
+    ਪੂਰਨ nb_sw_formats = 0;
     HRESULT hr;
-    int i;
+    ਪੂਰਨ i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    ਆਕਾਰ(*constraints->valid_sw_formats));
+    ਜੇ (!constraints->valid_sw_formats)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+    ਲਈ (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
         UINT format_support = 0;
         hr = ID3D11Device_CheckFormatSupport(device_hwctx->device, supported_formats[i].d3d_format, &format_support);
-        if (SUCCEEDED(hr) && (format_support & D3D11_FORMAT_SUPPORT_TEXTURE2D))
+        ਜੇ (SUCCEEDED(hr) && (format_support & D3D11_FORMAT_SUPPORT_TEXTURE2D))
             constraints->valid_sw_formats[nb_sw_formats++] = supported_formats[i].pix_fmt;
     }
     constraints->valid_sw_formats[nb_sw_formats] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, ਆਕਾਰ(*constraints->valid_hw_formats));
+    ਜੇ (!constraints->valid_hw_formats)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_D3D11;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static void free_texture(void *opaque, uint8_t *data)
+ਸਥਿਰ ਖਾਲੀ free_texture(ਖਾਲੀ *opaque, uint8_t *ਅੰਕੜੇ)
 {
     ID3D11Texture2D_Release((ID3D11Texture2D *)opaque);
-    av_free(data);
+    av_free(ਅੰਕੜੇ);
 }
 
-static AVBufferRef *wrap_texture_buf(AVHWFramesContext *ctx, ID3D11Texture2D *tex, int index)
+ਸਥਿਰ AVBufferRef *wrap_texture_buf(AVHWFramesContext *ctx, ID3D11Texture2D *tex, ਪੂਰਨ ਸੂਚਕਾਂਕ)
 {
     AVBufferRef *buf;
-    AVD3D11FrameDescriptor         *desc = av_mallocz(sizeof(*desc));
+    AVD3_D11_ਚੌਖਟਾ_Descriptor         *desc = av_mallocz(ਆਕਾਰ(*desc));
     D3D11VAFramesContext              *s = ctx->hwctx;
-    AVD3D11VAFramesContext *frames_hwctx = &s->p;
-    if (!desc) {
+    AVD3D11VAFramesContext *ਚੌਖਟੇ_hwctx = &s->p;
+    ਜੇ (!desc) {
         ID3D11Texture2D_Release(tex);
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    if (s->nb_surfaces <= s->nb_surfaces_used) {
-        frames_hwctx->texture_infos = av_realloc_f(frames_hwctx->texture_infos,
-                                                   s->nb_surfaces_used + 1,
-                                                   sizeof(*frames_hwctx->texture_infos));
-        if (!frames_hwctx->texture_infos) {
+    ਜੇ (s->nb_surfaces <= s->nb_surfaces_ਵਰਤਿਆ) {
+        ਚੌਖਟੇ_hwctx->texture_infos = av_realloc_f(ਚੌਖਟੇ_hwctx->texture_infos,
+                                                   s->nb_surfaces_ਵਰਤਿਆ + 1,
+                                                   ਆਕਾਰ(*ਚੌਖਟੇ_hwctx->texture_infos));
+        ਜੇ (!ਚੌਖਟੇ_hwctx->texture_infos) {
             ID3D11Texture2D_Release(tex);
             av_free(desc);
-            return NULL;
+            ਵਾਪਸ ਨਿਰਾ;
         }
-        s->nb_surfaces = s->nb_surfaces_used + 1;
+        s->nb_surfaces = s->nb_surfaces_ਵਰਤਿਆ + 1;
     }
 
-    frames_hwctx->texture_infos[s->nb_surfaces_used].texture = tex;
-    frames_hwctx->texture_infos[s->nb_surfaces_used].index = index;
-    s->nb_surfaces_used++;
+    ਚੌਖਟੇ_hwctx->texture_infos[s->nb_surfaces_ਵਰਤਿਆ].texture = tex;
+    ਚੌਖਟੇ_hwctx->texture_infos[s->nb_surfaces_ਵਰਤਿਆ].ਸੂਚਕਾਂਕ = ਸੂਚਕਾਂਕ;
+    s->nb_surfaces_ਵਰਤਿਆ++;
 
     desc->texture = tex;
-    desc->index   = index;
+    desc->ਸੂਚਕਾਂਕ   = ਸੂਚਕਾਂਕ;
 
-    buf = av_buffer_create((uint8_t *)desc, sizeof(*desc), free_texture, tex, 0);
-    if (!buf) {
+    buf = av_ਬਫਰ_create((uint8_t *)desc, ਆਕਾਰ(*desc), free_texture, tex, 0);
+    ਜੇ (!buf) {
         ID3D11Texture2D_Release(tex);
         av_free(desc);
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    return buf;
+    ਵਾਪਸ buf;
 }
 
-static AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
+ਸਥਿਰ AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
 {
     D3D11VAFramesContext       *s = ctx->hwctx;
     AVD3D11VAFramesContext *hwctx = &s->p;
@@ -228,527 +228,527 @@ static AVBufferRef *d3d11va_alloc_single(AVHWFramesContext *ctx)
     HRESULT hr;
     ID3D11Texture2D *tex;
     D3D11_TEXTURE2D_DESC texDesc = {
-        .Width      = ctx->width,
-        .Height     = ctx->height,
-        .MipLevels  = 1,
+        .ਚੌੜਾਈ_2      = ctx->ਚੌੜਾਈ,
+        .ਉਚਾਈ_2     = ctx->ਉਚਾਈ,
+        .Mip_ਪੱਧਰ  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
-        .ArraySize  = 1,
+        .SampleDesc = { .ਗਿਣਤੀ_3 = 1 },
+        .Array_ਮਾਪ  = 1,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
         .MiscFlags  = hwctx->MiscFlags,
     };
 
-    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &tex);
-    if (FAILED(hr)) {
-        av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (long)hr);
-        return NULL;
+    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, ਨਿਰਾ, &tex);
+    ਜੇ (FAILED(hr)) {
+        av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (ਲੰਮਾ)hr);
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    return wrap_texture_buf(ctx, tex, 0);
+    ਵਾਪਸ wrap_texture_buf(ctx, tex, 0);
 }
 
-static AVBufferRef *d3d11va_pool_alloc(void *opaque, size_t size)
+ਸਥਿਰ AVBufferRef *d3d11va_pool_alloc(ਖਾਲੀ *opaque, size_t ਮਾਪ)
 {
     AVHWFramesContext        *ctx = (AVHWFramesContext*)opaque;
     D3D11VAFramesContext       *s = ctx->hwctx;
     AVD3D11VAFramesContext *hwctx = &s->p;
     D3D11_TEXTURE2D_DESC  texDesc;
 
-    if (!hwctx->texture)
-        return d3d11va_alloc_single(ctx);
+    ਜੇ (!hwctx->texture)
+        ਵਾਪਸ d3d11va_alloc_single(ctx);
 
     ID3D11Texture2D_GetDesc(hwctx->texture, &texDesc);
 
-    if (s->nb_surfaces_used >= texDesc.ArraySize) {
+    ਜੇ (s->nb_surfaces_ਵਰਤਿਆ >= texDesc.Array_ਮਾਪ) {
         av_log(ctx, AV_LOG_ERROR, "Static surface pool size exceeded.\n");
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    ID3D11Texture2D_AddRef(hwctx->texture);
-    return wrap_texture_buf(ctx, hwctx->texture, s->nb_surfaces_used);
+    ID3_D11_Texture2_D_ਜੋੜੋ_Ref(hwctx->texture);
+    ਵਾਪਸ wrap_texture_buf(ctx, hwctx->texture, s->nb_surfaces_ਵਰਤਿਆ);
 }
 
-static int d3d11va_frames_init(AVHWFramesContext *ctx)
+ਸਥਿਰ ਪੂਰਨ d3d11va_ਚੌਖਟੇ_init(AVHWFramesContext *ctx)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
     AVD3D11VAFramesContext        *hwctx = &s->p;
 
-    int i;
+    ਪੂਰਨ i;
     HRESULT hr;
     D3D11_TEXTURE2D_DESC texDesc;
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
-        if (ctx->sw_format == supported_formats[i].pix_fmt) {
+    ਲਈ (i = 0; i < FF_ARRAY_ELEMS(supported_formats); i++) {
+        ਜੇ (ctx->sw_format == supported_formats[i].pix_fmt) {
             s->format = supported_formats[i].d3d_format;
-            break;
+            ਰੋਕੋ;
         }
     }
-    if (i == FF_ARRAY_ELEMS(supported_formats)) {
+    ਜੇ (i == FF_ARRAY_ELEMS(supported_formats)) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format: %s\n",
                av_get_pix_fmt_name(ctx->sw_format));
-        return AVERROR(EINVAL);
+        ਵਾਪਸ AVERROR(EINVAL);
     }
 
     hwctx->BindFlags |= device_hwctx->BindFlags;
     hwctx->MiscFlags |= device_hwctx->MiscFlags;
 
-    if (s->format == DXGI_FORMAT_420_OPAQUE)
+    ਜੇ (s->format == DXGI_FORMAT_420_OPAQUE)
         hwctx->BindFlags &= ~D3D11_BIND_SHADER_RESOURCE;
 
-    ctx->initial_pool_size = FFMIN(ctx->initial_pool_size, MAX_ARRAY_SIZE);
+    ctx->initial_pool_ਮਾਪ = FFMIN(ctx->initial_pool_ਮਾਪ, MAX_ARRAY_ਮਾਪ);
 
     texDesc = (D3D11_TEXTURE2D_DESC){
-        .Width      = ctx->width,
-        .Height     = ctx->height,
-        .MipLevels  = 1,
+        .ਚੌੜਾਈ_2      = ctx->ਚੌੜਾਈ,
+        .ਉਚਾਈ_2     = ctx->ਉਚਾਈ,
+        .Mip_ਪੱਧਰ  = 1,
         .Format     = s->format,
-        .SampleDesc = { .Count = 1 },
-        .ArraySize  = ctx->initial_pool_size,
+        .SampleDesc = { .ਗਿਣਤੀ_3 = 1 },
+        .Array_ਮਾਪ  = ctx->initial_pool_ਮਾਪ,
         .Usage      = D3D11_USAGE_DEFAULT,
         .BindFlags  = hwctx->BindFlags,
         .MiscFlags  = hwctx->MiscFlags,
     };
 
-    if (hwctx->texture) {
+    ਜੇ (hwctx->texture) {
         D3D11_TEXTURE2D_DESC texDesc2;
         ID3D11Texture2D_GetDesc(hwctx->texture, &texDesc2);
 
-        if (texDesc.Width != texDesc2.Width ||
-            texDesc.Height != texDesc2.Height ||
+        ਜੇ (texDesc.ਚੌੜਾਈ_2 != texDesc2.ਚੌੜਾਈ_2 ||
+            texDesc.ਉਚਾਈ_2 != texDesc2.ਉਚਾਈ_2 ||
             texDesc.Format != texDesc2.Format) {
             av_log(ctx, AV_LOG_ERROR, "User-provided texture has mismatching parameters\n");
-            return AVERROR(EINVAL);
+            ਵਾਪਸ AVERROR(EINVAL);
         }
 
-        ctx->initial_pool_size = texDesc2.ArraySize;
+        ctx->initial_pool_ਮਾਪ = texDesc2.Array_ਮਾਪ;
         hwctx->BindFlags = texDesc2.BindFlags;
         hwctx->MiscFlags = texDesc2.MiscFlags;
-    } else if (texDesc.ArraySize > 0) {
-        hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &hwctx->texture);
-        if (FAILED(hr)) {
-            av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (long)hr);
-            return AVERROR_UNKNOWN;
+    } ਨਹੀਂਤਾਂ ਜੇ (texDesc.Array_ਮਾਪ > 0) {
+        hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, ਨਿਰਾ, &hwctx->texture);
+        ਜੇ (FAILED(hr)) {
+            av_log(ctx, AV_LOG_ERROR, "Could not create the texture (%lx)\n", (ਲੰਮਾ)hr);
+            ਵਾਪਸ AVERROR_UNKNOWN;
         }
     }
 
-    hwctx->texture_infos = av_realloc_f(NULL, ctx->initial_pool_size, sizeof(*hwctx->texture_infos));
-    if (!hwctx->texture_infos)
-        return AVERROR(ENOMEM);
-    s->nb_surfaces = ctx->initial_pool_size;
+    hwctx->texture_infos = av_realloc_f(ਨਿਰਾ, ctx->initial_pool_ਮਾਪ, ਆਕਾਰ(*hwctx->texture_infos));
+    ਜੇ (!hwctx->texture_infos)
+        ਵਾਪਸ AVERROR(ENOMEM);
+    s->nb_surfaces = ctx->initial_pool_ਮਾਪ;
 
-    ffhwframesctx(ctx)->pool_internal =
-        av_buffer_pool_init2(sizeof(AVD3D11FrameDescriptor),
-                             ctx, d3d11va_pool_alloc, NULL);
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+    ffhwframesctx(ctx)->pool_ਅੰਦਰੂਨੀ =
+        av_ਬਫਰ_pool_init2(ਆਕਾਰ(AVD3_D11_ਚੌਖਟਾ_Descriptor),
+                             ctx, d3d11va_pool_alloc, ਨਿਰਾ);
+    ਜੇ (!ffhwframesctx(ctx)->pool_ਅੰਦਰੂਨੀ)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int d3d11va_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ਸਥਿਰ ਪੂਰਨ d3d11va_get_ਬਫਰ(AVHWFramesContext *ctx, AVFrame *ਚੌਖਟਾ)
 {
-    AVD3D11FrameDescriptor *desc;
+    AVD3_D11_ਚੌਖਟਾ_Descriptor *desc;
 
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ਚੌਖਟਾ->buf[0] = av_ਬਫਰ_pool_get(ctx->pool);
+    ਜੇ (!ਚੌਖਟਾ->buf[0])
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    desc = (AVD3D11FrameDescriptor *)frame->buf[0]->data;
+    desc = (AVD3_D11_ਚੌਖਟਾ_Descriptor *)ਚੌਖਟਾ->buf[0]->ਅੰਕੜੇ;
 
-    frame->data[0] = (uint8_t *)desc->texture;
-    frame->data[1] = (uint8_t *)desc->index;
-    frame->format  = AV_PIX_FMT_D3D11;
-    frame->width   = ctx->width;
-    frame->height  = ctx->height;
+    ਚੌਖਟਾ->ਅੰਕੜੇ[0] = (uint8_t *)desc->texture;
+    ਚੌਖਟਾ->ਅੰਕੜੇ[1] = (uint8_t *)desc->ਸੂਚਕਾਂਕ;
+    ਚੌਖਟਾ->format  = AV_PIX_FMT_D3D11;
+    ਚੌਖਟਾ->ਚੌੜਾਈ   = ctx->ਚੌੜਾਈ;
+    ਚੌਖਟਾ->ਉਚਾਈ  = ctx->ਉਚਾਈ;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int d3d11va_transfer_get_formats(AVHWFramesContext *ctx,
-                                        enum AVHWFrameTransferDirection dir,
-                                        enum AVPixelFormat **formats)
+ਸਥਿਰ ਪੂਰਨ d3d11va_transfer_get_formats(AVHWFramesContext *ctx,
+                                        ਗਿਣਤੀ AVHWFrameTransferDirection dir,
+                                        ਗਿਣਤੀ AVPixelFormat **formats)
 {
     D3D11VAFramesContext *s = ctx->hwctx;
-    enum AVPixelFormat *fmts;
+    ਗਿਣਤੀ AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, ਆਕਾਰ(*fmts));
+    ਜੇ (!fmts)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     // Don't signal support for opaque formats. Actual access would fail.
-    if (s->format == DXGI_FORMAT_420_OPAQUE)
+    ਜੇ (s->format == DXGI_FORMAT_420_OPAQUE)
         fmts[0] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT format)
+ਸਥਿਰ ਪੂਰਨ d3d11va_create_staging_texture(AVHWFramesContext *ctx, DXGI_FORMAT format)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
     HRESULT hr;
     D3D11_TEXTURE2D_DESC texDesc = {
-        .Width          = ctx->width,
-        .Height         = ctx->height,
-        .MipLevels      = 1,
+        .ਚੌੜਾਈ_2          = ctx->ਚੌੜਾਈ,
+        .ਉਚਾਈ_2         = ctx->ਉਚਾਈ,
+        .Mip_ਪੱਧਰ      = 1,
         .Format         = format,
-        .SampleDesc     = { .Count = 1 },
-        .ArraySize      = 1,
+        .SampleDesc     = { .ਗਿਣਤੀ_3 = 1 },
+        .Array_ਮਾਪ      = 1,
         .Usage          = D3D11_USAGE_STAGING,
         .CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE,
     };
 
-    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, NULL, &s->staging_texture);
-    if (FAILED(hr)) {
-        av_log(ctx, AV_LOG_ERROR, "Could not create the staging texture (%lx)\n", (long)hr);
-        return AVERROR_UNKNOWN;
+    hr = ID3D11Device_CreateTexture2D(device_hwctx->device, &texDesc, ਨਿਰਾ, &s->staging_texture);
+    ਜੇ (FAILED(hr)) {
+        av_log(ctx, AV_LOG_ERROR, "Could not create the staging texture (%lx)\n", (ਲੰਮਾ)hr);
+        ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static void fill_texture_ptrs(uint8_t *data[4], int linesize[4],
+ਸਥਿਰ ਖਾਲੀ fill_texture_ptrs(uint8_t *ਅੰਕੜੇ[4], ਪੂਰਨ linesize[4],
                               AVHWFramesContext *ctx,
                               D3D11_TEXTURE2D_DESC *desc,
                               D3D11_MAPPED_SUBRESOURCE *map)
 {
-    int i;
+    ਪੂਰਨ i;
 
-    for (i = 0; i < 4; i++)
-        linesize[i] = map->RowPitch;
+    ਲਈ (i = 0; i < 4; i++)
+        linesize[i] = map->ਪੰਕਤੀ_Pitch;
 
-    av_image_fill_pointers(data, ctx->sw_format, desc->Height,
-                           (uint8_t*)map->pData, linesize);
+    av_image_fill_ਸੂਚਕ_ਸਾਰੇ(ਅੰਕੜੇ, ctx->sw_format, desc->ਉਚਾਈ_2,
+                           (uint8_t*)map->p_ਅੰਕੜੇ, linesize);
 }
 
-static int d3d11va_transfer_data(AVHWFramesContext *ctx, AVFrame *dst,
-                                 const AVFrame *src)
+ਸਥਿਰ ਪੂਰਨ d3d11va_transfer_ਅੰਕੜੇ(AVHWFramesContext *ctx, AVFrame *dst,
+                                 ਅਚਲ AVFrame *src)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->device_ctx->hwctx;
     D3D11VAFramesContext              *s = ctx->hwctx;
-    int download = src->format == AV_PIX_FMT_D3D11;
-    const AVFrame *frame = download ? src : dst;
-    const AVFrame *other = download ? dst : src;
+    ਪੂਰਨ download = src->format == AV_PIX_FMT_D3D11;
+    ਅਚਲ AVFrame *ਚੌਖਟਾ = download ? src : dst;
+    ਅਚਲ AVFrame *other = download ? dst : src;
     // (The interface types are compatible.)
-    ID3D11Resource *texture = (ID3D11Resource *)(ID3D11Texture2D *)frame->data[0];
-    int index = (intptr_t)frame->data[1];
+    ID3D11Resource *texture = (ID3D11Resource *)(ID3D11Texture2D *)ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+    ਪੂਰਨ ਸੂਚਕਾਂਕ = (intptr_t)ਚੌਖਟਾ->ਅੰਕੜੇ[1];
     ID3D11Resource *staging;
-    int w = FFMIN(dst->width,  src->width);
-    int h = FFMIN(dst->height, src->height);
-    uint8_t *map_data[4];
-    int map_linesize[4];
+    ਪੂਰਨ w = FFMIN(dst->ਚੌੜਾਈ,  src->ਚੌੜਾਈ);
+    ਪੂਰਨ h = FFMIN(dst->ਉਚਾਈ, src->ਉਚਾਈ);
+    uint8_t *map_ਅੰਕੜੇ[4];
+    ਪੂਰਨ map_linesize[4];
     D3D11_TEXTURE2D_DESC desc;
     D3D11_MAPPED_SUBRESOURCE map;
     HRESULT hr;
-    int res;
+    ਪੂਰਨ res;
 
-    if (frame->hw_frames_ctx->data != (uint8_t *)ctx || other->format != ctx->sw_format)
-        return AVERROR(EINVAL);
+    ਜੇ (ਚੌਖਟਾ->hw_ਚੌਖਟੇ_ctx->ਅੰਕੜੇ != (uint8_t *)ctx || other->format != ctx->sw_format)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    device_hwctx->lock(device_hwctx->lock_ctx);
+    device_hwctx->ਤਾਲਾ(device_hwctx->ਤਾਲਾ_ctx);
 
-    if (!s->staging_texture) {
+    ਜੇ (!s->staging_texture) {
         ID3D11Texture2D_GetDesc((ID3D11Texture2D *)texture, &desc);
         res = d3d11va_create_staging_texture(ctx, desc.Format);
-        if (res < 0)
-            return res;
+        ਜੇ (res < 0)
+            ਵਾਪਸ res;
     }
 
     staging = (ID3D11Resource *)s->staging_texture;
 
     ID3D11Texture2D_GetDesc(s->staging_texture, &desc);
 
-    if (download) {
+    ਜੇ (download) {
         ID3D11DeviceContext_CopySubresourceRegion(device_hwctx->device_context,
                                                   staging, 0, 0, 0, 0,
-                                                  texture, index, NULL);
+                                                  texture, ਸੂਚਕਾਂਕ, ਨਿਰਾ);
 
         hr = ID3D11DeviceContext_Map(device_hwctx->device_context,
                                      staging, 0, D3D11_MAP_READ, 0, &map);
-        if (FAILED(hr))
-            goto map_failed;
+        ਜੇ (FAILED(hr))
+            ਜਾਓ map_failed;
 
-        fill_texture_ptrs(map_data, map_linesize, ctx, &desc, &map);
+        fill_texture_ptrs(map_ਅੰਕੜੇ, map_linesize, ctx, &desc, &map);
 
-        av_image_copy2(dst->data, dst->linesize, map_data, map_linesize,
+        av_image_copy2(dst->ਅੰਕੜੇ, dst->linesize, map_ਅੰਕੜੇ, map_linesize,
                        ctx->sw_format, w, h);
 
         ID3D11DeviceContext_Unmap(device_hwctx->device_context, staging, 0);
-    } else {
+    } ਨਹੀਂਤਾਂ {
         hr = ID3D11DeviceContext_Map(device_hwctx->device_context,
                                      staging, 0, D3D11_MAP_WRITE, 0, &map);
-        if (FAILED(hr))
-            goto map_failed;
+        ਜੇ (FAILED(hr))
+            ਜਾਓ map_failed;
 
-        fill_texture_ptrs(map_data, map_linesize, ctx, &desc, &map);
+        fill_texture_ptrs(map_ਅੰਕੜੇ, map_linesize, ctx, &desc, &map);
 
-        av_image_copy2(map_data, map_linesize, src->data, src->linesize,
+        av_image_copy2(map_ਅੰਕੜੇ, map_linesize, src->ਅੰਕੜੇ, src->linesize,
                        ctx->sw_format, w, h);
 
         ID3D11DeviceContext_Unmap(device_hwctx->device_context, staging, 0);
 
         ID3D11DeviceContext_CopySubresourceRegion(device_hwctx->device_context,
-                                                  texture, index, 0, 0, 0,
-                                                  staging, 0, NULL);
+                                                  texture, ਸੂਚਕਾਂਕ, 0, 0, 0,
+                                                  staging, 0, ਨਿਰਾ);
     }
 
-    device_hwctx->unlock(device_hwctx->lock_ctx);
-    return 0;
+    device_hwctx->unlock(device_hwctx->ਤਾਲਾ_ctx);
+    ਵਾਪਸ 0;
 
 map_failed:
-    av_log(ctx, AV_LOG_ERROR, "Unable to lock D3D11VA surface (%lx)\n", (long)hr);
-    device_hwctx->unlock(device_hwctx->lock_ctx);
-    return AVERROR_UNKNOWN;
+    av_log(ctx, AV_LOG_ERROR, "Unable to lock D3D11VA surface (%lx)\n", (ਲੰਮਾ)hr);
+    device_hwctx->unlock(device_hwctx->ਤਾਲਾ_ctx);
+    ਵਾਪਸ AVERROR_UNKNOWN;
 }
 
-static int d3d11va_device_init(AVHWDeviceContext *hwdev)
+ਸਥਿਰ ਪੂਰਨ d3d11va_device_init(AVHWDeviceContext *hwdev)
 {
     AVD3D11VADeviceContext *device_hwctx = hwdev->hwctx;
     HRESULT hr;
 
-    if (!device_hwctx->lock) {
-        device_hwctx->lock_ctx = CreateMutex(NULL, 0, NULL);
-        if (device_hwctx->lock_ctx == INVALID_HANDLE_VALUE) {
-            av_log(NULL, AV_LOG_ERROR, "Failed to create a mutex\n");
-            return AVERROR(EINVAL);
+    ਜੇ (!device_hwctx->ਤਾਲਾ) {
+        device_hwctx->ਤਾਲਾ_ctx = CreateMutex(ਨਿਰਾ, 0, ਨਿਰਾ);
+        ਜੇ (device_hwctx->ਤਾਲਾ_ctx == INVALID_HANDLE_ਮੁੱਲ) {
+            av_log(ਨਿਰਾ, AV_LOG_ERROR, "Failed to create a mutex\n");
+            ਵਾਪਸ AVERROR(EINVAL);
         }
-        device_hwctx->lock   = d3d11va_default_lock;
+        device_hwctx->ਤਾਲਾ   = d3d11va_default_ਤਾਲਾ;
         device_hwctx->unlock = d3d11va_default_unlock;
     }
 
-    if (!device_hwctx->device_context) {
-        ID3D11Device_GetImmediateContext(device_hwctx->device, &device_hwctx->device_context);
-        if (!device_hwctx->device_context)
-            return AVERROR_UNKNOWN;
+    ਜੇ (!device_hwctx->device_context) {
+        ID3_D11_Device_Get_ਤੁਰੰਤ_Context(device_hwctx->device, &device_hwctx->device_context);
+        ਜੇ (!device_hwctx->device_context)
+            ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    if (!device_hwctx->video_device) {
+    ਜੇ (!device_hwctx->video_device) {
         hr = ID3D11DeviceContext_QueryInterface(device_hwctx->device, &IID_ID3D11VideoDevice,
-                                                (void **)&device_hwctx->video_device);
-        if (FAILED(hr))
-            return AVERROR_UNKNOWN;
+                                                (ਖਾਲੀ **)&device_hwctx->video_device);
+        ਜੇ (FAILED(hr))
+            ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    if (!device_hwctx->video_context) {
+    ਜੇ (!device_hwctx->video_context) {
         hr = ID3D11DeviceContext_QueryInterface(device_hwctx->device_context, &IID_ID3D11VideoContext,
-                                                (void **)&device_hwctx->video_context);
-        if (FAILED(hr))
-            return AVERROR_UNKNOWN;
+                                                (ਖਾਲੀ **)&device_hwctx->video_context);
+        ਜੇ (FAILED(hr))
+            ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static void d3d11va_device_uninit(AVHWDeviceContext *hwdev)
+ਸਥਿਰ ਖਾਲੀ d3d11va_device_uninit(AVHWDeviceContext *hwdev)
 {
     AVD3D11VADeviceContext *device_hwctx = hwdev->hwctx;
 
-    if (device_hwctx->device) {
+    ਜੇ (device_hwctx->device) {
         ID3D11Device_Release(device_hwctx->device);
-        device_hwctx->device = NULL;
+        device_hwctx->device = ਨਿਰਾ;
     }
 
-    if (device_hwctx->device_context) {
+    ਜੇ (device_hwctx->device_context) {
         ID3D11DeviceContext_Release(device_hwctx->device_context);
-        device_hwctx->device_context = NULL;
+        device_hwctx->device_context = ਨਿਰਾ;
     }
 
-    if (device_hwctx->video_device) {
+    ਜੇ (device_hwctx->video_device) {
         ID3D11VideoDevice_Release(device_hwctx->video_device);
-        device_hwctx->video_device = NULL;
+        device_hwctx->video_device = ਨਿਰਾ;
     }
 
-    if (device_hwctx->video_context) {
+    ਜੇ (device_hwctx->video_context) {
         ID3D11VideoContext_Release(device_hwctx->video_context);
-        device_hwctx->video_context = NULL;
+        device_hwctx->video_context = ਨਿਰਾ;
     }
 
-    if (device_hwctx->lock == d3d11va_default_lock) {
-        CloseHandle(device_hwctx->lock_ctx);
-        device_hwctx->lock_ctx = INVALID_HANDLE_VALUE;
-        device_hwctx->lock = NULL;
+    ਜੇ (device_hwctx->ਤਾਲਾ == d3d11va_default_ਤਾਲਾ) {
+        CloseHandle(device_hwctx->ਤਾਲਾ_ctx);
+        device_hwctx->ਤਾਲਾ_ctx = INVALID_HANDLE_ਮੁੱਲ;
+        device_hwctx->ਤਾਲਾ = ਨਿਰਾ;
     }
 }
 
-static int d3d11va_device_find_adapter_by_vendor_id(AVHWDeviceContext *ctx, uint32_t flags, const char *vendor_id)
+ਸਥਿਰ ਪੂਰਨ d3d11va_device_ਲੱਭੋ_adapter_by_vendor_id(AVHWDeviceContext *ctx, uint32_t flags, ਅਚਲ ਅੱਖਰ *vendor_id)
 {
     HRESULT hr;
-    IDXGIAdapter *adapter = NULL;
+    IDXGIAdapter *adapter = ਨਿਰਾ;
     IDXGIFactory2 *factory;
-    int adapter_id = 0;
-    long int id = strtol(vendor_id, NULL, 0);
+    ਪੂਰਨ adapter_id = 0;
+    ਲੰਮਾ ਪੂਰਨ id = strtol(vendor_id, ਨਿਰਾ, 0);
 
-    hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (void **)&factory);
-    if (FAILED(hr)) {
+    hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (ਖਾਲੀ **)&factory);
+    ਜੇ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "CreateDXGIFactory returned error\n");
-        return -1;
+        ਵਾਪਸ -1;
     }
 
-    while (IDXGIFactory2_EnumAdapters(factory, adapter_id++, &adapter) != DXGI_ERROR_NOT_FOUND) {
-        ID3D11Device* device = NULL;
+    ਜਦੋਂ (IDXGIFactory2_EnumAdapters(factory, adapter_id++, &adapter) != DXGI_ERROR_NOT_ਮਿਲਿਆ) {
+        ID3D11Device* device = ਨਿਰਾ;
         DXGI_ADAPTER_DESC adapter_desc;
 
-        hr = mD3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, NULL, 0, D3D11_SDK_VERSION, &device, NULL, NULL);
-        if (FAILED(hr)) {
+        hr = mD3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, ਨਿਰਾ, flags, ਨਿਰਾ, 0, D3_D11_SDK_ਸੰਸਕਰਣ, &device, ਨਿਰਾ, ਨਿਰਾ);
+        ਜੇ (FAILED(hr)) {
             av_log(ctx, AV_LOG_DEBUG, "D3D11CreateDevice returned error, try next adapter\n");
             IDXGIAdapter_Release(adapter);
-            continue;
+            ਜਾਰੀ;
         }
 
         hr = IDXGIAdapter2_GetDesc(adapter, &adapter_desc);
         ID3D11Device_Release(device);
         IDXGIAdapter_Release(adapter);
-        if (FAILED(hr)) {
+        ਜੇ (FAILED(hr)) {
             av_log(ctx, AV_LOG_DEBUG, "IDXGIAdapter2_GetDesc returned error, try next adapter\n");
-            continue;
-        } else if (adapter_desc.VendorId == id) {
+            ਜਾਰੀ;
+        } ਨਹੀਂਤਾਂ ਜੇ (adapter_desc.VendorId == id) {
             IDXGIFactory2_Release(factory);
-            return adapter_id - 1;
+            ਵਾਪਸ adapter_id - 1;
         }
     }
 
     IDXGIFactory2_Release(factory);
-    return -1;
+    ਵਾਪਸ -1;
 }
 
-static int d3d11va_device_create(AVHWDeviceContext *ctx, const char *device,
-                                 AVDictionary *opts, int flags)
+ਸਥਿਰ ਪੂਰਨ d3d11va_device_create(AVHWDeviceContext *ctx, ਅਚਲ ਅੱਖਰ *device,
+                                 AVDictionary *opts, ਪੂਰਨ flags)
 {
     AVD3D11VADeviceContext *device_hwctx = ctx->hwctx;
 
     HRESULT hr;
-    IDXGIAdapter           *pAdapter = NULL;
+    IDXGIAdapter           *pAdapter = ਨਿਰਾ;
     ID3D10Multithread      *pMultithread;
     UINT creationFlags = D3D11_CREATE_DEVICE_VIDEO_SUPPORT;
-    int is_debug       = !!av_dict_get(opts, "debug", NULL, 0);
-    int ret;
-    int adapter = -1;
+    ਪੂਰਨ is_debug       = !!av_dict_get(opts, "debug", ਨਿਰਾ, 0);
+    ਪੂਰਨ ret;
+    ਪੂਰਨ adapter = -1;
 
-    if (is_debug) {
+    ਜੇ (is_debug) {
         creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
         av_log(ctx, AV_LOG_INFO, "Enabling d3d11 debugging.\n");
     }
 
-    if ((ret = ff_thread_once(&functions_loaded, load_functions)) != 0)
-        return AVERROR_UNKNOWN;
-    if (!mD3D11CreateDevice || !mCreateDXGIFactory) {
+    ਜੇ ((ret = ff_thread_once(&functions_loaded, ਲੱਦੋ_functions)) != 0)
+        ਵਾਪਸ AVERROR_UNKNOWN;
+    ਜੇ (!mD3D11CreateDevice || !mCreateDXGIFactory) {
         av_log(ctx, AV_LOG_ERROR, "Failed to load D3D11 library or its functions\n");
-        return AVERROR_UNKNOWN;
+        ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    if (device) {
+    ਜੇ (device) {
         adapter = atoi(device);
-    } else {
-        AVDictionaryEntry *e = av_dict_get(opts, "vendor_id", NULL, 0);
-        if (e && e->value) {
-            adapter = d3d11va_device_find_adapter_by_vendor_id(ctx, creationFlags, e->value);
-            if (adapter < 0) {
+    } ਨਹੀਂਤਾਂ {
+        AVDictionary_ਇੰਦਰਾਜ *e = av_dict_get(opts, "vendor_id", ਨਿਰਾ, 0);
+        ਜੇ (e && e->ਮੁੱਲ) {
+            adapter = d3d11va_device_ਲੱਭੋ_adapter_by_vendor_id(ctx, creationFlags, e->ਮੁੱਲ);
+            ਜੇ (adapter < 0) {
                 av_log(ctx, AV_LOG_ERROR, "Failed to find d3d11va adapter by "
-                       "vendor id %s\n", e->value);
-                return AVERROR_UNKNOWN;
+                       "vendor id %s\n", e->ਮੁੱਲ);
+                ਵਾਪਸ AVERROR_UNKNOWN;
             }
         }
     }
 
-    if (adapter >= 0) {
+    ਜੇ (adapter >= 0) {
         IDXGIFactory2 *pDXGIFactory;
 
         av_log(ctx, AV_LOG_VERBOSE, "Selecting d3d11va adapter %d\n", adapter);
-        hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (void **)&pDXGIFactory);
-        if (SUCCEEDED(hr)) {
-            if (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
-                pAdapter = NULL;
+        hr = mCreateDXGIFactory(&IID_IDXGIFactory2, (ਖਾਲੀ **)&pDXGIFactory);
+        ਜੇ (SUCCEEDED(hr)) {
+            ਜੇ (FAILED(IDXGIFactory2_EnumAdapters(pDXGIFactory, adapter, &pAdapter)))
+                pAdapter = ਨਿਰਾ;
             IDXGIFactory2_Release(pDXGIFactory);
         }
     }
 
-    if (pAdapter) {
+    ਜੇ (pAdapter) {
         DXGI_ADAPTER_DESC desc;
         hr = IDXGIAdapter2_GetDesc(pAdapter, &desc);
-        if (!FAILED(hr)) {
+        ਜੇ (!FAILED(hr)) {
             av_log(ctx, AV_LOG_INFO, "Using device %04x:%04x (%ls).\n",
                    desc.VendorId, desc.DeviceId, desc.Description);
         }
     }
 
-    hr = mD3D11CreateDevice(pAdapter, pAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE, NULL, creationFlags, NULL, 0,
-                   D3D11_SDK_VERSION, &device_hwctx->device, NULL, NULL);
-    if (pAdapter)
+    hr = mD3D11CreateDevice(pAdapter, pAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE, ਨਿਰਾ, creationFlags, ਨਿਰਾ, 0,
+                   D3_D11_SDK_ਸੰਸਕਰਣ, &device_hwctx->device, ਨਿਰਾ, ਨਿਰਾ);
+    ਜੇ (pAdapter)
         IDXGIAdapter_Release(pAdapter);
-    if (FAILED(hr)) {
-        av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device (%lx)\n", (long)hr);
-        return AVERROR_UNKNOWN;
+    ਜੇ (FAILED(hr)) {
+        av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device (%lx)\n", (ਲੰਮਾ)hr);
+        ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    hr = ID3D11Device_QueryInterface(device_hwctx->device, &IID_ID3D10Multithread, (void **)&pMultithread);
-    if (SUCCEEDED(hr)) {
-        ID3D10Multithread_SetMultithreadProtected(pMultithread, TRUE);
+    hr = ID3D11Device_QueryInterface(device_hwctx->device, &IID_ID3D10Multithread, (ਖਾਲੀ **)&pMultithread);
+    ਜੇ (SUCCEEDED(hr)) {
+        ID3_D10_Multithread_ਸੈੱਟ_Multithread_Protected(pMultithread, TRUE);
         ID3D10Multithread_Release(pMultithread);
     }
 
-#if !HAVE_UWP && HAVE_DXGIDEBUG_H
-    if (is_debug) {
-        HANDLE dxgidebug_dll = LoadLibrary("dxgidebug.dll");
-        if (dxgidebug_dll) {
-            HRESULT (WINAPI  * pf_DXGIGetDebugInterface)(const GUID *riid, void **ppDebug)
-                = (void *)GetProcAddress(dxgidebug_dll, "DXGIGetDebugInterface");
-            if (pf_DXGIGetDebugInterface) {
-                IDXGIDebug *dxgi_debug = NULL;
-                hr = pf_DXGIGetDebugInterface(&IID_IDXGIDebug, (void**)&dxgi_debug);
-                if (SUCCEEDED(hr) && dxgi_debug) {
-                    IDXGIDebug_ReportLiveObjects(dxgi_debug, DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+#ਜੇ !HAVE_UWP && HAVE_DXGIDEBUG_H
+    ਜੇ (is_debug) {
+        HANDLE dxgidebug_dll = ਲੱਦੋ_Library("dxgidebug.dll");
+        ਜੇ (dxgidebug_dll) {
+            HRESULT (WINAPI  * pf_DXGIGetDebugInterface)(ਅਚਲ GUID *riid, ਖਾਲੀ **ppDebug)
+                = (ਖਾਲੀ *)Get_Proc_ਪਤਾ(dxgidebug_dll, "DXGIGetDebugInterface");
+            ਜੇ (pf_DXGIGetDebugInterface) {
+                IDXGIDebug *dxgi_debug = ਨਿਰਾ;
+                hr = pf_DXGIGetDebugInterface(&IID_IDXGIDebug, (ਖਾਲੀ**)&dxgi_debug);
+                ਜੇ (SUCCEEDED(hr) && dxgi_debug) {
+                    IDXGIDebug_Report_ਜੀਵਤ_Objects(dxgi_debug, DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
                     av_log(ctx, AV_LOG_INFO, "Enabled dxgi debugging.\n");
-                } else {
+                } ਨਹੀਂਤਾਂ {
                     av_log(ctx, AV_LOG_WARNING, "Failed enabling dxgi debugging.\n");
                 }
-            } else {
+            } ਨਹੀਂਤਾਂ {
                 av_log(ctx, AV_LOG_WARNING, "Failed getting dxgi debug interface.\n");
             }
-        } else {
+        } ਨਹੀਂਤਾਂ {
             av_log(ctx, AV_LOG_WARNING, "Failed loading dxgi debug library.\n");
         }
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    if (av_dict_get(opts, "SHADER", NULL, 0))
+    ਜੇ (av_dict_get(opts, "SHADER", ਨਿਰਾ, 0))
         device_hwctx->BindFlags |= D3D11_BIND_SHADER_RESOURCE;
 
-    if (av_dict_get(opts, "UAV", NULL, 0))
+    ਜੇ (av_dict_get(opts, "UAV", ਨਿਰਾ, 0))
         device_hwctx->BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
 
-    if (av_dict_get(opts, "RTV", NULL, 0))
-        device_hwctx->BindFlags |= D3D11_BIND_RENDER_TARGET;
+    ਜੇ (av_dict_get(opts, "RTV", ਨਿਰਾ, 0))
+        device_hwctx->BindFlags |= D3_D11_BIND_RENDER_ਨਿਸ਼ਾਨਾ;
 
-    if (av_dict_get(opts, "SHARED", NULL, 0))
+    ਜੇ (av_dict_get(opts, "SHARED", ਨਿਰਾ, 0))
         device_hwctx->MiscFlags |= D3D11_RESOURCE_MISC_SHARED;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-const HWContextType ff_hwcontext_type_d3d11va = {
+ਅਚਲ HWContextType ff_hwcontext_type_d3d11va = {
     .type                 = AV_HWDEVICE_TYPE_D3D11VA,
     .name                 = "D3D11VA",
 
-    .device_hwctx_size    = sizeof(AVD3D11VADeviceContext),
-    .frames_hwctx_size    = sizeof(D3D11VAFramesContext),
+    .device_hwctx_ਮਾਪ    = ਆਕਾਰ(AVD3D11VADeviceContext),
+    .ਚੌਖਟੇ_hwctx_ਮਾਪ    = ਆਕਾਰ(D3D11VAFramesContext),
 
     .device_create        = d3d11va_device_create,
     .device_init          = d3d11va_device_init,
     .device_uninit        = d3d11va_device_uninit,
-    .frames_get_constraints = d3d11va_frames_get_constraints,
-    .frames_init          = d3d11va_frames_init,
-    .frames_uninit        = d3d11va_frames_uninit,
-    .frames_get_buffer    = d3d11va_get_buffer,
+    .ਚੌਖਟੇ_get_constraints = d3d11va_ਚੌਖਟੇ_get_constraints,
+    .ਚੌਖਟੇ_init          = d3d11va_ਚੌਖਟੇ_init,
+    .ਚੌਖਟੇ_uninit        = d3d11va_ਚੌਖਟੇ_uninit,
+    .ਚੌਖਟੇ_get_ਬਫਰ    = d3d11va_get_ਬਫਰ,
     .transfer_get_formats = d3d11va_transfer_get_formats,
-    .transfer_data_to     = d3d11va_transfer_data,
-    .transfer_data_from   = d3d11va_transfer_data,
+    .transfer_ਅੰਕੜੇ_ਮੰਜ਼ਿਲ     = d3d11va_transfer_ਅੰਕੜੇ,
+    .transfer_ਅੰਕੜੇ_from   = d3d11va_transfer_ਅੰਕੜੇ,
 
-    .pix_fmts             = (const enum AVPixelFormat[]){ AV_PIX_FMT_D3D11, AV_PIX_FMT_NONE },
+    .pix_fmts             = (ਅਚਲ ਗਿਣਤੀ AVPixelFormat[]){ AV_PIX_FMT_D3D11, AV_PIX_FMT_NONE },
 };

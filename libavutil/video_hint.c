@@ -18,64 +18,64 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "avstring.h"
-#include "frame.h"
-#include "macros.h"
-#include "mem.h"
-#include "video_hint.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "frame.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "video_hint.h"
 
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
-                                 size_t *out_size)
+                                 size_t *ਬਾਹਰਲਾ_ਮਾਪ)
 {
-    struct TestStruct {
+    ਬਣਤਰ TestStruct {
         AVVideoHint hint;
         AVVideoRect rect;
     };
-    const size_t rect_offset = offsetof(struct TestStruct, rect);
-    size_t size = rect_offset;
+    ਅਚਲ size_t rect_ਵਿੱਥ = offsetof(ਬਣਤਰ TestStruct, rect);
+    size_t ਮਾਪ = rect_ਵਿੱਥ;
     AVVideoHint *hint;
 
-    *out_size = 0;
-    if (nb_rects > (SIZE_MAX - size) / sizeof(AVVideoRect))
-        return NULL;
-    size += sizeof(AVVideoRect) * nb_rects;
+    *ਬਾਹਰਲਾ_ਮਾਪ = 0;
+    ਜੇ (nb_rects > (SIZE_MAX - ਮਾਪ) / ਆਕਾਰ(AVVideoRect))
+        ਵਾਪਸ ਨਿਰਾ;
+    ਮਾਪ += ਆਕਾਰ(AVVideoRect) * nb_rects;
 
-    hint = av_mallocz(size);
-    if (!hint)
-        return NULL;
+    hint = av_mallocz(ਮਾਪ);
+    ਜੇ (!hint)
+        ਵਾਪਸ ਨਿਰਾ;
 
     hint->nb_rects    = nb_rects;
-    hint->rect_offset = rect_offset;
-    hint->rect_size   = sizeof(AVVideoRect);
+    hint->rect_ਵਿੱਥ = rect_ਵਿੱਥ;
+    hint->rect_ਮਾਪ   = ਆਕਾਰ(AVVideoRect);
 
-    *out_size = size;
+    *ਬਾਹਰਲਾ_ਮਾਪ = ਮਾਪ;
 
-    return hint;
+    ਵਾਪਸ hint;
 }
 
-AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
+AVVideoHint *av_video_hint_create_side_ਅੰਕੜੇ(AVFrame *ਚੌਖਟਾ,
                                             size_t nb_rects)
 {
     AVVideoHint *hint;
     AVBufferRef *buf;
-    size_t size = 0;
+    size_t ਮਾਪ = 0;
 
-    hint = av_video_hint_alloc(nb_rects, &size);
-    if (!hint)
-        return NULL;
+    hint = av_video_hint_alloc(nb_rects, &ਮਾਪ);
+    ਜੇ (!hint)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    buf = av_buffer_create((uint8_t *)hint, size, NULL, NULL, 0);
-    if (!buf) {
+    buf = av_ਬਫਰ_create((uint8_t *)hint, ਮਾਪ, ਨਿਰਾ, ਨਿਰਾ, 0);
+    ਜੇ (!buf) {
         av_freep(&hint);
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_HINT, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    ਜੇ (!av_ਚੌਖਟਾ_new_side_ਅੰਕੜੇ_from_buf(ਚੌਖਟਾ, AV_ਚੌਖਟਾ_ਅੰਕੜੇ_VIDEO_HINT, buf)) {
+        av_ਬਫਰ_unref(&buf);
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    return hint;
+    ਵਾਪਸ hint;
 }

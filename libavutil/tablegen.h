@@ -21,35 +21,35 @@
  * Compatibility libm for table generation files
  */
 
-#ifndef AVUTIL_TABLEGEN_H
-#define AVUTIL_TABLEGEN_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_TABLEGEN_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_TABLEGEN_H
 
-#include <math.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <math.h>
 
 // we lack some functions on all host platforms, and we don't care about
 // performance and/or strict ISO C semantics as it's performed at build time
-static inline double ff_cbrt(double x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਦੁੱਗਣਾ ff_cbrt(ਦੁੱਗਣਾ x)
 {
-    return x < 0 ? -pow(-x, 1.0 / 3.0) : pow(x, 1.0 / 3.0);
+    ਵਾਪਸ x < 0 ? -ਘਾਤ(-x, 1.0 / 3.0) : ਘਾਤ(x, 1.0 / 3.0);
 }
-#define cbrt ff_cbrt
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ cbrt ff_cbrt
 
-static inline double ff_rint(double x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਦੁੱਗਣਾ ff_rint(ਦੁੱਗਣਾ x)
 {
-    return x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
+    ਵਾਪਸ x >= 0 ? floor(x + 0.5) : ceil(x - 0.5);
 }
-#define rint ff_rint
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ rint ff_rint
 
-static inline long long ff_llrint(double x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਲੰਮਾ ਲੰਮਾ ff_llrint(ਦੁੱਗਣਾ x)
 {
-    return rint(x);
+    ਵਾਪਸ rint(x);
 }
-#define llrint ff_llrint
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ llrint ff_llrint
 
-static inline long ff_lrint(double x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਲੰਮਾ ff_lrint(ਦੁੱਗਣਾ x)
 {
-    return rint(x);
+    ਵਾਪਸ rint(x);
 }
-#define lrint ff_lrint
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lrint ff_lrint
 
-#endif /* AVUTIL_TABLEGEN_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_TABLEGEN_H */

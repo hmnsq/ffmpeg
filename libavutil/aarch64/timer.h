@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AARCH64_TIMER_H
-#define AVUTIL_AARCH64_TIMER_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_AARCH64_TIMER_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_AARCH64_TIMER_H
 
-#include <stdint.h>
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#if HAVE_INLINE_ASM
+#ਜੇ HAVE_INLINE_ASM
 
-#define AV_READ_TIME read_time
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_READ_ਸਮਾਂ read_ਸਮਾਂ
 
-static inline uint64_t read_time(void)
+ਸਥਿਰ ਸਤਰਅੰਦਰ uint64_t read_ਸਮਾਂ(ਖਾਲੀ)
 {
-    uint64_t cycle_counter;
-    __asm__ volatile(
+    uint64_t ਚੱਕਰ_counter;
+    __asm__ ਅਸਥਿਰ(
         "isb                   \t\n"
         // cntvct_el0 has lower resolution than pmccntr_el0, but is usually
         // accessible from user space by default.
         "mrs %0, cntvct_el0        "
-        : "=r"(cycle_counter) :: "memory" );
+        : "=r"(ਚੱਕਰ_counter) :: "memory" );
 
-    return cycle_counter;
+    ਵਾਪਸ ਚੱਕਰ_counter;
 }
 
-#endif /* HAVE_INLINE_ASM */
+#ਜੇ_ਅੰਤ /* HAVE_INLINE_ASM */
 
-#endif /* AVUTIL_AARCH64_TIMER_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_AARCH64_TIMER_H */

@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
 
-#include "libavutil/iamf.h"
-#include "libavutil/log.h"
-#include "libavutil/opt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/iamf.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/log.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/opt.h"
 
-static void print_class_tree(const AVClass *class, int depth)
+ਸਥਿਰ ਖਾਲੀ print_class_ਰੁੱਖ(ਅਚਲ AVClass *class, ਪੂਰਨ ਡੂੰਘਾਈ)
 {
-    const AVClass *child;
-    void *iter = NULL;
+    ਅਚਲ AVClass *ਬੱਚਾ;
+    ਖਾਲੀ *iter = ਨਿਰਾ;
 
-    printf("%*s%s\n", depth * 2, "", class->class_name);
-    if (depth >= 8)
-        return;
-    while ((child = av_opt_child_class_iterate(class, &iter)))
-        print_class_tree(child, depth + 1);
+    ਲਿਖੋ("%*s%s\n", ਡੂੰਘਾਈ * 2, "", class->class_name);
+    ਜੇ (ਡੂੰਘਾਈ >= 8)
+        ਵਾਪਸ;
+    ਜਦੋਂ ((ਬੱਚਾ = av_opt_ਬੱਚਾ_class_iterate(class, &iter)))
+        print_class_ਰੁੱਖ(ਬੱਚਾ, ਡੂੰਘਾਈ + 1);
 }
 
-static void find_option(const AVClass *class, const char *name)
+ਸਥਿਰ ਖਾਲੀ ਲੱਭੋ_option(ਅਚਲ AVClass *class, ਅਚਲ ਅੱਖਰ *name)
 {
-    const AVOption *o = av_opt_find2(&class, name, NULL, 0,
-                                     AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ,
-                                     NULL);
-    printf("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
+    ਅਚਲ AVOption *o = av_opt_find2(&class, name, ਨਿਰਾ, 0,
+                                     AV_OPT_ਖੋਜ_CHILDREN | AV_OPT_ਖੋਜ_FAKE_OBJ,
+                                     ਨਿਰਾ);
+    ਲਿਖੋ("%s: %s %s\n", class->class_name, name, o ? "found" : "not found");
 }
 
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
-    const AVClass *audio_element = av_iamf_audio_element_get_class();
-    const AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
-    const AVClass *param_definition = av_iamf_param_definition_get_class();
+    ਅਚਲ AVClass *audio_element = av_iamf_audio_element_get_class();
+    ਅਚਲ AVClass *mix_presentation = av_iamf_mix_presentation_get_class();
+    ਅਚਲ AVClass *param_definition = av_iamf_param_definition_get_class();
 
-    printf("Testing av_opt_child_class_iterate()\n");
-    print_class_tree(audio_element, 0);
-    print_class_tree(mix_presentation, 0);
-    print_class_tree(param_definition, 0);
+    ਲਿਖੋ("Testing av_opt_child_class_iterate()\n");
+    print_class_ਰੁੱਖ(audio_element, 0);
+    print_class_ਰੁੱਖ(mix_presentation, 0);
+    print_class_ਰੁੱਖ(param_definition, 0);
 
-    printf("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
-    find_option(audio_element, "default_w");
-    find_option(audio_element, "ch_layout");
-    find_option(mix_presentation, "annotations");
-    find_option(mix_presentation, "default_mix_gain");
-    find_option(mix_presentation, "headphones_rendering_mode");
-    find_option(mix_presentation, "sound_system");
-    find_option(mix_presentation, "parameter_rate");
-    find_option(param_definition, "parameter_rate");
-    find_option(param_definition, "subblock_duration");
+    ਲਿਖੋ("\nTesting av_opt_find2() with AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ\n");
+    ਲੱਭੋ_option(audio_element, "default_w");
+    ਲੱਭੋ_option(audio_element, "ch_layout");
+    ਲੱਭੋ_option(mix_presentation, "annotations");
+    ਲੱਭੋ_option(mix_presentation, "default_mix_gain");
+    ਲੱਭੋ_option(mix_presentation, "headphones_rendering_mode");
+    ਲੱਭੋ_option(mix_presentation, "sound_system");
+    ਲੱਭੋ_option(mix_presentation, "parameter_rate");
+    ਲੱਭੋ_option(param_definition, "parameter_rate");
+    ਲੱਭੋ_option(param_definition, "subblock_duration");
 
-    return 0;
+    ਵਾਪਸ 0;
 }

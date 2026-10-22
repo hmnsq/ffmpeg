@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AES_INTERNAL_H
-#define AVUTIL_AES_INTERNAL_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_AES_ਅੰਦਰੂਨੀ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_AES_ਅੰਦਰੂਨੀ_H
 
-#include "mem_internal.h"
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
-typedef union {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਸੰਘ {
     uint64_t u64[2];
     uint32_t u32[4];
     uint8_t u8x4[4][4];
     uint8_t u8[16];
-} av_aes_block;
+} av_aes_ਖੰਡ;
 
-typedef struct AVAES {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVAES {
     // Note: round_key[16] is accessed in the init code, but this only
     // overwrites state, which does not matter (see also commit ba554c0).
-    DECLARE_ALIGNED(16, av_aes_block, round_key)[15];
-    DECLARE_ALIGNED(16, av_aes_block, state)[2];
-    int rounds;
-    void (*crypt)(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int rounds);
+    DECLARE_ALIGNED(16, av_aes_ਖੰਡ, ਗੇੜਾ_ਕੁੰਜੀ)[15];
+    DECLARE_ALIGNED(16, av_aes_ਖੰਡ, state)[2];
+    ਪੂਰਨ ਗੇੜ;
+    ਖਾਲੀ (*crypt)(ਬਣਤਰ AVAES *a, uint8_t *dst, ਅਚਲ uint8_t *src, ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ ਗੇੜ);
 } AVAES;
 
-void ff_init_aes_x86(AVAES *a, int decrypt);
-void ff_init_aes_aarch64(AVAES *a, int decrypt);
+ਖਾਲੀ ff_init_aes_x86(AVAES *a, ਪੂਰਨ decrypt);
+ਖਾਲੀ ff_init_aes_aarch64(AVAES *a, ਪੂਰਨ decrypt);
 
-#endif /* AVUTIL_AES_INTERNAL_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_AES_INTERNAL_H */

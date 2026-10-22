@@ -24,10 +24,10 @@
  * Libavutil version macros
  */
 
-#ifndef AVUTIL_VERSION_H
-#define AVUTIL_VERSION_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_ਸੰਸਕਰਣ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_ਸੰਸਕਰਣ_H
 
-#include "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
 
 /**
  * @addtogroup version_utils
@@ -53,17 +53,17 @@
  * @{
  */
 
-#define AV_VERSION_INT(a, b, c) ((a)<<16 | (b)<<8 | (c))
-#define AV_VERSION_DOT(a, b, c) a ##.## b ##.## c
-#define AV_VERSION(a, b, c) AV_VERSION_DOT(a, b, c)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_ਸੰਸਕਰਣ_INT(a, b, c) ((a)<<16 | (b)<<8 | (c))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_ਸੰਸਕਰਣ_DOT(a, b, c) a ##.## b ##.## c
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_ਸੰਸਕਰਣ(a, b, c) AV_ਸੰਸਕਰਣ_DOT(a, b, c)
 
 /**
  * Extract version components from the full ::AV_VERSION_INT int as returned
  * by functions like ::avformat_version() and ::avcodec_version()
  */
-#define AV_VERSION_MAJOR(a) ((a) >> 16)
-#define AV_VERSION_MINOR(a) (((a) & 0x00FF00) >> 8)
-#define AV_VERSION_MICRO(a) ((a) & 0xFF)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_ਸੰਸਕਰਣ_MAJOR(a) ((a) >> 16)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_ਸੰਸਕਰਣ_MINOR(a) (((a) & 0x00FF00) >> 8)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_ਸੰਸਕਰਣ_MICRO(a) ((a) & 0xFF)
 
 /**
  * @}
@@ -78,19 +78,19 @@
  * @{
  */
 
-#define LIBAVUTIL_VERSION_MAJOR  61
-#define LIBAVUTIL_VERSION_MINOR  16
-#define LIBAVUTIL_VERSION_MICRO 100
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LIBAVUTIL_ਸੰਸਕਰਣ_MAJOR  61
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LIBAVUTIL_ਸੰਸਕਰਣ_MINOR  16
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LIBAVUTIL_ਸੰਸਕਰਣ_MICRO 100
 
-#define LIBAVUTIL_VERSION_INT   AV_VERSION_INT(LIBAVUTIL_VERSION_MAJOR, \
-                                               LIBAVUTIL_VERSION_MINOR, \
-                                               LIBAVUTIL_VERSION_MICRO)
-#define LIBAVUTIL_VERSION       AV_VERSION(LIBAVUTIL_VERSION_MAJOR,     \
-                                           LIBAVUTIL_VERSION_MINOR,     \
-                                           LIBAVUTIL_VERSION_MICRO)
-#define LIBAVUTIL_BUILD         LIBAVUTIL_VERSION_INT
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LIBAVUTIL_ਸੰਸਕਰਣ_INT   AV_ਸੰਸਕਰਣ_INT(LIBAVUTIL_ਸੰਸਕਰਣ_MAJOR, \
+                                               LIBAVUTIL_ਸੰਸਕਰਣ_MINOR, \
+                                               LIBAVUTIL_ਸੰਸਕਰਣ_MICRO)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LIBAVUTIL_ਸੰਸਕਰਣ       AV_ਸੰਸਕਰਣ(LIBAVUTIL_ਸੰਸਕਰਣ_MAJOR,     \
+                                           LIBAVUTIL_ਸੰਸਕਰਣ_MINOR,     \
+                                           LIBAVUTIL_ਸੰਸਕਰਣ_MICRO)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LIBAVUTIL_BUILD         LIBAVUTIL_ਸੰਸਕਰਣ_INT
 
-#define LIBAVUTIL_IDENT         "Lavu" AV_STRINGIFY(LIBAVUTIL_VERSION)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LIBAVUTIL_IDENT         "Lavu" AV_STRINGIFY(LIBAVUTIL_ਸੰਸਕਰਣ)
 
 /**
  * @defgroup lavu_depr_guards Deprecation Guards
@@ -105,15 +105,15 @@
  * @{
  */
 
-#define FF_API_CPU_FLAG_FORCE           (LIBAVUTIL_VERSION_MAJOR < 62)
-#define FF_API_DOVI_L11_INVALID_PROPS   (LIBAVUTIL_VERSION_MAJOR < 62)
-#define FF_API_ASSERT_FPU               (LIBAVUTIL_VERSION_MAJOR < 62)
-#define FF_API_VULKAN_SYNC_QUEUES       (LIBAVUTIL_VERSION_MAJOR < 62)
-#define FF_API_CHANNEL_LAYOUT_BACK      (LIBAVUTIL_VERSION_MAJOR < 62)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_API_CPU_FLAG_FORCE           (LIBAVUTIL_ਸੰਸਕਰਣ_MAJOR < 62)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_API_DOVI_L11_INVALID_PROPS   (LIBAVUTIL_ਸੰਸਕਰਣ_MAJOR < 62)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_API_ASSERT_FPU               (LIBAVUTIL_ਸੰਸਕਰਣ_MAJOR < 62)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_API_VULKAN_SYNC_QUEUES       (LIBAVUTIL_ਸੰਸਕਰਣ_MAJOR < 62)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_API_CHANNEL_LAYOUT_ਪਿੱਠ      (LIBAVUTIL_ਸੰਸਕਰਣ_MAJOR < 62)
 
 /**
  * @}
  * @}
  */
 
-#endif /* AVUTIL_VERSION_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_VERSION_H */

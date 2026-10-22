@@ -16,31 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
 
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#include "libavutil/cpu.h"
-#include "libavutil/avstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/avstring.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#elif ARCH_RISCV
-#include "libavutil/riscv/cpu.h"
-#endif
+#ਜੇ ARCH_AARCH64
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/aarch64/cpu.h"
+#ਜਾਂਜੇ ARCH_RISCV
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/riscv/cpu.h"
+#ਜੇ_ਅੰਤ
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if !HAVE_GETOPT
-#include "compat/getopt.c"
-#endif
+#ਜੇ HAVE_UNISTD_H
+#ਅਨ੍ਤਰ੍ਭਾਵ <unistd.h>
+#ਜੇ_ਅੰਤ
+#ਜੇ !HAVE_GETOPT
+#ਅਨ੍ਤਰ੍ਭਾਵ "compat/getopt.c"
+#ਜੇ_ਅੰਤ
 
-static const struct {
-    int flag;
-    const char *name;
+ਸਥਿਰ ਅਚਲ ਬਣਤਰ {
+    ਪੂਰਨ flag;
+    ਅਚਲ ਅੱਖਰ *name;
 } cpu_flag_tab[] = {
-#if   ARCH_AARCH64
+#ਜੇ   ARCH_AARCH64
     { AV_CPU_FLAG_ARMV8,     "armv8"      },
     { AV_CPU_FLAG_NEON,      "neon"       },
     { AV_CPU_FLAG_VFP,       "vfp"        },
@@ -50,12 +50,12 @@ static const struct {
     { AV_CPU_FLAG_SVE2,      "sve2"       },
     { AV_CPU_FLAG_SME,       "sme"        },
     { AV_CPU_FLAG_SME_I16I64, "sme_i16i64" },
-    { AV_CPU_FLAG_ARM_CRC,   "crc"        },
+    { AV_CPU_FLAG_ARM_ਚੱਕਰੀ_ਜਾਂਚ,   "crc"        },
     { AV_CPU_FLAG_SME2,      "sme2"       },
     { AV_CPU_FLAG_PMULL,     "pmull"      },
     { AV_CPU_FLAG_EOR3,      "eor3"       },
     { AV_CPU_FLAG_ARM_AES,   "aes"        },
-#elif ARCH_ARM
+#ਜਾਂਜੇ ARCH_ARM
     { AV_CPU_FLAG_ARMV5TE,   "armv5te"    },
     { AV_CPU_FLAG_ARMV6,     "armv6"      },
     { AV_CPU_FLAG_ARMV6T2,   "armv6t2"    },
@@ -64,14 +64,14 @@ static const struct {
     { AV_CPU_FLAG_VFPV3,     "vfpv3"      },
     { AV_CPU_FLAG_NEON,      "neon"       },
     { AV_CPU_FLAG_SETEND,    "setend"     },
-#elif ARCH_PPC
+#ਜਾਂਜੇ ARCH_PPC
     { AV_CPU_FLAG_ALTIVEC,   "altivec"    },
     { AV_CPU_FLAG_VSX,       "vsx"        },
     { AV_CPU_FLAG_POWER8,    "power8"     },
-#elif ARCH_MIPS
+#ਜਾਂਜੇ ARCH_MIPS
     { AV_CPU_FLAG_MMI,       "mmi"        },
     { AV_CPU_FLAG_MSA,       "msa"        },
-#elif ARCH_X86
+#ਜਾਂਜੇ ARCH_X86
     { AV_CPU_FLAG_MMX,       "mmx"        },
     { AV_CPU_FLAG_MMXEXT,    "mmxext"     },
     { AV_CPU_FLAG_SSE,       "sse"        },
@@ -99,10 +99,10 @@ static const struct {
     { AV_CPU_FLAG_AVX512,    "avx512"     },
     { AV_CPU_FLAG_AVX512ICL, "avx512icl"  },
     { AV_CPU_FLAG_SLOW_GATHER, "slowgather" },
-#elif ARCH_LOONGARCH
+#ਜਾਂਜੇ ARCH_LOONGARCH
     { AV_CPU_FLAG_LSX,       "lsx"        },
     { AV_CPU_FLAG_LASX,      "lasx"       },
-#elif ARCH_RISCV
+#ਜਾਂਜੇ ARCH_RISCV
     { AV_CPU_FLAG_RVI,       "rvi"        },
     { AV_CPU_FLAG_RVB_BASIC, "zbb"        },
     { AV_CPU_FLAG_RVB,       "rvb"        },
@@ -112,88 +112,88 @@ static const struct {
     { AV_CPU_FLAG_RVV_F64,   "zve64d"     },
     { AV_CPU_FLAG_RV_ZVBB,   "zvbb"       },
     { AV_CPU_FLAG_RV_MISALIGNED, "misaligned" },
-#elif ARCH_WASM
+#ਜਾਂਜੇ ARCH_WASM
     { AV_CPU_FLAG_SIMD128,   "simd128"    },
-#endif
+#ਜੇ_ਅੰਤ
     { 0 }
 };
 
-static void print_cpu_flags(int cpu_flags, const char *type)
+ਸਥਿਰ ਖਾਲੀ print_cpu_flags(ਪੂਰਨ cpu_flags, ਅਚਲ ਅੱਖਰ *type)
 {
-    int i;
+    ਪੂਰਨ i;
 
-    printf("cpu_flags(%s) = 0x%08X\n", type, cpu_flags);
-    printf("cpu_flags_str(%s) =", type);
-    for (i = 0; cpu_flag_tab[i].flag; i++)
-        if (cpu_flags & cpu_flag_tab[i].flag)
-            printf(" %s", cpu_flag_tab[i].name);
-    printf("\n");
+    ਲਿਖੋ("cpu_flags(%s) = 0x%08X\n", type, cpu_flags);
+    ਲਿਖੋ("cpu_flags_str(%s) =", type);
+    ਲਈ (i = 0; cpu_flag_tab[i].flag; i++)
+        ਜੇ (cpu_flags & cpu_flag_tab[i].flag)
+            ਲਿਖੋ(" %s", cpu_flag_tab[i].name);
+    ਲਿਖੋ("\n");
 }
 
 
-int main(int argc, char **argv)
+ਪੂਰਨ ਮੁੱਖ(ਪੂਰਨ argc, ਅੱਖਰ **argv)
 {
-    int cpu_flags_raw = av_get_cpu_flags();
-    int cpu_flags_eff;
-    int cpu_count = av_cpu_count();
-    const char *threads = "auto";
-    int i;
+    ਪੂਰਨ cpu_flags_raw = av_get_cpu_flags();
+    ਪੂਰਨ cpu_flags_eff;
+    ਪੂਰਨ cpu_ਗਿਣਤੀ = av_cpu_ਗਿਣਤੀ();
+    ਅਚਲ ਅੱਖਰ *ਧਾਗੇ = "auto";
+    ਪੂਰਨ i;
 
-    for(i = 0; cpu_flag_tab[i].flag; i++) {
-        unsigned tmp = 0;
-        if (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
+    ਲਈ(i = 0; cpu_flag_tab[i].flag; i++) {
+        ਬਿਨਾਨਿਸ਼ਾਨੀ tmp = 0;
+        ਜੇ (av_parse_cpu_caps(&tmp, cpu_flag_tab[i].name) < 0) {
             fprintf(stderr, "Table missing %s\n", cpu_flag_tab[i].name);
-            return 4;
+            ਵਾਪਸ 4;
         }
     }
 
-    if (cpu_flags_raw < 0)
-        return 1;
+    ਜੇ (cpu_flags_raw < 0)
+        ਵਾਪਸ 1;
 
-    for (;;) {
-        int c = getopt(argc, argv, "c:t:");
-        if (c == -1)
-            break;
-        switch (c) {
-        case 'c':
+    ਲਈ (;;) {
+        ਪੂਰਨ c = getopt(argc, argv, "c:t:");
+        ਜੇ (c == -1)
+            ਰੋਕੋ;
+        ਚੋਣ (c) {
+        ਹਾਲਤ 'c':
         {
-            unsigned flags = av_get_cpu_flags();
-            if (av_parse_cpu_caps(&flags, optarg) < 0)
-                return 2;
+            ਬਿਨਾਨਿਸ਼ਾਨੀ flags = av_get_cpu_flags();
+            ਜੇ (av_parse_cpu_caps(&flags, optarg) < 0)
+                ਵਾਪਸ 2;
 
             av_force_cpu_flags(flags);
-            break;
+            ਰੋਕੋ;
         }
-        case 't':
+        ਹਾਲਤ 't':
         {
-            threads = optarg;
+            ਧਾਗੇ = optarg;
         }
         }
     }
 
     cpu_flags_eff = av_get_cpu_flags();
 
-    if (cpu_flags_eff < 0)
-        return 3;
+    ਜੇ (cpu_flags_eff < 0)
+        ਵਾਪਸ 3;
 
     print_cpu_flags(cpu_flags_raw, "raw");
     print_cpu_flags(cpu_flags_eff, "effective");
-    printf("threads = %s (cpu_count = %d)\n", threads, cpu_count);
-#if ARCH_AARCH64 && HAVE_SVE
-    if (cpu_flags_raw & AV_CPU_FLAG_SVE)
-        printf("sve_vector_length = %d\n", 8 * ff_aarch64_sve_length());
-#endif
-#if ARCH_AARCH64 && HAVE_SME
-    if (cpu_flags_raw & AV_CPU_FLAG_SME)
-        printf("sme_vector_length = %d\n", 8 * ff_aarch64_sme_length());
-#endif
-#if ARCH_RISCV && HAVE_RVV
-    if (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
-        size_t bytes = ff_get_rv_vlenb();
+    ਲਿਖੋ("threads = %s (cpu_count = %d)\n", ਧਾਗੇ, cpu_ਗਿਣਤੀ);
+#ਜੇ ARCH_AARCH64 && HAVE_SVE
+    ਜੇ (cpu_flags_raw & AV_CPU_FLAG_SVE)
+        ਲਿਖੋ("sve_vector_length = %d\n", 8 * ff_aarch64_sve_ਲੰਮਾਈ());
+#ਜੇ_ਅੰਤ
+#ਜੇ ARCH_AARCH64 && HAVE_SME
+    ਜੇ (cpu_flags_raw & AV_CPU_FLAG_SME)
+        ਲਿਖੋ("sme_vector_length = %d\n", 8 * ff_aarch64_sme_ਲੰਮਾਈ());
+#ਜੇ_ਅੰਤ
+#ਜੇ ARCH_RISCV && HAVE_RVV
+    ਜੇ (cpu_flags_raw & AV_CPU_FLAG_RVV_I32) {
+        size_t ਬਾਈਟਾਂ = ff_get_rv_vlenb();
 
-        printf("rv_vlenb = %zu (%zu bits)\n", bytes, 8 * bytes);
+        ਲਿਖੋ("rv_vlenb = %zu (%zu bits)\n", ਬਾਈਟਾਂ, 8 * ਬਾਈਟਾਂ);
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    return 0;
+    ਵਾਪਸ 0;
 }

@@ -18,249 +18,249 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_INTMATH_H
-#define AVUTIL_RISCV_INTMATH_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_RISCV_INTMATH_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_RISCV_INTMATH_H
 
-#include <stdint.h>
-#include <math.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <math.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/riscv/cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/riscv/cpu.h"
 
 /*
  * The compiler is forced to sign-extend the result anyhow, so it is faster to
  * compute it explicitly and use it.
  */
-#define av_clip_int8 av_clip_int8_rvi
-static av_always_inline av_const int8_t av_clip_int8_rvi(int a)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_clip_int8 av_clip_int8_rvi
+ਸਥਿਰ av_always_inline av_const int8_t av_clip_int8_rvi(ਪੂਰਨ a)
 {
-    union { uint8_t u; int8_t s; } u = { .u = a };
+    ਸੰਘ { uint8_t u; int8_t s; } u = { .u = a };
 
-    if (a != u.s)
+    ਜੇ (a != u.s)
         a = ((a >> 31) ^ 0x7F);
-    return a;
+    ਵਾਪਸ a;
 }
 
-#define av_clip_int16 av_clip_int16_rvi
-static av_always_inline av_const int16_t av_clip_int16_rvi(int a)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_clip_int16 av_clip_int16_rvi
+ਸਥਿਰ av_always_inline av_const int16_t av_clip_int16_rvi(ਪੂਰਨ a)
 {
-    union { uint16_t u; int16_t s; } u = { .u = a };
+    ਸੰਘ { uint16_t u; int16_t s; } u = { .u = a };
 
-    if (a != u.s)
+    ਜੇ (a != u.s)
         a = ((a >> 31) ^ 0x7FFF);
-    return a;
+    ਵਾਪਸ a;
 }
 
-#define av_clipl_int32 av_clipl_int32_rvi
-static av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_clipl_int32 av_clipl_int32_rvi
+ਸਥਿਰ av_always_inline av_const int32_t av_clipl_int32_rvi(int64_t a)
 {
-    union { uint32_t u; int32_t s; } u = { .u = a };
+    ਸੰਘ { uint32_t u; int32_t s; } u = { .u = a };
 
-    if (a != u.s)
+    ਜੇ (a != u.s)
         a = ((a >> 63) ^ 0x7FFFFFFF);
-    return a;
+    ਵਾਪਸ a;
 }
 
-#define av_clip_intp2 av_clip_intp2_rvi
-static av_always_inline av_const int av_clip_intp2_rvi(int a, int p)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_clip_intp2 av_clip_intp2_rvi
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ av_clip_intp2_rvi(ਪੂਰਨ a, ਪੂਰਨ p)
 {
-    const int shift = 31 - p;
-    int b = ((int)(((unsigned)a) << shift)) >> shift;
+    ਅਚਲ ਪੂਰਨ ਖਿਸਕਾਓ = 31 - p;
+    ਪੂਰਨ b = ((ਪੂਰਨ)(((ਬਿਨਾਨਿਸ਼ਾਨੀ)a) << ਖਿਸਕਾਓ)) >> ਖਿਸਕਾਓ;
 
-    if (a != b)
+    ਜੇ (a != b)
         b = (a >> 31) ^ ((1 << p) - 1);
-    return b;
+    ਵਾਪਸ b;
 }
 
-#if defined (__riscv_f) || defined (__riscv_zfinx)
-#define av_clipf av_clipf_rvf
-static av_always_inline av_const float av_clipf_rvf(float a, float min,
-                                                    float max)
+#ਜੇ defined (__riscv_f) || defined (__riscv_zfinx)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_clipf av_clipf_rvf
+ਸਥਿਰ av_always_inline av_const ਦਸ਼ਮਲਵ av_clipf_rvf(ਦਸ਼ਮਲਵ a, ਦਸ਼ਮਲਵ min,
+                                                    ਦਸ਼ਮਲਵ max)
 {
-    return fminf(fmaxf(a, min), max);
+    ਵਾਪਸ fminf(fmaxf(a, min), max);
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-#if defined (__riscv_d) || defined (__riscv_zdinx)
-#define av_clipd av_clipd_rvd
-static av_always_inline av_const double av_clipd_rvd(double a, double min,
-                                                     double max)
+#ਜੇ defined (__riscv_d) || defined (__riscv_zdinx)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_clipd av_clipd_rvd
+ਸਥਿਰ av_always_inline av_const ਦੁੱਗਣਾ av_clipd_rvd(ਦੁੱਗਣਾ a, ਦੁੱਗਣਾ min,
+                                                     ਦੁੱਗਣਾ max)
 {
-    return fmin(fmax(a, min), max);
+    ਵਾਪਸ fmin(fmax(a, min), max);
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-#if defined (__GNUC__) || defined (__clang__)
-static inline av_const int ff_ctz_rv(int x)
+#ਜੇ defined (__GNUC__) || defined (__clang__)
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ ff_ctz_rv(ਪੂਰਨ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ਜੇ HAVE_RV && !defined(__riscv_zbb)
+    ਜੇ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ਪੂਰਨ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ਜੇ __riscv_xlen >= 64
             "ctzw    %0, %1\n"
-#else
+#ਨਹੀਂਤਾਂ
             "ctz     %0, %1\n"
-#endif
+#ਜੇ_ਅੰਤ
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        ਜੇ (y > 32)
             __builtin_unreachable();
-        return y;
+        ਵਾਪਸ y;
     }
-#endif
-    return __builtin_ctz(x);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ __builtin_ctz(x);
 }
-#define ff_ctz ff_ctz_rv
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_ctz ff_ctz_rv
 
-static inline av_const int ff_ctzll_rv(long long x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ ff_ctzll_rv(ਲੰਮਾ ਲੰਮਾ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
-    if (!__builtin_constant_p(x) &&
+#ਜੇ HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen == 64
+    ਜੇ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ਪੂਰਨ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "ctz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        ਜੇ (y > 64)
             __builtin_unreachable();
-        return y;
+        ਵਾਪਸ y;
     }
-#endif
-    return __builtin_ctzll(x);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ __builtin_ctzll(x);
 }
-#define ff_ctzll ff_ctzll_rv
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_ctzll ff_ctzll_rv
 
-static inline av_const int ff_clz_rv(int x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ ff_clz_rv(ਪੂਰਨ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ਜੇ HAVE_RV && !defined(__riscv_zbb)
+    ਜੇ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ਪੂਰਨ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ਜੇ __riscv_xlen >= 64
             "clzw    %0, %1\n"
-#else
+#ਨਹੀਂਤਾਂ
             "clz     %0, %1\n"
-#endif
+#ਜੇ_ਅੰਤ
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        ਜੇ (y > 32)
             __builtin_unreachable();
-        return y;
+        ਵਾਪਸ y;
     }
-#endif
-    return __builtin_clz(x);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ __builtin_clz(x);
 }
-#define ff_clz ff_clz_rv
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_clz ff_clz_rv
 
-#if __riscv_xlen == 64
-static inline av_const int ff_clzll_rv(long long x)
+#ਜੇ __riscv_xlen == 64
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ ff_clzll_rv(ਲੰਮਾ ਲੰਮਾ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ਜੇ HAVE_RV && !defined(__riscv_zbb)
+    ਜੇ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ਪੂਰਨ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "clz     %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        ਜੇ (y > 64)
             __builtin_unreachable();
-        return y;
+        ਵਾਪਸ y;
     }
-#endif
-    return __builtin_clzll(x);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ __builtin_clzll(x);
 }
-#define ff_clz ff_clz_rv
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_clz ff_clz_rv
+#ਜੇ_ਅੰਤ
 
-static inline av_const int ff_log2_rv(unsigned int x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ ff_log2_rv(ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ x)
 {
-    return 31 - ff_clz_rv(x | 1);
+    ਵਾਪਸ 31 - ff_clz_rv(x | 1);
 }
-#define ff_log2 ff_log2_rv
-#define ff_log2_16bit ff_log2_rv
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_log2 ff_log2_rv
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_log2_16bit ff_log2_rv
 
-static inline av_const int av_popcount_rv(unsigned int x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ av_popcount_rv(ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ਜੇ HAVE_RV && !defined(__riscv_zbb)
+    ਜੇ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ਪੂਰਨ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ਜੇ __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#ਨਹੀਂਤਾਂ
             "cpop    %0, %1\n"
-#endif
+#ਜੇ_ਅੰਤ
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 32)
+        ਜੇ (y > 32)
             __builtin_unreachable();
-        return y;
+        ਵਾਪਸ y;
     }
-#endif
-    return __builtin_popcount(x);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ __builtin_popcount(x);
 }
-#define av_popcount av_popcount_rv
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_popcount av_popcount_rv
 
-static inline av_const int av_popcount64_rv(uint64_t x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ av_popcount64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
-    if (!__builtin_constant_p(x) &&
+#ਜੇ HAVE_RV && !defined(__riscv_zbb) && __riscv_xlen >= 64
+    ਜੇ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ਪੂਰਨ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
             "cpop    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        if (y > 64)
+        ਜੇ (y > 64)
             __builtin_unreachable();
-        return y;
+        ਵਾਪਸ y;
     }
-#endif
-    return __builtin_popcountl(x);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ __builtin_popcountl(x);
 }
-#define av_popcount64 av_popcount64_rv
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_popcount64 av_popcount64_rv
 
-static inline av_const int av_parity_rv(unsigned int x)
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ av_parity_rv(ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ਜੇ HAVE_RV && !defined(__riscv_zbb)
+    ਜੇ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), true)) {
-        int y;
+        ਪੂਰਨ y;
 
         __asm__ (
             ".option push\n"
             ".option arch, +zbb\n"
-#if __riscv_xlen >= 64
+#ਜੇ __riscv_xlen >= 64
             "cpopw   %0, %1\n"
-#else
+#ਨਹੀਂਤਾਂ
             "cpop    %0, %1\n"
-#endif
+#ਜੇ_ਅੰਤ
             ".option pop" : "=r" (y) : "r" (x));
-        return y & 1;
+        ਵਾਪਸ y & 1;
     }
-#endif
-    return __builtin_parity(x);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ __builtin_parity(x);
 }
-#define av_parity av_parity_rv
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_parity av_parity_rv
+#ਜੇ_ਅੰਤ
 
-#endif /* AVUTIL_RISCV_INTMATH_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_RISCV_INTMATH_H */

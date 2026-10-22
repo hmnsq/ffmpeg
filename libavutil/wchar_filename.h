@@ -16,85 +16,85 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_WCHAR_FILENAME_H
-#define AVUTIL_WCHAR_FILENAME_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_WCHAR_FILENAME_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_WCHAR_FILENAME_H
 
-#ifdef _WIN32
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ _WIN32
 
-#include <errno.h>
-#include <stddef.h>
-#include <windows.h>
-#include "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <errno.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <windows.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
 
-av_warn_unused_result
-static inline int utf8towchar(const char *filename_utf8, wchar_t **filename_w)
+av_warn_ਅਣਵਰਤਿਆ_ਨਤੀਜਾ
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ utf8towchar(ਅਚਲ ਅੱਖਰ *filename_utf8, wchar_t **filename_w)
 {
-    int num_chars;
-    num_chars = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filename_utf8, -1, NULL, 0);
-    if (num_chars <= 0) {
-        *filename_w = NULL;
+    ਪੂਰਨ ਅੰਕ_chars;
+    ਅੰਕ_chars = Multi_Byte_ਮੰਜ਼ਿਲ_Wide_Char(CP_UTF8, MB_ERR_INVALID_CHARS, filename_utf8, -1, ਨਿਰਾ, 0);
+    ਜੇ (ਅੰਕ_chars <= 0) {
+        *filename_w = ਨਿਰਾ;
         errno = EINVAL;
-        return -1;
+        ਵਾਪਸ -1;
     }
-    *filename_w = (wchar_t *)av_calloc(num_chars, sizeof(wchar_t));
-    if (!*filename_w) {
+    *filename_w = (wchar_t *)av_calloc(ਅੰਕ_chars, ਆਕਾਰ(wchar_t));
+    ਜੇ (!*filename_w) {
         errno = ENOMEM;
-        return -1;
+        ਵਾਪਸ -1;
     }
-    MultiByteToWideChar(CP_UTF8, 0, filename_utf8, -1, *filename_w, num_chars);
-    return 0;
+    Multi_Byte_ਮੰਜ਼ਿਲ_Wide_Char(CP_UTF8, 0, filename_utf8, -1, *filename_w, ਅੰਕ_chars);
+    ਵਾਪਸ 0;
 }
 
-av_warn_unused_result
-static inline int wchartocp(unsigned int code_page, const wchar_t *filename_w,
-                            char **filename)
+av_warn_ਅਣਵਰਤਿਆ_ਨਤੀਜਾ
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ wchartocp(ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ ਕੋਡ_ਪੰਨਾ, ਅਚਲ wchar_t *filename_w,
+                            ਅੱਖਰ **filename)
 {
-    DWORD flags = code_page == CP_UTF8 ? WC_ERR_INVALID_CHARS : 0;
-    int num_chars = WideCharToMultiByte(code_page, flags, filename_w, -1,
-                                        NULL, 0, NULL, NULL);
-    if (num_chars <= 0) {
-        *filename = NULL;
+    DWORD flags = ਕੋਡ_ਪੰਨਾ == CP_UTF8 ? WC_ERR_INVALID_CHARS : 0;
+    ਪੂਰਨ ਅੰਕ_chars = Wide_Char_ਮੰਜ਼ਿਲ_Multi_Byte(ਕੋਡ_ਪੰਨਾ, flags, filename_w, -1,
+                                        ਨਿਰਾ, 0, ਨਿਰਾ, ਨਿਰਾ);
+    ਜੇ (ਅੰਕ_chars <= 0) {
+        *filename = ਨਿਰਾ;
         errno = EINVAL;
-        return -1;
+        ਵਾਪਸ -1;
     }
-    *filename = (char *)av_malloc_array(num_chars, sizeof **filename);
-    if (!*filename) {
+    *filename = (ਅੱਖਰ *)av_malloc_array(ਅੰਕ_chars, ਆਕਾਰ **filename);
+    ਜੇ (!*filename) {
         errno = ENOMEM;
-        return -1;
+        ਵਾਪਸ -1;
     }
-    WideCharToMultiByte(code_page, flags, filename_w, -1,
-                        *filename, num_chars, NULL, NULL);
-    return 0;
+    Wide_Char_ਮੰਜ਼ਿਲ_Multi_Byte(ਕੋਡ_ਪੰਨਾ, flags, filename_w, -1,
+                        *filename, ਅੰਕ_chars, ਨਿਰਾ, ਨਿਰਾ);
+    ਵਾਪਸ 0;
 }
 
-av_warn_unused_result
-static inline int wchartoutf8(const wchar_t *filename_w, char **filename)
+av_warn_ਅਣਵਰਤਿਆ_ਨਤੀਜਾ
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ wchartoutf8(ਅਚਲ wchar_t *filename_w, ਅੱਖਰ **filename)
 {
-    return wchartocp(CP_UTF8, filename_w, filename);
+    ਵਾਪਸ wchartocp(CP_UTF8, filename_w, filename);
 }
 
-av_warn_unused_result
-static inline int wchartoansi(const wchar_t *filename_w, char **filename)
+av_warn_ਅਣਵਰਤਿਆ_ਨਤੀਜਾ
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ wchartoansi(ਅਚਲ wchar_t *filename_w, ਅੱਖਰ **filename)
 {
-    return wchartocp(CP_ACP, filename_w, filename);
+    ਵਾਪਸ wchartocp(CP_ACP, filename_w, filename);
 }
 
-av_warn_unused_result
-static inline int utf8toansi(const char *filename_utf8, char **filename)
+av_warn_ਅਣਵਰਤਿਆ_ਨਤੀਜਾ
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ utf8toansi(ਅਚਲ ਅੱਖਰ *filename_utf8, ਅੱਖਰ **filename)
 {
-    wchar_t *filename_w = NULL;
-    int ret = -1;
-    if (utf8towchar(filename_utf8, &filename_w))
-        return -1;
+    wchar_t *filename_w = ਨਿਰਾ;
+    ਪੂਰਨ ret = -1;
+    ਜੇ (utf8towchar(filename_utf8, &filename_w))
+        ਵਾਪਸ -1;
 
-    if (!filename_w) {
-        *filename = NULL;
-        return 0;
+    ਜੇ (!filename_w) {
+        *filename = ਨਿਰਾ;
+        ਵਾਪਸ 0;
     }
 
     ret = wchartoansi(filename_w, filename);
     av_free(filename_w);
-    return ret;
+    ਵਾਪਸ ret;
 }
 
 /**
@@ -102,12 +102,12 @@ static inline int utf8toansi(const char *filename_utf8, char **filename)
  * see .NET6: PathInternal.IsExtended()
  * https://github.com/dotnet/runtime/blob/9260c249140ef90b4299d0fe1aa3037e25228518/src/libraries/Common/src/System/IO/PathInternal.Windows.cs#L165
  */
-static inline int path_is_extended(const wchar_t *path)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ਰਸਤਾ_is_extended(ਅਚਲ wchar_t *ਰਸਤਾ)
 {
-    if (path[0] == L'\\' && (path[1] == L'\\' || path[1] == L'?') && path[2] == L'?' && path[3] == L'\\')
-        return 1;
+    ਜੇ (ਰਸਤਾ[0] == L'\\' && (ਰਸਤਾ[1] == L'\\' || ਰਸਤਾ[1] == L'?') && ਰਸਤਾ[2] == L'?' && ਰਸਤਾ[3] == L'\\')
+        ਵਾਪਸ 1;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
 /**
@@ -116,12 +116,12 @@ static inline int path_is_extended(const wchar_t *path)
  * we don't check forward slashes and extended paths (as already done)
  * https://github.com/dotnet/runtime/blob/9260c249140ef90b4299d0fe1aa3037e25228518/src/libraries/Common/src/System/IO/PathInternal.Windows.cs#L132
  */
-static inline int path_is_device_path(const wchar_t *path)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ਰਸਤਾ_is_device_ਰਸਤਾ(ਅਚਲ wchar_t *ਰਸਤਾ)
 {
-    if (path[0] == L'\\' && path[1] == L'\\' && path[2] == L'.' && path[3] == L'\\')
-        return 1;
+    ਜੇ (ਰਸਤਾ[0] == L'\\' && ਰਸਤਾ[1] == L'\\' && ਰਸਤਾ[2] == L'.' && ਰਸਤਾ[3] == L'\\')
+        ਵਾਪਸ 1;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
 /**
@@ -129,34 +129,34 @@ static inline int path_is_device_path(const wchar_t *path)
  * see .NET6: PathHelper.GetFullPathName()
  * https://github.com/dotnet/runtime/blob/2a99e18eedabcf1add064c099da59d9301ce45e0/src/libraries/System.Private.CoreLib/src/System/IO/PathHelper.Windows.cs#L70
  */
-static inline int get_full_path_name(wchar_t **ppath_w)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ get_ਭਰਿਆ_ਰਸਤਾ_name(wchar_t **ppath_w)
 {
-    int num_chars;
-    wchar_t *temp_w;
+    ਪੂਰਨ ਅੰਕ_chars;
+    wchar_t *ਆਰਜ਼ੀ_w;
 
-    num_chars = GetFullPathNameW(*ppath_w, 0, NULL, NULL);
-    if (num_chars <= 0) {
+    ਅੰਕ_chars = Get_ਭਰਿਆ_ਰਸਤਾ_Name_W(*ppath_w, 0, ਨਿਰਾ, ਨਿਰਾ);
+    ਜੇ (ਅੰਕ_chars <= 0) {
         errno = EINVAL;
-        return -1;
+        ਵਾਪਸ -1;
     }
 
-    temp_w = (wchar_t *)av_calloc(num_chars, sizeof(wchar_t));
-    if (!temp_w) {
+    ਆਰਜ਼ੀ_w = (wchar_t *)av_calloc(ਅੰਕ_chars, ਆਕਾਰ(wchar_t));
+    ਜੇ (!ਆਰਜ਼ੀ_w) {
         errno = ENOMEM;
-        return -1;
+        ਵਾਪਸ -1;
     }
 
-    num_chars = GetFullPathNameW(*ppath_w, num_chars, temp_w, NULL);
-    if (num_chars <= 0) {
-        av_free(temp_w);
+    ਅੰਕ_chars = Get_ਭਰਿਆ_ਰਸਤਾ_Name_W(*ppath_w, ਅੰਕ_chars, ਆਰਜ਼ੀ_w, ਨਿਰਾ);
+    ਜੇ (ਅੰਕ_chars <= 0) {
+        av_free(ਆਰਜ਼ੀ_w);
         errno = EINVAL;
-        return -1;
+        ਵਾਪਸ -1;
     }
 
     av_freep(ppath_w);
-    *ppath_w = temp_w;
+    *ppath_w = ਆਰਜ਼ੀ_w;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
 /**
@@ -166,12 +166,12 @@ static inline int get_full_path_name(wchar_t **ppath_w)
  * see .NET6: PathHelper.Normalize()
  * https://github.com/dotnet/runtime/blob/2a99e18eedabcf1add064c099da59d9301ce45e0/src/libraries/System.Private.CoreLib/src/System/IO/PathHelper.Windows.cs#L25
  */
-static inline int path_normalize(wchar_t **ppath_w)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ਰਸਤਾ_normalize(wchar_t **ppath_w)
 {
-    int ret;
+    ਪੂਰਨ ret;
 
-    if ((ret = get_full_path_name(ppath_w)) < 0)
-        return ret;
+    ਜੇ ((ret = get_ਭਰਿਆ_ਰਸਤਾ_name(ppath_w)) < 0)
+        ਵਾਪਸ ret;
 
     /* What .NET does at this point is to call PathHelper.TryExpandShortFileName()
      * in case the path contains a '~' character.
@@ -179,7 +179,7 @@ static inline int path_normalize(wchar_t **ppath_w)
      * for presentation, and the extended path prefix works with 8.3 path
      * components as well
      */
-    return 0;
+    ਵਾਪਸ 0;
 }
 
 /**
@@ -191,45 +191,45 @@ static inline int path_normalize(wchar_t **ppath_w)
  * see .NET6: PathInternal.EnsureExtendedPrefix()
  * https://github.com/dotnet/runtime/blob/9260c249140ef90b4299d0fe1aa3037e25228518/src/libraries/Common/src/System/IO/PathInternal.Windows.cs#L107
  */
-static inline int add_extended_prefix(wchar_t **ppath_w)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ਜੋੜੋ_extended_ਅਗੇਤਰ(wchar_t **ppath_w)
 {
-    const wchar_t *unc_prefix           = L"\\\\?\\UNC\\";
-    const wchar_t *extended_path_prefix = L"\\\\?\\";
-    const wchar_t *path_w               = *ppath_w;
-    const size_t len                    = wcslen(path_w);
-    wchar_t *temp_w;
+    ਅਚਲ wchar_t *unc_ਅਗੇਤਰ           = L"\\\\?\\UNC\\";
+    ਅਚਲ wchar_t *extended_ਰਸਤਾ_ਅਗੇਤਰ = L"\\\\?\\";
+    ਅਚਲ wchar_t *ਰਸਤਾ_w               = *ppath_w;
+    ਅਚਲ size_t len                    = wcslen(ਰਸਤਾ_w);
+    wchar_t *ਆਰਜ਼ੀ_w;
 
     /* We're skipping the check IsPartiallyQualified() because
      * we expect to have called GetFullPathNameW() already. */
-    if (len < 2 || path_is_extended(*ppath_w) || path_is_device_path(*ppath_w)) {
-        return 0;
+    ਜੇ (len < 2 || ਰਸਤਾ_is_extended(*ppath_w) || ਰਸਤਾ_is_device_ਰਸਤਾ(*ppath_w)) {
+        ਵਾਪਸ 0;
     }
 
-    if (path_w[0] == L'\\' && path_w[1] == L'\\') {
+    ਜੇ (ਰਸਤਾ_w[0] == L'\\' && ਰਸਤਾ_w[1] == L'\\') {
         /* unc_prefix length is 8 plus 1 for terminating zeros,
          * we subtract 2 for the leading '\\' of the original path */
-        temp_w = (wchar_t *)av_calloc(len - 2 + 8 + 1, sizeof(wchar_t));
-        if (!temp_w) {
+        ਆਰਜ਼ੀ_w = (wchar_t *)av_calloc(len - 2 + 8 + 1, ਆਕਾਰ(wchar_t));
+        ਜੇ (!ਆਰਜ਼ੀ_w) {
             errno = ENOMEM;
-            return -1;
+            ਵਾਪਸ -1;
         }
-        wcscpy(temp_w, unc_prefix);
-        wcscat(temp_w, path_w + 2);
-    } else {
+        wcscpy(ਆਰਜ਼ੀ_w, unc_ਅਗੇਤਰ);
+        wcscat(ਆਰਜ਼ੀ_w, ਰਸਤਾ_w + 2);
+    } ਨਹੀਂਤਾਂ {
         // The length of extended_path_prefix is 4 plus 1 for terminating zeros
-        temp_w = (wchar_t *)av_calloc(len + 4 + 1, sizeof(wchar_t));
-        if (!temp_w) {
+        ਆਰਜ਼ੀ_w = (wchar_t *)av_calloc(len + 4 + 1, ਆਕਾਰ(wchar_t));
+        ਜੇ (!ਆਰਜ਼ੀ_w) {
             errno = ENOMEM;
-            return -1;
+            ਵਾਪਸ -1;
         }
-        wcscpy(temp_w, extended_path_prefix);
-        wcscat(temp_w, path_w);
+        wcscpy(ਆਰਜ਼ੀ_w, extended_ਰਸਤਾ_ਅਗੇਤਰ);
+        wcscat(ਆਰਜ਼ੀ_w, ਰਸਤਾ_w);
     }
 
     av_freep(ppath_w);
-    *ppath_w = temp_w;
+    *ppath_w = ਆਰਜ਼ੀ_w;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
 /**
@@ -242,40 +242,40 @@ static inline int add_extended_prefix(wchar_t **ppath_w)
  * see .NET6: Path.GetFullPath() and Path.GetFullPathInternal()
  * https://github.com/dotnet/runtime/blob/2a99e18eedabcf1add064c099da59d9301ce45e0/src/libraries/System.Private.CoreLib/src/System/IO/Path.Windows.cs#L126
  */
-static inline int get_extended_win32_path(const char *path, wchar_t **ppath_w)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ get_extended_win32_ਰਸਤਾ(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, wchar_t **ppath_w)
 {
-    int ret;
+    ਪੂਰਨ ret;
     size_t len;
 
-    if ((ret = utf8towchar(path, ppath_w)) < 0)
-        return ret;
+    ਜੇ ((ret = utf8towchar(ਰਸਤਾ, ppath_w)) < 0)
+        ਵਾਪਸ ret;
 
-    if (path_is_extended(*ppath_w)) {
+    ਜੇ (ਰਸਤਾ_is_extended(*ppath_w)) {
         /* Paths prefixed with '\\?\' or \??\' are considered normalized by definition.
          * Windows doesn't normalize those paths and neither should we.
          */
-        return 0;
+        ਵਾਪਸ 0;
     }
 
-    if ((ret = path_normalize(ppath_w)) < 0) {
+    ਜੇ ((ret = ਰਸਤਾ_normalize(ppath_w)) < 0) {
         av_freep(ppath_w);
-        return ret;
+        ਵਾਪਸ ret;
     }
 
     /* see .NET6: PathInternal.EnsureExtendedPrefixIfNeeded()
      * https://github.com/dotnet/runtime/blob/9260c249140ef90b4299d0fe1aa3037e25228518/src/libraries/Common/src/System/IO/PathInternal.Windows.cs#L92
      */
     len = wcslen(*ppath_w);
-    if (len >= MAX_PATH) {
-        if ((ret = add_extended_prefix(ppath_w)) < 0) {
+    ਜੇ (len >= MAX_ਰਸਤਾ) {
+        ਜੇ ((ret = ਜੋੜੋ_extended_ਅਗੇਤਰ(ppath_w)) < 0) {
             av_freep(ppath_w);
-            return ret;
+            ਵਾਪਸ ret;
         }
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-#endif
+#ਜੇ_ਅੰਤ
 
-#endif /* AVUTIL_WCHAR_FILENAME_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_WCHAR_FILENAME_H */

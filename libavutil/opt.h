@@ -19,20 +19,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_OPT_H
-#define AVUTIL_OPT_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_OPT_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_OPT_H
 
 /**
  * @file
  * AVOptions
  */
 
-#include "rational.h"
-#include "channel_layout.h"
-#include "dict.h"
-#include "log.h"
-#include "pixfmt.h"
-#include "samplefmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "rational.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "channel_layout.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "dict.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "log.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "pixfmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "samplefmt.h"
 
 /**
  * @defgroup avoptions AVOptions
@@ -247,7 +247,7 @@
  *   e.g. which av_opt_get_*() and av_opt_set_*() functions can be called, or
  *   what format will av_opt_get()/av_opt_set() expect/produce.
  */
-enum AVOptionType{
+ਗਿਣਤੀ AVOptionType{
     /**
      * Underlying C type is unsigned int.
      */
@@ -282,7 +282,7 @@ enum AVOptionType{
      * allocated with the av_malloc() family of functions. The pointer is
      * immediately followed by an int containing the array length in bytes.
      */
-    AV_OPT_TYPE_BINARY,
+    AV_OPT_TYPE_ਦੁਆਧਾਰੀ,
     /**
      * Underlying C type is AVDictionary*.
      */
@@ -299,7 +299,7 @@ enum AVOptionType{
     /**
      * Underlying C type is two consecutive integers.
      */
-    AV_OPT_TYPE_IMAGE_SIZE,
+    AV_OPT_TYPE_IMAGE_ਮਾਪ,
     /**
      * Underlying C type is enum AVPixelFormat.
      */
@@ -311,7 +311,7 @@ enum AVOptionType{
     /**
      * Underlying C type is AVRational.
      */
-    AV_OPT_TYPE_VIDEO_RATE,
+    AV_OPT_TYPE_VIDEO_ਦਰ,
     /**
      * Underlying C type is int64_t.
      */
@@ -348,67 +348,67 @@ enum AVOptionType{
 /**
  * A generic parameter which can be set by the user for muxing or encoding.
  */
-#define AV_OPT_FLAG_ENCODING_PARAM  (1 << 0)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_ENCODING_PARAM  (1 << 0)
 /**
  * A generic parameter which can be set by the user for demuxing or decoding.
  */
-#define AV_OPT_FLAG_DECODING_PARAM  (1 << 1)
-#define AV_OPT_FLAG_AUDIO_PARAM     (1 << 3)
-#define AV_OPT_FLAG_VIDEO_PARAM     (1 << 4)
-#define AV_OPT_FLAG_SUBTITLE_PARAM  (1 << 5)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_DECODING_PARAM  (1 << 1)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_AUDIO_PARAM     (1 << 3)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_VIDEO_PARAM     (1 << 4)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_SUBTITLE_PARAM  (1 << 5)
 /**
  * The option is intended for exporting values to the caller.
  */
-#define AV_OPT_FLAG_EXPORT          (1 << 6)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_EXPORT          (1 << 6)
 /**
  * The option may not be set through the AVOptions API, only read.
  * This flag only makes sense when AV_OPT_FLAG_EXPORT is also set.
  */
-#define AV_OPT_FLAG_READONLY        (1 << 7)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_READONLY        (1 << 7)
 /**
  * A generic parameter which can be set by the user for bit stream filtering.
  */
-#define AV_OPT_FLAG_BSF_PARAM       (1 << 8)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_BSF_PARAM       (1 << 8)
 
 /**
  * A generic parameter which can be set by the user at runtime.
  */
-#define AV_OPT_FLAG_RUNTIME_PARAM   (1 << 15)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_RUNTIME_PARAM   (1 << 15)
 /**
  * A generic parameter which can be set by the user for filtering.
  */
-#define AV_OPT_FLAG_FILTERING_PARAM (1 << 16)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_FILTERING_PARAM (1 << 16)
 /**
  * Set if option is deprecated, users should refer to AVOption.help text for
  * more information.
  */
-#define AV_OPT_FLAG_DEPRECATED      (1 << 17)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_DEPRECATED      (1 << 17)
 /**
  * Set if option constants can also reside in child objects.
  */
-#define AV_OPT_FLAG_CHILD_CONSTS    (1 << 18)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_FLAG_ਬੱਚਾ_CONSTS    (1 << 18)
 
 /**
  * May be set as default_val for AV_OPT_TYPE_FLAG_ARRAY options.
  */
-typedef struct AVOptionArrayDef {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVOptionArrayDef {
     /**
      * Native access only.
      *
      * Default value of the option, as would be serialized by av_opt_get() (i.e.
      * using the value of sep as the separator).
      */
-    const char         *def;
+    ਅਚਲ ਅੱਖਰ         *def;
 
     /**
      * Minimum number of elements in the array. When this field is non-zero, def
      * must be non-NULL and contain at least this number of elements.
      */
-    unsigned            size_min;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ            ਮਾਪ_min;
     /**
      * Maximum number of elements in the array, 0 when unlimited.
      */
-    unsigned            size_max;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ            ਮਾਪ_max;
 
     /**
      * Separator between array elements in string representations of this
@@ -419,20 +419,20 @@ typedef struct AVOptionArrayDef {
      * The separator and the backslash must be backslash-escaped in order to
      * appear in string representations of the option value.
      */
-    char                sep;
+    ਅੱਖਰ                sep;
 } AVOptionArrayDef;
 
 /**
  * AVOption
  */
-typedef struct AVOption {
-    const char *name;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVOption {
+    ਅਚਲ ਅੱਖਰ *name;
 
     /**
      * short English help text
      * @todo What about other languages?
      */
-    const char *help;
+    ਅਚਲ ਅੱਖਰ *help;
 
     /**
      * Native access only.
@@ -440,17 +440,17 @@ typedef struct AVOption {
      * The offset relative to the context structure where the option
      * value is stored. It should be 0 for named constants.
      */
-    int offset;
-    enum AVOptionType type;
+    ਪੂਰਨ ਵਿੱਥ;
+    ਗਿਣਤੀ AVOptionType type;
 
     /**
      * Native access only, except when documented otherwise.
      * the default value for scalar options
      */
-    union {
+    ਸੰਘ {
         int64_t i64;
-        double dbl;
-        const char *str;
+        ਦੁੱਗਣਾ dbl;
+        ਅਚਲ ਅੱਖਰ *str;
         /* TODO those are unused now */
         AVRational q;
 
@@ -460,51 +460,51 @@ typedef struct AVOption {
          * Foreign access to some members allowed, as noted in AVOptionArrayDef
          * documentation.
          */
-        const AVOptionArrayDef *arr;
+        ਅਚਲ AVOptionArrayDef *arr;
     } default_val;
-    double min;                 ///< minimum valid value for the option
-    double max;                 ///< maximum valid value for the option
+    ਦੁੱਗਣਾ min;                 ///< minimum valid value for the option
+    ਦੁੱਗਣਾ max;                 ///< maximum valid value for the option
 
     /**
      * A combination of AV_OPT_FLAG_*.
      */
-    int flags;
+    ਪੂਰਨ flags;
 
     /**
      * The logical unit to which the option belongs. Non-constant
      * options and corresponding named constants share the same
      * unit. May be NULL.
      */
-    const char *unit;
+    ਅਚਲ ਅੱਖਰ *unit;
 } AVOption;
 
 /**
  * A single allowed range of values, or a single allowed value.
  */
-typedef struct AVOptionRange {
-    const char *str;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVOptionRange {
+    ਅਚਲ ਅੱਖਰ *str;
     /**
      * Value range.
      * For string ranges this represents the min/max length.
      * For dimensions this represents the min/max pixel count or width/height in multi-component case.
      */
-    double value_min, value_max;
+    ਦੁੱਗਣਾ ਮੁੱਲ_min, ਮੁੱਲ_max;
     /**
      * Value's component range.
      * For string this represents the unicode range for chars, 0-127 limits to ASCII.
      */
-    double component_min, component_max;
+    ਦੁੱਗਣਾ component_min, component_max;
     /**
      * Range flag.
      * If set to 1 the struct encodes a range, if set to 0 a single value.
      */
-    int is_range;
+    ਪੂਰਨ is_range;
 } AVOptionRange;
 
 /**
  * List of AVOptionRange structs.
  */
-typedef struct AVOptionRanges {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVOptionRanges {
     /**
      * Array of option ranges.
      *
@@ -539,11 +539,11 @@ typedef struct AVOptionRanges {
     /**
      * Number of ranges per component.
      */
-    int nb_ranges;
+    ਪੂਰਨ nb_ranges;
     /**
      * Number of components.
      */
-    int nb_components;
+    ਪੂਰਨ nb_components;
 } AVOptionRanges;
 
 /**
@@ -556,7 +556,7 @@ typedef struct AVOptionRanges {
  *
  * @param s an AVOption-enabled struct (its first member must be a pointer to AVClass)
  */
-void av_opt_set_defaults(void *s);
+ਖਾਲੀ av_opt_ਸੈੱਟ_defaults(ਖਾਲੀ *s);
 
 /**
  * Set the values of all AVOption fields to their default values. Only these
@@ -567,12 +567,12 @@ void av_opt_set_defaults(void *s);
  * @param mask combination of AV_OPT_FLAG_*
  * @param flags combination of AV_OPT_FLAG_*
  */
-void av_opt_set_defaults2(void *s, int mask, int flags);
+ਖਾਲੀ av_opt_ਸੈੱਟ_defaults2(ਖਾਲੀ *s, ਪੂਰਨ ਨਕਾਬ_2, ਪੂਰਨ flags);
 
 /**
  * Free all allocated objects in obj.
  */
-void av_opt_free(void *obj);
+ਖਾਲੀ av_opt_free(ਖਾਲੀ *obj);
 
 /**
  * Iterate over all AVOptions belonging to obj.
@@ -583,7 +583,7 @@ void av_opt_free(void *obj);
  *             or NULL
  * @return next AVOption or NULL
  */
-const AVOption *av_opt_next(const void *obj, const AVOption *prev);
+ਅਚਲ AVOption *av_opt_ਅਗਲਾ(ਅਚਲ ਖਾਲੀ *obj, ਅਚਲ AVOption *prev);
 
 /**
  * Iterate over AVOptions-enabled children of obj.
@@ -591,7 +591,7 @@ const AVOption *av_opt_next(const void *obj, const AVOption *prev);
  * @param prev result of a previous call to this function or NULL
  * @return next AVOptions-enabled child or NULL
  */
-void *av_opt_child_next(void *obj, void *prev);
+ਖਾਲੀ *av_opt_ਬੱਚਾ_ਅਗਲਾ(ਖਾਲੀ *obj, ਖਾਲੀ *prev);
 
 /**
  * Iterate over potential AVOptions-enabled children of parent.
@@ -599,9 +599,9 @@ void *av_opt_child_next(void *obj, void *prev);
  * @param iter a pointer where iteration state is stored.
  * @return AVClass corresponding to next potential child or NULL
  */
-const AVClass *av_opt_child_class_iterate(const AVClass *parent, void **iter);
+ਅਚਲ AVClass *av_opt_ਬੱਚਾ_class_iterate(ਅਚਲ AVClass *ਮਾਪਾ, ਖਾਲੀ **iter);
 
-#define AV_OPT_SEARCH_CHILDREN   (1 << 0) /**< Search in possible children of the
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_ਖੋਜ_CHILDREN   (1 << 0) /**< Search in possible children of the
                                                given object first. */
 /**
  *  The obj passed to av_opt_find() or av_opt_set() is fake -- only a double pointer
@@ -609,26 +609,26 @@ const AVClass *av_opt_child_class_iterate(const AVClass *parent, void **iter);
  *  useful for searching for options or verifying they can be applied without needing
  *  to allocate the corresponding object.
  */
-#define AV_OPT_SEARCH_FAKE_OBJ   (1 << 1)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_ਖੋਜ_FAKE_OBJ   (1 << 1)
 
 /**
  *  In av_opt_get, return NULL if the option has a pointer type and is set to NULL,
  *  rather than returning an empty string.
  */
-#define AV_OPT_ALLOW_NULL (1 << 2)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_ALLOW_NULL (1 << 2)
 
 /**
  * May be used with av_opt_set_array() to signal that new elements should
  * replace the existing ones in the indicated range.
  */
-#define AV_OPT_ARRAY_REPLACE (1 << 3)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_ARRAY_REPLACE (1 << 3)
 
 /**
  *  Allows av_opt_query_ranges and av_opt_query_ranges_default to return more than
  *  one component for certain option types.
  *  @see AVOptionRanges for details.
  */
-#define AV_OPT_MULTI_COMPONENT_RANGE (1 << 12)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_MULTI_COMPONENT_RANGE (1 << 12)
 
 /**
  * Look for an option in an object. Consider only options which
@@ -652,8 +652,8 @@ const AVClass *av_opt_child_class_iterate(const AVClass *parent, void **iter);
  * AVDictionary (e.g. avformat_open_input()) to set options found with this
  * flag.
  */
-const AVOption *av_opt_find(void *obj, const char *name, const char *unit,
-                            int opt_flags, int search_flags);
+ਅਚਲ AVOption *av_opt_ਲੱਭੋ(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਅਚਲ ਅੱਖਰ *unit,
+                            ਪੂਰਨ opt_flags, ਪੂਰਨ ਖੋਜ_flags);
 
 /**
  * Look for an option in an object. Consider only options which
@@ -676,8 +676,8 @@ const AVOption *av_opt_find(void *obj, const char *name, const char *unit,
  * @return A pointer to the option found, or NULL if no option
  *         was found.
  */
-const AVOption *av_opt_find2(void *obj, const char *name, const char *unit,
-                             int opt_flags, int search_flags, void **target_obj);
+ਅਚਲ AVOption *av_opt_find2(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਅਚਲ ਅੱਖਰ *unit,
+                             ਪੂਰਨ opt_flags, ਪੂਰਨ ਖੋਜ_flags, ਖਾਲੀ **ਨਿਸ਼ਾਨਾ_obj);
 
 /**
  * Show the obj options.
@@ -688,7 +688,7 @@ const AVOption *av_opt_find2(void *obj, const char *name, const char *unit,
  * options for which it is !(opt->flags & req_flags).
  * @param av_log_obj log context to use for showing the options
  */
-int av_opt_show2(void *obj, void *av_log_obj, int req_flags, int rej_flags);
+ਪੂਰਨ av_opt_show2(ਖਾਲੀ *obj, ਖਾਲੀ *av_log_obj, ਪੂਰਨ req_flags, ਪੂਰਨ rej_flags);
 
 /**
  * Extract a key-value pair from the beginning of a string.
@@ -709,18 +709,18 @@ int av_opt_show2(void *obj, void *av_log_obj, int req_flags, int rej_flags);
  *          AVERROR(EINVAL) if no key is present
  *
  */
-int av_opt_get_key_value(const char **ropts,
-                         const char *key_val_sep, const char *pairs_sep,
-                         unsigned flags,
-                         char **rkey, char **rval);
+ਪੂਰਨ av_opt_get_ਕੁੰਜੀ_ਮੁੱਲ(ਅਚਲ ਅੱਖਰ **ropts,
+                         ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ_val_sep, ਅਚਲ ਅੱਖਰ *ਜੋੜੇ_sep,
+                         ਬਿਨਾਨਿਸ਼ਾਨੀ flags,
+                         ਅੱਖਰ **rkey, ਅੱਖਰ **rval);
 
-enum {
+ਗਿਣਤੀ {
 
     /**
      * Accept to parse a value without a key; the key will then be returned
      * as NULL.
      */
-    AV_OPT_FLAG_IMPLICIT_KEY = 1,
+    AV_OPT_FLAG_IMPLICIT_ਕੁੰਜੀ = 1,
 };
 
 /**
@@ -749,8 +749,8 @@ enum {
  * the error code issued by av_opt_set() if a key/value pair
  * cannot be set
  */
-int av_set_options_string(void *ctx, const char *opts,
-                          const char *key_val_sep, const char *pairs_sep);
+ਪੂਰਨ av_ਸੈੱਟ_options_string(ਖਾਲੀ *ctx, ਅਚਲ ਅੱਖਰ *opts,
+                          ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ_val_sep, ਅਚਲ ਅੱਖਰ *ਜੋੜੇ_sep);
 
 /**
  * Parse the key-value pairs list in opts. For each key=value pair found,
@@ -779,9 +779,9 @@ int av_set_options_string(void *ctx, const char *opts,
  * Separators must use characters distinct from option names and from each
  * other.
  */
-int av_opt_set_from_string(void *ctx, const char *opts,
-                           const char *const *shorthand,
-                           const char *key_val_sep, const char *pairs_sep);
+ਪੂਰਨ av_opt_ਸੈੱਟ_from_string(ਖਾਲੀ *ctx, ਅਚਲ ਅੱਖਰ *opts,
+                           ਅਚਲ ਅੱਖਰ *ਅਚਲ *shorthand,
+                           ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ_val_sep, ਅਚਲ ਅੱਖਰ *ਜੋੜੇ_sep);
 
 /**
  * Set all the options from a given dictionary on an object.
@@ -797,7 +797,7 @@ int av_opt_set_from_string(void *ctx, const char *opts,
  *
  * @see av_dict_copy()
  */
-int av_opt_set_dict(void *obj, struct AVDictionary **options);
+ਪੂਰਨ av_opt_ਸੈੱਟ_dict(ਖਾਲੀ *obj, ਬਣਤਰ AVDictionary **options);
 
 
 /**
@@ -815,7 +815,7 @@ int av_opt_set_dict(void *obj, struct AVDictionary **options);
  *
  * @see av_dict_copy()
  */
-int av_opt_set_dict2(void *obj, struct AVDictionary **options, int search_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_dict2(ਖਾਲੀ *obj, ਬਣਤਰ AVDictionary **options, ਪੂਰਨ ਖੋਜ_flags);
 
 /**
  * Copy options from src object into dest object.
@@ -834,7 +834,7 @@ int av_opt_set_dict2(void *obj, struct AVDictionary **options, int search_flags)
  * @param src  Object to copy into
  * @return 0 on success, negative on error
  */
-int av_opt_copy(void *dest, const void *src);
+ਪੂਰਨ av_opt_copy(ਖਾਲੀ *dest, ਅਚਲ ਖਾਲੀ *src);
 
 /**
  * @defgroup opt_set_funcs Option setting functions
@@ -866,25 +866,25 @@ int av_opt_copy(void *dest, const void *src);
  * AVERROR(ERANGE) if the value is out of range
  * AVERROR(EINVAL) if the value is not valid
  */
-int av_opt_set         (void *obj, const char *name, const char *val, int search_flags);
-int av_opt_set_int     (void *obj, const char *name, int64_t     val, int search_flags);
-int av_opt_set_double  (void *obj, const char *name, double      val, int search_flags);
-int av_opt_set_q       (void *obj, const char *name, AVRational  val, int search_flags);
-int av_opt_set_bin     (void *obj, const char *name, const uint8_t *val, int size, int search_flags);
-int av_opt_set_image_size(void *obj, const char *name, int w, int h, int search_flags);
-int av_opt_set_pixel_fmt (void *obj, const char *name, enum AVPixelFormat fmt, int search_flags);
-int av_opt_set_sample_fmt(void *obj, const char *name, enum AVSampleFormat fmt, int search_flags);
-int av_opt_set_video_rate(void *obj, const char *name, AVRational val, int search_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ         (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਅਚਲ ਅੱਖਰ *val, ਪੂਰਨ ਖੋਜ_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_int     (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, int64_t     val, ਪੂਰਨ ਖੋਜ_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_double  (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਦੁੱਗਣਾ      val, ਪੂਰਨ ਖੋਜ_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_q       (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, AVRational  val, ਪੂਰਨ ਖੋਜ_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_bin     (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਅਚਲ uint8_t *val, ਪੂਰਨ ਮਾਪ, ਪੂਰਨ ਖੋਜ_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_image_ਮਾਪ(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ w, ਪੂਰਨ h, ਪੂਰਨ ਖੋਜ_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_pixel_fmt (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਗਿਣਤੀ AVPixelFormat fmt, ਪੂਰਨ ਖੋਜ_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_sample_fmt(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਗਿਣਤੀ AVSampleFormat fmt, ਪੂਰਨ ਖੋਜ_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_video_ਦਰ(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, AVRational val, ਪੂਰਨ ਖੋਜ_flags);
 /**
  * @note Any old chlayout present is discarded and replaced with a copy of the new one. The
  * caller still owns layout and is responsible for uninitializing it.
  */
-int av_opt_set_chlayout(void *obj, const char *name, const AVChannelLayout *layout, int search_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_chlayout(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਅਚਲ AVChannelLayout *layout, ਪੂਰਨ ਖੋਜ_flags);
 /**
  * @note Any old dictionary present is discarded and replaced with a copy of the new one. The
  * caller still owns val is and responsible for freeing it.
  */
-int av_opt_set_dict_val(void *obj, const char *name, const AVDictionary *val, int search_flags);
+ਪੂਰਨ av_opt_ਸੈੱਟ_dict_val(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਅਚਲ AVDictionary *val, ਪੂਰਨ ਖੋਜ_flags);
 
 /**
  * Add, replace, or remove elements for an array option. Which of these
@@ -932,9 +932,9 @@ int av_opt_set_dict_val(void *obj, const char *name, const AVDictionary *val, in
  *            start_elem+nb_elems (if present). New array size is
  *            max(start_elem + nb_elems, old array size).
  */
-int av_opt_set_array(void *obj, const char *name, int search_flags,
-                     unsigned int start_elem, unsigned int nb_elems,
-                     enum AVOptionType val_type, const void *val);
+ਪੂਰਨ av_opt_ਸੈੱਟ_array(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags,
+                     ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ ਸ਼ੁਰੂ_elem, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ nb_elems,
+                     ਗਿਣਤੀ AVOptionType val_type, ਅਚਲ ਖਾਲੀ *val);
 
 /**
  * @}
@@ -966,30 +966,30 @@ int av_opt_set_array(void *obj, const char *name, int search_flags,
  * and is set to NULL, *out_val will be set to NULL instead of an allocated
  * empty string.
  */
-int av_opt_get         (void *obj, const char *name, int search_flags, uint8_t   **out_val);
-int av_opt_get_int     (void *obj, const char *name, int search_flags, int64_t    *out_val);
-int av_opt_get_double  (void *obj, const char *name, int search_flags, double     *out_val);
-int av_opt_get_q       (void *obj, const char *name, int search_flags, AVRational *out_val);
-int av_opt_get_image_size(void *obj, const char *name, int search_flags, int *w_out, int *h_out);
-int av_opt_get_pixel_fmt (void *obj, const char *name, int search_flags, enum AVPixelFormat *out_fmt);
-int av_opt_get_sample_fmt(void *obj, const char *name, int search_flags, enum AVSampleFormat *out_fmt);
-int av_opt_get_video_rate(void *obj, const char *name, int search_flags, AVRational *out_val);
+ਪੂਰਨ av_opt_get         (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, uint8_t   **ਬਾਹਰਲਾ_val);
+ਪੂਰਨ av_opt_get_int     (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, int64_t    *ਬਾਹਰਲਾ_val);
+ਪੂਰਨ av_opt_get_double  (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, ਦੁੱਗਣਾ     *ਬਾਹਰਲਾ_val);
+ਪੂਰਨ av_opt_get_q       (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, AVRational *ਬਾਹਰਲਾ_val);
+ਪੂਰਨ av_opt_get_image_ਮਾਪ(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, ਪੂਰਨ *w_ਬਾਹਰਲਾ, ਪੂਰਨ *h_ਬਾਹਰਲਾ);
+ਪੂਰਨ av_opt_get_pixel_fmt (ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, ਗਿਣਤੀ AVPixelFormat *ਬਾਹਰਲਾ_fmt);
+ਪੂਰਨ av_opt_get_sample_fmt(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, ਗਿਣਤੀ AVSampleFormat *ਬਾਹਰਲਾ_fmt);
+ਪੂਰਨ av_opt_get_video_ਦਰ(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, AVRational *ਬਾਹਰਲਾ_val);
 /**
  * @param[out] layout The returned layout is a copy of the actual value and must
  * be freed with av_channel_layout_uninit() by the caller
  */
-int av_opt_get_chlayout(void *obj, const char *name, int search_flags, AVChannelLayout *layout);
+ਪੂਰਨ av_opt_get_chlayout(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, AVChannelLayout *layout);
 /**
  * @param[out] out_val The returned dictionary is a copy of the actual value and must
  * be freed with av_dict_free() by the caller
  */
-int av_opt_get_dict_val(void *obj, const char *name, int search_flags, AVDictionary **out_val);
+ਪੂਰਨ av_opt_get_dict_val(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags, AVDictionary **ਬਾਹਰਲਾ_val);
 
 /**
  * For an array-type option, get the number of elements in the array.
  */
-int av_opt_get_array_size(void *obj, const char *name, int search_flags,
-                          unsigned int *out_val);
+ਪੂਰਨ av_opt_get_array_ਮਾਪ(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags,
+                          ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ *ਬਾਹਰਲਾ_val);
 
 /**
  * For an array-type option, retrieve the values of one or more array elements.
@@ -1021,9 +1021,9 @@ int av_opt_get_array_size(void *obj, const char *name, int search_flags,
  *                 For dynamically allocated types (strings, binary, dicts,
  *                 etc.), the result is owned and freed by the caller.
  */
-int av_opt_get_array(void *obj, const char *name, int search_flags,
-                     unsigned int start_elem, unsigned int nb_elems,
-                     enum AVOptionType out_type, void *out_val);
+ਪੂਰਨ av_opt_get_array(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags,
+                     ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ ਸ਼ੁਰੂ_elem, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ nb_elems,
+                     ਗਿਣਤੀ AVOptionType ਬਾਹਰਲਾ_type, ਖਾਲੀ *ਬਾਹਰਲਾ_val);
 /**
  * @}
  */
@@ -1042,13 +1042,13 @@ int av_opt_get_array(void *obj, const char *name, int search_flags,
  *
  * @return 0 on success, a negative number on failure.
  */
-int av_opt_eval_flags (void *obj, const AVOption *o, const char *val, int        *flags_out);
-int av_opt_eval_int   (void *obj, const AVOption *o, const char *val, int        *int_out);
-int av_opt_eval_uint  (void *obj, const AVOption *o, const char *val, unsigned   *uint_out);
-int av_opt_eval_int64 (void *obj, const AVOption *o, const char *val, int64_t    *int64_out);
-int av_opt_eval_float (void *obj, const AVOption *o, const char *val, float      *float_out);
-int av_opt_eval_double(void *obj, const AVOption *o, const char *val, double     *double_out);
-int av_opt_eval_q     (void *obj, const AVOption *o, const char *val, AVRational *q_out);
+ਪੂਰਨ av_opt_eval_flags (ਖਾਲੀ *obj, ਅਚਲ AVOption *o, ਅਚਲ ਅੱਖਰ *val, ਪੂਰਨ        *flags_ਬਾਹਰਲਾ);
+ਪੂਰਨ av_opt_eval_int   (ਖਾਲੀ *obj, ਅਚਲ AVOption *o, ਅਚਲ ਅੱਖਰ *val, ਪੂਰਨ        *int_ਬਾਹਰਲਾ);
+ਪੂਰਨ av_opt_eval_uint  (ਖਾਲੀ *obj, ਅਚਲ AVOption *o, ਅਚਲ ਅੱਖਰ *val, ਬਿਨਾਨਿਸ਼ਾਨੀ   *uint_ਬਾਹਰਲਾ);
+ਪੂਰਨ av_opt_eval_int64 (ਖਾਲੀ *obj, ਅਚਲ AVOption *o, ਅਚਲ ਅੱਖਰ *val, int64_t    *int64_ਬਾਹਰਲਾ);
+ਪੂਰਨ av_opt_eval_float (ਖਾਲੀ *obj, ਅਚਲ AVOption *o, ਅਚਲ ਅੱਖਰ *val, ਦਸ਼ਮਲਵ      *float_ਬਾਹਰਲਾ);
+ਪੂਰਨ av_opt_eval_double(ਖਾਲੀ *obj, ਅਚਲ AVOption *o, ਅਚਲ ਅੱਖਰ *val, ਦੁੱਗਣਾ     *double_ਬਾਹਰਲਾ);
+ਪੂਰਨ av_opt_eval_q     (ਖਾਲੀ *obj, ਅਚਲ AVOption *o, ਅਚਲ ਅੱਖਰ *val, AVRational *q_ਬਾਹਰਲਾ);
 /**
  * @}
  */
@@ -1065,7 +1065,7 @@ int av_opt_eval_q     (void *obj, const AVOption *o, const char *val, AVRational
  *              0 when option is not set its default,
  *             <0 on error
  */
-int av_opt_is_set_to_default(void *obj, const AVOption *o);
+ਪੂਰਨ av_opt_is_ਸੈੱਟ_ਮੰਜ਼ਿਲ_default(ਖਾਲੀ *obj, ਅਚਲ AVOption *o);
 
 /**
  * Check if given option is set to its default value.
@@ -1077,7 +1077,7 @@ int av_opt_is_set_to_default(void *obj, const AVOption *o);
  *                     0 when option is not set its default,
  *                     <0 on error
  */
-int av_opt_is_set_to_default_by_name(void *obj, const char *name, int search_flags);
+ਪੂਰਨ av_opt_is_ਸੈੱਟ_ਮੰਜ਼ਿਲ_default_by_name(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ ਖੋਜ_flags);
 
 /**
  * Check whether a particular flag is set in a flags field.
@@ -1087,20 +1087,20 @@ int av_opt_is_set_to_default_by_name(void *obj, const char *name, int search_fla
  * @return non-zero if the flag is set, zero if the flag isn't set,
  *         isn't of the right type, or the flags field doesn't exist.
  */
-int av_opt_flag_is_set(void *obj, const char *field_name, const char *flag_name);
+ਪੂਰਨ av_opt_flag_is_ਸੈੱਟ(ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *ਖੇਤਰ_name, ਅਚਲ ਅੱਖਰ *flag_name);
 
-#define AV_OPT_SERIALIZE_SKIP_DEFAULTS              0x00000001  ///< Serialize options that are not set to default values only.
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_SERIALIZE_SKIP_DEFAULTS              0x00000001  ///< Serialize options that are not set to default values only.
 /**
  * Match only options with the exact @ref AVOption.flags flags
  * in @ref opt_flags, for exclusion or inclusion in serialization.
  */
-#define AV_OPT_SERIALIZE_OPT_FLAGS_EXACT            0x00000002
-#define AV_OPT_SERIALIZE_SEARCH_CHILDREN            0x00000004  ///< Serialize options in possible children of the given object.
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_SERIALIZE_OPT_FLAGS_EXACT            0x00000002
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_SERIALIZE_ਖੋਜ_CHILDREN            0x00000004  ///< Serialize options in possible children of the given object.
 /**
  * Serialize options with @ref AVOption.flags flags not
  * in @ref opt_flags.
  */
-#define AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE          0x00000008
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE          0x00000008
 
 /**
  * Serialize object's options.
@@ -1120,8 +1120,8 @@ int av_opt_flag_is_set(void *obj, const char *field_name, const char *flag_name)
  * @return                   >= 0 on success, negative on error
  * @warning Separators cannot be neither '\\' nor '\0'. They also cannot be the same.
  */
-int av_opt_serialize(void *obj, int opt_flags, int flags, char **buffer,
-                     const char key_val_sep, const char pairs_sep);
+ਪੂਰਨ av_opt_serialize(ਖਾਲੀ *obj, ਪੂਰਨ opt_flags, ਪੂਰਨ flags, ਅੱਖਰ **ਬਫਰ,
+                     ਅਚਲ ਅੱਖਰ ਕੁੰਜੀ_val_sep, ਅਚਲ ਅੱਖਰ ਜੋੜੇ_sep);
 
 /**
  * @}
@@ -1130,7 +1130,7 @@ int av_opt_serialize(void *obj, int opt_flags, int flags, char **buffer,
 /**
  * Free an AVOptionRanges struct and set it to NULL.
  */
-void av_opt_freep_ranges(AVOptionRanges **ranges);
+ਖਾਲੀ av_opt_freep_ranges(AVOptionRanges **ranges);
 
 /**
  * Get a list of allowed ranges for the given option.
@@ -1145,7 +1145,7 @@ void av_opt_freep_ranges(AVOptionRanges **ranges);
  *
  * @return number of components returned on success, a negative error code otherwise
  */
-int av_opt_query_ranges(AVOptionRanges **, void *obj, const char *key, int flags);
+ਪੂਰਨ av_opt_query_ranges(AVOptionRanges **, ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ, ਪੂਰਨ flags);
 
 /**
  * Get a default list of allowed ranges for the given option.
@@ -1161,10 +1161,10 @@ int av_opt_query_ranges(AVOptionRanges **, void *obj, const char *key, int flags
  *
  * @return number of components returned on success, a negative error code otherwise
  */
-int av_opt_query_ranges_default(AVOptionRanges **, void *obj, const char *key, int flags);
+ਪੂਰਨ av_opt_query_ranges_default(AVOptionRanges **, ਖਾਲੀ *obj, ਅਚਲ ਅੱਖਰ *ਕੁੰਜੀ, ਪੂਰਨ flags);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_OPT_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_OPT_H */

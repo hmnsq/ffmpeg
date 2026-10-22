@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AMBIENT_VIEWING_ENVIRONMENT_H
-#define AVUTIL_AMBIENT_VIEWING_ENVIRONMENT_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_AMBIENT_VIEWING_ENVIRONMENT_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_AMBIENT_VIEWING_ENVIRONMENT_H
 
-#include <stddef.h>
-#include "frame.h"
-#include "rational.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "frame.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "rational.h"
 
 /**
  * Ambient viewing environment metadata as defined by H.274. The values are
@@ -33,7 +33,7 @@
  * @note sizeof(AVAmbientViewingEnvironment) is not part of the public ABI, and
  *       it must be allocated using av_ambient_viewing_environment_alloc.
  */
-typedef struct AVAmbientViewingEnvironment {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVAmbientViewingEnvironment {
     /**
      * Environmental illuminance of the ambient viewing environment in lux.
      */
@@ -59,7 +59,7 @@ typedef struct AVAmbientViewingEnvironment {
  *
  * @return the newly allocated struct or NULL on failure
  */
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size);
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *ਮਾਪ);
 
 /**
  * Allocate and add an AVAmbientViewingEnvironment structure to an existing
@@ -67,6 +67,6 @@ AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size);
  *
  * @return the newly allocated struct, or NULL on failure
  */
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame);
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_ਅੰਕੜੇ(AVFrame *ਚੌਖਟਾ);
 
-#endif /* AVUTIL_AMBIENT_VIEWING_ENVIRONMENT_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_AMBIENT_VIEWING_ENVIRONMENT_H */

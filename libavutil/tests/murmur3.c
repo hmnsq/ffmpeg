@@ -18,44 +18,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <inttypes.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
 
-#include "libavutil/intreadwrite.h"
-#include "libavutil/mem.h"
-#include "libavutil/murmur3.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/intreadwrite.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/murmur3.h"
 
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
-    int i;
-    uint8_t hash_result[16] = {0};
-    struct AVMurMur3 *ctx = av_murmur3_alloc();
-#if 1
-    uint8_t in[256] = {0};
+    ਪੂਰਨ i;
+    uint8_t hash_ਨਤੀਜਾ[16] = {0};
+    ਬਣਤਰ AVMurMur3 *ctx = av_murmur3_alloc();
+#ਜੇ 1
+    uint8_t ਵਿੱਚ_2[256] = {0};
     uint8_t *hashes = av_mallocz(256 * 16);
-    for (i = 0; i < 256; i++)
+    ਲਈ (i = 0; i < 256; i++)
     {
-        in[i] = i;
+        ਵਿੱਚ_2[i] = i;
         av_murmur3_init_seeded(ctx, 256 - i);
         // Note: this actually tests hashing 0 bytes
-        av_murmur3_update(ctx, in, i);
+        av_murmur3_update(ctx, ਵਿੱਚ_2, i);
         av_murmur3_final(ctx, hashes + 16 * i);
     }
     av_murmur3_init_seeded(ctx, 0);
     av_murmur3_update(ctx, hashes, 256 * 16);
-    av_murmur3_final(ctx, hash_result);
+    av_murmur3_final(ctx, hash_ਨਤੀਜਾ);
     av_free(hashes);
     av_freep(&ctx);
-    printf("result: 0x%"PRIx64" 0x%"PRIx64"\n", AV_RL64(hash_result), AV_RL64(hash_result + 8));
+    ਲਿਖੋ("result: 0x%"PRIx64" 0x%"PRIx64"\n", AV_RL64(hash_ਨਤੀਜਾ), AV_RL64(hash_ਨਤੀਜਾ + 8));
     // official reference value is 32 bit
-    return AV_RL32(hash_result) != 0x6384ba69;
-#else
-    uint8_t *in = av_mallocz(512*1024);
+    ਵਾਪਸ AV_RL32(hash_ਨਤੀਜਾ) != 0x6384ba69;
+#ਨਹੀਂਤਾਂ
+    uint8_t *ਵਿੱਚ_2 = av_mallocz(512*1024);
     av_murmur3_init(ctx);
-    for (i = 0; i < 40*1024; i++)
-        av_murmur3_update(ctx, in, 512*1024);
-    av_murmur3_final(ctx, hash_result);
-    av_free(in);
-    return hash_result[0];
-#endif
+    ਲਈ (i = 0; i < 40*1024; i++)
+        av_murmur3_update(ctx, ਵਿੱਚ_2, 512*1024);
+    av_murmur3_final(ctx, hash_ਨਤੀਜਾ);
+    av_free(ਵਿੱਚ_2);
+    ਵਾਪਸ hash_ਨਤੀਜਾ[0];
+#ਜੇ_ਅੰਤ
 }

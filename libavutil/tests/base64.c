@@ -18,83 +18,83 @@
 
 // LCOV_EXCL_START
 
-#include "libavutil/timer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/timer.h"
 
-#include <stdint.h>
-#include <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/base64.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/common.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/base64.h"
 
-#define MAX_DATA_SIZE    1024
-#define MAX_ENCODED_SIZE 2048
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_ਅੰਕੜੇ_ਮਾਪ    1024
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_ENCODED_ਮਾਪ 2048
 
-static int test_encode_decode(const uint8_t *data, unsigned int data_size,
-                              const char *encoded_ref)
+ਸਥਿਰ ਪੂਰਨ test_encode_decode(ਅਚਲ uint8_t *ਅੰਕੜੇ, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ ਅੰਕੜੇ_ਮਾਪ,
+                              ਅਚਲ ਅੱਖਰ *encoded_ref)
 {
-    char  encoded[MAX_ENCODED_SIZE];
-    uint8_t data2[MAX_DATA_SIZE];
-    int data2_size, max_data2_size = MAX_DATA_SIZE;
+    ਅੱਖਰ  encoded[MAX_ENCODED_ਮਾਪ];
+    uint8_t data2[MAX_ਅੰਕੜੇ_ਮਾਪ];
+    ਪੂਰਨ data2_ਮਾਪ, max_data2_ਮਾਪ = MAX_ਅੰਕੜੇ_ਮਾਪ;
 
-    if (!av_base64_encode(encoded, MAX_ENCODED_SIZE, data, data_size)) {
-        printf("Failed: cannot encode the input data\n");
-        return 1;
+    ਜੇ (!av_base64_encode(encoded, MAX_ENCODED_ਮਾਪ, ਅੰਕੜੇ, ਅੰਕੜੇ_ਮਾਪ)) {
+        ਲਿਖੋ("Failed: cannot encode the input data\n");
+        ਵਾਪਸ 1;
     }
-    if (encoded_ref && strcmp(encoded, encoded_ref)) {
-        printf("Failed: encoded string differs from reference\n"
+    ਜੇ (encoded_ref && strcmp(encoded, encoded_ref)) {
+        ਲਿਖੋ("Failed: encoded string differs from reference\n"
                "Encoded:\n%s\nReference:\n%s\n", encoded, encoded_ref);
-        return 1;
+        ਵਾਪਸ 1;
     }
 
-    if ((data2_size = av_base64_decode(data2, encoded, max_data2_size)) != data_size) {
-        printf("Failed: cannot decode the encoded string\n"
+    ਜੇ ((data2_ਮਾਪ = av_base64_decode(data2, encoded, max_data2_ਮਾਪ)) != ਅੰਕੜੇ_ਮਾਪ) {
+        ਲਿਖੋ("Failed: cannot decode the encoded string\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ਵਾਪਸ 1;
     }
-    if ((data2_size = av_base64_decode(data2, encoded, data_size)) != data_size) {
-        printf("Failed: cannot decode with minimal buffer\n"
+    ਜੇ ((data2_ਮਾਪ = av_base64_decode(data2, encoded, ਅੰਕੜੇ_ਮਾਪ)) != ਅੰਕੜੇ_ਮਾਪ) {
+        ਲਿਖੋ("Failed: cannot decode with minimal buffer\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ਵਾਪਸ 1;
     }
-    if (memcmp(data2, data, data_size)) {
-        printf("Failed: encoded/decoded data differs from original data\n");
-        return 1;
+    ਜੇ (memcmp(data2, ਅੰਕੜੇ, ਅੰਕੜੇ_ਮਾਪ)) {
+        ਲਿਖੋ("Failed: encoded/decoded data differs from original data\n");
+        ਵਾਪਸ 1;
     }
-    if (av_base64_decode(NULL, encoded, 0) != 0) {
-        printf("Failed: decode to NULL buffer\n");
-        return 1;
+    ਜੇ (av_base64_decode(ਨਿਰਾ, encoded, 0) != 0) {
+        ਲਿਖੋ("Failed: decode to NULL buffer\n");
+        ਵਾਪਸ 1;
     }
-    if (data_size > 0 && (data2_size = av_base64_decode(data2, encoded, data_size - 1)) != data_size - 1) {
-        printf("Failed: out of array write\n"
+    ਜੇ (ਅੰਕੜੇ_ਮਾਪ > 0 && (data2_ਮਾਪ = av_base64_decode(data2, encoded, ਅੰਕੜੇ_ਮਾਪ - 1)) != ਅੰਕੜੇ_ਮਾਪ - 1) {
+        ਲਿਖੋ("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ਵਾਪਸ 1;
     }
-    if (data_size > 1 && (data2_size = av_base64_decode(data2, encoded, data_size - 2)) != data_size - 2) {
-        printf("Failed: out of array write\n"
+    ਜੇ (ਅੰਕੜੇ_ਮਾਪ > 1 && (data2_ਮਾਪ = av_base64_decode(data2, encoded, ਅੰਕੜੇ_ਮਾਪ - 2)) != ਅੰਕੜੇ_ਮਾਪ - 2) {
+        ਲਿਖੋ("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ਵਾਪਸ 1;
     }
-    if (strlen(encoded)) {
-        char *end = strchr(encoded, '=');
-        if (!end)
-            end = encoded + strlen(encoded) - 1;
-        *end = '%';
-        if (av_base64_decode(NULL, encoded, 0) >= 0) {
-            printf("Failed: error detection\n");
-            return 1;
+    ਜੇ (ਲੜੀ_ਲੰਬਾਈ(encoded)) {
+        ਅੱਖਰ *ਸਿਰਾ = strchr(encoded, '=');
+        ਜੇ (!ਸਿਰਾ)
+            ਸਿਰਾ = encoded + ਲੜੀ_ਲੰਬਾਈ(encoded) - 1;
+        *ਸਿਰਾ = '%';
+        ਜੇ (av_base64_decode(ਨਿਰਾ, encoded, 0) >= 0) {
+            ਲਿਖੋ("Failed: error detection\n");
+            ਵਾਪਸ 1;
         }
     }
 
-    printf("Passed!\n");
-    return 0;
+    ਲਿਖੋ("Passed!\n");
+    ਵਾਪਸ 0;
 }
 
-int main(int argc, char ** argv)
+ਪੂਰਨ ਮੁੱਖ(ਪੂਰਨ argc, ਅੱਖਰ ** argv)
 {
-    int i, error_count = 0;
-    struct test {
-        const uint8_t *data;
-        const char *encoded_ref;
+    ਪੂਰਨ i, error_ਗਿਣਤੀ = 0;
+    ਬਣਤਰ test {
+        ਅਚਲ uint8_t *ਅੰਕੜੇ;
+        ਅਚਲ ਅੱਖਰ *encoded_ref;
     } tests[] = {
         { "",        ""},
         { "1",       "MQ=="},
@@ -105,36 +105,36 @@ int main(int argc, char ** argv)
         { "666666",  "NjY2NjY2"},
         { "abc:def", "YWJjOmRlZg=="},
     };
-    char in[1024], out[2048];
+    ਅੱਖਰ ਵਿੱਚ_2[1024], ਬਾਹਰਲਾ[2048];
 
-    printf("Encoding/decoding tests\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
-        error_count += test_encode_decode(tests[i].data, strlen(tests[i].data), tests[i].encoded_ref);
+    ਲਿਖੋ("Encoding/decoding tests\n");
+    ਲਈ (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
+        error_ਗਿਣਤੀ += test_encode_decode(tests[i].ਅੰਕੜੇ, ਲੜੀ_ਲੰਬਾਈ(tests[i].ਅੰਕੜੇ), tests[i].encoded_ref);
 
-    if (argc>1 && !strcmp(argv[1], "-t")) {
-        memset(in, 123, sizeof(in));
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_encode(out, sizeof(out), in, sizeof(in));
+    ਜੇ (argc>1 && !strcmp(argv[1], "-t")) {
+        memset(ਵਿੱਚ_2, 123, ਆਕਾਰ(ਵਿੱਚ_2));
+        ਲਈ(i=0; i<10000; i++){
+            ਸ਼ੁਰੂ_TIMER
+            av_base64_encode(ਬਾਹਰਲਾ, ਆਕਾਰ(ਬਾਹਰਲਾ), ਵਿੱਚ_2, ਆਕਾਰ(ਵਿੱਚ_2));
             STOP_TIMER("encode")
         }
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_decode(in, out, sizeof(in));
+        ਲਈ(i=0; i<10000; i++){
+            ਸ਼ੁਰੂ_TIMER
+            av_base64_decode(ਵਿੱਚ_2, ਬਾਹਰਲਾ, ਆਕਾਰ(ਵਿੱਚ_2));
             STOP_TIMER("decode")
         }
 
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_decode(NULL, out, 0);
+        ਲਈ(i=0; i<10000; i++){
+            ਸ਼ੁਰੂ_TIMER
+            av_base64_decode(ਨਿਰਾ, ਬਾਹਰਲਾ, 0);
             STOP_TIMER("syntax check")
         }
     }
 
-    if (error_count)
-        printf("Error Count: %d.\n", error_count);
+    ਜੇ (error_ਗਿਣਤੀ)
+        ਲਿਖੋ("Error Count: %d.\n", error_ਗਿਣਤੀ);
 
-    return !!error_count;
+    ਵਾਪਸ !!error_ਗਿਣਤੀ;
 }
 
 // LCOV_EXCL_STOP

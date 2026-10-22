@@ -19,223 +19,223 @@
 // This header should only be used to simplify code where
 // threading is optional, not as a generic threading abstraction.
 
-#ifndef AVUTIL_THREAD_H
-#define AVUTIL_THREAD_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_THREAD_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_THREAD_H
 
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#if HAVE_PRCTL
-#include <sys/prctl.h>
-#elif (HAVE_PTHREAD_SETNAME_NP || HAVE_PTHREAD_SET_NAME_NP) && HAVE_PTHREAD_NP_H
-#include <pthread_np.h>
-#endif
+#ਜੇ HAVE_PRCTL
+#ਅਨ੍ਤਰ੍ਭਾਵ <sys/prctl.h>
+#ਜਾਂਜੇ (HAVE_PTHREAD_SETNAME_NP || HAVE_PTHREAD_ਸੈੱਟ_NAME_NP) && HAVE_PTHREAD_NP_H
+#ਅਨ੍ਤਰ੍ਭਾਵ <pthread_np.h>
+#ਜੇ_ਅੰਤ
 
-#include "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
 
-#if HAVE_PTHREADS || HAVE_W32THREADS || HAVE_OS2THREADS
+#ਜੇ HAVE_PTHREADS || HAVE_W32_ਧਾਗੇ || HAVE_OS2_ਧਾਗੇ
 
-#if HAVE_PTHREADS
-#include <pthread.h>
+#ਜੇ HAVE_PTHREADS
+#ਅਨ੍ਤਰ੍ਭਾਵ <pthread.h>
 
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
+#ਜੇ defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
 
-#include <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
 
-#include "log.h"
-#include "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "log.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
 
-#define ASSERT_PTHREAD_ABORT(func, ret) do {                            \
-    char errbuf[AV_ERROR_MAX_STRING_SIZE] = "";                         \
-    av_log(NULL, AV_LOG_FATAL, AV_STRINGIFY(func)                       \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ASSERT_PTHREAD_ABORT(func, ret) ਕਰੋ {                            \
+    ਅੱਖਰ errbuf[AV_ERROR_MAX_STRING_ਮਾਪ] = "";                         \
+    av_log(ਨਿਰਾ, AV_LOG_FATAL, AV_STRINGIFY(func)                       \
            " failed with error: %s\n",                                  \
-           av_make_error_string(errbuf, AV_ERROR_MAX_STRING_SIZE,       \
+           av_make_error_string(errbuf, AV_ERROR_MAX_STRING_ਮਾਪ,       \
                                 AVERROR(ret)));                         \
     abort();                                                            \
-} while (0)
+} ਜਦੋਂ (0)
 
-#define ASSERT_PTHREAD_NORET(func, ...) do {                            \
-    int ret = func(__VA_ARGS__);                                        \
-    if (ret)                                                            \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ASSERT_PTHREAD_NORET(func, ...) ਕਰੋ {                            \
+    ਪੂਰਨ ret = func(__VA_ARGS__);                                        \
+    ਜੇ (ret)                                                            \
         ASSERT_PTHREAD_ABORT(func, ret);                                \
-} while (0)
+} ਜਦੋਂ (0)
 
-#define ASSERT_PTHREAD(func, ...) do {                                  \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ASSERT_PTHREAD(func, ...) ਕਰੋ {                                  \
     ASSERT_PTHREAD_NORET(func, __VA_ARGS__);                            \
-    return 0;                                                           \
-} while (0)
+    ਵਾਪਸ 0;                                                           \
+} ਜਦੋਂ (0)
 
-static inline int strict_pthread_join(pthread_t thread, void **value_ptr)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_join(pthread_t thread, ਖਾਲੀ **ਮੁੱਲ_ptr)
 {
-    ASSERT_PTHREAD(pthread_join, thread, value_ptr);
+    ASSERT_PTHREAD(pthread_join, thread, ਮੁੱਲ_ptr);
 }
 
-static inline int strict_pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_mutex_init(pthread_mutex_t *mutex, ਅਚਲ pthread_mutexattr_t *attr)
 {
-    if (attr) {
+    ਜੇ (attr) {
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, attr);
-    } else {
+    } ਨਹੀਂਤਾਂ {
         pthread_mutexattr_t local_attr;
         ASSERT_PTHREAD_NORET(pthread_mutexattr_init, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_settype, &local_attr, PTHREAD_MUTEX_ERRORCHECK);
         ASSERT_PTHREAD_NORET(pthread_mutex_init, mutex, &local_attr);
         ASSERT_PTHREAD_NORET(pthread_mutexattr_destroy, &local_attr);
     }
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static inline int strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_mutex_destroy(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_destroy, mutex);
 }
 
-static inline int strict_pthread_mutex_lock(pthread_mutex_t *mutex)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_mutex_ਤਾਲਾ(pthread_mutex_t *mutex)
 {
-    ASSERT_PTHREAD(pthread_mutex_lock, mutex);
+    ASSERT_PTHREAD(pthread_mutex_ਤਾਲਾ, mutex);
 }
 
-static inline int strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_mutex_unlock(pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_mutex_unlock, mutex);
 }
 
-static inline int strict_pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_cond_init(pthread_cond_t *cond, ਅਚਲ pthread_condattr_t *attr)
 {
     ASSERT_PTHREAD(pthread_cond_init, cond, attr);
 }
 
-static inline int strict_pthread_cond_destroy(pthread_cond_t *cond)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_cond_destroy(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_destroy, cond);
 }
 
-static inline int strict_pthread_cond_signal(pthread_cond_t *cond)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_cond_signal(pthread_cond_t *cond)
 {
     ASSERT_PTHREAD(pthread_cond_signal, cond);
 }
 
-static inline int strict_pthread_cond_broadcast(pthread_cond_t *cond)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_cond_ਪ੍ਰਸਾਰਣ(pthread_cond_t *cond)
 {
-    ASSERT_PTHREAD(pthread_cond_broadcast, cond);
+    ASSERT_PTHREAD(pthread_cond_ਪ੍ਰਸਾਰਣ, cond);
 }
 
-static inline int strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
     ASSERT_PTHREAD(pthread_cond_wait, cond, mutex);
 }
 
-static inline int strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
-                                                const struct timespec *abstime)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
+                                                ਅਚਲ ਬਣਤਰ timespec *abstime)
 {
-    int ret = pthread_cond_timedwait(cond, mutex, abstime);
-    if (ret && ret != ETIMEDOUT)
+    ਪੂਰਨ ret = pthread_cond_timedwait(cond, mutex, abstime);
+    ਜੇ (ret && ret != ETIMEDOUT)
         ASSERT_PTHREAD_ABORT(pthread_cond_timedwait, ret);
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-static inline int strict_pthread_once(pthread_once_t *once_control, void (*init_routine)(void))
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ strict_pthread_once(pthread_once_t *once_control, ਖਾਲੀ (*init_routine)(ਖਾਲੀ))
 {
     ASSERT_PTHREAD(pthread_once, once_control, init_routine);
 }
 
-#define pthread_join           strict_pthread_join
-#define pthread_mutex_init     strict_pthread_mutex_init
-#define pthread_mutex_destroy  strict_pthread_mutex_destroy
-#define pthread_mutex_lock     strict_pthread_mutex_lock
-#define pthread_mutex_unlock   strict_pthread_mutex_unlock
-#define pthread_cond_init      strict_pthread_cond_init
-#define pthread_cond_destroy   strict_pthread_cond_destroy
-#define pthread_cond_signal    strict_pthread_cond_signal
-#define pthread_cond_broadcast strict_pthread_cond_broadcast
-#define pthread_cond_wait      strict_pthread_cond_wait
-#define pthread_cond_timedwait strict_pthread_cond_timedwait
-#define pthread_once           strict_pthread_once
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_join           strict_pthread_join
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_mutex_init     strict_pthread_mutex_init
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_mutex_destroy  strict_pthread_mutex_destroy
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_mutex_ਤਾਲਾ     strict_pthread_mutex_ਤਾਲਾ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_mutex_unlock   strict_pthread_mutex_unlock
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_cond_init      strict_pthread_cond_init
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_cond_destroy   strict_pthread_cond_destroy
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_cond_signal    strict_pthread_cond_signal
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_cond_ਪ੍ਰਸਾਰਣ strict_pthread_cond_ਪ੍ਰਸਾਰਣ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_cond_wait      strict_pthread_cond_wait
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_cond_timedwait strict_pthread_cond_timedwait
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ pthread_once           strict_pthread_once
+#ਜੇ_ਅੰਤ
 
-#elif HAVE_OS2THREADS
-#include "compat/os2threads.h"
-#else
-#include "compat/w32pthreads.h"
-#endif
+#ਜਾਂਜੇ HAVE_OS2_ਧਾਗੇ
+#ਅਨ੍ਤਰ੍ਭਾਵ "compat/os2threads.h"
+#ਨਹੀਂਤਾਂ
+#ਅਨ੍ਤਰ੍ਭਾਵ "compat/w32pthreads.h"
+#ਜੇ_ਅੰਤ
 
-#define AVMutex pthread_mutex_t
-#define AV_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVMutex pthread_mutex_t
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 
-#define ff_mutex_init    pthread_mutex_init
-#define ff_mutex_lock    pthread_mutex_lock
-#define ff_mutex_unlock  pthread_mutex_unlock
-#define ff_mutex_destroy pthread_mutex_destroy
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_mutex_init    pthread_mutex_init
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_mutex_ਤਾਲਾ    pthread_mutex_ਤਾਲਾ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_mutex_unlock  pthread_mutex_unlock
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_mutex_destroy pthread_mutex_destroy
 
-#define AVCond pthread_cond_t
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVCond pthread_cond_t
 
-#define ff_cond_init      pthread_cond_init
-#define ff_cond_destroy   pthread_cond_destroy
-#define ff_cond_signal    pthread_cond_signal
-#define ff_cond_broadcast pthread_cond_broadcast
-#define ff_cond_wait      pthread_cond_wait
-#define ff_cond_timedwait pthread_cond_timedwait
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_cond_init      pthread_cond_init
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_cond_destroy   pthread_cond_destroy
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_cond_signal    pthread_cond_signal
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_cond_ਪ੍ਰਸਾਰਣ pthread_cond_ਪ੍ਰਸਾਰਣ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_cond_wait      pthread_cond_wait
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_cond_timedwait pthread_cond_timedwait
 
-#define AVOnce pthread_once_t
-#define AV_ONCE_INIT PTHREAD_ONCE_INIT
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVOnce pthread_once_t
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_ONCE_INIT PTHREAD_ONCE_INIT
 
-#define ff_thread_once(control, routine) pthread_once(control, routine)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ff_thread_once(control, routine) pthread_once(control, routine)
 
-#else
+#ਨਹੀਂਤਾਂ
 
-#define AVMutex char
-#define AV_MUTEX_INITIALIZER 0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVMutex ਅੱਖਰ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_MUTEX_INITIALIZER 0
 
-static inline int ff_mutex_init(AVMutex *mutex, const void *attr){ return 0; }
-static inline int ff_mutex_lock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_unlock(AVMutex *mutex){ return 0; }
-static inline int ff_mutex_destroy(AVMutex *mutex){ return 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_mutex_init(AVMutex *mutex, ਅਚਲ ਖਾਲੀ *attr){ ਵਾਪਸ 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_mutex_ਤਾਲਾ(AVMutex *mutex){ ਵਾਪਸ 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_mutex_unlock(AVMutex *mutex){ ਵਾਪਸ 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_mutex_destroy(AVMutex *mutex){ ਵਾਪਸ 0; }
 
-#define AVCond char
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVCond ਅੱਖਰ
 
-static inline int ff_cond_init(AVCond *cond, const void *attr){ return 0; }
-static inline int ff_cond_destroy(AVCond *cond){ return 0; }
-static inline int ff_cond_signal(AVCond *cond){ return 0; }
-static inline int ff_cond_broadcast(AVCond *cond){ return 0; }
-static inline int ff_cond_wait(AVCond *cond, AVMutex *mutex){ return 0; }
-static inline int ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
-                                    const void *abstime){ return 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_cond_init(AVCond *cond, ਅਚਲ ਖਾਲੀ *attr){ ਵਾਪਸ 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_cond_destroy(AVCond *cond){ ਵਾਪਸ 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_cond_signal(AVCond *cond){ ਵਾਪਸ 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_cond_ਪ੍ਰਸਾਰਣ(AVCond *cond){ ਵਾਪਸ 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_cond_wait(AVCond *cond, AVMutex *mutex){ ਵਾਪਸ 0; }
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_cond_timedwait(AVCond *cond, AVMutex *mutex,
+                                    ਅਚਲ ਖਾਲੀ *abstime){ ਵਾਪਸ 0; }
 
-#define AVOnce char
-#define AV_ONCE_INIT 0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVOnce ਅੱਖਰ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_ONCE_INIT 0
 
-static inline int ff_thread_once(char *control, void (*routine)(void))
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_thread_once(ਅੱਖਰ *control, ਖਾਲੀ (*routine)(ਖਾਲੀ))
 {
-    if (!*control) {
+    ਜੇ (!*control) {
         routine();
         *control = 1;
     }
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-#endif
+#ਜੇ_ਅੰਤ
 
-static inline int ff_thread_setname(const char *name)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_thread_setname(ਅਚਲ ਅੱਖਰ *name)
 {
-    int ret = 0;
+    ਪੂਰਨ ret = 0;
 
-#if HAVE_PRCTL
-    ret = AVERROR(prctl(PR_SET_NAME, name));
-#elif HAVE_PTHREAD_SETNAME_NP
-#if defined(__APPLE__)
+#ਜੇ HAVE_PRCTL
+    ret = AVERROR(prctl(PR_ਸੈੱਟ_NAME, name));
+#ਜਾਂਜੇ HAVE_PTHREAD_SETNAME_NP
+#ਜੇ defined(__APPLE__)
     ret = AVERROR(pthread_setname_np(name));
-#elif defined(__NetBSD__)
+#ਜਾਂਜੇ defined(__NetBSD__)
     ret = AVERROR(pthread_setname_np(pthread_self(), "%s", name));
-#else
+#ਨਹੀਂਤਾਂ
     ret = AVERROR(pthread_setname_np(pthread_self(), name));
-#endif
-#elif HAVE_PTHREAD_SET_NAME_NP
-    pthread_set_name_np(pthread_self(), name);
-#elif HAVE_W32THREADS
+#ਜੇ_ਅੰਤ
+#ਜਾਂਜੇ HAVE_PTHREAD_ਸੈੱਟ_NAME_NP
+    pthread_ਸੈੱਟ_name_np(pthread_self(), name);
+#ਜਾਂਜੇ HAVE_W32_ਧਾਗੇ
     ret = win32_thread_setname(name);
-#else
+#ਨਹੀਂਤਾਂ
     ret = AVERROR(ENOSYS);
-#endif
+#ਜੇ_ਅੰਤ
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-#endif /* AVUTIL_THREAD_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_THREAD_H */

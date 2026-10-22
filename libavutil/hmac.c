@@ -18,189 +18,189 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "attributes.h"
-#include "error.h"
-#include "hmac.h"
-#include "md5.h"
-#include "sha.h"
-#include "sha512.h"
-#include "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hmac.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "md5.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "sha.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "sha512.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
 
-#define MAX_HASHLEN 64
-#define MAX_BLOCKLEN 128
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_HASHLEN 64
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_BLOCKLEN 128
 
-typedef void (*hmac_final)(void *ctx, uint8_t *dst);
-typedef void (*hmac_update)(void *ctx, const uint8_t *src, size_t len);
-typedef void (*hmac_init)(void *ctx);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ (*hmac_final)(ਖਾਲੀ *ctx, uint8_t *dst);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ (*hmac_update)(ਖਾਲੀ *ctx, ਅਚਲ uint8_t *src, size_t len);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਖਾਲੀ (*hmac_init)(ਖਾਲੀ *ctx);
 
-struct AVHMAC {
-    void *hash;
-    int blocklen, hashlen;
+ਬਣਤਰ AVHMAC {
+    ਖਾਲੀ *hash;
+    ਪੂਰਨ blocklen, hashlen;
     hmac_final  final;
     hmac_update update;
     hmac_init   init;
-    uint8_t key[MAX_BLOCKLEN];
-    int keylen;
+    uint8_t ਕੁੰਜੀ[MAX_BLOCKLEN];
+    ਪੂਰਨ keylen;
 };
 
-#define DEFINE_ALGO_BITS_INIT(prefix, bits)        \
-static av_cold void prefix##bits##_init(void *ctx) \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DEFINE_ALGO_ਬਿੱਟ_INIT(ਅਗੇਤਰ, ਬਿੱਟ)        \
+ਸਥਿਰ av_cold ਖਾਲੀ ਅਗੇਤਰ##bits##_init(ਖਾਲੀ *ctx) \
 {                                                  \
-    av_##prefix##_init(ctx, bits);                 \
+    av_##prefix##_init(ctx, ਬਿੱਟ);                 \
 }
 
-#define DEFINE_ALGO_INIT(prefix)             \
-static av_cold void prefix##_init(void *ctx) \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DEFINE_ALGO_INIT(ਅਗੇਤਰ)             \
+ਸਥਿਰ av_cold ਖਾਲੀ ਅਗੇਤਰ##_init(ਖਾਲੀ *ctx) \
 {                                            \
     av_##prefix##_init(ctx);                 \
 }
 
-#define DEFINE_ALGO(prefix)                                            \
-static void prefix##_update(void *ctx, const uint8_t *src, size_t len) \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DEFINE_ALGO(ਅਗੇਤਰ)                                            \
+ਸਥਿਰ ਖਾਲੀ ਅਗੇਤਰ##_update(ਖਾਲੀ *ctx, ਅਚਲ uint8_t *src, size_t len) \
 {                                                                      \
     av_##prefix##_update(ctx, src, len);                               \
 }                                                                      \
-static void prefix##_final(void *ctx, uint8_t *dst)                    \
+ਸਥਿਰ ਖਾਲੀ ਅਗੇਤਰ##_final(ਖਾਲੀ *ctx, uint8_t *dst)                    \
 {                                                                      \
     av_##prefix##_final(ctx, dst);                                     \
 }
 
 DEFINE_ALGO_INIT(md5)
-DEFINE_ALGO_BITS_INIT(sha, 160)
-DEFINE_ALGO_BITS_INIT(sha, 224)
-DEFINE_ALGO_BITS_INIT(sha, 256)
-DEFINE_ALGO_BITS_INIT(sha512, 384)
-DEFINE_ALGO_BITS_INIT(sha512, 512)
+DEFINE_ALGO_ਬਿੱਟ_INIT(sha, 160)
+DEFINE_ALGO_ਬਿੱਟ_INIT(sha, 224)
+DEFINE_ALGO_ਬਿੱਟ_INIT(sha, 256)
+DEFINE_ALGO_ਬਿੱਟ_INIT(sha512, 384)
+DEFINE_ALGO_ਬਿੱਟ_INIT(sha512, 512)
 DEFINE_ALGO(md5)
 DEFINE_ALGO(sha)
 DEFINE_ALGO(sha512)
 
-AVHMAC *av_hmac_alloc(enum AVHMACType type)
+AVHMAC *av_hmac_alloc(ਗਿਣਤੀ AVHMACType type)
 {
-    AVHMAC *c = av_mallocz(sizeof(*c));
-    if (!c)
-        return NULL;
-    switch (type) {
-    case AV_HMAC_MD5:
+    AVHMAC *c = av_mallocz(ਆਕਾਰ(*c));
+    ਜੇ (!c)
+        ਵਾਪਸ ਨਿਰਾ;
+    ਚੋਣ (type) {
+    ਹਾਲਤ AV_HMAC_MD5:
         c->blocklen = 64;
         c->hashlen  = 16;
         c->init     = md5_init;
         c->update   = md5_update;
         c->final    = md5_final;
         c->hash     = av_md5_alloc();
-        break;
-    case AV_HMAC_SHA1:
+        ਰੋਕੋ;
+    ਹਾਲਤ AV_HMAC_SHA1:
         c->blocklen = 64;
         c->hashlen  = 20;
         c->init     = sha160_init;
         c->update   = sha_update;
         c->final    = sha_final;
         c->hash     = av_sha_alloc();
-        break;
-    case AV_HMAC_SHA224:
+        ਰੋਕੋ;
+    ਹਾਲਤ AV_HMAC_SHA224:
         c->blocklen = 64;
         c->hashlen  = 28;
         c->init     = sha224_init;
         c->update   = sha_update;
         c->final    = sha_final;
         c->hash     = av_sha_alloc();
-        break;
-    case AV_HMAC_SHA256:
+        ਰੋਕੋ;
+    ਹਾਲਤ AV_HMAC_SHA256:
         c->blocklen = 64;
         c->hashlen  = 32;
         c->init     = sha256_init;
         c->update   = sha_update;
         c->final    = sha_final;
         c->hash     = av_sha_alloc();
-        break;
-    case AV_HMAC_SHA384:
+        ਰੋਕੋ;
+    ਹਾਲਤ AV_HMAC_SHA384:
         c->blocklen = 128;
         c->hashlen  = 48;
         c->init     = sha512384_init;
         c->update   = sha512_update;
         c->final    = sha512_final;
         c->hash     = av_sha512_alloc();
-        break;
-    case AV_HMAC_SHA512:
+        ਰੋਕੋ;
+    ਹਾਲਤ AV_HMAC_SHA512:
         c->blocklen = 128;
         c->hashlen  = 64;
         c->init     = sha512512_init;
         c->update   = sha512_update;
         c->final    = sha512_final;
         c->hash     = av_sha512_alloc();
-        break;
-    default:
+        ਰੋਕੋ;
+    ਮੂਲ:
         av_free(c);
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
-    if (!c->hash) {
+    ਜੇ (!c->hash) {
         av_free(c);
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
-    return c;
+    ਵਾਪਸ c;
 }
 
-void av_hmac_free(AVHMAC *c)
+ਖਾਲੀ av_hmac_free(AVHMAC *c)
 {
-    if (!c)
-        return;
+    ਜੇ (!c)
+        ਵਾਪਸ;
     av_freep(&c->hash);
     av_free(c);
 }
 
-void av_hmac_init(AVHMAC *c, const uint8_t *key, unsigned int keylen)
+ਖਾਲੀ av_hmac_init(AVHMAC *c, ਅਚਲ uint8_t *ਕੁੰਜੀ, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ keylen)
 {
-    int i;
-    uint8_t block[MAX_BLOCKLEN];
-    if (keylen > c->blocklen) {
+    ਪੂਰਨ i;
+    uint8_t ਖੰਡ[MAX_BLOCKLEN];
+    ਜੇ (keylen > c->blocklen) {
         c->init(c->hash);
-        c->update(c->hash, key, keylen);
-        c->final(c->hash, c->key);
+        c->update(c->hash, ਕੁੰਜੀ, keylen);
+        c->final(c->hash, c->ਕੁੰਜੀ);
         c->keylen = c->hashlen;
-    } else {
-        memcpy(c->key, key, keylen);
+    } ਨਹੀਂਤਾਂ {
+        ਸਮ੍ਰਿਤੀ_ਨਕਲ(c->ਕੁੰਜੀ, ਕੁੰਜੀ, keylen);
         c->keylen = keylen;
     }
     c->init(c->hash);
-    for (i = 0; i < c->keylen; i++)
-        block[i] = c->key[i] ^ 0x36;
-    for (i = c->keylen; i < c->blocklen; i++)
-        block[i] = 0x36;
-    c->update(c->hash, block, c->blocklen);
+    ਲਈ (i = 0; i < c->keylen; i++)
+        ਖੰਡ[i] = c->ਕੁੰਜੀ[i] ^ 0x36;
+    ਲਈ (i = c->keylen; i < c->blocklen; i++)
+        ਖੰਡ[i] = 0x36;
+    c->update(c->hash, ਖੰਡ, c->blocklen);
 }
 
-void av_hmac_update(AVHMAC *c, const uint8_t *data, unsigned int len)
+ਖਾਲੀ av_hmac_update(AVHMAC *c, ਅਚਲ uint8_t *ਅੰਕੜੇ, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ len)
 {
-    c->update(c->hash, data, len);
+    c->update(c->hash, ਅੰਕੜੇ, len);
 }
 
-int av_hmac_final(AVHMAC *c, uint8_t *out, unsigned int outlen)
+ਪੂਰਨ av_hmac_final(AVHMAC *c, uint8_t *ਬਾਹਰਲਾ, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ outlen)
 {
-    uint8_t block[MAX_BLOCKLEN];
-    int i;
-    if (outlen < c->hashlen)
-        return AVERROR(EINVAL);
-    c->final(c->hash, out);
+    uint8_t ਖੰਡ[MAX_BLOCKLEN];
+    ਪੂਰਨ i;
+    ਜੇ (outlen < c->hashlen)
+        ਵਾਪਸ AVERROR(EINVAL);
+    c->final(c->hash, ਬਾਹਰਲਾ);
     c->init(c->hash);
-    for (i = 0; i < c->keylen; i++)
-        block[i] = c->key[i] ^ 0x5C;
-    for (i = c->keylen; i < c->blocklen; i++)
-        block[i] = 0x5C;
-    c->update(c->hash, block, c->blocklen);
-    c->update(c->hash, out, c->hashlen);
-    c->final(c->hash, out);
-    return c->hashlen;
+    ਲਈ (i = 0; i < c->keylen; i++)
+        ਖੰਡ[i] = c->ਕੁੰਜੀ[i] ^ 0x5C;
+    ਲਈ (i = c->keylen; i < c->blocklen; i++)
+        ਖੰਡ[i] = 0x5C;
+    c->update(c->hash, ਖੰਡ, c->blocklen);
+    c->update(c->hash, ਬਾਹਰਲਾ, c->hashlen);
+    c->final(c->hash, ਬਾਹਰਲਾ);
+    ਵਾਪਸ c->hashlen;
 }
 
-int av_hmac_calc(AVHMAC *c, const uint8_t *data, unsigned int len,
-                 const uint8_t *key, unsigned int keylen,
-                 uint8_t *out, unsigned int outlen)
+ਪੂਰਨ av_hmac_calc(AVHMAC *c, ਅਚਲ uint8_t *ਅੰਕੜੇ, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ len,
+                 ਅਚਲ uint8_t *ਕੁੰਜੀ, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ keylen,
+                 uint8_t *ਬਾਹਰਲਾ, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ outlen)
 {
-    av_hmac_init(c, key, keylen);
-    av_hmac_update(c, data, len);
-    return av_hmac_final(c, out, outlen);
+    av_hmac_init(c, ਕੁੰਜੀ, keylen);
+    av_hmac_update(c, ਅੰਕੜੇ, len);
+    ਵਾਪਸ av_hmac_final(c, ਬਾਹਰਲਾ, outlen);
 }

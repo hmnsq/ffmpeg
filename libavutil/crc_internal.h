@@ -16,53 +16,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CRC_INTERNAL_H
-#define AVUTIL_CRC_INTERNAL_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_ਚੱਕਰੀ_ਜਾਂਚ_ਅੰਦਰੂਨੀ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_ਚੱਕਰੀ_ਜਾਂਚ_ਅੰਦਰੂਨੀ_H
 
-#include <stdint.h>
-#include "libavutil/attributes.h"
-#include "libavutil/reverse.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/reverse.h"
 
-static uint64_t reverse(uint64_t p, unsigned int deg)
+ਸਥਿਰ uint64_t ਉਲਟ(uint64_t p, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ deg)
 {
     uint64_t ret = 0;
-    int i;
-    for (i = 0; i < (deg / 8); i += 1) {
-        ret = (ret << 8) | (ff_reverse[p & 0xff]);
+    ਪੂਰਨ i;
+    ਲਈ (i = 0; i < (deg / 8); i += 1) {
+        ret = (ret << 8) | (ff_ਉਲਟ[p & 0xff]);
         p >>= 8;
     }
-    int rem = (deg + 1) - 8 * i;
-    ret = (ret << rem) | (ff_reverse[p & 0xff] >> (8 - rem));
-    return ret;
+    ਪੂਰਨ rem = (deg + 1) - 8 * i;
+    ret = (ret << rem) | (ff_ਉਲਟ[p & 0xff] >> (8 - rem));
+    ਵਾਪਸ ret;
 }
 
-av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
-                                 uint64_t *div, int bitreverse)
+av_ਅਣਵਰਤਿਆ ਸਥਿਰ uint64_t xnmodp(ਬਿਨਾਨਿਸ਼ਾਨੀ n, uint64_t poly, ਬਿਨਾਨਿਸ਼ਾਨੀ deg,
+                                 uint64_t *div, ਪੂਰਨ bitreverse)
 {
-    uint64_t mod, mask, high;
+    uint64_t mod, ਨਕਾਬ_2, ਉੱਚਾ;
 
-    if (n < deg) {
+    ਜੇ (n < deg) {
         *div = 0;
-        return poly;
+        ਵਾਪਸ poly;
     }
-    mask = ((uint64_t)1 << deg) - 1;
-    poly &= mask;
+    ਨਕਾਬ_2 = ((uint64_t)1 << deg) - 1;
+    poly &= ਨਕਾਬ_2;
     mod = poly;
     *div = 1;
     deg--;
-    while (--n > deg) {
-        high = (mod >> deg) & 1;
-        *div = (*div << 1) | high;
+    ਜਦੋਂ (--n > deg) {
+        ਉੱਚਾ = (mod >> deg) & 1;
+        *div = (*div << 1) | ਉੱਚਾ;
         mod <<= 1;
-        if (high)
+        ਜੇ (ਉੱਚਾ)
             mod ^= poly;
     }
-    uint64_t ret = mod & mask;
-    if (bitreverse) {
-        *div = reverse(*div, deg) << 1;
-        return reverse(ret, deg) << 1;
+    uint64_t ret = mod & ਨਕਾਬ_2;
+    ਜੇ (bitreverse) {
+        *div = ਉਲਟ(*div, deg) << 1;
+        ਵਾਪਸ ਉਲਟ(ret, deg) << 1;
     }
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-#endif /* AVUTIL_CRC_INTERNAL_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_CRC_INTERNAL_H */

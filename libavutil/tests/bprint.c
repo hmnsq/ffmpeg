@@ -18,75 +18,75 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/avassert.h"
-#include "libavutil/bprint.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/avassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/bprint.c"
 
-static void bprint_pascal(AVBPrint *b, unsigned size)
+ਸਥਿਰ ਖਾਲੀ bprint_pascal(AVBPrint *b, ਬਿਨਾਨਿਸ਼ਾਨੀ ਮਾਪ)
 {
-    unsigned i, j;
-    unsigned p[42];
+    ਬਿਨਾਨਿਸ਼ਾਨੀ i, j;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ p[42];
 
-    av_assert0(size < FF_ARRAY_ELEMS(p));
+    av_assert0(ਮਾਪ < FF_ARRAY_ELEMS(p));
 
     p[0] = 1;
     av_bprintf(b, "%8d\n", 1);
-    for (i = 1; i <= size; i++) {
+    ਲਈ (i = 1; i <= ਮਾਪ; i++) {
         p[i] = 1;
-        for (j = i - 1; j > 0; j--)
+        ਲਈ (j = i - 1; j > 0; j--)
             p[j] = p[j] + p[j - 1];
-        for (j = 0; j <= i; j++)
+        ਲਈ (j = 0; j <= i; j++)
             av_bprintf(b, "%8d", p[j]);
         av_bprintf(b, "\n");
     }
 }
 
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
     AVBPrint b;
-    char buf[256];
-    struct tm testtime = { .tm_year = 100, .tm_mon = 11, .tm_mday = 20 };
+    ਅੱਖਰ buf[256];
+    ਬਣਤਰ tm testtime = { .tm_year = 100, .tm_mon = 11, .tm_mday = 20 };
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_UNLIMITED);
+    av_bprint_init(&b, 0, AV_BPRINT_ਮਾਪ_UNLIMITED);
     bprint_pascal(&b, 5);
-    printf("Short text in unlimited buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
-    printf("%s\n", b.str);
-    av_bprint_finalize(&b, NULL);
+    ਲਿਖੋ("Short text in unlimited buffer: %u/%u\n", (ਬਿਨਾਨਿਸ਼ਾਨੀ)ਲੜੀ_ਲੰਬਾਈ(b.str), b.len);
+    ਲਿਖੋ("%s\n", b.str);
+    av_bprint_finalize(&b, ਨਿਰਾ);
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_UNLIMITED);
+    av_bprint_init(&b, 0, AV_BPRINT_ਮਾਪ_UNLIMITED);
     bprint_pascal(&b, 25);
-    printf("Long text in unlimited buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
-    av_bprint_finalize(&b, NULL);
+    ਲਿਖੋ("Long text in unlimited buffer: %u/%u\n", (ਬਿਨਾਨਿਸ਼ਾਨੀ)ਲੜੀ_ਲੰਬਾਈ(b.str), b.len);
+    av_bprint_finalize(&b, ਨਿਰਾ);
 
     av_bprint_init(&b, 0, 2048);
     bprint_pascal(&b, 25);
-    printf("Long text in limited buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
-    av_bprint_finalize(&b, NULL);
+    ਲਿਖੋ("Long text in limited buffer: %u/%u\n", (ਬਿਨਾਨਿਸ਼ਾਨੀ)ਲੜੀ_ਲੰਬਾਈ(b.str), b.len);
+    av_bprint_finalize(&b, ਨਿਰਾ);
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_AUTOMATIC);
+    av_bprint_init(&b, 0, AV_BPRINT_ਮਾਪ_AUTOMATIC);
     bprint_pascal(&b, 5);
-    printf("Short text in automatic buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
+    ਲਿਖੋ("Short text in automatic buffer: %u/%u\n", (ਬਿਨਾਨਿਸ਼ਾਨੀ)ਲੜੀ_ਲੰਬਾਈ(b.str), b.len);
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_AUTOMATIC);
+    av_bprint_init(&b, 0, AV_BPRINT_ਮਾਪ_AUTOMATIC);
     bprint_pascal(&b, 25);
-    printf("Long text in automatic buffer: %u/%u\n", (unsigned)strlen(b.str)/8*8, b.len);
+    ਲਿਖੋ("Long text in automatic buffer: %u/%u\n", (ਬਿਨਾਨਿਸ਼ਾਨੀ)ਲੜੀ_ਲੰਬਾਈ(b.str)/8*8, b.len);
     /* Note that the size of the automatic buffer is arch-dependent. */
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_COUNT_ONLY);
+    av_bprint_init(&b, 0, AV_BPRINT_ਮਾਪ_ਗਿਣਤੀ_ONLY);
     bprint_pascal(&b, 25);
-    printf("Long text count only buffer: %u/%u\n", (unsigned)strlen(b.str), b.len);
+    ਲਿਖੋ("Long text count only buffer: %u/%u\n", (ਬਿਨਾਨਿਸ਼ਾਨੀ)ਲੜੀ_ਲੰਬਾਈ(b.str), b.len);
 
-    av_bprint_init_for_buffer(&b, buf, sizeof(buf));
+    av_bprint_init_for_ਬਫਰ(&b, buf, ਆਕਾਰ(buf));
     bprint_pascal(&b, 25);
-    printf("Long text count only buffer: %u/%u\n", (unsigned)strlen(buf), b.len);
+    ਲਿਖੋ("Long text count only buffer: %u/%u\n", (ਬਿਨਾਨਿਸ਼ਾਨੀ)ਲੜੀ_ਲੰਬਾਈ(buf), b.len);
 
-    av_bprint_init(&b, 0, AV_BPRINT_SIZE_UNLIMITED);
+    av_bprint_init(&b, 0, AV_BPRINT_ਮਾਪ_UNLIMITED);
     av_bprint_strftime(&b, "%Y-%m-%d", &testtime);
-    printf("strftime full: %u/%u \"%s\"\n", (unsigned)strlen(buf), b.len, b.str);
-    av_bprint_finalize(&b, NULL);
+    ਲਿਖੋ("strftime full: %u/%u \"%s\"\n", (ਬਿਨਾਨਿਸ਼ਾਨੀ)ਲੜੀ_ਲੰਬਾਈ(buf), b.len, b.str);
+    av_bprint_finalize(&b, ਨਿਰਾ);
 
     av_bprint_init(&b, 0, 8);
     av_bprint_strftime(&b, "%Y-%m-%d", &testtime);
-    printf("strftime truncated: %u/%u \"%s\"\n", (unsigned)strlen(buf), b.len, b.str);
+    ਲਿਖੋ("strftime truncated: %u/%u \"%s\"\n", (ਬਿਨਾਨਿਸ਼ਾਨੀ)ਲੜੀ_ਲੰਬਾਈ(buf), b.len, b.str);
 
-    return 0;
+    ਵਾਪਸ 0;
 }

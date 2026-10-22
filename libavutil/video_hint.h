@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_VIDEO_HINT_H
-#define AVUTIL_VIDEO_HINT_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_VIDEO_HINT_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_VIDEO_HINT_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "libavutil/avassert.h"
-#include "libavutil/frame.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/avassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/frame.h"
 
-typedef struct AVVideoRect {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVVideoRect {
     uint32_t x, y;
-    uint32_t width, height;
+    uint32_t ਚੌੜਾਈ, ਉਚਾਈ;
 } AVVideoRect;
 
-typedef enum AVVideoHintType {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ AVVideoHintType {
     /* rectangled delimit the constant areas (unchanged), default is changed */
     AV_VIDEO_HINT_TYPE_CONSTANT,
 
     /* rectangled delimit the constant areas (changed), default is not changed */
-    AV_VIDEO_HINT_TYPE_CHANGED,
+    AV_VIDEO_HINT_TYPE_ਬਦਲਿਆ,
 } AVVideoHintType;
 
-typedef struct AVVideoHint {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVVideoHint {
     /**
      * Number of AVVideoRect present.
      *
@@ -53,24 +53,24 @@ typedef struct AVVideoHint {
      * Offset in bytes from the beginning of this structure at which the array
      * of AVVideoRect starts.
      */
-    size_t rect_offset;
+    size_t rect_ਵਿੱਥ;
 
     /**
      * Size in bytes of AVVideoRect.
      */
-    size_t rect_size;
+    size_t rect_ਮਾਪ;
 
     AVVideoHintType type;
 } AVVideoHint;
 
-static av_always_inline AVVideoRect *
-av_video_hint_rects(const AVVideoHint *hints) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset);
+ਸਥਿਰ av_always_inline AVVideoRect *
+av_video_hint_rects(ਅਚਲ AVVideoHint *hints) {
+    ਵਾਪਸ (AVVideoRect *)((uint8_t *)hints + hints->rect_ਵਿੱਥ);
 }
 
-static av_always_inline AVVideoRect *
-av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
-    return (AVVideoRect *)((uint8_t *)hints + hints->rect_offset + idx * hints->rect_size);
+ਸਥਿਰ av_always_inline AVVideoRect *
+av_video_hint_get_rect(ਅਚਲ AVVideoHint *hints, size_t idx) {
+    ਵਾਪਸ (AVVideoRect *)((uint8_t *)hints + hints->rect_ਵਿੱਥ + idx * hints->rect_ਮਾਪ);
 }
 
 /**
@@ -94,14 +94,14 @@ av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
  *         av_free()) on success, NULL on memory allocation failure
  */
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
-                                 size_t *out_size);
+                                 size_t *ਬਾਹਰਲਾ_ਮਾਪ);
 
 /**
  * Same as av_video_hint_alloc(), except newly-allocated AVVideoHint is attached
  * as side data of type AV_FRAME_DATA_VIDEO_HINT_INFO to frame.
  */
-AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
+AVVideoHint *av_video_hint_create_side_ਅੰਕੜੇ(AVFrame *ਚੌਖਟਾ,
                                             size_t nb_rects);
 
 
-#endif /* AVUTIL_VIDEO_HINT_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_VIDEO_HINT_H */

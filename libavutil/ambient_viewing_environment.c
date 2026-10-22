@@ -18,43 +18,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ambient_viewing_environment.h"
-#include "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ambient_viewing_environment.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
 
-static void get_defaults(AVAmbientViewingEnvironment *env)
+ਸਥਿਰ ਖਾਲੀ get_defaults(AVAmbientViewingEnvironment *env)
 {
     env->ambient_illuminance =
     env->ambient_light_x     =
     env->ambient_light_y     = (AVRational) { 0, 1 };
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *ਮਾਪ)
 {
     AVAmbientViewingEnvironment *env =
-        av_mallocz(sizeof(AVAmbientViewingEnvironment));
+        av_mallocz(ਆਕਾਰ(AVAmbientViewingEnvironment));
 
-    if (size)
-        *size = env ? sizeof(*env) : 0;
+    ਜੇ (ਮਾਪ)
+        *ਮਾਪ = env ? ਆਕਾਰ(*env) : 0;
 
-    if (!env)
-        return NULL;
+    ਜੇ (!env)
+        ਵਾਪਸ ਨਿਰਾ;
 
     get_defaults(env);
 
-    return env;
+    ਵਾਪਸ env;
 }
 
-AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame)
+AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_ਅੰਕੜੇ(AVFrame *ਚੌਖਟਾ)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame,
-                               AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
-                               sizeof(AVAmbientViewingEnvironment));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ਅੰਕੜੇ *side_ਅੰਕੜੇ =
+        av_ਚੌਖਟਾ_new_side_ਅੰਕੜੇ(ਚੌਖਟਾ,
+                               AV_ਚੌਖਟਾ_ਅੰਕੜੇ_AMBIENT_VIEWING_ENVIRONMENT,
+                               ਆਕਾਰ(AVAmbientViewingEnvironment));
+    ਜੇ (!side_ਅੰਕੜੇ)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    memset(side_data->data, 0, side_data->size);
-    get_defaults((AVAmbientViewingEnvironment *)side_data->data);
+    memset(side_ਅੰਕੜੇ->ਅੰਕੜੇ, 0, side_ਅੰਕੜੇ->ਮਾਪ);
+    get_defaults((AVAmbientViewingEnvironment *)side_ਅੰਕੜੇ->ਅੰਕੜੇ);
 
-    return (AVAmbientViewingEnvironment *)side_data->data;
+    ਵਾਪਸ (AVAmbientViewingEnvironment *)side_ਅੰਕੜੇ->ਅੰਕੜੇ;
 }

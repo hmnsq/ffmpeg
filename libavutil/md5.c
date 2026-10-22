@@ -30,36 +30,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "bswap.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "md5.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "bswap.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "intreadwrite.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "md5.h"
 
-typedef struct AVMD5 {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVMD5 {
     uint64_t len;
-    uint8_t  block[64];
+    uint8_t  ਖੰਡ[64];
     uint32_t ABCD[4];
 } AVMD5;
 
-const int av_md5_size = sizeof(AVMD5);
+ਅਚਲ ਪੂਰਨ av_md5_ਮਾਪ = ਆਕਾਰ(AVMD5);
 
-struct AVMD5 *av_md5_alloc(void)
+ਬਣਤਰ AVMD5 *av_md5_alloc(ਖਾਲੀ)
 {
-    return av_mallocz(sizeof(struct AVMD5));
+    ਵਾਪਸ av_mallocz(ਆਕਾਰ(ਬਣਤਰ AVMD5));
 }
 
-static const uint8_t S[4][4] = {
+ਸਥਿਰ ਅਚਲ uint8_t S[4][4] = {
     { 7, 12, 17, 22 },  /* round 1 */
     { 5,  9, 14, 20 },  /* round 2 */
     { 4, 11, 16, 23 },  /* round 3 */
     { 6, 10, 15, 21 }   /* round 4 */
 };
 
-static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
+ਸਥਿਰ ਅਚਲ uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,   /* round 1 */
     0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
@@ -81,40 +81,40 @@ static const uint32_t T[64] = { // T[i]= fabs(sin(i+1)<<32)
     0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391,
 };
 
-#define CORE(i, a, b, c, d)                                             \
-    do {                                                                \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CORE(i, a, b, c, d)                                             \
+    ਕਰੋ {                                                                \
         t  = S[i >> 4][i & 3];                                          \
         a += T[i];                                                      \
                                                                         \
-        if (i < 32) {                                                   \
-            if (i < 16)                                                 \
+        ਜੇ (i < 32) {                                                   \
+            ਜੇ (i < 16)                                                 \
                 a += (d ^ (b & (c ^ d)))  + AV_RL32(X+(       i  & 15));\
-            else                                                        \
+            ਨਹੀਂਤਾਂ                                                        \
                 a += ((d & b) | (~d & c)) + AV_RL32(X+((1 + 5*i) & 15));\
-        } else {                                                        \
-            if (i < 48)                                                 \
+        } ਨਹੀਂਤਾਂ {                                                        \
+            ਜੇ (i < 48)                                                 \
                 a += (b ^ c ^ d)          + AV_RL32(X+((5 + 3*i) & 15));\
-            else                                                        \
+            ਨਹੀਂਤਾਂ                                                        \
                 a += (c ^ (b | ~d))       + AV_RL32(X+((    7*i) & 15));\
         }                                                               \
         a = b + (a << t | a >> (32 - t));                               \
-    } while (0)
+    } ਜਦੋਂ (0)
 
-static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
+ਸਥਿਰ ਖਾਲੀ body(uint32_t ABCD[4], ਅਚਲ uint8_t *src, size_t nblocks)
 {
-    const uint32_t *X;
+    ਅਚਲ uint32_t *X;
     uint32_t a, b, c, d, t;
 
-    for (size_t n = 0; n < nblocks; n++) {
+    ਲਈ (size_t n = 0; n < nblocks; n++) {
         a = ABCD[3];
         b = ABCD[2];
         c = ABCD[1];
         d = ABCD[0];
 
-        X = (const uint32_t *)src + n * 16;
+        X = (ਅਚਲ uint32_t *)src + n * 16;
 
-#if CONFIG_SMALL
-        for (int i = 0; i < 64; i++) {
+#ਜੇ CONFIG_SMALL
+        ਲਈ (ਪੂਰਨ i = 0; i < 64; i++) {
             CORE(i, a, b, c, d);
             t = d;
             d = c;
@@ -122,16 +122,16 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
             b = a;
             a = t;
         }
-#else
-#define CORE2(i)                                                        \
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CORE2(i)                                                        \
         CORE(i, a, b, c, d); CORE((i + 1), d, a, b, c);                 \
         CORE((i + 2), c, d, a, b); CORE((i + 3), b, c, d, a)
-#define CORE4(i) CORE2(i); CORE2((i + 4)); CORE2((i + 8)); CORE2((i + 12))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CORE4(i) CORE2(i); CORE2((i + 4)); CORE2((i + 8)); CORE2((i + 12))
         CORE4(0);
         CORE4(16);
         CORE4(32);
         CORE4(48);
-#endif
+#ਜੇ_ਅੰਤ
 
         ABCD[0] += d;
         ABCD[1] += c;
@@ -140,7 +140,7 @@ static void body(uint32_t ABCD[4], const uint8_t *src, size_t nblocks)
     }
 }
 
-void av_md5_init(AVMD5 *ctx)
+ਖਾਲੀ av_md5_init(AVMD5 *ctx)
 {
     ctx->len     = 0;
 
@@ -150,57 +150,57 @@ void av_md5_init(AVMD5 *ctx)
     ctx->ABCD[3] = 0x67452301;
 }
 
-void av_md5_update(AVMD5 *ctx, const uint8_t *src, size_t len)
+ਖਾਲੀ av_md5_update(AVMD5 *ctx, ਅਚਲ uint8_t *src, size_t len)
 {
-    const uint8_t *end;
-    int j;
+    ਅਚਲ uint8_t *ਸਿਰਾ;
+    ਪੂਰਨ j;
 
     j         = ctx->len & 63;
     ctx->len += len;
 
-    if (j) {
-        int cnt = FFMIN(len, 64 - j);
-        memcpy(ctx->block + j, src, cnt);
+    ਜੇ (j) {
+        ਪੂਰਨ cnt = FFMIN(len, 64 - j);
+        ਸਮ੍ਰਿਤੀ_ਨਕਲ(ctx->ਖੰਡ + j, src, cnt);
         src += cnt;
         len -= cnt;
-        if (j + cnt < 64)
-            return;
-        body(ctx->ABCD, ctx->block, 1);
+        ਜੇ (j + cnt < 64)
+            ਵਾਪਸ;
+        body(ctx->ABCD, ctx->ਖੰਡ, 1);
     }
 
-    end = src + (len & ~63);
-    if (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
-       while (src < end) {
-           memcpy(ctx->block, src, 64);
-           body(ctx->ABCD, ctx->block, 1);
+    ਸਿਰਾ = src + (len & ~63);
+    ਜੇ (!HAVE_FAST_UNALIGNED && ((intptr_t)src & 3)) {
+       ਜਦੋਂ (src < ਸਿਰਾ) {
+           ਸਮ੍ਰਿਤੀ_ਨਕਲ(ctx->ਖੰਡ, src, 64);
+           body(ctx->ABCD, ctx->ਖੰਡ, 1);
            src += 64;
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         size_t nblocks = len / 64;
         body(ctx->ABCD, src, nblocks);
-        src = end;
+        src = ਸਿਰਾ;
     }
     len &= 63;
-    if (len > 0)
-        memcpy(ctx->block, src, len);
+    ਜੇ (len > 0)
+        ਸਮ੍ਰਿਤੀ_ਨਕਲ(ctx->ਖੰਡ, src, len);
 }
 
-void av_md5_final(AVMD5 *ctx, uint8_t *dst)
+ਖਾਲੀ av_md5_final(AVMD5 *ctx, uint8_t *dst)
 {
-    int i;
+    ਪੂਰਨ i;
     uint64_t finalcount = av_le2ne64(ctx->len << 3);
 
     av_md5_update(ctx, "\200", 1);
-    while ((ctx->len & 63) != 56)
+    ਜਦੋਂ ((ctx->len & 63) != 56)
         av_md5_update(ctx, "", 1);
 
     av_md5_update(ctx, (uint8_t *) &finalcount, 8);
 
-    for (i = 0; i < 4; i++)
+    ਲਈ (i = 0; i < 4; i++)
         AV_WL32(dst + 4 * i, ctx->ABCD[3 - i]);
 }
 
-void av_md5_sum(uint8_t *dst, const uint8_t *src, size_t len)
+ਖਾਲੀ av_md5_ਜੋੜ(uint8_t *dst, ਅਚਲ uint8_t *src, size_t len)
 {
     AVMD5 ctx;
 

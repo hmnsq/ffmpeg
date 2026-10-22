@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BLOWFISH_H
-#define AVUTIL_BLOWFISH_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_BLOWFISH_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_BLOWFISH_H
 
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
 /**
  * @defgroup lavu_blowfish Blowfish
@@ -30,17 +30,17 @@
  * @{
  */
 
-#define AV_BF_ROUNDS 16
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BF_ਗੇੜ 16
 
-typedef struct AVBlowfish {
-    uint32_t p[AV_BF_ROUNDS + 2];
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVBlowfish {
+    uint32_t p[AV_BF_ਗੇੜ + 2];
     uint32_t s[4][256];
 } AVBlowfish;
 
 /**
  * Allocate an AVBlowfish context.
  */
-AVBlowfish *av_blowfish_alloc(void);
+AVBlowfish *av_blowfish_alloc(ਖਾਲੀ);
 
 /**
  * Initialize an AVBlowfish context.
@@ -49,7 +49,7 @@ AVBlowfish *av_blowfish_alloc(void);
  * @param key a key
  * @param key_len length of the key
  */
-void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
+ਖਾਲੀ av_blowfish_init(ਬਣਤਰ AVBlowfish *ctx, ਅਚਲ uint8_t *ਕੁੰਜੀ, ਪੂਰਨ ਕੁੰਜੀ_len);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -59,8 +59,8 @@ void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
  * @param xr right four bytes halves of input to be encrypted
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt);
+ਖਾਲੀ av_blowfish_crypt_ecb(ਬਣਤਰ AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
+                           ਪੂਰਨ decrypt);
 
 /**
  * Encrypt or decrypt a buffer using a previously initialized context.
@@ -72,11 +72,11 @@ void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
  * @param iv initialization vector for CBC mode, if NULL ECB will be used
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_blowfish_crypt(struct AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt);
+ਖਾਲੀ av_blowfish_crypt(ਬਣਤਰ AVBlowfish *ctx, uint8_t *dst, ਅਚਲ uint8_t *src,
+                       ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ decrypt);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_BLOWFISH_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_BLOWFISH_H */

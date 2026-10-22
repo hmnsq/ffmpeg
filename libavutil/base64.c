@@ -24,20 +24,20 @@
  * @author Ryan Martell <rdm4@martellventures.com> (with lots of Michael)
  */
 
-#include <limits.h>
-#include <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
 
-#include "base64.h"
-#include "base64_internal.h"
-#include "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "base64.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "base64_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
 
-#if ARCH_AARCH64
-#include "libavutil/aarch64/cpu.h"
-#include "libavutil/aarch64/base64.h"
-#endif
+#ਜੇ ARCH_AARCH64
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/aarch64/cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/aarch64/base64.h"
+#ਜੇ_ਅੰਤ
 
 /* ---------------- private code */
-static const uint8_t map2[256] =
+ਸਥਿਰ ਅਚਲ uint8_t map2[256] =
 {
     0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -76,71 +76,71 @@ static const uint8_t map2[256] =
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 };
 
-#define BASE64_DEC_STEP(i) do { \
-    bits = map2[in[i]]; \
-    if (bits & 0x80) \
-        goto out ## i; \
-    v = i ? (v << 6) + bits : bits; \
-} while(0)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ BASE64_DEC_ਕਦਮ(i) ਕਰੋ { \
+    ਬਿੱਟ = map2[ਵਿੱਚ_2[i]]; \
+    ਜੇ (ਬਿੱਟ & 0x80) \
+        ਜਾਓ ਬਾਹਰਲਾ ## i; \
+    v = i ? (v << 6) + ਬਿੱਟ : ਬਿੱਟ; \
+} ਜਦੋਂ(0)
 
-int av_base64_decode(uint8_t *out, const char *in_str, int out_size)
+ਪੂਰਨ av_base64_decode(uint8_t *ਬਾਹਰਲਾ, ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_str, ਪੂਰਨ ਬਾਹਰਲਾ_ਮਾਪ)
 {
-    uint8_t *dst = out;
-    uint8_t *end;
+    uint8_t *dst = ਬਾਹਰਲਾ;
+    uint8_t *ਸਿਰਾ;
     // no sign extension
-    const uint8_t *in = in_str;
-    unsigned bits = 0xff;
-    unsigned v;
+    ਅਚਲ uint8_t *ਵਿੱਚ_2 = ਵਿੱਚ_str;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਬਿੱਟ = 0xff;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ v;
 
-    if (!out)
-        goto validity_check;
+    ਜੇ (!ਬਾਹਰਲਾ)
+        ਜਾਓ validity_check;
 
-    end = out + out_size;
-    while (end - dst > 3) {
-        BASE64_DEC_STEP(0);
-        BASE64_DEC_STEP(1);
-        BASE64_DEC_STEP(2);
-        BASE64_DEC_STEP(3);
+    ਸਿਰਾ = ਬਾਹਰਲਾ + ਬਾਹਰਲਾ_ਮਾਪ;
+    ਜਦੋਂ (ਸਿਰਾ - dst > 3) {
+        BASE64_DEC_ਕਦਮ(0);
+        BASE64_DEC_ਕਦਮ(1);
+        BASE64_DEC_ਕਦਮ(2);
+        BASE64_DEC_ਕਦਮ(3);
         // Using AV_WB32 directly confuses compiler
         v = av_be2ne32(v << 8);
         AV_WN32(dst, v);
         dst += 3;
-        in += 4;
+        ਵਿੱਚ_2 += 4;
     }
-    if (end - dst) {
-        BASE64_DEC_STEP(0);
-        BASE64_DEC_STEP(1);
-        BASE64_DEC_STEP(2);
-        BASE64_DEC_STEP(3);
+    ਜੇ (ਸਿਰਾ - dst) {
+        BASE64_DEC_ਕਦਮ(0);
+        BASE64_DEC_ਕਦਮ(1);
+        BASE64_DEC_ਕਦਮ(2);
+        BASE64_DEC_ਕਦਮ(3);
         *dst++ = v >> 16;
-        if (end - dst)
+        ਜੇ (ਸਿਰਾ - dst)
             *dst++ = v >> 8;
-        if (end - dst)
+        ਜੇ (ਸਿਰਾ - dst)
             *dst++ = v;
-        in += 4;
+        ਵਿੱਚ_2 += 4;
     }
 validity_check:
-    while (1) {
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
-        BASE64_DEC_STEP(0);
-        in++;
+    ਜਦੋਂ (1) {
+        BASE64_DEC_ਕਦਮ(0);
+        ਵਿੱਚ_2++;
+        BASE64_DEC_ਕਦਮ(0);
+        ਵਿੱਚ_2++;
+        BASE64_DEC_ਕਦਮ(0);
+        ਵਿੱਚ_2++;
+        BASE64_DEC_ਕਦਮ(0);
+        ਵਿੱਚ_2++;
     }
 
 out3:
-    if (end - dst)
+    ਜੇ (ਸਿਰਾ - dst)
         *dst++ = v >> 10;
     v <<= 2;
 out2:
-    if (end - dst)
+    ਜੇ (ਸਿਰਾ - dst)
         *dst++ = v >> 4;
 out1:
 out0:
-    return bits & 1 ? AVERROR_INVALIDDATA : out ? dst - out : 0;
+    ਵਾਪਸ ਬਿੱਟ & 1 ? AVERROR_INVALIDDATA : ਬਾਹਰਲਾ ? dst - ਬਾਹਰਲਾ : 0;
 }
 
 /*****************************************************************************
@@ -149,18 +149,18 @@ out0:
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-char *av_base64_encode(char *out, int out_size, const uint8_t *in, int in_size)
+ਅੱਖਰ *av_base64_encode(ਅੱਖਰ *ਬਾਹਰਲਾ, ਪੂਰਨ ਬਾਹਰਲਾ_ਮਾਪ, ਅਚਲ uint8_t *ਵਿੱਚ_2, ਪੂਰਨ ਵਿੱਚ_ਮਾਪ)
 {
-    static const char b64[] =
+    ਸਥਿਰ ਅਚਲ ਅੱਖਰ b64[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    if (in_size >= UINT_MAX / 4 ||
-        out_size < AV_BASE64_SIZE(in_size))
-        return NULL;
-#if ARCH_AARCH64
-    if (in_size >= 48 && have_neon(av_get_cpu_flags())) {
-        return ff_base64_encode_neon(out, in, in_size, b64);
+    ਜੇ (ਵਿੱਚ_ਮਾਪ >= UINT_MAX / 4 ||
+        ਬਾਹਰਲਾ_ਮਾਪ < AV_BASE64_ਮਾਪ(ਵਿੱਚ_ਮਾਪ))
+        ਵਾਪਸ ਨਿਰਾ;
+#ਜੇ ARCH_AARCH64
+    ਜੇ (ਵਿੱਚ_ਮਾਪ >= 48 && have_neon(av_get_cpu_flags())) {
+        ਵਾਪਸ ff_base64_encode_neon(ਬਾਹਰਲਾ, ਵਿੱਚ_2, ਵਿੱਚ_ਮਾਪ, b64);
     }
-#endif
-    return ff_base64_encode_c(out, in, in_size, b64);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ ff_base64_encode_c(ਬਾਹਰਲਾ, ਵਿੱਚ_2, ਵਿੱਚ_ਮਾਪ, b64);
 }

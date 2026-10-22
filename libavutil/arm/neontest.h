@@ -20,34 +20,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ARM_NEONTEST_H
-#define AVUTIL_ARM_NEONTEST_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_ARM_NEONTEST_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_ARM_NEONTEST_H
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <inttypes.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdarg.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "libavutil/bswap.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/bswap.h"
 
-#define storeneonregs(mem)                \
-    __asm__ volatile(                     \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ storeneonregs(mem)                \
+    __asm__ ਅਸਥਿਰ(                     \
         "vstm %0, {d8-d15}\n\t"           \
         :: "r"(mem) : "memory")
 
-#define testneonclobbers(func, ctx, ...)                        \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ testneonclobbers(func, ctx, ...)                        \
     uint64_t neon[2][8];                                        \
-    int ret;                                                    \
+    ਪੂਰਨ ret;                                                    \
     storeneonregs(neon[0]);                                     \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storeneonregs(neon[1]);                                     \
-    if (memcmp(neon[0], neon[1], sizeof(neon[0]))) {            \
-        int i;                                                  \
+    ਜੇ (memcmp(neon[0], neon[1], ਆਕਾਰ(neon[0]))) {            \
+        ਪੂਰਨ i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "NEON REGS CLOBBERED IN %s!\n", #func);          \
-        for (i = 0; i < 8; i ++)                                \
-            if (neon[0][i] != neon[1][i]) {                     \
+        ਲਈ (i = 0; i < 8; i ++)                                \
+            ਜੇ (neon[0][i] != neon[1][i]) {                     \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "d%-2d = %016"PRIx64"\n",                \
                        8 + i, av_bswap64(neon[0][i]));          \
@@ -57,11 +57,11 @@
             }                                                   \
         abort();                                                \
     }                                                           \
-    return ret
+    ਵਾਪਸ ret
 
-#define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ wrap(func)      \
+ਪੂਰਨ __real_ ## func;    \
+ਪੂਰਨ __wrap_ ## func;    \
+ਪੂਰਨ __wrap_ ## func
 
-#endif /* AVUTIL_ARM_NEONTEST_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_ARM_NEONTEST_H */

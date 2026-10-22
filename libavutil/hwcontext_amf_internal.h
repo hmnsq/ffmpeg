@@ -17,29 +17,29 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#define AVUTIL_HWCONTEXT_AMF_INTERNAL_H
-#include <AMF/core/Factory.h>
-#include <AMF/core/Context.h>
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_HWCONTEXT_AMF_ਅੰਦਰੂਨੀ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_HWCONTEXT_AMF_ਅੰਦਰੂਨੀ_H
+#ਅਨ੍ਤਰ੍ਭਾਵ <AMF/core/Factory.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <AMF/core/Context.h>
 
 /**
 * Error handling helper
 */
-#define AMF_RETURN_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AMF_RETURN_IF_FALSE(avctx, ਘਾਤਾਂਕ, ret_ਮੁੱਲ, /*message,*/ ...) \
+    ਜੇ (!(ਘਾਤਾਂਕ)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        return ret_value; \
+        ਵਾਪਸ ret_ਮੁੱਲ; \
     }
 
-#define AMF_GOTO_FAIL_IF_FALSE(avctx, exp, ret_value, /*message,*/ ...) \
-    if (!(exp)) { \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AMF_GOTO_FAIL_IF_FALSE(avctx, ਘਾਤਾਂਕ, ret_ਮੁੱਲ, /*message,*/ ...) \
+    ਜੇ (!(ਘਾਤਾਂਕ)) { \
         av_log(avctx, AV_LOG_ERROR, __VA_ARGS__); \
-        ret = ret_value; \
-        goto fail; \
+        ret = ret_ਮੁੱਲ; \
+        ਜਾਓ fail; \
     }
 
-#define AMF_TIME_BASE_Q          (AVRational){1, AMF_SECOND}
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AMF_ਸਮਾਂ_ਅਧਾਰ_Q          (AVRational){1, AMF_ਦੂਜਾ}
 
-#define AMF_IFACE_CALL(this, function, ...) ((this)->pVtbl->function((this), ##__VA_ARGS__))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AMF_IFACE_CALL(this, function, ...) ((this)->pVtbl->function((this), ##__VA_ARGS__))
 
-#endif /* AVUTIL_HWCONTEXT_AMF_INTERNAL_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_HWCONTEXT_AMF_INTERNAL_H */

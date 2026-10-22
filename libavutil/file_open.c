@@ -16,177 +16,177 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "avutil.h"
-#include "file_open.h"
-#include "mem.h"
-#include <stdarg.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_IO_H
-#include <io.h>
-#endif
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avutil.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "file_open.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdarg.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <fcntl.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <sys/stat.h>
+#ਜੇ HAVE_UNISTD_H
+#ਅਨ੍ਤਰ੍ਭਾਵ <unistd.h>
+#ਜੇ_ਅੰਤ
+#ਜੇ HAVE_IO_H
+#ਅਨ੍ਤਰ੍ਭਾਵ <io.h>
+#ਜੇ_ਅੰਤ
 
-#ifdef _WIN32
-#undef open
-#undef lseek
-#undef stat
-#undef fstat
-#include <windows.h>
-#include <share.h>
-#include <errno.h>
-#include "wchar_filename.h"
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ _WIN32
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ open
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ lseek
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ stat
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ fstat
+#ਅਨ੍ਤਰ੍ਭਾਵ <windows.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <share.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <errno.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "wchar_filename.h"
 
-static int win32_open(const char *filename_utf8, int oflag, int pmode)
+ਸਥਿਰ ਪੂਰਨ win32_open(ਅਚਲ ਅੱਖਰ *filename_utf8, ਪੂਰਨ oflag, ਪੂਰਨ pmode)
 {
-    int fd;
+    ਪੂਰਨ fd;
     wchar_t *filename_w;
 
     /* convert UTF-8 to wide chars */
-    if (get_extended_win32_path(filename_utf8, &filename_w))
-        return -1;
-    if (!filename_w)
-        goto fallback;
+    ਜੇ (get_extended_win32_ਰਸਤਾ(filename_utf8, &filename_w))
+        ਵਾਪਸ -1;
+    ਜੇ (!filename_w)
+        ਜਾਓ fallback;
 
     fd = _wsopen(filename_w, oflag, SH_DENYNO, pmode);
     av_freep(&filename_w);
 
-    if (fd != -1 || (oflag & O_CREAT))
-        return fd;
+    ਜੇ (fd != -1 || (oflag & O_CREAT))
+        ਵਾਪਸ fd;
 
 fallback:
     /* filename may be in CP_ACP */
-    return _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
+    ਵਾਪਸ _sopen(filename_utf8, oflag, SH_DENYNO, pmode);
 }
-#define open win32_open
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ open win32_open
+#ਜੇ_ਅੰਤ
 
-int avpriv_open(const char *filename, int flags, ...)
+ਪੂਰਨ avpriv_open(ਅਚਲ ਅੱਖਰ *filename, ਪੂਰਨ flags, ...)
 {
-    int fd;
-    unsigned int mode = 0;
+    ਪੂਰਨ fd;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ ਬਹੁਲਕ = 0;
     va_list ap;
 
     va_start(ap, flags);
-    if (flags & O_CREAT)
-        mode = va_arg(ap, unsigned int);
+    ਜੇ (flags & O_CREAT)
+        ਬਹੁਲਕ = va_arg(ap, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ);
     va_end(ap);
 
-#ifdef O_CLOEXEC
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ O_CLOEXEC
     flags |= O_CLOEXEC;
-#endif
-#ifdef O_NOINHERIT
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ O_NOINHERIT
     flags |= O_NOINHERIT;
-#endif
+#ਜੇ_ਅੰਤ
 
-    fd = open(filename, flags, mode);
-#if HAVE_FCNTL
-    if (fd != -1) {
-        if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
-            av_log(NULL, AV_LOG_DEBUG, "Failed to set close on exec\n");
+    fd = open(filename, flags, ਬਹੁਲਕ);
+#ਜੇ HAVE_FCNTL
+    ਜੇ (fd != -1) {
+        ਜੇ (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
+            av_log(ਨਿਰਾ, AV_LOG_DEBUG, "Failed to set close on exec\n");
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    return fd;
+    ਵਾਪਸ fd;
 }
 
-typedef struct FileLogContext {
-    const AVClass *class;
-    int   log_offset;
-    void *log_ctx;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ FileLogContext {
+    ਅਚਲ AVClass *class;
+    ਪੂਰਨ   log_ਵਿੱਥ;
+    ਖਾਲੀ *log_ctx;
 } FileLogContext;
 
-static const AVClass file_log_ctx_class = {
+ਸਥਿਰ ਅਚਲ AVClass file_log_ctx_class = {
     .class_name                = "TEMPFILE",
-    .item_name                 = av_default_item_name,
-    .option                    = NULL,
-    .version                   = LIBAVUTIL_VERSION_INT,
-    .log_level_offset_offset   = offsetof(FileLogContext, log_offset),
-    .parent_log_context_offset = offsetof(FileLogContext, log_ctx),
+    .ਵਸਤੂ_name                 = av_default_ਵਸਤੂ_name,
+    .option                    = ਨਿਰਾ,
+    .ਸੰਸਕਰਣ                   = LIBAVUTIL_ਸੰਸਕਰਣ_INT,
+    .log_level_ਵਿੱਥ_ਵਿੱਥ   = offsetof(FileLogContext, log_ਵਿੱਥ),
+    .ਮਾਪਾ_log_context_ਵਿੱਥ = offsetof(FileLogContext, log_ctx),
 };
 
-int avpriv_tempfile(const char *prefix, char **filename, int log_offset, void *log_ctx)
+ਪੂਰਨ avpriv_tempfile(ਅਚਲ ਅੱਖਰ *ਅਗੇਤਰ, ਅੱਖਰ **filename, ਪੂਰਨ log_ਵਿੱਥ, ਖਾਲੀ *log_ctx)
 {
-    FileLogContext file_log_ctx = { &file_log_ctx_class, log_offset, log_ctx };
-    int fd = -1;
-#if HAVE_MKSTEMP
-    size_t len = strlen(prefix) + 12; /* room for "/tmp/" and "XXXXXX\0" */
+    FileLogContext file_log_ctx = { &file_log_ctx_class, log_ਵਿੱਥ, log_ctx };
+    ਪੂਰਨ fd = -1;
+#ਜੇ HAVE_MKSTEMP
+    size_t len = ਲੜੀ_ਲੰਬਾਈ(ਅਗੇਤਰ) + 12; /* room for "/tmp/" and "XXXXXX\0" */
     *filename  = av_malloc(len);
-#elif HAVE_TEMPNAM
-    void *ptr= tempnam(NULL, prefix);
-    if(!ptr)
-        ptr= tempnam(".", prefix);
+#ਜਾਂਜੇ HAVE_TEMPNAM
+    ਖਾਲੀ *ptr= tempnam(ਨਿਰਾ, ਅਗੇਤਰ);
+    ਜੇ(!ptr)
+        ptr= tempnam(".", ਅਗੇਤਰ);
     *filename = av_strdup(ptr);
-    free(ptr);
-#else
-    return AVERROR(ENOSYS);
-#endif
+    ਮੁਕਤ(ptr);
+#ਨਹੀਂਤਾਂ
+    ਵਾਪਸ AVERROR(ENOSYS);
+#ਜੇ_ਅੰਤ
     /* -----common section-----*/
-    if (!*filename) {
+    ਜੇ (!*filename) {
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot allocate file name\n");
-        return AVERROR(ENOMEM);
+        ਵਾਪਸ AVERROR(ENOMEM);
     }
-#if !HAVE_MKSTEMP
-#   ifndef O_BINARY
-#       define O_BINARY 0
+#ਜੇ !HAVE_MKSTEMP
+#   ifndef O_ਦੁਆਧਾਰੀ
+#       define O_ਦੁਆਧਾਰੀ 0
 #   endif
 #   ifndef O_EXCL
 #       define O_EXCL 0
 #   endif
-    fd = open(*filename, O_RDWR | O_BINARY | O_CREAT | O_EXCL, 0600);
-#else
-    snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
+    fd = open(*filename, O_RDWR | O_ਦੁਆਧਾਰੀ | O_CREAT | O_EXCL, 0600);
+#ਨਹੀਂਤਾਂ
+    snprintf(*filename, len, "/tmp/%sXXXXXX", ਅਗੇਤਰ);
     fd = mkstemp(*filename);
-#if defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
-    if (fd < 0) {
-        snprintf(*filename, len, "./%sXXXXXX", prefix);
+#ਜੇ defined(_WIN32) || defined (__ANDROID__) || defined(__DJGPP__)
+    ਜੇ (fd < 0) {
+        snprintf(*filename, len, "./%sXXXXXX", ਅਗੇਤਰ);
         fd = mkstemp(*filename);
     }
-#endif
-#endif
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ
     /* -----common section-----*/
-    if (fd < 0) {
-        int err = AVERROR(errno);
+    ਜੇ (fd < 0) {
+        ਪੂਰਨ err = AVERROR(errno);
         av_log(&file_log_ctx, AV_LOG_ERROR, "ff_tempfile: Cannot open temporary file %s\n", *filename);
         av_freep(filename);
-        return err;
+        ਵਾਪਸ err;
     }
-    return fd; /* success */
+    ਵਾਪਸ fd; /* success */
 }
 
-FILE *avpriv_fopen_utf8(const char *path, const char *mode)
+FILE *avpriv_fopen_utf8(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *ਬਹੁਲਕ)
 {
-    int fd;
-    int access;
-    const char *m = mode;
+    ਪੂਰਨ fd;
+    ਪੂਰਨ access;
+    ਅਚਲ ਅੱਖਰ *m = ਬਹੁਲਕ;
 
-    switch (*m++) {
-    case 'r': access = O_RDONLY; break;
-    case 'w': access = O_CREAT|O_WRONLY|O_TRUNC; break;
-    case 'a': access = O_CREAT|O_WRONLY|O_APPEND; break;
-    default :
+    ਚੋਣ (*m++) {
+    ਹਾਲਤ 'r': access = O_RDONLY; ਰੋਕੋ;
+    ਹਾਲਤ 'w': access = O_CREAT|O_WRONLY|O_TRUNC; ਰੋਕੋ;
+    ਹਾਲਤ 'a': access = O_CREAT|O_WRONLY|O_APPEND; ਰੋਕੋ;
+    ਮੂਲ :
         errno = EINVAL;
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
-    while (*m) {
-        if (*m == '+') {
+    ਜਦੋਂ (*m) {
+        ਜੇ (*m == '+') {
             access &= ~(O_RDONLY | O_WRONLY);
             access |= O_RDWR;
-        } else if (*m == 'b') {
-#ifdef O_BINARY
-            access |= O_BINARY;
-#endif
-        } else if (*m) {
+        } ਨਹੀਂਤਾਂ ਜੇ (*m == 'b') {
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ O_ਦੁਆਧਾਰੀ
+            access |= O_ਦੁਆਧਾਰੀ;
+#ਜੇ_ਅੰਤ
+        } ਨਹੀਂਤਾਂ ਜੇ (*m) {
             errno = EINVAL;
-            return NULL;
+            ਵਾਪਸ ਨਿਰਾ;
         }
         m++;
     }
-    fd = avpriv_open(path, access, 0666);
-    if (fd == -1)
-        return NULL;
-    return fdopen(fd, mode);
+    fd = avpriv_open(ਰਸਤਾ, access, 0666);
+    ਜੇ (fd == -1)
+        ਵਾਪਸ ਨਿਰਾ;
+    ਵਾਪਸ fdopen(fd, ਬਹੁਲਕ);
 }

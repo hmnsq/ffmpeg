@@ -18,60 +18,60 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/float_dsp.h"
 
-void ff_vector_fmul_rvv(float *dst, const float *src0, const float *src1,
-                         int len);
-void ff_vector_fmac_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_scalar_rvv(float *dst, const float *src, float mul,
-                                int len);
-void ff_vector_fmul_window_rvv(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
-void ff_vector_fmul_add_rvv(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
-void ff_vector_fmul_reverse_rvv(float *dst, const float *src0,
-                                 const float *src1, int len);
-void ff_butterflies_float_rvv(float *v1, float *v2, int len);
-float ff_scalarproduct_float_rvv(const float *v1, const float *v2, int len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmul_rvv(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src0, ਅਚਲ ਦਸ਼ਮਲਵ *src1,
+                         ਪੂਰਨ len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmac_scalar_rvv(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src, ਦਸ਼ਮਲਵ mul,
+                                ਪੂਰਨ len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmul_scalar_rvv(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src, ਦਸ਼ਮਲਵ mul,
+                                ਪੂਰਨ len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmul_ਖਿੜਕੀ_rvv(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src0,
+                                ਅਚਲ ਦਸ਼ਮਲਵ *src1, ਅਚਲ ਦਸ਼ਮਲਵ *win, ਪੂਰਨ len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmul_ਜੋੜੋ_rvv(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src0, ਅਚਲ ਦਸ਼ਮਲਵ *src1,
+                             ਅਚਲ ਦਸ਼ਮਲਵ *src2, ਪੂਰਨ len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmul_ਉਲਟ_rvv(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src0,
+                                 ਅਚਲ ਦਸ਼ਮਲਵ *src1, ਪੂਰਨ len);
+ਖਾਲੀ ff_butterflies_float_rvv(ਦਸ਼ਮਲਵ *v1, ਦਸ਼ਮਲਵ *v2, ਪੂਰਨ len);
+ਦਸ਼ਮਲਵ ff_scalarproduct_float_rvv(ਅਚਲ ਦਸ਼ਮਲਵ *v1, ਅਚਲ ਦਸ਼ਮਲਵ *v2, ਪੂਰਨ len);
 
-void ff_vector_dmul_rvv(double *dst, const double *src0, const double *src1,
-                         int len);
-void ff_vector_dmac_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-void ff_vector_dmul_scalar_rvv(double *dst, const double *src, double mul,
-                                int len);
-double ff_scalarproduct_double_rvv(const double *v1, const double *v2,
+ਖਾਲੀ ff_ਸਦਿਸ਼_dmul_rvv(ਦੁੱਗਣਾ *dst, ਅਚਲ ਦੁੱਗਣਾ *src0, ਅਚਲ ਦੁੱਗਣਾ *src1,
+                         ਪੂਰਨ len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_dmac_scalar_rvv(ਦੁੱਗਣਾ *dst, ਅਚਲ ਦੁੱਗਣਾ *src, ਦੁੱਗਣਾ mul,
+                                ਪੂਰਨ len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_dmul_scalar_rvv(ਦੁੱਗਣਾ *dst, ਅਚਲ ਦੁੱਗਣਾ *src, ਦੁੱਗਣਾ mul,
+                                ਪੂਰਨ len);
+ਦੁੱਗਣਾ ff_scalarproduct_double_rvv(ਅਚਲ ਦੁੱਗਣਾ *v1, ਅਚਲ ਦੁੱਗਣਾ *v2,
                                    size_t len);
 
-av_cold void ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
+av_cold ਖਾਲੀ ff_float_dsp_init_riscv(AVFloatDSPContext *fdsp)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ਜੇ HAVE_RVV
+    ਪੂਰਨ flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVB) {
-        if (flags & AV_CPU_FLAG_RVV_F32) {
-            fdsp->vector_fmul = ff_vector_fmul_rvv;
-            fdsp->vector_fmac_scalar = ff_vector_fmac_scalar_rvv;
-            fdsp->vector_fmul_scalar = ff_vector_fmul_scalar_rvv;
-            fdsp->vector_fmul_window = ff_vector_fmul_window_rvv;
-            fdsp->vector_fmul_add = ff_vector_fmul_add_rvv;
-            fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_rvv;
+    ਜੇ (flags & AV_CPU_FLAG_RVB) {
+        ਜੇ (flags & AV_CPU_FLAG_RVV_F32) {
+            fdsp->ਸਦਿਸ਼_fmul = ff_ਸਦਿਸ਼_fmul_rvv;
+            fdsp->ਸਦਿਸ਼_fmac_scalar = ff_ਸਦਿਸ਼_fmac_scalar_rvv;
+            fdsp->ਸਦਿਸ਼_fmul_scalar = ff_ਸਦਿਸ਼_fmul_scalar_rvv;
+            fdsp->ਸਦਿਸ਼_fmul_ਖਿੜਕੀ = ff_ਸਦਿਸ਼_fmul_ਖਿੜਕੀ_rvv;
+            fdsp->ਸਦਿਸ਼_fmul_ਜੋੜੋ = ff_ਸਦਿਸ਼_fmul_ਜੋੜੋ_rvv;
+            fdsp->ਸਦਿਸ਼_fmul_ਉਲਟ = ff_ਸਦਿਸ਼_fmul_ਉਲਟ_rvv;
             fdsp->butterflies_float = ff_butterflies_float_rvv;
             fdsp->scalarproduct_float = ff_scalarproduct_float_rvv;
         }
 
-        if (flags & AV_CPU_FLAG_RVV_F64) {
-            fdsp->vector_dmul = ff_vector_dmul_rvv;
-            fdsp->vector_dmac_scalar = ff_vector_dmac_scalar_rvv;
-            fdsp->vector_dmul_scalar = ff_vector_dmul_scalar_rvv;
+        ਜੇ (flags & AV_CPU_FLAG_RVV_F64) {
+            fdsp->ਸਦਿਸ਼_dmul = ff_ਸਦਿਸ਼_dmul_rvv;
+            fdsp->ਸਦਿਸ਼_dmac_scalar = ff_ਸਦਿਸ਼_dmac_scalar_rvv;
+            fdsp->ਸਦਿਸ਼_dmul_scalar = ff_ਸਦਿਸ਼_dmul_scalar_rvv;
             fdsp->scalarproduct_double = ff_scalarproduct_double_rvv;
         }
     }
-#endif
+#ਜੇ_ਅੰਤ
 }

@@ -23,47 +23,47 @@
  * common internal and external API header
  */
 
-#ifndef AVUTIL_COMMON_H
-#define AVUTIL_COMMON_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_COMMON_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_COMMON_H
 
-#if defined(__cplusplus) && !defined(__STDC_CONSTANT_MACROS) && !defined(UINT64_C)
-#error missing -D__STDC_CONSTANT_MACROS / #define __STDC_CONSTANT_MACROS
-#endif
+#ਜੇ defined(__cplusplus) && !defined(__STDC_CONSTANT_MACROS) && !defined(UINT64_C)
+#ਗਲਤੀ missing -D__STDC_CONSTANT_MACROS / #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ __STDC_CONSTANT_MACROS
+#ਜੇ_ਅੰਤ
 
-#include <errno.h>
-#include <inttypes.h>
-#include <limits.h>
-#include <math.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <errno.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <inttypes.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <math.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "attributes.h"
-#include "error.h"
-#include "macros.h"
-#include "version.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "version.h"
 
-#ifdef HAVE_AV_CONFIG_H
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ HAVE_AV_CONFIG_H
 #   include "config.h"
 #   include "intmath.h"
 #   include "internal.h"
-#else
+#ਨਹੀਂਤਾਂ
 #   include "mem.h"
-#endif /* HAVE_AV_CONFIG_H */
+#ਜੇ_ਅੰਤ /* HAVE_AV_CONFIG_H */
 
 //rounded division & shift
-#define RSHIFT(a,b) ((a) > 0 ? ((a) + ((1<<(b))>>1))>>(b) : ((a) + ((1<<(b))>>1)-1)>>(b))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ RSHIFT(a,b) ((a) > 0 ? ((a) + ((1<<(b))>>1))>>(b) : ((a) + ((1<<(b))>>1)-1)>>(b))
 /* assume b>0 */
-#define ROUNDED_DIV(a,b) (((a)>=0 ? (a) + ((b)>>1) : (a) - ((b)>>1))/(b))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ROUNDED_DIV(a,b) (((a)>=0 ? (a) + ((b)>>1) : (a) - ((b)>>1))/(b))
 /* Fast a/(1<<b) rounded toward +inf. Assume a>=0 and b>=0 */
-#define AV_CEIL_RSHIFT(a,b) (!av_builtin_constant_p(b) ? -((-(a)) >> (b)) \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_CEIL_RSHIFT(a,b) (!av_builtin_constant_p(b) ? -((-(a)) >> (b)) \
                                                        : ((a) + (1<<(b)) - 1) >> (b))
 /* Backwards compat. */
-#define FF_CEIL_RSHIFT AV_CEIL_RSHIFT
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_CEIL_RSHIFT AV_CEIL_RSHIFT
 
-#define FFUDIV(a,b) (((a)>0 ?(a):(a)-(b)+1) / (b))
-#define FFUMOD(a,b) ((a)-(b)*FFUDIV(a,b))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FFUDIV(a,b) (((a)>0 ?(a):(a)-(b)+1) / (b))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FFUMOD(a,b) ((a)-(b)*FFUDIV(a,b))
 
 /**
  * Absolute value, Note, INT_MIN / INT64_MIN result in undefined behavior as they
@@ -71,8 +71,8 @@
  * as with *abs()
  * @see FFNABS()
  */
-#define FFABS(a) ((a) >= 0 ? (a) : (-(a)))
-#define FFSIGN(a) ((a) > 0 ? 1 : -1)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FFABS(a) ((a) >= 0 ? (a) : (-(a)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FFSIGN(a) ((a) > 0 ? 1 : -1)
 
 /**
  * Negative Absolute value.
@@ -80,7 +80,7 @@
  * As with many macros, this evaluates its argument twice, it thus must not have
  * a sideeffect, that is FFNABS(x++) has undefined behavior.
  */
-#define FFNABS(a) ((a) <= 0 ? (a) : (-(a)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FFNABS(a) ((a) <= 0 ? (a) : (-(a)))
 
 /**
  * Unsigned Absolute value.
@@ -88,85 +88,85 @@
  * This also works with INT_MIN which would otherwise not be representable
  * As with many macros, this evaluates its argument twice.
  */
-#define FFABSU(a) ((a) <= 0 ? -(unsigned)(a) : (unsigned)(a))
-#define FFABS64U(a) ((a) <= 0 ? -(uint64_t)(a) : (uint64_t)(a))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FFABSU(a) ((a) <= 0 ? -(ਬਿਨਾਨਿਸ਼ਾਨੀ)(a) : (ਬਿਨਾਨਿਸ਼ਾਨੀ)(a))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FFABS64U(a) ((a) <= 0 ? -(uint64_t)(a) : (uint64_t)(a))
 
 /* misc math functions */
 
-#ifndef av_ceil_log2
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_ceil_log2
 #   define av_ceil_log2     av_ceil_log2_c
-#endif
-#ifndef av_clip
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clip
 #   define av_clip          av_clip_c
-#endif
-#ifndef av_clip64
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clip64
 #   define av_clip64        av_clip64_c
-#endif
-#ifndef av_clip_uint8
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clip_uint8
 #   define av_clip_uint8    av_clip_uint8_c
-#endif
-#ifndef av_clip_int8
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clip_int8
 #   define av_clip_int8     av_clip_int8_c
-#endif
-#ifndef av_clip_uint16
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clip_uint16
 #   define av_clip_uint16   av_clip_uint16_c
-#endif
-#ifndef av_clip_int16
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clip_int16
 #   define av_clip_int16    av_clip_int16_c
-#endif
-#ifndef av_clipl_int32
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clipl_int32
 #   define av_clipl_int32   av_clipl_int32_c
-#endif
-#ifndef av_clip_intp2
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clip_intp2
 #   define av_clip_intp2    av_clip_intp2_c
-#endif
-#ifndef av_clip_uintp2
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clip_uintp2
 #   define av_clip_uintp2   av_clip_uintp2_c
-#endif
-#ifndef av_sat_add32
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_sat_add32
 #   define av_sat_add32     av_sat_add32_c
-#endif
-#ifndef av_sat_dadd32
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_sat_dadd32
 #   define av_sat_dadd32    av_sat_dadd32_c
-#endif
-#ifndef av_sat_sub32
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_sat_sub32
 #   define av_sat_sub32     av_sat_sub32_c
-#endif
-#ifndef av_sat_dsub32
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_sat_dsub32
 #   define av_sat_dsub32    av_sat_dsub32_c
-#endif
-#ifndef av_sat_add64
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_sat_add64
 #   define av_sat_add64     av_sat_add64_c
-#endif
-#ifndef av_sat_sub64
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_sat_sub64
 #   define av_sat_sub64     av_sat_sub64_c
-#endif
-#ifndef av_clipf
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clipf
 #   define av_clipf         av_clipf_c
-#endif
-#ifndef av_clipd
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_clipd
 #   define av_clipd         av_clipd_c
-#endif
-#ifndef av_zero_extend
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_zero_extend
 #   define av_zero_extend   av_zero_extend_c
-#endif
-#ifndef av_popcount
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_popcount
 #   define av_popcount      av_popcount_c
-#endif
-#ifndef av_popcount64
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_popcount64
 #   define av_popcount64    av_popcount64_c
-#endif
-#ifndef av_parity
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_parity
 #   define av_parity        av_parity_c
-#endif
+#ਜੇ_ਅੰਤ
 
-#ifndef av_log2
-av_const int av_log2(unsigned v);
-#endif
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_log2
+av_const ਪੂਰਨ av_log2(ਬਿਨਾਨਿਸ਼ਾਨੀ v);
+#ਜੇ_ਅੰਤ
 
-#ifndef av_log2_16bit
-av_const int av_log2_16bit(unsigned v);
-#endif
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_log2_16bit
+av_const ਪੂਰਨ av_log2_16bit(ਬਿਨਾਨਿਸ਼ਾਨੀ v);
+#ਜੇ_ਅੰਤ
 
 /**
  * Clip a signed integer value into the amin-amax range.
@@ -175,14 +175,14 @@ av_const int av_log2_16bit(unsigned v);
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ av_clip_c(ਪੂਰਨ a, ਪੂਰਨ amin, ਪੂਰਨ amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
-    if      (a < amin) return amin;
-    else if (a > amax) return amax;
-    else               return a;
+#ਜੇ defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    ਜੇ (amin > amax) abort();
+#ਜੇ_ਅੰਤ
+    ਜੇ      (a < amin) ਵਾਪਸ amin;
+    ਨਹੀਂਤਾਂ ਜੇ (a > amax) ਵਾਪਸ amax;
+    ਨਹੀਂਤਾਂ               ਵਾਪਸ a;
 }
 
 /**
@@ -192,14 +192,14 @@ static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, int64_t amax)
+ਸਥਿਰ av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, int64_t amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
-    if      (a < amin) return amin;
-    else if (a > amax) return amax;
-    else               return a;
+#ਜੇ defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    ਜੇ (amin > amax) abort();
+#ਜੇ_ਅੰਤ
+    ਜੇ      (a < amin) ਵਾਪਸ amin;
+    ਨਹੀਂਤਾਂ ਜੇ (a > amax) ਵਾਪਸ amax;
+    ਨਹੀਂਤਾਂ               ਵਾਪਸ a;
 }
 
 /**
@@ -207,10 +207,10 @@ static av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, in
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
+ਸਥਿਰ av_always_inline av_const uint8_t av_clip_uint8_c(ਪੂਰਨ a)
 {
-    if (a&(~0xFF)) return (~a)>>31;
-    else           return a;
+    ਜੇ (a&(~0xFF)) ਵਾਪਸ (~a)>>31;
+    ਨਹੀਂਤਾਂ           ਵਾਪਸ a;
 }
 
 /**
@@ -218,10 +218,10 @@ static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const int8_t av_clip_int8_c(int a)
+ਸਥਿਰ av_always_inline av_const int8_t av_clip_int8_c(ਪੂਰਨ a)
 {
-    if ((a+0x80U) & ~0xFF) return (a>>31) ^ 0x7F;
-    else                  return a;
+    ਜੇ ((a+0x80U) & ~0xFF) ਵਾਪਸ (a>>31) ^ 0x7F;
+    ਨਹੀਂਤਾਂ                  ਵਾਪਸ a;
 }
 
 /**
@@ -229,10 +229,10 @@ static av_always_inline av_const int8_t av_clip_int8_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
+ਸਥਿਰ av_always_inline av_const uint16_t av_clip_uint16_c(ਪੂਰਨ a)
 {
-    if (a&(~0xFFFF)) return (~a)>>31;
-    else             return a;
+    ਜੇ (a&(~0xFFFF)) ਵਾਪਸ (~a)>>31;
+    ਨਹੀਂਤਾਂ             ਵਾਪਸ a;
 }
 
 /**
@@ -240,10 +240,10 @@ static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const int16_t av_clip_int16_c(int a)
+ਸਥਿਰ av_always_inline av_const int16_t av_clip_int16_c(ਪੂਰਨ a)
 {
-    if ((a+0x8000U) & ~0xFFFF) return (a>>31) ^ 0x7FFF;
-    else                      return a;
+    ਜੇ ((a+0x8000U) & ~0xFFFF) ਵਾਪਸ (a>>31) ^ 0x7FFF;
+    ਨਹੀਂਤਾਂ                      ਵਾਪਸ a;
 }
 
 /**
@@ -251,10 +251,10 @@ static av_always_inline av_const int16_t av_clip_int16_c(int a)
  * @param a value to clip
  * @return clipped value
  */
-static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
+ਸਥਿਰ av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
 {
-    if ((a+UINT64_C(0x80000000)) & ~UINT64_C(0xFFFFFFFF)) return (int32_t)((a>>63) ^ 0x7FFFFFFF);
-    else                                                  return (int32_t)a;
+    ਜੇ ((a+UINT64_C(0x80000000)) & ~UINT64_C(0xFFFFFFFF)) ਵਾਪਸ (int32_t)((a>>63) ^ 0x7FFFFFFF);
+    ਨਹੀਂਤਾਂ                                                  ਵਾਪਸ (int32_t)a;
 }
 
 /**
@@ -263,12 +263,12 @@ static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
  * @param  p bit position to clip at
  * @return clipped value
  */
-static av_always_inline av_const int av_clip_intp2_c(int a, int p)
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ av_clip_intp2_c(ਪੂਰਨ a, ਪੂਰਨ p)
 {
-    if (((unsigned)a + (1U << p)) & ~((2U << p) - 1))
-        return (a >> 31) ^ ((1 << p) - 1);
-    else
-        return a;
+    ਜੇ (((ਬਿਨਾਨਿਸ਼ਾਨੀ)a + (1U << p)) & ~((2U << p) - 1))
+        ਵਾਪਸ (a >> 31) ^ ((1 << p) - 1);
+    ਨਹੀਂਤਾਂ
+        ਵਾਪਸ a;
 }
 
 /**
@@ -277,10 +277,10 @@ static av_always_inline av_const int av_clip_intp2_c(int a, int p)
  * @param  p bit position to clip at
  * @return clipped value
  */
-static av_always_inline av_const unsigned av_clip_uintp2_c(int a, int p)
+ਸਥਿਰ av_always_inline av_const ਬਿਨਾਨਿਸ਼ਾਨੀ av_clip_uintp2_c(ਪੂਰਨ a, ਪੂਰਨ p)
 {
-    if (a & ~((1U<<p) - 1)) return (~a) >> 31 & ((1U<<p) - 1);
-    else                    return  a;
+    ਜੇ (a & ~((1U<<p) - 1)) ਵਾਪਸ (~a) >> 31 & ((1U<<p) - 1);
+    ਨਹੀਂਤਾਂ                    ਵਾਪਸ  a;
 }
 
 /**
@@ -289,12 +289,12 @@ static av_always_inline av_const unsigned av_clip_uintp2_c(int a, int p)
  * @param  p bit position to clip at. Must be between 0 and 31.
  * @return clipped value
  */
-static av_always_inline av_const unsigned av_zero_extend_c(unsigned a, unsigned p)
+ਸਥਿਰ av_always_inline av_const ਬਿਨਾਨਿਸ਼ਾਨੀ av_zero_extend_c(ਬਿਨਾਨਿਸ਼ਾਨੀ a, ਬਿਨਾਨਿਸ਼ਾਨੀ p)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (p > 31) abort();
-#endif
-    return a & ((1U << p) - 1);
+#ਜੇ defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    ਜੇ (p > 31) abort();
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ a & ((1U << p) - 1);
 }
 
 /**
@@ -304,9 +304,9 @@ static av_always_inline av_const unsigned av_zero_extend_c(unsigned a, unsigned 
  * @param  b another value
  * @return sum with signed saturation
  */
-static av_always_inline int av_sat_add32_c(int a, int b)
+ਸਥਿਰ av_always_inline ਪੂਰਨ av_sat_add32_c(ਪੂਰਨ a, ਪੂਰਨ b)
 {
-    return av_clipl_int32((int64_t)a + b);
+    ਵਾਪਸ av_clipl_int32((int64_t)a + b);
 }
 
 /**
@@ -316,9 +316,9 @@ static av_always_inline int av_sat_add32_c(int a, int b)
  * @param  b value doubled and added to a
  * @return sum sat(a + sat(2*b)) with signed saturation
  */
-static av_always_inline int av_sat_dadd32_c(int a, int b)
+ਸਥਿਰ av_always_inline ਪੂਰਨ av_sat_dadd32_c(ਪੂਰਨ a, ਪੂਰਨ b)
 {
-    return av_sat_add32(a, av_sat_add32(b, b));
+    ਵਾਪਸ av_sat_add32(a, av_sat_add32(b, b));
 }
 
 /**
@@ -328,9 +328,9 @@ static av_always_inline int av_sat_dadd32_c(int a, int b)
  * @param  b another value
  * @return difference with signed saturation
  */
-static av_always_inline int av_sat_sub32_c(int a, int b)
+ਸਥਿਰ av_always_inline ਪੂਰਨ av_sat_sub32_c(ਪੂਰਨ a, ਪੂਰਨ b)
 {
-    return av_clipl_int32((int64_t)a - b);
+    ਵਾਪਸ av_clipl_int32((int64_t)a - b);
 }
 
 /**
@@ -340,9 +340,9 @@ static av_always_inline int av_sat_sub32_c(int a, int b)
  * @param  b value doubled and subtracted from a
  * @return difference sat(a - sat(2*b)) with signed saturation
  */
-static av_always_inline int av_sat_dsub32_c(int a, int b)
+ਸਥਿਰ av_always_inline ਪੂਰਨ av_sat_dsub32_c(ਪੂਰਨ a, ਪੂਰਨ b)
 {
-    return av_sat_sub32(a, av_sat_add32(b, b));
+    ਵਾਪਸ av_sat_sub32(a, av_sat_add32(b, b));
 }
 
 /**
@@ -352,16 +352,16 @@ static av_always_inline int av_sat_dsub32_c(int a, int b)
  * @param  b another value
  * @return sum with signed saturation
  */
-static av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_add_overflow)
+ਸਥਿਰ av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
+#ਜੇ (!defined(__INTEL_COMPILER) && AV_GCC_ਸੰਸਕਰਣ_AT_ਘੱਟ_ਤੋਂ_ਘੱਟ(5,1)) || AV_HAS_BUILTIN(__builtin_add_overflow)
     int64_t tmp;
-    return !__builtin_add_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
-#else
+    ਵਾਪਸ !__builtin_add_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
+#ਨਹੀਂਤਾਂ
     int64_t s = a+(uint64_t)b;
-    if ((int64_t)(a^b | ~s^b) >= 0)
-        return INT64_MAX ^ (b >> 63);
-    return s;
-#endif
+    ਜੇ ((int64_t)(a^b | ~s^b) >= 0)
+        ਵਾਪਸ INT64_MAX ^ (b >> 63);
+    ਵਾਪਸ s;
+#ਜੇ_ਅੰਤ
 }
 
 /**
@@ -371,17 +371,17 @@ static av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
  * @param  b another value
  * @return difference with signed saturation
  */
-static av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
-#if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_sub_overflow)
+ਸਥਿਰ av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
+#ਜੇ (!defined(__INTEL_COMPILER) && AV_GCC_ਸੰਸਕਰਣ_AT_ਘੱਟ_ਤੋਂ_ਘੱਟ(5,1)) || AV_HAS_BUILTIN(__builtin_sub_overflow)
     int64_t tmp;
-    return !__builtin_sub_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
-#else
-    if (b <= 0 && a >= INT64_MAX + b)
-        return INT64_MAX;
-    if (b >= 0 && a <= INT64_MIN + b)
-        return INT64_MIN;
-    return a - b;
-#endif
+    ਵਾਪਸ !__builtin_sub_overflow(a, b, &tmp) ? tmp : (tmp < 0 ? INT64_MAX : INT64_MIN);
+#ਨਹੀਂਤਾਂ
+    ਜੇ (b <= 0 && a >= INT64_MAX + b)
+        ਵਾਪਸ INT64_MAX;
+    ਜੇ (b >= 0 && a <= INT64_MIN + b)
+        ਵਾਪਸ INT64_MIN;
+    ਵਾਪਸ a - b;
+#ਜੇ_ਅੰਤ
 }
 
 /**
@@ -393,12 +393,12 @@ static av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const float av_clipf_c(float a, float amin, float amax)
+ਸਥਿਰ av_always_inline av_const ਦਸ਼ਮਲਵ av_clipf_c(ਦਸ਼ਮਲਵ a, ਦਸ਼ਮਲਵ amin, ਦਸ਼ਮਲਵ amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
-    return FFMIN(FFMAX(a, amin), amax);
+#ਜੇ defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    ਜੇ (amin > amax) abort();
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ FFMIN(FFMAX(a, amin), amax);
 }
 
 /**
@@ -410,21 +410,21 @@ static av_always_inline av_const float av_clipf_c(float a, float amin, float ama
  * @param amax maximum value of the clip range
  * @return clipped value
  */
-static av_always_inline av_const double av_clipd_c(double a, double amin, double amax)
+ਸਥਿਰ av_always_inline av_const ਦੁੱਗਣਾ av_clipd_c(ਦੁੱਗਣਾ a, ਦੁੱਗਣਾ amin, ਦੁੱਗਣਾ amax)
 {
-#if defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (amin > amax) abort();
-#endif
-    return FFMIN(FFMAX(a, amin), amax);
+#ਜੇ defined(HAVE_AV_CONFIG_H) && defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    ਜੇ (amin > amax) abort();
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ FFMIN(FFMAX(a, amin), amax);
 }
 
 /** Compute ceil(log2(x)).
  * @param x value used to compute ceil(log2(x))
  * @return computed ceiling of log2(x)
  */
-static av_always_inline av_const int av_ceil_log2_c(int x)
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ av_ceil_log2_c(ਪੂਰਨ x)
 {
-    return av_log2((x - 1U) << 1);
+    ਵਾਪਸ av_log2((x - 1U) << 1);
 }
 
 /**
@@ -432,13 +432,13 @@ static av_always_inline av_const int av_ceil_log2_c(int x)
  * @param x value to count bits of
  * @return the number of bits set to one in x
  */
-static av_always_inline av_const int av_popcount_c(uint32_t x)
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ av_popcount_c(uint32_t x)
 {
     x -= (x >> 1) & 0x55555555;
     x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
     x = (x + (x >> 4)) & 0x0F0F0F0F;
     x += x >> 8;
-    return (x + (x >> 16)) & 0x3F;
+    ਵਾਪਸ (x + (x >> 16)) & 0x3F;
 }
 
 /**
@@ -446,14 +446,14 @@ static av_always_inline av_const int av_popcount_c(uint32_t x)
  * @param x value to count bits of
  * @return the number of bits set to one in x
  */
-static av_always_inline av_const int av_popcount64_c(uint64_t x)
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ av_popcount64_c(uint64_t x)
 {
-    return av_popcount((uint32_t)x) + av_popcount((uint32_t)(x >> 32));
+    ਵਾਪਸ av_popcount((uint32_t)x) + av_popcount((uint32_t)(x >> 32));
 }
 
-static av_always_inline av_const int av_parity_c(uint32_t v)
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ av_parity_c(uint32_t v)
 {
-    return av_popcount(v) & 1;
+    ਵਾਪਸ av_popcount(v) & 1;
 }
 
 /**
@@ -474,20 +474,20 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
  * exit from the macro code (e.g. through a goto or a return) in order
  * to prevent undefined results.
  */
-#define GET_UTF8(val, GET_BYTE, ERROR)\
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ GET_UTF8(val, GET_BYTE, ERROR)\
     val= (uint8_t)(GET_BYTE);\
     {\
-        uint32_t top = (val & 128) >> 1;\
-        if ((val & 0xc0) == 0x80 || val >= 0xFE)\
+        uint32_t ਸਿਖਰ = (val & 128) >> 1;\
+        ਜੇ ((val & 0xc0) == 0x80 || val >= 0xFE)\
             {ERROR}\
-        while (val & top) {\
-            unsigned int tmp = (uint8_t)(GET_BYTE) - 128;\
-            if(tmp>>6)\
+        ਜਦੋਂ (val & ਸਿਖਰ) {\
+            ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ tmp = (uint8_t)(GET_BYTE) - 128;\
+            ਜੇ(tmp>>6)\
                 {ERROR}\
             val= (val<<6) + tmp;\
-            top <<= 5;\
+            ਸਿਖਰ <<= 5;\
         }\
-        val &= (top << 1) - 1;\
+        val &= (ਸਿਖਰ << 1) - 1;\
     }
 
 /**
@@ -499,13 +499,13 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
  * @param ERROR     Expression to be evaluated on invalid input,
  *                  typically a goto statement.
  */
-#define GET_UTF16(val, GET_16BIT, ERROR)\
-    val = (uint16_t)(GET_16BIT);\
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ GET_UTF16(val, GET_16_ਦੋਆਧਾਰੀ_ਅੰਕ, ERROR)\
+    val = (uint16_t)(GET_16_ਦੋਆਧਾਰੀ_ਅੰਕ);\
     {\
-        unsigned int hi = val - 0xD800;\
-        if (hi < 0x800) {\
-            val = (uint16_t)(GET_16BIT) - 0xDC00;\
-            if (val > 0x3FFU || hi > 0x3FFU)\
+        ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ hi = val - 0xD800;\
+        ਜੇ (hi < 0x800) {\
+            val = (uint16_t)(GET_16_ਦੋਆਧਾਰੀ_ਅੰਕ) - 0xDC00;\
+            ਜੇ (val > 0x3FFU || hi > 0x3FFU)\
                 {ERROR}\
             val += (hi<<10) + 0x10000;\
         }\
@@ -527,21 +527,21 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
  * 7 times in the general case, depending on the length of the converted
  * Unicode character.
  */
-#define PUT_UTF8(val, tmp, PUT_BYTE)\
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PUT_UTF8(val, tmp, PUT_BYTE)\
     {\
-        int bytes, shift;\
-        uint32_t in = val;\
-        if (in < 0x80) {\
-            tmp = in;\
+        ਪੂਰਨ ਬਾਈਟਾਂ, ਖਿਸਕਾਓ;\
+        uint32_t ਵਿੱਚ_2 = val;\
+        ਜੇ (ਵਿੱਚ_2 < 0x80) {\
+            tmp = ਵਿੱਚ_2;\
             PUT_BYTE\
-        } else {\
-            bytes = (av_log2(in) + 4) / 5;\
-            shift = (bytes - 1) * 6;\
-            tmp = (256 - (256 >> bytes)) | (in >> shift);\
+        } ਨਹੀਂਤਾਂ {\
+            ਬਾਈਟਾਂ = (av_log2(ਵਿੱਚ_2) + 4) / 5;\
+            ਖਿਸਕਾਓ = (ਬਾਈਟਾਂ - 1) * 6;\
+            tmp = (256 - (256 >> ਬਾਈਟਾਂ)) | (ਵਿੱਚ_2 >> ਖਿਸਕਾਓ);\
             PUT_BYTE\
-            while (shift >= 6) {\
-                shift -= 6;\
-                tmp = 0x80 | ((in >> shift) & 0x3f);\
+            ਜਦੋਂ (ਖਿਸਕਾਓ >= 6) {\
+                ਖਿਸਕਾਓ -= 6;\
+                tmp = 0x80 | ((ਵਿੱਚ_2 >> ਖਿਸਕਾਓ) & 0x3f);\
                 PUT_BYTE\
             }\
         }\
@@ -561,18 +561,18 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
  * as the input byte.  For example, PUT_BYTE could be "*output++ = tmp;"
  * PUT_BYTE will be executed 1 or 2 times depending on input character.
  */
-#define PUT_UTF16(val, tmp, PUT_16BIT)\
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PUT_UTF16(val, tmp, PUT_16_ਦੋਆਧਾਰੀ_ਅੰਕ)\
     {\
-        uint32_t in = val;\
-        if (in < 0x10000) {\
-            tmp = in;\
-            PUT_16BIT\
-        } else {\
-            tmp = 0xD800 | ((in - 0x10000) >> 10);\
-            PUT_16BIT\
-            tmp = 0xDC00 | ((in - 0x10000) & 0x3FF);\
-            PUT_16BIT\
+        uint32_t ਵਿੱਚ_2 = val;\
+        ਜੇ (ਵਿੱਚ_2 < 0x10000) {\
+            tmp = ਵਿੱਚ_2;\
+            PUT_16_ਦੋਆਧਾਰੀ_ਅੰਕ\
+        } ਨਹੀਂਤਾਂ {\
+            tmp = 0xD800 | ((ਵਿੱਚ_2 - 0x10000) >> 10);\
+            PUT_16_ਦੋਆਧਾਰੀ_ਅੰਕ\
+            tmp = 0xDC00 | ((ਵਿੱਚ_2 - 0x10000) & 0x3FF);\
+            PUT_16_ਦੋਆਧਾਰੀ_ਅੰਕ\
         }\
     }\
 
-#endif /* AVUTIL_COMMON_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_COMMON_H */

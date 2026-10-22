@@ -60,83 +60,83 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "uuid.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+ਪੂਰਨ av_uuid_parse(ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_2, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    ਜੇ (ਲੜੀ_ਲੰਬਾਈ(ਵਿੱਚ_2) != 36)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    ਵਾਪਸ av_uuid_parse_range(ਵਿੱਚ_2, ਵਿੱਚ_2 + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+ਸਥਿਰ ਪੂਰਨ xdigit_ਮੰਜ਼ਿਲ_int(ਅੱਖਰ c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    ਜੇ (c >= 'a' && c <= 'f')
+        ਵਾਪਸ c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    ਜੇ (c >= '0' && c <= '9')
+        ਵਾਪਸ c - '0';
 
-    return -1;
+    ਵਾਪਸ -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+ਪੂਰਨ av_uuid_parse_range(ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_ਸ਼ੁਰੂ, ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_ਸਿਰਾ, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    ਪੂਰਨ i;
+    ਅਚਲ ਅੱਖਰ *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    ਜੇ ((ਵਿੱਚ_ਸਿਰਾ - ਵਿੱਚ_ਸ਼ੁਰੂ) != 36)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    ਲਈ (i = 0, cp = ਵਿੱਚ_ਸ਼ੁਰੂ; i < 16; i++) {
+        ਪੂਰਨ hi;
+        ਪੂਰਨ lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        ਜੇ (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
-        hi = xdigit_to_int(*cp++);
-        lo = xdigit_to_int(*cp++);
+        hi = xdigit_ਮੰਜ਼ਿਲ_int(*cp++);
+        lo = xdigit_ਮੰਜ਼ਿਲ_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        ਜੇ (hi == -1 || lo == -1)
+            ਵਾਪਸ AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+ਸਥਿਰ attribute_nonstring ਅਚਲ ਅੱਖਰ hexdigits_ਹੇਠਲਾ[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+ਖਾਲੀ av_uuid_unparse(ਅਚਲ AVUUID uuid, ਅੱਖਰ *ਬਾਹਰਲਾ)
 {
-    char *p = out;
+    ਅੱਖਰ *p = ਬਾਹਰਲਾ;
 
-    for (int i = 0; i < 16; i++) {
+    ਲਈ (ਪੂਰਨ i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        ਜੇ (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
-        *p++ = hexdigits_lower[tmp >> 4];
-        *p++ = hexdigits_lower[tmp & 15];
+        *p++ = hexdigits_ਹੇਠਲਾ[tmp >> 4];
+        *p++ = hexdigits_ਹੇਠਲਾ[tmp & 15];
     }
 
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+ਪੂਰਨ av_uuid_urn_parse(ਅਚਲ ਅੱਖਰ *ਵਿੱਚ_2, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    ਜੇ (av_stristr(ਵਿੱਚ_2, "urn:uuid:") != ਵਿੱਚ_2)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    ਵਾਪਸ av_uuid_parse(ਵਿੱਚ_2 + 9, uu);
 }

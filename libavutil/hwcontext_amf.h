@@ -17,44 +17,44 @@
  */
 
 
-#ifndef AVUTIL_HWCONTEXT_AMF_H
-#define AVUTIL_HWCONTEXT_AMF_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_HWCONTEXT_AMF_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_HWCONTEXT_AMF_H
 
-#include "pixfmt.h"
-#include "hwcontext.h"
-#include <AMF/core/Factory.h>
-#include <AMF/core/Context.h>
-#include <AMF/core/Trace.h>
-#include <AMF/core/Debug.h>
-#include <AMF/components/ColorSpace.h>
-#include "libavutil/mastering_display_metadata.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "pixfmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <AMF/core/Factory.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <AMF/core/Context.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <AMF/core/Trace.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <AMF/core/Debug.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <AMF/components/ColorSpace.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/mastering_display_metadata.h"
 
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVAMFDeviceContext {
-    void *              library;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVAMFDeviceContext {
+    ਖਾਲੀ *              library;
     AMFFactory         *factory;
-    void               *trace_writer;
+    ਖਾਲੀ               *trace_writer;
 
-    int64_t             version; ///< version of AMF runtime
+    int64_t             ਸੰਸਕਰਣ; ///< version of AMF runtime
     AMFContext         *context;
-    AMF_MEMORY_TYPE     memory_type;
+    AMF_ਸਮ੍ਰਿਤੀ_TYPE     ਸਮ੍ਰਿਤੀ_type;
 
-    void (*lock)(void *lock_ctx);
-    void (*unlock)(void *lock_ctx);
-    void *lock_ctx;
+    ਖਾਲੀ (*ਤਾਲਾ)(ਖਾਲੀ *ਤਾਲਾ_ctx);
+    ਖਾਲੀ (*unlock)(ਖਾਲੀ *ਤਾਲਾ_ctx);
+    ਖਾਲੀ *ਤਾਲਾ_ctx;
 } AVAMFDeviceContext;
 
-enum AMF_MEMORY_TYPE av_amf_get_memory_type(AVAMFDeviceContext *amf_ctx);
+ਗਿਣਤੀ AMF_ਸਮ੍ਰਿਤੀ_TYPE av_amf_get_ਸਮ੍ਰਿਤੀ_type(AVAMFDeviceContext *amf_ctx);
 
-enum AMF_SURFACE_FORMAT av_av_to_amf_format(enum AVPixelFormat fmt);
-enum AVPixelFormat av_amf_to_av_format(enum AMF_SURFACE_FORMAT fmt);
+ਗਿਣਤੀ AMF_SURFACE_FORMAT av_av_ਮੰਜ਼ਿਲ_amf_format(ਗਿਣਤੀ AVPixelFormat fmt);
+ਗਿਣਤੀ AVPixelFormat av_amf_ਮੰਜ਼ਿਲ_av_format(ਗਿਣਤੀ AMF_SURFACE_FORMAT fmt);
 
-enum AMF_VIDEO_CONVERTER_COLOR_PROFILE_ENUM av_amf_get_color_profile(enum AVColorRange color_range, enum AVColorSpace color_space);
-int av_amf_display_mastering_meta_to_hdrmeta(const AVMasteringDisplayMetadata *display_meta, AMFHDRMetadata *hdrmeta);
-int av_amf_light_metadata_to_hdrmeta(const AVContentLightMetadata *light_meta, AMFHDRMetadata *hdrmeta);
-int av_amf_extract_hdr_metadata(const AVFrame *frame, AMFHDRMetadata *hdrmeta);
-int av_amf_attach_hdr_metadata(AVFrame *frame, const AMFHDRMetadata *hdrmeta);
+ਗਿਣਤੀ AMF_VIDEO_CONVERTER_COLOR_PROFILE_ENUM av_amf_get_color_profile(ਗਿਣਤੀ AVColorRange color_range, ਗਿਣਤੀ AVColorSpace color_space);
+ਪੂਰਨ av_amf_display_mastering_meta_ਮੰਜ਼ਿਲ_hdrmeta(ਅਚਲ AVMasteringDisplayMetadata *display_meta, AMFHDRMetadata *hdrmeta);
+ਪੂਰਨ av_amf_light_metadata_ਮੰਜ਼ਿਲ_hdrmeta(ਅਚਲ AVContentLightMetadata *light_meta, AMFHDRMetadata *hdrmeta);
+ਪੂਰਨ av_amf_ਕੱਢੋ_hdr_metadata(ਅਚਲ AVFrame *ਚੌਖਟਾ, AMFHDRMetadata *hdrmeta);
+ਪੂਰਨ av_amf_attach_hdr_metadata(AVFrame *ਚੌਖਟਾ, ਅਚਲ AMFHDRMetadata *hdrmeta);
 
-#endif /* AVUTIL_HWCONTEXT_AMF_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_HWCONTEXT_AMF_H */

@@ -18,48 +18,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "libavutil/hash.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/hash.h"
 
-#define SRC_BUF_SIZE 64
-#define DST_BUF_SIZE (AV_HASH_MAX_SIZE * 8)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SRC_BUF_ਮਾਪ 64
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DST_BUF_ਮਾਪ (AV_HASH_MAX_ਮਾਪ * 8)
 
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
-   struct AVHashContext *ctx = NULL;
-   int i, j, numhashes = 0;
-   static const uint8_t src[SRC_BUF_SIZE] = { 0 };
-   uint8_t dst[DST_BUF_SIZE];
+   ਬਣਤਰ AVHashContext *ctx = ਨਿਰਾ;
+   ਪੂਰਨ i, j, numhashes = 0;
+   ਸਥਿਰ ਅਚਲ uint8_t src[SRC_BUF_ਮਾਪ] = { 0 };
+   uint8_t dst[DST_BUF_ਮਾਪ];
 
-   while (av_hash_names(numhashes))
+   ਜਦੋਂ (av_hash_ਨਾਂ(numhashes))
        numhashes++;
 
-   for (i = 0; i < numhashes; i++) {
-       if (av_hash_alloc(&ctx, av_hash_names(i)) < 0)
-           return 1;
+   ਲਈ (i = 0; i < numhashes; i++) {
+       ਜੇ (av_hash_alloc(&ctx, av_hash_ਨਾਂ(i)) < 0)
+           ਵਾਪਸ 1;
 
        av_hash_init(ctx);
-       av_hash_update(ctx, src, SRC_BUF_SIZE);
-       memset(dst, 0, DST_BUF_SIZE);
-       av_hash_final_hex(ctx, dst, DST_BUF_SIZE);
-       printf("%s hex: %s\n", av_hash_get_name(ctx), dst);
+       av_hash_update(ctx, src, SRC_BUF_ਮਾਪ);
+       memset(dst, 0, DST_BUF_ਮਾਪ);
+       av_hash_final_hex(ctx, dst, DST_BUF_ਮਾਪ);
+       ਲਿਖੋ("%s hex: %s\n", av_hash_get_name(ctx), dst);
 
        av_hash_init(ctx);
-       av_hash_update(ctx, src, SRC_BUF_SIZE);
-       av_hash_final_bin(ctx, dst, DST_BUF_SIZE);
-       printf("%s bin:", av_hash_get_name(ctx));
-       for (j = 0; j < av_hash_get_size(ctx); j++) {
-           printf(" %#x", dst[j]);
+       av_hash_update(ctx, src, SRC_BUF_ਮਾਪ);
+       av_hash_final_bin(ctx, dst, DST_BUF_ਮਾਪ);
+       ਲਿਖੋ("%s bin:", av_hash_get_name(ctx));
+       ਲਈ (j = 0; j < av_hash_get_ਮਾਪ(ctx); j++) {
+           ਲਿਖੋ(" %#x", dst[j]);
        }
-       printf("\n");
+       ਲਿਖੋ("\n");
 
        av_hash_init(ctx);
-       av_hash_update(ctx, src, SRC_BUF_SIZE);
-       av_hash_final_b64(ctx, dst, DST_BUF_SIZE);
-       printf("%s b64: %s\n", av_hash_get_name(ctx), dst);
+       av_hash_update(ctx, src, SRC_BUF_ਮਾਪ);
+       av_hash_final_b64(ctx, dst, DST_BUF_ਮਾਪ);
+       ਲਿਖੋ("%s b64: %s\n", av_hash_get_name(ctx), dst);
        av_hash_freep(&ctx);
    }
-   return 0;
+   ਵਾਪਸ 0;
 }

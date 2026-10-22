@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define TEST 1
-#include "libavutil/random_seed.c"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ TEST 1
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/random_seed.c"
 
-#define N 256
-#define F 2
-#include <stdio.h>
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ N 256
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ F 2
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
 
-typedef uint32_t (*random_seed_ptr_t)(void);
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ uint32_t (*random_ਬੀਜ_ptr_t)(ਖਾਲੀ);
 
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
-    int i, j, rsf, retry;
+    ਪੂਰਨ i, j, rsf, retry;
     uint32_t seeds[N];
-    random_seed_ptr_t random_seed[F] = {av_get_random_seed, get_generic_seed};
+    random_ਬੀਜ_ptr_t random_ਬੀਜ[F] = {av_get_random_ਬੀਜ, get_generic_ਬੀਜ};
 
-    for (rsf=0; rsf<F; ++rsf){
-        for (retry=0; retry<3; retry++){
-            for (i=0; i<N; i++){
-                seeds[i] = random_seed[rsf]();
-                for (j=0; j<i; j++)
-                    if (seeds[j] == seeds[i])
-                        goto retry;
+    ਲਈ (rsf=0; rsf<F; ++rsf){
+        ਲਈ (retry=0; retry<3; retry++){
+            ਲਈ (i=0; i<N; i++){
+                seeds[i] = random_ਬੀਜ[rsf]();
+                ਲਈ (j=0; j<i; j++)
+                    ਜੇ (seeds[j] == seeds[i])
+                        ਜਾਓ retry;
             }
-            printf("seeds OK\n");
-            break;
+            ਲਿਖੋ("seeds OK\n");
+            ਰੋਕੋ;
             retry:;
         }
-        if (retry >= 3) {
-            printf("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
-            return 1;
+        ਜੇ (retry >= 3) {
+            ਲਿਖੋ("rsf %d: FAIL at %d with %"PRIX32"\n", rsf, j, seeds[j]);
+            ਵਾਪਸ 1;
         }
     }
-    return 0;
+    ਵਾਪਸ 0;
 }

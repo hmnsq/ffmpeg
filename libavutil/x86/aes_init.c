@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include "libavutil/aes_internal.h"
-#include "libavutil/x86/cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/aes_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/x86/cpu.h"
 
-void ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, const uint8_t *src,
-                             int count, uint8_t *iv, int rounds);
+ਖਾਲੀ ff_aes_decrypt_10_aesni(AVAES *a, uint8_t *dst, ਅਚਲ uint8_t *src,
+                             ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ ਗੇੜ);
+ਖਾਲੀ ff_aes_decrypt_12_aesni(AVAES *a, uint8_t *dst, ਅਚਲ uint8_t *src,
+                             ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ ਗੇੜ);
+ਖਾਲੀ ff_aes_decrypt_14_aesni(AVAES *a, uint8_t *dst, ਅਚਲ uint8_t *src,
+                             ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ ਗੇੜ);
+ਖਾਲੀ ff_aes_encrypt_10_aesni(AVAES *a, uint8_t *dst, ਅਚਲ uint8_t *src,
+                             ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ ਗੇੜ);
+ਖਾਲੀ ff_aes_encrypt_12_aesni(AVAES *a, uint8_t *dst, ਅਚਲ uint8_t *src,
+                             ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ ਗੇੜ);
+ਖਾਲੀ ff_aes_encrypt_14_aesni(AVAES *a, uint8_t *dst, ਅਚਲ uint8_t *src,
+                             ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ ਗੇੜ);
 
-void ff_init_aes_x86(AVAES *a, int decrypt)
+ਖਾਲੀ ff_init_aes_x86(AVAES *a, ਪੂਰਨ decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ਪੂਰਨ cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_AESNI(cpu_flags)) {
-        if (a->rounds == 10)
+    ਜੇ (EXTERNAL_AESNI(cpu_flags)) {
+        ਜੇ (a->ਗੇੜ == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_aesni : ff_aes_encrypt_10_aesni;
-        else if (a->rounds == 12)
+        ਨਹੀਂਤਾਂ ਜੇ (a->ਗੇੜ == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_aesni : ff_aes_encrypt_12_aesni;
-        else if (a->rounds == 14)
+        ਨਹੀਂਤਾਂ ਜੇ (a->ਗੇੜ == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_aesni : ff_aes_encrypt_14_aesni;
     }
 }

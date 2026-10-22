@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CAST5_H
-#define AVUTIL_CAST5_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_CAST5_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_CAST5_H
 
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
 
 /**
@@ -33,15 +33,15 @@
   * @{
   */
 
-extern const int av_cast5_size;
+ਬਾਹਰੀ ਅਚਲ ਪੂਰਨ av_cast5_ਮਾਪ;
 
-struct AVCAST5;
+ਬਣਤਰ AVCAST5;
 
 /**
   * Allocate an AVCAST5 context
   * To free the struct: av_free(ptr)
   */
-struct AVCAST5 *av_cast5_alloc(void);
+ਬਣਤਰ AVCAST5 *av_cast5_alloc(ਖਾਲੀ);
 /**
   * Initialize an AVCAST5 context.
   *
@@ -50,7 +50,7 @@ struct AVCAST5 *av_cast5_alloc(void);
   * @param key_bits number of keybits: possible are 40,48,...,128
   * @return 0 on success, less than 0 on failure
  */
-int av_cast5_init(struct AVCAST5 *ctx, const uint8_t *key, int key_bits);
+ਪੂਰਨ av_cast5_init(ਬਣਤਰ AVCAST5 *ctx, ਅਚਲ uint8_t *ਕੁੰਜੀ, ਪੂਰਨ ਕੁੰਜੀ_ਬਿੱਟ);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context, ECB mode only
@@ -61,7 +61,7 @@ int av_cast5_init(struct AVCAST5 *ctx, const uint8_t *key, int key_bits);
   * @param count number of 8 byte blocks
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_cast5_crypt(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int count, int decrypt);
+ਖਾਲੀ av_cast5_crypt(ਬਣਤਰ AVCAST5 *ctx, uint8_t *dst, ਅਚਲ uint8_t *src, ਪੂਰਨ ਗਿਣਤੀ_2, ਪੂਰਨ decrypt);
 
 /**
   * Encrypt or decrypt a buffer using a previously initialized context
@@ -73,8 +73,8 @@ void av_cast5_crypt(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int c
   * @param iv initialization vector for CBC mode, NULL for ECB mode
   * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_cast5_crypt2(struct AVCAST5 *ctx, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+ਖਾਲੀ av_cast5_crypt2(ਬਣਤਰ AVCAST5 *ctx, uint8_t *dst, ਅਚਲ uint8_t *src, ਪੂਰਨ ਗਿਣਤੀ_2, uint8_t *iv, ਪੂਰਨ decrypt);
 /**
  * @}
  */
-#endif /* AVUTIL_CAST5_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_CAST5_H */

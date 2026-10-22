@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdarg.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/file.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/log.h"
 
-static int last_log_level = -1;
+ਸਥਿਰ ਪੂਰਨ ਆਖਰੀ_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+ਸਥਿਰ ਖਾਲੀ log_callback(ਖਾਲੀ *ctx, ਪੂਰਨ level, ਅਚਲ ਅੱਖਰ *fmt, va_list ਦਲੀਲਾਂ)
 {
-    (void)ctx; (void)fmt; (void)args;
-    last_log_level = level;
+    (ਖਾਲੀ)ctx; (ਖਾਲੀ)fmt; (ਖਾਲੀ)ਦਲੀਲਾਂ;
+    ਆਖਰੀ_log_level = level;
 }
 
-int main(int argc, char **argv)
+ਪੂਰਨ ਮੁੱਖ(ਪੂਰਨ argc, ਅੱਖਰ **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    ਅਚਲ ਅੱਖਰ *ਰਸਤਾ = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
-    size_t size;
+    size_t ਮਾਪ;
 
-    av_log_set_callback(log_callback);
+    av_log_ਸੈੱਟ_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
-    av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    ਜੇ (av_file_map(ਰਸਤਾ, &buf, &ਮਾਪ, 0, ਨਿਰਾ) < 0)
+        ਵਾਪਸ 1;
+    av_file_unmap(buf, ਮਾਪ);
+    ਜੇ (ਮਾਪ == 0)
+        ਵਾਪਸ 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
-        last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
-            av_file_unmap(buf, size);
-            return 2;
+    ਲਈ (ਪੂਰਨ i = 0; i < 2; i++) {
+        ਆਖਰੀ_log_level = -1;
+        ਜੇ (av_file_map("no_such_file_xyz", &buf, &ਮਾਪ, i, ਨਿਰਾ) >= 0) {
+            av_file_unmap(buf, ਮਾਪ);
+            ਵਾਪਸ 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        ਜੇ (ਆਖਰੀ_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
-                    AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+                    AV_LOG_ERROR + i, i, ਆਖਰੀ_log_level);
+            ਵਾਪਸ 3;
         }
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }

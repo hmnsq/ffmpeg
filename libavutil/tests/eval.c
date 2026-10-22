@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <math.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/mathematics.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/eval.h"
 
-static const double const_values[] = {
+ਸਥਿਰ ਅਚਲ ਦੁੱਗਣਾ const_ਮੁੱਲਾਂ[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *ਅਚਲ const_ਨਾਂ[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+ਪੂਰਨ ਮੁੱਖ(ਪੂਰਨ argc, ਅੱਖਰ **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    ਪੂਰਨ i;
+    ਦੁੱਗਣਾ d;
+    ਅਚਲ ਅੱਖਰ *ਅਚਲ *ਵਿਅੰਜਕ;
+    ਸਥਿਰ ਅਚਲ ਅੱਖਰ *ਅਚਲ exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        ਨਿਰਾ
     };
-    int ret;
+    ਪੂਰਨ ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
-            printf("av_expr_parse_and_eval failed\n");
+    ਲਈ (ਵਿਅੰਜਕ = exprs; *ਵਿਅੰਜਕ; ਵਿਅੰਜਕ++) {
+        ਲਿਖੋ("Evaluating '%s'\n", *ਵਿਅੰਜਕ);
+        ret = av_ਵਿਅੰਜਕ_parse_and_eval(&d, *ਵਿਅੰਜਕ,
+                               const_ਨਾਂ, const_ਮੁੱਲਾਂ,
+                               ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, 0, ਨਿਰਾ);
+        ਜੇ (isnan(d))
+            ਲਿਖੋ("'%s' -> nan\n\n", *ਵਿਅੰਜਕ);
+        ਨਹੀਂਤਾਂ
+            ਲਿਖੋ("'%s' -> %f\n\n", *ਵਿਅੰਜਕ, d);
+        ਜੇ (ret < 0)
+            ਲਿਖੋ("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 12.7\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
-    printf("%f == 0.931322575\n", d);
-    if (ret < 0)
-        printf("av_expr_parse_and_eval failed\n");
+    ret = av_ਵਿਅੰਜਕ_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_ਨਾਂ, const_ਮੁੱਲਾਂ,
+                           ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, 0, ਨਿਰਾ);
+    ਲਿਖੋ("%f == 12.7\n", d);
+    ਜੇ (ret < 0)
+        ਲਿਖੋ("av_expr_parse_and_eval failed\n");
+    ret = av_ਵਿਅੰਜਕ_parse_and_eval(&d, "80G/80Gi",
+                           const_ਨਾਂ, const_ਮੁੱਲਾਂ,
+                           ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, 0, ਨਿਰਾ);
+    ਲਿਖੋ("%f == 0.931322575\n", d);
+    ਜੇ (ret < 0)
+        ਲਿਖੋ("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
-            START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
-                printf("av_expr_parse_and_eval failed\n");
+    ਜੇ (argc > 1 && !strcmp(argv[1], "-t")) {
+        ਲਈ (i = 0; i < 1050; i++) {
+            ਸ਼ੁਰੂ_TIMER;
+            ret = av_ਵਿਅੰਜਕ_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_ਨਾਂ, const_ਮੁੱਲਾਂ,
+                                   ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, ਨਿਰਾ, 0, ਨਿਰਾ);
+            ਜੇ (ret < 0)
+                ਲਿਖੋ("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }

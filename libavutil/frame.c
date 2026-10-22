@@ -16,227 +16,227 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "channel_layout.h"
-#include "avassert.h"
-#include "buffer.h"
-#include "dict.h"
-#include "frame.h"
-#include "frame_internal.h"
-#include "imgutils.h"
-#include "mem.h"
-#include "refstruct.h"
-#include "samplefmt.h"
-#include "side_data.h"
-#include "hwcontext.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "channel_layout.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "buffer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "dict.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "frame.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "frame_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "imgutils.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "refstruct.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "samplefmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "side_data.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext.h"
 
-static void get_frame_defaults(AVFrame *frame)
+ਸਥਿਰ ਖਾਲੀ get_ਚੌਖਟਾ_defaults(AVFrame *ਚੌਖਟਾ)
 {
-    memset(frame, 0, sizeof(*frame));
+    memset(ਚੌਖਟਾ, 0, ਆਕਾਰ(*ਚੌਖਟਾ));
 
-    frame->pts                   =
-    frame->pkt_dts               = AV_NOPTS_VALUE;
-    frame->best_effort_timestamp = AV_NOPTS_VALUE;
-    frame->duration            = 0;
-    frame->time_base           = (AVRational){ 0, 1 };
-    frame->sample_aspect_ratio = (AVRational){ 0, 1 };
-    frame->format              = -1; /* unknown */
-    frame->extended_data       = frame->data;
-    frame->color_primaries     = AVCOL_PRI_UNSPECIFIED;
-    frame->color_trc           = AVCOL_TRC_UNSPECIFIED;
-    frame->colorspace          = AVCOL_SPC_UNSPECIFIED;
-    frame->color_range         = AVCOL_RANGE_UNSPECIFIED;
-    frame->chroma_location     = AVCHROMA_LOC_UNSPECIFIED;
-    frame->alpha_mode          = AVALPHA_MODE_UNSPECIFIED;
-    frame->flags               = 0;
+    ਚੌਖਟਾ->pts                   =
+    ਚੌਖਟਾ->pkt_dts               = AV_NOPTS_ਮੁੱਲ;
+    ਚੌਖਟਾ->ਉੱਤਮ_effort_timestamp = AV_NOPTS_ਮੁੱਲ;
+    ਚੌਖਟਾ->duration            = 0;
+    ਚੌਖਟਾ->ਸਮਾਂ_ਅਧਾਰ           = (AVRational){ 0, 1 };
+    ਚੌਖਟਾ->sample_aspect_ਅਨੁਪਾਤ = (AVRational){ 0, 1 };
+    ਚੌਖਟਾ->format              = -1; /* unknown */
+    ਚੌਖਟਾ->extended_ਅੰਕੜੇ       = ਚੌਖਟਾ->ਅੰਕੜੇ;
+    ਚੌਖਟਾ->color_primaries     = AVCOL_PRI_UNSPECIFIED;
+    ਚੌਖਟਾ->color_trc           = AVCOL_TRC_UNSPECIFIED;
+    ਚੌਖਟਾ->colorspace          = AVCOL_SPC_UNSPECIFIED;
+    ਚੌਖਟਾ->color_range         = AVCOL_RANGE_UNSPECIFIED;
+    ਚੌਖਟਾ->chroma_location     = AVCHROMA_LOC_UNSPECIFIED;
+    ਚੌਖਟਾ->alpha_ਬਹੁਲਕ          = AVALPHA_ਬਹੁਲਕ_UNSPECIFIED;
+    ਚੌਖਟਾ->flags               = 0;
 }
 
-AVFrame *av_frame_alloc(void)
+AVFrame *av_ਚੌਖਟਾ_alloc(ਖਾਲੀ)
 {
-    AVFrame *frame = av_malloc(sizeof(*frame));
+    AVFrame *ਚੌਖਟਾ = av_malloc(ਆਕਾਰ(*ਚੌਖਟਾ));
 
-    if (!frame)
-        return NULL;
+    ਜੇ (!ਚੌਖਟਾ)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    get_frame_defaults(frame);
+    get_ਚੌਖਟਾ_defaults(ਚੌਖਟਾ);
 
-    return frame;
+    ਵਾਪਸ ਚੌਖਟਾ;
 }
 
-void av_frame_free(AVFrame **frame)
+ਖਾਲੀ av_ਚੌਖਟਾ_free(AVFrame **ਚੌਖਟਾ)
 {
-    if (!frame || !*frame)
-        return;
+    ਜੇ (!ਚੌਖਟਾ || !*ਚੌਖਟਾ)
+        ਵਾਪਸ;
 
-    av_frame_unref(*frame);
-    av_freep(frame);
+    av_ਚੌਖਟਾ_unref(*ਚੌਖਟਾ);
+    av_freep(ਚੌਖਟਾ);
 }
 
-#define ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ALIGN (HAVE_SIMD_ALIGN_64 ? 64 : 32)
 
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
-                              AVBufferRef *(*alloc)(void *opaque, size_t size),
-                              void *opaque)
+ਪੂਰਨ ff_ਚੌਖਟਾ_get_video_ਬਫਰ(AVFrame *ਚੌਖਟਾ, ਪੂਰਨ align,
+                              AVBufferRef *(*alloc)(ਖਾਲੀ *opaque, size_t ਮਾਪ),
+                              ਖਾਲੀ *opaque)
 {
-    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
-    int ret, padded_height;
-    int plane_padding;
+    ਅਚਲ AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(ਚੌਖਟਾ->format);
+    ਪੂਰਨ ret, padded_ਉਚਾਈ;
+    ਪੂਰਨ plane_padding;
     ptrdiff_t linesizes[4];
-    size_t total_size, sizes[4];
+    size_t ਕੁੱਲ_ਮਾਪ, sizes[4];
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    ਜੇ (!desc)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(frame->width, frame->height, 0, NULL)) < 0)
-        return ret;
+    ਜੇ ((ret = av_image_check_ਮਾਪ(ਚੌਖਟਾ->ਚੌੜਾਈ, ਚੌਖਟਾ->ਉਚਾਈ, 0, ਨਿਰਾ)) < 0)
+        ਵਾਪਸ ret;
 
-    if (align <= 0)
+    ਜੇ (align <= 0)
         align = ALIGN;
     plane_padding = FFMAX(ALIGN, align);
 
-    if (!frame->linesize[0]) {
-        for (int i = 1; i <= align; i += i) {
-            ret = av_image_fill_linesizes(frame->linesize, frame->format,
-                                          FFALIGN(frame->width, i));
-            if (ret < 0)
-                return ret;
-            if (!(frame->linesize[0] & (align-1)))
-                break;
+    ਜੇ (!ਚੌਖਟਾ->linesize[0]) {
+        ਲਈ (ਪੂਰਨ i = 1; i <= align; i += i) {
+            ret = av_image_fill_linesizes(ਚੌਖਟਾ->linesize, ਚੌਖਟਾ->format,
+                                          FFALIGN(ਚੌਖਟਾ->ਚੌੜਾਈ, i));
+            ਜੇ (ret < 0)
+                ਵਾਪਸ ret;
+            ਜੇ (!(ਚੌਖਟਾ->linesize[0] & (align-1)))
+                ਰੋਕੋ;
         }
 
-        for (int i = 0; i < 4 && frame->linesize[i]; i++)
-            frame->linesize[i] = FFALIGN(frame->linesize[i], align);
+        ਲਈ (ਪੂਰਨ i = 0; i < 4 && ਚੌਖਟਾ->linesize[i]; i++)
+            ਚੌਖਟਾ->linesize[i] = FFALIGN(ਚੌਖਟਾ->linesize[i], align);
     }
 
-    for (int i = 0; i < 4; i++)
-        linesizes[i] = frame->linesize[i];
+    ਲਈ (ਪੂਰਨ i = 0; i < 4; i++)
+        linesizes[i] = ਚੌਖਟਾ->linesize[i];
 
-    padded_height = FFALIGN(frame->height, 32);
-    if ((ret = av_image_fill_plane_sizes(sizes, frame->format,
-                                         padded_height, linesizes)) < 0)
-        return ret;
+    padded_ਉਚਾਈ = FFALIGN(ਚੌਖਟਾ->ਉਚਾਈ, 32);
+    ਜੇ ((ret = av_image_fill_plane_sizes(sizes, ਚੌਖਟਾ->format,
+                                         padded_ਉਚਾਈ, linesizes)) < 0)
+        ਵਾਪਸ ret;
 
-    total_size = 4 * plane_padding + 4 * align;
-    for (int i = 0; i < 4; i++) {
-        if (sizes[i] > SIZE_MAX - total_size)
-            return AVERROR(EINVAL);
-        total_size += sizes[i];
+    ਕੁੱਲ_ਮਾਪ = 4 * plane_padding + 4 * align;
+    ਲਈ (ਪੂਰਨ i = 0; i < 4; i++) {
+        ਜੇ (sizes[i] > SIZE_MAX - ਕੁੱਲ_ਮਾਪ)
+            ਵਾਪਸ AVERROR(EINVAL);
+        ਕੁੱਲ_ਮਾਪ += sizes[i];
     }
 
-    frame->buf[0] = alloc ? alloc(opaque, total_size) : av_buffer_alloc(total_size);
-    if (!frame->buf[0]) {
+    ਚੌਖਟਾ->buf[0] = alloc ? alloc(opaque, ਕੁੱਲ_ਮਾਪ) : av_ਬਫਰ_alloc(ਕੁੱਲ_ਮਾਪ);
+    ਜੇ (!ਚੌਖਟਾ->buf[0]) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
-                                      frame->buf[0]->data, frame->linesize)) < 0)
-        goto fail;
+    ਜੇ ((ret = av_image_fill_ਸੂਚਕ_ਸਾਰੇ(ਚੌਖਟਾ->ਅੰਕੜੇ, ਚੌਖਟਾ->format, padded_ਉਚਾਈ,
+                                      ਚੌਖਟਾ->buf[0]->ਅੰਕੜੇ, ਚੌਖਟਾ->linesize)) < 0)
+        ਜਾਓ fail;
 
-    for (int i = 1; i < 4; i++) {
-        if (frame->data[i])
-            frame->data[i] += i * plane_padding;
-        frame->data[i] = (uint8_t *)FFALIGN((uintptr_t)frame->data[i], align);
+    ਲਈ (ਪੂਰਨ i = 1; i < 4; i++) {
+        ਜੇ (ਚੌਖਟਾ->ਅੰਕੜੇ[i])
+            ਚੌਖਟਾ->ਅੰਕੜੇ[i] += i * plane_padding;
+        ਚੌਖਟਾ->ਅੰਕੜੇ[i] = (uint8_t *)FFALIGN((uintptr_t)ਚੌਖਟਾ->ਅੰਕੜੇ[i], align);
     }
 
-    frame->extended_data = frame->data;
+    ਚੌਖਟਾ->extended_ਅੰਕੜੇ = ਚੌਖਟਾ->ਅੰਕੜੇ;
 
-    return 0;
+    ਵਾਪਸ 0;
 fail:
-    av_frame_unref(frame);
-    return ret;
+    av_ਚੌਖਟਾ_unref(ਚੌਖਟਾ);
+    ਵਾਪਸ ret;
 }
 
-static int get_audio_buffer(AVFrame *frame, int align)
+ਸਥਿਰ ਪੂਰਨ get_audio_ਬਫਰ(AVFrame *ਚੌਖਟਾ, ਪੂਰਨ align)
 {
-    int planar   = av_sample_fmt_is_planar(frame->format);
-    int channels, planes;
-    size_t size;
-    int ret;
+    ਪੂਰਨ planar   = av_sample_fmt_is_planar(ਚੌਖਟਾ->format);
+    ਪੂਰਨ channels, planes;
+    size_t ਮਾਪ;
+    ਪੂਰਨ ret;
 
-    channels = frame->ch_layout.nb_channels;
+    channels = ਚੌਖਟਾ->ch_layout.nb_channels;
     planes   = planar ? channels : 1;
-    if (!frame->linesize[0]) {
-        ret = av_samples_get_buffer_size(&frame->linesize[0], channels,
-                                         frame->nb_samples, frame->format,
+    ਜੇ (!ਚੌਖਟਾ->linesize[0]) {
+        ret = av_samples_get_ਬਫਰ_ਮਾਪ(&ਚੌਖਟਾ->linesize[0], channels,
+                                         ਚੌਖਟਾ->nb_samples, ਚੌਖਟਾ->format,
                                          align);
-        if (ret < 0)
-            return ret;
+        ਜੇ (ret < 0)
+            ਵਾਪਸ ret;
     }
 
-    if (align <= 0)
+    ਜੇ (align <= 0)
         align = ALIGN;
 
-    if (planes > AV_NUM_DATA_POINTERS) {
-        frame->extended_data = av_calloc(planes,
-                                          sizeof(*frame->extended_data));
-        frame->extended_buf  = av_calloc(planes - AV_NUM_DATA_POINTERS,
-                                          sizeof(*frame->extended_buf));
-        if (!frame->extended_data || !frame->extended_buf) {
-            av_freep(&frame->extended_data);
-            av_freep(&frame->extended_buf);
-            return AVERROR(ENOMEM);
+    ਜੇ (planes > AV_ਅੰਕ_ਅੰਕੜੇ_ਸੂਚਕ_ਸਾਰੇ) {
+        ਚੌਖਟਾ->extended_ਅੰਕੜੇ = av_calloc(planes,
+                                          ਆਕਾਰ(*ਚੌਖਟਾ->extended_ਅੰਕੜੇ));
+        ਚੌਖਟਾ->extended_buf  = av_calloc(planes - AV_ਅੰਕ_ਅੰਕੜੇ_ਸੂਚਕ_ਸਾਰੇ,
+                                          ਆਕਾਰ(*ਚੌਖਟਾ->extended_buf));
+        ਜੇ (!ਚੌਖਟਾ->extended_ਅੰਕੜੇ || !ਚੌਖਟਾ->extended_buf) {
+            av_freep(&ਚੌਖਟਾ->extended_ਅੰਕੜੇ);
+            av_freep(&ਚੌਖਟਾ->extended_buf);
+            ਵਾਪਸ AVERROR(ENOMEM);
         }
-        frame->nb_extended_buf = planes - AV_NUM_DATA_POINTERS;
-    } else
-        frame->extended_data = frame->data;
+        ਚੌਖਟਾ->nb_extended_buf = planes - AV_ਅੰਕ_ਅੰਕੜੇ_ਸੂਚਕ_ਸਾਰੇ;
+    } ਨਹੀਂਤਾਂ
+        ਚੌਖਟਾ->extended_ਅੰਕੜੇ = ਚੌਖਟਾ->ਅੰਕੜੇ;
 
-    if (frame->linesize[0] > SIZE_MAX - align)
-        return AVERROR(EINVAL);
-    size = frame->linesize[0] + (size_t)align;
+    ਜੇ (ਚੌਖਟਾ->linesize[0] > SIZE_MAX - align)
+        ਵਾਪਸ AVERROR(EINVAL);
+    ਮਾਪ = ਚੌਖਟਾ->linesize[0] + (size_t)align;
 
-    for (int i = 0; i < FFMIN(planes, AV_NUM_DATA_POINTERS); i++) {
-        frame->buf[i] = av_buffer_alloc(size);
-        if (!frame->buf[i]) {
-            av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+    ਲਈ (ਪੂਰਨ i = 0; i < FFMIN(planes, AV_ਅੰਕ_ਅੰਕੜੇ_ਸੂਚਕ_ਸਾਰੇ); i++) {
+        ਚੌਖਟਾ->buf[i] = av_ਬਫਰ_alloc(ਮਾਪ);
+        ਜੇ (!ਚੌਖਟਾ->buf[i]) {
+            av_ਚੌਖਟਾ_unref(ਚੌਖਟਾ);
+            ਵਾਪਸ AVERROR(ENOMEM);
         }
-        frame->extended_data[i] = frame->data[i] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->buf[i]->data, align);
+        ਚੌਖਟਾ->extended_ਅੰਕੜੇ[i] = ਚੌਖਟਾ->ਅੰਕੜੇ[i] =
+            (uint8_t *)FFALIGN((uintptr_t)ਚੌਖਟਾ->buf[i]->ਅੰਕੜੇ, align);
     }
-    for (int i = 0; i < planes - AV_NUM_DATA_POINTERS; i++) {
-        frame->extended_buf[i] = av_buffer_alloc(size);
-        if (!frame->extended_buf[i]) {
-            av_frame_unref(frame);
-            return AVERROR(ENOMEM);
+    ਲਈ (ਪੂਰਨ i = 0; i < planes - AV_ਅੰਕ_ਅੰਕੜੇ_ਸੂਚਕ_ਸਾਰੇ; i++) {
+        ਚੌਖਟਾ->extended_buf[i] = av_ਬਫਰ_alloc(ਮਾਪ);
+        ਜੇ (!ਚੌਖਟਾ->extended_buf[i]) {
+            av_ਚੌਖਟਾ_unref(ਚੌਖਟਾ);
+            ਵਾਪਸ AVERROR(ENOMEM);
         }
-        frame->extended_data[i + AV_NUM_DATA_POINTERS] =
-            (uint8_t *)FFALIGN((uintptr_t)frame->extended_buf[i]->data, align);
+        ਚੌਖਟਾ->extended_ਅੰਕੜੇ[i + AV_ਅੰਕ_ਅੰਕੜੇ_ਸੂਚਕ_ਸਾਰੇ] =
+            (uint8_t *)FFALIGN((uintptr_t)ਚੌਖਟਾ->extended_buf[i]->ਅੰਕੜੇ, align);
     }
-    return 0;
+    ਵਾਪਸ 0;
 
 }
 
-int av_frame_get_buffer(AVFrame *frame, int align)
+ਪੂਰਨ av_ਚੌਖਟਾ_get_ਬਫਰ(AVFrame *ਚੌਖਟਾ, ਪੂਰਨ align)
 {
-    if (frame->format < 0)
-        return AVERROR(EINVAL);
+    ਜੇ (ਚੌਖਟਾ->format < 0)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    if (frame->width > 0 && frame->height > 0)
-        return ff_frame_get_video_buffer(frame, align, NULL, NULL);
-    else if (frame->nb_samples > 0 &&
-             (av_channel_layout_check(&frame->ch_layout)))
-        return get_audio_buffer(frame, align);
+    ਜੇ (ਚੌਖਟਾ->ਚੌੜਾਈ > 0 && ਚੌਖਟਾ->ਉਚਾਈ > 0)
+        ਵਾਪਸ ff_ਚੌਖਟਾ_get_video_ਬਫਰ(ਚੌਖਟਾ, align, ਨਿਰਾ, ਨਿਰਾ);
+    ਨਹੀਂਤਾਂ ਜੇ (ਚੌਖਟਾ->nb_samples > 0 &&
+             (av_channel_layout_check(&ਚੌਖਟਾ->ch_layout)))
+        ਵਾਪਸ get_audio_ਬਫਰ(ਚੌਖਟਾ, align);
 
-    return AVERROR(EINVAL);
+    ਵਾਪਸ AVERROR(EINVAL);
 }
 
-static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
+ਸਥਿਰ ਪੂਰਨ ਚੌਖਟਾ_copy_props(AVFrame *dst, ਅਚਲ AVFrame *src, ਪੂਰਨ force_copy)
 {
     dst->pict_type              = src->pict_type;
-    dst->sample_aspect_ratio    = src->sample_aspect_ratio;
-    dst->crop_top               = src->crop_top;
+    dst->sample_aspect_ਅਨੁਪਾਤ    = src->sample_aspect_ਅਨੁਪਾਤ;
+    dst->crop_ਸਿਖਰ               = src->crop_ਸਿਖਰ;
     dst->crop_bottom            = src->crop_bottom;
-    dst->crop_left              = src->crop_left;
-    dst->crop_right             = src->crop_right;
+    dst->crop_ਖੱਬਾ              = src->crop_ਖੱਬਾ;
+    dst->crop_ਸੱਜਾ             = src->crop_ਸੱਜਾ;
     dst->pts                    = src->pts;
     dst->duration               = src->duration;
     dst->repeat_pict            = src->repeat_pict;
-    dst->sample_rate            = src->sample_rate;
+    dst->sample_ਦਰ            = src->sample_ਦਰ;
     dst->opaque                 = src->opaque;
     dst->pkt_dts                = src->pkt_dts;
-    dst->time_base              = src->time_base;
+    dst->ਸਮਾਂ_ਅਧਾਰ              = src->ਸਮਾਂ_ਅਧਾਰ;
     dst->quality                = src->quality;
-    dst->best_effort_timestamp  = src->best_effort_timestamp;
+    dst->ਉੱਤਮ_effort_timestamp  = src->ਉੱਤਮ_effort_timestamp;
     dst->flags                  = src->flags;
     dst->decode_error_flags     = src->decode_error_flags;
     dst->color_primaries        = src->color_primaries;
@@ -244,587 +244,587 @@ static int frame_copy_props(AVFrame *dst, const AVFrame *src, int force_copy)
     dst->colorspace             = src->colorspace;
     dst->color_range            = src->color_range;
     dst->chroma_location        = src->chroma_location;
-    dst->alpha_mode             = src->alpha_mode;
+    dst->alpha_ਬਹੁਲਕ             = src->alpha_ਬਹੁਲਕ;
 
     av_dict_copy(&dst->metadata, src->metadata, 0);
 
-    for (int i = 0; i < src->nb_side_data; i++) {
-        const AVFrameSideData *sd_src = src->side_data[i];
-        AVFrameSideData *sd_dst;
-        if (   sd_src->type == AV_FRAME_DATA_PANSCAN
-            && (src->width != dst->width || src->height != dst->height))
-            continue;
-        if (force_copy) {
-            sd_dst = av_frame_new_side_data(dst, sd_src->type,
-                                            sd_src->size);
-            if (!sd_dst) {
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+    ਲਈ (ਪੂਰਨ i = 0; i < src->nb_side_ਅੰਕੜੇ; i++) {
+        ਅਚਲ AVFrame_Side_ਅੰਕੜੇ *sd_src = src->side_ਅੰਕੜੇ[i];
+        AVFrame_Side_ਅੰਕੜੇ *sd_dst;
+        ਜੇ (   sd_src->type == AV_ਚੌਖਟਾ_ਅੰਕੜੇ_PANSCAN
+            && (src->ਚੌੜਾਈ != dst->ਚੌੜਾਈ || src->ਉਚਾਈ != dst->ਉਚਾਈ))
+            ਜਾਰੀ;
+        ਜੇ (force_copy) {
+            sd_dst = av_ਚੌਖਟਾ_new_side_ਅੰਕੜੇ(dst, sd_src->type,
+                                            sd_src->ਮਾਪ);
+            ਜੇ (!sd_dst) {
+                av_ਚੌਖਟਾ_side_ਅੰਕੜੇ_free(&dst->side_ਅੰਕੜੇ, &dst->nb_side_ਅੰਕੜੇ);
+                ਵਾਪਸ AVERROR(ENOMEM);
             }
-            memcpy(sd_dst->data, sd_src->data, sd_src->size);
-        } else {
-            AVBufferRef *ref = av_buffer_ref(sd_src->buf);
-            sd_dst = av_frame_new_side_data_from_buf(dst, sd_src->type, ref);
-            if (!sd_dst) {
-                av_buffer_unref(&ref);
-                av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
-                return AVERROR(ENOMEM);
+            ਸਮ੍ਰਿਤੀ_ਨਕਲ(sd_dst->ਅੰਕੜੇ, sd_src->ਅੰਕੜੇ, sd_src->ਮਾਪ);
+        } ਨਹੀਂਤਾਂ {
+            AVBufferRef *ref = av_ਬਫਰ_ref(sd_src->buf);
+            sd_dst = av_ਚੌਖਟਾ_new_side_ਅੰਕੜੇ_from_buf(dst, sd_src->type, ref);
+            ਜੇ (!sd_dst) {
+                av_ਬਫਰ_unref(&ref);
+                av_ਚੌਖਟਾ_side_ਅੰਕੜੇ_free(&dst->side_ਅੰਕੜੇ, &dst->nb_side_ਅੰਕੜੇ);
+                ਵਾਪਸ AVERROR(ENOMEM);
             }
         }
         av_dict_copy(&sd_dst->metadata, sd_src->metadata, 0);
     }
 
-    av_refstruct_replace(&dst->private_ref, src->private_ref);
-    return av_buffer_replace(&dst->opaque_ref, src->opaque_ref);
+    av_refstruct_replace(&dst->ਨਿੱਜੀ_ref, src->ਨਿੱਜੀ_ref);
+    ਵਾਪਸ av_ਬਫਰ_replace(&dst->opaque_ref, src->opaque_ref);
 }
 
-int av_frame_ref(AVFrame *dst, const AVFrame *src)
+ਪੂਰਨ av_ਚੌਖਟਾ_ref(AVFrame *dst, ਅਚਲ AVFrame *src)
 {
-    int ret = 0;
+    ਪੂਰਨ ret = 0;
 
-    av_assert1(dst->width == 0 && dst->height == 0);
+    av_assert1(dst->ਚੌੜਾਈ == 0 && dst->ਉਚਾਈ == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
-               dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
+               dst->ch_layout.ਕ੍ਰਮ == AV_CHANNEL_ਕ੍ਰਮ_UNSPEC);
 
     dst->format         = src->format;
-    dst->width          = src->width;
-    dst->height         = src->height;
+    dst->ਚੌੜਾਈ          = src->ਚੌੜਾਈ;
+    dst->ਉਚਾਈ         = src->ਉਚਾਈ;
     dst->nb_samples     = src->nb_samples;
 
-    ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    ret = ਚੌਖਟਾ_copy_props(dst, src, 0);
+    ਜੇ (ret < 0)
+        ਜਾਓ fail;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    ਜੇ (ret < 0)
+        ਜਾਓ fail;
 
     /* duplicate the frame data if it's not refcounted */
-    if (!src->buf[0]) {
-        ret = av_frame_get_buffer(dst, 0);
-        if (ret < 0)
-            goto fail;
+    ਜੇ (!src->buf[0]) {
+        ret = av_ਚੌਖਟਾ_get_ਬਫਰ(dst, 0);
+        ਜੇ (ret < 0)
+            ਜਾਓ fail;
 
-        ret = av_frame_copy(dst, src);
-        if (ret < 0)
-            goto fail;
+        ret = av_ਚੌਖਟਾ_copy(dst, src);
+        ਜੇ (ret < 0)
+            ਜਾਓ fail;
 
-        return 0;
+        ਵਾਪਸ 0;
     }
 
     /* ref the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        if (!src->buf[i])
-            continue;
-        dst->buf[i] = av_buffer_ref(src->buf[i]);
-        if (!dst->buf[i]) {
+    ਲਈ (ਪੂਰਨ i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        ਜੇ (!src->buf[i])
+            ਜਾਰੀ;
+        dst->buf[i] = av_ਬਫਰ_ref(src->buf[i]);
+        ਜੇ (!dst->buf[i]) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ਜਾਓ fail;
         }
     }
 
-    if (src->extended_buf) {
+    ਜੇ (src->extended_buf) {
         dst->extended_buf = av_calloc(src->nb_extended_buf,
-                                      sizeof(*dst->extended_buf));
-        if (!dst->extended_buf) {
+                                      ਆਕਾਰ(*dst->extended_buf));
+        ਜੇ (!dst->extended_buf) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ਜਾਓ fail;
         }
         dst->nb_extended_buf = src->nb_extended_buf;
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            dst->extended_buf[i] = av_buffer_ref(src->extended_buf[i]);
-            if (!dst->extended_buf[i]) {
+        ਲਈ (ਪੂਰਨ i = 0; i < src->nb_extended_buf; i++) {
+            dst->extended_buf[i] = av_ਬਫਰ_ref(src->extended_buf[i]);
+            ਜੇ (!dst->extended_buf[i]) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                ਜਾਓ fail;
             }
         }
     }
 
-    if (src->hw_frames_ctx) {
-        dst->hw_frames_ctx = av_buffer_ref(src->hw_frames_ctx);
-        if (!dst->hw_frames_ctx) {
+    ਜੇ (src->hw_ਚੌਖਟੇ_ctx) {
+        dst->hw_ਚੌਖਟੇ_ctx = av_ਬਫਰ_ref(src->hw_ਚੌਖਟੇ_ctx);
+        ਜੇ (!dst->hw_ਚੌਖਟੇ_ctx) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ਜਾਓ fail;
         }
     }
 
     /* duplicate extended data */
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    ਜੇ (src->extended_ਅੰਕੜੇ != src->ਅੰਕੜੇ) {
+        ਪੂਰਨ ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        ਜੇ (ch <= 0 || ch > SIZE_MAX / ਆਕਾਰ(*dst->extended_ਅੰਕੜੇ)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            ਜਾਓ fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_ਅੰਕੜੇ = av_memdup(src->extended_ਅੰਕੜੇ, ਆਕਾਰ(*dst->extended_ਅੰਕੜੇ) * ch);
+        ਜੇ (!dst->extended_ਅੰਕੜੇ) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ਜਾਓ fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } ਨਹੀਂਤਾਂ
+        dst->extended_ਅੰਕੜੇ = dst->ਅੰਕੜੇ;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst->ਅੰਕੜੇ,     src->ਅੰਕੜੇ,     ਆਕਾਰ(src->ਅੰਕੜੇ));
+    ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst->linesize, src->linesize, ਆਕਾਰ(src->linesize));
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-    av_frame_unref(dst);
-    return ret;
+    av_ਚੌਖਟਾ_unref(dst);
+    ਵਾਪਸ ret;
 }
 
-int av_frame_replace(AVFrame *dst, const AVFrame *src)
+ਪੂਰਨ av_ਚੌਖਟਾ_replace(AVFrame *dst, ਅਚਲ AVFrame *src)
 {
-    int ret = 0;
+    ਪੂਰਨ ret = 0;
 
-    if (dst == src)
-        return AVERROR(EINVAL);
+    ਜੇ (dst == src)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    if (!src->buf[0]) {
-        av_frame_unref(dst);
+    ਜੇ (!src->buf[0]) {
+        av_ਚੌਖਟਾ_unref(dst);
 
         /* duplicate the frame data if it's not refcounted */
-        if (   src->data[0] || src->data[1]
-            || src->data[2] || src->data[3])
-            return av_frame_ref(dst, src);
+        ਜੇ (   src->ਅੰਕੜੇ[0] || src->ਅੰਕੜੇ[1]
+            || src->ਅੰਕੜੇ[2] || src->ਅੰਕੜੇ[3])
+            ਵਾਪਸ av_ਚੌਖਟਾ_ref(dst, src);
 
-        ret = frame_copy_props(dst, src, 0);
-        if (ret < 0)
-            goto fail;
+        ret = ਚੌਖਟਾ_copy_props(dst, src, 0);
+        ਜੇ (ret < 0)
+            ਜਾਓ fail;
     }
 
     dst->format         = src->format;
-    dst->width          = src->width;
-    dst->height         = src->height;
+    dst->ਚੌੜਾਈ          = src->ਚੌੜਾਈ;
+    dst->ਉਚਾਈ         = src->ਉਚਾਈ;
     dst->nb_samples     = src->nb_samples;
 
     ret = av_channel_layout_copy(&dst->ch_layout, &src->ch_layout);
-    if (ret < 0)
-        goto fail;
+    ਜੇ (ret < 0)
+        ਜਾਓ fail;
 
-    av_frame_side_data_free(&dst->side_data, &dst->nb_side_data);
+    av_ਚੌਖਟਾ_side_ਅੰਕੜੇ_free(&dst->side_ਅੰਕੜੇ, &dst->nb_side_ਅੰਕੜੇ);
     av_dict_free(&dst->metadata);
-    ret = frame_copy_props(dst, src, 0);
-    if (ret < 0)
-        goto fail;
+    ret = ਚੌਖਟਾ_copy_props(dst, src, 0);
+    ਜੇ (ret < 0)
+        ਜਾਓ fail;
 
     /* replace the buffers */
-    for (int i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
-        ret = av_buffer_replace(&dst->buf[i], src->buf[i]);
-        if (ret < 0)
-            goto fail;
+    ਲਈ (ਪੂਰਨ i = 0; i < FF_ARRAY_ELEMS(src->buf); i++) {
+        ret = av_ਬਫਰ_replace(&dst->buf[i], src->buf[i]);
+        ਜੇ (ret < 0)
+            ਜਾਓ fail;
     }
 
-    if (src->extended_buf) {
-        if (dst->nb_extended_buf != src->nb_extended_buf) {
-            int nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
-            void *tmp;
+    ਜੇ (src->extended_buf) {
+        ਜੇ (dst->nb_extended_buf != src->nb_extended_buf) {
+            ਪੂਰਨ nb_extended_buf = FFMIN(dst->nb_extended_buf, src->nb_extended_buf);
+            ਖਾਲੀ *tmp;
 
-            for (int i = nb_extended_buf; i < dst->nb_extended_buf; i++)
-                av_buffer_unref(&dst->extended_buf[i]);
+            ਲਈ (ਪੂਰਨ i = nb_extended_buf; i < dst->nb_extended_buf; i++)
+                av_ਬਫਰ_unref(&dst->extended_buf[i]);
 
             tmp = av_realloc_array(dst->extended_buf, src->nb_extended_buf,
-                                   sizeof(*dst->extended_buf));
-            if (!tmp) {
+                                   ਆਕਾਰ(*dst->extended_buf));
+            ਜੇ (!tmp) {
                 ret = AVERROR(ENOMEM);
-                goto fail;
+                ਜਾਓ fail;
             }
             dst->extended_buf = tmp;
             dst->nb_extended_buf = src->nb_extended_buf;
 
             memset(&dst->extended_buf[nb_extended_buf], 0,
-                   (src->nb_extended_buf - nb_extended_buf) * sizeof(*dst->extended_buf));
+                   (src->nb_extended_buf - nb_extended_buf) * ਆਕਾਰ(*dst->extended_buf));
         }
 
-        for (int i = 0; i < src->nb_extended_buf; i++) {
-            ret = av_buffer_replace(&dst->extended_buf[i], src->extended_buf[i]);
-            if (ret < 0)
-                goto fail;
+        ਲਈ (ਪੂਰਨ i = 0; i < src->nb_extended_buf; i++) {
+            ret = av_ਬਫਰ_replace(&dst->extended_buf[i], src->extended_buf[i]);
+            ਜੇ (ret < 0)
+                ਜਾਓ fail;
         }
-    } else if (dst->extended_buf) {
-        for (int i = 0; i < dst->nb_extended_buf; i++)
-            av_buffer_unref(&dst->extended_buf[i]);
+    } ਨਹੀਂਤਾਂ ਜੇ (dst->extended_buf) {
+        ਲਈ (ਪੂਰਨ i = 0; i < dst->nb_extended_buf; i++)
+            av_ਬਫਰ_unref(&dst->extended_buf[i]);
         av_freep(&dst->extended_buf);
     }
 
-    ret = av_buffer_replace(&dst->hw_frames_ctx, src->hw_frames_ctx);
-    if (ret < 0)
-        goto fail;
+    ret = av_ਬਫਰ_replace(&dst->hw_ਚੌਖਟੇ_ctx, src->hw_ਚੌਖਟੇ_ctx);
+    ਜੇ (ret < 0)
+        ਜਾਓ fail;
 
-    if (dst->extended_data != dst->data)
-        av_freep(&dst->extended_data);
+    ਜੇ (dst->extended_ਅੰਕੜੇ != dst->ਅੰਕੜੇ)
+        av_freep(&dst->extended_ਅੰਕੜੇ);
 
-    if (src->extended_data != src->data) {
-        int ch = dst->ch_layout.nb_channels;
+    ਜੇ (src->extended_ਅੰਕੜੇ != src->ਅੰਕੜੇ) {
+        ਪੂਰਨ ch = dst->ch_layout.nb_channels;
 
-        if (ch <= 0 || ch > SIZE_MAX / sizeof(*dst->extended_data)) {
+        ਜੇ (ch <= 0 || ch > SIZE_MAX / ਆਕਾਰ(*dst->extended_ਅੰਕੜੇ)) {
             ret = AVERROR(EINVAL);
-            goto fail;
+            ਜਾਓ fail;
         }
 
-        dst->extended_data = av_memdup(src->extended_data, sizeof(*dst->extended_data) * ch);
-        if (!dst->extended_data) {
+        dst->extended_ਅੰਕੜੇ = av_memdup(src->extended_ਅੰਕੜੇ, ਆਕਾਰ(*dst->extended_ਅੰਕੜੇ) * ch);
+        ਜੇ (!dst->extended_ਅੰਕੜੇ) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ਜਾਓ fail;
         }
-    } else
-        dst->extended_data = dst->data;
+    } ਨਹੀਂਤਾਂ
+        dst->extended_ਅੰਕੜੇ = dst->ਅੰਕੜੇ;
 
-    memcpy(dst->data,     src->data,     sizeof(src->data));
-    memcpy(dst->linesize, src->linesize, sizeof(src->linesize));
+    ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst->ਅੰਕੜੇ,     src->ਅੰਕੜੇ,     ਆਕਾਰ(src->ਅੰਕੜੇ));
+    ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst->linesize, src->linesize, ਆਕਾਰ(src->linesize));
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-    av_frame_unref(dst);
-    return ret;
+    av_ਚੌਖਟਾ_unref(dst);
+    ਵਾਪਸ ret;
 }
 
-AVFrame *av_frame_clone(const AVFrame *src)
+AVFrame *av_ਚੌਖਟਾ_clone(ਅਚਲ AVFrame *src)
 {
-    AVFrame *ret = av_frame_alloc();
+    AVFrame *ret = av_ਚੌਖਟਾ_alloc();
 
-    if (!ret)
-        return NULL;
+    ਜੇ (!ret)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    if (av_frame_ref(ret, src) < 0)
-        av_frame_free(&ret);
+    ਜੇ (av_ਚੌਖਟਾ_ref(ret, src) < 0)
+        av_ਚੌਖਟਾ_free(&ret);
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-void av_frame_unref(AVFrame *frame)
+ਖਾਲੀ av_ਚੌਖਟਾ_unref(AVFrame *ਚੌਖਟਾ)
 {
-    if (!frame)
-        return;
+    ਜੇ (!ਚੌਖਟਾ)
+        ਵਾਪਸ;
 
-    av_frame_side_data_free(&frame->side_data, &frame->nb_side_data);
+    av_ਚੌਖਟਾ_side_ਅੰਕੜੇ_free(&ਚੌਖਟਾ->side_ਅੰਕੜੇ, &ਚੌਖਟਾ->nb_side_ਅੰਕੜੇ);
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        av_buffer_unref(&frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        av_buffer_unref(&frame->extended_buf[i]);
-    av_freep(&frame->extended_buf);
-    av_dict_free(&frame->metadata);
+    ਲਈ (ਪੂਰਨ i = 0; i < FF_ARRAY_ELEMS(ਚੌਖਟਾ->buf); i++)
+        av_ਬਫਰ_unref(&ਚੌਖਟਾ->buf[i]);
+    ਲਈ (ਪੂਰਨ i = 0; i < ਚੌਖਟਾ->nb_extended_buf; i++)
+        av_ਬਫਰ_unref(&ਚੌਖਟਾ->extended_buf[i]);
+    av_freep(&ਚੌਖਟਾ->extended_buf);
+    av_dict_free(&ਚੌਖਟਾ->metadata);
 
-    av_buffer_unref(&frame->hw_frames_ctx);
+    av_ਬਫਰ_unref(&ਚੌਖਟਾ->hw_ਚੌਖਟੇ_ctx);
 
-    av_buffer_unref(&frame->opaque_ref);
-    av_refstruct_unref(&frame->private_ref);
+    av_ਬਫਰ_unref(&ਚੌਖਟਾ->opaque_ref);
+    av_refstruct_unref(&ਚੌਖਟਾ->ਨਿੱਜੀ_ref);
 
-    if (frame->extended_data != frame->data)
-        av_freep(&frame->extended_data);
+    ਜੇ (ਚੌਖਟਾ->extended_ਅੰਕੜੇ != ਚੌਖਟਾ->ਅੰਕੜੇ)
+        av_freep(&ਚੌਖਟਾ->extended_ਅੰਕੜੇ);
 
-    av_channel_layout_uninit(&frame->ch_layout);
+    av_channel_layout_uninit(&ਚੌਖਟਾ->ch_layout);
 
-    get_frame_defaults(frame);
+    get_ਚੌਖਟਾ_defaults(ਚੌਖਟਾ);
 }
 
-void av_frame_move_ref(AVFrame *dst, AVFrame *src)
+ਖਾਲੀ av_ਚੌਖਟਾ_move_ref(AVFrame *dst, AVFrame *src)
 {
-    av_assert1(dst->width == 0 && dst->height == 0);
+    av_assert1(dst->ਚੌੜਾਈ == 0 && dst->ਉਚਾਈ == 0);
     av_assert1(dst->ch_layout.nb_channels == 0 &&
-               dst->ch_layout.order == AV_CHANNEL_ORDER_UNSPEC);
+               dst->ch_layout.ਕ੍ਰਮ == AV_CHANNEL_ਕ੍ਰਮ_UNSPEC);
 
     *dst = *src;
-    if (src->extended_data == src->data)
-        dst->extended_data = dst->data;
-    get_frame_defaults(src);
+    ਜੇ (src->extended_ਅੰਕੜੇ == src->ਅੰਕੜੇ)
+        dst->extended_ਅੰਕੜੇ = dst->ਅੰਕੜੇ;
+    get_ਚੌਖਟਾ_defaults(src);
 }
 
-int av_frame_is_writable(AVFrame *frame)
+ਪੂਰਨ av_ਚੌਖਟਾ_is_writable(AVFrame *ਚੌਖਟਾ)
 {
-    int ret = 1;
+    ਪੂਰਨ ret = 1;
 
     /* assume non-refcounted frames are not writable */
-    if (!frame->buf[0])
-        return 0;
+    ਜੇ (!ਚੌਖਟਾ->buf[0])
+        ਵਾਪਸ 0;
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
-        if (frame->buf[i])
-            ret &= !!av_buffer_is_writable(frame->buf[i]);
-    for (int i = 0; i < frame->nb_extended_buf; i++)
-        ret &= !!av_buffer_is_writable(frame->extended_buf[i]);
+    ਲਈ (ਪੂਰਨ i = 0; i < FF_ARRAY_ELEMS(ਚੌਖਟਾ->buf); i++)
+        ਜੇ (ਚੌਖਟਾ->buf[i])
+            ret &= !!av_ਬਫਰ_is_writable(ਚੌਖਟਾ->buf[i]);
+    ਲਈ (ਪੂਰਨ i = 0; i < ਚੌਖਟਾ->nb_extended_buf; i++)
+        ret &= !!av_ਬਫਰ_is_writable(ਚੌਖਟਾ->extended_buf[i]);
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-int av_frame_make_writable(AVFrame *frame)
+ਪੂਰਨ av_ਚੌਖਟਾ_make_writable(AVFrame *ਚੌਖਟਾ)
 {
     AVFrame tmp;
-    int ret;
+    ਪੂਰਨ ret;
 
-    if (av_frame_is_writable(frame))
-        return 0;
+    ਜੇ (av_ਚੌਖਟਾ_is_writable(ਚੌਖਟਾ))
+        ਵਾਪਸ 0;
 
-    memset(&tmp, 0, sizeof(tmp));
-    tmp.format         = frame->format;
-    tmp.width          = frame->width;
-    tmp.height         = frame->height;
-    tmp.nb_samples     = frame->nb_samples;
-    ret = av_channel_layout_copy(&tmp.ch_layout, &frame->ch_layout);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    memset(&tmp, 0, ਆਕਾਰ(tmp));
+    tmp.format         = ਚੌਖਟਾ->format;
+    tmp.ਚੌੜਾਈ          = ਚੌਖਟਾ->ਚੌੜਾਈ;
+    tmp.ਉਚਾਈ         = ਚੌਖਟਾ->ਉਚਾਈ;
+    tmp.nb_samples     = ਚੌਖਟਾ->nb_samples;
+    ret = av_channel_layout_copy(&tmp.ch_layout, &ਚੌਖਟਾ->ch_layout);
+    ਜੇ (ret < 0) {
+        av_ਚੌਖਟਾ_unref(&tmp);
+        ਵਾਪਸ ret;
     }
 
-    if (frame->hw_frames_ctx)
-        ret = av_hwframe_get_buffer(frame->hw_frames_ctx, &tmp, 0);
-    else
-        ret = av_frame_get_buffer(&tmp, 0);
-    if (ret < 0)
-        return ret;
+    ਜੇ (ਚੌਖਟਾ->hw_ਚੌਖਟੇ_ctx)
+        ret = av_hwframe_get_ਬਫਰ(ਚੌਖਟਾ->hw_ਚੌਖਟੇ_ctx, &tmp, 0);
+    ਨਹੀਂਤਾਂ
+        ret = av_ਚੌਖਟਾ_get_ਬਫਰ(&tmp, 0);
+    ਜੇ (ret < 0)
+        ਵਾਪਸ ret;
 
-    ret = av_frame_copy(&tmp, frame);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    ret = av_ਚੌਖਟਾ_copy(&tmp, ਚੌਖਟਾ);
+    ਜੇ (ret < 0) {
+        av_ਚੌਖਟਾ_unref(&tmp);
+        ਵਾਪਸ ret;
     }
 
-    ret = av_frame_copy_props(&tmp, frame);
-    if (ret < 0) {
-        av_frame_unref(&tmp);
-        return ret;
+    ret = av_ਚੌਖਟਾ_copy_props(&tmp, ਚੌਖਟਾ);
+    ਜੇ (ret < 0) {
+        av_ਚੌਖਟਾ_unref(&tmp);
+        ਵਾਪਸ ret;
     }
 
-    av_frame_unref(frame);
+    av_ਚੌਖਟਾ_unref(ਚੌਖਟਾ);
 
-    *frame = tmp;
-    if (tmp.data == tmp.extended_data)
-        frame->extended_data = frame->data;
+    *ਚੌਖਟਾ = tmp;
+    ਜੇ (tmp.ਅੰਕੜੇ == tmp.extended_ਅੰਕੜੇ)
+        ਚੌਖਟਾ->extended_ਅੰਕੜੇ = ਚੌਖਟਾ->ਅੰਕੜੇ;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src)
+ਪੂਰਨ av_ਚੌਖਟਾ_copy_props(AVFrame *dst, ਅਚਲ AVFrame *src)
 {
-    return frame_copy_props(dst, src, 1);
+    ਵਾਪਸ ਚੌਖਟਾ_copy_props(dst, src, 1);
 }
 
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane)
+AVBufferRef *av_ਚੌਖਟਾ_get_plane_ਬਫਰ(ਅਚਲ AVFrame *ਚੌਖਟਾ, ਪੂਰਨ plane)
 {
-    uintptr_t data;
-    int planes;
+    uintptr_t ਅੰਕੜੇ;
+    ਪੂਰਨ planes;
 
-    if (frame->nb_samples) {
-        int channels = frame->ch_layout.nb_channels;
-        if (!channels)
-            return NULL;
-        planes = av_sample_fmt_is_planar(frame->format) ? channels : 1;
-    } else
+    ਜੇ (ਚੌਖਟਾ->nb_samples) {
+        ਪੂਰਨ channels = ਚੌਖਟਾ->ch_layout.nb_channels;
+        ਜੇ (!channels)
+            ਵਾਪਸ ਨਿਰਾ;
+        planes = av_sample_fmt_is_planar(ਚੌਖਟਾ->format) ? channels : 1;
+    } ਨਹੀਂਤਾਂ
         planes = 4;
 
-    if (plane < 0 || plane >= planes || !frame->extended_data[plane])
-        return NULL;
-    data = (uintptr_t)frame->extended_data[plane];
+    ਜੇ (plane < 0 || plane >= planes || !ਚੌਖਟਾ->extended_ਅੰਕੜੇ[plane])
+        ਵਾਪਸ ਨਿਰਾ;
+    ਅੰਕੜੇ = (uintptr_t)ਚੌਖਟਾ->extended_ਅੰਕੜੇ[plane];
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(frame->buf) && frame->buf[i]; i++) {
-        AVBufferRef *buf = frame->buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+    ਲਈ (ਪੂਰਨ i = 0; i < FF_ARRAY_ELEMS(ਚੌਖਟਾ->buf) && ਚੌਖਟਾ->buf[i]; i++) {
+        AVBufferRef *buf = ਚੌਖਟਾ->buf[i];
+        uintptr_t buf_begin = (uintptr_t)buf->ਅੰਕੜੇ;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        ਜੇ (ਅੰਕੜੇ >= buf_begin && ਅੰਕੜੇ < buf_begin + buf->ਮਾਪ)
+            ਵਾਪਸ buf;
     }
-    for (int i = 0; i < frame->nb_extended_buf; i++) {
-        AVBufferRef *buf = frame->extended_buf[i];
-        uintptr_t buf_begin = (uintptr_t)buf->data;
+    ਲਈ (ਪੂਰਨ i = 0; i < ਚੌਖਟਾ->nb_extended_buf; i++) {
+        AVBufferRef *buf = ਚੌਖਟਾ->extended_buf[i];
+        uintptr_t buf_begin = (uintptr_t)buf->ਅੰਕੜੇ;
 
-        if (data >= buf_begin && data < buf_begin + buf->size)
-            return buf;
+        ਜੇ (ਅੰਕੜੇ >= buf_begin && ਅੰਕੜੇ < buf_begin + buf->ਮਾਪ)
+            ਵਾਪਸ buf;
     }
-    return NULL;
+    ਵਾਪਸ ਨਿਰਾ;
 }
 
-AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+AVFrame_Side_ਅੰਕੜੇ *av_ਚੌਖਟਾ_new_side_ਅੰਕੜੇ_from_buf(AVFrame *ਚੌਖਟਾ,
+                                                 ਗਿਣਤੀ AVFrame_Side_ਅੰਕੜੇ_Type type,
                                                  AVBufferRef *buf)
 {
-    return
-        ff_frame_side_data_add_from_buf(
-            &frame->side_data, &frame->nb_side_data, type, buf);
+    ਵਾਪਸ
+        ff_ਚੌਖਟਾ_side_ਅੰਕੜੇ_ਜੋੜੋ_from_buf(
+            &ਚੌਖਟਾ->side_ਅੰਕੜੇ, &ਚੌਖਟਾ->nb_side_ਅੰਕੜੇ, type, buf);
 }
 
-AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
-                                        size_t size)
+AVFrame_Side_ਅੰਕੜੇ *av_ਚੌਖਟਾ_new_side_ਅੰਕੜੇ(AVFrame *ਚੌਖਟਾ,
+                                        ਗਿਣਤੀ AVFrame_Side_ਅੰਕੜੇ_Type type,
+                                        size_t ਮਾਪ)
 {
-    AVFrameSideData *ret;
-    AVBufferRef *buf = av_buffer_alloc(size);
-    ret = av_frame_new_side_data_from_buf(frame, type, buf);
-    if (!ret)
-        av_buffer_unref(&buf);
-    return ret;
+    AVFrame_Side_ਅੰਕੜੇ *ret;
+    AVBufferRef *buf = av_ਬਫਰ_alloc(ਮਾਪ);
+    ret = av_ਚੌਖਟਾ_new_side_ਅੰਕੜੇ_from_buf(ਚੌਖਟਾ, type, buf);
+    ਜੇ (!ret)
+        av_ਬਫਰ_unref(&buf);
+    ਵਾਪਸ ret;
 }
 
-AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type)
+AVFrame_Side_ਅੰਕੜੇ *av_ਚੌਖਟਾ_get_side_ਅੰਕੜੇ(ਅਚਲ AVFrame *ਚੌਖਟਾ,
+                                        ਗਿਣਤੀ AVFrame_Side_ਅੰਕੜੇ_Type type)
 {
-    return (AVFrameSideData *)av_frame_side_data_get(
-        frame->side_data, frame->nb_side_data,
+    ਵਾਪਸ (AVFrame_Side_ਅੰਕੜੇ *)av_ਚੌਖਟਾ_side_ਅੰਕੜੇ_get(
+        ਚੌਖਟਾ->side_ਅੰਕੜੇ, ਚੌਖਟਾ->nb_side_ਅੰਕੜੇ,
         type
     );
 }
 
-static int frame_copy_video(AVFrame *dst, const AVFrame *src)
+ਸਥਿਰ ਪੂਰਨ ਚੌਖਟਾ_copy_video(AVFrame *dst, ਅਚਲ AVFrame *src)
 {
-    int planes;
+    ਪੂਰਨ planes;
 
-    if (dst->width  < src->width ||
-        dst->height < src->height)
-        return AVERROR(EINVAL);
+    ਜੇ (dst->ਚੌੜਾਈ  < src->ਚੌੜਾਈ ||
+        dst->ਉਚਾਈ < src->ਉਚਾਈ)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    if (src->hw_frames_ctx || dst->hw_frames_ctx)
-        return av_hwframe_transfer_data(dst, src, 0);
+    ਜੇ (src->hw_ਚੌਖਟੇ_ctx || dst->hw_ਚੌਖਟੇ_ctx)
+        ਵਾਪਸ av_hwframe_transfer_ਅੰਕੜੇ(dst, src, 0);
 
-    planes = av_pix_fmt_count_planes(dst->format);
-    for (int i = 0; i < planes; i++)
-        if (!dst->data[i] || !src->data[i])
-            return AVERROR(EINVAL);
+    planes = av_pix_fmt_ਗਿਣਤੀ_planes(dst->format);
+    ਲਈ (ਪੂਰਨ i = 0; i < planes; i++)
+        ਜੇ (!dst->ਅੰਕੜੇ[i] || !src->ਅੰਕੜੇ[i])
+            ਵਾਪਸ AVERROR(EINVAL);
 
-    av_image_copy2(dst->data, dst->linesize,
-                   src->data, src->linesize,
-                   dst->format, src->width, src->height);
+    av_image_copy2(dst->ਅੰਕੜੇ, dst->linesize,
+                   src->ਅੰਕੜੇ, src->linesize,
+                   dst->format, src->ਚੌੜਾਈ, src->ਉਚਾਈ);
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int frame_copy_audio(AVFrame *dst, const AVFrame *src)
+ਸਥਿਰ ਪੂਰਨ ਚੌਖਟਾ_copy_audio(AVFrame *dst, ਅਚਲ AVFrame *src)
 {
-    int planar   = av_sample_fmt_is_planar(dst->format);
-    int channels = dst->ch_layout.nb_channels;
-    int planes   = planar ? channels : 1;
+    ਪੂਰਨ planar   = av_sample_fmt_is_planar(dst->format);
+    ਪੂਰਨ channels = dst->ch_layout.nb_channels;
+    ਪੂਰਨ planes   = planar ? channels : 1;
 
-    if (dst->nb_samples != src->nb_samples ||
+    ਜੇ (dst->nb_samples != src->nb_samples ||
         av_channel_layout_compare(&dst->ch_layout, &src->ch_layout))
-        return AVERROR(EINVAL);
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    for (int i = 0; i < planes; i++)
-        if (!dst->extended_data[i] || !src->extended_data[i])
-            return AVERROR(EINVAL);
+    ਲਈ (ਪੂਰਨ i = 0; i < planes; i++)
+        ਜੇ (!dst->extended_ਅੰਕੜੇ[i] || !src->extended_ਅੰਕੜੇ[i])
+            ਵਾਪਸ AVERROR(EINVAL);
 
-    av_samples_copy(dst->extended_data, src->extended_data, 0, 0,
+    av_samples_copy(dst->extended_ਅੰਕੜੇ, src->extended_ਅੰਕੜੇ, 0, 0,
                     dst->nb_samples, channels, dst->format);
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-int av_frame_copy(AVFrame *dst, const AVFrame *src)
+ਪੂਰਨ av_ਚੌਖਟਾ_copy(AVFrame *dst, ਅਚਲ AVFrame *src)
 {
-    if (dst->format != src->format || dst->format < 0)
-        return AVERROR(EINVAL);
+    ਜੇ (dst->format != src->format || dst->format < 0)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    if (dst->width > 0 && dst->height > 0)
-        return frame_copy_video(dst, src);
-    else if (dst->nb_samples > 0 &&
+    ਜੇ (dst->ਚੌੜਾਈ > 0 && dst->ਉਚਾਈ > 0)
+        ਵਾਪਸ ਚੌਖਟਾ_copy_video(dst, src);
+    ਨਹੀਂਤਾਂ ਜੇ (dst->nb_samples > 0 &&
              (av_channel_layout_check(&dst->ch_layout)))
-        return frame_copy_audio(dst, src);
+        ਵਾਪਸ ਚੌਖਟਾ_copy_audio(dst, src);
 
-    return AVERROR(EINVAL);
+    ਵਾਪਸ AVERROR(EINVAL);
 }
 
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type)
+ਖਾਲੀ av_ਚੌਖਟਾ_remove_side_ਅੰਕੜੇ(AVFrame *ਚੌਖਟਾ, ਗਿਣਤੀ AVFrame_Side_ਅੰਕੜੇ_Type type)
 {
-    av_frame_side_data_remove(&frame->side_data, &frame->nb_side_data, type);
+    av_ਚੌਖਟਾ_side_ਅੰਕੜੇ_remove(&ਚੌਖਟਾ->side_ਅੰਕੜੇ, &ਚੌਖਟਾ->nb_side_ਅੰਕੜੇ, type);
 }
 
-static int calc_cropping_offsets(size_t offsets[4], const AVFrame *frame,
-                                 const AVPixFmtDescriptor *desc)
+ਸਥਿਰ ਪੂਰਨ calc_cropping_offsets(size_t offsets[4], ਅਚਲ AVFrame *ਚੌਖਟਾ,
+                                 ਅਚਲ AVPixFmtDescriptor *desc)
 {
-    for (int i = 0; frame->data[i]; i++) {
-        const AVComponentDescriptor *comp = NULL;
-        int shift_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
-        int shift_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    ਲਈ (ਪੂਰਨ i = 0; ਚੌਖਟਾ->ਅੰਕੜੇ[i]; i++) {
+        ਅਚਲ AVComponentDescriptor *comp = ਨਿਰਾ;
+        ਪੂਰਨ ਖਿਸਕਾਓ_x = (i == 1 || i == 2) ? desc->log2_chroma_w : 0;
+        ਪੂਰਨ ਖਿਸਕਾਓ_y = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
 
-        if (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
+        ਜੇ (desc->flags & AV_PIX_FMT_FLAG_PAL && i == 1) {
             offsets[i] = 0;
-            break;
+            ਰੋਕੋ;
         }
 
         /* find any component descriptor for this plane */
-        for (int j = 0; j < desc->nb_components; j++) {
-            if (desc->comp[j].plane == i) {
+        ਲਈ (ਪੂਰਨ j = 0; j < desc->nb_components; j++) {
+            ਜੇ (desc->comp[j].plane == i) {
                 comp = &desc->comp[j];
-                break;
+                ਰੋਕੋ;
             }
         }
-        if (!comp)
-            return AVERROR_BUG;
+        ਜੇ (!comp)
+            ਵਾਪਸ AVERROR_BUG;
 
-        offsets[i] = (frame->crop_top  >> shift_y) * frame->linesize[i] +
-                     (frame->crop_left >> shift_x) * comp->step;
+        offsets[i] = (ਚੌਖਟਾ->crop_ਸਿਖਰ  >> ਖਿਸਕਾਓ_y) * ਚੌਖਟਾ->linesize[i] +
+                     (ਚੌਖਟਾ->crop_ਖੱਬਾ >> ਖਿਸਕਾਓ_x) * comp->ਕਦਮ;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-int av_frame_apply_cropping(AVFrame *frame, int flags)
+ਪੂਰਨ av_ਚੌਖਟਾ_apply_cropping(AVFrame *ਚੌਖਟਾ, ਪੂਰਨ flags)
 {
-    const AVPixFmtDescriptor *desc;
+    ਅਚਲ AVPixFmtDescriptor *desc;
     size_t offsets[4];
-    int ret;
+    ਪੂਰਨ ret;
 
-    if (!(frame->width > 0 && frame->height > 0))
-        return AVERROR(EINVAL);
+    ਜੇ (!(ਚੌਖਟਾ->ਚੌੜਾਈ > 0 && ਚੌਖਟਾ->ਉਚਾਈ > 0))
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    if (frame->crop_left >= INT_MAX - frame->crop_right        ||
-        frame->crop_top  >= INT_MAX - frame->crop_bottom       ||
-        (frame->crop_left + frame->crop_right) >= frame->width ||
-        (frame->crop_top + frame->crop_bottom) >= frame->height)
-        return AVERROR(ERANGE);
+    ਜੇ (ਚੌਖਟਾ->crop_ਖੱਬਾ >= ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ - ਚੌਖਟਾ->crop_ਸੱਜਾ        ||
+        ਚੌਖਟਾ->crop_ਸਿਖਰ  >= ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ - ਚੌਖਟਾ->crop_bottom       ||
+        (ਚੌਖਟਾ->crop_ਖੱਬਾ + ਚੌਖਟਾ->crop_ਸੱਜਾ) >= ਚੌਖਟਾ->ਚੌੜਾਈ ||
+        (ਚੌਖਟਾ->crop_ਸਿਖਰ + ਚੌਖਟਾ->crop_bottom) >= ਚੌਖਟਾ->ਉਚਾਈ)
+        ਵਾਪਸ AVERROR(ERANGE);
 
-    desc = av_pix_fmt_desc_get(frame->format);
-    if (!desc)
-        return AVERROR_BUG;
+    desc = av_pix_fmt_desc_get(ਚੌਖਟਾ->format);
+    ਜੇ (!desc)
+        ਵਾਪਸ AVERROR_BUG;
 
     /* Apply just the right/bottom cropping for hwaccel formats. Bitstream
      * formats cannot be easily handled here either (and corresponding decoders
      * should not export any cropping anyway), so do the same for those as well.
      * */
-    if (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
-        frame->width      -= frame->crop_right;
-        frame->height     -= frame->crop_bottom;
-        frame->crop_right  = 0;
-        frame->crop_bottom = 0;
-        return 0;
+    ਜੇ (desc->flags & (AV_PIX_FMT_FLAG_BITSTREAM | AV_PIX_FMT_FLAG_HWACCEL)) {
+        ਚੌਖਟਾ->ਚੌੜਾਈ      -= ਚੌਖਟਾ->crop_ਸੱਜਾ;
+        ਚੌਖਟਾ->ਉਚਾਈ     -= ਚੌਖਟਾ->crop_bottom;
+        ਚੌਖਟਾ->crop_ਸੱਜਾ  = 0;
+        ਚੌਖਟਾ->crop_bottom = 0;
+        ਵਾਪਸ 0;
     }
 
     /* calculate the offsets for each plane */
-    ret = calc_cropping_offsets(offsets, frame, desc);
-    if (ret < 0)
-        return ret;
+    ret = calc_cropping_offsets(offsets, ਚੌਖਟਾ, desc);
+    ਜੇ (ret < 0)
+        ਵਾਪਸ ret;
 
     /* adjust the offsets to avoid breaking alignment */
-    if (!(flags & AV_FRAME_CROP_UNALIGNED)) {
-        int log2_crop_align = frame->crop_left ? ff_ctz(frame->crop_left) : INT_MAX;
-        int min_log2_align = INT_MAX;
+    ਜੇ (!(flags & AV_ਚੌਖਟਾ_CROP_UNALIGNED)) {
+        ਪੂਰਨ log2_crop_align = ਚੌਖਟਾ->crop_ਖੱਬਾ ? ff_ctz(ਚੌਖਟਾ->crop_ਖੱਬਾ) : ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ;
+        ਪੂਰਨ min_log2_align = ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ;
 
-        for (int i = 0; frame->data[i]; i++) {
-            int log2_align = offsets[i] ? ff_ctz(offsets[i]) : INT_MAX;
+        ਲਈ (ਪੂਰਨ i = 0; ਚੌਖਟਾ->ਅੰਕੜੇ[i]; i++) {
+            ਪੂਰਨ log2_align = offsets[i] ? ff_ctz(offsets[i]) : ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ;
             min_log2_align = FFMIN(log2_align, min_log2_align);
         }
 
         /* The data alignment is the cropping alignment scaled by a power of 2,
          * up for multi-byte pixels and down for subsampled planes */
-        if (min_log2_align < 5 && log2_crop_align != INT_MAX) {
-            frame->crop_left &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
-            ret = calc_cropping_offsets(offsets, frame, desc);
-            if (ret < 0)
-                return ret;
+        ਜੇ (min_log2_align < 5 && log2_crop_align != ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ) {
+            ਚੌਖਟਾ->crop_ਖੱਬਾ &= ~((1 << (5 + log2_crop_align - min_log2_align)) - 1);
+            ret = calc_cropping_offsets(offsets, ਚੌਖਟਾ, desc);
+            ਜੇ (ret < 0)
+                ਵਾਪਸ ret;
         }
     }
 
-    for (int i = 0; frame->data[i]; i++)
-        frame->data[i] += offsets[i];
+    ਲਈ (ਪੂਰਨ i = 0; ਚੌਖਟਾ->ਅੰਕੜੇ[i]; i++)
+        ਚੌਖਟਾ->ਅੰਕੜੇ[i] += offsets[i];
 
-    frame->width      -= (frame->crop_left + frame->crop_right);
-    frame->height     -= (frame->crop_top  + frame->crop_bottom);
-    frame->crop_left   = 0;
-    frame->crop_right  = 0;
-    frame->crop_top    = 0;
-    frame->crop_bottom = 0;
+    ਚੌਖਟਾ->ਚੌੜਾਈ      -= (ਚੌਖਟਾ->crop_ਖੱਬਾ + ਚੌਖਟਾ->crop_ਸੱਜਾ);
+    ਚੌਖਟਾ->ਉਚਾਈ     -= (ਚੌਖਟਾ->crop_ਸਿਖਰ  + ਚੌਖਟਾ->crop_bottom);
+    ਚੌਖਟਾ->crop_ਖੱਬਾ   = 0;
+    ਚੌਖਟਾ->crop_ਸੱਜਾ  = 0;
+    ਚੌਖਟਾ->crop_ਸਿਖਰ    = 0;
+    ਚੌਖਟਾ->crop_bottom = 0;
 
-    return 0;
+    ਵਾਪਸ 0;
 }

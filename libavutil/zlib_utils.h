@@ -16,73 +16,73 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_ZLIB_UTILS_H
-#define AVUTIL_ZLIB_UTILS_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_ZLIB_UTILS_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_ZLIB_UTILS_H
 
-#include <stdint.h>
-#include "log.h"
-#include "error.h"
-#include "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "log.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
 
-#include <zlib.h>
-#define CHUNK_SIZE 1024 * 64
+#ਅਨ੍ਤਰ੍ਭਾਵ <zlib.h>
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CHUNK_ਮਾਪ 1024 * 64
 
-static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
-                                 const uint8_t *src, int src_len)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਪੂਰਨ ff_zlib_expand(ਖਾਲੀ *ctx, uint8_t **ਬਾਹਰਲਾ, size_t *ਬਾਹਰਲਾ_len,
+                                 ਅਚਲ uint8_t *src, ਪੂਰਨ src_len)
 {
-    int ret;
+    ਪੂਰਨ ret;
 
-    z_stream stream = { 0 };
-    if (inflateInit2(&stream, 32 + 15) != Z_OK) {
+    z_ਧਾਰਾ ਧਾਰਾ = { 0 };
+    ਜੇ (inflateInit2(&ਧਾਰਾ, 32 + 15) != Z_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error during zlib initialisation: %s\n",
-               stream.msg);
-        return AVERROR(ENOSYS);
+               ਧਾਰਾ.ਸੁਨੇਹਾ);
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-    uint64_t buf_size = CHUNK_SIZE * 4;
-    uint8_t *buf = av_realloc(NULL, buf_size);
-    if (!buf) {
-        inflateEnd(&stream);
-        return AVERROR(ENOMEM);
+    uint64_t buf_ਮਾਪ = CHUNK_ਮਾਪ * 4;
+    uint8_t *buf = av_realloc(ਨਿਰਾ, buf_ਮਾਪ);
+    ਜੇ (!buf) {
+        inflate_ਸਿਰਾ(&ਧਾਰਾ);
+        ਵਾਪਸ AVERROR(ENOMEM);
     }
 
-    stream.next_in = src;
-    stream.avail_in = src_len;
+    ਧਾਰਾ.ਅਗਲਾ_ਵਿੱਚ = src;
+    ਧਾਰਾ.avail_ਵਿੱਚ = src_len;
 
-    do {
-        stream.avail_out = buf_size - stream.total_out;
-        stream.next_out = buf + stream.total_out;
+    ਕਰੋ {
+        ਧਾਰਾ.avail_ਬਾਹਰਲਾ = buf_ਮਾਪ - ਧਾਰਾ.ਕੁੱਲ_ਬਾਹਰਲਾ;
+        ਧਾਰਾ.ਅਗਲਾ_ਬਾਹਰਲਾ = buf + ਧਾਰਾ.ਕੁੱਲ_ਬਾਹਰਲਾ;
 
-        ret = inflate(&stream, Z_FINISH);
-        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
+        ret = inflate(&ਧਾਰਾ, Z_ਅੰਤ);
+        ਜੇ (ret != Z_OK && ret != Z_ਧਾਰਾ_ਸਿਰਾ && ret != Z_BUF_ERROR) {
             av_log(ctx, AV_LOG_ERROR, "zlib inflate error(%d): %s\n",
-                   ret, stream.msg);
-            inflateEnd(&stream);
+                   ret, ਧਾਰਾ.ਸੁਨੇਹਾ);
+            inflate_ਸਿਰਾ(&ਧਾਰਾ);
             av_free(buf);
-            return AVERROR(EINVAL);
+            ਵਾਪਸ AVERROR(EINVAL);
         }
 
-        if (stream.avail_out == 0) {
-            buf_size += CHUNK_SIZE;
-            uint8_t *tmp = av_realloc(buf, buf_size);
-            if (!tmp) {
-                inflateEnd(&stream);
+        ਜੇ (ਧਾਰਾ.avail_ਬਾਹਰਲਾ == 0) {
+            buf_ਮਾਪ += CHUNK_ਮਾਪ;
+            uint8_t *tmp = av_realloc(buf, buf_ਮਾਪ);
+            ਜੇ (!tmp) {
+                inflate_ਸਿਰਾ(&ਧਾਰਾ);
                 av_free(buf);
-                return AVERROR(ENOMEM);
+                ਵਾਪਸ AVERROR(ENOMEM);
             }
             buf = tmp;
         }
-    } while (ret != Z_STREAM_END);
+    } ਜਦੋਂ (ret != Z_ਧਾਰਾ_ਸਿਰਾ);
 
     // NULL-terminate string
     // there is guaranteed to be space for this, due to condition in loop
-    buf[stream.total_out] = 0;
+    buf[ਧਾਰਾ.ਕੁੱਲ_ਬਾਹਰਲਾ] = 0;
 
-    inflateEnd(&stream);
+    inflate_ਸਿਰਾ(&ਧਾਰਾ);
 
-    *out = buf;
-    *out_len = stream.total_out;
+    *ਬਾਹਰਲਾ = buf;
+    *ਬਾਹਰਲਾ_len = ਧਾਰਾ.ਕੁੱਲ_ਬਾਹਰਲਾ;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
-#endif /* AVUTIL_ZLIB_UTILS_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_ZLIB_UTILS_H */

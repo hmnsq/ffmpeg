@@ -16,47 +16,47 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "gain_map.h"
-#include "mem.h"
-#include "libavcodec/bytestream.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "gain_map.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavcodec/bytestream.h"
 
-static void gain_map_params_default(AVGainMapParams *p)
+ਸਥਿਰ ਖਾਲੀ gain_map_params_default(AVGainMapParams *p)
 {
     *p = (AVGainMapParams) {
-        .base_hdr_headroom      = { 0, 1 },
+        .ਅਧਾਰ_hdr_headroom      = { 0, 1 },
         .alternate_hdr_headroom = { 0, 1 },
         .nb_channels = 1,
     };
 
     /* Pre-fill all three channels as a convenience */
-    for (int c = 0; c < 3; c++) {
-        p->channels[c] = (struct AVGainMapChannel) {
+    ਲਈ (ਪੂਰਨ c = 0; c < 3; c++) {
+        p->channels[c] = (ਬਣਤਰ AVGainMapChannel) {
             .gain_map_min       = { 0, 1 },
             .gain_map_max       = { 0, 1 },
             .gamma              = { 1, 1 },
-            .base_offset        = { 1, 64 },
-            .alternate_offset   = { 1, 64 },
+            .ਅਧਾਰ_ਵਿੱਥ        = { 1, 64 },
+            .alternate_ਵਿੱਥ   = { 1, 64 },
         };
     }
 }
 
-#define CHECK(cond) do { if (!(cond)) return AVERROR_INVALIDDATA; } while (0)
-#define CHECK_SIGNED(q)   CHECK((q).den > 0);
-#define CHECK_UNSIGNED(q) CHECK((q).num >= 0 && (q).den > 0);
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CHECK(cond) ਕਰੋ { ਜੇ (!(cond)) ਵਾਪਸ AVERROR_INVALIDDATA; } ਜਦੋਂ (0)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CHECK_SIGNED(q)   CHECK((q).den > 0);
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CHECK_UNSIGNED(q) CHECK((q).ਅੰਕ >= 0 && (q).den > 0);
 
-int av_gain_map_params_validate(const AVGainMapParams *p)
+ਪੂਰਨ av_gain_map_params_validate(ਅਚਲ AVGainMapParams *p)
 {
-    CHECK(0 <= p->version && p->version <= AV_ISO21496_VERSION);
+    CHECK(0 <= p->ਸੰਸਕਰਣ && p->ਸੰਸਕਰਣ <= AV_ISO21496_ਸੰਸਕਰਣ);
     CHECK(p->nb_channels == 1 || p->nb_channels == 3);
-    CHECK_UNSIGNED(p->base_hdr_headroom);
+    CHECK_UNSIGNED(p->ਅਧਾਰ_hdr_headroom);
     CHECK_UNSIGNED(p->alternate_hdr_headroom);
 
-    for (int c = 0; c < p->nb_channels; c++) {
-        const struct AVGainMapChannel *const ch = &p->channels[c];
+    ਲਈ (ਪੂਰਨ c = 0; c < p->nb_channels; c++) {
+        ਅਚਲ ਬਣਤਰ AVGainMapChannel *ਅਚਲ ch = &p->channels[c];
         CHECK_SIGNED(ch->gain_map_min);
         CHECK_SIGNED(ch->gain_map_max);
         CHECK_UNSIGNED(ch->gamma);
-        CHECK(ch->gamma.num != 0);
+        CHECK(ch->gamma.ਅੰਕ != 0);
         /**
          * Note: The ISO spec declares these as signed, but a negative value
          * makes no numeric sense and would result in infinities in the
@@ -65,68 +65,68 @@ int av_gain_map_params_validate(const AVGainMapParams *p)
          * requires them to be nonnegative as well, so this avoids an
          * inconsistency.
          */
-        CHECK_UNSIGNED(ch->base_offset);
-        CHECK_UNSIGNED(ch->alternate_offset);
+        CHECK_UNSIGNED(ch->ਅਧਾਰ_ਵਿੱਥ);
+        CHECK_UNSIGNED(ch->alternate_ਵਿੱਥ);
         CHECK(av_cmp_q(ch->gain_map_min, ch->gain_map_max) <= 0);
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-#define ISO21496_HEADER_SIZE 5
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ISO21496_ਸਿਰਲੇਖ_ਮਾਪ 5
 
-#define ISO21496_FLAG_MULTICHANNEL (1 << 7)
-#define ISO21496_FLAG_USE_BASE_CG  (1 << 6)
-#define ISO21496_FLAG_RESERVED     0x3f
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ISO21496_FLAG_MULTICHANNEL (1 << 7)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ISO21496_FLAG_USE_ਅਧਾਰ_CG  (1 << 6)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ISO21496_FLAG_RESERVED     0x3f
 
-static size_t iso21496_payload_size(int nb_channels)
+ਸਥਿਰ size_t iso21496_payload_ਮਾਪ(ਪੂਰਨ nb_channels)
 {
-    return 4 * 4 + (size_t) nb_channels * 10 * 4;
+    ਵਾਪਸ 4 * 4 + (size_t) nb_channels * 10 * 4;
 }
 
-static int make_q(int64_t num, uint32_t den, AVRational *out)
+ਸਥਿਰ ਪੂਰਨ make_q(int64_t ਅੰਕ, uint32_t den, AVRational *ਬਾਹਰਲਾ)
 {
-    if (!den)
-        return AVERROR_INVALIDDATA;
+    ਜੇ (!den)
+        ਵਾਪਸ AVERROR_INVALIDDATA;
 
     /* Ensure the result fits in AVRational */
-    av_reduce(&out->num, &out->den, num, den, INT32_MAX);
-    return 0;
+    av_reduce(&ਬਾਹਰਲਾ->ਅੰਕ, &ਬਾਹਰਲਾ->den, ਅੰਕ, den, INT32_MAX);
+    ਵਾਪਸ 0;
 }
 
-static int get_sq(GetByteContext *gb, AVRational *out)
+ਸਥਿਰ ਪੂਰਨ get_sq(GetByteContext *gb, AVRational *ਬਾਹਰਲਾ)
 {
-    int32_t  num = (int32_t) bytestream2_get_be32(gb);
+    int32_t  ਅੰਕ = (int32_t) bytestream2_get_be32(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    ਵਾਪਸ make_q(ਅੰਕ, den, ਬਾਹਰਲਾ);
 }
 
-static int get_uq(GetByteContext *gb, AVRational *out)
+ਸਥਿਰ ਪੂਰਨ get_uq(GetByteContext *gb, AVRational *ਬਾਹਰਲਾ)
 {
-    uint32_t num = bytestream2_get_be32u(gb);
+    uint32_t ਅੰਕ = bytestream2_get_be32u(gb);
     uint32_t den = bytestream2_get_be32u(gb);
-    return make_q(num, den, out);
+    ਵਾਪਸ make_q(ਅੰਕ, den, ਬਾਹਰਲਾ);
 }
 
-int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
-                                     const uint8_t *data, size_t size)
+ਪੂਰਨ av_gain_map_params_from_iso21496(AVGainMapParams *ਸੀਮਿਤ p,
+                                     ਅਚਲ uint8_t *ਅੰਕੜੇ, size_t ਮਾਪ)
 {
-    int ret;
-    if (!p || !data)
-        return AVERROR(EINVAL);
+    ਪੂਰਨ ret;
+    ਜੇ (!p || !ਅੰਕੜੇ)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    if (size < ISO21496_HEADER_SIZE || size > INT_MAX)
-        return AVERROR_INVALIDDATA;
+    ਜੇ (ਮਾਪ < ISO21496_ਸਿਰਲੇਖ_ਮਾਪ || ਮਾਪ > ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ)
+        ਵਾਪਸ AVERROR_INVALIDDATA;
 
     GetByteContext gb;
-    bytestream2_init(&gb, data, size);
+    bytestream2_init(&gb, ਅੰਕੜੇ, ਮਾਪ);
 
     /* Parse header */
-    const uint16_t minimum_version = bytestream2_get_be16(&gb);
-    const uint16_t writer_version  = bytestream2_get_be16(&gb);
-    if (minimum_version > AV_ISO21496_VERSION || writer_version < minimum_version)
-        return AVERROR_PATCHWELCOME;
-    const uint8_t flags = bytestream2_get_byte(&gb);
+    ਅਚਲ uint16_t minimum_ਸੰਸਕਰਣ = bytestream2_get_be16(&gb);
+    ਅਚਲ uint16_t writer_ਸੰਸਕਰਣ  = bytestream2_get_be16(&gb);
+    ਜੇ (minimum_ਸੰਸਕਰਣ > AV_ISO21496_ਸੰਸਕਰਣ || writer_ਸੰਸਕਰਣ < minimum_ਸੰਸਕਰਣ)
+        ਵਾਪਸ AVERROR_PATCHWELCOME;
+    ਅਚਲ uint8_t flags = bytestream2_get_byte(&gb);
 
     /**
      * While the spec does not require reserved bits to be 0, older versions
@@ -136,115 +136,115 @@ int av_gain_map_params_from_iso21496(AVGainMapParams *restrict p,
      * additions to later revisions of the published spec, the validity of
      * ignoring which is already guarded by the `minimum_version` check.
      */
-    if (writer_version == 0 && (flags & ISO21496_FLAG_RESERVED))
-        return AVERROR_INVALIDDATA;
+    ਜੇ (writer_ਸੰਸਕਰਣ == 0 && (flags & ISO21496_FLAG_RESERVED))
+        ਵਾਪਸ AVERROR_INVALIDDATA;
 
-    p->version              = AV_ISO21496_VERSION;
+    p->ਸੰਸਕਰਣ              = AV_ISO21496_ਸੰਸਕਰਣ;
     p->nb_channels          =   (flags & ISO21496_FLAG_MULTICHANNEL) ? 3 : 1;
-    p->use_base_color_space = !!(flags & ISO21496_FLAG_USE_BASE_CG);
+    p->use_ਅਧਾਰ_color_space = !!(flags & ISO21496_FLAG_USE_ਅਧਾਰ_CG);
 
     /* Parse payload */
-    if (bytestream2_get_bytes_left(&gb) < iso21496_payload_size(p->nb_channels))
-        return AVERROR_INVALIDDATA;
+    ਜੇ (bytestream2_get_ਬਾਈਟਾਂ_ਖੱਬਾ(&gb) < iso21496_payload_ਮਾਪ(p->nb_channels))
+        ਵਾਪਸ AVERROR_INVALIDDATA;
 
-    if ((ret = get_uq(&gb, &p->base_hdr_headroom))      < 0 ||
+    ਜੇ ((ret = get_uq(&gb, &p->ਅਧਾਰ_hdr_headroom))      < 0 ||
         (ret = get_uq(&gb, &p->alternate_hdr_headroom)) < 0)
-        return ret;
+        ਵਾਪਸ ret;
 
-    for (int c = 0; c < p->nb_channels; c++) {
-        struct AVGainMapChannel *const ch = &p->channels[c];
-        if ((ret = get_sq(&gb, &ch->gain_map_min))     < 0 ||
+    ਲਈ (ਪੂਰਨ c = 0; c < p->nb_channels; c++) {
+        ਬਣਤਰ AVGainMapChannel *ਅਚਲ ch = &p->channels[c];
+        ਜੇ ((ret = get_sq(&gb, &ch->gain_map_min))     < 0 ||
             (ret = get_sq(&gb, &ch->gain_map_max))     < 0 ||
             (ret = get_uq(&gb, &ch->gamma))            < 0 ||
-            (ret = get_sq(&gb, &ch->base_offset))      < 0 ||
-            (ret = get_sq(&gb, &ch->alternate_offset)) < 0)
-            return ret;
+            (ret = get_sq(&gb, &ch->ਅਧਾਰ_ਵਿੱਥ))      < 0 ||
+            (ret = get_sq(&gb, &ch->alternate_ਵਿੱਥ)) < 0)
+            ਵਾਪਸ ret;
     }
 
     /* nb_channels == 1 means every channel shares the same parameters */
-    for (int c = p->nb_channels; c < 3; c++)
+    ਲਈ (ਪੂਰਨ c = p->nb_channels; c < 3; c++)
         p->channels[c] = p->channels[0];
 
-    return av_gain_map_params_validate(p);
+    ਵਾਪਸ av_gain_map_params_validate(p);
 }
 
-static void put_q(PutByteContext *pb, AVRational q)
+ਸਥਿਰ ਖਾਲੀ put_q(PutByteContext *pb, AVRational q)
 {
-    bytestream2_put_be32(pb, (unsigned) q.num);
-    bytestream2_put_be32(pb, (unsigned) q.den);
+    bytestream2_put_be32(pb, (ਬਿਨਾਨਿਸ਼ਾਨੀ) q.ਅੰਕ);
+    bytestream2_put_be32(pb, (ਬਿਨਾਨਿਸ਼ਾਨੀ) q.den);
 }
 
-int av_gain_map_params_to_iso21496(const AVGainMapParams *p, uint8_t *buf)
+ਪੂਰਨ av_gain_map_params_ਮੰਜ਼ਿਲ_iso21496(ਅਚਲ AVGainMapParams *p, uint8_t *buf)
 {
-    if (!p || !buf)
-        return AVERROR(EINVAL);
+    ਜੇ (!p || !buf)
+        ਵਾਪਸ AVERROR(EINVAL);
 
     /* Ensures representability in the bitstream */
-    int ret = av_gain_map_params_validate(p);
-    if (ret < 0)
-        return ret;
+    ਪੂਰਨ ret = av_gain_map_params_validate(p);
+    ਜੇ (ret < 0)
+        ਵਾਪਸ ret;
 
     PutByteContext pb;
-    bytestream2_init_writer(&pb, buf, AV_GAIN_MAP_MAX_PAYLOAD_SIZE);
+    bytestream2_init_writer(&pb, buf, AV_GAIN_MAP_MAX_PAYLOAD_ਮਾਪ);
 
-    int channels = av_gain_map_channels_identical(p) ? 1 : p->nb_channels;
+    ਪੂਰਨ channels = av_gain_map_channels_identical(p) ? 1 : p->nb_channels;
     uint8_t flags = 0;
-    if (channels == 3)
+    ਜੇ (channels == 3)
         flags |= ISO21496_FLAG_MULTICHANNEL;
-    if (p->use_base_color_space)
-        flags |= ISO21496_FLAG_USE_BASE_CG;
+    ਜੇ (p->use_ਅਧਾਰ_color_space)
+        flags |= ISO21496_FLAG_USE_ਅਧਾਰ_CG;
 
-    bytestream2_put_be16(&pb, p->version); /* minimum_version */
-    bytestream2_put_be16(&pb, p->version); /* writer_version */
+    bytestream2_put_be16(&pb, p->ਸੰਸਕਰਣ); /* minimum_version */
+    bytestream2_put_be16(&pb, p->ਸੰਸਕਰਣ); /* writer_version */
     bytestream2_put_byte(&pb, flags);
-    put_q(&pb, p->base_hdr_headroom);
+    put_q(&pb, p->ਅਧਾਰ_hdr_headroom);
     put_q(&pb, p->alternate_hdr_headroom);
 
-    for (int c = 0; c < channels; c++) {
-        const struct AVGainMapChannel *const ch = &p->channels[c];
+    ਲਈ (ਪੂਰਨ c = 0; c < channels; c++) {
+        ਅਚਲ ਬਣਤਰ AVGainMapChannel *ਅਚਲ ch = &p->channels[c];
         put_q(&pb, ch->gain_map_min);
         put_q(&pb, ch->gain_map_max);
         put_q(&pb, ch->gamma);
-        put_q(&pb, ch->base_offset);
-        put_q(&pb, ch->alternate_offset);
+        put_q(&pb, ch->ਅਧਾਰ_ਵਿੱਥ);
+        put_q(&pb, ch->alternate_ਵਿੱਥ);
     }
 
-    return bytestream2_tell_p(&pb);
+    ਵਾਪਸ bytestream2_tell_p(&pb);
 }
 
-int av_gain_map_channels_identical(const AVGainMapParams *p)
+ਪੂਰਨ av_gain_map_channels_identical(ਅਚਲ AVGainMapParams *p)
 {
-    static_assert(sizeof(p->channels[0]) == sizeof(int[2]) * 5,
+    static_assert(ਆਕਾਰ(p->channels[0]) == ਆਕਾਰ(ਪੂਰਨ[2]) * 5,
                   "AVGainMapChannel struct is tightly packed");
 
-    return !memcmp(&p->channels[0], &p->channels[1], sizeof(p->channels[0])) &&
-           !memcmp(&p->channels[0], &p->channels[2], sizeof(p->channels[0]));
+    ਵਾਪਸ !memcmp(&p->channels[0], &p->channels[1], ਆਕਾਰ(p->channels[0])) &&
+           !memcmp(&p->channels[0], &p->channels[2], ਆਕਾਰ(p->channels[0]));
 }
 
-AVGainMapParams *av_gain_map_params_alloc(size_t *size)
+AVGainMapParams *av_gain_map_params_alloc(size_t *ਮਾਪ)
 {
-    AVGainMapParams *p = av_malloc(sizeof(AVGainMapParams));
-    if (!p)
-        return NULL;
+    AVGainMapParams *p = av_malloc(ਆਕਾਰ(AVGainMapParams));
+    ਜੇ (!p)
+        ਵਾਪਸ ਨਿਰਾ;
 
     gain_map_params_default(p);
 
-    if (size)
-        *size = sizeof(*p);
+    ਜੇ (ਮਾਪ)
+        *ਮਾਪ = ਆਕਾਰ(*p);
 
-    return p;
+    ਵਾਪਸ p;
 }
 
-AVGainMapParams *av_gain_map_params_create_side_data(AVFrameSideData ***fsd, int *nb_sd)
+AVGainMapParams *av_gain_map_params_create_side_ਅੰਕੜੇ(AVFrame_Side_ਅੰਕੜੇ ***fsd, ਪੂਰਨ *nb_sd)
 {
-    AVFrameSideData *sd;
-    sd = av_frame_side_data_new(fsd, nb_sd, AV_FRAME_DATA_GAIN_MAP_PARAMS,
-                                sizeof(AVGainMapParams),
-                                AV_FRAME_SIDE_DATA_FLAG_REPLACE);
-    if (!sd)
-        return NULL;
+    AVFrame_Side_ਅੰਕੜੇ *sd;
+    sd = av_ਚੌਖਟਾ_side_ਅੰਕੜੇ_new(fsd, nb_sd, AV_ਚੌਖਟਾ_ਅੰਕੜੇ_GAIN_MAP_PARAMS,
+                                ਆਕਾਰ(AVGainMapParams),
+                                AV_ਚੌਖਟਾ_SIDE_ਅੰਕੜੇ_FLAG_REPLACE);
+    ਜੇ (!sd)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    AVGainMapParams *const p = (AVGainMapParams *) sd->data;
+    AVGainMapParams *ਅਚਲ p = (AVGainMapParams *) sd->ਅੰਕੜੇ;
     gain_map_params_default(p);
-    return p;
+    ਵਾਪਸ p;
 }

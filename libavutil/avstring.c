@@ -19,445 +19,445 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdarg.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "config.h"
-#include "mem.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "bprint.h"
-#include "error.h"
-#include "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "bprint.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
 
-int av_strstart(const char *str, const char *pfx, const char **ptr)
+ਪੂਰਨ av_strstart(ਅਚਲ ਅੱਖਰ *str, ਅਚਲ ਅੱਖਰ *pfx, ਅਚਲ ਅੱਖਰ **ptr)
 {
-    while (*pfx && *pfx == *str) {
+    ਜਦੋਂ (*pfx && *pfx == *str) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ਜੇ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    ਵਾਪਸ !*pfx;
 }
 
-int av_stristart(const char *str, const char *pfx, const char **ptr)
+ਪੂਰਨ av_stristart(ਅਚਲ ਅੱਖਰ *str, ਅਚਲ ਅੱਖਰ *pfx, ਅਚਲ ਅੱਖਰ **ptr)
 {
-    while (*pfx && av_toupper((unsigned)*pfx) == av_toupper((unsigned)*str)) {
+    ਜਦੋਂ (*pfx && av_toupper((ਬਿਨਾਨਿਸ਼ਾਨੀ)*pfx) == av_toupper((ਬਿਨਾਨਿਸ਼ਾਨੀ)*str)) {
         pfx++;
         str++;
     }
-    if (!*pfx && ptr)
+    ਜੇ (!*pfx && ptr)
         *ptr = str;
-    return !*pfx;
+    ਵਾਪਸ !*pfx;
 }
 
-char *av_stristr(const char *s1, const char *s2)
+ਅੱਖਰ *av_stristr(ਅਚਲ ਅੱਖਰ *s1, ਅਚਲ ਅੱਖਰ *s2)
 {
-    if (!*s2)
-        return (char*)(intptr_t)s1;
+    ਜੇ (!*s2)
+        ਵਾਪਸ (ਅੱਖਰ*)(intptr_t)s1;
 
-    do
-        if (av_stristart(s1, s2, NULL))
-            return (char*)(intptr_t)s1;
-    while (*s1++);
+    ਕਰੋ
+        ਜੇ (av_stristart(s1, s2, ਨਿਰਾ))
+            ਵਾਪਸ (ਅੱਖਰ*)(intptr_t)s1;
+    ਜਦੋਂ (*s1++);
 
-    return NULL;
+    ਵਾਪਸ ਨਿਰਾ;
 }
 
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length)
+ਅੱਖਰ *av_strnstr(ਅਚਲ ਅੱਖਰ *haystack, ਅਚਲ ਅੱਖਰ *needle, size_t hay_ਲੰਮਾਈ)
 {
-    size_t needle_len = strlen(needle);
-    if (!needle_len)
-        return (char*)haystack;
-    while (hay_length >= needle_len) {
-        hay_length--;
-        if (!memcmp(haystack, needle, needle_len))
-            return (char*)haystack;
+    size_t needle_len = ਲੜੀ_ਲੰਬਾਈ(needle);
+    ਜੇ (!needle_len)
+        ਵਾਪਸ (ਅੱਖਰ*)haystack;
+    ਜਦੋਂ (hay_ਲੰਮਾਈ >= needle_len) {
+        hay_ਲੰਮਾਈ--;
+        ਜੇ (!memcmp(haystack, needle, needle_len))
+            ਵਾਪਸ (ਅੱਖਰ*)haystack;
         haystack++;
     }
-    return NULL;
+    ਵਾਪਸ ਨਿਰਾ;
 }
 
-size_t av_strlcpy(char *dst, const char *src, size_t size)
+size_t av_strlcpy(ਅੱਖਰ *dst, ਅਚਲ ਅੱਖਰ *src, size_t ਮਾਪ)
 {
     size_t len = 0;
-    while (++len < size && *src)
+    ਜਦੋਂ (++len < ਮਾਪ && *src)
         *dst++ = *src++;
-    if (len <= size)
+    ਜੇ (len <= ਮਾਪ)
         *dst = 0;
-    return len + strlen(src) - 1;
+    ਵਾਪਸ len + ਲੜੀ_ਲੰਬਾਈ(src) - 1;
 }
 
-size_t av_strlcat(char *dst, const char *src, size_t size)
+size_t av_strlcat(ਅੱਖਰ *dst, ਅਚਲ ਅੱਖਰ *src, size_t ਮਾਪ)
 {
-    size_t len = strlen(dst);
-    if (size <= len + 1)
-        return len + strlen(src);
-    return len + av_strlcpy(dst + len, src, size - len);
+    size_t len = ਲੜੀ_ਲੰਬਾਈ(dst);
+    ਜੇ (ਮਾਪ <= len + 1)
+        ਵਾਪਸ len + ਲੜੀ_ਲੰਬਾਈ(src);
+    ਵਾਪਸ len + av_strlcpy(dst + len, src, ਮਾਪ - len);
 }
 
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...)
+size_t av_strlcatf(ਅੱਖਰ *dst, size_t ਮਾਪ, ਅਚਲ ਅੱਖਰ *fmt, ...)
 {
-    size_t len = strlen(dst);
+    size_t len = ਲੜੀ_ਲੰਬਾਈ(dst);
     va_list vl;
 
     va_start(vl, fmt);
-    len += vsnprintf(dst + len, size > len ? size - len : 0, fmt, vl);
+    len += vsnprintf(dst + len, ਮਾਪ > len ? ਮਾਪ - len : 0, fmt, vl);
     va_end(vl);
 
-    return len;
+    ਵਾਪਸ len;
 }
 
-char *av_asprintf(const char *fmt, ...)
+ਅੱਖਰ *av_asprintf(ਅਚਲ ਅੱਖਰ *fmt, ...)
 {
-    char *p = NULL;
+    ਅੱਖਰ *p = ਨਿਰਾ;
     va_list va;
-    int len;
+    ਪੂਰਨ len;
 
     va_start(va, fmt);
-    len = vsnprintf(NULL, 0, fmt, va);
+    len = vsnprintf(ਨਿਰਾ, 0, fmt, va);
     va_end(va);
-    if (len < 0)
-        goto end;
+    ਜੇ (len < 0)
+        ਜਾਓ ਸਿਰਾ;
 
     p = av_malloc(len + 1);
-    if (!p)
-        goto end;
+    ਜੇ (!p)
+        ਜਾਓ ਸਿਰਾ;
 
     va_start(va, fmt);
     len = vsnprintf(p, len + 1, fmt, va);
     va_end(va);
-    if (len < 0)
+    ਜੇ (len < 0)
         av_freep(&p);
 
-end:
-    return p;
+ਸਿਰਾ:
+    ਵਾਪਸ p;
 }
 
-#define WHITESPACES " \n\t\r"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ WHITESPACES " \n\t\r"
 
-char *av_get_token(const char **buf, const char *term)
+ਅੱਖਰ *av_get_token(ਅਚਲ ਅੱਖਰ **buf, ਅਚਲ ਅੱਖਰ *ਪਦ)
 {
-    char *out     = av_realloc(NULL, strlen(*buf) + 1);
-    char *ret     = out, *end = out;
-    const char *p = *buf;
-    if (!out)
-        return NULL;
+    ਅੱਖਰ *ਬਾਹਰਲਾ     = av_realloc(ਨਿਰਾ, ਲੜੀ_ਲੰਬਾਈ(*buf) + 1);
+    ਅੱਖਰ *ret     = ਬਾਹਰਲਾ, *ਸਿਰਾ = ਬਾਹਰਲਾ;
+    ਅਚਲ ਅੱਖਰ *p = *buf;
+    ਜੇ (!ਬਾਹਰਲਾ)
+        ਵਾਪਸ ਨਿਰਾ;
     p += strspn(p, WHITESPACES);
 
-    while (*p && !strspn(p, term)) {
-        char c = *p++;
-        if (c == '\\' && *p) {
-            *out++ = *p++;
-            end    = out;
-        } else if (c == '\'') {
-            while (*p && *p != '\'')
-                *out++ = *p++;
-            if (*p) {
+    ਜਦੋਂ (*p && !strspn(p, ਪਦ)) {
+        ਅੱਖਰ c = *p++;
+        ਜੇ (c == '\\' && *p) {
+            *ਬਾਹਰਲਾ++ = *p++;
+            ਸਿਰਾ    = ਬਾਹਰਲਾ;
+        } ਨਹੀਂਤਾਂ ਜੇ (c == '\'') {
+            ਜਦੋਂ (*p && *p != '\'')
+                *ਬਾਹਰਲਾ++ = *p++;
+            ਜੇ (*p) {
                 p++;
-                end = out;
+                ਸਿਰਾ = ਬਾਹਰਲਾ;
             }
-        } else {
-            *out++ = c;
+        } ਨਹੀਂਤਾਂ {
+            *ਬਾਹਰਲਾ++ = c;
         }
     }
 
-    do
-        *out-- = 0;
-    while (out >= end && strspn(out, WHITESPACES));
+    ਕਰੋ
+        *ਬਾਹਰਲਾ-- = 0;
+    ਜਦੋਂ (ਬਾਹਰਲਾ >= ਸਿਰਾ && strspn(ਬਾਹਰਲਾ, WHITESPACES));
 
     *buf = p;
 
-    char *small_ret = av_realloc(ret, out - ret + 2);
-    return small_ret ? small_ret : ret;
+    ਅੱਖਰ *small_ret = av_realloc(ret, ਬਾਹਰਲਾ - ret + 2);
+    ਵਾਪਸ small_ret ? small_ret : ret;
 }
 
-char *av_strtok(char *s, const char *delim, char **saveptr)
+ਅੱਖਰ *av_strtok(ਅੱਖਰ *s, ਅਚਲ ਅੱਖਰ *delim, ਅੱਖਰ **saveptr)
 {
-    char *tok;
+    ਅੱਖਰ *tok;
 
-    if (!s && !(s = *saveptr))
-        return NULL;
+    ਜੇ (!s && !(s = *saveptr))
+        ਵਾਪਸ ਨਿਰਾ;
 
     /* skip leading delimiters */
     s += strspn(s, delim);
 
     /* s now points to the first non delimiter char, or to the end of the string */
-    if (!*s) {
-        *saveptr = NULL;
-        return NULL;
+    ਜੇ (!*s) {
+        *saveptr = ਨਿਰਾ;
+        ਵਾਪਸ ਨਿਰਾ;
     }
     tok = s++;
 
     /* skip non delimiters */
     s += strcspn(s, delim);
-    if (*s) {
+    ਜੇ (*s) {
         *s = 0;
         *saveptr = s+1;
-    } else {
-        *saveptr = NULL;
+    } ਨਹੀਂਤਾਂ {
+        *saveptr = ਨਿਰਾ;
     }
 
-    return tok;
+    ਵਾਪਸ tok;
 }
 
-int av_strcasecmp(const char *a, const char *b)
+ਪੂਰਨ av_strcasecmp(ਅਚਲ ਅੱਖਰ *a, ਅਚਲ ਅੱਖਰ *b)
 {
     uint8_t c1, c2;
-    do {
+    ਕਰੋ {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (c1 && c1 == c2);
-    return c1 - c2;
+    } ਜਦੋਂ (c1 && c1 == c2);
+    ਵਾਪਸ c1 - c2;
 }
 
-int av_strncasecmp(const char *a, const char *b, size_t n)
+ਪੂਰਨ av_strncasecmp(ਅਚਲ ਅੱਖਰ *a, ਅਚਲ ਅੱਖਰ *b, size_t n)
 {
     uint8_t c1, c2;
-    if (n <= 0)
-        return 0;
-    do {
+    ਜੇ (n <= 0)
+        ਵਾਪਸ 0;
+    ਕਰੋ {
         c1 = av_tolower(*a++);
         c2 = av_tolower(*b++);
-    } while (--n && c1 && c1 == c2);
-    return c1 - c2;
+    } ਜਦੋਂ (--n && c1 && c1 == c2);
+    ਵਾਪਸ c1 - c2;
 }
 
-char *av_strireplace(const char *str, const char *from, const char *to)
+ਅੱਖਰ *av_strireplace(ਅਚਲ ਅੱਖਰ *str, ਅਚਲ ਅੱਖਰ *from, ਅਚਲ ਅੱਖਰ *ਮੰਜ਼ਿਲ)
 {
-    char *ret = NULL;
-    const char *pstr2, *pstr = str;
-    size_t tolen = strlen(to), fromlen = strlen(from);
+    ਅੱਖਰ *ret = ਨਿਰਾ;
+    ਅਚਲ ਅੱਖਰ *pstr2, *pstr = str;
+    size_t tolen = ਲੜੀ_ਲੰਬਾਈ(ਮੰਜ਼ਿਲ), fromlen = ਲੜੀ_ਲੰਬਾਈ(from);
     AVBPrint pbuf;
 
-    if (!fromlen)
-        return av_strdup(str);
+    ਜੇ (!fromlen)
+        ਵਾਪਸ av_strdup(str);
 
-    av_bprint_init(&pbuf, 1, AV_BPRINT_SIZE_UNLIMITED);
-    while ((pstr2 = av_stristr(pstr, from))) {
-        av_bprint_append_data(&pbuf, pstr, pstr2 - pstr);
+    av_bprint_init(&pbuf, 1, AV_BPRINT_ਮਾਪ_UNLIMITED);
+    ਜਦੋਂ ((pstr2 = av_stristr(pstr, from))) {
+        av_bprint_append_ਅੰਕੜੇ(&pbuf, pstr, pstr2 - pstr);
         pstr = pstr2 + fromlen;
-        av_bprint_append_data(&pbuf, to, tolen);
+        av_bprint_append_ਅੰਕੜੇ(&pbuf, ਮੰਜ਼ਿਲ, tolen);
     }
-    av_bprint_append_data(&pbuf, pstr, strlen(pstr));
-    if (!av_bprint_is_complete(&pbuf)) {
-        av_bprint_finalize(&pbuf, NULL);
-    } else {
+    av_bprint_append_ਅੰਕੜੇ(&pbuf, pstr, ਲੜੀ_ਲੰਬਾਈ(pstr));
+    ਜੇ (!av_bprint_is_complete(&pbuf)) {
+        av_bprint_finalize(&pbuf, ਨਿਰਾ);
+    } ਨਹੀਂਤਾਂ {
         av_bprint_finalize(&pbuf, &ret);
     }
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-const char *av_basename(const char *path)
+ਅਚਲ ਅੱਖਰ *av_basename(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ)
 {
-    if (!path || *path == '\0')
-        return ".";
+    ਜੇ (!ਰਸਤਾ || *ਰਸਤਾ == '\0')
+        ਵਾਪਸ ".";
 
-    const char *p = strrchr(path, '/');
-#if HAVE_DOS_PATHS
-    const char *q = strrchr(path, '\\');
-    const char *d = strchr(path, ':');
+    ਅਚਲ ਅੱਖਰ *p = strrchr(ਰਸਤਾ, '/');
+#ਜੇ HAVE_DOS_PATHS
+    ਅਚਲ ਅੱਖਰ *q = strrchr(ਰਸਤਾ, '\\');
+    ਅਚਲ ਅੱਖਰ *d = strchr(ਰਸਤਾ, ':');
     p = FFMAX3(p, q, d);
-#endif
+#ਜੇ_ਅੰਤ
 
-    if (!p)
-        return path;
+    ਜੇ (!p)
+        ਵਾਪਸ ਰਸਤਾ;
 
-    return p + 1;
+    ਵਾਪਸ p + 1;
 }
 
-const char *av_dirname(char *path)
+ਅਚਲ ਅੱਖਰ *av_dirname(ਅੱਖਰ *ਰਸਤਾ)
 {
-    char *p = path ? strrchr(path, '/') : NULL;
+    ਅੱਖਰ *p = ਰਸਤਾ ? strrchr(ਰਸਤਾ, '/') : ਨਿਰਾ;
 
-#if HAVE_DOS_PATHS
-    char *q = path ? strrchr(path, '\\') : NULL;
-    char *d = path ? strchr(path, ':')  : NULL;
+#ਜੇ HAVE_DOS_PATHS
+    ਅੱਖਰ *q = ਰਸਤਾ ? strrchr(ਰਸਤਾ, '\\') : ਨਿਰਾ;
+    ਅੱਖਰ *d = ਰਸਤਾ ? strchr(ਰਸਤਾ, ':')  : ਨਿਰਾ;
 
     d = d ? d + 1 : d;
 
     p = FFMAX3(p, q, d);
-#endif
+#ਜੇ_ਅੰਤ
 
-    if (!p)
-        return ".";
+    ਜੇ (!p)
+        ਵਾਪਸ ".";
 
     *p = '\0';
 
-    return path;
+    ਵਾਪਸ ਰਸਤਾ;
 }
 
-char *av_append_path_component(const char *path, const char *component)
+ਅੱਖਰ *av_append_ਰਸਤਾ_component(ਅਚਲ ਅੱਖਰ *ਰਸਤਾ, ਅਚਲ ਅੱਖਰ *component)
 {
     size_t p_len, c_len;
-    char *fullpath;
+    ਅੱਖਰ *fullpath;
 
-    if (!path)
-        return av_strdup(component);
-    if (!component)
-        return av_strdup(path);
+    ਜੇ (!ਰਸਤਾ)
+        ਵਾਪਸ av_strdup(component);
+    ਜੇ (!component)
+        ਵਾਪਸ av_strdup(ਰਸਤਾ);
 
-    p_len = strlen(path);
-    c_len = strlen(component);
-    if (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
-        return NULL;
+    p_len = ਲੜੀ_ਲੰਬਾਈ(ਰਸਤਾ);
+    c_len = ਲੜੀ_ਲੰਬਾਈ(component);
+    ਜੇ (p_len > SIZE_MAX - c_len || p_len + c_len > SIZE_MAX - 2)
+        ਵਾਪਸ ਨਿਰਾ;
     fullpath = av_malloc(p_len + c_len + 2);
-    if (fullpath) {
-        if (p_len) {
-            av_strlcpy(fullpath, path, p_len + 1);
-            if (c_len) {
-                if (fullpath[p_len - 1] != '/' && component[0] != '/')
+    ਜੇ (fullpath) {
+        ਜੇ (p_len) {
+            av_strlcpy(fullpath, ਰਸਤਾ, p_len + 1);
+            ਜੇ (c_len) {
+                ਜੇ (fullpath[p_len - 1] != '/' && component[0] != '/')
                     fullpath[p_len++] = '/';
-                else if (fullpath[p_len - 1] == '/' && component[0] == '/')
+                ਨਹੀਂਤਾਂ ਜੇ (fullpath[p_len - 1] == '/' && component[0] == '/')
                     p_len--;
             }
         }
         av_strlcpy(&fullpath[p_len], component, c_len + 1);
         fullpath[p_len + c_len] = 0;
     }
-    return fullpath;
+    ਵਾਪਸ fullpath;
 }
 
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags)
+ਪੂਰਨ av_escape(ਅੱਖਰ **dst, ਅਚਲ ਅੱਖਰ *src, ਅਚਲ ਅੱਖਰ *special_chars,
+              ਗਿਣਤੀ AVEscape_ਬਹੁਲਕ ਬਹੁਲਕ, ਪੂਰਨ flags)
 {
     AVBPrint dstbuf;
-    int ret;
+    ਪੂਰਨ ret;
 
-    av_bprint_init(&dstbuf, 1, INT_MAX); /* (int)dstbuf.len must be >= 0 */
-    av_bprint_escape(&dstbuf, src, special_chars, mode, flags);
+    av_bprint_init(&dstbuf, 1, ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ); /* (int)dstbuf.len must be >= 0 */
+    av_bprint_escape(&dstbuf, src, special_chars, ਬਹੁਲਕ, flags);
 
-    if (!av_bprint_is_complete(&dstbuf)) {
-        av_bprint_finalize(&dstbuf, NULL);
-        return AVERROR(ENOMEM);
+    ਜੇ (!av_bprint_is_complete(&dstbuf)) {
+        av_bprint_finalize(&dstbuf, ਨਿਰਾ);
+        ਵਾਪਸ AVERROR(ENOMEM);
     }
-    if ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
-        return ret;
-    return dstbuf.len;
+    ਜੇ ((ret = av_bprint_finalize(&dstbuf, dst)) < 0)
+        ਵਾਪਸ ret;
+    ਵਾਪਸ dstbuf.len;
 }
 
-int av_match_name(const char *name, const char *names)
+ਪੂਰਨ av_ਮੇਲ_name(ਅਚਲ ਅੱਖਰ *name, ਅਚਲ ਅੱਖਰ *ਨਾਂ)
 {
-    const char *p;
+    ਅਚਲ ਅੱਖਰ *p;
     size_t len, namelen;
 
-    if (!name || !names)
-        return 0;
+    ਜੇ (!name || !ਨਾਂ)
+        ਵਾਪਸ 0;
 
-    namelen = strlen(name);
-    while (*names) {
-        int negate = '-' == *names;
-        p = strchr(names, ',');
-        if (!p)
-            p = names + strlen(names);
-        names += negate;
-        len = FFMAX(p - names, namelen);
-        if (!av_strncasecmp(name, names, len) || !strncmp("ALL", names, FFMAX(3, p - names)))
-            return !negate;
-        names = p + (*p == ',');
+    namelen = ਲੜੀ_ਲੰਬਾਈ(name);
+    ਜਦੋਂ (*ਨਾਂ) {
+        ਪੂਰਨ negate = '-' == *ਨਾਂ;
+        p = strchr(ਨਾਂ, ',');
+        ਜੇ (!p)
+            p = ਨਾਂ + ਲੜੀ_ਲੰਬਾਈ(ਨਾਂ);
+        ਨਾਂ += negate;
+        len = FFMAX(p - ਨਾਂ, namelen);
+        ਜੇ (!av_strncasecmp(name, ਨਾਂ, len) || !ਲੜੀ_ਤੁਲਨਾ("ALL", ਨਾਂ, FFMAX(3, p - ਨਾਂ)))
+            ਵਾਪਸ !negate;
+        ਨਾਂ = p + (*p == ',');
     }
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags)
+ਪੂਰਨ av_utf8_decode(int32_t *codep, ਅਚਲ uint8_t **bufp, ਅਚਲ uint8_t *buf_ਸਿਰਾ,
+                   ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ flags)
 {
-    const uint8_t *p = *bufp;
-    uint32_t top;
-    uint64_t code;
-    int ret = 0, tail_len;
+    ਅਚਲ uint8_t *p = *bufp;
+    uint32_t ਸਿਖਰ;
+    uint64_t ਕੋਡ;
+    ਪੂਰਨ ret = 0, ਪੂਛ_len;
     uint32_t overlong_encoding_mins[6] = {
         0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000,
     };
 
-    if (p >= buf_end)
-        return 0;
+    ਜੇ (p >= buf_ਸਿਰਾ)
+        ਵਾਪਸ 0;
 
-    code = *p++;
+    ਕੋਡ = *p++;
 
     /* first sequence byte starts with 10, or is 1111-1110 or 1111-1111,
        which is not admitted */
-    if ((code & 0xc0) == 0x80 || code >= 0xFE) {
+    ਜੇ ((ਕੋਡ & 0xc0) == 0x80 || ਕੋਡ >= 0xFE) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        ਜਾਓ ਸਿਰਾ;
     }
-    top = (code & 128) >> 1;
+    ਸਿਖਰ = (ਕੋਡ & 128) >> 1;
 
-    tail_len = 0;
-    while (code & top) {
-        int tmp;
-        tail_len++;
-        if (p >= buf_end) {
+    ਪੂਛ_len = 0;
+    ਜਦੋਂ (ਕੋਡ & ਸਿਖਰ) {
+        ਪੂਰਨ tmp;
+        ਪੂਛ_len++;
+        ਜੇ (p >= buf_ਸਿਰਾ) {
             (*bufp) ++;
-            return AVERROR(EILSEQ); /* incomplete sequence */
+            ਵਾਪਸ AVERROR(EILSEQ); /* incomplete sequence */
         }
 
         /* we assume the byte to be in the form 10xx-xxxx */
         tmp = *p++ - 128;   /* strip leading 1 */
-        if (tmp>>6) {
+        ਜੇ (tmp>>6) {
             (*bufp) ++;
-            return AVERROR(EILSEQ);
+            ਵਾਪਸ AVERROR(EILSEQ);
         }
-        code = (code<<6) + tmp;
-        top <<= 5;
+        ਕੋਡ = (ਕੋਡ<<6) + tmp;
+        ਸਿਖਰ <<= 5;
     }
-    code &= (top << 1) - 1;
+    ਕੋਡ &= (ਸਿਖਰ << 1) - 1;
 
     /* check for overlong encodings */
-    av_assert0(tail_len <= 5);
-    if (code < overlong_encoding_mins[tail_len]) {
+    av_assert0(ਪੂਛ_len <= 5);
+    ਜੇ (ਕੋਡ < overlong_encoding_mins[ਪੂਛ_len]) {
         ret = AVERROR(EILSEQ);
-        goto end;
+        ਜਾਓ ਸਿਰਾ;
     }
 
-    if (code >= 1U<<31) {
+    ਜੇ (ਕੋਡ >= 1U<<31) {
         ret = AVERROR(EILSEQ);  /* out-of-range value */
-        goto end;
+        ਜਾਓ ਸਿਰਾ;
     }
 
-    *codep = code;
+    *codep = ਕੋਡ;
 
-    if (code > 0x10FFFF &&
+    ਜੇ (ਕੋਡ > 0x10FFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES))
         ret = AVERROR(EILSEQ);
-    if (code < 0x20 && code != 0x9 && code != 0xA && code != 0xD &&
+    ਜੇ (ਕੋਡ < 0x20 && ਕੋਡ != 0x9 && ਕੋਡ != 0xA && ਕੋਡ != 0xD &&
         flags & AV_UTF8_FLAG_EXCLUDE_XML_INVALID_CONTROL_CODES)
         ret = AVERROR(EILSEQ);
-    if (code >= 0xD800 && code <= 0xDFFF &&
+    ਜੇ (ਕੋਡ >= 0xD800 && ਕੋਡ <= 0xDFFF &&
         !(flags & AV_UTF8_FLAG_ACCEPT_SURROGATES))
         ret = AVERROR(EILSEQ);
-    if ((code == 0xFFFE || code == 0xFFFF) &&
+    ਜੇ ((ਕੋਡ == 0xFFFE || ਕੋਡ == 0xFFFF) &&
         !(flags & AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS))
         ret = AVERROR(EILSEQ);
 
-end:
+ਸਿਰਾ:
     *bufp = p;
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-int av_match_list(const char *name, const char *list, char separator)
+ਪੂਰਨ av_ਮੇਲ_list(ਅਚਲ ਅੱਖਰ *name, ਅਚਲ ਅੱਖਰ *list, ਅੱਖਰ separator)
 {
-    const char *p, *q;
+    ਅਚਲ ਅੱਖਰ *p, *q;
 
-    for (p = name; p && *p; ) {
-        for (q = list; q && *q; ) {
-            int k;
-            for (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
-                if (k && (!p[k] || p[k] == separator))
-                    return 1;
+    ਲਈ (p = name; p && *p; ) {
+        ਲਈ (q = list; q && *q; ) {
+            ਪੂਰਨ k;
+            ਲਈ (k = 0; p[k] == q[k] || (p[k]*q[k] == 0 && p[k]+q[k] == separator); k++)
+                ਜੇ (k && (!p[k] || p[k] == separator))
+                    ਵਾਪਸ 1;
             q = strchr(q, separator);
-            if(q)
+            ਜੇ(q)
                 q++;
         }
         p = strchr(p, separator);
-        if (p)
+        ਜੇ (p)
             p++;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }

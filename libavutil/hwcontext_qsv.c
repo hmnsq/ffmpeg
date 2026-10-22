@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdatomic.h>
-#include <stdint.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdatomic.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include <mfxvideo.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <mfxvideo.h>
 
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#if HAVE_PTHREADS
-#include <pthread.h>
-#endif
+#ਜੇ HAVE_PTHREADS
+#ਅਨ੍ਤਰ੍ਭਾਵ <pthread.h>
+#ਜੇ_ਅੰਤ
 
-#define COBJMACROS
-#if CONFIG_VAAPI
-#include "hwcontext_vaapi.h"
-#endif
-#if CONFIG_D3D11VA
-#include "hwcontext_d3d11va.h"
-#endif
-#if CONFIG_DXVA2
-#include <initguid.h>
-#include "hwcontext_dxva2.h"
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ COBJMACROS
+#ਜੇ CONFIG_VAAPI
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext_vaapi.h"
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext_d3d11va.h"
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+#ਅਨ੍ਤਰ੍ਭਾਵ <initguid.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext_dxva2.h"
+#ਜੇ_ਅੰਤ
 
-#include "buffer.h"
-#include "common.h"
-#include "hwcontext.h"
-#include "hwcontext_internal.h"
-#include "hwcontext_qsv.h"
-#include "mem.h"
-#include "pixfmt.h"
-#include "pixdesc.h"
-#include "time.h"
-#include "imgutils.h"
-#include "avassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "buffer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "common.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "hwcontext_qsv.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "pixfmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "pixdesc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "time.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "imgutils.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avassert.h"
 
-#define QSV_VERSION_ATLEAST(MAJOR, MINOR)   \
-    (MFX_VERSION_MAJOR > (MAJOR) ||         \
-     MFX_VERSION_MAJOR == (MAJOR) && MFX_VERSION_MINOR >= (MINOR))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ QSV_ਸੰਸਕਰਣ_ATLEAST(MAJOR, MINOR)   \
+    (MFX_ਸੰਸਕਰਣ_MAJOR > (MAJOR) ||         \
+     MFX_ਸੰਸਕਰਣ_MAJOR == (MAJOR) && MFX_ਸੰਸਕਰਣ_MINOR >= (MINOR))
 
-#define QSV_RUNTIME_VERSION_ATLEAST(MFX_VERSION, MAJOR, MINOR)          \
-    ((MFX_VERSION.Major > (MAJOR)) ||                                   \
-     (MFX_VERSION.Major == (MAJOR) && MFX_VERSION.Minor >= (MINOR)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ QSV_RUNTIME_ਸੰਸਕਰਣ_ATLEAST(MFX_ਸੰਸਕਰਣ, MAJOR, MINOR)          \
+    ((MFX_ਸੰਸਕਰਣ.Major > (MAJOR)) ||                                   \
+     (MFX_ਸੰਸਕਰਣ.Major == (MAJOR) && MFX_ਸੰਸਕਰਣ.Minor >= (MINOR)))
 
-#define MFX_IMPL_VIA_MASK(impl) (0x0f00 & (impl))
-#define QSV_ONEVPL       QSV_VERSION_ATLEAST(2, 0)
-#define QSV_HAVE_OPAQUE  !QSV_ONEVPL
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MFX_IMPL_ਰਾਹੀਂ_ਨਕਾਬ(impl) (0x0f00 & (impl))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ QSV_ONEVPL       QSV_ਸੰਸਕਰਣ_ATLEAST(2, 0)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ QSV_HAVE_OPAQUE  !QSV_ONEVPL
 
-#if QSV_ONEVPL
-#include <mfxdispatcher.h>
-#else
-#define MFXUnload(a) do { } while(0)
-#endif
+#ਜੇ QSV_ONEVPL
+#ਅਨ੍ਤਰ੍ਭਾਵ <mfxdispatcher.h>
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MFXUnload(a) ਕਰੋ { } ਜਦੋਂ(0)
+#ਜੇ_ਅੰਤ
 
-typedef struct QSVDevicePriv {
-    AVBufferRef *child_device_ctx;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ QSVDevicePriv {
+    AVBufferRef *ਬੱਚਾ_device_ctx;
 } QSVDevicePriv;
 
-typedef struct QSVDeviceContext {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ QSVDeviceContext {
     /**
      * The public AVQSVDeviceContext. See hwcontext_qsv.h for it.
      */
@@ -82,14 +82,14 @@ typedef struct QSVDeviceContext {
 
     mfxHDL              handle;
     mfxHandleType       handle_type;
-    mfxVersion          ver;
+    mfx_ਸੰਸਕਰਣ          ver;
     mfxIMPL             impl;
 
-    enum AVHWDeviceType child_device_type;
-    enum AVPixelFormat  child_pix_fmt;
+    ਗਿਣਤੀ AVHWDeviceType ਬੱਚਾ_device_type;
+    ਗਿਣਤੀ AVPixelFormat  ਬੱਚਾ_pix_fmt;
 } QSVDeviceContext;
 
-typedef struct QSVFramesContext {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ QSVFramesContext {
     /**
      * The public AVQSVFramesContext. See hwcontext_qsv.h for it.
      */
@@ -99,39 +99,39 @@ typedef struct QSVFramesContext {
     atomic_int session_download_init;
     mfxSession session_upload;
     atomic_int session_upload_init;
-#if HAVE_PTHREADS
-    pthread_mutex_t session_lock;
-#endif
+#ਜੇ HAVE_PTHREADS
+    pthread_mutex_t session_ਤਾਲਾ;
+#ਜੇ_ਅੰਤ
 
-    AVBufferRef *child_frames_ref;
-    mfxFrameSurface1 *surfaces_internal;
-    mfxHDLPair *handle_pairs_internal;
-    int             nb_surfaces_used;
+    AVBufferRef *ਬੱਚਾ_ਚੌਖਟੇ_ref;
+    mfx_ਚੌਖਟਾ_Surface1 *surfaces_ਅੰਦਰੂਨੀ;
+    mfxHDLPair *handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ;
+    ਪੂਰਨ             nb_surfaces_ਵਰਤਿਆ;
 
     // used in the frame allocator for non-opaque surfaces
     mfxMemId *mem_ids;
-#if QSV_HAVE_OPAQUE
+#ਜੇ QSV_HAVE_OPAQUE
     // used in the opaque alloc request for opaque surfaces
-    mfxFrameSurface1 **surface_ptrs;
+    mfx_ਚੌਖਟਾ_Surface1 **surface_ptrs;
 
     mfxExtOpaqueSurfaceAlloc opaque_alloc;
-    mfxExtBuffer *ext_buffers[1];
-#endif
-    AVFrame realigned_upload_frame;
-    AVFrame realigned_download_frame;
+    mfx_Ext_ਬਫਰ *ext_buffers[1];
+#ਜੇ_ਅੰਤ
+    AVFrame realigned_upload_ਚੌਖਟਾ;
+    AVFrame realigned_download_ਚੌਖਟਾ;
 
-    mfxFrameInfo frame_info;
+    mfx_ਚੌਖਟਾ_Info ਚੌਖਟਾ_info;
 } QSVFramesContext;
 
-typedef struct QSVSurface {
-    mfxFrameSurface1 mfx_surface;
-    AVFrame *child_frame;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ QSVSurface {
+    mfx_ਚੌਖਟਾ_Surface1 mfx_surface;
+    AVFrame *ਬੱਚਾ_ਚੌਖਟਾ;
 } QSVSurface;
 
-static const struct {
-    enum AVPixelFormat pix_fmt;
+ਸਥਿਰ ਅਚਲ ਬਣਤਰ {
+    ਗਿਣਤੀ AVPixelFormat pix_fmt;
     uint32_t           fourcc;
-    uint16_t           mfx_shift;
+    uint16_t           mfx_ਖਿਸਕਾਓ;
 } supported_pixel_formats[] = {
     { AV_PIX_FMT_NV12, MFX_FOURCC_NV12, 0 },
     { AV_PIX_FMT_BGRA, MFX_FOURCC_RGB4, 0 },
@@ -139,10 +139,10 @@ static const struct {
     { AV_PIX_FMT_PAL8, MFX_FOURCC_P8,   0 },
     { AV_PIX_FMT_YUYV422,
                        MFX_FOURCC_YUY2, 0 },
-#if CONFIG_VAAPI
+#ਜੇ CONFIG_VAAPI
     { AV_PIX_FMT_UYVY422,
                        MFX_FOURCC_UYVY, 0 },
-#endif
+#ਜੇ_ਅੰਤ
     { AV_PIX_FMT_Y210,
                        MFX_FOURCC_Y210, 1 },
     // VUYX is used for VAAPI child device,
@@ -153,7 +153,7 @@ static const struct {
     // the SDK only declares support for Y410
     { AV_PIX_FMT_XV30,
                        MFX_FOURCC_Y410, 0 },
-#if QSV_VERSION_ATLEAST(1, 31)
+#ਜੇ QSV_ਸੰਸਕਰਣ_ATLEAST(1, 31)
     // P012 is used for VAAPI child device,
     // the SDK only declares support for P016
     { AV_PIX_FMT_P012,
@@ -166,728 +166,728 @@ static const struct {
     // the SDK only declares support for Y416
     { AV_PIX_FMT_XV36,
                        MFX_FOURCC_Y416, 1 },
-#endif
+#ਜੇ_ਅੰਤ
 };
 
-extern int ff_qsv_get_surface_base_handle(mfxFrameSurface1 *surf,
-                                          enum AVHWDeviceType base_dev_type,
-                                          void **base_handle);
+ਬਾਹਰੀ ਪੂਰਨ ff_qsv_get_surface_ਅਧਾਰ_handle(mfx_ਚੌਖਟਾ_Surface1 *surf,
+                                          ਗਿਣਤੀ AVHWDeviceType ਅਧਾਰ_dev_type,
+                                          ਖਾਲੀ **ਅਧਾਰ_handle);
 
-static int qsv_init_surface(AVHWFramesContext *ctx, mfxFrameSurface1 *surf);
+ਸਥਿਰ ਪੂਰਨ qsv_init_surface(AVHWFramesContext *ctx, mfx_ਚੌਖਟਾ_Surface1 *surf);
 
 /**
  * Caller needs to allocate enough space for base_handle pointer.
  **/
-int ff_qsv_get_surface_base_handle(mfxFrameSurface1 *surf,
-                                   enum AVHWDeviceType base_dev_type,
-                                   void **base_handle)
+ਪੂਰਨ ff_qsv_get_surface_ਅਧਾਰ_handle(mfx_ਚੌਖਟਾ_Surface1 *surf,
+                                   ਗਿਣਤੀ AVHWDeviceType ਅਧਾਰ_dev_type,
+                                   ਖਾਲੀ **ਅਧਾਰ_handle)
 {
     mfxHDLPair *handle_pair;
-    handle_pair = surf->Data.MemId;
-    switch (base_dev_type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
-        base_handle[0] = handle_pair->first;
-        return 0;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
-        base_handle[0] = handle_pair->first;
-        base_handle[1] = handle_pair->second;
-        return 0;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
-        base_handle[0] = handle_pair->first;
-        return 0;
-#endif
+    handle_pair = surf->ਅੰਕੜੇ_2.MemId;
+    ਚੋਣ (ਅਧਾਰ_dev_type) {
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_HWDEVICE_TYPE_VAAPI:
+        ਅਧਾਰ_handle[0] = handle_pair->ਪਹਿਲਾ;
+        ਵਾਪਸ 0;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+    ਹਾਲਤ AV_HWDEVICE_TYPE_D3D11VA:
+        ਅਧਾਰ_handle[0] = handle_pair->ਪਹਿਲਾ;
+        ਅਧਾਰ_handle[1] = handle_pair->ਦੂਜਾ;
+        ਵਾਪਸ 0;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+    ਹਾਲਤ AV_HWDEVICE_TYPE_DXVA2:
+        ਅਧਾਰ_handle[0] = handle_pair->ਪਹਿਲਾ;
+        ਵਾਪਸ 0;
+#ਜੇ_ਅੰਤ
     }
-    return AVERROR(EINVAL);
+    ਵਾਪਸ AVERROR(EINVAL);
 }
 
-static uint32_t qsv_fourcc_from_pix_fmt(enum AVPixelFormat pix_fmt)
+ਸਥਿਰ uint32_t qsv_fourcc_from_pix_fmt(ਗਿਣਤੀ AVPixelFormat pix_fmt)
 {
-    int i;
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++) {
-        if (supported_pixel_formats[i].pix_fmt == pix_fmt)
-            return supported_pixel_formats[i].fourcc;
+    ਪੂਰਨ i;
+    ਲਈ (i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++) {
+        ਜੇ (supported_pixel_formats[i].pix_fmt == pix_fmt)
+            ਵਾਪਸ supported_pixel_formats[i].fourcc;
     }
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static uint16_t qsv_shift_from_pix_fmt(enum AVPixelFormat pix_fmt)
+ਸਥਿਰ uint16_t qsv_ਖਿਸਕਾਓ_from_pix_fmt(ਗਿਣਤੀ AVPixelFormat pix_fmt)
 {
-    for (int i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++) {
-        if (supported_pixel_formats[i].pix_fmt == pix_fmt)
-            return supported_pixel_formats[i].mfx_shift;
+    ਲਈ (ਪੂਰਨ i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++) {
+        ਜੇ (supported_pixel_formats[i].pix_fmt == pix_fmt)
+            ਵਾਪਸ supported_pixel_formats[i].mfx_ਖਿਸਕਾਓ;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-#if CONFIG_D3D11VA
-static uint32_t qsv_get_d3d11va_bind_flags(int mem_type)
+#ਜੇ CONFIG_D3D11VA
+ਸਥਿਰ uint32_t qsv_get_d3d11va_bind_flags(ਪੂਰਨ mem_type)
 {
     uint32_t bind_flags = 0;
 
-    if ((mem_type & MFX_MEMTYPE_VIDEO_MEMORY_ENCODER_TARGET) && (mem_type & MFX_MEMTYPE_INTERNAL_FRAME))
+    ਜੇ ((mem_type & MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_ENCODER_ਨਿਸ਼ਾਨਾ) && (mem_type & MFX_MEMTYPE_ਅੰਦਰੂਨੀ_ਚੌਖਟਾ))
         bind_flags = D3D11_BIND_DECODER | D3D11_BIND_VIDEO_ENCODER;
-    else
+    ਨਹੀਂਤਾਂ
         bind_flags = D3D11_BIND_DECODER;
 
-    if ((MFX_MEMTYPE_FROM_VPPOUT & mem_type) || (MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET & mem_type))
-        bind_flags = D3D11_BIND_RENDER_TARGET;
+    ਜੇ ((MFX_MEMTYPE_FROM_VPPOUT & mem_type) || (MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_PROCESSOR_ਨਿਸ਼ਾਨਾ & mem_type))
+        bind_flags = D3_D11_BIND_RENDER_ਨਿਸ਼ਾਨਾ;
 
-    return bind_flags;
+    ਵਾਪਸ bind_flags;
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-static int qsv_fill_border(AVFrame *dst, const AVFrame *src)
+ਸਥਿਰ ਪੂਰਨ qsv_fill_border(AVFrame *dst, ਅਚਲ AVFrame *src)
 {
-    const AVPixFmtDescriptor *desc;
-    int i, planes_nb = 0;
-    if (dst->format != src->format)
-        return AVERROR(EINVAL);
+    ਅਚਲ AVPixFmtDescriptor *desc;
+    ਪੂਰਨ i, planes_nb = 0;
+    ਜੇ (dst->format != src->format)
+        ਵਾਪਸ AVERROR(EINVAL);
 
     desc = av_pix_fmt_desc_get(dst->format);
 
-    for (i = 0; i < desc->nb_components; i++)
+    ਲਈ (i = 0; i < desc->nb_components; i++)
         planes_nb = FFMAX(planes_nb, desc->comp[i].plane + 1);
 
-    for (i = 0; i < planes_nb; i++) {
-        int sheight, dheight, y;
+    ਲਈ (i = 0; i < planes_nb; i++) {
+        ਪੂਰਨ sheight, dheight, y;
         ptrdiff_t swidth = av_image_get_linesize(src->format,
-                                                 src->width,
+                                                 src->ਚੌੜਾਈ,
                                                  i);
         ptrdiff_t dwidth = av_image_get_linesize(dst->format,
-                                                 dst->width,
+                                                 dst->ਚੌੜਾਈ,
                                                  i);
-        const AVComponentDescriptor comp = desc->comp[i];
-        if (swidth < 0 || dwidth < 0) {
-            av_log(NULL, AV_LOG_ERROR, "av_image_get_linesize failed\n");
-            return AVERROR(EINVAL);
+        ਅਚਲ AVComponentDescriptor comp = desc->comp[i];
+        ਜੇ (swidth < 0 || dwidth < 0) {
+            av_log(ਨਿਰਾ, AV_LOG_ERROR, "av_image_get_linesize failed\n");
+            ਵਾਪਸ AVERROR(EINVAL);
         }
-        sheight = src->height;
-        dheight = dst->height;
-        if (i) {
-            sheight = AV_CEIL_RSHIFT(src->height, desc->log2_chroma_h);
-            dheight = AV_CEIL_RSHIFT(dst->height, desc->log2_chroma_h);
+        sheight = src->ਉਚਾਈ;
+        dheight = dst->ਉਚਾਈ;
+        ਜੇ (i) {
+            sheight = AV_CEIL_RSHIFT(src->ਉਚਾਈ, desc->log2_chroma_h);
+            dheight = AV_CEIL_RSHIFT(dst->ਉਚਾਈ, desc->log2_chroma_h);
         }
         //fill right padding
-        for (y = 0; y < sheight; y++) {
-            void *line_ptr = dst->data[i] + y*dst->linesize[i] + swidth;
-            av_memcpy_backptr(line_ptr,
-                           comp.depth > 8 ? 2 : 1,
+        ਲਈ (y = 0; y < sheight; y++) {
+            ਖਾਲੀ *ਸਤਰ_ptr = dst->ਅੰਕੜੇ[i] + y*dst->linesize[i] + swidth;
+            av_memcpy_backptr(ਸਤਰ_ptr,
+                           comp.ਡੂੰਘਾਈ > 8 ? 2 : 1,
                            dwidth - swidth);
         }
         //fill bottom padding
-        for (y = sheight; y < dheight; y++) {
-            memcpy(dst->data[i]+y*dst->linesize[i],
-                   dst->data[i]+(sheight-1)*dst->linesize[i],
+        ਲਈ (y = sheight; y < dheight; y++) {
+            ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst->ਅੰਕੜੇ[i]+y*dst->linesize[i],
+                   dst->ਅੰਕੜੇ[i]+(sheight-1)*dst->linesize[i],
                    dwidth);
         }
     }
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_device_init(AVHWDeviceContext *ctx)
+ਸਥਿਰ ਪੂਰਨ qsv_device_init(AVHWDeviceContext *ctx)
 {
     QSVDeviceContext       *s = ctx->hwctx;
     AVQSVDeviceContext *hwctx = &s->p;
-    int   hw_handle_supported = 0;
+    ਪੂਰਨ   hw_handle_supported = 0;
     mfxHandleType handle_type;
-    enum AVHWDeviceType device_type;
-    enum AVPixelFormat  pix_fmt;
-    mfxStatus err;
+    ਗਿਣਤੀ AVHWDeviceType device_type;
+    ਗਿਣਤੀ AVPixelFormat  pix_fmt;
+    mfx_ਸਥਿਤੀ err;
 
     err = MFXQueryIMPL(hwctx->session, &s->impl);
-    if (err == MFX_ERR_NONE)
-        err = MFXQueryVersion(hwctx->session, &s->ver);
-    if (err != MFX_ERR_NONE) {
+    ਜੇ (err == MFX_ERR_NONE)
+        err = MFXQuery_ਸੰਸਕਰਣ(hwctx->session, &s->ver);
+    ਜੇ (err != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error querying the session attributes\n");
-        return AVERROR_UNKNOWN;
+        ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    if (MFX_IMPL_VIA_VAAPI == MFX_IMPL_VIA_MASK(s->impl)) {
-#if CONFIG_VAAPI
+    ਜੇ (MFX_IMPL_ਰਾਹੀਂ_VAAPI == MFX_IMPL_ਰਾਹੀਂ_ਨਕਾਬ(s->impl)) {
+#ਜੇ CONFIG_VAAPI
         handle_type = MFX_HANDLE_VA_DISPLAY;
         device_type = AV_HWDEVICE_TYPE_VAAPI;
         pix_fmt = AV_PIX_FMT_VAAPI;
         hw_handle_supported = 1;
-#endif
-    } else if (MFX_IMPL_VIA_D3D11 == MFX_IMPL_VIA_MASK(s->impl)) {
-#if CONFIG_D3D11VA
+#ਜੇ_ਅੰਤ
+    } ਨਹੀਂਤਾਂ ਜੇ (MFX_IMPL_ਰਾਹੀਂ_D3_D11 == MFX_IMPL_ਰਾਹੀਂ_ਨਕਾਬ(s->impl)) {
+#ਜੇ CONFIG_D3D11VA
         handle_type = MFX_HANDLE_D3D11_DEVICE;
         device_type = AV_HWDEVICE_TYPE_D3D11VA;
         pix_fmt = AV_PIX_FMT_D3D11;
         hw_handle_supported = 1;
-#endif
-    } else if (MFX_IMPL_VIA_D3D9 == MFX_IMPL_VIA_MASK(s->impl)) {
-#if CONFIG_DXVA2
+#ਜੇ_ਅੰਤ
+    } ਨਹੀਂਤਾਂ ਜੇ (MFX_IMPL_ਰਾਹੀਂ_D3_D9 == MFX_IMPL_ਰਾਹੀਂ_ਨਕਾਬ(s->impl)) {
+#ਜੇ CONFIG_DXVA2
         handle_type = MFX_HANDLE_D3D9_DEVICE_MANAGER;
         device_type = AV_HWDEVICE_TYPE_DXVA2;
         pix_fmt = AV_PIX_FMT_DXVA2_VLD;
         hw_handle_supported = 1;
-#endif
+#ਜੇ_ਅੰਤ
     }
 
-    if (hw_handle_supported) {
+    ਜੇ (hw_handle_supported) {
         err = MFXVideoCORE_GetHandle(hwctx->session, handle_type, &s->handle);
-        if (err == MFX_ERR_NONE) {
+        ਜੇ (err == MFX_ERR_NONE) {
             s->handle_type       = handle_type;
-            s->child_device_type = device_type;
-            s->child_pix_fmt     = pix_fmt;
+            s->ਬੱਚਾ_device_type = device_type;
+            s->ਬੱਚਾ_pix_fmt     = pix_fmt;
         }
     }
-    if (!s->handle) {
+    ਜੇ (!s->handle) {
         av_log(ctx, AV_LOG_VERBOSE, "No supported hw handle could be retrieved "
                "from the session\n");
     }
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static void qsv_frames_uninit(AVHWFramesContext *ctx)
+ਸਥਿਰ ਖਾਲੀ qsv_ਚੌਖਟੇ_uninit(AVHWFramesContext *ctx)
 {
     QSVFramesContext *s = ctx->hwctx;
 
-    if (s->session_download) {
+    ਜੇ (s->session_download) {
         MFXVideoVPP_Close(s->session_download);
         MFXClose(s->session_download);
     }
-    s->session_download = NULL;
+    s->session_download = ਨਿਰਾ;
     s->session_download_init = 0;
 
-    if (s->session_upload) {
+    ਜੇ (s->session_upload) {
         MFXVideoVPP_Close(s->session_upload);
         MFXClose(s->session_upload);
     }
-    s->session_upload = NULL;
+    s->session_upload = ਨਿਰਾ;
     s->session_upload_init = 0;
 
-#if HAVE_PTHREADS
-    pthread_mutex_destroy(&s->session_lock);
-#endif
+#ਜੇ HAVE_PTHREADS
+    pthread_mutex_destroy(&s->session_ਤਾਲਾ);
+#ਜੇ_ਅੰਤ
 
     av_freep(&s->mem_ids);
-#if QSV_HAVE_OPAQUE
+#ਜੇ QSV_HAVE_OPAQUE
     av_freep(&s->surface_ptrs);
-#endif
-    av_freep(&s->surfaces_internal);
-    av_freep(&s->handle_pairs_internal);
-    av_frame_unref(&s->realigned_upload_frame);
-    av_frame_unref(&s->realigned_download_frame);
-    av_buffer_unref(&s->child_frames_ref);
+#ਜੇ_ਅੰਤ
+    av_freep(&s->surfaces_ਅੰਦਰੂਨੀ);
+    av_freep(&s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ);
+    av_ਚੌਖਟਾ_unref(&s->realigned_upload_ਚੌਖਟਾ);
+    av_ਚੌਖਟਾ_unref(&s->realigned_download_ਚੌਖਟਾ);
+    av_ਬਫਰ_unref(&s->ਬੱਚਾ_ਚੌਖਟੇ_ref);
 }
 
-static void qsv_pool_release_dummy(void *opaque, uint8_t *data)
+ਸਥਿਰ ਖਾਲੀ qsv_pool_release_dummy(ਖਾਲੀ *opaque, uint8_t *ਅੰਕੜੇ)
 {
 }
 
-static void qsv_pool_release(void *opaque, uint8_t *data)
+ਸਥਿਰ ਖਾਲੀ qsv_pool_release(ਖਾਲੀ *opaque, uint8_t *ਅੰਕੜੇ)
 {
     AVHWFramesContext *ctx = (AVHWFramesContext*)opaque;
     QSVFramesContext *s = ctx->hwctx;
-    QSVSurface *qsv_surface = (QSVSurface *)data;
-    mfxHDLPair *hdl_pair = (mfxHDLPair *)qsv_surface->mfx_surface.Data.MemId;
-    AVHWFramesContext *child_frames_ctx;
+    QSVSurface *qsv_surface = (QSVSurface *)ਅੰਕੜੇ;
+    mfxHDLPair *hdl_pair = (mfxHDLPair *)qsv_surface->mfx_surface.ਅੰਕੜੇ_2.MemId;
+    AVHWFramesContext *ਬੱਚਾ_ਚੌਖਟੇ_ctx;
 
-    if (!s->child_frames_ref)
-        return;
+    ਜੇ (!s->ਬੱਚਾ_ਚੌਖਟੇ_ref)
+        ਵਾਪਸ;
 
-    child_frames_ctx = (AVHWFramesContext*)s->child_frames_ref->data;
-    if (!child_frames_ctx->device_ctx)
-        return;
+    ਬੱਚਾ_ਚੌਖਟੇ_ctx = (AVHWFramesContext*)s->ਬੱਚਾ_ਚੌਖਟੇ_ref->ਅੰਕੜੇ;
+    ਜੇ (!ਬੱਚਾ_ਚੌਖਟੇ_ctx->device_ctx)
+        ਵਾਪਸ;
 
-#if CONFIG_VAAPI
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_VAAPI)
-        av_freep(&hdl_pair->first);
-#endif
+#ਜੇ CONFIG_VAAPI
+    ਜੇ (ਬੱਚਾ_ਚੌਖਟੇ_ctx->device_ctx->type == AV_HWDEVICE_TYPE_VAAPI)
+        av_freep(&hdl_pair->ਪਹਿਲਾ);
+#ਜੇ_ਅੰਤ
 
     av_freep(&hdl_pair);
-    av_frame_free(&qsv_surface->child_frame);
+    av_ਚੌਖਟਾ_free(&qsv_surface->ਬੱਚਾ_ਚੌਖਟਾ);
     av_freep(&qsv_surface);
 }
 
-static AVBufferRef *qsv_fixed_pool_alloc(void *opaque, size_t size)
+ਸਥਿਰ AVBufferRef *qsv_fixed_pool_alloc(ਖਾਲੀ *opaque, size_t ਮਾਪ)
 {
     AVHWFramesContext    *ctx = (AVHWFramesContext*)opaque;
     QSVFramesContext       *s = ctx->hwctx;
     AVQSVFramesContext *hwctx = &s->p;
 
-    if (s->nb_surfaces_used < hwctx->nb_surfaces) {
-        s->nb_surfaces_used++;
-        return av_buffer_create((uint8_t*)(s->surfaces_internal + s->nb_surfaces_used - 1),
-                                sizeof(*hwctx->surfaces), qsv_pool_release_dummy, NULL, 0);
+    ਜੇ (s->nb_surfaces_ਵਰਤਿਆ < hwctx->nb_surfaces) {
+        s->nb_surfaces_ਵਰਤਿਆ++;
+        ਵਾਪਸ av_ਬਫਰ_create((uint8_t*)(s->surfaces_ਅੰਦਰੂਨੀ + s->nb_surfaces_ਵਰਤਿਆ - 1),
+                                ਆਕਾਰ(*hwctx->surfaces), qsv_pool_release_dummy, ਨਿਰਾ, 0);
     }
 
-    return NULL;
+    ਵਾਪਸ ਨਿਰਾ;
 }
 
-static AVBufferRef *qsv_dynamic_pool_alloc(void *opaque, size_t size)
+ਸਥਿਰ AVBufferRef *qsv_dynamic_pool_alloc(ਖਾਲੀ *opaque, size_t ਮਾਪ)
 {
     AVHWFramesContext    *ctx = (AVHWFramesContext*)opaque;
     QSVFramesContext       *s = ctx->hwctx;
-    AVHWFramesContext *child_frames_ctx;
-    QSVSurface *qsv_surface = NULL;
-    mfxHDLPair *handle_pairs_internal = NULL;
-    int ret;
+    AVHWFramesContext *ਬੱਚਾ_ਚੌਖਟੇ_ctx;
+    QSVSurface *qsv_surface = ਨਿਰਾ;
+    mfxHDLPair *handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ = ਨਿਰਾ;
+    ਪੂਰਨ ret;
 
-    if (!s->child_frames_ref)
-        goto fail;
+    ਜੇ (!s->ਬੱਚਾ_ਚੌਖਟੇ_ref)
+        ਜਾਓ fail;
 
-    child_frames_ctx = (AVHWFramesContext*)s->child_frames_ref->data;
-    if (!child_frames_ctx->device_ctx)
-        goto fail;
+    ਬੱਚਾ_ਚੌਖਟੇ_ctx = (AVHWFramesContext*)s->ਬੱਚਾ_ਚੌਖਟੇ_ref->ਅੰਕੜੇ;
+    ਜੇ (!ਬੱਚਾ_ਚੌਖਟੇ_ctx->device_ctx)
+        ਜਾਓ fail;
 
-#if CONFIG_DXVA2
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
+#ਜੇ CONFIG_DXVA2
+    ਜੇ (ਬੱਚਾ_ਚੌਖਟੇ_ctx->device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
         av_log(ctx, AV_LOG_ERROR,
                "QSV on dxva2 requires a fixed frame pool size\n");
-        goto fail;
+        ਜਾਓ fail;
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    qsv_surface = av_calloc(1, sizeof(*qsv_surface));
-    if (!qsv_surface)
-        goto fail;
+    qsv_surface = av_calloc(1, ਆਕਾਰ(*qsv_surface));
+    ਜੇ (!qsv_surface)
+        ਜਾਓ fail;
 
-    qsv_surface->child_frame = av_frame_alloc();
-    if (!qsv_surface->child_frame)
-        goto fail;
+    qsv_surface->ਬੱਚਾ_ਚੌਖਟਾ = av_ਚੌਖਟਾ_alloc();
+    ਜੇ (!qsv_surface->ਬੱਚਾ_ਚੌਖਟਾ)
+        ਜਾਓ fail;
 
-    ret = av_hwframe_get_buffer(s->child_frames_ref, qsv_surface->child_frame, 0);
-    if (ret < 0)
-        goto fail;
+    ret = av_hwframe_get_ਬਫਰ(s->ਬੱਚਾ_ਚੌਖਟੇ_ref, qsv_surface->ਬੱਚਾ_ਚੌਖਟਾ, 0);
+    ਜੇ (ret < 0)
+        ਜਾਓ fail;
 
-    handle_pairs_internal = av_calloc(1, sizeof(*handle_pairs_internal));
-    if (!handle_pairs_internal)
-        goto fail;
+    handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ = av_calloc(1, ਆਕਾਰ(*handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ));
+    ਜੇ (!handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ)
+        ਜਾਓ fail;
 
     ret = qsv_init_surface(ctx, &qsv_surface->mfx_surface);
-    if (ret < 0)
-        goto fail;
+    ਜੇ (ret < 0)
+        ਜਾਓ fail;
 
-#if CONFIG_VAAPI
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
-        VASurfaceID *surface_id_internal;
+#ਜੇ CONFIG_VAAPI
+    ਜੇ (ਬੱਚਾ_ਚੌਖਟੇ_ctx->device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
+        VASurfaceID *surface_id_ਅੰਦਰੂਨੀ;
 
-        surface_id_internal = av_calloc(1, sizeof(*surface_id_internal));
-        if (!surface_id_internal)
-            goto fail;
+        surface_id_ਅੰਦਰੂਨੀ = av_calloc(1, ਆਕਾਰ(*surface_id_ਅੰਦਰੂਨੀ));
+        ਜੇ (!surface_id_ਅੰਦਰੂਨੀ)
+            ਜਾਓ fail;
 
-        *surface_id_internal = (VASurfaceID)(uintptr_t)qsv_surface->child_frame->data[3];
-        handle_pairs_internal->first = (mfxHDL)surface_id_internal;
-        handle_pairs_internal->second = (mfxMemId)MFX_INFINITE;
+        *surface_id_ਅੰਦਰੂਨੀ = (VASurfaceID)(uintptr_t)qsv_surface->ਬੱਚਾ_ਚੌਖਟਾ->ਅੰਕੜੇ[3];
+        handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਪਹਿਲਾ = (mfxHDL)surface_id_ਅੰਦਰੂਨੀ;
+        handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-#if CONFIG_D3D11VA
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        AVD3D11VAFramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        handle_pairs_internal->first = (mfxMemId)qsv_surface->child_frame->data[0];
+#ਜੇ CONFIG_D3D11VA
+    ਜੇ (ਬੱਚਾ_ਚੌਖਟੇ_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        AVD3D11VAFramesContext *ਬੱਚਾ_ਚੌਖਟੇ_hwctx = ਬੱਚਾ_ਚੌਖਟੇ_ctx->hwctx;
+        handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਪਹਿਲਾ = (mfxMemId)qsv_surface->ਬੱਚਾ_ਚੌਖਟਾ->ਅੰਕੜੇ[0];
 
-        if (child_frames_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET)
-            handle_pairs_internal->second = (mfxMemId)MFX_INFINITE;
-        else
-            handle_pairs_internal->second = (mfxMemId)qsv_surface->child_frame->data[1];
+        ਜੇ (ਬੱਚਾ_ਚੌਖਟੇ_hwctx->BindFlags & D3_D11_BIND_RENDER_ਨਿਸ਼ਾਨਾ)
+            handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
+        ਨਹੀਂਤਾਂ
+            handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਦੂਜਾ = (mfxMemId)qsv_surface->ਬੱਚਾ_ਚੌਖਟਾ->ਅੰਕੜੇ[1];
 
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    qsv_surface->mfx_surface.Data.MemId = (mfxMemId)handle_pairs_internal;
-    return av_buffer_create((uint8_t *)qsv_surface, sizeof(*qsv_surface),
+    qsv_surface->mfx_surface.ਅੰਕੜੇ_2.MemId = (mfxMemId)handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ;
+    ਵਾਪਸ av_ਬਫਰ_create((uint8_t *)qsv_surface, ਆਕਾਰ(*qsv_surface),
                             qsv_pool_release, ctx, 0);
 
 fail:
-    if (qsv_surface) {
-        av_frame_free(&qsv_surface->child_frame);
+    ਜੇ (qsv_surface) {
+        av_ਚੌਖਟਾ_free(&qsv_surface->ਬੱਚਾ_ਚੌਖਟਾ);
     }
 
     av_freep(&qsv_surface);
-    av_freep(&handle_pairs_internal);
+    av_freep(&handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ);
 
-    return NULL;
+    ਵਾਪਸ ਨਿਰਾ;
 }
 
-static AVBufferRef *qsv_pool_alloc(void *opaque, size_t size)
+ਸਥਿਰ AVBufferRef *qsv_pool_alloc(ਖਾਲੀ *opaque, size_t ਮਾਪ)
 {
     AVHWFramesContext    *ctx = (AVHWFramesContext*)opaque;
     AVQSVFramesContext *hwctx = ctx->hwctx;
 
-    if (hwctx->nb_surfaces == 0) {
-        return qsv_dynamic_pool_alloc(opaque, size);
-    } else {
-        return qsv_fixed_pool_alloc(opaque, size);
+    ਜੇ (hwctx->nb_surfaces == 0) {
+        ਵਾਪਸ qsv_dynamic_pool_alloc(opaque, ਮਾਪ);
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ qsv_fixed_pool_alloc(opaque, ਮਾਪ);
     }
 }
 
-static int qsv_init_child_ctx(AVHWFramesContext *ctx)
+ਸਥਿਰ ਪੂਰਨ qsv_init_ਬੱਚਾ_ctx(AVHWFramesContext *ctx)
 {
     QSVDeviceContext *device_priv = ctx->device_ctx->hwctx;
     QSVFramesContext           *s = ctx->hwctx;
     AVQSVFramesContext     *hwctx = &s->p;
 
-    AVBufferRef *child_device_ref = NULL;
-    AVBufferRef *child_frames_ref = NULL;
+    AVBufferRef *ਬੱਚਾ_device_ref = ਨਿਰਾ;
+    AVBufferRef *ਬੱਚਾ_ਚੌਖਟੇ_ref = ਨਿਰਾ;
 
-    AVHWDeviceContext *child_device_ctx;
-    AVHWFramesContext *child_frames_ctx;
+    AVHWDeviceContext *ਬੱਚਾ_device_ctx;
+    AVHWFramesContext *ਬੱਚਾ_ਚੌਖਟੇ_ctx;
 
-    int i, ret = 0;
+    ਪੂਰਨ i, ret = 0;
 
-    if (!device_priv->handle) {
+    ਜੇ (!device_priv->handle) {
         av_log(ctx, AV_LOG_ERROR,
                "Cannot create a non-opaque internal surface pool without "
                "a hardware handle\n");
-        return AVERROR(EINVAL);
+        ਵਾਪਸ AVERROR(EINVAL);
     }
 
-    child_device_ref = av_hwdevice_ctx_alloc(device_priv->child_device_type);
-    if (!child_device_ref)
-        return AVERROR(ENOMEM);
-    child_device_ctx   = (AVHWDeviceContext*)child_device_ref->data;
+    ਬੱਚਾ_device_ref = av_hwdevice_ctx_alloc(device_priv->ਬੱਚਾ_device_type);
+    ਜੇ (!ਬੱਚਾ_device_ref)
+        ਵਾਪਸ AVERROR(ENOMEM);
+    ਬੱਚਾ_device_ctx   = (AVHWDeviceContext*)ਬੱਚਾ_device_ref->ਅੰਕੜੇ;
 
-#if CONFIG_VAAPI
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
-        AVVAAPIDeviceContext *child_device_hwctx = child_device_ctx->hwctx;
-        child_device_hwctx->display = (VADisplay)device_priv->handle;
+#ਜੇ CONFIG_VAAPI
+    ਜੇ (ਬੱਚਾ_device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
+        AVVAAPIDeviceContext *ਬੱਚਾ_device_hwctx = ਬੱਚਾ_device_ctx->hwctx;
+        ਬੱਚਾ_device_hwctx->display = (VADisplay)device_priv->handle;
     }
-#endif
-#if CONFIG_D3D11VA
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        AVD3D11VADeviceContext *child_device_hwctx = child_device_ctx->hwctx;
-        ID3D11Device_AddRef((ID3D11Device*)device_priv->handle);
-        child_device_hwctx->device = (ID3D11Device*)device_priv->handle;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+    ਜੇ (ਬੱਚਾ_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        AVD3D11VADeviceContext *ਬੱਚਾ_device_hwctx = ਬੱਚਾ_device_ctx->hwctx;
+        ID3_D11_Device_ਜੋੜੋ_Ref((ID3D11Device*)device_priv->handle);
+        ਬੱਚਾ_device_hwctx->device = (ID3D11Device*)device_priv->handle;
     }
-#endif
-#if CONFIG_DXVA2
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
-        AVDXVA2DeviceContext *child_device_hwctx = child_device_ctx->hwctx;
-        child_device_hwctx->devmgr = (IDirect3DDeviceManager9*)device_priv->handle;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+    ਜੇ (ਬੱਚਾ_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
+        AVDXVA2DeviceContext *ਬੱਚਾ_device_hwctx = ਬੱਚਾ_device_ctx->hwctx;
+        ਬੱਚਾ_device_hwctx->devmgr = (IDirect3DDeviceManager9*)device_priv->handle;
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    ret = av_hwdevice_ctx_init(child_device_ref);
-    if (ret < 0) {
+    ret = av_hwdevice_ctx_init(ਬੱਚਾ_device_ref);
+    ਜੇ (ret < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error initializing a child device context\n");
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    child_frames_ref = av_hwframe_ctx_alloc(child_device_ref);
-    if (!child_frames_ref) {
+    ਬੱਚਾ_ਚੌਖਟੇ_ref = av_hwframe_ctx_alloc(ਬੱਚਾ_device_ref);
+    ਜੇ (!ਬੱਚਾ_ਚੌਖਟੇ_ref) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ਜਾਓ fail;
     }
-    child_frames_ctx = (AVHWFramesContext*)child_frames_ref->data;
+    ਬੱਚਾ_ਚੌਖਟੇ_ctx = (AVHWFramesContext*)ਬੱਚਾ_ਚੌਖਟੇ_ref->ਅੰਕੜੇ;
 
-    child_frames_ctx->format            = device_priv->child_pix_fmt;
-    child_frames_ctx->sw_format         = ctx->sw_format;
-    child_frames_ctx->initial_pool_size = ctx->initial_pool_size;
-    child_frames_ctx->width             = FFALIGN(ctx->width, 16);
-    child_frames_ctx->height            = FFALIGN(ctx->height, 16);
+    ਬੱਚਾ_ਚੌਖਟੇ_ctx->format            = device_priv->ਬੱਚਾ_pix_fmt;
+    ਬੱਚਾ_ਚੌਖਟੇ_ctx->sw_format         = ctx->sw_format;
+    ਬੱਚਾ_ਚੌਖਟੇ_ctx->initial_pool_ਮਾਪ = ctx->initial_pool_ਮਾਪ;
+    ਬੱਚਾ_ਚੌਖਟੇ_ctx->ਚੌੜਾਈ             = FFALIGN(ctx->ਚੌੜਾਈ, 16);
+    ਬੱਚਾ_ਚੌਖਟੇ_ctx->ਉਚਾਈ            = FFALIGN(ctx->ਉਚਾਈ, 16);
 
-#if CONFIG_D3D11VA
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        AVD3D11VAFramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        if (hwctx->frame_type == 0)
-            hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-        if (hwctx->frame_type & MFX_MEMTYPE_SHARED_RESOURCE)
-            child_frames_hwctx->MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-        child_frames_hwctx->BindFlags = qsv_get_d3d11va_bind_flags(hwctx->frame_type);
+#ਜੇ CONFIG_D3D11VA
+    ਜੇ (ਬੱਚਾ_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        AVD3D11VAFramesContext *ਬੱਚਾ_ਚੌਖਟੇ_hwctx = ਬੱਚਾ_ਚੌਖਟੇ_ctx->hwctx;
+        ਜੇ (hwctx->ਚੌਖਟਾ_type == 0)
+            hwctx->ਚੌਖਟਾ_type = MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_PROCESSOR_ਨਿਸ਼ਾਨਾ;
+        ਜੇ (hwctx->ਚੌਖਟਾ_type & MFX_MEMTYPE_SHARED_RESOURCE)
+            ਬੱਚਾ_ਚੌਖਟੇ_hwctx->MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+        ਬੱਚਾ_ਚੌਖਟੇ_hwctx->BindFlags = qsv_get_d3d11va_bind_flags(hwctx->ਚੌਖਟਾ_type);
     }
-#endif
-#if CONFIG_DXVA2
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
-        AVDXVA2FramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        if (hwctx->frame_type & MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET)
-            child_frames_hwctx->surface_type = DXVA2_VideoProcessorRenderTarget;
-        else
-            child_frames_hwctx->surface_type = DXVA2_VideoDecoderRenderTarget;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+    ਜੇ (ਬੱਚਾ_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
+        AVDXVA2_ਚੌਖਟੇ_Context *ਬੱਚਾ_ਚੌਖਟੇ_hwctx = ਬੱਚਾ_ਚੌਖਟੇ_ctx->hwctx;
+        ਜੇ (hwctx->ਚੌਖਟਾ_type & MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_PROCESSOR_ਨਿਸ਼ਾਨਾ)
+            ਬੱਚਾ_ਚੌਖਟੇ_hwctx->surface_type = DXVA2_Video_Processor_Render_ਨਿਸ਼ਾਨਾ;
+        ਨਹੀਂਤਾਂ
+            ਬੱਚਾ_ਚੌਖਟੇ_hwctx->surface_type = DXVA2_Video_Decoder_Render_ਨਿਸ਼ਾਨਾ;
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    ret = av_hwframe_ctx_init(child_frames_ref);
-    if (ret < 0) {
+    ret = av_hwframe_ctx_init(ਬੱਚਾ_ਚੌਖਟੇ_ref);
+    ਜੇ (ret < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error initializing a child frames context\n");
-        goto fail;
+        ਜਾਓ fail;
     }
 
-#if CONFIG_VAAPI
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
-        AVVAAPIFramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        for (i = 0; i < ctx->initial_pool_size; i++) {
-            s->handle_pairs_internal[i].first = child_frames_hwctx->surface_ids + i;
-            s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-            s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+#ਜੇ CONFIG_VAAPI
+    ਜੇ (ਬੱਚਾ_device_ctx->type == AV_HWDEVICE_TYPE_VAAPI) {
+        AVVAAPIFramesContext *ਬੱਚਾ_ਚੌਖਟੇ_hwctx = ਬੱਚਾ_ਚੌਖਟੇ_ctx->hwctx;
+        ਲਈ (i = 0; i < ctx->initial_pool_ਮਾਪ; i++) {
+            s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਪਹਿਲਾ = ਬੱਚਾ_ਚੌਖਟੇ_hwctx->surface_ids + i;
+            s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
+            s->surfaces_ਅੰਦਰੂਨੀ[i].ਅੰਕੜੇ_2.MemId = (mfxMemId)&s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i];
         }
-        hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+        hwctx->ਚੌਖਟਾ_type = MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_DECODER_ਨਿਸ਼ਾਨਾ;
     }
-#endif
-#if CONFIG_D3D11VA
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        AVD3D11VAFramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        for (i = 0; i < ctx->initial_pool_size; i++) {
-            s->handle_pairs_internal[i].first = (mfxMemId)child_frames_hwctx->texture_infos[i].texture;
-            if(child_frames_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-                s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-            } else {
-                s->handle_pairs_internal[i].second = (mfxMemId)child_frames_hwctx->texture_infos[i].index;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+    ਜੇ (ਬੱਚਾ_device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        AVD3D11VAFramesContext *ਬੱਚਾ_ਚੌਖਟੇ_hwctx = ਬੱਚਾ_ਚੌਖਟੇ_ctx->hwctx;
+        ਲਈ (i = 0; i < ctx->initial_pool_ਮਾਪ; i++) {
+            s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਪਹਿਲਾ = (mfxMemId)ਬੱਚਾ_ਚੌਖਟੇ_hwctx->texture_infos[i].texture;
+            ਜੇ(ਬੱਚਾ_ਚੌਖਟੇ_hwctx->BindFlags & D3_D11_BIND_RENDER_ਨਿਸ਼ਾਨਾ) {
+                s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
+            } ਨਹੀਂਤਾਂ {
+                s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਦੂਜਾ = (mfxMemId)ਬੱਚਾ_ਚੌਖਟੇ_hwctx->texture_infos[i].ਸੂਚਕਾਂਕ;
             }
-            s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+            s->surfaces_ਅੰਦਰੂਨੀ[i].ਅੰਕੜੇ_2.MemId = (mfxMemId)&s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i];
         }
-        if (child_frames_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-            hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-        } else {
-            hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+        ਜੇ (ਬੱਚਾ_ਚੌਖਟੇ_hwctx->BindFlags & D3_D11_BIND_RENDER_ਨਿਸ਼ਾਨਾ) {
+            hwctx->ਚੌਖਟਾ_type |= MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_PROCESSOR_ਨਿਸ਼ਾਨਾ;
+        } ਨਹੀਂਤਾਂ {
+            hwctx->ਚੌਖਟਾ_type |= MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_DECODER_ਨਿਸ਼ਾਨਾ;
         }
     }
-#endif
-#if CONFIG_DXVA2
-    if (child_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
-        AVDXVA2FramesContext *child_frames_hwctx = child_frames_ctx->hwctx;
-        for (i = 0; i < ctx->initial_pool_size; i++) {
-            s->handle_pairs_internal[i].first = (mfxMemId)child_frames_hwctx->surfaces[i];
-            s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-            s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+    ਜੇ (ਬੱਚਾ_device_ctx->type == AV_HWDEVICE_TYPE_DXVA2) {
+        AVDXVA2_ਚੌਖਟੇ_Context *ਬੱਚਾ_ਚੌਖਟੇ_hwctx = ਬੱਚਾ_ਚੌਖਟੇ_ctx->hwctx;
+        ਲਈ (i = 0; i < ctx->initial_pool_ਮਾਪ; i++) {
+            s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਪਹਿਲਾ = (mfxMemId)ਬੱਚਾ_ਚੌਖਟੇ_hwctx->surfaces[i];
+            s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
+            s->surfaces_ਅੰਦਰੂਨੀ[i].ਅੰਕੜੇ_2.MemId = (mfxMemId)&s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i];
         }
-        if (child_frames_hwctx->surface_type == DXVA2_VideoProcessorRenderTarget)
-            hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-        else
-            hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+        ਜੇ (ਬੱਚਾ_ਚੌਖਟੇ_hwctx->surface_type == DXVA2_Video_Processor_Render_ਨਿਸ਼ਾਨਾ)
+            hwctx->ਚੌਖਟਾ_type = MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_PROCESSOR_ਨਿਸ਼ਾਨਾ;
+        ਨਹੀਂਤਾਂ
+            hwctx->ਚੌਖਟਾ_type = MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_DECODER_ਨਿਸ਼ਾਨਾ;
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    s->child_frames_ref       = child_frames_ref;
-    child_frames_ref          = NULL;
+    s->ਬੱਚਾ_ਚੌਖਟੇ_ref       = ਬੱਚਾ_ਚੌਖਟੇ_ref;
+    ਬੱਚਾ_ਚੌਖਟੇ_ref          = ਨਿਰਾ;
 
 fail:
-    av_buffer_unref(&child_device_ref);
-    av_buffer_unref(&child_frames_ref);
-    return ret;
+    av_ਬਫਰ_unref(&ਬੱਚਾ_device_ref);
+    av_ਬਫਰ_unref(&ਬੱਚਾ_ਚੌਖਟੇ_ref);
+    ਵਾਪਸ ret;
 }
 
-static int qsv_init_surface(AVHWFramesContext *ctx, mfxFrameSurface1 *surf)
+ਸਥਿਰ ਪੂਰਨ qsv_init_surface(AVHWFramesContext *ctx, mfx_ਚੌਖਟਾ_Surface1 *surf)
 {
-    const AVPixFmtDescriptor *desc;
+    ਅਚਲ AVPixFmtDescriptor *desc;
     uint32_t fourcc;
 
     desc = av_pix_fmt_desc_get(ctx->sw_format);
-    if (!desc)
-        return AVERROR(EINVAL);
+    ਜੇ (!desc)
+        ਵਾਪਸ AVERROR(EINVAL);
 
     fourcc = qsv_fourcc_from_pix_fmt(ctx->sw_format);
-    if (!fourcc)
-        return AVERROR(EINVAL);
+    ਜੇ (!fourcc)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    surf->Info.BitDepthLuma   = desc->comp[0].depth;
-    surf->Info.BitDepthChroma = desc->comp[0].depth;
-    surf->Info.Shift          = qsv_shift_from_pix_fmt(ctx->sw_format);
+    surf->Info.ਦੋਆਧਾਰੀ_ਅੰਕ_ਡੂੰਘਾਈ_Luma   = desc->comp[0].ਡੂੰਘਾਈ;
+    surf->Info.ਦੋਆਧਾਰੀ_ਅੰਕ_ਡੂੰਘਾਈ_Chroma = desc->comp[0].ਡੂੰਘਾਈ;
+    surf->Info.ਖਿਸਕਾਓ_2          = qsv_ਖਿਸਕਾਓ_from_pix_fmt(ctx->sw_format);
 
-    if (desc->log2_chroma_w && desc->log2_chroma_h)
+    ਜੇ (desc->log2_chroma_w && desc->log2_chroma_h)
         surf->Info.ChromaFormat   = MFX_CHROMAFORMAT_YUV420;
-    else if (desc->log2_chroma_w)
+    ਨਹੀਂਤਾਂ ਜੇ (desc->log2_chroma_w)
         surf->Info.ChromaFormat   = MFX_CHROMAFORMAT_YUV422;
-    else
+    ਨਹੀਂਤਾਂ
         surf->Info.ChromaFormat   = MFX_CHROMAFORMAT_YUV444;
 
     surf->Info.FourCC         = fourcc;
-    surf->Info.Width          = FFALIGN(ctx->width, 16);
-    surf->Info.CropW          = ctx->width;
-    surf->Info.Height         = FFALIGN(ctx->height, 16);
-    surf->Info.CropH          = ctx->height;
-    surf->Info.FrameRateExtN  = 25;
-    surf->Info.FrameRateExtD  = 1;
+    surf->Info.ਚੌੜਾਈ_2          = FFALIGN(ctx->ਚੌੜਾਈ, 16);
+    surf->Info.CropW          = ctx->ਚੌੜਾਈ;
+    surf->Info.ਉਚਾਈ_2         = FFALIGN(ctx->ਉਚਾਈ, 16);
+    surf->Info.CropH          = ctx->ਉਚਾਈ;
+    surf->Info.ਚੌਖਟਾ_ਦਰ_Ext_N  = 25;
+    surf->Info.ਚੌਖਟਾ_ਦਰ_Ext_D  = 1;
     surf->Info.PicStruct      = MFX_PICSTRUCT_PROGRESSIVE;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_init_pool(AVHWFramesContext *ctx, uint32_t fourcc)
+ਸਥਿਰ ਪੂਰਨ qsv_init_pool(AVHWFramesContext *ctx, uint32_t fourcc)
 {
     QSVFramesContext              *s = ctx->hwctx;
-    AVQSVFramesContext *frames_hwctx = &s->p;
+    AVQSVFramesContext *ਚੌਖਟੇ_hwctx = &s->p;
 
-    int i, ret = 0;
+    ਪੂਰਨ i, ret = 0;
 
-    if (ctx->initial_pool_size < 0) {
+    ਜੇ (ctx->initial_pool_ਮਾਪ < 0) {
         av_log(ctx, AV_LOG_ERROR, "Invalid frame pool size\n");
-        return AVERROR(EINVAL);
-    } else if (ctx->initial_pool_size == 0) {
-        mfxFrameSurface1 mfx_surf1;
+        ਵਾਪਸ AVERROR(EINVAL);
+    } ਨਹੀਂਤਾਂ ਜੇ (ctx->initial_pool_ਮਾਪ == 0) {
+        mfx_ਚੌਖਟਾ_Surface1 mfx_surf1;
 
-        ret = qsv_init_child_ctx(ctx);
-        if (ret < 0)
-            return ret;
+        ret = qsv_init_ਬੱਚਾ_ctx(ctx);
+        ਜੇ (ret < 0)
+            ਵਾਪਸ ret;
 
-        ffhwframesctx(ctx)->pool_internal = av_buffer_pool_init2(sizeof(mfxFrameSurface1),
-                                                                 ctx, qsv_pool_alloc, NULL);
-        if (!ffhwframesctx(ctx)->pool_internal)
-            return AVERROR(ENOMEM);
+        ffhwframesctx(ctx)->pool_ਅੰਦਰੂਨੀ = av_ਬਫਰ_pool_init2(ਆਕਾਰ(mfx_ਚੌਖਟਾ_Surface1),
+                                                                 ctx, qsv_pool_alloc, ਨਿਰਾ);
+        ਜੇ (!ffhwframesctx(ctx)->pool_ਅੰਦਰੂਨੀ)
+            ਵਾਪਸ AVERROR(ENOMEM);
 
-        memset(&mfx_surf1, 0, sizeof(mfx_surf1));
+        memset(&mfx_surf1, 0, ਆਕਾਰ(mfx_surf1));
         qsv_init_surface(ctx, &mfx_surf1);
-        s->frame_info = mfx_surf1.Info;
-        frames_hwctx->info = &s->frame_info;
-        frames_hwctx->nb_surfaces = 0;
+        s->ਚੌਖਟਾ_info = mfx_surf1.Info;
+        ਚੌਖਟੇ_hwctx->info = &s->ਚੌਖਟਾ_info;
+        ਚੌਖਟੇ_hwctx->nb_surfaces = 0;
 
-        return 0;
+        ਵਾਪਸ 0;
     }
 
-    s->handle_pairs_internal = av_calloc(ctx->initial_pool_size,
-                                         sizeof(*s->handle_pairs_internal));
-    if (!s->handle_pairs_internal)
-        return AVERROR(ENOMEM);
+    s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ = av_calloc(ctx->initial_pool_ਮਾਪ,
+                                         ਆਕਾਰ(*s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ));
+    ਜੇ (!s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    s->surfaces_internal = av_calloc(ctx->initial_pool_size,
-                                     sizeof(*s->surfaces_internal));
-    if (!s->surfaces_internal)
-        return AVERROR(ENOMEM);
+    s->surfaces_ਅੰਦਰੂਨੀ = av_calloc(ctx->initial_pool_ਮਾਪ,
+                                     ਆਕਾਰ(*s->surfaces_ਅੰਦਰੂਨੀ));
+    ਜੇ (!s->surfaces_ਅੰਦਰੂਨੀ)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    for (i = 0; i < ctx->initial_pool_size; i++) {
-        ret = qsv_init_surface(ctx, &s->surfaces_internal[i]);
-        if (ret < 0)
-            return ret;
+    ਲਈ (i = 0; i < ctx->initial_pool_ਮਾਪ; i++) {
+        ret = qsv_init_surface(ctx, &s->surfaces_ਅੰਦਰੂਨੀ[i]);
+        ਜੇ (ret < 0)
+            ਵਾਪਸ ret;
     }
 
-#if QSV_HAVE_OPAQUE
-    if (!(frames_hwctx->frame_type & MFX_MEMTYPE_OPAQUE_FRAME)) {
-        ret = qsv_init_child_ctx(ctx);
-        if (ret < 0)
-            return ret;
+#ਜੇ QSV_HAVE_OPAQUE
+    ਜੇ (!(ਚੌਖਟੇ_hwctx->ਚੌਖਟਾ_type & MFX_MEMTYPE_OPAQUE_ਚੌਖਟਾ)) {
+        ret = qsv_init_ਬੱਚਾ_ctx(ctx);
+        ਜੇ (ret < 0)
+            ਵਾਪਸ ret;
     }
-#else
-    ret = qsv_init_child_ctx(ctx);
-    if (ret < 0)
-        return ret;
-#endif
+#ਨਹੀਂਤਾਂ
+    ret = qsv_init_ਬੱਚਾ_ctx(ctx);
+    ਜੇ (ret < 0)
+        ਵਾਪਸ ret;
+#ਜੇ_ਅੰਤ
 
-    ffhwframesctx(ctx)->pool_internal = av_buffer_pool_init2(sizeof(mfxFrameSurface1),
-                                                             ctx, qsv_pool_alloc, NULL);
-    if (!ffhwframesctx(ctx)->pool_internal)
-        return AVERROR(ENOMEM);
+    ffhwframesctx(ctx)->pool_ਅੰਦਰੂਨੀ = av_ਬਫਰ_pool_init2(ਆਕਾਰ(mfx_ਚੌਖਟਾ_Surface1),
+                                                             ctx, qsv_pool_alloc, ਨਿਰਾ);
+    ਜੇ (!ffhwframesctx(ctx)->pool_ਅੰਦਰੂਨੀ)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    frames_hwctx->surfaces    = s->surfaces_internal;
-    frames_hwctx->nb_surfaces = ctx->initial_pool_size;
+    ਚੌਖਟੇ_hwctx->surfaces    = s->surfaces_ਅੰਦਰੂਨੀ;
+    ਚੌਖਟੇ_hwctx->nb_surfaces = ctx->initial_pool_ਮਾਪ;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static mfxStatus frame_alloc(mfxHDL pthis, mfxFrameAllocRequest *req,
-                             mfxFrameAllocResponse *resp)
+ਸਥਿਰ mfx_ਸਥਿਤੀ ਚੌਖਟਾ_alloc(mfxHDL pthis, mfx_ਚੌਖਟਾ_Alloc_Request *req,
+                             mfx_ਚੌਖਟਾ_Alloc_Response *resp)
 {
     AVHWFramesContext    *ctx = pthis;
     QSVFramesContext       *s = ctx->hwctx;
     AVQSVFramesContext *hwctx = &s->p;
-    mfxFrameInfo *i  = &req->Info;
-    mfxFrameInfo *i1 = hwctx->nb_surfaces ? &hwctx->surfaces[0].Info : hwctx->info;
+    mfx_ਚੌਖਟਾ_Info *i  = &req->Info;
+    mfx_ਚੌਖਟਾ_Info *i1 = hwctx->nb_surfaces ? &hwctx->surfaces[0].Info : hwctx->info;
 
-    if (!(req->Type & MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET) ||
+    ਜੇ (!(req->Type & MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_PROCESSOR_ਨਿਸ਼ਾਨਾ) ||
         !(req->Type & (MFX_MEMTYPE_FROM_VPPIN | MFX_MEMTYPE_FROM_VPPOUT)) ||
-        !(req->Type & MFX_MEMTYPE_EXTERNAL_FRAME))
-        return MFX_ERR_UNSUPPORTED;
-    if (i->Width  > i1->Width || i->Height > i1->Height ||
+        !(req->Type & MFX_MEMTYPE_EXTERNAL_ਚੌਖਟਾ))
+        ਵਾਪਸ MFX_ERR_UNSUPPORTED;
+    ਜੇ (i->ਚੌੜਾਈ_2  > i1->ਚੌੜਾਈ_2 || i->ਉਚਾਈ_2 > i1->ਉਚਾਈ_2 ||
         i->FourCC != i1->FourCC || i->ChromaFormat != i1->ChromaFormat) {
         av_log(ctx, AV_LOG_ERROR, "Mismatching surface properties in an "
                "allocation request: %dx%d %d %d vs %dx%d %d %d\n",
-               i->Width,  i->Height,  i->FourCC,  i->ChromaFormat,
-               i1->Width, i1->Height, i1->FourCC, i1->ChromaFormat);
-        return MFX_ERR_UNSUPPORTED;
+               i->ਚੌੜਾਈ_2,  i->ਉਚਾਈ_2,  i->FourCC,  i->ChromaFormat,
+               i1->ਚੌੜਾਈ_2, i1->ਉਚਾਈ_2, i1->FourCC, i1->ChromaFormat);
+        ਵਾਪਸ MFX_ERR_UNSUPPORTED;
     }
 
     resp->mids           = s->mem_ids;
-    resp->NumFrameActual = hwctx->nb_surfaces;
+    resp->ਅੰਕ_ਚੌਖਟਾ_Actual = hwctx->nb_surfaces;
 
-    return MFX_ERR_NONE;
+    ਵਾਪਸ MFX_ERR_NONE;
 }
 
-static mfxStatus frame_free(mfxHDL pthis, mfxFrameAllocResponse *resp)
+ਸਥਿਰ mfx_ਸਥਿਤੀ ਚੌਖਟਾ_free(mfxHDL pthis, mfx_ਚੌਖਟਾ_Alloc_Response *resp)
 {
-    return MFX_ERR_NONE;
+    ਵਾਪਸ MFX_ERR_NONE;
 }
 
-static mfxStatus frame_lock(mfxHDL pthis, mfxMemId mid, mfxFrameData *ptr)
+ਸਥਿਰ mfx_ਸਥਿਤੀ ਚੌਖਟਾ_ਤਾਲਾ(mfxHDL pthis, mfxMemId mid, mfx_ਚੌਖਟਾ_ਅੰਕੜੇ *ptr)
 {
-    return MFX_ERR_UNSUPPORTED;
+    ਵਾਪਸ MFX_ERR_UNSUPPORTED;
 }
 
-static mfxStatus frame_unlock(mfxHDL pthis, mfxMemId mid, mfxFrameData *ptr)
+ਸਥਿਰ mfx_ਸਥਿਤੀ ਚੌਖਟਾ_unlock(mfxHDL pthis, mfxMemId mid, mfx_ਚੌਖਟਾ_ਅੰਕੜੇ *ptr)
 {
-    return MFX_ERR_UNSUPPORTED;
+    ਵਾਪਸ MFX_ERR_UNSUPPORTED;
 }
 
-static mfxStatus frame_get_hdl(mfxHDL pthis, mfxMemId mid, mfxHDL *hdl)
+ਸਥਿਰ mfx_ਸਥਿਤੀ ਚੌਖਟਾ_get_hdl(mfxHDL pthis, mfxMemId mid, mfxHDL *hdl)
 {
     mfxHDLPair *pair_dst = (mfxHDLPair*)hdl;
     mfxHDLPair *pair_src = (mfxHDLPair*)mid;
 
-    pair_dst->first = pair_src->first;
+    pair_dst->ਪਹਿਲਾ = pair_src->ਪਹਿਲਾ;
 
-    if (pair_src->second != (mfxMemId)MFX_INFINITE)
-        pair_dst->second = pair_src->second;
-    return MFX_ERR_NONE;
+    ਜੇ (pair_src->ਦੂਜਾ != (mfxMemId)MFX_INFINITE)
+        pair_dst->ਦੂਜਾ = pair_src->ਦੂਜਾ;
+    ਵਾਪਸ MFX_ERR_NONE;
 }
 
-#if QSV_ONEVPL
+#ਜੇ QSV_ONEVPL
 
-static int qsv_d3d11_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
+ਸਥਿਰ ਪੂਰਨ qsv_d3d11_update_config(ਖਾਲੀ *ctx, mfxHDL handle, mfxConfig cfg)
 {
-    int ret = AVERROR_UNKNOWN;
-#if CONFIG_D3D11VA
-    mfxStatus sts;
+    ਪੂਰਨ ret = AVERROR_UNKNOWN;
+#ਜੇ CONFIG_D3D11VA
+    mfx_ਸਥਿਤੀ sts;
     IDXGIAdapter *pDXGIAdapter;
     DXGI_ADAPTER_DESC adapterDesc;
-    IDXGIDevice *pDXGIDevice = NULL;
+    IDXGIDevice *pDXGIDevice = ਨਿਰਾ;
     HRESULT hr;
     ID3D11Device *device = handle;
-    mfxVariant impl_value = {0};
+    mfxVariant impl_ਮੁੱਲ = {0};
 
-    hr = ID3D11Device_QueryInterface(device, &IID_IDXGIDevice, (void**)&pDXGIDevice);
-    if (SUCCEEDED(hr)) {
+    hr = ID3D11Device_QueryInterface(device, &IID_IDXGIDevice, (ਖਾਲੀ**)&pDXGIDevice);
+    ਜੇ (SUCCEEDED(hr)) {
         hr = IDXGIDevice_GetAdapter(pDXGIDevice, &pDXGIAdapter);
-        if (FAILED(hr)) {
+        ਜੇ (FAILED(hr)) {
             av_log(ctx, AV_LOG_ERROR, "Error IDXGIDevice_GetAdapter %#lx\n", hr);
             IDXGIDevice_Release(pDXGIDevice);
-            return ret;
+            ਵਾਪਸ ret;
         }
 
         hr = IDXGIAdapter_GetDesc(pDXGIAdapter, &adapterDesc);
-        if (FAILED(hr)) {
+        ਜੇ (FAILED(hr)) {
             av_log(ctx, AV_LOG_ERROR, "Error IDXGIAdapter_GetDesc %#lx\n", hr);
-            goto fail;
+            ਜਾਓ fail;
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         av_log(ctx, AV_LOG_ERROR, "Error ID3D11Device_QueryInterface %#lx\n", hr);
-        return ret;
+        ਵਾਪਸ ret;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U16;
-    impl_value.Data.U16 = adapterDesc.DeviceId;
+    impl_ਮੁੱਲ.Type = MFX_VARIANT_TYPE_U16;
+    impl_ਮੁੱਲ.ਅੰਕੜੇ_2.U16 = adapterDesc.DeviceId;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceID", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ਅਚਲ mfxU8 *)"mfxExtendedDeviceId.DeviceID", impl_ਮੁੱਲ);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "DeviceID property: %d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_PTR;
-    impl_value.Data.Ptr = &adapterDesc.AdapterLuid;
+    impl_ਮੁੱਲ.Type = MFX_VARIANT_TYPE_PTR;
+    impl_ਮੁੱਲ.ਅੰਕੜੇ_2.Ptr = &adapterDesc.AdapterLuid;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ਅਚਲ mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_ਮੁੱਲ);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "DeviceLUID property: %d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = 0x0001;
+    impl_ਮੁੱਲ.Type = MFX_VARIANT_TYPE_U32;
+    impl_ਮੁੱਲ.ਅੰਕੜੇ_2.U32 = 0x0001;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.LUIDDeviceNodeMask", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ਅਚਲ mfxU8 *)"mfxExtendedDeviceId.LUIDDeviceNodeMask", impl_ਮੁੱਲ);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "LUIDDeviceNodeMask property: %d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
     ret = 0;
@@ -895,80 +895,80 @@ static int qsv_d3d11_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
 fail:
     IDXGIAdapter_Release(pDXGIAdapter);
     IDXGIDevice_Release(pDXGIDevice);
-#endif
-    return ret;
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ ret;
 }
 
-static int qsv_d3d9_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
+ਸਥਿਰ ਪੂਰਨ qsv_d3d9_update_config(ਖਾਲੀ *ctx, mfxHDL handle, mfxConfig cfg)
 {
-    int ret = AVERROR_UNKNOWN;
-#if CONFIG_DXVA2
-    mfxStatus sts;
+    ਪੂਰਨ ret = AVERROR_UNKNOWN;
+#ਜੇ CONFIG_DXVA2
+    mfx_ਸਥਿਤੀ sts;
     IDirect3DDeviceManager9* devmgr = handle;
-    IDirect3DDevice9 *device = NULL;
-    IDirect3DDevice9Ex *device_ex = NULL;
+    IDirect3DDevice9 *device = ਨਿਰਾ;
+    IDirect3DDevice9Ex *device_ex = ਨਿਰਾ;
     HANDLE device_handle = 0;
-    IDirect3D9Ex *d3d9ex = NULL;
-    IDirect3D9 *d3d9 = NULL;
+    IDirect3D9Ex *d3d9ex = ਨਿਰਾ;
+    IDirect3D9 *d3d9 = ਨਿਰਾ;
     LUID luid;
     D3DDEVICE_CREATION_PARAMETERS params;
     HRESULT hr;
-    mfxVariant impl_value = {0};
+    mfxVariant impl_ਮੁੱਲ = {0};
 
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(devmgr, &device_handle);
-    if (FAILED(hr)) {
+    ਜੇ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error OpenDeviceHandle %#lx\n", hr);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    hr = IDirect3DDeviceManager9_LockDevice(devmgr, device_handle, &device, TRUE);
-    if (FAILED(hr)) {
+    hr = IDirect3_DDevice_Manager9_ਤਾਲਾ_Device(devmgr, device_handle, &device, TRUE);
+    ਜੇ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error LockDevice %#lx\n", hr);
         IDirect3DDeviceManager9_CloseDeviceHandle(devmgr, device_handle);
-        goto fail;
+        ਜਾਓ fail;
     }
-    hr = IDirect3DDevice9_QueryInterface(device, &IID_IDirect3DDevice9Ex, (void **)&device_ex);
+    hr = IDirect3DDevice9_QueryInterface(device, &IID_IDirect3DDevice9Ex, (ਖਾਲੀ **)&device_ex);
     IDirect3DDevice9_Release(device);
-    if (FAILED(hr)) {
+    ਜੇ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3DDevice9_QueryInterface %#lx\n", hr);
-        goto unlock;
+        ਜਾਓ unlock;
     }
 
     hr = IDirect3DDevice9Ex_GetCreationParameters(device_ex, &params);
-    if (FAILED(hr)) {
+    ਜੇ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3DDevice9_GetCreationParameters %#lx\n", hr);
         IDirect3DDevice9Ex_Release(device_ex);
-        goto unlock;
+        ਜਾਓ unlock;
     }
 
     hr = IDirect3DDevice9Ex_GetDirect3D(device_ex, &d3d9);
-    if (FAILED(hr)) {
+    ਜੇ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3DDevice9Ex_GetDirect3D %#lx\n", hr);
         IDirect3DDevice9Ex_Release(device_ex);
-        goto unlock;
+        ਜਾਓ unlock;
     }
-    hr = IDirect3D9_QueryInterface(d3d9, &IID_IDirect3D9Ex, (void **)&d3d9ex);
+    hr = IDirect3D9_QueryInterface(d3d9, &IID_IDirect3D9Ex, (ਖਾਲੀ **)&d3d9ex);
     IDirect3D9_Release(d3d9);
-    if (FAILED(hr)) {
+    ਜੇ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3D9_QueryInterface3D %#lx\n", hr);
         IDirect3DDevice9Ex_Release(device_ex);
-        goto unlock;
+        ਜਾਓ unlock;
     }
 
     hr = IDirect3D9Ex_GetAdapterLUID(d3d9ex, params.AdapterOrdinal, &luid);
-    if (FAILED(hr)) {
+    ਜੇ (FAILED(hr)) {
         av_log(ctx, AV_LOG_ERROR, "Error IDirect3DDevice9Ex_GetAdapterLUID %#lx\n", hr);
-        goto release;
+        ਜਾਓ release;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_PTR;
-    impl_value.Data.Ptr = &luid;
+    impl_ਮੁੱਲ.Type = MFX_VARIANT_TYPE_PTR;
+    impl_ਮੁੱਲ.ਅੰਕੜੇ_2.Ptr = &luid;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ਅਚਲ mfxU8 *)"mfxExtendedDeviceId.DeviceLUID", impl_ਮੁੱਲ);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "DeviceLUID property: %d.\n", sts);
-        goto release;
+        ਜਾਓ release;
     }
 
     ret = 0;
@@ -981,154 +981,154 @@ unlock:
     IDirect3DDeviceManager9_UnlockDevice(devmgr, device_handle, FALSE);
     IDirect3DDeviceManager9_CloseDeviceHandle(devmgr, device_handle);
 fail:
-#endif
-    return ret;
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ ret;
 }
 
-static int qsv_va_update_config(void *ctx, mfxHDL handle, mfxConfig cfg)
+ਸਥਿਰ ਪੂਰਨ qsv_va_update_config(ਖਾਲੀ *ctx, mfxHDL handle, mfxConfig cfg)
 {
-#if CONFIG_VAAPI
-#if VA_CHECK_VERSION(1, 15, 0)
-    mfxStatus sts;
+#ਜੇ CONFIG_VAAPI
+#ਜੇ VA_CHECK_ਸੰਸਕਰਣ(1, 15, 0)
+    mfx_ਸਥਿਤੀ sts;
     VADisplay dpy = handle;
     VAStatus vas;
     VADisplayAttribute attr = {
         .type = VADisplayPCIID,
     };
-    mfxVariant impl_value = {0};
+    mfxVariant impl_ਮੁੱਲ = {0};
 
-    vas = vaGetDisplayAttributes(dpy, &attr, 1);
-    if (vas == VA_STATUS_SUCCESS && attr.flags != VA_DISPLAY_ATTRIB_NOT_SUPPORTED) {
-        impl_value.Type = MFX_VARIANT_TYPE_U16;
-        impl_value.Data.U16 = (attr.value & 0xFFFF);
+    vas = va_Get_Display_ਗੁਣ(dpy, &attr, 1);
+    ਜੇ (vas == VA_ਸਥਿਤੀ_SUCCESS && attr.flags != VA_DISPLAY_ATTRIB_NOT_SUPPORTED) {
+        impl_ਮੁੱਲ.Type = MFX_VARIANT_TYPE_U16;
+        impl_ਮੁੱਲ.ਅੰਕੜੇ_2.U16 = (attr.ਮੁੱਲ & 0xFFFF);
         sts = MFXSetConfigFilterProperty(cfg,
-                                         (const mfxU8 *)"mfxImplDescription.mfxDeviceDescription.DeviceID", impl_value);
-        if (sts != MFX_ERR_NONE) {
+                                         (ਅਚਲ mfxU8 *)"mfxImplDescription.mfxDeviceDescription.DeviceID", impl_ਮੁੱਲ);
+        ਜੇ (sts != MFX_ERR_NONE) {
             av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                    "DeviceID property: %d.\n", sts);
-            goto fail;
+            ਜਾਓ fail;
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         av_log(ctx, AV_LOG_ERROR, "libva: Failed to get device id from the driver. Please "
                "consider to upgrade the driver to support VA-API 1.15.0\n");
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-#else
+#ਨਹੀਂਤਾਂ
     av_log(ctx, AV_LOG_ERROR, "libva: This version of libva doesn't support retrieving "
            "the device information from the driver. Please consider to upgrade libva to "
            "support VA-API 1.15.0\n");
-#endif
-#endif
-    return AVERROR_UNKNOWN;
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ AVERROR_UNKNOWN;
 }
 
-static int qsv_new_mfx_loader(void *ctx,
+ਸਥਿਰ ਪੂਰਨ qsv_new_mfx_loader(ਖਾਲੀ *ctx,
                               mfxHDL handle,
                               mfxHandleType handle_type,
                               mfxIMPL implementation,
-                              mfxVersion *pver,
-                              void **ploader)
+                              mfx_ਸੰਸਕਰਣ *pver,
+                              ਖਾਲੀ **ploader)
 {
-    mfxStatus sts;
-    mfxLoader loader = NULL;
+    mfx_ਸਥਿਤੀ sts;
+    mfxLoader loader = ਨਿਰਾ;
     mfxConfig cfg;
-    mfxVariant impl_value = {0};
+    mfxVariant impl_ਮੁੱਲ = {0};
 
-    *ploader = NULL;
+    *ploader = ਨਿਰਾ;
     loader = MFXLoad();
-    if (!loader) {
+    ਜੇ (!loader) {
         av_log(ctx, AV_LOG_ERROR, "Error creating a MFX loader\n");
-        goto fail;
+        ਜਾਓ fail;
     }
 
     /* Create configurations for implementation */
     cfg = MFXCreateConfig(loader);
-    if (!cfg) {
+    ਜੇ (!cfg) {
         av_log(ctx, AV_LOG_ERROR, "Error creating a MFX configuration\n");
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = (implementation == MFX_IMPL_SOFTWARE) ?
+    impl_ਮੁੱਲ.Type = MFX_VARIANT_TYPE_U32;
+    impl_ਮੁੱਲ.ਅੰਕੜੇ_2.U32 = (implementation == MFX_IMPL_SOFTWARE) ?
         MFX_IMPL_TYPE_SOFTWARE : MFX_IMPL_TYPE_HARDWARE;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.Impl", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ਅਚਲ mfxU8 *)"mfxImplDescription.Impl", impl_ਮੁੱਲ);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration "
                "property: %d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = pver->Version;
+    impl_ਮੁੱਲ.Type = MFX_VARIANT_TYPE_U32;
+    impl_ਮੁੱਲ.ਅੰਕੜੇ_2.U32 = pver->ਸੰਸਕਰਣ_2;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.ApiVersion.Version",
-                                     impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ਅਚਲ mfxU8 *)"mfxImplDescription.ApiVersion.Version",
+                                     impl_ਮੁੱਲ);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration "
                "property: %d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = 0x8086; // Intel device only
+    impl_ਮੁੱਲ.Type = MFX_VARIANT_TYPE_U32;
+    impl_ਮੁੱਲ.ਅੰਕੜੇ_2.U32 = 0x8086; // Intel device only
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.VendorID", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ਅਚਲ mfxU8 *)"mfxImplDescription.VendorID", impl_ਮੁੱਲ);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "VendorID property: %d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    if (MFX_HANDLE_VA_DISPLAY == handle_type) {
-        if (handle && qsv_va_update_config(ctx, handle, cfg))
-            goto fail;
+    ਜੇ (MFX_HANDLE_VA_DISPLAY == handle_type) {
+        ਜੇ (handle && qsv_va_update_config(ctx, handle, cfg))
+            ਜਾਓ fail;
 
-        impl_value.Data.U32 = MFX_ACCEL_MODE_VIA_VAAPI;
-    } else if (MFX_HANDLE_D3D9_DEVICE_MANAGER == handle_type) {
-        if (handle && qsv_d3d9_update_config(ctx, handle, cfg))
-            goto fail;
+        impl_ਮੁੱਲ.ਅੰਕੜੇ_2.U32 = MFX_ACCEL_ਬਹੁਲਕ_ਰਾਹੀਂ_VAAPI;
+    } ਨਹੀਂਤਾਂ ਜੇ (MFX_HANDLE_D3D9_DEVICE_MANAGER == handle_type) {
+        ਜੇ (handle && qsv_d3d9_update_config(ctx, handle, cfg))
+            ਜਾਓ fail;
 
-        impl_value.Data.U32 = MFX_ACCEL_MODE_VIA_D3D9;
-    } else {
-        if (handle && qsv_d3d11_update_config(ctx, handle, cfg))
-            goto fail;
+        impl_ਮੁੱਲ.ਅੰਕੜੇ_2.U32 = MFX_ACCEL_ਬਹੁਲਕ_ਰਾਹੀਂ_D3_D9;
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ (handle && qsv_d3d11_update_config(ctx, handle, cfg))
+            ਜਾਓ fail;
 
-        impl_value.Data.U32 = MFX_ACCEL_MODE_VIA_D3D11;
+        impl_ਮੁੱਲ.ਅੰਕੜੇ_2.U32 = MFX_ACCEL_ਬਹੁਲਕ_ਰਾਹੀਂ_D3_D11;
     }
 
-    impl_value.Type = MFX_VARIANT_TYPE_U32;
+    impl_ਮੁੱਲ.Type = MFX_VARIANT_TYPE_U32;
     sts = MFXSetConfigFilterProperty(cfg,
-                                     (const mfxU8 *)"mfxImplDescription.AccelerationMode", impl_value);
-    if (sts != MFX_ERR_NONE) {
+                                     (ਅਚਲ mfxU8 *)"mfxImplDescription.AccelerationMode", impl_ਮੁੱਲ);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error adding a MFX configuration"
                "AccelerationMode property: %d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
     *ploader = loader;
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-    if (loader)
+    ਜੇ (loader)
         MFXUnload(loader);
 
-    return AVERROR_UNKNOWN;
+    ਵਾਪਸ AVERROR_UNKNOWN;
 }
 
-static int qsv_create_mfx_session_from_loader(void *ctx, mfxLoader loader, mfxSession *psession)
+ਸਥਿਰ ਪੂਰਨ qsv_create_mfx_session_from_loader(ਖਾਲੀ *ctx, mfxLoader loader, mfxSession *psession)
 {
-    mfxStatus sts;
-    mfxSession session = NULL;
+    mfx_ਸਥਿਤੀ sts;
+    mfxSession session = ਨਿਰਾ;
     uint32_t impl_idx = 0;
-    mfxVersion ver;
+    mfx_ਸੰਸਕਰਣ ver;
 
-    while (1) {
+    ਜਦੋਂ (1) {
         /* Enumerate all implementations */
         mfxImplDescription *impl_desc;
 
@@ -1136,30 +1136,30 @@ static int qsv_create_mfx_session_from_loader(void *ctx, mfxLoader loader, mfxSe
                                      MFX_IMPLCAPS_IMPLDESCSTRUCTURE,
                                      (mfxHDL *)&impl_desc);
         /* Failed to find an available implementation */
-        if (sts == MFX_ERR_NOT_FOUND)
-            break;
-        else if (sts != MFX_ERR_NONE) {
+        ਜੇ (sts == MFX_ERR_NOT_ਮਿਲਿਆ)
+            ਰੋਕੋ;
+        ਨਹੀਂਤਾਂ ਜੇ (sts != MFX_ERR_NONE) {
             impl_idx++;
-            continue;
+            ਜਾਰੀ;
         }
 
         sts = MFXCreateSession(loader, impl_idx, &session);
         MFXDispReleaseImplDescription(loader, impl_desc);
-        if (sts == MFX_ERR_NONE)
-            break;
+        ਜੇ (sts == MFX_ERR_NONE)
+            ਰੋਕੋ;
 
         impl_idx++;
     }
 
-    if (sts != MFX_ERR_NONE) {
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error creating a MFX session: %d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    sts = MFXQueryVersion(session, &ver);
-    if (sts != MFX_ERR_NONE) {
+    sts = MFXQuery_ਸੰਸਕਰਣ(session, &ver);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error querying a MFX session: %d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
     av_log(ctx, AV_LOG_VERBOSE, "Initialize MFX session: implementation "
@@ -1167,97 +1167,97 @@ static int qsv_create_mfx_session_from_loader(void *ctx, mfxLoader loader, mfxSe
 
     *psession = session;
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-    if (session)
+    ਜੇ (session)
         MFXClose(session);
 
-    return AVERROR_UNKNOWN;
+    ਵਾਪਸ AVERROR_UNKNOWN;
 }
 
-static int qsv_create_mfx_session(void *ctx,
+ਸਥਿਰ ਪੂਰਨ qsv_create_mfx_session(ਖਾਲੀ *ctx,
                                   mfxHDL handle,
                                   mfxHandleType handle_type,
                                   mfxIMPL implementation,
-                                  mfxVersion *pver,
+                                  mfx_ਸੰਸਕਰਣ *pver,
                                   mfxSession *psession,
-                                  void **ploader)
+                                  ਖਾਲੀ **ploader)
 {
-    mfxLoader loader = NULL;
+    mfxLoader loader = ਨਿਰਾ;
 
     av_log(ctx, AV_LOG_VERBOSE,
            "Use Intel(R) oneVPL to create MFX session, API version is "
            "%d.%d, the required implementation version is %d.%d\n",
-           MFX_VERSION_MAJOR, MFX_VERSION_MINOR, pver->Major, pver->Minor);
+           MFX_ਸੰਸਕਰਣ_MAJOR, MFX_ਸੰਸਕਰਣ_MINOR, pver->Major, pver->Minor);
 
-    if (handle_type != MFX_HANDLE_VA_DISPLAY &&
+    ਜੇ (handle_type != MFX_HANDLE_VA_DISPLAY &&
         handle_type != MFX_HANDLE_D3D9_DEVICE_MANAGER &&
         handle_type != MFX_HANDLE_D3D11_DEVICE) {
         av_log(ctx, AV_LOG_ERROR,
                "Invalid MFX device handle type\n");
-        return AVERROR(EXDEV);
+        ਵਾਪਸ AVERROR(EXDEV);
     }
 
-    *psession = NULL;
+    *psession = ਨਿਰਾ;
 
-    if (!*ploader) {
-        if (qsv_new_mfx_loader(ctx, handle, handle_type, implementation, pver, (void **)&loader))
-            goto fail;
+    ਜੇ (!*ploader) {
+        ਜੇ (qsv_new_mfx_loader(ctx, handle, handle_type, implementation, pver, (ਖਾਲੀ **)&loader))
+            ਜਾਓ fail;
 
         av_assert0(loader);
-    } else
+    } ਨਹੀਂਤਾਂ
         loader = *ploader;      // Use the input mfxLoader to create mfx session
 
-    if (qsv_create_mfx_session_from_loader(ctx, loader, psession))
-        goto fail;
+    ਜੇ (qsv_create_mfx_session_from_loader(ctx, loader, psession))
+        ਜਾਓ fail;
 
-    if (!*ploader)
+    ਜੇ (!*ploader)
         *ploader = loader;
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-    if (!*ploader && loader)
+    ਜੇ (!*ploader && loader)
         MFXUnload(loader);
 
-    return AVERROR_UNKNOWN;
+    ਵਾਪਸ AVERROR_UNKNOWN;
 }
 
-#else
+#ਨਹੀਂਤਾਂ
 
-static int qsv_create_mfx_session(void *ctx,
+ਸਥਿਰ ਪੂਰਨ qsv_create_mfx_session(ਖਾਲੀ *ctx,
                                   mfxHDL handle,
                                   mfxHandleType handle_type,
                                   mfxIMPL implementation,
-                                  mfxVersion *pver,
+                                  mfx_ਸੰਸਕਰਣ *pver,
                                   mfxSession *psession,
-                                  void **ploader)
+                                  ਖਾਲੀ **ploader)
 {
-    mfxVersion ver;
-    mfxStatus sts;
-    mfxSession session = NULL;
+    mfx_ਸੰਸਕਰਣ ver;
+    mfx_ਸਥਿਤੀ sts;
+    mfxSession session = ਨਿਰਾ;
 
     av_log(ctx, AV_LOG_VERBOSE,
            "Use Intel(R) Media SDK to create MFX session, API version is "
            "%d.%d, the required implementation version is %d.%d\n",
-           MFX_VERSION_MAJOR, MFX_VERSION_MINOR, pver->Major, pver->Minor);
+           MFX_ਸੰਸਕਰਣ_MAJOR, MFX_ਸੰਸਕਰਣ_MINOR, pver->Major, pver->Minor);
 
-    *ploader = NULL;
-    *psession = NULL;
+    *ploader = ਨਿਰਾ;
+    *psession = ਨਿਰਾ;
     ver = *pver;
     sts = MFXInit(implementation, &ver, &session);
-    if (sts != MFX_ERR_NONE) {
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error initializing an MFX session: "
                "%d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    sts = MFXQueryVersion(session, &ver);
-    if (sts != MFX_ERR_NONE) {
+    sts = MFXQuery_ਸੰਸਕਰਣ(session, &ver);
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error querying an MFX session: "
                "%d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
     av_log(ctx, AV_LOG_VERBOSE, "Initialize MFX session: implementation "
@@ -1266,1109 +1266,1109 @@ static int qsv_create_mfx_session(void *ctx,
     MFXClose(session);
 
     sts = MFXInit(implementation, &ver, &session);
-    if (sts != MFX_ERR_NONE) {
+    ਜੇ (sts != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error initializing an MFX session: "
                "%d.\n", sts);
-        goto fail;
+        ਜਾਓ fail;
     }
 
     *psession = session;
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-    if (session)
+    ਜੇ (session)
         MFXClose(session);
 
-    return AVERROR_UNKNOWN;
+    ਵਾਪਸ AVERROR_UNKNOWN;
 }
 
-#endif
+#ਜੇ_ਅੰਤ
 
-static int qsv_init_internal_session(AVHWFramesContext *ctx,
-                                     mfxSession *session, int upload)
+ਸਥਿਰ ਪੂਰਨ qsv_init_ਅੰਦਰੂਨੀ_session(AVHWFramesContext *ctx,
+                                     mfxSession *session, ਪੂਰਨ upload)
 {
     QSVFramesContext              *s = ctx->hwctx;
-    AVQSVFramesContext *frames_hwctx = &s->p;
+    AVQSVFramesContext *ਚੌਖਟੇ_hwctx = &s->p;
     QSVDeviceContext   *device_priv  = ctx->device_ctx->hwctx;
     AVQSVDeviceContext *hwctx        = &device_priv->p;
-    int opaque = 0;
+    ਪੂਰਨ opaque = 0;
 
-    mfxFrameAllocator frame_allocator = {
+    mfx_ਚੌਖਟਾ_Allocator ਚੌਖਟਾ_allocator = {
         .pthis  = ctx,
-        .Alloc  = frame_alloc,
-        .Lock   = frame_lock,
-        .Unlock = frame_unlock,
-        .GetHDL = frame_get_hdl,
-        .Free   = frame_free,
+        .Alloc  = ਚੌਖਟਾ_alloc,
+        .ਤਾਲਾ_2   = ਚੌਖਟਾ_ਤਾਲਾ,
+        .Unlock = ਚੌਖਟਾ_unlock,
+        .GetHDL = ਚੌਖਟਾ_get_hdl,
+        .Free   = ਚੌਖਟਾ_free,
     };
 
     mfxVideoParam par;
-    mfxStatus err;
-    int                   ret = AVERROR_UNKNOWN;
+    mfx_ਸਥਿਤੀ err;
+    ਪੂਰਨ                   ret = AVERROR_UNKNOWN;
     /* hwctx->loader is non-NULL for oneVPL user and NULL for non-oneVPL user */
-    void             **loader = &hwctx->loader;
-    mfxSession parent_session = hwctx->session;
+    ਖਾਲੀ             **loader = &hwctx->loader;
+    mfxSession ਮਾਪਾ_session = hwctx->session;
     mfxIMPL impl;
-    mfxVersion ver;
+    mfx_ਸੰਸਕਰਣ ver;
 
-    err = MFXQueryIMPL(parent_session, &impl);
-    if (err == MFX_ERR_NONE)
-        err = MFXQueryVersion(parent_session, &ver);
-    if (err != MFX_ERR_NONE) {
+    err = MFXQueryIMPL(ਮਾਪਾ_session, &impl);
+    ਜੇ (err == MFX_ERR_NONE)
+        err = MFXQuery_ਸੰਸਕਰਣ(ਮਾਪਾ_session, &ver);
+    ਜੇ (err != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error querying the session attributes.\n");
-        return AVERROR_UNKNOWN;
+        ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-#if QSV_HAVE_OPAQUE
-    opaque = !!(frames_hwctx->frame_type & MFX_MEMTYPE_OPAQUE_FRAME);
-#endif
+#ਜੇ QSV_HAVE_OPAQUE
+    opaque = !!(ਚੌਖਟੇ_hwctx->ਚੌਖਟਾ_type & MFX_MEMTYPE_OPAQUE_ਚੌਖਟਾ);
+#ਜੇ_ਅੰਤ
 
     ret = qsv_create_mfx_session(ctx, device_priv->handle, device_priv->handle_type,
                                  device_priv->impl, &device_priv->ver, session, loader);
-    if (ret)
-        goto fail;
+    ਜੇ (ret)
+        ਜਾਓ fail;
 
-    if (device_priv->handle) {
-        err = MFXVideoCORE_SetHandle(*session, device_priv->handle_type,
+    ਜੇ (device_priv->handle) {
+        err = MFXVideo_CORE_ਸੈੱਟ_Handle(*session, device_priv->handle_type,
                                      device_priv->handle);
-        if (err != MFX_ERR_NONE) {
+        ਜੇ (err != MFX_ERR_NONE) {
             ret = AVERROR_UNKNOWN;
-            goto fail;
+            ਜਾਓ fail;
         }
     }
 
-    if (QSV_RUNTIME_VERSION_ATLEAST(ver, 1, 25)) {
-        err = MFXJoinSession(parent_session, *session);
-        if (err != MFX_ERR_NONE) {
+    ਜੇ (QSV_RUNTIME_ਸੰਸਕਰਣ_ATLEAST(ver, 1, 25)) {
+        err = MFXJoinSession(ਮਾਪਾ_session, *session);
+        ਜੇ (err != MFX_ERR_NONE) {
             av_log(ctx, AV_LOG_ERROR, "Error joining session.\n");
             ret = AVERROR_UNKNOWN;
-            goto fail;
+            ਜਾਓ fail;
         }
     }
 
-    if (!opaque) {
-        err = MFXVideoCORE_SetFrameAllocator(*session, &frame_allocator);
-        if (err != MFX_ERR_NONE) {
+    ਜੇ (!opaque) {
+        err = MFXVideo_CORE_ਸੈੱਟ_ਚੌਖਟਾ_Allocator(*session, &ਚੌਖਟਾ_allocator);
+        ਜੇ (err != MFX_ERR_NONE) {
             ret = AVERROR_UNKNOWN;
-            goto fail;
+            ਜਾਓ fail;
         }
     }
 
-    memset(&par, 0, sizeof(par));
+    memset(&par, 0, ਆਕਾਰ(par));
 
-    if (!opaque) {
-        par.IOPattern = upload ? MFX_IOPATTERN_OUT_VIDEO_MEMORY :
-                                 MFX_IOPATTERN_IN_VIDEO_MEMORY;
+    ਜੇ (!opaque) {
+        par.IOPattern = upload ? MFX_IOPATTERN_ਬਾਹਰਲਾ_VIDEO_ਸਮ੍ਰਿਤੀ :
+                                 MFX_IOPATTERN_ਵਿੱਚ_VIDEO_ਸਮ੍ਰਿਤੀ;
     }
-#if QSV_HAVE_OPAQUE
-    else {
+#ਜੇ QSV_HAVE_OPAQUE
+    ਨਹੀਂਤਾਂ {
         par.ExtParam    = s->ext_buffers;
-        par.NumExtParam = FF_ARRAY_ELEMS(s->ext_buffers);
-        par.IOPattern   = upload ? MFX_IOPATTERN_OUT_OPAQUE_MEMORY :
-                                   MFX_IOPATTERN_IN_OPAQUE_MEMORY;
+        par.ਅੰਕ_Ext_Param = FF_ARRAY_ELEMS(s->ext_buffers);
+        par.IOPattern   = upload ? MFX_IOPATTERN_ਬਾਹਰਲਾ_OPAQUE_ਸਮ੍ਰਿਤੀ :
+                                   MFX_IOPATTERN_ਵਿੱਚ_OPAQUE_ਸਮ੍ਰਿਤੀ;
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    par.IOPattern |= upload ? MFX_IOPATTERN_IN_SYSTEM_MEMORY :
-                              MFX_IOPATTERN_OUT_SYSTEM_MEMORY;
-    par.AsyncDepth = 1;
+    par.IOPattern |= upload ? MFX_IOPATTERN_ਵਿੱਚ_SYSTEM_ਸਮ੍ਰਿਤੀ :
+                              MFX_IOPATTERN_ਬਾਹਰਲਾ_SYSTEM_ਸਮ੍ਰਿਤੀ;
+    par.Async_ਡੂੰਘਾਈ = 1;
 
-    par.vpp.In = frames_hwctx->nb_surfaces ? frames_hwctx->surfaces[0].Info : *frames_hwctx->info;
+    par.vpp.ਵਿੱਚ_3 = ਚੌਖਟੇ_hwctx->nb_surfaces ? ਚੌਖਟੇ_hwctx->surfaces[0].Info : *ਚੌਖਟੇ_hwctx->info;
 
     /* Apparently VPP requires the frame rate to be set to some value, otherwise
      * init will fail (probably for the framerate conversion filter). Since we
      * are only doing data upload/download here, we just invent an arbitrary
      * value */
-    par.vpp.In.FrameRateExtN = 25;
-    par.vpp.In.FrameRateExtD = 1;
-    par.vpp.Out = par.vpp.In;
+    par.vpp.ਵਿੱਚ_3.ਚੌਖਟਾ_ਦਰ_Ext_N = 25;
+    par.vpp.ਵਿੱਚ_3.ਚੌਖਟਾ_ਦਰ_Ext_D = 1;
+    par.vpp.ਬਾਹਰਲਾ_2 = par.vpp.ਵਿੱਚ_3;
 
     err = MFXVideoVPP_Init(*session, &par);
-    if (err != MFX_ERR_NONE) {
+    ਜੇ (err != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_VERBOSE, "Error opening the internal VPP session."
                "Surface upload/download will not be possible\n");
 
         ret = AVERROR_UNKNOWN;
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-    if (*session)
+    ਜੇ (*session)
         MFXClose(*session);
 
-    *session = NULL;
+    *session = ਨਿਰਾ;
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-static int qsv_frames_init(AVHWFramesContext *ctx)
+ਸਥਿਰ ਪੂਰਨ qsv_ਚੌਖਟੇ_init(AVHWFramesContext *ctx)
 {
     QSVFramesContext              *s = ctx->hwctx;
-    AVQSVFramesContext *frames_hwctx = &s->p;
+    AVQSVFramesContext *ਚੌਖਟੇ_hwctx = &s->p;
 
-    int opaque = 0;
+    ਪੂਰਨ opaque = 0;
 
     uint32_t fourcc;
-    int i, ret;
+    ਪੂਰਨ i, ret;
 
-#if QSV_HAVE_OPAQUE
-    opaque = !!(frames_hwctx->frame_type & MFX_MEMTYPE_OPAQUE_FRAME);
-#endif
+#ਜੇ QSV_HAVE_OPAQUE
+    opaque = !!(ਚੌਖਟੇ_hwctx->ਚੌਖਟਾ_type & MFX_MEMTYPE_OPAQUE_ਚੌਖਟਾ);
+#ਜੇ_ਅੰਤ
 
     fourcc = qsv_fourcc_from_pix_fmt(ctx->sw_format);
-    if (!fourcc) {
+    ਜੇ (!fourcc) {
         av_log(ctx, AV_LOG_ERROR, "Unsupported pixel format\n");
-        return AVERROR(ENOSYS);
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-    if (!ctx->pool) {
+    ਜੇ (!ctx->pool) {
         ret = qsv_init_pool(ctx, fourcc);
-        if (ret < 0) {
+        ਜੇ (ret < 0) {
             av_log(ctx, AV_LOG_ERROR, "Error creating an internal frame pool\n");
-            return ret;
+            ਵਾਪਸ ret;
         }
     }
 
-    if (!opaque) {
-        s->mem_ids = av_calloc(frames_hwctx->nb_surfaces, sizeof(*s->mem_ids));
-        if (!s->mem_ids)
-            return AVERROR(ENOMEM);
+    ਜੇ (!opaque) {
+        s->mem_ids = av_calloc(ਚੌਖਟੇ_hwctx->nb_surfaces, ਆਕਾਰ(*s->mem_ids));
+        ਜੇ (!s->mem_ids)
+            ਵਾਪਸ AVERROR(ENOMEM);
 
-        for (i = 0; i < frames_hwctx->nb_surfaces; i++)
-            s->mem_ids[i] = frames_hwctx->surfaces[i].Data.MemId;
+        ਲਈ (i = 0; i < ਚੌਖਟੇ_hwctx->nb_surfaces; i++)
+            s->mem_ids[i] = ਚੌਖਟੇ_hwctx->surfaces[i].ਅੰਕੜੇ_2.MemId;
     }
-#if QSV_HAVE_OPAQUE
-    else {
-        s->surface_ptrs = av_calloc(frames_hwctx->nb_surfaces,
-                                    sizeof(*s->surface_ptrs));
-        if (!s->surface_ptrs)
-            return AVERROR(ENOMEM);
+#ਜੇ QSV_HAVE_OPAQUE
+    ਨਹੀਂਤਾਂ {
+        s->surface_ptrs = av_calloc(ਚੌਖਟੇ_hwctx->nb_surfaces,
+                                    ਆਕਾਰ(*s->surface_ptrs));
+        ਜੇ (!s->surface_ptrs)
+            ਵਾਪਸ AVERROR(ENOMEM);
 
-        for (i = 0; i < frames_hwctx->nb_surfaces; i++)
-            s->surface_ptrs[i] = frames_hwctx->surfaces + i;
+        ਲਈ (i = 0; i < ਚੌਖਟੇ_hwctx->nb_surfaces; i++)
+            s->surface_ptrs[i] = ਚੌਖਟੇ_hwctx->surfaces + i;
 
-        s->opaque_alloc.In.Surfaces   = s->surface_ptrs;
-        s->opaque_alloc.In.NumSurface = frames_hwctx->nb_surfaces;
-        s->opaque_alloc.In.Type       = frames_hwctx->frame_type;
+        s->opaque_alloc.ਵਿੱਚ_3.Surfaces   = s->surface_ptrs;
+        s->opaque_alloc.ਵਿੱਚ_3.ਅੰਕ_Surface = ਚੌਖਟੇ_hwctx->nb_surfaces;
+        s->opaque_alloc.ਵਿੱਚ_3.Type       = ਚੌਖਟੇ_hwctx->ਚੌਖਟਾ_type;
 
-        s->opaque_alloc.Out = s->opaque_alloc.In;
+        s->opaque_alloc.ਬਾਹਰਲਾ_2 = s->opaque_alloc.ਵਿੱਚ_3;
 
-        s->opaque_alloc.Header.BufferId = MFX_EXTBUFF_OPAQUE_SURFACE_ALLOCATION;
-        s->opaque_alloc.Header.BufferSz = sizeof(s->opaque_alloc);
+        s->opaque_alloc.ਸਿਰਲੇਖ_2.ਬਫਰ_Id = MFX_EXTBUFF_OPAQUE_SURFACE_ਵੰਡ;
+        s->opaque_alloc.ਸਿਰਲੇਖ_2.ਬਫਰ_Sz = ਆਕਾਰ(s->opaque_alloc);
 
-        s->ext_buffers[0] = (mfxExtBuffer*)&s->opaque_alloc;
+        s->ext_buffers[0] = (mfx_Ext_ਬਫਰ*)&s->opaque_alloc;
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    s->session_download = NULL;
-    s->session_upload   = NULL;
+    s->session_download = ਨਿਰਾ;
+    s->session_upload   = ਨਿਰਾ;
 
     s->session_download_init = 0;
     s->session_upload_init   = 0;
 
-#if HAVE_PTHREADS
-    pthread_mutex_init(&s->session_lock, NULL);
-#endif
+#ਜੇ HAVE_PTHREADS
+    pthread_mutex_init(&s->session_ਤਾਲਾ, ਨਿਰਾ);
+#ਜੇ_ਅੰਤ
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_get_buffer(AVHWFramesContext *ctx, AVFrame *frame)
+ਸਥਿਰ ਪੂਰਨ qsv_get_ਬਫਰ(AVHWFramesContext *ctx, AVFrame *ਚੌਖਟਾ)
 {
-    frame->buf[0] = av_buffer_pool_get(ctx->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ਚੌਖਟਾ->buf[0] = av_ਬਫਰ_pool_get(ctx->pool);
+    ਜੇ (!ਚੌਖਟਾ->buf[0])
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    frame->data[3] = frame->buf[0]->data;
-    frame->format  = AV_PIX_FMT_QSV;
-    frame->width   = ctx->width;
-    frame->height  = ctx->height;
+    ਚੌਖਟਾ->ਅੰਕੜੇ[3] = ਚੌਖਟਾ->buf[0]->ਅੰਕੜੇ;
+    ਚੌਖਟਾ->format  = AV_PIX_FMT_QSV;
+    ਚੌਖਟਾ->ਚੌੜਾਈ   = ctx->ਚੌੜਾਈ;
+    ਚੌਖਟਾ->ਉਚਾਈ  = ctx->ਉਚਾਈ;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_transfer_get_formats(AVHWFramesContext *ctx,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats)
+ਸਥਿਰ ਪੂਰਨ qsv_transfer_get_formats(AVHWFramesContext *ctx,
+                                    ਗਿਣਤੀ AVHWFrameTransferDirection dir,
+                                    ਗਿਣਤੀ AVPixelFormat **formats)
 {
-    enum AVPixelFormat *fmts;
+    ਗਿਣਤੀ AVPixelFormat *fmts;
 
-    fmts = av_malloc_array(2, sizeof(*fmts));
-    if (!fmts)
-        return AVERROR(ENOMEM);
+    fmts = av_malloc_array(2, ਆਕਾਰ(*fmts));
+    ਜੇ (!fmts)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
     fmts[0] = ctx->sw_format;
     fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = fmts;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_frames_derive_from(AVHWFramesContext *dst_ctx,
-                                  AVHWFramesContext *src_ctx, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_ਚੌਖਟੇ_derive_from(AVHWFramesContext *dst_ctx,
+                                  AVHWFramesContext *src_ctx, ਪੂਰਨ flags)
 {
     AVQSVFramesContext *src_hwctx = src_ctx->hwctx;
-    int i;
+    ਪੂਰਨ i;
 
-    switch (dst_ctx->device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    ਚੋਣ (dst_ctx->device_ctx->type) {
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_HWDEVICE_TYPE_VAAPI:
         {
             AVVAAPIFramesContext *dst_hwctx = dst_ctx->hwctx;
             dst_hwctx->surface_ids = av_calloc(src_hwctx->nb_surfaces,
-                                               sizeof(*dst_hwctx->surface_ids));
-            if (!dst_hwctx->surface_ids)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].Data.MemId;
-                dst_hwctx->surface_ids[i] = *(VASurfaceID*)pair->first;
+                                               ਆਕਾਰ(*dst_hwctx->surface_ids));
+            ਜੇ (!dst_hwctx->surface_ids)
+                ਵਾਪਸ AVERROR(ENOMEM);
+            ਲਈ (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].ਅੰਕੜੇ_2.MemId;
+                dst_hwctx->surface_ids[i] = *(VASurfaceID*)pair->ਪਹਿਲਾ;
             }
             dst_hwctx->nb_surfaces = src_hwctx->nb_surfaces;
         }
-        break;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+    ਹਾਲਤ AV_HWDEVICE_TYPE_D3D11VA:
         {
             D3D11_TEXTURE2D_DESC texDesc;
             AVD3D11VAFramesContext *dst_hwctx;
-            dst_ctx->initial_pool_size = src_ctx->initial_pool_size;
+            dst_ctx->initial_pool_ਮਾਪ = src_ctx->initial_pool_ਮਾਪ;
             dst_hwctx = dst_ctx->hwctx;
             dst_hwctx->texture_infos = av_calloc(src_hwctx->nb_surfaces,
-                                                 sizeof(*dst_hwctx->texture_infos));
-            if (!dst_hwctx->texture_infos)
-                return AVERROR(ENOMEM);
-            if (src_hwctx->frame_type & MFX_MEMTYPE_SHARED_RESOURCE)
+                                                 ਆਕਾਰ(*dst_hwctx->texture_infos));
+            ਜੇ (!dst_hwctx->texture_infos)
+                ਵਾਪਸ AVERROR(ENOMEM);
+            ਜੇ (src_hwctx->ਚੌਖਟਾ_type & MFX_MEMTYPE_SHARED_RESOURCE)
                 dst_hwctx->MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].Data.MemId;
-                dst_hwctx->texture_infos[i].texture = (ID3D11Texture2D*)pair->first;
-                dst_hwctx->texture_infos[i].index = pair->second == (mfxMemId)MFX_INFINITE ? (intptr_t)0 : (intptr_t)pair->second;
+            ਲਈ (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].ਅੰਕੜੇ_2.MemId;
+                dst_hwctx->texture_infos[i].texture = (ID3D11Texture2D*)pair->ਪਹਿਲਾ;
+                dst_hwctx->texture_infos[i].ਸੂਚਕਾਂਕ = pair->ਦੂਜਾ == (mfxMemId)MFX_INFINITE ? (intptr_t)0 : (intptr_t)pair->ਦੂਜਾ;
             }
-            if (src_hwctx->nb_surfaces) {
+            ਜੇ (src_hwctx->nb_surfaces) {
                 ID3D11Texture2D_GetDesc(dst_hwctx->texture_infos[0].texture, &texDesc);
                 dst_hwctx->BindFlags = texDesc.BindFlags;
-            } else
-                dst_hwctx->BindFlags = qsv_get_d3d11va_bind_flags(src_hwctx->frame_type);
+            } ਨਹੀਂਤਾਂ
+                dst_hwctx->BindFlags = qsv_get_d3d11va_bind_flags(src_hwctx->ਚੌਖਟਾ_type);
         }
-        break;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+    ਹਾਲਤ AV_HWDEVICE_TYPE_DXVA2:
         {
-            AVDXVA2FramesContext *dst_hwctx = dst_ctx->hwctx;
+            AVDXVA2_ਚੌਖਟੇ_Context *dst_hwctx = dst_ctx->hwctx;
             dst_hwctx->surfaces = av_calloc(src_hwctx->nb_surfaces,
-                                            sizeof(*dst_hwctx->surfaces));
-            if (!dst_hwctx->surfaces)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].Data.MemId;
-                dst_hwctx->surfaces[i] = (IDirect3DSurface9*)pair->first;
+                                            ਆਕਾਰ(*dst_hwctx->surfaces));
+            ਜੇ (!dst_hwctx->surfaces)
+                ਵਾਪਸ AVERROR(ENOMEM);
+            ਲਈ (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                mfxHDLPair *pair = (mfxHDLPair*)src_hwctx->surfaces[i].ਅੰਕੜੇ_2.MemId;
+                dst_hwctx->surfaces[i] = (IDirect3DSurface9*)pair->ਪਹਿਲਾ;
             }
             dst_hwctx->nb_surfaces = src_hwctx->nb_surfaces;
-            if (src_hwctx->frame_type == MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET)
-                dst_hwctx->surface_type = DXVA2_VideoDecoderRenderTarget;
-            else
-                dst_hwctx->surface_type = DXVA2_VideoProcessorRenderTarget;
+            ਜੇ (src_hwctx->ਚੌਖਟਾ_type == MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_DECODER_ਨਿਸ਼ਾਨਾ)
+                dst_hwctx->surface_type = DXVA2_Video_Decoder_Render_ਨਿਸ਼ਾਨਾ;
+            ਨਹੀਂਤਾਂ
+                dst_hwctx->surface_type = DXVA2_Video_Processor_Render_ਨਿਸ਼ਾਨਾ;
         }
-        break;
-#endif
-    default:
-        return AVERROR(ENOSYS);
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+    ਮੂਲ:
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_map_from(AVHWFramesContext *ctx,
-                        AVFrame *dst, const AVFrame *src, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_map_from(AVHWFramesContext *ctx,
+                        AVFrame *dst, ਅਚਲ AVFrame *src, ਪੂਰਨ flags)
 {
     QSVFramesContext *s = ctx->hwctx;
-    mfxFrameSurface1 *surf = (mfxFrameSurface1*)src->data[3];
-    AVHWFramesContext *child_frames_ctx;
-    const AVPixFmtDescriptor *desc;
-    uint8_t *child_data;
+    mfx_ਚੌਖਟਾ_Surface1 *surf = (mfx_ਚੌਖਟਾ_Surface1*)src->ਅੰਕੜੇ[3];
+    AVHWFramesContext *ਬੱਚਾ_ਚੌਖਟੇ_ctx;
+    ਅਚਲ AVPixFmtDescriptor *desc;
+    uint8_t *ਬੱਚਾ_ਅੰਕੜੇ;
     AVFrame *dummy;
-    int ret = 0;
+    ਪੂਰਨ ret = 0;
 
-    if (!s->child_frames_ref)
-        return AVERROR(ENOSYS);
-    child_frames_ctx = (AVHWFramesContext*)s->child_frames_ref->data;
+    ਜੇ (!s->ਬੱਚਾ_ਚੌਖਟੇ_ref)
+        ਵਾਪਸ AVERROR(ENOSYS);
+    ਬੱਚਾ_ਚੌਖਟੇ_ctx = (AVHWFramesContext*)s->ਬੱਚਾ_ਚੌਖਟੇ_ref->ਅੰਕੜੇ;
 
-    switch (child_frames_ctx->device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    ਚੋਣ (ਬੱਚਾ_ਚੌਖਟੇ_ctx->device_ctx->type) {
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_HWDEVICE_TYPE_VAAPI:
     {
-        mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
+        mfxHDLPair *pair = (mfxHDLPair*)surf->ਅੰਕੜੇ_2.MemId;
         /* pair->first is *VASurfaceID while data[3] in vaapi frame is VASurfaceID, so
          * we need this casting for vaapi.
          * Add intptr_t to force cast from VASurfaceID(uint) type to pointer(long) type
          * to avoid compile warning */
-        child_data = (uint8_t*)(intptr_t)*(VASurfaceID*)pair->first;
-        break;
+        ਬੱਚਾ_ਅੰਕੜੇ = (uint8_t*)(intptr_t)*(VASurfaceID*)pair->ਪਹਿਲਾ;
+        ਰੋਕੋ;
     }
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+    ਹਾਲਤ AV_HWDEVICE_TYPE_D3D11VA:
     {
-        mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
-        child_data = pair->first;
-        break;
+        mfxHDLPair *pair = (mfxHDLPair*)surf->ਅੰਕੜੇ_2.MemId;
+        ਬੱਚਾ_ਅੰਕੜੇ = pair->ਪਹਿਲਾ;
+        ਰੋਕੋ;
     }
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+    ਹਾਲਤ AV_HWDEVICE_TYPE_DXVA2:
     {
-        mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
-        child_data = pair->first;
-        break;
+        mfxHDLPair *pair = (mfxHDLPair*)surf->ਅੰਕੜੇ_2.MemId;
+        ਬੱਚਾ_ਅੰਕੜੇ = pair->ਪਹਿਲਾ;
+        ਰੋਕੋ;
     }
-#endif
-    default:
-        return AVERROR(ENOSYS);
+#ਜੇ_ਅੰਤ
+    ਮੂਲ:
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-    if (dst->format == child_frames_ctx->format) {
-        ret = ff_hwframe_map_create(s->child_frames_ref,
-                                    dst, src, NULL, NULL);
-        if (ret < 0)
-            return ret;
+    ਜੇ (dst->format == ਬੱਚਾ_ਚੌਖਟੇ_ctx->format) {
+        ret = ff_hwframe_map_create(s->ਬੱਚਾ_ਚੌਖਟੇ_ref,
+                                    dst, src, ਨਿਰਾ, ਨਿਰਾ);
+        ਜੇ (ret < 0)
+            ਵਾਪਸ ret;
 
-        dst->width   = src->width;
-        dst->height  = src->height;
+        dst->ਚੌੜਾਈ   = src->ਚੌੜਾਈ;
+        dst->ਉਚਾਈ  = src->ਉਚਾਈ;
 
-       if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-            mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
-            dst->data[0] = pair->first;
-            dst->data[1] = pair->second == (mfxMemId)MFX_INFINITE ? (uint8_t *)0 : pair->second;
-        } else {
-            dst->data[3] = child_data;
+       ਜੇ (ਬੱਚਾ_ਚੌਖਟੇ_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+            mfxHDLPair *pair = (mfxHDLPair*)surf->ਅੰਕੜੇ_2.MemId;
+            dst->ਅੰਕੜੇ[0] = pair->ਪਹਿਲਾ;
+            dst->ਅੰਕੜੇ[1] = pair->ਦੂਜਾ == (mfxMemId)MFX_INFINITE ? (uint8_t *)0 : pair->ਦੂਜਾ;
+        } ਨਹੀਂਤਾਂ {
+            dst->ਅੰਕੜੇ[3] = ਬੱਚਾ_ਅੰਕੜੇ;
         }
 
-        return 0;
+        ਵਾਪਸ 0;
     }
 
     desc = av_pix_fmt_desc_get(dst->format);
-    if (desc && desc->flags & AV_PIX_FMT_FLAG_HWACCEL) {
+    ਜੇ (desc && desc->flags & AV_PIX_FMT_FLAG_HWACCEL) {
         // This only supports mapping to software.
-        return AVERROR(ENOSYS);
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-    dummy = av_frame_alloc();
-    if (!dummy)
-        return AVERROR(ENOMEM);
+    dummy = av_ਚੌਖਟਾ_alloc();
+    ਜੇ (!dummy)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    dummy->buf[0]        = av_buffer_ref(src->buf[0]);
-    dummy->hw_frames_ctx = av_buffer_ref(s->child_frames_ref);
-    if (!dummy->buf[0] || !dummy->hw_frames_ctx)
-        goto fail;
+    dummy->buf[0]        = av_ਬਫਰ_ref(src->buf[0]);
+    dummy->hw_ਚੌਖਟੇ_ctx = av_ਬਫਰ_ref(s->ਬੱਚਾ_ਚੌਖਟੇ_ref);
+    ਜੇ (!dummy->buf[0] || !dummy->hw_ਚੌਖਟੇ_ctx)
+        ਜਾਓ fail;
 
-    dummy->format        = child_frames_ctx->format;
-    dummy->width         = src->width;
-    dummy->height        = src->height;
+    dummy->format        = ਬੱਚਾ_ਚੌਖਟੇ_ctx->format;
+    dummy->ਚੌੜਾਈ         = src->ਚੌੜਾਈ;
+    dummy->ਉਚਾਈ        = src->ਉਚਾਈ;
 
-    if (child_frames_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
-        mfxHDLPair *pair = (mfxHDLPair*)surf->Data.MemId;
-        dummy->data[0] = pair->first;
-        dummy->data[1] = pair->second == (mfxMemId)MFX_INFINITE ? (uint8_t *)0 : pair->second;
-    } else {
-        dummy->data[3] = child_data;
+    ਜੇ (ਬੱਚਾ_ਚੌਖਟੇ_ctx->device_ctx->type == AV_HWDEVICE_TYPE_D3D11VA) {
+        mfxHDLPair *pair = (mfxHDLPair*)surf->ਅੰਕੜੇ_2.MemId;
+        dummy->ਅੰਕੜੇ[0] = pair->ਪਹਿਲਾ;
+        dummy->ਅੰਕੜੇ[1] = pair->ਦੂਜਾ == (mfxMemId)MFX_INFINITE ? (uint8_t *)0 : pair->ਦੂਜਾ;
+    } ਨਹੀਂਤਾਂ {
+        dummy->ਅੰਕੜੇ[3] = ਬੱਚਾ_ਅੰਕੜੇ;
     }
 
     ret = av_hwframe_map(dst, dummy, flags);
 
 fail:
-    av_frame_free(&dummy);
+    av_ਚੌਖਟਾ_free(&dummy);
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-static int qsv_transfer_data_child(AVHWFramesContext *ctx, AVFrame *dst,
-                                   const AVFrame *src)
+ਸਥਿਰ ਪੂਰਨ qsv_transfer_ਅੰਕੜੇ_ਬੱਚਾ(AVHWFramesContext *ctx, AVFrame *dst,
+                                   ਅਚਲ AVFrame *src)
 {
     QSVFramesContext *s = ctx->hwctx;
-    AVHWFramesContext *child_frames_ctx = (AVHWFramesContext*)s->child_frames_ref->data;
-    int download = !!src->hw_frames_ctx;
-    mfxFrameSurface1 *surf = (mfxFrameSurface1*)(download ? src->data[3] : dst->data[3]);
+    AVHWFramesContext *ਬੱਚਾ_ਚੌਖਟੇ_ctx = (AVHWFramesContext*)s->ਬੱਚਾ_ਚੌਖਟੇ_ref->ਅੰਕੜੇ;
+    ਪੂਰਨ download = !!src->hw_ਚੌਖਟੇ_ctx;
+    mfx_ਚੌਖਟਾ_Surface1 *surf = (mfx_ਚੌਖਟਾ_Surface1*)(download ? src->ਅੰਕੜੇ[3] : dst->ਅੰਕੜੇ[3]);
 
     AVFrame *dummy;
-    int ret;
+    ਪੂਰਨ ret;
 
-    dummy = av_frame_alloc();
-    if (!dummy)
-        return AVERROR(ENOMEM);
+    dummy = av_ਚੌਖਟਾ_alloc();
+    ਜੇ (!dummy)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    dummy->format        = child_frames_ctx->format;
-    dummy->width         = src->width;
-    dummy->height        = src->height;
+    dummy->format        = ਬੱਚਾ_ਚੌਖਟੇ_ctx->format;
+    dummy->ਚੌੜਾਈ         = src->ਚੌੜਾਈ;
+    dummy->ਉਚਾਈ        = src->ਉਚਾਈ;
     dummy->buf[0]        = download ? src->buf[0] : dst->buf[0];
-    dummy->data[3]       = surf->Data.MemId;
-    dummy->hw_frames_ctx = s->child_frames_ref;
+    dummy->ਅੰਕੜੇ[3]       = surf->ਅੰਕੜੇ_2.MemId;
+    dummy->hw_ਚੌਖਟੇ_ctx = s->ਬੱਚਾ_ਚੌਖਟੇ_ref;
 
-    ret = download ? av_hwframe_transfer_data(dst, dummy, 0) :
-                     av_hwframe_transfer_data(dummy, src, 0);
+    ret = download ? av_hwframe_transfer_ਅੰਕੜੇ(dst, dummy, 0) :
+                     av_hwframe_transfer_ਅੰਕੜੇ(dummy, src, 0);
 
-    dummy->buf[0]        = NULL;
-    dummy->data[3]       = NULL;
-    dummy->hw_frames_ctx = NULL;
+    dummy->buf[0]        = ਨਿਰਾ;
+    dummy->ਅੰਕੜੇ[3]       = ਨਿਰਾ;
+    dummy->hw_ਚੌਖਟੇ_ctx = ਨਿਰਾ;
 
-    av_frame_free(&dummy);
+    av_ਚੌਖਟਾ_free(&dummy);
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-static int map_frame_to_surface(const AVFrame *frame, mfxFrameSurface1 *surface)
+ਸਥਿਰ ਪੂਰਨ map_ਚੌਖਟਾ_ਮੰਜ਼ਿਲ_surface(ਅਚਲ AVFrame *ਚੌਖਟਾ, mfx_ਚੌਖਟਾ_Surface1 *surface)
 {
-    switch (frame->format) {
-    case AV_PIX_FMT_NV12:
-    case AV_PIX_FMT_P010:
-    case AV_PIX_FMT_P012:
-        surface->Data.Y  = frame->data[0];
-        surface->Data.UV = frame->data[1];
-        break;
+    ਚੋਣ (ਚੌਖਟਾ->format) {
+    ਹਾਲਤ AV_PIX_FMT_NV12:
+    ਹਾਲਤ AV_PIX_FMT_P010:
+    ਹਾਲਤ AV_PIX_FMT_P012:
+        surface->ਅੰਕੜੇ_2.Y  = ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+        surface->ਅੰਕੜੇ_2.UV = ਚੌਖਟਾ->ਅੰਕੜੇ[1];
+        ਰੋਕੋ;
 
-    case AV_PIX_FMT_YUV420P:
-        surface->Data.Y = frame->data[0];
-        surface->Data.U = frame->data[1];
-        surface->Data.V = frame->data[2];
-        break;
+    ਹਾਲਤ AV_PIX_FMT_YUV420P:
+        surface->ਅੰਕੜੇ_2.Y = ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+        surface->ਅੰਕੜੇ_2.U = ਚੌਖਟਾ->ਅੰਕੜੇ[1];
+        surface->ਅੰਕੜੇ_2.V = ਚੌਖਟਾ->ਅੰਕੜੇ[2];
+        ਰੋਕੋ;
 
-    case AV_PIX_FMT_BGRA:
-        surface->Data.B = frame->data[0];
-        surface->Data.G = frame->data[0] + 1;
-        surface->Data.R = frame->data[0] + 2;
-        surface->Data.A = frame->data[0] + 3;
-        break;
-    case AV_PIX_FMT_YUYV422:
-        surface->Data.Y = frame->data[0];
-        surface->Data.U = frame->data[0] + 1;
-        surface->Data.V = frame->data[0] + 3;
-        break;
+    ਹਾਲਤ AV_PIX_FMT_BGRA:
+        surface->ਅੰਕੜੇ_2.B = ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+        surface->ਅੰਕੜੇ_2.G = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 1;
+        surface->ਅੰਕੜੇ_2.R = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 2;
+        surface->ਅੰਕੜੇ_2.A = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 3;
+        ਰੋਕੋ;
+    ਹਾਲਤ AV_PIX_FMT_YUYV422:
+        surface->ਅੰਕੜੇ_2.Y = ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+        surface->ਅੰਕੜੇ_2.U = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 1;
+        surface->ਅੰਕੜੇ_2.V = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 3;
+        ਰੋਕੋ;
 
-    case AV_PIX_FMT_Y210:
-    case AV_PIX_FMT_Y212:
-        surface->Data.Y16 = (mfxU16 *)frame->data[0];
-        surface->Data.U16 = (mfxU16 *)frame->data[0] + 1;
-        surface->Data.V16 = (mfxU16 *)frame->data[0] + 3;
-        break;
-    case AV_PIX_FMT_VUYX:
-        surface->Data.V = frame->data[0];
-        surface->Data.U = frame->data[0] + 1;
-        surface->Data.Y = frame->data[0] + 2;
+    ਹਾਲਤ AV_PIX_FMT_Y210:
+    ਹਾਲਤ AV_PIX_FMT_Y212:
+        surface->ਅੰਕੜੇ_2.Y16 = (mfxU16 *)ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+        surface->ਅੰਕੜੇ_2.U16 = (mfxU16 *)ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 1;
+        surface->ਅੰਕੜੇ_2.V16 = (mfxU16 *)ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 3;
+        ਰੋਕੋ;
+    ਹਾਲਤ AV_PIX_FMT_VUYX:
+        surface->ਅੰਕੜੇ_2.V = ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+        surface->ਅੰਕੜੇ_2.U = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 1;
+        surface->ਅੰਕੜੇ_2.Y = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 2;
         // Only set Data.A to a valid address, the SDK doesn't
         // use the value from the frame.
-        surface->Data.A = frame->data[0] + 3;
-        break;
-    case AV_PIX_FMT_XV30:
-        surface->Data.U = frame->data[0];
-        break;
-    case AV_PIX_FMT_XV36:
-        surface->Data.U = frame->data[0];
-        surface->Data.Y = frame->data[0] + 2;
-        surface->Data.V = frame->data[0] + 4;
+        surface->ਅੰਕੜੇ_2.A = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 3;
+        ਰੋਕੋ;
+    ਹਾਲਤ AV_PIX_FMT_XV30:
+        surface->ਅੰਕੜੇ_2.U = ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+        ਰੋਕੋ;
+    ਹਾਲਤ AV_PIX_FMT_XV36:
+        surface->ਅੰਕੜੇ_2.U = ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+        surface->ਅੰਕੜੇ_2.Y = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 2;
+        surface->ਅੰਕੜੇ_2.V = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 4;
         // Only set Data.A to a valid address, the SDK doesn't
         // use the value from the frame.
-        surface->Data.A = frame->data[0] + 6;
-        break;
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_UYVY422:
-        surface->Data.Y = frame->data[0] + 1;
-        surface->Data.U = frame->data[0];
-        surface->Data.V = frame->data[0] + 2;
-        break;
-#endif
-    default:
-        return MFX_ERR_UNSUPPORTED;
+        surface->ਅੰਕੜੇ_2.A = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 6;
+        ਰੋਕੋ;
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_PIX_FMT_UYVY422:
+        surface->ਅੰਕੜੇ_2.Y = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 1;
+        surface->ਅੰਕੜੇ_2.U = ਚੌਖਟਾ->ਅੰਕੜੇ[0];
+        surface->ਅੰਕੜੇ_2.V = ਚੌਖਟਾ->ਅੰਕੜੇ[0] + 2;
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+    ਮੂਲ:
+        ਵਾਪਸ MFX_ERR_UNSUPPORTED;
     }
-    surface->Data.Pitch     = frame->linesize[0];
-    surface->Data.TimeStamp = frame->pts;
+    surface->ਅੰਕੜੇ_2.Pitch     = ਚੌਖਟਾ->linesize[0];
+    surface->ਅੰਕੜੇ_2.ਸਮਾਂ_Stamp = ਚੌਖਟਾ->pts;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_internal_session_check_init(AVHWFramesContext *ctx, int upload)
+ਸਥਿਰ ਪੂਰਨ qsv_ਅੰਦਰੂਨੀ_session_check_init(AVHWFramesContext *ctx, ਪੂਰਨ upload)
 {
     QSVFramesContext *s = ctx->hwctx;
     atomic_int *inited  = upload ? &s->session_upload_init : &s->session_download_init;
     mfxSession *session = upload ? &s->session_upload      : &s->session_download;
-    int ret = 0;
+    ਪੂਰਨ ret = 0;
 
-    if (atomic_load(inited))
-        return 0;
+    ਜੇ (atomic_load(inited))
+        ਵਾਪਸ 0;
 
-#if HAVE_PTHREADS
-    pthread_mutex_lock(&s->session_lock);
-#endif
+#ਜੇ HAVE_PTHREADS
+    pthread_mutex_ਤਾਲਾ(&s->session_ਤਾਲਾ);
+#ਜੇ_ਅੰਤ
 
-    if (!atomic_load(inited)) {
-        ret = qsv_init_internal_session(ctx, session, upload);
+    ਜੇ (!atomic_load(inited)) {
+        ret = qsv_init_ਅੰਦਰੂਨੀ_session(ctx, session, upload);
         atomic_store(inited, 1);
     }
 
-#if HAVE_PTHREADS
-    pthread_mutex_unlock(&s->session_lock);
-#endif
+#ਜੇ HAVE_PTHREADS
+    pthread_mutex_unlock(&s->session_ਤਾਲਾ);
+#ਜੇ_ਅੰਤ
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-static int qsv_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst,
-                                  const AVFrame *src)
+ਸਥਿਰ ਪੂਰਨ qsv_transfer_ਅੰਕੜੇ_from(AVHWFramesContext *ctx, AVFrame *dst,
+                                  ਅਚਲ AVFrame *src)
 {
     QSVFramesContext  *s = ctx->hwctx;
-    mfxFrameSurface1 out = {{ 0 }};
-    mfxFrameSurface1 *in = (mfxFrameSurface1*)src->data[3];
+    mfx_ਚੌਖਟਾ_Surface1 ਬਾਹਰਲਾ = {{ 0 }};
+    mfx_ਚੌਖਟਾ_Surface1 *ਵਿੱਚ_2 = (mfx_ਚੌਖਟਾ_Surface1*)src->ਅੰਕੜੇ[3];
 
-    mfxSyncPoint sync = NULL;
-    mfxStatus err;
-    int ret = 0;
+    mfx_Sync_ਬਿੰਦੂ sync = ਨਿਰਾ;
+    mfx_ਸਥਿਤੀ err;
+    ਪੂਰਨ ret = 0;
     /* download to temp frame if the output is not padded as libmfx requires */
-    AVFrame *tmp_frame = &s->realigned_download_frame;
-    AVFrame *dst_frame;
-    int realigned = 0;
+    AVFrame *tmp_ਚੌਖਟਾ = &s->realigned_download_ਚੌਖਟਾ;
+    AVFrame *dst_ਚੌਖਟਾ;
+    ਪੂਰਨ realigned = 0;
 
-    ret = qsv_internal_session_check_init(ctx, 0);
-    if (ret < 0)
-        return ret;
+    ret = qsv_ਅੰਦਰੂਨੀ_session_check_init(ctx, 0);
+    ਜੇ (ret < 0)
+        ਵਾਪਸ ret;
 
     /* According to MSDK spec for mfxframeinfo, "Width must be a multiple of 16.
      * Height must be a multiple of 16 for progressive frame sequence and a
      * multiple of 32 otherwise.", so align all frames to 16 before downloading. */
-    if (dst->height & 15 || dst->linesize[0] & 15) {
+    ਜੇ (dst->ਉਚਾਈ & 15 || dst->linesize[0] & 15) {
         realigned = 1;
-        if (tmp_frame->format != dst->format ||
-            tmp_frame->width  != FFALIGN(dst->linesize[0], 16) ||
-            tmp_frame->height != FFALIGN(dst->height, 16)) {
-            av_frame_unref(tmp_frame);
+        ਜੇ (tmp_ਚੌਖਟਾ->format != dst->format ||
+            tmp_ਚੌਖਟਾ->ਚੌੜਾਈ  != FFALIGN(dst->linesize[0], 16) ||
+            tmp_ਚੌਖਟਾ->ਉਚਾਈ != FFALIGN(dst->ਉਚਾਈ, 16)) {
+            av_ਚੌਖਟਾ_unref(tmp_ਚੌਖਟਾ);
 
-            tmp_frame->format = dst->format;
-            tmp_frame->width  = FFALIGN(dst->linesize[0], 16);
-            tmp_frame->height = FFALIGN(dst->height, 16);
-            ret = av_frame_get_buffer(tmp_frame, 0);
-            if (ret < 0)
-                return ret;
+            tmp_ਚੌਖਟਾ->format = dst->format;
+            tmp_ਚੌਖਟਾ->ਚੌੜਾਈ  = FFALIGN(dst->linesize[0], 16);
+            tmp_ਚੌਖਟਾ->ਉਚਾਈ = FFALIGN(dst->ਉਚਾਈ, 16);
+            ret = av_ਚੌਖਟਾ_get_ਬਫਰ(tmp_ਚੌਖਟਾ, 0);
+            ਜੇ (ret < 0)
+                ਵਾਪਸ ret;
         }
     }
 
-    dst_frame = realigned ? tmp_frame : dst;
+    dst_ਚੌਖਟਾ = realigned ? tmp_ਚੌਖਟਾ : dst;
 
-    if (!s->session_download) {
-        if (s->child_frames_ref)
-            return qsv_transfer_data_child(ctx, dst_frame, src);
+    ਜੇ (!s->session_download) {
+        ਜੇ (s->ਬੱਚਾ_ਚੌਖਟੇ_ref)
+            ਵਾਪਸ qsv_transfer_ਅੰਕੜੇ_ਬੱਚਾ(ctx, dst_ਚੌਖਟਾ, src);
 
         av_log(ctx, AV_LOG_ERROR, "Surface download not possible\n");
-        return AVERROR(ENOSYS);
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-    out.Info = in->Info;
-    map_frame_to_surface(dst_frame, &out);
+    ਬਾਹਰਲਾ.Info = ਵਿੱਚ_2->Info;
+    map_ਚੌਖਟਾ_ਮੰਜ਼ਿਲ_surface(dst_ਚੌਖਟਾ, &ਬਾਹਰਲਾ);
 
-    do {
-        err = MFXVideoVPP_RunFrameVPPAsync(s->session_download, in, &out, NULL, &sync);
-        if (err == MFX_WRN_DEVICE_BUSY)
+    ਕਰੋ {
+        err = MFXVideo_VPP_ਲੜੀਵਾਰ_ਚੌਖਟਾ_VPPAsync(s->session_download, ਵਿੱਚ_2, &ਬਾਹਰਲਾ, ਨਿਰਾ, &sync);
+        ਜੇ (err == MFX_WRN_DEVICE_BUSY)
             av_usleep(1);
-    } while (err == MFX_WRN_DEVICE_BUSY);
+    } ਜਦੋਂ (err == MFX_WRN_DEVICE_BUSY);
 
-    if (err < 0 || !sync) {
+    ਜੇ (err < 0 || !sync) {
         av_log(ctx, AV_LOG_ERROR, "Error downloading the surface\n");
-        return AVERROR_UNKNOWN;
+        ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    do {
+    ਕਰੋ {
         err = MFXVideoCORE_SyncOperation(s->session_download, sync, 1000);
-    } while (err == MFX_WRN_IN_EXECUTION);
-    if (err < 0) {
+    } ਜਦੋਂ (err == MFX_WRN_ਵਿੱਚ_EXECUTION);
+    ਜੇ (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error synchronizing the operation: %d\n", err);
-        return AVERROR_UNKNOWN;
+        ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    if (realigned) {
-        tmp_frame->width  = dst->width;
-        tmp_frame->height = dst->height;
-        ret = av_frame_copy(dst, tmp_frame);
-        tmp_frame->width  = FFALIGN(dst->linesize[0], 16);
-        tmp_frame->height = FFALIGN(dst->height, 16);
-        if (ret < 0)
-            return ret;
+    ਜੇ (realigned) {
+        tmp_ਚੌਖਟਾ->ਚੌੜਾਈ  = dst->ਚੌੜਾਈ;
+        tmp_ਚੌਖਟਾ->ਉਚਾਈ = dst->ਉਚਾਈ;
+        ret = av_ਚੌਖਟਾ_copy(dst, tmp_ਚੌਖਟਾ);
+        tmp_ਚੌਖਟਾ->ਚੌੜਾਈ  = FFALIGN(dst->linesize[0], 16);
+        tmp_ਚੌਖਟਾ->ਉਚਾਈ = FFALIGN(dst->ਉਚਾਈ, 16);
+        ਜੇ (ret < 0)
+            ਵਾਪਸ ret;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst,
-                                const AVFrame *src)
+ਸਥਿਰ ਪੂਰਨ qsv_transfer_ਅੰਕੜੇ_ਮੰਜ਼ਿਲ(AVHWFramesContext *ctx, AVFrame *dst,
+                                ਅਚਲ AVFrame *src)
 {
     QSVFramesContext   *s = ctx->hwctx;
-    mfxFrameSurface1   in = {{ 0 }};
-    mfxFrameSurface1 *out = (mfxFrameSurface1*)dst->data[3];
-    mfxFrameInfo tmp_info;
+    mfx_ਚੌਖਟਾ_Surface1   ਵਿੱਚ_2 = {{ 0 }};
+    mfx_ਚੌਖਟਾ_Surface1 *ਬਾਹਰਲਾ = (mfx_ਚੌਖਟਾ_Surface1*)dst->ਅੰਕੜੇ[3];
+    mfx_ਚੌਖਟਾ_Info tmp_info;
 
-    mfxSyncPoint sync = NULL;
-    mfxStatus err;
-    int ret = 0;
+    mfx_Sync_ਬਿੰਦੂ sync = ਨਿਰਾ;
+    mfx_ਸਥਿਤੀ err;
+    ਪੂਰਨ ret = 0;
     /* make a copy if the input is not padded as libmfx requires */
-    AVFrame *tmp_frame = &s->realigned_upload_frame;
-    const AVFrame *src_frame;
-    int realigned = 0;
+    AVFrame *tmp_ਚੌਖਟਾ = &s->realigned_upload_ਚੌਖਟਾ;
+    ਅਚਲ AVFrame *src_ਚੌਖਟਾ;
+    ਪੂਰਨ realigned = 0;
 
-    ret = qsv_internal_session_check_init(ctx, 1);
-    if (ret < 0)
-        return ret;
+    ret = qsv_ਅੰਦਰੂਨੀ_session_check_init(ctx, 1);
+    ਜੇ (ret < 0)
+        ਵਾਪਸ ret;
 
     /* According to MSDK spec for mfxframeinfo, "Width must be a multiple of 16.
      * Height must be a multiple of 16 for progressive frame sequence and a
      * multiple of 32 otherwise.", so align all frames to 16 before uploading. */
-    if (src->height & 15 || src->linesize[0] & 15) {
+    ਜੇ (src->ਉਚਾਈ & 15 || src->linesize[0] & 15) {
         realigned = 1;
-        if (tmp_frame->format != src->format ||
-            tmp_frame->width  != FFALIGN(src->width, 16) ||
-            tmp_frame->height != FFALIGN(src->height, 16)) {
-            av_frame_unref(tmp_frame);
+        ਜੇ (tmp_ਚੌਖਟਾ->format != src->format ||
+            tmp_ਚੌਖਟਾ->ਚੌੜਾਈ  != FFALIGN(src->ਚੌੜਾਈ, 16) ||
+            tmp_ਚੌਖਟਾ->ਉਚਾਈ != FFALIGN(src->ਉਚਾਈ, 16)) {
+            av_ਚੌਖਟਾ_unref(tmp_ਚੌਖਟਾ);
 
-            tmp_frame->format = src->format;
-            tmp_frame->width  = FFALIGN(src->width, 16);
-            tmp_frame->height = FFALIGN(src->height, 16);
-            ret = av_frame_get_buffer(tmp_frame, 0);
-            if (ret < 0)
-                return ret;
+            tmp_ਚੌਖਟਾ->format = src->format;
+            tmp_ਚੌਖਟਾ->ਚੌੜਾਈ  = FFALIGN(src->ਚੌੜਾਈ, 16);
+            tmp_ਚੌਖਟਾ->ਉਚਾਈ = FFALIGN(src->ਉਚਾਈ, 16);
+            ret = av_ਚੌਖਟਾ_get_ਬਫਰ(tmp_ਚੌਖਟਾ, 0);
+            ਜੇ (ret < 0)
+                ਵਾਪਸ ret;
         }
-        ret = av_frame_copy(tmp_frame, src);
-        if (ret < 0) {
-            av_frame_unref(tmp_frame);
-            return ret;
+        ret = av_ਚੌਖਟਾ_copy(tmp_ਚੌਖਟਾ, src);
+        ਜੇ (ret < 0) {
+            av_ਚੌਖਟਾ_unref(tmp_ਚੌਖਟਾ);
+            ਵਾਪਸ ret;
         }
-        ret = qsv_fill_border(tmp_frame, src);
-        if (ret < 0) {
-            av_frame_unref(tmp_frame);
-            return ret;
+        ret = qsv_fill_border(tmp_ਚੌਖਟਾ, src);
+        ਜੇ (ret < 0) {
+            av_ਚੌਖਟਾ_unref(tmp_ਚੌਖਟਾ);
+            ਵਾਪਸ ret;
         }
 
-        tmp_info = out->Info;
-        out->Info.CropW = FFMIN(out->Info.Width,  tmp_frame->width);
-        out->Info.CropH = FFMIN(out->Info.Height, tmp_frame->height);
+        tmp_info = ਬਾਹਰਲਾ->Info;
+        ਬਾਹਰਲਾ->Info.CropW = FFMIN(ਬਾਹਰਲਾ->Info.ਚੌੜਾਈ_2,  tmp_ਚੌਖਟਾ->ਚੌੜਾਈ);
+        ਬਾਹਰਲਾ->Info.CropH = FFMIN(ਬਾਹਰਲਾ->Info.ਉਚਾਈ_2, tmp_ਚੌਖਟਾ->ਉਚਾਈ);
     }
 
-    src_frame = realigned ? tmp_frame : src;
+    src_ਚੌਖਟਾ = realigned ? tmp_ਚੌਖਟਾ : src;
 
-    if (!s->session_upload) {
-        if (s->child_frames_ref)
-            return qsv_transfer_data_child(ctx, dst, src_frame);
+    ਜੇ (!s->session_upload) {
+        ਜੇ (s->ਬੱਚਾ_ਚੌਖਟੇ_ref)
+            ਵਾਪਸ qsv_transfer_ਅੰਕੜੇ_ਬੱਚਾ(ctx, dst, src_ਚੌਖਟਾ);
 
         av_log(ctx, AV_LOG_ERROR, "Surface upload not possible\n");
-        return AVERROR(ENOSYS);
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-    in.Info = out->Info;
-    map_frame_to_surface(src_frame, &in);
+    ਵਿੱਚ_2.Info = ਬਾਹਰਲਾ->Info;
+    map_ਚੌਖਟਾ_ਮੰਜ਼ਿਲ_surface(src_ਚੌਖਟਾ, &ਵਿੱਚ_2);
 
-    do {
-        err = MFXVideoVPP_RunFrameVPPAsync(s->session_upload, &in, out, NULL, &sync);
-        if (err == MFX_WRN_DEVICE_BUSY)
+    ਕਰੋ {
+        err = MFXVideo_VPP_ਲੜੀਵਾਰ_ਚੌਖਟਾ_VPPAsync(s->session_upload, &ਵਿੱਚ_2, ਬਾਹਰਲਾ, ਨਿਰਾ, &sync);
+        ਜੇ (err == MFX_WRN_DEVICE_BUSY)
             av_usleep(1);
-    } while (err == MFX_WRN_DEVICE_BUSY);
+    } ਜਦੋਂ (err == MFX_WRN_DEVICE_BUSY);
 
-    if (err < 0 || !sync) {
+    ਜੇ (err < 0 || !sync) {
         av_log(ctx, AV_LOG_ERROR, "Error uploading the surface\n");
-        return AVERROR_UNKNOWN;
+        ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    do {
+    ਕਰੋ {
         err = MFXVideoCORE_SyncOperation(s->session_upload, sync, 1000);
-    } while (err == MFX_WRN_IN_EXECUTION);
-    if (err < 0) {
+    } ਜਦੋਂ (err == MFX_WRN_ਵਿੱਚ_EXECUTION);
+    ਜੇ (err < 0) {
         av_log(ctx, AV_LOG_ERROR, "Error synchronizing the operation\n");
-        return AVERROR_UNKNOWN;
+        ਵਾਪਸ AVERROR_UNKNOWN;
     }
 
-    if (realigned) {
-        out->Info.CropW = tmp_info.CropW;
-        out->Info.CropH = tmp_info.CropH;
+    ਜੇ (realigned) {
+        ਬਾਹਰਲਾ->Info.CropW = tmp_info.CropW;
+        ਬਾਹਰਲਾ->Info.CropH = tmp_info.CropH;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_dynamic_frames_derive_to(AVHWFramesContext *dst_ctx,
-                                        AVHWFramesContext *src_ctx, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_dynamic_ਚੌਖਟੇ_derive_ਮੰਜ਼ਿਲ(AVHWFramesContext *dst_ctx,
+                                        AVHWFramesContext *src_ctx, ਪੂਰਨ flags)
 {
     QSVFramesContext *s = dst_ctx->hwctx;
     AVQSVFramesContext *dst_hwctx = &s->p;
-    mfxFrameSurface1 mfx_surf1;
+    mfx_ਚੌਖਟਾ_Surface1 mfx_surf1;
 
-    switch (src_ctx->device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
-        dst_hwctx->frame_type  = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
-        break;
-#endif
+    ਚੋਣ (src_ctx->device_ctx->type) {
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_HWDEVICE_TYPE_VAAPI:
+        dst_hwctx->ਚੌਖਟਾ_type  = MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_DECODER_ਨਿਸ਼ਾਨਾ;
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
 
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+#ਜੇ CONFIG_D3D11VA
+    ਹਾਲਤ AV_HWDEVICE_TYPE_D3D11VA:
     {
         AVD3D11VAFramesContext *src_hwctx = src_ctx->hwctx;
 
-        if (src_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-            dst_hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-        } else {
-            dst_hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+        ਜੇ (src_hwctx->BindFlags & D3_D11_BIND_RENDER_ਨਿਸ਼ਾਨਾ) {
+            dst_hwctx->ਚੌਖਟਾ_type |= MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_PROCESSOR_ਨਿਸ਼ਾਨਾ;
+        } ਨਹੀਂਤਾਂ {
+            dst_hwctx->ਚੌਖਟਾ_type |= MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_DECODER_ਨਿਸ਼ਾਨਾ;
         }
     }
-    break;
-#endif
+    ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
 
-    default:
-        return AVERROR(ENOSYS);
+    ਮੂਲ:
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-    memset(&mfx_surf1, 0, sizeof(mfx_surf1));
+    memset(&mfx_surf1, 0, ਆਕਾਰ(mfx_surf1));
     qsv_init_surface(dst_ctx, &mfx_surf1);
-    s->frame_info = mfx_surf1.Info;
-    dst_hwctx->info = &s->frame_info;
+    s->ਚੌਖਟਾ_info = mfx_surf1.Info;
+    dst_hwctx->info = &s->ਚੌਖਟਾ_info;
     dst_hwctx->nb_surfaces = 0;
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_fixed_frames_derive_to(AVHWFramesContext *dst_ctx,
-                                      AVHWFramesContext *src_ctx, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_fixed_ਚੌਖਟੇ_derive_ਮੰਜ਼ਿਲ(AVHWFramesContext *dst_ctx,
+                                      AVHWFramesContext *src_ctx, ਪੂਰਨ flags)
 {
     QSVFramesContext *s = dst_ctx->hwctx;
     AVQSVFramesContext *dst_hwctx = &s->p;
-    int i;
+    ਪੂਰਨ i;
 
-    switch (src_ctx->device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    ਚੋਣ (src_ctx->device_ctx->type) {
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_HWDEVICE_TYPE_VAAPI:
         {
             AVVAAPIFramesContext *src_hwctx = src_ctx->hwctx;
-            s->handle_pairs_internal = av_calloc(src_ctx->initial_pool_size,
-                                                 sizeof(*s->handle_pairs_internal));
-            if (!s->handle_pairs_internal)
-                return AVERROR(ENOMEM);
-            s->surfaces_internal = av_calloc(src_hwctx->nb_surfaces,
-                                             sizeof(*s->surfaces_internal));
-            if (!s->surfaces_internal)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                qsv_init_surface(dst_ctx, &s->surfaces_internal[i]);
-                s->handle_pairs_internal[i].first = src_hwctx->surface_ids + i;
-                s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-                s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+            s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ = av_calloc(src_ctx->initial_pool_ਮਾਪ,
+                                                 ਆਕਾਰ(*s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ));
+            ਜੇ (!s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ)
+                ਵਾਪਸ AVERROR(ENOMEM);
+            s->surfaces_ਅੰਦਰੂਨੀ = av_calloc(src_hwctx->nb_surfaces,
+                                             ਆਕਾਰ(*s->surfaces_ਅੰਦਰੂਨੀ));
+            ਜੇ (!s->surfaces_ਅੰਦਰੂਨੀ)
+                ਵਾਪਸ AVERROR(ENOMEM);
+            ਲਈ (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                qsv_init_surface(dst_ctx, &s->surfaces_ਅੰਦਰੂਨੀ[i]);
+                s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਪਹਿਲਾ = src_hwctx->surface_ids + i;
+                s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
+                s->surfaces_ਅੰਦਰੂਨੀ[i].ਅੰਕੜੇ_2.MemId = (mfxMemId)&s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i];
             }
             dst_hwctx->nb_surfaces = src_hwctx->nb_surfaces;
-            dst_hwctx->frame_type  = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+            dst_hwctx->ਚੌਖਟਾ_type  = MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_DECODER_ਨਿਸ਼ਾਨਾ;
         }
-        break;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+    ਹਾਲਤ AV_HWDEVICE_TYPE_D3D11VA:
         {
             AVD3D11VAFramesContext *src_hwctx = src_ctx->hwctx;
-            s->handle_pairs_internal = av_calloc(src_ctx->initial_pool_size,
-                                                 sizeof(*s->handle_pairs_internal));
-            if (!s->handle_pairs_internal)
-                return AVERROR(ENOMEM);
-            s->surfaces_internal = av_calloc(src_ctx->initial_pool_size,
-                                             sizeof(*s->surfaces_internal));
-            if (!s->surfaces_internal)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_ctx->initial_pool_size; i++) {
-                qsv_init_surface(dst_ctx, &s->surfaces_internal[i]);
-                s->handle_pairs_internal[i].first = (mfxMemId)src_hwctx->texture_infos[i].texture;
-                if (src_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-                    s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-                } else {
-                    s->handle_pairs_internal[i].second = (mfxMemId)src_hwctx->texture_infos[i].index;
+            s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ = av_calloc(src_ctx->initial_pool_ਮਾਪ,
+                                                 ਆਕਾਰ(*s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ));
+            ਜੇ (!s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ)
+                ਵਾਪਸ AVERROR(ENOMEM);
+            s->surfaces_ਅੰਦਰੂਨੀ = av_calloc(src_ctx->initial_pool_ਮਾਪ,
+                                             ਆਕਾਰ(*s->surfaces_ਅੰਦਰੂਨੀ));
+            ਜੇ (!s->surfaces_ਅੰਦਰੂਨੀ)
+                ਵਾਪਸ AVERROR(ENOMEM);
+            ਲਈ (i = 0; i < src_ctx->initial_pool_ਮਾਪ; i++) {
+                qsv_init_surface(dst_ctx, &s->surfaces_ਅੰਦਰੂਨੀ[i]);
+                s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਪਹਿਲਾ = (mfxMemId)src_hwctx->texture_infos[i].texture;
+                ਜੇ (src_hwctx->BindFlags & D3_D11_BIND_RENDER_ਨਿਸ਼ਾਨਾ) {
+                    s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
+                } ਨਹੀਂਤਾਂ {
+                    s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਦੂਜਾ = (mfxMemId)src_hwctx->texture_infos[i].ਸੂਚਕਾਂਕ;
                 }
-                s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+                s->surfaces_ਅੰਦਰੂਨੀ[i].ਅੰਕੜੇ_2.MemId = (mfxMemId)&s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i];
             }
-            dst_hwctx->nb_surfaces = src_ctx->initial_pool_size;
-            if (src_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-                dst_hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-            } else {
-                dst_hwctx->frame_type |= MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+            dst_hwctx->nb_surfaces = src_ctx->initial_pool_ਮਾਪ;
+            ਜੇ (src_hwctx->BindFlags & D3_D11_BIND_RENDER_ਨਿਸ਼ਾਨਾ) {
+                dst_hwctx->ਚੌਖਟਾ_type |= MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_PROCESSOR_ਨਿਸ਼ਾਨਾ;
+            } ਨਹੀਂਤਾਂ {
+                dst_hwctx->ਚੌਖਟਾ_type |= MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_DECODER_ਨਿਸ਼ਾਨਾ;
             }
         }
-        break;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+    ਹਾਲਤ AV_HWDEVICE_TYPE_DXVA2:
         {
-            AVDXVA2FramesContext *src_hwctx = src_ctx->hwctx;
-            s->handle_pairs_internal = av_calloc(src_ctx->initial_pool_size,
-                                                 sizeof(*s->handle_pairs_internal));
-            if (!s->handle_pairs_internal)
-                return AVERROR(ENOMEM);
-            s->surfaces_internal = av_calloc(src_hwctx->nb_surfaces,
-                                             sizeof(*s->surfaces_internal));
-            if (!s->surfaces_internal)
-                return AVERROR(ENOMEM);
-            for (i = 0; i < src_hwctx->nb_surfaces; i++) {
-                qsv_init_surface(dst_ctx, &s->surfaces_internal[i]);
-                s->handle_pairs_internal[i].first = (mfxMemId)src_hwctx->surfaces[i];
-                s->handle_pairs_internal[i].second = (mfxMemId)MFX_INFINITE;
-                s->surfaces_internal[i].Data.MemId = (mfxMemId)&s->handle_pairs_internal[i];
+            AVDXVA2_ਚੌਖਟੇ_Context *src_hwctx = src_ctx->hwctx;
+            s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ = av_calloc(src_ctx->initial_pool_ਮਾਪ,
+                                                 ਆਕਾਰ(*s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ));
+            ਜੇ (!s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ)
+                ਵਾਪਸ AVERROR(ENOMEM);
+            s->surfaces_ਅੰਦਰੂਨੀ = av_calloc(src_hwctx->nb_surfaces,
+                                             ਆਕਾਰ(*s->surfaces_ਅੰਦਰੂਨੀ));
+            ਜੇ (!s->surfaces_ਅੰਦਰੂਨੀ)
+                ਵਾਪਸ AVERROR(ENOMEM);
+            ਲਈ (i = 0; i < src_hwctx->nb_surfaces; i++) {
+                qsv_init_surface(dst_ctx, &s->surfaces_ਅੰਦਰੂਨੀ[i]);
+                s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਪਹਿਲਾ = (mfxMemId)src_hwctx->surfaces[i];
+                s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i].ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
+                s->surfaces_ਅੰਦਰੂਨੀ[i].ਅੰਕੜੇ_2.MemId = (mfxMemId)&s->handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ[i];
             }
             dst_hwctx->nb_surfaces = src_hwctx->nb_surfaces;
-            if (src_hwctx->surface_type == DXVA2_VideoProcessorRenderTarget)
-                dst_hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_PROCESSOR_TARGET;
-            else
-                dst_hwctx->frame_type = MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+            ਜੇ (src_hwctx->surface_type == DXVA2_Video_Processor_Render_ਨਿਸ਼ਾਨਾ)
+                dst_hwctx->ਚੌਖਟਾ_type = MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_PROCESSOR_ਨਿਸ਼ਾਨਾ;
+            ਨਹੀਂਤਾਂ
+                dst_hwctx->ਚੌਖਟਾ_type = MFX_MEMTYPE_VIDEO_ਸਮ੍ਰਿਤੀ_DECODER_ਨਿਸ਼ਾਨਾ;
         }
-        break;
-#endif
-    default:
-        return AVERROR(ENOSYS);
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+    ਮੂਲ:
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-    dst_hwctx->surfaces = s->surfaces_internal;
+    dst_hwctx->surfaces = s->surfaces_ਅੰਦਰੂਨੀ;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int qsv_frames_derive_to(AVHWFramesContext *dst_ctx,
-                                AVHWFramesContext *src_ctx, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_ਚੌਖਟੇ_derive_ਮੰਜ਼ਿਲ(AVHWFramesContext *dst_ctx,
+                                AVHWFramesContext *src_ctx, ਪੂਰਨ flags)
 {
-    if (src_ctx->initial_pool_size < 0) {
+    ਜੇ (src_ctx->initial_pool_ਮਾਪ < 0) {
         av_log(dst_ctx, AV_LOG_ERROR, "Invalid src frame pool. \n");
-        return AVERROR(EINVAL);
-    } else if (src_ctx->initial_pool_size == 0) {
-        return qsv_dynamic_frames_derive_to(dst_ctx, src_ctx, flags);
-    } else {
-        return qsv_fixed_frames_derive_to(dst_ctx, src_ctx, flags);
+        ਵਾਪਸ AVERROR(EINVAL);
+    } ਨਹੀਂਤਾਂ ਜੇ (src_ctx->initial_pool_ਮਾਪ == 0) {
+        ਵਾਪਸ qsv_dynamic_ਚੌਖਟੇ_derive_ਮੰਜ਼ਿਲ(dst_ctx, src_ctx, flags);
+    } ਨਹੀਂਤਾਂ {
+        ਵਾਪਸ qsv_fixed_ਚੌਖਟੇ_derive_ਮੰਜ਼ਿਲ(dst_ctx, src_ctx, flags);
     }
 }
 
-static int qsv_fixed_pool_map_to(AVHWFramesContext *dst_ctx,
-                                 AVFrame *dst, const AVFrame *src, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_fixed_pool_map_ਮੰਜ਼ਿਲ(AVHWFramesContext *dst_ctx,
+                                 AVFrame *dst, ਅਚਲ AVFrame *src, ਪੂਰਨ flags)
 {
     AVQSVFramesContext *hwctx = dst_ctx->hwctx;
-    int i, err, index = -1;
+    ਪੂਰਨ i, err, ਸੂਚਕਾਂਕ = -1;
 
-    for (i = 0; i < hwctx->nb_surfaces && index < 0; i++) {
-        switch(src->format) {
-#if CONFIG_VAAPI
-        case AV_PIX_FMT_VAAPI:
+    ਲਈ (i = 0; i < hwctx->nb_surfaces && ਸੂਚਕਾਂਕ < 0; i++) {
+        ਚੋਣ(src->format) {
+#ਜੇ CONFIG_VAAPI
+        ਹਾਲਤ AV_PIX_FMT_VAAPI:
         {
-            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].Data.MemId;
-            if (*(VASurfaceID*)pair->first == (VASurfaceID)(uintptr_t)src->data[3])
-                index = i;
-            break;
+            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].ਅੰਕੜੇ_2.MemId;
+            ਜੇ (*(VASurfaceID*)pair->ਪਹਿਲਾ == (VASurfaceID)(uintptr_t)src->ਅੰਕੜੇ[3])
+                ਸੂਚਕਾਂਕ = i;
+            ਰੋਕੋ;
         }
-#endif
-#if CONFIG_D3D11VA
-        case AV_PIX_FMT_D3D11:
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+        ਹਾਲਤ AV_PIX_FMT_D3D11:
         {
-            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].Data.MemId;
-            if (pair->first == src->data[0]
-                && (pair->second == src->data[1]
-                    || (pair->second == (mfxMemId)MFX_INFINITE && src->data[1] == (uint8_t *)0)))
-                index = i;
-            break;
+            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].ਅੰਕੜੇ_2.MemId;
+            ਜੇ (pair->ਪਹਿਲਾ == src->ਅੰਕੜੇ[0]
+                && (pair->ਦੂਜਾ == src->ਅੰਕੜੇ[1]
+                    || (pair->ਦੂਜਾ == (mfxMemId)MFX_INFINITE && src->ਅੰਕੜੇ[1] == (uint8_t *)0)))
+                ਸੂਚਕਾਂਕ = i;
+            ਰੋਕੋ;
         }
-#endif
-#if CONFIG_DXVA2
-        case AV_PIX_FMT_DXVA2_VLD:
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+        ਹਾਲਤ AV_PIX_FMT_DXVA2_VLD:
         {
-            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].Data.MemId;
-            if (pair->first == src->data[3])
-                index = i;
-            break;
+            mfxHDLPair *pair = (mfxHDLPair*)hwctx->surfaces[i].ਅੰਕੜੇ_2.MemId;
+            ਜੇ (pair->ਪਹਿਲਾ == src->ਅੰਕੜੇ[3])
+                ਸੂਚਕਾਂਕ = i;
+            ਰੋਕੋ;
         }
-#endif
+#ਜੇ_ਅੰਤ
         }
     }
-    if (index < 0) {
+    ਜੇ (ਸੂਚਕਾਂਕ < 0) {
         av_log(dst_ctx, AV_LOG_ERROR, "Trying to map from a surface which "
                "is not in the mapped frames context.\n");
-        return AVERROR(EINVAL);
+        ਵਾਪਸ AVERROR(EINVAL);
     }
 
-    err = ff_hwframe_map_create(dst->hw_frames_ctx,
-                                dst, src, NULL, NULL);
-    if (err)
-        return err;
+    err = ff_hwframe_map_create(dst->hw_ਚੌਖਟੇ_ctx,
+                                dst, src, ਨਿਰਾ, ਨਿਰਾ);
+    ਜੇ (err)
+        ਵਾਪਸ err;
 
-    dst->width   = src->width;
-    dst->height  = src->height;
-    dst->data[3] = (uint8_t*)&hwctx->surfaces[index];
+    dst->ਚੌੜਾਈ   = src->ਚੌੜਾਈ;
+    dst->ਉਚਾਈ  = src->ਉਚਾਈ;
+    dst->ਅੰਕੜੇ[3] = (uint8_t*)&hwctx->surfaces[ਸੂਚਕਾਂਕ];
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static void qsv_dynamic_pool_unmap(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
+ਸਥਿਰ ਖਾਲੀ qsv_dynamic_pool_unmap(AVHWFramesContext *ctx, HWMapDescriptor *hwmap)
 {
-    mfxFrameSurface1 *surfaces_internal = (mfxFrameSurface1 *)hwmap->priv;
-    mfxHDLPair *handle_pairs_internal = (mfxHDLPair *)surfaces_internal->Data.MemId;
-    AVHWFramesContext *src_ctx = (AVHWFramesContext *)ffhwframesctx(ctx)->source_frames->data;
+    mfx_ਚੌਖਟਾ_Surface1 *surfaces_ਅੰਦਰੂਨੀ = (mfx_ਚੌਖਟਾ_Surface1 *)hwmap->priv;
+    mfxHDLPair *handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ = (mfxHDLPair *)surfaces_ਅੰਦਰੂਨੀ->ਅੰਕੜੇ_2.MemId;
+    AVHWFramesContext *src_ctx = (AVHWFramesContext *)ffhwframesctx(ctx)->ਸਰੋਤ_ਚੌਖਟੇ->ਅੰਕੜੇ;
 
-    switch (src_ctx->format) {
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_VAAPI:
+    ਚੋਣ (src_ctx->format) {
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_PIX_FMT_VAAPI:
     {
-        av_freep(&handle_pairs_internal->first);
+        av_freep(&handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਪਹਿਲਾ);
 
-        break;
+        ਰੋਕੋ;
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-#if CONFIG_D3D11VA
-    case AV_PIX_FMT_D3D11:
+#ਜੇ CONFIG_D3D11VA
+    ਹਾਲਤ AV_PIX_FMT_D3D11:
     {
         /* Do nothing */
-        break;
+        ਰੋਕੋ;
     }
-#endif
-    default:
+#ਜੇ_ਅੰਤ
+    ਮੂਲ:
         av_log(ctx, AV_LOG_ERROR, "Should not reach here. \n");
-        break;
+        ਰੋਕੋ;
     }
 
-    av_freep(&handle_pairs_internal);
-    av_freep(&surfaces_internal);
+    av_freep(&handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ);
+    av_freep(&surfaces_ਅੰਦਰੂਨੀ);
 }
 
-static int qsv_dynamic_pool_map_to(AVHWFramesContext *dst_ctx,
-                                   AVFrame *dst, const AVFrame *src, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_dynamic_pool_map_ਮੰਜ਼ਿਲ(AVHWFramesContext *dst_ctx,
+                                   AVFrame *dst, ਅਚਲ AVFrame *src, ਪੂਰਨ flags)
 {
-    mfxFrameSurface1 *surfaces_internal = NULL;
-    mfxHDLPair *handle_pairs_internal = NULL;
-    int ret = 0;
+    mfx_ਚੌਖਟਾ_Surface1 *surfaces_ਅੰਦਰੂਨੀ = ਨਿਰਾ;
+    mfxHDLPair *handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ = ਨਿਰਾ;
+    ਪੂਰਨ ret = 0;
 
-    surfaces_internal = av_calloc(1, sizeof(*surfaces_internal));
-    if (!surfaces_internal) {
+    surfaces_ਅੰਦਰੂਨੀ = av_calloc(1, ਆਕਾਰ(*surfaces_ਅੰਦਰੂਨੀ));
+    ਜੇ (!surfaces_ਅੰਦਰੂਨੀ) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    handle_pairs_internal = av_calloc(1, sizeof(*handle_pairs_internal));
-    if (!handle_pairs_internal) {
+    handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ = av_calloc(1, ਆਕਾਰ(*handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ));
+    ਜੇ (!handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    ret = qsv_init_surface(dst_ctx, surfaces_internal);
-    if (ret < 0)
-        goto fail;
+    ret = qsv_init_surface(dst_ctx, surfaces_ਅੰਦਰੂਨੀ);
+    ਜੇ (ret < 0)
+        ਜਾਓ fail;
 
-    switch (src->format) {
-#if CONFIG_VAAPI
-    case AV_PIX_FMT_VAAPI:
+    ਚੋਣ (src->format) {
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_PIX_FMT_VAAPI:
     {
-        VASurfaceID *surface_id_internal;
+        VASurfaceID *surface_id_ਅੰਦਰੂਨੀ;
 
-        surface_id_internal = av_calloc(1, sizeof(*surface_id_internal));
-        if (!surface_id_internal) {
+        surface_id_ਅੰਦਰੂਨੀ = av_calloc(1, ਆਕਾਰ(*surface_id_ਅੰਦਰੂਨੀ));
+        ਜੇ (!surface_id_ਅੰਦਰੂਨੀ) {
             ret =AVERROR(ENOMEM);
-            goto fail;
+            ਜਾਓ fail;
         }
 
-        *surface_id_internal = (VASurfaceID)(uintptr_t)src->data[3];
-        handle_pairs_internal->first = (mfxHDL)surface_id_internal;
-        handle_pairs_internal->second = (mfxMemId)MFX_INFINITE;
+        *surface_id_ਅੰਦਰੂਨੀ = (VASurfaceID)(uintptr_t)src->ਅੰਕੜੇ[3];
+        handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਪਹਿਲਾ = (mfxHDL)surface_id_ਅੰਦਰੂਨੀ;
+        handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
 
-        break;
+        ਰੋਕੋ;
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-#if CONFIG_D3D11VA
-    case AV_PIX_FMT_D3D11:
+#ਜੇ CONFIG_D3D11VA
+    ਹਾਲਤ AV_PIX_FMT_D3D11:
     {
-        AVHWFramesContext *src_ctx = (AVHWFramesContext*)src->hw_frames_ctx->data;
+        AVHWFramesContext *src_ctx = (AVHWFramesContext*)src->hw_ਚੌਖਟੇ_ctx->ਅੰਕੜੇ;
         AVD3D11VAFramesContext *src_hwctx = src_ctx->hwctx;
 
-        handle_pairs_internal->first = (mfxMemId)src->data[0];
+        handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਪਹਿਲਾ = (mfxMemId)src->ਅੰਕੜੇ[0];
 
-        if (src_hwctx->BindFlags & D3D11_BIND_RENDER_TARGET) {
-            handle_pairs_internal->second = (mfxMemId)MFX_INFINITE;
-        } else {
-            handle_pairs_internal->second = (mfxMemId)src->data[1];
+        ਜੇ (src_hwctx->BindFlags & D3_D11_BIND_RENDER_ਨਿਸ਼ਾਨਾ) {
+            handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਦੂਜਾ = (mfxMemId)MFX_INFINITE;
+        } ਨਹੀਂਤਾਂ {
+            handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ->ਦੂਜਾ = (mfxMemId)src->ਅੰਕੜੇ[1];
         }
 
-        break;
+        ਰੋਕੋ;
     }
-#endif
-    default:
+#ਜੇ_ਅੰਤ
+    ਮੂਲ:
         ret = AVERROR(ENOSYS);
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    surfaces_internal->Data.MemId = (mfxMemId)handle_pairs_internal;
+    surfaces_ਅੰਦਰੂਨੀ->ਅੰਕੜੇ_2.MemId = (mfxMemId)handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ;
 
-    ret = ff_hwframe_map_create(dst->hw_frames_ctx,
-                                dst, src, qsv_dynamic_pool_unmap, surfaces_internal);
-    if (ret)
-        goto fail;
+    ret = ff_hwframe_map_create(dst->hw_ਚੌਖਟੇ_ctx,
+                                dst, src, qsv_dynamic_pool_unmap, surfaces_ਅੰਦਰੂਨੀ);
+    ਜੇ (ret)
+        ਜਾਓ fail;
 
-    dst->width   = src->width;
-    dst->height  = src->height;
-    dst->data[3] = (uint8_t*)surfaces_internal;
+    dst->ਚੌੜਾਈ   = src->ਚੌੜਾਈ;
+    dst->ਉਚਾਈ  = src->ਉਚਾਈ;
+    dst->ਅੰਕੜੇ[3] = (uint8_t*)surfaces_ਅੰਦਰੂਨੀ;
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-    av_freep(&handle_pairs_internal);
-    av_freep(&surfaces_internal);
-    return ret;
+    av_freep(&handle_ਜੋੜੇ_ਅੰਦਰੂਨੀ);
+    av_freep(&surfaces_ਅੰਦਰੂਨੀ);
+    ਵਾਪਸ ret;
 }
 
-static int qsv_map_to(AVHWFramesContext *dst_ctx,
-                      AVFrame *dst, const AVFrame *src, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_map_ਮੰਜ਼ਿਲ(AVHWFramesContext *dst_ctx,
+                      AVFrame *dst, ਅਚਲ AVFrame *src, ਪੂਰਨ flags)
 {
     AVQSVFramesContext *hwctx = dst_ctx->hwctx;
 
-    if (hwctx->nb_surfaces)
-        return qsv_fixed_pool_map_to(dst_ctx, dst, src, flags);
-    else
-        return qsv_dynamic_pool_map_to(dst_ctx, dst, src, flags);
+    ਜੇ (hwctx->nb_surfaces)
+        ਵਾਪਸ qsv_fixed_pool_map_ਮੰਜ਼ਿਲ(dst_ctx, dst, src, flags);
+    ਨਹੀਂਤਾਂ
+        ਵਾਪਸ qsv_dynamic_pool_map_ਮੰਜ਼ਿਲ(dst_ctx, dst, src, flags);
 }
 
-static int qsv_frames_get_constraints(AVHWDeviceContext *ctx,
-                                      const void *hwconfig,
+ਸਥਿਰ ਪੂਰਨ qsv_ਚੌਖਟੇ_get_constraints(AVHWDeviceContext *ctx,
+                                      ਅਚਲ ਖਾਲੀ *hwconfig,
                                       AVHWFramesConstraints *constraints)
 {
-    int i;
+    ਪੂਰਨ i;
 
     constraints->valid_sw_formats = av_malloc_array(FF_ARRAY_ELEMS(supported_pixel_formats) + 1,
-                                                    sizeof(*constraints->valid_sw_formats));
-    if (!constraints->valid_sw_formats)
-        return AVERROR(ENOMEM);
+                                                    ਆਕਾਰ(*constraints->valid_sw_formats));
+    ਜੇ (!constraints->valid_sw_formats)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++)
+    ਲਈ (i = 0; i < FF_ARRAY_ELEMS(supported_pixel_formats); i++)
         constraints->valid_sw_formats[i] = supported_pixel_formats[i].pix_fmt;
     constraints->valid_sw_formats[FF_ARRAY_ELEMS(supported_pixel_formats)] = AV_PIX_FMT_NONE;
 
-    constraints->valid_hw_formats = av_malloc_array(2, sizeof(*constraints->valid_hw_formats));
-    if (!constraints->valid_hw_formats)
-        return AVERROR(ENOMEM);
+    constraints->valid_hw_formats = av_malloc_array(2, ਆਕਾਰ(*constraints->valid_hw_formats));
+    ਜੇ (!constraints->valid_hw_formats)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
     constraints->valid_hw_formats[0] = AV_PIX_FMT_QSV;
     constraints->valid_hw_formats[1] = AV_PIX_FMT_NONE;
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static void qsv_device_free(AVHWDeviceContext *ctx)
+ਸਥਿਰ ਖਾਲੀ qsv_device_free(AVHWDeviceContext *ctx)
 {
     AVQSVDeviceContext *hwctx = ctx->hwctx;
     QSVDevicePriv       *priv = ctx->user_opaque;
 
-    if (hwctx->session)
+    ਜੇ (hwctx->session)
         MFXClose(hwctx->session);
 
-    if (hwctx->loader)
+    ਜੇ (hwctx->loader)
         MFXUnload(hwctx->loader);
-    av_buffer_unref(&priv->child_device_ctx);
+    av_ਬਫਰ_unref(&priv->ਬੱਚਾ_device_ctx);
     av_freep(&priv);
 }
 
-static mfxIMPL choose_implementation(const char *device, enum AVHWDeviceType child_device_type)
+ਸਥਿਰ mfxIMPL ਚੁਣੋ_implementation(ਅਚਲ ਅੱਖਰ *device, ਗਿਣਤੀ AVHWDeviceType ਬੱਚਾ_device_type)
 {
-    static const struct {
-        const char *name;
+    ਸਥਿਰ ਅਚਲ ਬਣਤਰ {
+        ਅਚਲ ਅੱਖਰ *name;
         mfxIMPL     impl;
     } impl_map[] = {
         { "auto",     MFX_IMPL_AUTO         },
@@ -2382,263 +2382,263 @@ static mfxIMPL choose_implementation(const char *device, enum AVHWDeviceType chi
     };
 
     mfxIMPL impl = MFX_IMPL_AUTO_ANY;
-    int i;
+    ਪੂਰਨ i;
 
-    if (device) {
-        for (i = 0; i < FF_ARRAY_ELEMS(impl_map); i++)
-            if (!strcmp(device, impl_map[i].name)) {
+    ਜੇ (device) {
+        ਲਈ (i = 0; i < FF_ARRAY_ELEMS(impl_map); i++)
+            ਜੇ (!strcmp(device, impl_map[i].name)) {
                 impl = impl_map[i].impl;
-                break;
+                ਰੋਕੋ;
             }
-        if (i == FF_ARRAY_ELEMS(impl_map))
-            impl = strtol(device, NULL, 0);
+        ਜੇ (i == FF_ARRAY_ELEMS(impl_map))
+            impl = strtol(device, ਨਿਰਾ, 0);
     }
 
-    if (impl != MFX_IMPL_SOFTWARE) {
-        if (child_device_type == AV_HWDEVICE_TYPE_D3D11VA)
-            impl |= MFX_IMPL_VIA_D3D11;
-        else if (child_device_type == AV_HWDEVICE_TYPE_DXVA2)
-            impl |= MFX_IMPL_VIA_D3D9;
+    ਜੇ (impl != MFX_IMPL_SOFTWARE) {
+        ਜੇ (ਬੱਚਾ_device_type == AV_HWDEVICE_TYPE_D3D11VA)
+            impl |= MFX_IMPL_ਰਾਹੀਂ_D3_D11;
+        ਨਹੀਂਤਾਂ ਜੇ (ਬੱਚਾ_device_type == AV_HWDEVICE_TYPE_DXVA2)
+            impl |= MFX_IMPL_ਰਾਹੀਂ_D3_D9;
     }
 
-    return impl;
+    ਵਾਪਸ impl;
 }
 
-static int qsv_device_derive_from_child(AVHWDeviceContext *ctx,
+ਸਥਿਰ ਪੂਰਨ qsv_device_derive_from_ਬੱਚਾ(AVHWDeviceContext *ctx,
                                         mfxIMPL implementation,
-                                        AVHWDeviceContext *child_device_ctx,
-                                        int flags)
+                                        AVHWDeviceContext *ਬੱਚਾ_device_ctx,
+                                        ਪੂਰਨ flags)
 {
     AVQSVDeviceContext *hwctx = ctx->hwctx;
 
-    mfxVersion    ver = { { 3, 1 } };
+    mfx_ਸੰਸਕਰਣ    ver = { { 3, 1 } };
     mfxHDL        handle;
     mfxHandleType handle_type;
-    mfxStatus     err;
-    int ret;
+    mfx_ਸਥਿਤੀ     err;
+    ਪੂਰਨ ret;
 
-    switch (child_device_ctx->type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    ਚੋਣ (ਬੱਚਾ_device_ctx->type) {
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_HWDEVICE_TYPE_VAAPI:
         {
-            AVVAAPIDeviceContext *child_device_hwctx = child_device_ctx->hwctx;
+            AVVAAPIDeviceContext *ਬੱਚਾ_device_hwctx = ਬੱਚਾ_device_ctx->hwctx;
             handle_type = MFX_HANDLE_VA_DISPLAY;
-            handle = (mfxHDL)child_device_hwctx->display;
+            handle = (mfxHDL)ਬੱਚਾ_device_hwctx->display;
         }
-        break;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+    ਹਾਲਤ AV_HWDEVICE_TYPE_D3D11VA:
         {
-            AVD3D11VADeviceContext *child_device_hwctx = child_device_ctx->hwctx;
+            AVD3D11VADeviceContext *ਬੱਚਾ_device_hwctx = ਬੱਚਾ_device_ctx->hwctx;
             handle_type = MFX_HANDLE_D3D11_DEVICE;
-            handle = (mfxHDL)child_device_hwctx->device;
+            handle = (mfxHDL)ਬੱਚਾ_device_hwctx->device;
         }
-        break;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+    ਹਾਲਤ AV_HWDEVICE_TYPE_DXVA2:
         {
-            AVDXVA2DeviceContext *child_device_hwctx = child_device_ctx->hwctx;
+            AVDXVA2DeviceContext *ਬੱਚਾ_device_hwctx = ਬੱਚਾ_device_ctx->hwctx;
             handle_type = MFX_HANDLE_D3D9_DEVICE_MANAGER;
-            handle = (mfxHDL)child_device_hwctx->devmgr;
+            handle = (mfxHDL)ਬੱਚਾ_device_hwctx->devmgr;
         }
-        break;
-#endif
-    default:
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+    ਮੂਲ:
         ret = AVERROR(ENOSYS);
-        goto fail;
+        ਜਾਓ fail;
     }
 
     ret = qsv_create_mfx_session(ctx, handle, handle_type, implementation, &ver,
                                  &hwctx->session, &hwctx->loader);
-    if (ret)
-        goto fail;
+    ਜੇ (ret)
+        ਜਾਓ fail;
 
-    err = MFXVideoCORE_SetHandle(hwctx->session, handle_type, handle);
-    if (err != MFX_ERR_NONE) {
+    err = MFXVideo_CORE_ਸੈੱਟ_Handle(hwctx->session, handle_type, handle);
+    ਜੇ (err != MFX_ERR_NONE) {
         av_log(ctx, AV_LOG_ERROR, "Error setting child device handle: "
                "%d\n", err);
         ret = AVERROR_UNKNOWN;
-        goto fail;
+        ਜਾਓ fail;
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 
 fail:
-    if (hwctx->session)
+    ਜੇ (hwctx->session)
         MFXClose(hwctx->session);
 
-    if (hwctx->loader)
+    ਜੇ (hwctx->loader)
         MFXUnload(hwctx->loader);
 
-    hwctx->session = NULL;
-    hwctx->loader = NULL;
-    return ret;
+    hwctx->session = ਨਿਰਾ;
+    hwctx->loader = ਨਿਰਾ;
+    ਵਾਪਸ ret;
 }
 
-static int qsv_device_derive(AVHWDeviceContext *ctx,
-                             AVHWDeviceContext *child_device_ctx,
-                             AVDictionary *opts, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_device_derive(AVHWDeviceContext *ctx,
+                             AVHWDeviceContext *ਬੱਚਾ_device_ctx,
+                             AVDictionary *opts, ਪੂਰਨ flags)
 {
     mfxIMPL impl;
     QSVDevicePriv *priv;
 
-    priv = av_mallocz(sizeof(*priv));
-    if (!priv)
-        return AVERROR(ENOMEM);
+    priv = av_mallocz(ਆਕਾਰ(*priv));
+    ਜੇ (!priv)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
     ctx->user_opaque = priv;
-    ctx->free = qsv_device_free;
+    ctx->ਮੁਕਤ = qsv_device_free;
 
-    impl = choose_implementation("hw_any", child_device_ctx->type);
-    return qsv_device_derive_from_child(ctx, impl,
-                                        child_device_ctx, flags);
+    impl = ਚੁਣੋ_implementation("hw_any", ਬੱਚਾ_device_ctx->type);
+    ਵਾਪਸ qsv_device_derive_from_ਬੱਚਾ(ctx, impl,
+                                        ਬੱਚਾ_device_ctx, flags);
 }
 
-static int qsv_device_create(AVHWDeviceContext *ctx, const char *device,
-                             AVDictionary *opts, int flags)
+ਸਥਿਰ ਪੂਰਨ qsv_device_create(AVHWDeviceContext *ctx, ਅਚਲ ਅੱਖਰ *device,
+                             AVDictionary *opts, ਪੂਰਨ flags)
 {
     QSVDevicePriv *priv;
-    enum AVHWDeviceType child_device_type;
-    AVHWDeviceContext *child_device;
-    AVDictionary *child_device_opts;
-    AVDictionaryEntry *e;
+    ਗਿਣਤੀ AVHWDeviceType ਬੱਚਾ_device_type;
+    AVHWDeviceContext *ਬੱਚਾ_device;
+    AVDictionary *ਬੱਚਾ_device_opts;
+    AVDictionary_ਇੰਦਰਾਜ *e;
 
     mfxIMPL impl;
-    int ret;
+    ਪੂਰਨ ret;
 
-    priv = av_mallocz(sizeof(*priv));
-    if (!priv)
-        return AVERROR(ENOMEM);
+    priv = av_mallocz(ਆਕਾਰ(*priv));
+    ਜੇ (!priv)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
     ctx->user_opaque = priv;
-    ctx->free        = qsv_device_free;
+    ctx->ਮੁਕਤ        = qsv_device_free;
 
-    e = av_dict_get(opts, "child_device_type", NULL, 0);
-    if (e) {
-        child_device_type = av_hwdevice_find_type_by_name(e->value);
-        if (child_device_type == AV_HWDEVICE_TYPE_NONE) {
+    e = av_dict_get(opts, "child_device_type", ਨਿਰਾ, 0);
+    ਜੇ (e) {
+        ਬੱਚਾ_device_type = av_hwdevice_ਲੱਭੋ_type_by_name(e->ਮੁੱਲ);
+        ਜੇ (ਬੱਚਾ_device_type == AV_HWDEVICE_TYPE_NONE) {
             av_log(ctx, AV_LOG_ERROR, "Unknown child device type "
-                   "\"%s\".\n", e->value);
-            return AVERROR(EINVAL);
+                   "\"%s\".\n", e->ਮੁੱਲ);
+            ਵਾਪਸ AVERROR(EINVAL);
         }
-#if QSV_ONEVPL
-    } else if (CONFIG_D3D11VA) {  // Use D3D11 by default if d3d11va is enabled
+#ਜੇ QSV_ONEVPL
+    } ਨਹੀਂਤਾਂ ਜੇ (CONFIG_D3D11VA) {  // Use D3D11 by default if d3d11va is enabled
         av_log(ctx, AV_LOG_VERBOSE,
                "Defaulting child_device_type to AV_HWDEVICE_TYPE_D3D11VA for oneVPL."
                "Please explicitly set child device type via \"-init_hw_device\" "
                "option if needed.\n");
-        child_device_type = AV_HWDEVICE_TYPE_D3D11VA;
-    } else if (CONFIG_DXVA2) {
-        child_device_type = AV_HWDEVICE_TYPE_DXVA2;
-#else
-    } else if (CONFIG_DXVA2) {
-        av_log(NULL, AV_LOG_WARNING,
+        ਬੱਚਾ_device_type = AV_HWDEVICE_TYPE_D3D11VA;
+    } ਨਹੀਂਤਾਂ ਜੇ (CONFIG_DXVA2) {
+        ਬੱਚਾ_device_type = AV_HWDEVICE_TYPE_DXVA2;
+#ਨਹੀਂਤਾਂ
+    } ਨਹੀਂਤਾਂ ਜੇ (CONFIG_DXVA2) {
+        av_log(ਨਿਰਾ, AV_LOG_WARNING,
                 "WARNING: defaulting child_device_type to AV_HWDEVICE_TYPE_DXVA2 for compatibility "
                 "with old commandlines. This behaviour will be removed "
                 "in the future. Please explicitly set device type via \"-init_hw_device\" option.\n");
-        child_device_type = AV_HWDEVICE_TYPE_DXVA2;
-    } else if (CONFIG_D3D11VA) {
-        child_device_type = AV_HWDEVICE_TYPE_D3D11VA;
-#endif
-    } else if (CONFIG_VAAPI) {
-        child_device_type = AV_HWDEVICE_TYPE_VAAPI;
-    } else {
+        ਬੱਚਾ_device_type = AV_HWDEVICE_TYPE_DXVA2;
+    } ਨਹੀਂਤਾਂ ਜੇ (CONFIG_D3D11VA) {
+        ਬੱਚਾ_device_type = AV_HWDEVICE_TYPE_D3D11VA;
+#ਜੇ_ਅੰਤ
+    } ਨਹੀਂਤਾਂ ਜੇ (CONFIG_VAAPI) {
+        ਬੱਚਾ_device_type = AV_HWDEVICE_TYPE_VAAPI;
+    } ਨਹੀਂਤਾਂ {
         av_log(ctx, AV_LOG_ERROR, "No supported child device type is enabled\n");
-        return AVERROR(ENOSYS);
+        ਵਾਪਸ AVERROR(ENOSYS);
     }
 
-#if CONFIG_VAAPI && defined(_WIN32)
+#ਜੇ CONFIG_VAAPI && defined(_WIN32)
     /* AV_HWDEVICE_TYPE_VAAPI on Windows/Libva-win32 not supported */
     /* Reject user specified child_device_type or CONFIG_VAAPI on Windows */
-    if (child_device_type == AV_HWDEVICE_TYPE_VAAPI) {
+    ਜੇ (ਬੱਚਾ_device_type == AV_HWDEVICE_TYPE_VAAPI) {
         av_log(ctx, AV_LOG_ERROR, "VAAPI child device type not supported for oneVPL on Windows"
-                "\"%s\".\n", e->value);
-        return AVERROR(EINVAL);
+                "\"%s\".\n", e->ਮੁੱਲ);
+        ਵਾਪਸ AVERROR(EINVAL);
     }
-#endif
+#ਜੇ_ਅੰਤ
 
-    child_device_opts = NULL;
-    switch (child_device_type) {
-#if CONFIG_VAAPI
-    case AV_HWDEVICE_TYPE_VAAPI:
+    ਬੱਚਾ_device_opts = ਨਿਰਾ;
+    ਚੋਣ (ਬੱਚਾ_device_type) {
+#ਜੇ CONFIG_VAAPI
+    ਹਾਲਤ AV_HWDEVICE_TYPE_VAAPI:
         {
             // libmfx does not actually implement VAAPI properly, rather it
             // depends on the specific behaviour of a matching iHD driver when
             // used on recent Intel hardware.  Set options to the VAAPI device
             // creation so that we should pick a usable setup by default if
             // possible, even when multiple devices and drivers are available.
-            av_dict_set(&child_device_opts, "vendor_id", "0x8086", 0);
-            av_dict_set(&child_device_opts, "driver",    "iHD",    0);
+            av_dict_ਸੈੱਟ(&ਬੱਚਾ_device_opts, "vendor_id", "0x8086", 0);
+            av_dict_ਸੈੱਟ(&ਬੱਚਾ_device_opts, "driver",    "iHD",    0);
         }
-        break;
-#endif
-#if CONFIG_D3D11VA
-    case AV_HWDEVICE_TYPE_D3D11VA:
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_D3D11VA
+    ਹਾਲਤ AV_HWDEVICE_TYPE_D3D11VA:
         {
             // Make sure the hardware vendor is Intel when multiple devices are
             // available, it will be ignored if user specifies the child device
             // explicitly
-            av_dict_set(&child_device_opts, "vendor_id",        "0x8086",  0);
+            av_dict_ਸੈੱਟ(&ਬੱਚਾ_device_opts, "vendor_id",        "0x8086",  0);
         }
-        break;
-#endif
-#if CONFIG_DXVA2
-    case AV_HWDEVICE_TYPE_DXVA2:
-#if QSV_ONEVPL
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+#ਜੇ CONFIG_DXVA2
+    ਹਾਲਤ AV_HWDEVICE_TYPE_DXVA2:
+#ਜੇ QSV_ONEVPL
         {
             av_log(ctx, AV_LOG_VERBOSE,
                    "d3d11va is not available or child device type is set to dxva2 "
                    "explicitly for oneVPL.\n");
         }
-#endif
-        break;
-#endif
-    default:
+#ਜੇ_ਅੰਤ
+        ਰੋਕੋ;
+#ਜੇ_ਅੰਤ
+    ਮੂਲ:
         {
             av_log(ctx, AV_LOG_ERROR, "No supported child device type is enabled\n");
-            return AVERROR(ENOSYS);
+            ਵਾਪਸ AVERROR(ENOSYS);
         }
-        break;
+        ਰੋਕੋ;
     }
 
-    e = av_dict_get(opts, "child_device", NULL, 0);
-    ret = av_hwdevice_ctx_create(&priv->child_device_ctx, child_device_type,
-                                 e ? e->value : NULL, child_device_opts, 0);
+    e = av_dict_get(opts, "child_device", ਨਿਰਾ, 0);
+    ret = av_hwdevice_ctx_create(&priv->ਬੱਚਾ_device_ctx, ਬੱਚਾ_device_type,
+                                 e ? e->ਮੁੱਲ : ਨਿਰਾ, ਬੱਚਾ_device_opts, 0);
 
-    av_dict_free(&child_device_opts);
-    if (ret < 0)
-        return ret;
+    av_dict_free(&ਬੱਚਾ_device_opts);
+    ਜੇ (ret < 0)
+        ਵਾਪਸ ret;
 
-    child_device = (AVHWDeviceContext*)priv->child_device_ctx->data;
+    ਬੱਚਾ_device = (AVHWDeviceContext*)priv->ਬੱਚਾ_device_ctx->ਅੰਕੜੇ;
 
-    impl = choose_implementation(device, child_device_type);
+    impl = ਚੁਣੋ_implementation(device, ਬੱਚਾ_device_type);
 
-    return qsv_device_derive_from_child(ctx, impl, child_device, 0);
+    ਵਾਪਸ qsv_device_derive_from_ਬੱਚਾ(ctx, impl, ਬੱਚਾ_device, 0);
 }
 
-const HWContextType ff_hwcontext_type_qsv = {
+ਅਚਲ HWContextType ff_hwcontext_type_qsv = {
     .type                   = AV_HWDEVICE_TYPE_QSV,
     .name                   = "QSV",
 
-    .device_hwctx_size      = sizeof(QSVDeviceContext),
-    .frames_hwctx_size      = sizeof(QSVFramesContext),
+    .device_hwctx_ਮਾਪ      = ਆਕਾਰ(QSVDeviceContext),
+    .ਚੌਖਟੇ_hwctx_ਮਾਪ      = ਆਕਾਰ(QSVFramesContext),
 
     .device_create          = qsv_device_create,
     .device_derive          = qsv_device_derive,
     .device_init            = qsv_device_init,
-    .frames_get_constraints = qsv_frames_get_constraints,
-    .frames_init            = qsv_frames_init,
-    .frames_uninit          = qsv_frames_uninit,
-    .frames_get_buffer      = qsv_get_buffer,
+    .ਚੌਖਟੇ_get_constraints = qsv_ਚੌਖਟੇ_get_constraints,
+    .ਚੌਖਟੇ_init            = qsv_ਚੌਖਟੇ_init,
+    .ਚੌਖਟੇ_uninit          = qsv_ਚੌਖਟੇ_uninit,
+    .ਚੌਖਟੇ_get_ਬਫਰ      = qsv_get_ਬਫਰ,
     .transfer_get_formats   = qsv_transfer_get_formats,
-    .transfer_data_to       = qsv_transfer_data_to,
-    .transfer_data_from     = qsv_transfer_data_from,
-    .map_to                 = qsv_map_to,
+    .transfer_ਅੰਕੜੇ_ਮੰਜ਼ਿਲ       = qsv_transfer_ਅੰਕੜੇ_ਮੰਜ਼ਿਲ,
+    .transfer_ਅੰਕੜੇ_from     = qsv_transfer_ਅੰਕੜੇ_from,
+    .map_ਮੰਜ਼ਿਲ                 = qsv_map_ਮੰਜ਼ਿਲ,
     .map_from               = qsv_map_from,
-    .frames_derive_to       = qsv_frames_derive_to,
-    .frames_derive_from     = qsv_frames_derive_from,
+    .ਚੌਖਟੇ_derive_ਮੰਜ਼ਿਲ       = qsv_ਚੌਖਟੇ_derive_ਮੰਜ਼ਿਲ,
+    .ਚੌਖਟੇ_derive_from     = qsv_ਚੌਖਟੇ_derive_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]){ AV_PIX_FMT_QSV, AV_PIX_FMT_NONE },
+    .pix_fmts = (ਅਚਲ ਗਿਣਤੀ AVPixelFormat[]){ AV_PIX_FMT_QSV, AV_PIX_FMT_NONE },
 };

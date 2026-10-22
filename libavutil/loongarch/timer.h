@@ -19,30 +19,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_LOONGARCH_TIMER_H
-#define AVUTIL_LOONGARCH_TIMER_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_LOONGARCH_TIMER_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_LOONGARCH_TIMER_H
 
-#include <stdint.h>
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#if HAVE_INLINE_ASM
+#ਜੇ HAVE_INLINE_ASM
 
-#define AV_READ_TIME read_time
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_READ_ਸਮਾਂ read_ਸਮਾਂ
 
-static inline uint64_t read_time(void)
+ਸਥਿਰ ਸਤਰਅੰਦਰ uint64_t read_ਸਮਾਂ(ਖਾਲੀ)
 {
 
-#if ARCH_LOONGARCH64
+#ਜੇ ARCH_LOONGARCH64
     uint64_t a, id;
-    __asm__ volatile ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
-    return a;
-#else
+    __asm__ ਅਸਥਿਰ ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
+    ਵਾਪਸ a;
+#ਨਹੀਂਤਾਂ
     uint32_t a, id;
-    __asm__ volatile ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
-    return (uint64_t)a;
-#endif
+    __asm__ ਅਸਥਿਰ ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
+    ਵਾਪਸ (uint64_t)a;
+#ਜੇ_ਅੰਤ
 }
 
-#endif /* HAVE_INLINE_ASM */
+#ਜੇ_ਅੰਤ /* HAVE_INLINE_ASM */
 
-#endif /* AVUTIL_LOONGARCH_TIMER_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_LOONGARCH_TIMER_H */

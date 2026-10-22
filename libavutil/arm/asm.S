@@ -101,7 +101,7 @@ FUNC    .endfunc
         .text
         .align          \align
     .if \export
-        .global EXTERN_ASM\name
+        .ਵੈਸ਼੍ਵਿਕ EXTERN_ASM\name
 ELF     .type   EXTERN_ASM\name, %function
 FUNC    .func   EXTERN_ASM\name
 TFUNC   .thumb_func EXTERN_ASM\name

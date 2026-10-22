@@ -16,40 +16,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
 
-#include "libavutil/md5.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/md5.h"
 
-static void print_md5(uint8_t *md5)
+ਸਥਿਰ ਖਾਲੀ print_md5(uint8_t *md5)
 {
-    int i;
-    for (i = 0; i < 16; i++)
-        printf("%02x", md5[i]);
-    printf("\n");
+    ਪੂਰਨ i;
+    ਲਈ (i = 0; i < 16; i++)
+        ਲਿਖੋ("%02x", md5[i]);
+    ਲਿਖੋ("\n");
 }
 
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
     uint8_t md5val[16];
-    int i;
+    ਪੂਰਨ i;
 
-    uint8_t in[1000];
+    uint8_t ਵਿੱਚ_2[1000];
 
-    for (i = 0; i < 1000; i++)
-        in[i] = i * i;
-    av_md5_sum(md5val, in, 1000);
+    ਲਈ (i = 0; i < 1000; i++)
+        ਵਿੱਚ_2[i] = i * i;
+    av_md5_ਜੋੜ(md5val, ਵਿੱਚ_2, 1000);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 63);
+    av_md5_ਜੋੜ(md5val, ਵਿੱਚ_2, 63);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 64);
+    av_md5_ਜੋੜ(md5val, ਵਿੱਚ_2, 64);
     print_md5(md5val);
-    av_md5_sum(md5val, in, 65);
+    av_md5_ਜੋੜ(md5val, ਵਿੱਚ_2, 65);
     print_md5(md5val);
-    for (i = 0; i < 1000; i++)
-        in[i] = i % 127;
-    av_md5_sum(md5val, in, 999);
+    ਲਈ (i = 0; i < 1000; i++)
+        ਵਿੱਚ_2[i] = i % 127;
+    av_md5_ਜੋੜ(md5val, ਵਿੱਚ_2, 999);
     print_md5(md5val);
 
-    return 0;
+    ਵਾਪਸ 0;
 }

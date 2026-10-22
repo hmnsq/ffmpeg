@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
-#include "libavutil/cpu.h"
-#include "libavutil/error.h"
-#include "libavutil/imgutils_internal.h"
-#include "libavutil/macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/imgutils_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/macros.h"
 
-#include "cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cpu.h"
 
-void ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
-                                      const uint8_t *src, ptrdiff_t src_linesize,
-                                      ptrdiff_t bytewidth, int height);
+ਖਾਲੀ ff_image_copy_plane_uc_from_sse4(uint8_t *dst, ptrdiff_t dst_linesize,
+                                      ਅਚਲ uint8_t *src, ptrdiff_t src_linesize,
+                                      ptrdiff_t bytewidth, ਪੂਰਨ ਉਚਾਈ);
 
-int ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                    const uint8_t *src, ptrdiff_t src_linesize,
-                                    ptrdiff_t bytewidth, int height)
+ਪੂਰਨ ff_image_copy_plane_uc_from_x86(uint8_t       *dst, ptrdiff_t dst_linesize,
+                                    ਅਚਲ uint8_t *src, ptrdiff_t src_linesize,
+                                    ptrdiff_t bytewidth, ਪੂਰਨ ਉਚਾਈ)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ਪੂਰਨ cpu_flags = av_get_cpu_flags();
     ptrdiff_t bw_aligned = FFALIGN(bytewidth, 64);
 
-    if (EXTERNAL_SSE4(cpu_flags) &&
+    ਜੇ (EXTERNAL_SSE4(cpu_flags) &&
         bw_aligned <= dst_linesize && bw_aligned <= src_linesize)
         ff_image_copy_plane_uc_from_sse4(dst, dst_linesize, src, src_linesize,
-                                         bw_aligned, height);
-    else
-        return AVERROR(ENOSYS);
+                                         bw_aligned, ਉਚਾਈ);
+    ਨਹੀਂਤਾਂ
+        ਵਾਪਸ AVERROR(ENOSYS);
 
-    return 0;
+    ਵਾਪਸ 0;
 }

@@ -18,21 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_PPC_FLOAT_DSP_VSX_H
-#define AVUTIL_PPC_FLOAT_DSP_VSX_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_PPC_FLOAT_DSP_VSX_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_PPC_FLOAT_DSP_VSX_H
 
-void ff_vector_fmul_vsx(float *dst, const float *src0,
-                        const float *src1, int len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmul_vsx(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src0,
+                        ਅਚਲ ਦਸ਼ਮਲਵ *src1, ਪੂਰਨ len);
 
-void ff_vector_fmul_window_vsx(float *dst, const float *src0,
-                               const float *src1, const float *win,
-                               int len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmul_ਖਿੜਕੀ_vsx(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src0,
+                               ਅਚਲ ਦਸ਼ਮਲਵ *src1, ਅਚਲ ਦਸ਼ਮਲਵ *win,
+                               ਪੂਰਨ len);
 
-void ff_vector_fmul_add_vsx(float *dst, const float *src0,
-                            const float *src1, const float *src2,
-                            int len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmul_ਜੋੜੋ_vsx(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src0,
+                            ਅਚਲ ਦਸ਼ਮਲਵ *src1, ਅਚਲ ਦਸ਼ਮਲਵ *src2,
+                            ਪੂਰਨ len);
 
-void ff_vector_fmul_reverse_vsx(float *dst, const float *src0,
-                                const float *src1, int len);
+ਖਾਲੀ ff_ਸਦਿਸ਼_fmul_ਉਲਟ_vsx(ਦਸ਼ਮਲਵ *dst, ਅਚਲ ਦਸ਼ਮਲਵ *src0,
+                                ਅਚਲ ਦਸ਼ਮਲਵ *src1, ਪੂਰਨ len);
 
-#endif /* AVUTIL_PPC_FLOAT_DSP_VSX_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_PPC_FLOAT_DSP_VSX_H */

@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_EXECUTOR_H
-#define AVUTIL_EXECUTOR_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_EXECUTOR_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_EXECUTOR_H
 
-typedef struct AVExecutor AVExecutor;
-typedef struct AVTask AVTask;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVExecutor AVExecutor;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVTask AVTask;
 
-struct AVTask {
-    AVTask *next;
+ਬਣਤਰ AVTask {
+    AVTask *ਅਗਲਾ;
 };
 
-typedef struct AVTaskCallbacks {
-    void *user_data;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVTaskCallbacks {
+    ਖਾਲੀ *user_ਅੰਕੜੇ;
 
-    int local_context_size;
+    ਪੂਰਨ local_context_ਮਾਪ;
 
     // return 1 if a's priority > b's priority
-    int (*priority_higher)(const AVTask *a, const AVTask *b);
+    ਪੂਰਨ (*ਤਰਜੀਹ_higher)(ਅਚਲ AVTask *a, ਅਚਲ AVTask *b);
 
     // task is ready for run
-    int (*ready)(const AVTask *t, void *user_data);
+    ਪੂਰਨ (*ready)(ਅਚਲ AVTask *t, ਖਾਲੀ *user_ਅੰਕੜੇ);
 
     // run the task
-    int (*run)(AVTask *t, void *local_context, void *user_data);
+    ਪੂਰਨ (*ਲੜੀਵਾਰ)(AVTask *t, ਖਾਲੀ *local_context, ਖਾਲੀ *user_ਅੰਕੜੇ);
 } AVTaskCallbacks;
 
 /**
@@ -49,19 +49,19 @@ typedef struct AVTaskCallbacks {
  * @param thread_count worker thread number, 0 for run on caller's thread directly
  * @return return the executor
  */
-AVExecutor* av_executor_alloc(const AVTaskCallbacks *callbacks, int thread_count);
+AVExecutor* av_executor_alloc(ਅਚਲ AVTaskCallbacks *callbacks, ਪੂਰਨ thread_ਗਿਣਤੀ);
 
 /**
  * Free executor
  * @param e  pointer to executor
  */
-void av_executor_free(AVExecutor **e);
+ਖਾਲੀ av_executor_free(AVExecutor **e);
 
 /**
  * Add task to executor
  * @param e pointer to executor
  * @param t pointer to task. If NULL, it will wakeup one work thread
  */
-void av_executor_execute(AVExecutor *e, AVTask *t);
+ਖਾਲੀ av_executor_execute(AVExecutor *e, AVTask *t);
 
-#endif //AVUTIL_EXECUTOR_H
+#ਜੇ_ਅੰਤ //AVUTIL_EXECUTOR_H

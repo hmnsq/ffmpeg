@@ -23,83 +23,83 @@
  * byte swapping routines
  */
 
-#ifndef AVUTIL_BSWAP_H
-#define AVUTIL_BSWAP_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_BSWAP_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_BSWAP_H
 
-#include <stdint.h>
-#include "libavutil/avconfig.h"
-#include "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/avconfig.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
 
-#ifdef HAVE_AV_CONFIG_H
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ HAVE_AV_CONFIG_H
 
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#if ARCH_ARM
+#ਜੇ ARCH_ARM
 #   include "arm/bswap.h"
-#elif ARCH_RISCV
+#ਜਾਂਜੇ ARCH_RISCV
 #   include "riscv/bswap.h"
-#elif ARCH_X86
+#ਜਾਂਜੇ ARCH_X86
 #   include "x86/bswap.h"
-#endif
+#ਜੇ_ਅੰਤ
 
-#endif /* HAVE_AV_CONFIG_H */
+#ਜੇ_ਅੰਤ /* HAVE_AV_CONFIG_H */
 
-#define AV_BSWAP16C(x) (((x) << 8 & 0xff00)  | ((x) >> 8 & 0x00ff))
-#define AV_BSWAP32C(x) (AV_BSWAP16C(x) << 16 | AV_BSWAP16C((x) >> 16))
-#define AV_BSWAP64C(x) (AV_BSWAP32C(x) << 32 | AV_BSWAP32C((x) >> 32))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BSWAP16C(x) (((x) << 8 & 0xff00)  | ((x) >> 8 & 0x00ff))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BSWAP32C(x) (AV_BSWAP16C(x) << 16 | AV_BSWAP16C((x) >> 16))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BSWAP64C(x) (AV_BSWAP32C(x) << 32 | AV_BSWAP32C((x) >> 32))
 
-#define AV_BSWAPC(s, x) AV_BSWAP##s##C(x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BSWAPC(s, x) AV_BSWAP##s##C(x)
 
-#ifndef av_bswap16
-static av_always_inline av_const uint16_t av_bswap16(uint16_t x)
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_bswap16
+ਸਥਿਰ av_always_inline av_const uint16_t av_bswap16(uint16_t x)
 {
     x= (x>>8) | (x<<8);
-    return x;
+    ਵਾਪਸ x;
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-#ifndef av_bswap32
-static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_bswap32
+ਸਥਿਰ av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
-    return AV_BSWAP32C(x);
+    ਵਾਪਸ AV_BSWAP32C(x);
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-#ifndef av_bswap64
-static inline uint64_t av_const av_bswap64(uint64_t x)
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ av_bswap64
+ਸਥਿਰ ਸਤਰਅੰਦਰ uint64_t av_const av_bswap64(uint64_t x)
 {
-    return (uint64_t)av_bswap32((uint32_t)x) << 32 | av_bswap32((uint32_t)(x >> 32));
+    ਵਾਪਸ (uint64_t)av_bswap32((uint32_t)x) << 32 | av_bswap32((uint32_t)(x >> 32));
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 // be2ne ... big-endian to native-endian
 // le2ne ... little-endian to native-endian
 
-#if AV_HAVE_BIGENDIAN
-#define av_be2ne16(x) (x)
-#define av_be2ne32(x) (x)
-#define av_be2ne64(x) (x)
-#define av_le2ne16(x) av_bswap16(x)
-#define av_le2ne32(x) av_bswap32(x)
-#define av_le2ne64(x) av_bswap64(x)
-#define AV_BE2NEC(s, x) (x)
-#define AV_LE2NEC(s, x) AV_BSWAPC(s, x)
-#else
-#define av_be2ne16(x) av_bswap16(x)
-#define av_be2ne32(x) av_bswap32(x)
-#define av_be2ne64(x) av_bswap64(x)
-#define av_le2ne16(x) (x)
-#define av_le2ne32(x) (x)
-#define av_le2ne64(x) (x)
-#define AV_BE2NEC(s, x) AV_BSWAPC(s, x)
-#define AV_LE2NEC(s, x) (x)
-#endif
+#ਜੇ AV_HAVE_BIGENDIAN
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_be2ne16(x) (x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_be2ne32(x) (x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_be2ne64(x) (x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_le2ne16(x) av_bswap16(x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_le2ne32(x) av_bswap32(x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_le2ne64(x) av_bswap64(x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BE2NEC(s, x) (x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_LE2NEC(s, x) AV_BSWAPC(s, x)
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_be2ne16(x) av_bswap16(x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_be2ne32(x) av_bswap32(x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_be2ne64(x) av_bswap64(x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_le2ne16(x) (x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_le2ne32(x) (x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_le2ne64(x) (x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BE2NEC(s, x) AV_BSWAPC(s, x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_LE2NEC(s, x) (x)
+#ਜੇ_ਅੰਤ
 
-#define AV_BE2NE16C(x) AV_BE2NEC(16, x)
-#define AV_BE2NE32C(x) AV_BE2NEC(32, x)
-#define AV_BE2NE64C(x) AV_BE2NEC(64, x)
-#define AV_LE2NE16C(x) AV_LE2NEC(16, x)
-#define AV_LE2NE32C(x) AV_LE2NEC(32, x)
-#define AV_LE2NE64C(x) AV_LE2NEC(64, x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BE2NE16C(x) AV_BE2NEC(16, x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BE2NE32C(x) AV_BE2NEC(32, x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_BE2NE64C(x) AV_BE2NEC(64, x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_LE2NE16C(x) AV_LE2NEC(16, x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_LE2NE32C(x) AV_LE2NEC(32, x)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_LE2NE64C(x) AV_LE2NEC(64, x)
 
-#endif /* AVUTIL_BSWAP_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_BSWAP_H */

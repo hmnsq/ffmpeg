@@ -16,65 +16,65 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
-#include "buffer.h"
-#include "frame.h"
-#include "mem.h"
-#include "video_enc_params.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "buffer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "frame.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "video_enc_params.h"
 
-AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size)
+AVVideoEncParams *av_video_enc_params_alloc(ਗਿਣਤੀ AVVideoEncParamsType type,
+                                            ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ nb_ਖੰਡਾਂ, size_t *ਬਾਹਰਲਾ_ਮਾਪ)
 {
-    struct TestStruct {
+    ਬਣਤਰ TestStruct {
         AVVideoEncParams   p;
-        AVVideoBlockParams b;
+        AVVideo_ਖੰਡ_Params b;
     };
-    const size_t blocks_offset = offsetof(struct TestStruct, b);
-    size_t size = blocks_offset;
+    ਅਚਲ size_t ਖੰਡਾਂ_ਵਿੱਥ = offsetof(ਬਣਤਰ TestStruct, b);
+    size_t ਮਾਪ = ਖੰਡਾਂ_ਵਿੱਥ;
     AVVideoEncParams *par;
 
-    if (nb_blocks > (SIZE_MAX - size) / sizeof(AVVideoBlockParams))
-        return NULL;
-    size += sizeof(AVVideoBlockParams) * nb_blocks;
+    ਜੇ (nb_ਖੰਡਾਂ > (SIZE_MAX - ਮਾਪ) / ਆਕਾਰ(AVVideo_ਖੰਡ_Params))
+        ਵਾਪਸ ਨਿਰਾ;
+    ਮਾਪ += ਆਕਾਰ(AVVideo_ਖੰਡ_Params) * nb_ਖੰਡਾਂ;
 
-    par = av_mallocz(size);
-    if (!par)
-        return NULL;
+    par = av_mallocz(ਮਾਪ);
+    ਜੇ (!par)
+        ਵਾਪਸ ਨਿਰਾ;
 
     par->type          = type;
-    par->nb_blocks     = nb_blocks;
-    par->block_size    = sizeof(AVVideoBlockParams);
-    par->blocks_offset = blocks_offset;
+    par->nb_ਖੰਡਾਂ     = nb_ਖੰਡਾਂ;
+    par->ਖੰਡ_ਮਾਪ    = ਆਕਾਰ(AVVideo_ਖੰਡ_Params);
+    par->ਖੰਡਾਂ_ਵਿੱਥ = ਖੰਡਾਂ_ਵਿੱਥ;
 
-    if (out_size)
-        *out_size = size;
+    ਜੇ (ਬਾਹਰਲਾ_ਮਾਪ)
+        *ਬਾਹਰਲਾ_ਮਾਪ = ਮਾਪ;
 
-    return par;
+    ਵਾਪਸ par;
 }
 
 AVVideoEncParams*
-av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks)
+av_video_enc_params_create_side_ਅੰਕੜੇ(AVFrame *ਚੌਖਟਾ, ਗਿਣਤੀ AVVideoEncParamsType type,
+                                     ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ nb_ਖੰਡਾਂ)
 {
     AVBufferRef      *buf;
     AVVideoEncParams *par;
-    size_t size;
+    size_t ਮਾਪ;
 
-    par = av_video_enc_params_alloc(type, nb_blocks, &size);
-    if (!par)
-        return NULL;
-    buf = av_buffer_create((uint8_t *)par, size, NULL, NULL, 0);
-    if (!buf) {
+    par = av_video_enc_params_alloc(type, nb_ਖੰਡਾਂ, &ਮਾਪ);
+    ਜੇ (!par)
+        ਵਾਪਸ ਨਿਰਾ;
+    buf = av_ਬਫਰ_create((uint8_t *)par, ਮਾਪ, ਨਿਰਾ, ਨਿਰਾ, 0);
+    ਜੇ (!buf) {
         av_freep(&par);
-        return NULL;
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    if (!av_frame_new_side_data_from_buf(frame, AV_FRAME_DATA_VIDEO_ENC_PARAMS, buf)) {
-        av_buffer_unref(&buf);
-        return NULL;
+    ਜੇ (!av_ਚੌਖਟਾ_new_side_ਅੰਕੜੇ_from_buf(ਚੌਖਟਾ, AV_ਚੌਖਟਾ_ਅੰਕੜੇ_VIDEO_ENC_PARAMS, buf)) {
+        av_ਬਫਰ_unref(&buf);
+        ਵਾਪਸ ਨਿਰਾ;
     }
 
-    return par;
+    ਵਾਪਸ par;
 }

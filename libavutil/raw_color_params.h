@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RAW_COLOR_PARAMS_H
-#define AVUTIL_RAW_COLOR_PARAMS_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_RAW_COLOR_PARAMS_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_RAW_COLOR_PARAMS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
-#include "frame.h"
-#include "rational.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "frame.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "rational.h"
 
-enum AVRawColorParamsType {
+ਗਿਣਤੀ AVRawColorParamsType {
     AV_RAW_COLOR_PARAMS_NONE = 0,
 
     /**
@@ -59,7 +59,7 @@ enum AVRawColorParamsType {
  * @note The struct must be allocated as part of AVRawColorParams using
  *       av_raw_color_params_alloc(). Its size is not a part of the public ABI.
  */
-typedef struct AVProResRawColorParams {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVProResRawColorParams {
     /**
      * White balance multiplier for the red channel, applied pre-debayer.
      */
@@ -76,7 +76,7 @@ typedef struct AVProResRawColorParams {
      * XYZ relative to the D65 illuminant, applied post-debayer.
      * out[i] = sum_j color_matrix[i][j] * in[j].
      */
-    AVRational color_matrix[3][3];
+    AVRational color_ਮੈਟ੍ਰਿਕਸ[3][3];
 
     /**
      * Post-matrix scene-linear scaling factor. Encodes highlight headroom the
@@ -96,7 +96,7 @@ typedef struct AVProResRawColorParams {
  * @note The struct must be allocated as part of AVRawColorParams using
  *       av_raw_color_params_alloc(). Its size is not a part of the public ABI.
  */
-typedef struct AVRW2RawColorParams {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVRW2RawColorParams {
     /**
      * White balance multiplier for the red channel, applied pre-debayer.
      */
@@ -126,11 +126,11 @@ typedef struct AVRW2RawColorParams {
  *       av_raw_color_params_create_side_data(). Its size is not a part of the
  *       public ABI.
  */
-typedef struct AVRawColorParams {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVRawColorParams {
     /**
      * Selects which member of `codec` is valid.
      */
-    enum AVRawColorParamsType type;
+    ਗਿਣਤੀ AVRawColorParamsType type;
 
     /**
      * Lowest valid raw sample code (sensor black point)
@@ -152,7 +152,7 @@ typedef struct AVRawColorParams {
     /**
      * Additional codec-specific fields.
      */
-    union {
+    ਸੰਘ {
         AVProResRawColorParams prores_raw;
         AVRW2RawColorParams rw2;
     } codec;
@@ -164,7 +164,7 @@ typedef struct AVRawColorParams {
  * @param size if non-NULL, set to sizeof(AVRawColorParams)
  * @return the newly allocated struct or NULL on failure
  */
-AVRawColorParams *av_raw_color_params_alloc(size_t *size);
+AVRawColorParams *av_raw_color_params_alloc(size_t *ਮਾਪ);
 
 /**
  * Allocate and add an AVRawColorParams structure to an existing AVFrame as
@@ -172,6 +172,6 @@ AVRawColorParams *av_raw_color_params_alloc(size_t *size);
  *
  * @return the newly allocated struct, or NULL on failure
  */
-AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame);
+AVRawColorParams *av_raw_color_params_create_side_ਅੰਕੜੇ(AVFrame *ਚੌਖਟਾ);
 
-#endif /* AVUTIL_RAW_COLOR_PARAMS_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_RAW_COLOR_PARAMS_H */

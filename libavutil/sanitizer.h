@@ -16,55 +16,55 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SANITIZER_H
-#define AVUTIL_SANITIZER_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_SANITIZER_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_SANITIZER_H
 
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#if defined(__has_feature)
-#if __has_feature(address_sanitizer)
-#define HAVE_ASAN 1
-#endif
-#if __has_feature(memory_sanitizer)
-#define HAVE_MSAN 1
-#endif
-#if __has_feature(undefined_behavior_sanitizer)
-#define HAVE_UBSAN 1
-#endif
-#endif
-#if defined(__SANITIZE_ADDRESS__)
-#undef  HAVE_ASAN
-#define HAVE_ASAN 1
-#endif
-#ifndef HAVE_ASAN
-#define HAVE_ASAN 0
-#endif
-#ifndef HAVE_MSAN
-#define HAVE_MSAN 0
-#endif
-#ifndef HAVE_UBSAN
-#define HAVE_UBSAN 0
-#endif
+#ਜੇ defined(__has_feature)
+#ਜੇ __has_feature(ਪਤਾ_sanitizer)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ HAVE_ASAN 1
+#ਜੇ_ਅੰਤ
+#ਜੇ __has_feature(ਸਮ੍ਰਿਤੀ_sanitizer)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ HAVE_MSAN 1
+#ਜੇ_ਅੰਤ
+#ਜੇ __has_feature(undefined_behavior_sanitizer)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ HAVE_UBSAN 1
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ
+#ਜੇ defined(__SANITIZE_ADDRESS__)
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ  HAVE_ASAN
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ HAVE_ASAN 1
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ HAVE_ASAN
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ HAVE_ASAN 0
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ HAVE_MSAN
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ HAVE_MSAN 0
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ HAVE_UBSAN
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ HAVE_UBSAN 0
+#ਜੇ_ਅੰਤ
 
 /* Mark allocated memory that nothing may touch until it is unpoisoned. */
-#if HAVE_ASAN
-#include <sanitizer/asan_interface.h>
-#define FF_ASAN_POISON(ptr, size)   __asan_poison_memory_region(ptr, size)
-#define FF_ASAN_UNPOISON(ptr, size) __asan_unpoison_memory_region(ptr, size)
-#else
-#define FF_ASAN_POISON(ptr, size)   ((void)(ptr), (void)(size))
-#define FF_ASAN_UNPOISON(ptr, size) ((void)(ptr), (void)(size))
-#endif
+#ਜੇ HAVE_ASAN
+#ਅਨ੍ਤਰ੍ਭਾਵ <sanitizer/asan_interface.h>
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_ASAN_POISON(ptr, ਮਾਪ)   __asan_poison_memory_region(ptr, ਮਾਪ)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_ASAN_UNPOISON(ptr, ਮਾਪ) __asan_unpoison_memory_region(ptr, ਮਾਪ)
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_ASAN_POISON(ptr, ਮਾਪ)   ((ਖਾਲੀ)(ptr), (ਖਾਲੀ)(ਮਾਪ))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_ASAN_UNPOISON(ptr, ਮਾਪ) ((ਖਾਲੀ)(ptr), (ਖਾਲੀ)(ਮਾਪ))
+#ਜੇ_ਅੰਤ
 
 /* Mark memory as uninitialized. */
-#if HAVE_MSAN
-#include <sanitizer/msan_interface.h>
-#define FF_MEM_UNDEFINED(ptr, size) __msan_allocated_memory(ptr, size)
-#elif CONFIG_MEMORY_POISONING && HAVE_VALGRIND_MEMCHECK_H
-#include <valgrind/memcheck.h>
-#define FF_MEM_UNDEFINED(ptr, size) VALGRIND_MAKE_MEM_UNDEFINED(ptr, size)
-#else
-#define FF_MEM_UNDEFINED(ptr, size) ((void)(ptr), (void)(size))
-#endif
+#ਜੇ HAVE_MSAN
+#ਅਨ੍ਤਰ੍ਭਾਵ <sanitizer/msan_interface.h>
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_MEM_UNDEFINED(ptr, ਮਾਪ) __msan_allocated_memory(ptr, ਮਾਪ)
+#ਜਾਂਜੇ CONFIG_ਸਮ੍ਰਿਤੀ_POISONING && HAVE_VALGRIND_MEMCHECK_H
+#ਅਨ੍ਤਰ੍ਭਾਵ <valgrind/memcheck.h>
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_MEM_UNDEFINED(ptr, ਮਾਪ) VALGRIND_MAKE_MEM_UNDEFINED(ptr, ਮਾਪ)
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_MEM_UNDEFINED(ptr, ਮਾਪ) ((ਖਾਲੀ)(ptr), (ਖਾਲੀ)(ਮਾਪ))
+#ਜੇ_ਅੰਤ
 
-#endif /* AVUTIL_SANITIZER_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_SANITIZER_H */

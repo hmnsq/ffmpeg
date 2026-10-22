@@ -18,80 +18,80 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_SOFTFLOAT_H
-#define AVUTIL_SOFTFLOAT_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_SOFTFLOAT_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_SOFTFLOAT_H
 
-#include <stdint.h>
-#include "common.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "common.h"
 
-#include "avassert.h"
-#include "softfloat_tables.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avassert.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "softfloat_tables.h"
 
-#define MIN_EXP -149
-#define MAX_EXP  126
-#define ONE_BITS 29
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MIN_EXP -149
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_EXP  126
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ONE_ਬਿੱਟ 29
 
-typedef struct SoftFloat{
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ SoftFloat{
     int32_t mant;
-    int32_t  exp;
+    int32_t  ਘਾਤਾਂਕ;
 }SoftFloat;
 
-static const SoftFloat FLOAT_0          = {          0,   MIN_EXP};             ///< 0.0
-static const SoftFloat FLOAT_05         = { 0x20000000,   0};                   ///< 0.5
-static const SoftFloat FLOAT_1          = { 0x20000000,   1};                   ///< 1.0
-static const SoftFloat FLOAT_EPSILON    = { 0x29F16B12, -16};                   ///< A small value
-static const SoftFloat FLOAT_1584893192 = { 0x32B771ED,   1};                   ///< 1.584893192 (10^.2)
-static const SoftFloat FLOAT_100000     = { 0x30D40000,  17};                   ///< 100000
-static const SoftFloat FLOAT_0999999    = { 0x3FFFFBCE,   0};                   ///< 0.999999
-static const SoftFloat FLOAT_MIN        = { 0x20000000,   MIN_EXP};
+ਸਥਿਰ ਅਚਲ SoftFloat FLOAT_0          = {          0,   MIN_EXP};             ///< 0.0
+ਸਥਿਰ ਅਚਲ SoftFloat FLOAT_05         = { 0x20000000,   0};                   ///< 0.5
+ਸਥਿਰ ਅਚਲ SoftFloat FLOAT_1          = { 0x20000000,   1};                   ///< 1.0
+ਸਥਿਰ ਅਚਲ SoftFloat FLOAT_EPSILON    = { 0x29F16B12, -16};                   ///< A small value
+ਸਥਿਰ ਅਚਲ SoftFloat FLOAT_1584893192 = { 0x32B771ED,   1};                   ///< 1.584893192 (10^.2)
+ਸਥਿਰ ਅਚਲ SoftFloat FLOAT_100000     = { 0x30D40000,  17};                   ///< 100000
+ਸਥਿਰ ਅਚਲ SoftFloat FLOAT_0999999    = { 0x3FFFFBCE,   0};                   ///< 0.999999
+ਸਥਿਰ ਅਚਲ SoftFloat FLOAT_MIN        = { 0x20000000,   MIN_EXP};
 
 
 /**
  * Convert a SoftFloat to a double precision float.
  */
-static inline av_const double av_sf2double(SoftFloat v) {
-    v.exp -= ONE_BITS +1;
-    return ldexp(v.mant, v.exp);
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਦੁੱਗਣਾ av_sf2double(SoftFloat v) {
+    v.ਘਾਤਾਂਕ -= ONE_ਬਿੱਟ +1;
+    ਵਾਪਸ ldexp(v.mant, v.ਘਾਤਾਂਕ);
 }
 
-static av_const SoftFloat av_normalize_sf(SoftFloat a){
-    if(a.mant){
-#if 1
-        while((a.mant + 0x1FFFFFFFU)<0x3FFFFFFFU){
+ਸਥਿਰ av_const SoftFloat av_normalize_sf(SoftFloat a){
+    ਜੇ(a.mant){
+#ਜੇ 1
+        ਜਦੋਂ((a.mant + 0x1FFFFFFFU)<0x3FFFFFFFU){
             a.mant += a.mant;
-            a.exp  -= 1;
+            a.ਘਾਤਾਂਕ  -= 1;
         }
-#else
-        int s=ONE_BITS - av_log2(FFABS(a.mant));
-        a.exp   -= s;
+#ਨਹੀਂਤਾਂ
+        ਪੂਰਨ s=ONE_ਬਿੱਟ - av_log2(FFABS(a.mant));
+        a.ਘਾਤਾਂਕ   -= s;
         a.mant <<= s;
-#endif
-        if(a.exp < MIN_EXP){
-            a.exp = MIN_EXP;
+#ਜੇ_ਅੰਤ
+        ਜੇ(a.ਘਾਤਾਂਕ < MIN_EXP){
+            a.ਘਾਤਾਂਕ = MIN_EXP;
             a.mant= 0;
         }
-    }else{
-        a.exp= MIN_EXP;
+    }ਨਹੀਂਤਾਂ{
+        a.ਘਾਤਾਂਕ= MIN_EXP;
     }
-    return a;
+    ਵਾਪਸ a;
 }
 
-static inline av_const SoftFloat av_normalize1_sf(SoftFloat a){
-#if 1
-    if((int32_t)(a.mant + 0x40000000U) <= 0){
-        a.exp++;
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const SoftFloat av_normalize1_sf(SoftFloat a){
+#ਜੇ 1
+    ਜੇ((int32_t)(a.mant + 0x40000000U) <= 0){
+        a.ਘਾਤਾਂਕ++;
         a.mant>>=1;
     }
     av_assert2(a.mant < 0x40000000 && a.mant > -0x40000000);
-    av_assert2(a.exp <= MAX_EXP);
-    return a;
-#elif 1
-    int t= a.mant + 0x40000000 < 0;
-    return (SoftFloat){ a.mant>>t, a.exp+t};
-#else
-    int t= (a.mant + 0x3FFFFFFFU)>>31;
-    return (SoftFloat){a.mant>>t, a.exp+t};
-#endif
+    av_assert2(a.ਘਾਤਾਂਕ <= MAX_EXP);
+    ਵਾਪਸ a;
+#ਜਾਂਜੇ 1
+    ਪੂਰਨ t= a.mant + 0x40000000 < 0;
+    ਵਾਪਸ (SoftFloat){ a.mant>>t, a.ਘਾਤਾਂਕ+t};
+#ਨਹੀਂਤਾਂ
+    ਪੂਰਨ t= (a.mant + 0x3FFFFFFFU)>>31;
+    ਵਾਪਸ (SoftFloat){a.mant>>t, a.ਘਾਤਾਂਕ+t};
+#ਜੇ_ਅੰਤ
 }
 
 /**
@@ -99,34 +99,34 @@ static inline av_const SoftFloat av_normalize1_sf(SoftFloat a){
  *         normalized, then the output will not be worse then the other input.
  *         If both are normalized, then the output will be normalized.
  */
-static inline av_const SoftFloat av_mul_sf(SoftFloat a, SoftFloat b){
-    a.exp += b.exp;
-    av_assert2((int32_t)((a.mant * (int64_t)b.mant) >> ONE_BITS) == (a.mant * (int64_t)b.mant) >> ONE_BITS);
-    a.mant = (a.mant * (int64_t)b.mant) >> ONE_BITS;
-    a = av_normalize1_sf((SoftFloat){a.mant, a.exp - 1});
-    if (!a.mant || a.exp < MIN_EXP)
-        return FLOAT_0;
-    return a;
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const SoftFloat av_mul_sf(SoftFloat a, SoftFloat b){
+    a.ਘਾਤਾਂਕ += b.ਘਾਤਾਂਕ;
+    av_assert2((int32_t)((a.mant * (int64_t)b.mant) >> ONE_ਬਿੱਟ) == (a.mant * (int64_t)b.mant) >> ONE_ਬਿੱਟ);
+    a.mant = (a.mant * (int64_t)b.mant) >> ONE_ਬਿੱਟ;
+    a = av_normalize1_sf((SoftFloat){a.mant, a.ਘਾਤਾਂਕ - 1});
+    ਜੇ (!a.mant || a.ਘਾਤਾਂਕ < MIN_EXP)
+        ਵਾਪਸ FLOAT_0;
+    ਵਾਪਸ a;
 }
 
 /**
  * b has to be normalized and not zero.
  * @return Will not be more denormalized than a.
  */
-static inline av_const SoftFloat av_div_sf(SoftFloat a, SoftFloat b){
-    int64_t temp = (int64_t)a.mant * (1<<(ONE_BITS+1));
-    temp /= b.mant;
-    a.exp -= b.exp;
-    a.mant = temp;
-    while (a.mant != temp) {
-        temp /= 2;
-        a.exp--;
-        a.mant = temp;
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const SoftFloat av_div_sf(SoftFloat a, SoftFloat b){
+    int64_t ਆਰਜ਼ੀ = (int64_t)a.mant * (1<<(ONE_ਬਿੱਟ+1));
+    ਆਰਜ਼ੀ /= b.mant;
+    a.ਘਾਤਾਂਕ -= b.ਘਾਤਾਂਕ;
+    a.mant = ਆਰਜ਼ੀ;
+    ਜਦੋਂ (a.mant != ਆਰਜ਼ੀ) {
+        ਆਰਜ਼ੀ /= 2;
+        a.ਘਾਤਾਂਕ--;
+        a.mant = ਆਰਜ਼ੀ;
     }
     a = av_normalize1_sf(a);
-    if (!a.mant || a.exp < MIN_EXP)
-        return FLOAT_0;
-    return a;
+    ਜੇ (!a.mant || a.ਘਾਤਾਂਕ < MIN_EXP)
+        ਵਾਪਸ FLOAT_0;
+    ਵਾਪਸ a;
 }
 
 /**
@@ -135,43 +135,43 @@ static inline av_const SoftFloat av_div_sf(SoftFloat a, SoftFloat b){
  *          > 0 if the first is greater
  *            0 if they are equal
  */
-static inline av_const int av_cmp_sf(SoftFloat a, SoftFloat b){
-    int t= a.exp - b.exp;
-    if      (t <-31) return                  -  b.mant      ;
-    else if (t <  0) return (a.mant >> (-t)) -  b.mant      ;
-    else if (t < 32) return  a.mant          - (b.mant >> t);
-    else             return  a.mant                         ;
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ av_cmp_sf(SoftFloat a, SoftFloat b){
+    ਪੂਰਨ t= a.ਘਾਤਾਂਕ - b.ਘਾਤਾਂਕ;
+    ਜੇ      (t <-31) ਵਾਪਸ                  -  b.mant      ;
+    ਨਹੀਂਤਾਂ ਜੇ (t <  0) ਵਾਪਸ (a.mant >> (-t)) -  b.mant      ;
+    ਨਹੀਂਤਾਂ ਜੇ (t < 32) ਵਾਪਸ  a.mant          - (b.mant >> t);
+    ਨਹੀਂਤਾਂ             ਵਾਪਸ  a.mant                         ;
 }
 
 /**
  * Compares two SoftFloats.
  * @returns 1 if a is greater than b, 0 otherwise
  */
-static inline av_const int av_gt_sf(SoftFloat a, SoftFloat b)
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ av_gt_sf(SoftFloat a, SoftFloat b)
 {
-    int t= a.exp - b.exp;
-    if      (t <-31) return 0                >  b.mant      ;
-    else if (t <  0) return (a.mant >> (-t)) >  b.mant      ;
-    else if (t < 32) return  a.mant          > (b.mant >> t);
-    else             return  a.mant          >  0           ;
+    ਪੂਰਨ t= a.ਘਾਤਾਂਕ - b.ਘਾਤਾਂਕ;
+    ਜੇ      (t <-31) ਵਾਪਸ 0                >  b.mant      ;
+    ਨਹੀਂਤਾਂ ਜੇ (t <  0) ਵਾਪਸ (a.mant >> (-t)) >  b.mant      ;
+    ਨਹੀਂਤਾਂ ਜੇ (t < 32) ਵਾਪਸ  a.mant          > (b.mant >> t);
+    ਨਹੀਂਤਾਂ             ਵਾਪਸ  a.mant          >  0           ;
 }
 
 /**
  * @returns the sum of 2 SoftFloats.
  */
-static inline av_const SoftFloat av_add_sf(SoftFloat a, SoftFloat b){
-    int t= a.exp - b.exp;
-    if      (t <-31) return b;
-    else if (t <  0) return av_normalize_sf(av_normalize1_sf((SoftFloat){ b.mant + (a.mant >> (-t)), b.exp}));
-    else if (t < 32) return av_normalize_sf(av_normalize1_sf((SoftFloat){ a.mant + (b.mant >>   t ), a.exp}));
-    else             return a;
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const SoftFloat av_ਜੋੜੋ_sf(SoftFloat a, SoftFloat b){
+    ਪੂਰਨ t= a.ਘਾਤਾਂਕ - b.ਘਾਤਾਂਕ;
+    ਜੇ      (t <-31) ਵਾਪਸ b;
+    ਨਹੀਂਤਾਂ ਜੇ (t <  0) ਵਾਪਸ av_normalize_sf(av_normalize1_sf((SoftFloat){ b.mant + (a.mant >> (-t)), b.ਘਾਤਾਂਕ}));
+    ਨਹੀਂਤਾਂ ਜੇ (t < 32) ਵਾਪਸ av_normalize_sf(av_normalize1_sf((SoftFloat){ a.mant + (b.mant >>   t ), a.ਘਾਤਾਂਕ}));
+    ਨਹੀਂਤਾਂ             ਵਾਪਸ a;
 }
 
 /**
  * @returns the difference of 2 SoftFloats.
  */
-static inline av_const SoftFloat av_sub_sf(SoftFloat a, SoftFloat b){
-    return av_add_sf(a, (SoftFloat){ -b.mant, b.exp});
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const SoftFloat av_sub_sf(SoftFloat a, SoftFloat b){
+    ਵਾਪਸ av_ਜੋੜੋ_sf(a, (SoftFloat){ -b.mant, b.ਘਾਤਾਂਕ});
 }
 
 //FIXME log, exp, pow
@@ -182,56 +182,56 @@ static inline av_const SoftFloat av_sub_sf(SoftFloat a, SoftFloat b){
  * SoftFloat.
  * @returns a SoftFloat with value v * 2^-frac_bits
  */
-static inline av_const SoftFloat av_int2sf(int v, int frac_bits){
-    int exp_offset = 0;
-    if(v <= INT_MIN + 1){
-        exp_offset = 1;
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const SoftFloat av_int2sf(ਪੂਰਨ v, ਪੂਰਨ frac_ਬਿੱਟ){
+    ਪੂਰਨ exp_ਵਿੱਥ = 0;
+    ਜੇ(v <= INT_MIN + 1){
+        exp_ਵਿੱਥ = 1;
         v>>=1;
     }
-    return av_normalize_sf(av_normalize1_sf((SoftFloat){v, ONE_BITS + 1 - frac_bits + exp_offset}));
+    ਵਾਪਸ av_normalize_sf(av_normalize1_sf((SoftFloat){v, ONE_ਬਿੱਟ + 1 - frac_ਬਿੱਟ + exp_ਵਿੱਥ}));
 }
 
 /**
  * Converts a SoftFloat to an integer.
  * Rounding is to -inf.
  */
-static inline av_const int av_sf2int(SoftFloat v, int frac_bits){
-    v.exp += frac_bits - (ONE_BITS + 1);
-    if(v.exp >= 0) return v.mant <<  v.exp ;
-    else           return v.mant >>(-v.exp);
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_const ਪੂਰਨ av_sf2int(SoftFloat v, ਪੂਰਨ frac_ਬਿੱਟ){
+    v.ਘਾਤਾਂਕ += frac_ਬਿੱਟ - (ONE_ਬਿੱਟ + 1);
+    ਜੇ(v.ਘਾਤਾਂਕ >= 0) ਵਾਪਸ v.mant <<  v.ਘਾਤਾਂਕ ;
+    ਨਹੀਂਤਾਂ           ਵਾਪਸ v.mant >>(-v.ਘਾਤਾਂਕ);
 }
 
 /**
  * Rounding-to-nearest used.
  */
-static av_always_inline SoftFloat av_sqrt_sf(SoftFloat val)
+ਸਥਿਰ av_always_inline SoftFloat av_sqrt_sf(SoftFloat val)
 {
-    int tabIndex, rem;
+    ਪੂਰਨ tab_ਸੂਚਕਾਂਕ, rem;
 
-    if (val.mant == 0)
-        val.exp = MIN_EXP;
-    else if (val.mant < 0)
+    ਜੇ (val.mant == 0)
+        val.ਘਾਤਾਂਕ = MIN_EXP;
+    ਨਹੀਂਤਾਂ ਜੇ (val.mant < 0)
         abort();
-    else
+    ਨਹੀਂਤਾਂ
     {
-        tabIndex = (val.mant - 0x20000000) >> 20;
+        tab_ਸੂਚਕਾਂਕ = (val.mant - 0x20000000) >> 20;
 
         rem = val.mant & 0xFFFFF;
-        val.mant  = (int)(((int64_t)av_sqrttbl_sf[tabIndex] * (0x100000 - rem) +
-                           (int64_t)av_sqrttbl_sf[tabIndex + 1] * rem +
+        val.mant  = (ਪੂਰਨ)(((int64_t)av_sqrttbl_sf[tab_ਸੂਚਕਾਂਕ] * (0x100000 - rem) +
+                           (int64_t)av_sqrttbl_sf[tab_ਸੂਚਕਾਂਕ + 1] * rem +
                            0x80000) >> 20);
-        val.mant = (int)(((int64_t)av_sqr_exp_multbl_sf[val.exp & 1] * val.mant +
+        val.mant = (ਪੂਰਨ)(((int64_t)av_sqr_exp_multbl_sf[val.ਘਾਤਾਂਕ & 1] * val.mant +
                           0x10000000) >> 29);
 
-        if (val.mant < 0x40000000)
-            val.exp -= 2;
-        else
+        ਜੇ (val.mant < 0x40000000)
+            val.ਘਾਤਾਂਕ -= 2;
+        ਨਹੀਂਤਾਂ
             val.mant >>= 1;
 
-        val.exp = (val.exp >> 1) + 1;
+        val.ਘਾਤਾਂਕ = (val.ਘਾਤਾਂਕ >> 1) + 1;
     }
 
-    return val;
+    ਵਾਪਸ val;
 }
 
 /**
@@ -241,19 +241,19 @@ static av_always_inline SoftFloat av_sqrt_sf(SoftFloat val)
  * @param s pointer to where   sine in units of (1<<30) is returned
  * @param c pointer to where cosine in units of (1<<30) is returned
  */
-av_unused static void av_sincos_sf(int a, int *s, int *c)
+av_ਅਣਵਰਤਿਆ ਸਥਿਰ ਖਾਲੀ av_sincos_sf(ਪੂਰਨ a, ਪੂਰਨ *s, ਪੂਰਨ *c)
 {
-    int idx, sign;
-    int sv, cv;
-    int st, ct;
+    ਪੂਰਨ idx, sign;
+    ਪੂਰਨ sv, cv;
+    ਪੂਰਨ st, ct;
 
     idx = a >> 26;
-    sign = (int32_t)((unsigned)idx << 27) >> 31;
+    sign = (int32_t)((ਬਿਨਾਨਿਸ਼ਾਨੀ)idx << 27) >> 31;
     cv = av_costbl_1_sf[idx & 0xf];
     cv = (cv ^ sign) - sign;
 
     idx -= 8;
-    sign = (int32_t)((unsigned)idx << 27) >> 31;
+    sign = (int32_t)((ਬਿਨਾਨਿਸ਼ਾਨੀ)idx << 27) >> 31;
     sv = av_costbl_1_sf[idx & 0xf];
     sv = (sv ^ sign) - sign;
 
@@ -261,9 +261,9 @@ av_unused static void av_sincos_sf(int a, int *s, int *c)
     ct = av_costbl_2_sf[idx & 0x1f];
     st = av_sintbl_2_sf[idx & 0x1f];
 
-    idx = (int)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
+    idx = (ਪੂਰਨ)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
 
-    sv = (int)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
+    sv = (ਪੂਰਨ)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
 
     cv = idx;
 
@@ -271,23 +271,23 @@ av_unused static void av_sincos_sf(int a, int *s, int *c)
     ct = av_costbl_3_sf[idx & 0x1f];
     st = av_sintbl_3_sf[idx & 0x1f];
 
-    idx = (int)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
+    idx = (ਪੂਰਨ)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
 
-    sv = (int)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
+    sv = (ਪੂਰਨ)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
     cv = idx;
 
     idx = a >> 11;
 
-    ct = (int)(((int64_t)av_costbl_4_sf[idx & 0x1f] * (0x800 - (a & 0x7ff)) +
+    ct = (ਪੂਰਨ)(((int64_t)av_costbl_4_sf[idx & 0x1f] * (0x800 - (a & 0x7ff)) +
                 (int64_t)av_costbl_4_sf[(idx & 0x1f)+1]*(a & 0x7ff) +
                 0x400) >> 11);
-    st = (int)(((int64_t)av_sintbl_4_sf[idx & 0x1f] * (0x800 - (a & 0x7ff)) +
+    st = (ਪੂਰਨ)(((int64_t)av_sintbl_4_sf[idx & 0x1f] * (0x800 - (a & 0x7ff)) +
                 (int64_t)av_sintbl_4_sf[(idx & 0x1f) + 1] * (a & 0x7ff) +
                 0x400) >> 11);
 
-    *c = (int)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
+    *c = (ਪੂਰਨ)(((int64_t)cv * ct - (int64_t)sv * st + 0x20000000) >> 30);
 
-    *s = (int)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
+    *s = (ਪੂਰਨ)(((int64_t)cv * st + (int64_t)sv * ct + 0x20000000) >> 30);
 }
 
-#endif /* AVUTIL_SOFTFLOAT_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_SOFTFLOAT_H */

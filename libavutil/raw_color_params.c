@@ -18,30 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "raw_color_params.h"
-#include "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "raw_color_params.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
 
-AVRawColorParams *av_raw_color_params_alloc(size_t *size)
+AVRawColorParams *av_raw_color_params_alloc(size_t *ਮਾਪ)
 {
-    AVRawColorParams *p = av_mallocz(sizeof(AVRawColorParams));
-    if (!p)
-        return NULL;
+    AVRawColorParams *p = av_mallocz(ਆਕਾਰ(AVRawColorParams));
+    ਜੇ (!p)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    if (size)
-        *size = sizeof(*p);
+    ਜੇ (ਮਾਪ)
+        *ਮਾਪ = ਆਕਾਰ(*p);
 
-    return p;
+    ਵਾਪਸ p;
 }
 
-AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
+AVRawColorParams *av_raw_color_params_create_side_ਅੰਕੜੇ(AVFrame *ਚੌਖਟਾ)
 {
-    AVFrameSideData *side_data =
-        av_frame_new_side_data(frame, AV_FRAME_DATA_RAW_COLOR_PARAMS,
-                               sizeof(AVRawColorParams));
-    if (!side_data)
-        return NULL;
+    AVFrame_Side_ਅੰਕੜੇ *side_ਅੰਕੜੇ =
+        av_ਚੌਖਟਾ_new_side_ਅੰਕੜੇ(ਚੌਖਟਾ, AV_ਚੌਖਟਾ_ਅੰਕੜੇ_RAW_COLOR_PARAMS,
+                               ਆਕਾਰ(AVRawColorParams));
+    ਜੇ (!side_ਅੰਕੜੇ)
+        ਵਾਪਸ ਨਿਰਾ;
 
-    memset(side_data->data, 0, side_data->size);
+    memset(side_ਅੰਕੜੇ->ਅੰਕੜੇ, 0, side_ਅੰਕੜੇ->ਮਾਪ);
 
-    return (AVRawColorParams *)side_data->data;
+    ਵਾਪਸ (AVRawColorParams *)side_ਅੰਕੜੇ->ਅੰਕੜੇ;
 }

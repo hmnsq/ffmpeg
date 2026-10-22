@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_QSORT_H
-#define AVUTIL_QSORT_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_QSORT_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_QSORT_H
 
-#include "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
 
 
 /**
@@ -30,69 +30,69 @@
  * to construct input that requires O(n^2) time but this is very unlikely to
  * happen with non constructed input.
  */
-#define AV_QSORT(p, num, type, cmp) do {\
-    void *stack[64][2];\
-    int sp= 1;\
-    stack[0][0] = p;\
-    stack[0][1] = (p)+(num)-1;\
-    while(sp){\
-        type *start= stack[--sp][0];\
-        type *end  = stack[  sp][1];\
-        while(start < end){\
-            if(start < end-1) {\
-                int checksort=0;\
-                type *right = end-2;\
-                type *left  = start+1;\
-                type *mid = start + ((end-start)>>1);\
-                if(cmp(start, end) > 0) {\
-                    if(cmp(  end, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else                    FFSWAP(type, *start, *end);\
-                }else{\
-                    if(cmp(start, mid) > 0) FFSWAP(type, *start, *mid);\
-                    else checksort= 1;\
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_QSORT(p, ਅੰਕ, type, cmp) ਕਰੋ {\
+    ਖਾਲੀ *ਢੇਰ_2[64][2];\
+    ਪੂਰਨ sp= 1;\
+    ਢੇਰ_2[0][0] = p;\
+    ਢੇਰ_2[0][1] = (p)+(ਅੰਕ)-1;\
+    ਜਦੋਂ(sp){\
+        type *ਸ਼ੁਰੂ= ਢੇਰ_2[--sp][0];\
+        type *ਸਿਰਾ  = ਢੇਰ_2[  sp][1];\
+        ਜਦੋਂ(ਸ਼ੁਰੂ < ਸਿਰਾ){\
+            ਜੇ(ਸ਼ੁਰੂ < ਸਿਰਾ-1) {\
+                ਪੂਰਨ checksort=0;\
+                type *ਸੱਜਾ = ਸਿਰਾ-2;\
+                type *ਖੱਬਾ  = ਸ਼ੁਰੂ+1;\
+                type *mid = ਸ਼ੁਰੂ + ((ਸਿਰਾ-ਸ਼ੁਰੂ)>>1);\
+                ਜੇ(cmp(ਸ਼ੁਰੂ, ਸਿਰਾ) > 0) {\
+                    ਜੇ(cmp(  ਸਿਰਾ, mid) > 0) FFSWAP(type, *ਸ਼ੁਰੂ, *mid);\
+                    ਨਹੀਂਤਾਂ                    FFSWAP(type, *ਸ਼ੁਰੂ, *ਸਿਰਾ);\
+                }ਨਹੀਂਤਾਂ{\
+                    ਜੇ(cmp(ਸ਼ੁਰੂ, mid) > 0) FFSWAP(type, *ਸ਼ੁਰੂ, *mid);\
+                    ਨਹੀਂਤਾਂ checksort= 1;\
                 }\
-                if(cmp(mid, end) > 0){ \
-                    FFSWAP(type, *mid, *end);\
+                ਜੇ(cmp(mid, ਸਿਰਾ) > 0){ \
+                    FFSWAP(type, *mid, *ਸਿਰਾ);\
                     checksort=0;\
                 }\
-                if(start == end-2) break;\
-                FFSWAP(type, end[-1], *mid);\
-                while(left <= right){\
-                    while(left<=right && cmp(left, end-1) < 0)\
-                        left++;\
-                    while(left<=right && cmp(right, end-1) > 0)\
-                        right--;\
-                    if(left <= right){\
-                        FFSWAP(type, *left, *right);\
-                        left++;\
-                        right--;\
+                ਜੇ(ਸ਼ੁਰੂ == ਸਿਰਾ-2) ਰੋਕੋ;\
+                FFSWAP(type, ਸਿਰਾ[-1], *mid);\
+                ਜਦੋਂ(ਖੱਬਾ <= ਸੱਜਾ){\
+                    ਜਦੋਂ(ਖੱਬਾ<=ਸੱਜਾ && cmp(ਖੱਬਾ, ਸਿਰਾ-1) < 0)\
+                        ਖੱਬਾ++;\
+                    ਜਦੋਂ(ਖੱਬਾ<=ਸੱਜਾ && cmp(ਸੱਜਾ, ਸਿਰਾ-1) > 0)\
+                        ਸੱਜਾ--;\
+                    ਜੇ(ਖੱਬਾ <= ਸੱਜਾ){\
+                        FFSWAP(type, *ਖੱਬਾ, *ਸੱਜਾ);\
+                        ਖੱਬਾ++;\
+                        ਸੱਜਾ--;\
                     }\
                 }\
-                FFSWAP(type, end[-1], *left);\
-                if(checksort && (mid == left-1 || mid == left)){\
-                    mid= start;\
-                    while(mid<end && cmp(mid, mid+1) <= 0)\
+                FFSWAP(type, ਸਿਰਾ[-1], *ਖੱਬਾ);\
+                ਜੇ(checksort && (mid == ਖੱਬਾ-1 || mid == ਖੱਬਾ)){\
+                    mid= ਸ਼ੁਰੂ;\
+                    ਜਦੋਂ(mid<ਸਿਰਾ && cmp(mid, mid+1) <= 0)\
                         mid++;\
-                    if(mid==end)\
-                        break;\
+                    ਜੇ(mid==ਸਿਰਾ)\
+                        ਰੋਕੋ;\
                 }\
-                if(end-left < left-start){\
-                    stack[sp  ][0]= start;\
-                    stack[sp++][1]= right;\
-                    start = left+1;\
-                }else{\
-                    stack[sp  ][0]= left+1;\
-                    stack[sp++][1]= end;\
-                    end = right;\
+                ਜੇ(ਸਿਰਾ-ਖੱਬਾ < ਖੱਬਾ-ਸ਼ੁਰੂ){\
+                    ਢੇਰ_2[sp  ][0]= ਸ਼ੁਰੂ;\
+                    ਢੇਰ_2[sp++][1]= ਸੱਜਾ;\
+                    ਸ਼ੁਰੂ = ਖੱਬਾ+1;\
+                }ਨਹੀਂਤਾਂ{\
+                    ਢੇਰ_2[sp  ][0]= ਖੱਬਾ+1;\
+                    ਢੇਰ_2[sp++][1]= ਸਿਰਾ;\
+                    ਸਿਰਾ = ਸੱਜਾ;\
                 }\
-            }else{\
-                if(cmp(start, end) > 0)\
-                    FFSWAP(type, *start, *end);\
-                break;\
+            }ਨਹੀਂਤਾਂ{\
+                ਜੇ(cmp(ਸ਼ੁਰੂ, ਸਿਰਾ) > 0)\
+                    FFSWAP(type, *ਸ਼ੁਰੂ, *ਸਿਰਾ);\
+                ਰੋਕੋ;\
             }\
         }\
     }\
-} while (0)
+} ਜਦੋਂ (0)
 
 /**
  * Merge sort, this sort requires a temporary buffer and is stable, its worst
@@ -100,23 +100,23 @@
  * @param p     must be a lvalue pointer, this function may exchange it with tmp
  * @param tmp   must be a lvalue pointer, this function may exchange it with p
  */
-#define AV_MSORT(p, tmp, num, type, cmp) do {\
-    unsigned i, j, step;\
-    for(step=1; step<(num); step+=step){\
-        for(i=0; i<(num); i+=2*step){\
-            unsigned a[2] = {i, i+step};\
-            unsigned end = FFMIN(i+2*step, (num));\
-            for(j=i; a[0]<i+step && a[1]<end; j++){\
-                int idx= cmp(p+a[0], p+a[1]) > 0;\
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AV_MSORT(p, tmp, ਅੰਕ, type, cmp) ਕਰੋ {\
+    ਬਿਨਾਨਿਸ਼ਾਨੀ i, j, ਕਦਮ;\
+    ਲਈ(ਕਦਮ=1; ਕਦਮ<(ਅੰਕ); ਕਦਮ+=ਕਦਮ){\
+        ਲਈ(i=0; i<(ਅੰਕ); i+=2*ਕਦਮ){\
+            ਬਿਨਾਨਿਸ਼ਾਨੀ a[2] = {i, i+ਕਦਮ};\
+            ਬਿਨਾਨਿਸ਼ਾਨੀ ਸਿਰਾ = FFMIN(i+2*ਕਦਮ, (ਅੰਕ));\
+            ਲਈ(j=i; a[0]<i+ਕਦਮ && a[1]<ਸਿਰਾ; j++){\
+                ਪੂਰਨ idx= cmp(p+a[0], p+a[1]) > 0;\
                 tmp[j] = p[ a[idx]++ ];\
             }\
-            if(a[0]>=i+step) a[0] = a[1];\
-            for(; j<end; j++){\
+            ਜੇ(a[0]>=i+ਕਦਮ) a[0] = a[1];\
+            ਲਈ(; j<ਸਿਰਾ; j++){\
                 tmp[j] = p[ a[0]++ ];\
             }\
         }\
         FFSWAP(type*, p, tmp);\
     }\
-} while (0)
+} ਜਦੋਂ (0)
 
-#endif /* AVUTIL_QSORT_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_QSORT_H */

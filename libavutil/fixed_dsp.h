@@ -45,14 +45,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FIXED_DSP_H
-#define AVUTIL_FIXED_DSP_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_FIXED_DSP_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_FIXED_DSP_H
 
-#include <stdint.h>
-#include "attributes.h"
-#include "libavcodec/mathops.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavcodec/mathops.h"
 
-typedef struct AVFixedDSPContext {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVFixedDSPContext {
     /* Assume len is a multiple of 16, and arrays are 32-byte aligned */
     /* Results of multiplications are scaled down by 31 bit (and rounded) if not
      * stated otherwise */
@@ -76,7 +76,7 @@ typedef struct AVFixedDSPContext {
      * @param bits scaling parameter
      *
      */
-    void (*vector_fmul_window_scaled)(int16_t *dst, const int32_t *src0, const int32_t *src1, const int32_t *win, int len, uint8_t bits);
+    ਖਾਲੀ (*ਸਦਿਸ਼_fmul_ਖਿੜਕੀ_scaled)(int16_t *dst, ਅਚਲ int32_t *src0, ਅਚਲ int32_t *src1, ਅਚਲ int32_t *win, ਪੂਰਨ len, uint8_t ਬਿੱਟ);
 
     /**
      * Overlap/add with window function.
@@ -94,7 +94,7 @@ typedef struct AVFixedDSPContext {
      * @param len  length of vector
      *             constraints: multiple of 4
      */
-    void (*vector_fmul_window)(int32_t *dst, const int32_t *src0, const int32_t *src1, const int32_t *win, int len);
+    ਖਾਲੀ (*ਸਦਿਸ਼_fmul_ਖਿੜਕੀ)(int32_t *dst, ਅਚਲ int32_t *src0, ਅਚਲ int32_t *src1, ਅਚਲ int32_t *win, ਪੂਰਨ len);
 
     /**
      * Fixed-point multiplication that calculates the entry wise product of two
@@ -109,10 +109,10 @@ typedef struct AVFixedDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul)(int *dst, const int *src0, const int *src1,
-                        int len);
+    ਖਾਲੀ (*ਸਦਿਸ਼_fmul)(ਪੂਰਨ *dst, ਅਚਲ ਪੂਰਨ *src0, ਅਚਲ ਪੂਰਨ *src1,
+                        ਪੂਰਨ len);
 
-    void (*vector_fmul_reverse)(int *dst, const int *src0, const int *src1, int len);
+    ਖਾਲੀ (*ਸਦਿਸ਼_fmul_ਉਲਟ)(ਪੂਰਨ *dst, ਅਚਲ ਪੂਰਨ *src0, ਅਚਲ ਪੂਰਨ *src1, ਪੂਰਨ len);
     /**
      * Calculate the entry wise product of two vectors of integers, add a third vector of
      * integers and store the result in a vector of integers.
@@ -128,8 +128,8 @@ typedef struct AVFixedDSPContext {
      * @param len  number of elements in the input
      *             constraints: multiple of 16
      */
-    void (*vector_fmul_add)(int *dst, const int *src0, const int *src1,
-                            const int *src2, int len);
+    ਖਾਲੀ (*ਸਦਿਸ਼_fmul_ਜੋੜੋ)(ਪੂਰਨ *dst, ਅਚਲ ਪੂਰਨ *src0, ਅਚਲ ਪੂਰਨ *src1,
+                            ਅਚਲ ਪੂਰਨ *src2, ਪੂਰਨ len);
 
     /**
      * Calculate the scalar product of two vectors of integers.
@@ -140,7 +140,7 @@ typedef struct AVFixedDSPContext {
      *
      * @return sum of elementwise products
      */
-    int (*scalarproduct_fixed)(const int *v1, const int *v2, int len);
+    ਪੂਰਨ (*scalarproduct_fixed)(ਅਚਲ ਪੂਰਨ *v1, ਅਚਲ ਪੂਰਨ *v2, ਪੂਰਨ len);
 
     /**
      * Calculate the sum and difference of two vectors of integers.
@@ -149,7 +149,7 @@ typedef struct AVFixedDSPContext {
      * @param v2  second input vector, difference output, 16-byte aligned
      * @param len length of vectors, multiple of 4
      */
-    void (*butterflies_fixed)(int *restrict v1, int *restrict v2, int len);
+    ਖਾਲੀ (*butterflies_fixed)(ਪੂਰਨ *ਸੀਮਿਤ v1, ਪੂਰਨ *ਸੀਮਿਤ v2, ਪੂਰਨ len);
 } AVFixedDSPContext;
 
 /**
@@ -158,10 +158,10 @@ typedef struct AVFixedDSPContext {
  *
  * @param strict  setting to non-zero avoids using functions which may not be IEEE-754 compliant
  */
-AVFixedDSPContext * avpriv_alloc_fixed_dsp(int strict);
+AVFixedDSPContext * avpriv_alloc_fixed_dsp(ਪੂਰਨ strict);
 
-void ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp);
-void ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp);
+ਖਾਲੀ ff_fixed_dsp_init_riscv(AVFixedDSPContext *fdsp);
+ਖਾਲੀ ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp);
 
 /**
  * Calculate the square root
@@ -173,33 +173,33 @@ void ff_fixed_dsp_init_x86(AVFixedDSPContext *fdsp);
  * note: input is normalized to (0, 1) fixed point value
  */
 
-static av_always_inline int fixed_sqrt(int x, int bits)
+ਸਥਿਰ av_always_inline ਪੂਰਨ fixed_sqrt(ਪੂਰਨ x, ਪੂਰਨ ਬਿੱਟ)
 {
-    int retval, bit_mask, guess, square, i;
+    ਪੂਰਨ retval, ਦੋਆਧਾਰੀ_ਅੰਕ_ਨਕਾਬ, guess, ਵਰਗਫਲ, i;
     int64_t accu;
-    int shift1 = 30 - bits;
-    int shift2 = bits - 15;
+    ਪੂਰਨ shift1 = 30 - ਬਿੱਟ;
+    ਪੂਰਨ shift2 = ਬਿੱਟ - 15;
 
-    if (shift1 > 0) retval = ff_sqrt(x << shift1);
-    else retval = ff_sqrt(x >> -shift1);
+    ਜੇ (shift1 > 0) retval = ff_sqrt(x << shift1);
+    ਨਹੀਂਤਾਂ retval = ff_sqrt(x >> -shift1);
 
-    if (shift2 > 0) {
+    ਜੇ (shift2 > 0) {
         retval = retval << shift2;
-        bit_mask = (1 << (shift2 - 1));
+        ਦੋਆਧਾਰੀ_ਅੰਕ_ਨਕਾਬ = (1 << (shift2 - 1));
 
-        for (i=0; i<shift2; i++){
-            guess = retval + bit_mask;
+        ਲਈ (i=0; i<shift2; i++){
+            guess = retval + ਦੋਆਧਾਰੀ_ਅੰਕ_ਨਕਾਬ;
             accu = (int64_t)guess * guess;
-            square = (int)((accu + bit_mask) >> bits);
-            if (x >= square)
-                retval += bit_mask;
-            bit_mask >>= 1;
+            ਵਰਗਫਲ = (ਪੂਰਨ)((accu + ਦੋਆਧਾਰੀ_ਅੰਕ_ਨਕਾਬ) >> ਬਿੱਟ);
+            ਜੇ (x >= ਵਰਗਫਲ)
+                retval += ਦੋਆਧਾਰੀ_ਅੰਕ_ਨਕਾਬ;
+            ਦੋਆਧਾਰੀ_ਅੰਕ_ਨਕਾਬ >>= 1;
         }
 
     }
-    else retval >>= (-shift2);
+    ਨਹੀਂਤਾਂ retval >>= (-shift2);
 
-    return retval;
+    ਵਾਪਸ retval;
 }
 
-#endif /* AVUTIL_FIXED_DSP_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_FIXED_DSP_H */

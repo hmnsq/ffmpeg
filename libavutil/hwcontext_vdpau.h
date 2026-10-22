@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_VDPAU_H
-#define AVUTIL_HWCONTEXT_VDPAU_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_HWCONTEXT_VDPAU_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_HWCONTEXT_VDPAU_H
 
-#include <vdpau/vdpau.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <vdpau/vdpau.h>
 
 /**
  * @file
@@ -32,13 +32,13 @@
 /**
  * This struct is allocated as AVHWDeviceContext.hwctx
  */
-typedef struct AVVDPAUDeviceContext {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVVDPAUDeviceContext {
     VdpDevice          device;
-    VdpGetProcAddress *get_proc_address;
+    Vdp_Get_Proc_ਪਤਾ *get_proc_ਪਤਾ;
 } AVVDPAUDeviceContext;
 
 /**
  * AVHWFramesContext.hwctx is currently not used
  */
 
-#endif /* AVUTIL_HWCONTEXT_VDPAU_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_HWCONTEXT_VDPAU_H */

@@ -16,21 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_RISCV_BSWAP_H
-#define AVUTIL_RISCV_BSWAP_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_RISCV_BSWAP_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_RISCV_BSWAP_H
 
-#include <stdint.h>
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/riscv/cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/riscv/cpu.h"
 
-#if defined (__GNUC__) || defined (__clang__)
-#define av_bswap16 __builtin_bswap16
+#ਜੇ defined (__GNUC__) || defined (__clang__)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_bswap16 __builtin_bswap16
 
-static av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
+ਸਥਿਰ av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ਜੇ HAVE_RV && !defined(__riscv_zbb)
+    ਜੇ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), 1)) {
         uintptr_t y;
 
@@ -39,18 +39,18 @@ static av_always_inline av_const uint32_t av_bswap32_rv(uint32_t x)
             ".option arch, +zbb\n"
             "rev8    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        return y >> (__riscv_xlen - 32);
+        ਵਾਪਸ y >> (__riscv_xlen - 32);
     }
-#endif
-    return __builtin_bswap32(x);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ __builtin_bswap32(x);
 }
-#define av_bswap32 av_bswap32_rv
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_bswap32 av_bswap32_rv
 
-#if __riscv_xlen >= 64
-static av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
+#ਜੇ __riscv_xlen >= 64
+ਸਥਿਰ av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
 {
-#if HAVE_RV && !defined(__riscv_zbb)
-    if (!__builtin_constant_p(x) &&
+#ਜੇ HAVE_RV && !defined(__riscv_zbb)
+    ਜੇ (!__builtin_constant_p(x) &&
         __builtin_expect(ff_rv_zbb_support(), 1)) {
         uintptr_t y;
 
@@ -59,14 +59,14 @@ static av_always_inline av_const uint64_t av_bswap64_rv(uint64_t x)
             ".option arch, +zbb\n"
             "rev8    %0, %1\n"
             ".option pop" : "=r" (y) : "r" (x));
-        return y >> (__riscv_xlen - 64);
+        ਵਾਪਸ y >> (__riscv_xlen - 64);
     }
-#endif
-    return __builtin_bswap64(x);
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ __builtin_bswap64(x);
 }
-#define av_bswap64 av_bswap64_rv
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_bswap64 av_bswap64_rv
+#ਜੇ_ਅੰਤ
 
-#endif
+#ਜੇ_ਅੰਤ
 
-#endif /* AVUTIL_RISCV_BSWAP_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_RISCV_BSWAP_H */

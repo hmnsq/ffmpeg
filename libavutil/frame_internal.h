@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_FRAME_INTERNAL_H
-#define AVUTIL_FRAME_INTERNAL_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_ਚੌਖਟਾ_ਅੰਦਰੂਨੀ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_ਚੌਖਟਾ_ਅੰਦਰੂਨੀ_H
 
-#include <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
 
-#include "buffer.h"
-#include "frame.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "buffer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "frame.h"
 
 /**
  * Allocate the buffer of a video frame like av_frame_get_buffer().
@@ -30,8 +30,8 @@
  * @param alloc  allocates the buffer, av_buffer_alloc() is used if NULL
  * @param opaque passed to alloc
  */
-int ff_frame_get_video_buffer(AVFrame *frame, int align,
-                              AVBufferRef *(*alloc)(void *opaque, size_t size),
-                              void *opaque);
+ਪੂਰਨ ff_ਚੌਖਟਾ_get_video_ਬਫਰ(AVFrame *ਚੌਖਟਾ, ਪੂਰਨ align,
+                              AVBufferRef *(*alloc)(ਖਾਲੀ *opaque, size_t ਮਾਪ),
+                              ਖਾਲੀ *opaque);
 
-#endif /* AVUTIL_FRAME_INTERNAL_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_FRAME_INTERNAL_H */

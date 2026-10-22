@@ -26,58 +26,58 @@
  * @see http://www.dropframetimecode.org
  */
 
-#include <stdio.h>
-#include "common.h"
-#include "timecode.h"
-#include "timecode_internal.h"
-#include "log.h"
-#include "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "common.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "timecode.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "timecode_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "log.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
 
-int av_timecode_adjust_ntsc_framenum2(int framenum, int fps)
+ਪੂਰਨ av_timecode_adjust_ntsc_framenum2(ਪੂਰਨ framenum, ਪੂਰਨ fps)
 {
     /* only works for multiples of NTSC 29.97 */
-    int drop_frames = 0;
-    int d, m, frames_per_10mins;
+    ਪੂਰਨ drop_ਚੌਖਟੇ = 0;
+    ਪੂਰਨ d, m, ਚੌਖਟੇ_ਪ੍ਰਤੀ_10mins;
 
-    if (fps && fps % 30 == 0) {
-        drop_frames = fps / 30 * 2;
-        frames_per_10mins = fps / 30 * 17982;
-    } else
-        return framenum;
+    ਜੇ (fps && fps % 30 == 0) {
+        drop_ਚੌਖਟੇ = fps / 30 * 2;
+        ਚੌਖਟੇ_ਪ੍ਰਤੀ_10mins = fps / 30 * 17982;
+    } ਨਹੀਂਤਾਂ
+        ਵਾਪਸ framenum;
 
-    d = framenum / frames_per_10mins;
-    m = framenum % frames_per_10mins;
+    d = framenum / ਚੌਖਟੇ_ਪ੍ਰਤੀ_10mins;
+    m = framenum % ਚੌਖਟੇ_ਪ੍ਰਤੀ_10mins;
 
-    return framenum + 9U * drop_frames * d + drop_frames * ((m - drop_frames) / (frames_per_10mins / 10));
+    ਵਾਪਸ framenum + 9U * drop_ਚੌਖਟੇ * d + drop_ਚੌਖਟੇ * ((m - drop_ਚੌਖਟੇ) / (ਚੌਖਟੇ_ਪ੍ਰਤੀ_10mins / 10));
 }
 
-uint32_t av_timecode_get_smpte_from_framenum(const AVTimecode *tc, int framenum)
+uint32_t av_timecode_get_smpte_from_framenum(ਅਚਲ AVTimecode *tc, ਪੂਰਨ framenum)
 {
-    unsigned fps = tc->fps;
-    int drop = !!(tc->flags & AV_TIMECODE_FLAG_DROPFRAME);
-    int hh, mm, ss, ff;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ fps = tc->fps;
+    ਪੂਰਨ drop = !!(tc->flags & AV_TIMECODE_FLAG_DROPFRAME);
+    ਪੂਰਨ hh, mm, ss, ff;
 
-    framenum += tc->start;
-    if (drop)
+    framenum += tc->ਸ਼ੁਰੂ;
+    ਜੇ (drop)
         framenum = av_timecode_adjust_ntsc_framenum2(framenum, tc->fps);
     ff = framenum % fps;
     ss = framenum / fps      % 60;
     mm = framenum / (fps*60LL) % 60;
     hh = framenum / (fps*3600LL) % 24;
-    return av_timecode_get_smpte(tc->rate, drop, hh, mm, ss, ff);
+    ਵਾਪਸ av_timecode_get_smpte(tc->ਦਰ, drop, hh, mm, ss, ff);
 }
 
-uint32_t av_timecode_get_smpte(AVRational rate, int drop, int hh, int mm, int ss, int ff)
+uint32_t av_timecode_get_smpte(AVRational ਦਰ, ਪੂਰਨ drop, ਪੂਰਨ hh, ਪੂਰਨ mm, ਪੂਰਨ ss, ਪੂਰਨ ff)
 {
     uint32_t tc = 0;
 
     /* For SMPTE 12-M timecodes, frame count is a special case if > 30 FPS.
        See SMPTE ST 12-1:2014 Sec 12.1 for more info. */
-    if (av_cmp_q(rate, (AVRational) {30, 1}) == 1) {
-        if (ff % 2 == 1) {
-            if (av_cmp_q(rate, (AVRational) {50, 1}) == 0)
+    ਜੇ (av_cmp_q(ਦਰ, (AVRational) {30, 1}) == 1) {
+        ਜੇ (ff % 2 == 1) {
+            ਜੇ (av_cmp_q(ਦਰ, (AVRational) {50, 1}) == 0)
                 tc |= (1 << 7);
-            else
+            ਨਹੀਂਤਾਂ
                 tc |= (1 << 23);
         }
         ff /= 2;
@@ -98,20 +98,20 @@ uint32_t av_timecode_get_smpte(AVRational rate, int drop, int hh, int mm, int ss
     tc |= (hh / 10) << 4;
     tc |= (hh % 10);
 
-    return tc;
+    ਵਾਪਸ tc;
 }
 
-char *av_timecode_make_string(const AVTimecode *tc, char *buf, int framenum_arg)
+ਅੱਖਰ *av_timecode_make_string(ਅਚਲ AVTimecode *tc, ਅੱਖਰ *buf, ਪੂਰਨ framenum_arg)
 {
-    unsigned fps = tc->fps;
-    int drop = tc->flags & AV_TIMECODE_FLAG_DROPFRAME;
-    int hh, mm, ss, ff, ff_len, neg = 0;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ fps = tc->fps;
+    ਪੂਰਨ drop = tc->flags & AV_TIMECODE_FLAG_DROPFRAME;
+    ਪੂਰਨ hh, mm, ss, ff, ff_len, neg = 0;
     int64_t framenum = framenum_arg;
 
-    framenum += tc->start;
-    if (drop)
+    framenum += tc->ਸ਼ੁਰੂ;
+    ਜੇ (drop)
         framenum = av_timecode_adjust_ntsc_framenum2(framenum, fps);
-    if (framenum < 0) {
+    ਜੇ (framenum < 0) {
         framenum = -framenum;
         neg = tc->flags & AV_TIMECODE_FLAG_ALLOWNEGATIVE;
     }
@@ -119,136 +119,136 @@ char *av_timecode_make_string(const AVTimecode *tc, char *buf, int framenum_arg)
     ss = framenum / fps        % 60;
     mm = framenum / (fps*60LL) % 60;
     hh = framenum / (fps*3600LL);
-    if (tc->flags & AV_TIMECODE_FLAG_24HOURSMAX)
+    ਜੇ (tc->flags & AV_TIMECODE_FLAG_24HOURSMAX)
         hh = hh % 24;
     ff_len = fps > 10000 ? 5 : fps > 1000 ? 4 : fps > 100 ? 3 : fps > 10 ? 2 : 1;
-    snprintf(buf, AV_TIMECODE_STR_SIZE, "%s%02d:%02d:%02d%c%0*d",
+    snprintf(buf, AV_TIMECODE_STR_ਮਾਪ, "%s%02d:%02d:%02d%c%0*d",
              neg ? "-" : "",
              hh, mm, ss, drop ? ';' : ':', ff_len, ff);
-    return buf;
+    ਵਾਪਸ buf;
 }
 
-char *av_timecode_make_smpte_tc_string2(char *buf, AVRational rate, uint32_t tcsmpte, int prevent_df, int skip_field)
+ਅੱਖਰ *av_timecode_make_smpte_tc_string2(ਅੱਖਰ *buf, AVRational ਦਰ, uint32_t tcsmpte, ਪੂਰਨ prevent_df, ਪੂਰਨ skip_ਖੇਤਰ)
 {
-    unsigned hh, mm, ss, ff, drop;
-    ff_timecode_set_smpte(&drop, &hh, &mm, &ss, &ff, rate, tcsmpte, prevent_df, skip_field);
+    ਬਿਨਾਨਿਸ਼ਾਨੀ hh, mm, ss, ff, drop;
+    ff_timecode_ਸੈੱਟ_smpte(&drop, &hh, &mm, &ss, &ff, ਦਰ, tcsmpte, prevent_df, skip_ਖੇਤਰ);
 
-    snprintf(buf, AV_TIMECODE_STR_SIZE, "%02u:%02u:%02u%c%02u",
+    snprintf(buf, AV_TIMECODE_STR_ਮਾਪ, "%02u:%02u:%02u%c%02u",
              hh, mm, ss, drop ? ';' : ':', ff);
-    return buf;
+    ਵਾਪਸ buf;
 
 }
 
-char *av_timecode_make_smpte_tc_string(char *buf, uint32_t tcsmpte, int prevent_df)
+ਅੱਖਰ *av_timecode_make_smpte_tc_string(ਅੱਖਰ *buf, uint32_t tcsmpte, ਪੂਰਨ prevent_df)
 {
-    return av_timecode_make_smpte_tc_string2(buf, (AVRational){30, 1}, tcsmpte, prevent_df, 1);
+    ਵਾਪਸ av_timecode_make_smpte_tc_string2(buf, (AVRational){30, 1}, tcsmpte, prevent_df, 1);
 }
 
-char *av_timecode_make_mpeg_tc_string(char *buf, uint32_t tc25bit)
+ਅੱਖਰ *av_timecode_make_mpeg_tc_string(ਅੱਖਰ *buf, uint32_t tc25bit)
 {
-    snprintf(buf, AV_TIMECODE_STR_SIZE,
+    snprintf(buf, AV_TIMECODE_STR_ਮਾਪ,
              "%02"PRIu32":%02"PRIu32":%02"PRIu32"%c%02"PRIu32,
              tc25bit>>19 & 0x1f,              // 5-bit hours
              tc25bit>>13 & 0x3f,              // 6-bit minutes
              tc25bit>>6  & 0x3f,              // 6-bit seconds
              tc25bit     & 1<<24 ? ';' : ':', // 1-bit drop flag
              tc25bit     & 0x3f);             // 6-bit frames
-    return buf;
+    ਵਾਪਸ buf;
 }
 
-static int check_fps(int fps)
+ਸਥਿਰ ਪੂਰਨ check_fps(ਪੂਰਨ fps)
 {
-    int i;
-    static const int supported_fps[] = {
+    ਪੂਰਨ i;
+    ਸਥਿਰ ਅਚਲ ਪੂਰਨ supported_fps[] = {
         24, 25, 30, 48, 50, 60, 100, 120, 150,
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(supported_fps); i++)
-        if (fps == supported_fps[i])
-            return 0;
-    return -1;
+    ਲਈ (i = 0; i < FF_ARRAY_ELEMS(supported_fps); i++)
+        ਜੇ (fps == supported_fps[i])
+            ਵਾਪਸ 0;
+    ਵਾਪਸ -1;
 }
 
-static int check_timecode(void *log_ctx, AVTimecode *tc)
+ਸਥਿਰ ਪੂਰਨ check_timecode(ਖਾਲੀ *log_ctx, AVTimecode *tc)
 {
-    if ((int)tc->fps <= 0) {
+    ਜੇ ((ਪੂਰਨ)tc->fps <= 0) {
         av_log(log_ctx, AV_LOG_ERROR, "Valid timecode frame rate must be specified. Minimum value is 1\n");
-        return AVERROR(EINVAL);
+        ਵਾਪਸ AVERROR(EINVAL);
     }
-    if ((tc->flags & AV_TIMECODE_FLAG_DROPFRAME) && tc->fps % 30 != 0) {
+    ਜੇ ((tc->flags & AV_TIMECODE_FLAG_DROPFRAME) && tc->fps % 30 != 0) {
         av_log(log_ctx, AV_LOG_ERROR, "Drop frame is only allowed with multiples of 30000/1001 FPS\n");
-        return AVERROR(EINVAL);
+        ਵਾਪਸ AVERROR(EINVAL);
     }
-    if (check_fps(tc->fps) < 0) {
+    ਜੇ (check_fps(tc->fps) < 0) {
         av_log(log_ctx, AV_LOG_WARNING, "Using non-standard frame rate %d/%d\n",
-               tc->rate.num, tc->rate.den);
+               tc->ਦਰ.ਅੰਕ, tc->ਦਰ.den);
     }
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int fps_from_frame_rate(AVRational rate)
+ਸਥਿਰ ਪੂਰਨ fps_from_ਚੌਖਟਾ_ਦਰ(AVRational ਦਰ)
 {
-    if (!rate.den || !rate.num)
-        return -1;
-    return (rate.num + rate.den/2LL) / rate.den;
+    ਜੇ (!ਦਰ.den || !ਦਰ.ਅੰਕ)
+        ਵਾਪਸ -1;
+    ਵਾਪਸ (ਦਰ.ਅੰਕ + ਦਰ.den/2LL) / ਦਰ.den;
 }
 
-int av_timecode_check_frame_rate(AVRational rate)
+ਪੂਰਨ av_timecode_check_ਚੌਖਟਾ_ਦਰ(AVRational ਦਰ)
 {
-    return check_fps(fps_from_frame_rate(rate));
+    ਵਾਪਸ check_fps(fps_from_ਚੌਖਟਾ_ਦਰ(ਦਰ));
 }
 
-int av_timecode_init(AVTimecode *tc, AVRational rate, int flags, int frame_start, void *log_ctx)
+ਪੂਰਨ av_timecode_init(AVTimecode *tc, AVRational ਦਰ, ਪੂਰਨ flags, ਪੂਰਨ ਚੌਖਟਾ_ਸ਼ੁਰੂ, ਖਾਲੀ *log_ctx)
 {
-    memset(tc, 0, sizeof(*tc));
-    tc->start = frame_start;
+    memset(tc, 0, ਆਕਾਰ(*tc));
+    tc->ਸ਼ੁਰੂ = ਚੌਖਟਾ_ਸ਼ੁਰੂ;
     tc->flags = flags;
-    tc->rate  = rate;
-    tc->fps   = fps_from_frame_rate(rate);
-    return check_timecode(log_ctx, tc);
+    tc->ਦਰ  = ਦਰ;
+    tc->fps   = fps_from_ਚੌਖਟਾ_ਦਰ(ਦਰ);
+    ਵਾਪਸ check_timecode(log_ctx, tc);
 }
 
-int av_timecode_init_from_components(AVTimecode *tc, AVRational rate, int flags, int hh, int mm, int ss, int ff, void *log_ctx)
+ਪੂਰਨ av_timecode_init_from_components(AVTimecode *tc, AVRational ਦਰ, ਪੂਰਨ flags, ਪੂਰਨ hh, ਪੂਰਨ mm, ਪੂਰਨ ss, ਪੂਰਨ ff, ਖਾਲੀ *log_ctx)
 {
-    int ret;
+    ਪੂਰਨ ret;
     int64_t s;
 
-    memset(tc, 0, sizeof(*tc));
+    memset(tc, 0, ਆਕਾਰ(*tc));
     tc->flags = flags;
-    tc->rate  = rate;
-    tc->fps   = fps_from_frame_rate(rate);
+    tc->ਦਰ  = ਦਰ;
+    tc->fps   = fps_from_ਚੌਖਟਾ_ਦਰ(ਦਰ);
 
     ret = check_timecode(log_ctx, tc);
-    if (ret < 0)
-        return ret;
+    ਜੇ (ret < 0)
+        ਵਾਪਸ ret;
 
     s = hh*3600LL + mm*60LL + ss;
-    if (s != (int32_t)s)
-        return AVERROR(EINVAL);
+    ਜੇ (s != (int32_t)s)
+        ਵਾਪਸ AVERROR(EINVAL);
 
     s = s * tc->fps + ff;
-    if (s != (int32_t)s)
-        return AVERROR(EINVAL);
-    tc->start = s;
+    ਜੇ (s != (int32_t)s)
+        ਵਾਪਸ AVERROR(EINVAL);
+    tc->ਸ਼ੁਰੂ = s;
 
-    if (tc->flags & AV_TIMECODE_FLAG_DROPFRAME) { /* adjust frame number */
-        int tmins = 60*hh + mm;
-        tc->start -= (tc->fps / 30 * 2) * (tmins - tmins/10);
+    ਜੇ (tc->flags & AV_TIMECODE_FLAG_DROPFRAME) { /* adjust frame number */
+        ਪੂਰਨ tmins = 60*hh + mm;
+        tc->ਸ਼ੁਰੂ -= (tc->fps / 30 * 2) * (tmins - tmins/10);
     }
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-int av_timecode_init_from_string(AVTimecode *tc, AVRational rate, const char *str, void *log_ctx)
+ਪੂਰਨ av_timecode_init_from_string(AVTimecode *tc, AVRational ਦਰ, ਅਚਲ ਅੱਖਰ *str, ਖਾਲੀ *log_ctx)
 {
-    char c;
-    int hh, mm, ss, ff, flags;
+    ਅੱਖਰ c;
+    ਪੂਰਨ hh, mm, ss, ff, flags;
 
-    if (sscanf(str, "%d:%d:%d%c%d", &hh, &mm, &ss, &c, &ff) != 5) {
+    ਜੇ (ਲੜੀ_ਤੋਂ_ਪੜ੍ਹੋ(str, "%d:%d:%d%c%d", &hh, &mm, &ss, &c, &ff) != 5) {
         av_log(log_ctx, AV_LOG_ERROR, "Unable to parse timecode, "
                                       "syntax: hh:mm:ss[:;.]ff\n");
-        return AVERROR_INVALIDDATA;
+        ਵਾਪਸ AVERROR_INVALIDDATA;
     }
     flags = c != ':' ? AV_TIMECODE_FLAG_DROPFRAME : 0; // drop if ';', '.', ...
 
-    return av_timecode_init_from_components(tc, rate, flags, hh, mm, ss, ff, log_ctx);
+    ਵਾਪਸ av_timecode_init_from_components(tc, ਦਰ, flags, hh, mm, ss, ff, log_ctx);
 }

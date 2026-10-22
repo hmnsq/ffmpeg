@@ -18,102 +18,102 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_INTMATH_H
-#define AVUTIL_X86_INTMATH_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_X86_INTMATH_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_X86_INTMATH_H
 
-#include <stdint.h>
-#include <stdlib.h>
-#if HAVE_FAST_CLZ
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__INTEL_COMPILER)
-#include <immintrin.h>
-#endif
-#endif
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
+#ਜੇ HAVE_FAST_CLZ
+#ਜੇ defined(_MSC_VER)
+#ਅਨ੍ਤਰ੍ਭਾਵ <intrin.h>
+#ਜਾਂਜੇ defined(__INTEL_COMPILER)
+#ਅਨ੍ਤਰ੍ਭਾਵ <immintrin.h>
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#if HAVE_FAST_CLZ
-#if (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
-#   if defined(__INTEL_COMPILER)
-#       define ff_log2(x) (_bit_scan_reverse((x)|1))
-#   else
+#ਜੇ HAVE_FAST_CLZ
+#ਜੇ (defined(__INTEL_COMPILER) && (__INTEL_COMPILER>=1216)) || defined(_MSC_VER)
+#   ਜੇ defined(__INTEL_COMPILER)
+#       define ff_log2(x) (ਦੋਆਧਾਰੀ_ਅੰਕ_ਜਾਂਚ_ਉਲਟ((x)|1))
+#   ਨਹੀਂਤਾਂ
 #       define ff_log2 ff_log2_x86
-static av_always_inline av_const int ff_log2_x86(unsigned int v)
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ ff_log2_x86(ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ v)
 {
-    unsigned long n;
-    _BitScanReverse(&n, v|1);
-    return n;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ n;
+    ਦੋਆਧਾਰੀ_ਅੰਕ_ਜਾਂਚ_ਉਲਟ_2(&n, v|1);
+    ਵਾਪਸ n;
 }
 #   endif
 #   define ff_log2_16bit av_log2
 
-#if defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
+#ਜੇ defined(__INTEL_COMPILER) || (defined(_MSC_VER) && \
                                   (defined(__BMI__) || !defined(__clang__)))
 #   define ff_ctz(v) _tzcnt_u32(v)
 
-#   if ARCH_X86_64
+#   ਜੇ ARCH_X86_64
 #       define ff_ctzll(v) _tzcnt_u64(v)
-#   else
+#   ਨਹੀਂਤਾਂ
 #       define ff_ctzll ff_ctzll_x86
-static av_always_inline av_const int ff_ctzll_x86(long long v)
+ਸਥਿਰ av_always_inline av_const ਪੂਰਨ ff_ctzll_x86(ਲੰਮਾ ਲੰਮਾ v)
 {
-    return ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
+    ਵਾਪਸ ((uint32_t)v == 0) ? _tzcnt_u32((uint32_t)(v >> 32)) + 32 : _tzcnt_u32((uint32_t)v);
 }
 #   endif
-#endif /* _MSC_VER */
+#ਜੇ_ਅੰਤ /* _MSC_VER */
 
-#endif /* __INTEL_COMPILER */
+#ਜੇ_ਅੰਤ /* __INTEL_COMPILER */
 
-#endif /* HAVE_FAST_CLZ */
+#ਜੇ_ਅੰਤ /* HAVE_FAST_CLZ */
 
-#if defined(__GNUC__) || defined(__clang__)
+#ਜੇ defined(__GNUC__) || defined(__clang__)
 
 /* Our generic version of av_popcount is faster than GCC's built-in on
  * CPUs that don't support the popcnt instruction.
  */
-#if defined(__POPCNT__)
-    #define av_popcount   __builtin_popcount
-#if ARCH_X86_64
-    #define av_popcount64 __builtin_popcountll
-#endif
+#ਜੇ defined(__POPCNT__)
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_popcount   __builtin_popcount
+#ਜੇ ARCH_X86_64
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_popcount64 __builtin_popcountll
+#ਜੇ_ਅੰਤ
 
-#endif /* __POPCNT__ */
+#ਜੇ_ਅੰਤ /* __POPCNT__ */
 
-#if defined(__BMI2__)
+#ਜੇ defined(__BMI2__)
 
-#if AV_GCC_VERSION_AT_LEAST(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-#define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+#ਜੇ AV_GCC_ਸੰਸਕਰਣ_AT_ਘੱਟ_ਤੋਂ_ਘੱਟ(5,1) || AV_HAS_BUILTIN(__builtin_ia32_bzhi_si)
+#ਜੇ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_zero_extend av_zero_extend_bmi2
+ਸਥਿਰ av_always_inline av_const ਬਿਨਾਨਿਸ਼ਾਨੀ av_zero_extend_bmi2(ਬਿਨਾਨਿਸ਼ਾਨੀ a, ਬਿਨਾਨਿਸ਼ਾਨੀ p)
 {
-    if (p > 31) abort();
-    return __builtin_ia32_bzhi_si(a, p);
+    ਜੇ (p > 31) abort();
+    ਵਾਪਸ __builtin_ia32_bzhi_si(a, p);
 }
-#else
-#define av_zero_extend __builtin_ia32_bzhi_si
-#endif
-#elif HAVE_INLINE_ASM
+#ਨਹੀਂਤਾਂ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_zero_extend __builtin_ia32_bzhi_si
+#ਜੇ_ਅੰਤ
+#ਜਾਂਜੇ HAVE_INLINE_ASM
 /* GCC releases before 5.1.0 have a broken bzhi builtin, so for those we
  * implement it using inline assembly
  */
-#define av_zero_extend av_zero_extend_bmi2
-static av_always_inline av_const unsigned av_zero_extend_bmi2(unsigned a, unsigned p)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ av_zero_extend av_zero_extend_bmi2
+ਸਥਿਰ av_always_inline av_const ਬਿਨਾਨਿਸ਼ਾਨੀ av_zero_extend_bmi2(ਬਿਨਾਨਿਸ਼ਾਨੀ a, ਬਿਨਾਨਿਸ਼ਾਨੀ p)
 {
-#if defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
-    if (p > 31) abort();
-#endif
-    if (av_builtin_constant_p(p))
-        return a & ((1U << p) - 1);
-    else {
-        unsigned x;
+#ਜੇ defined(ASSERT_LEVEL) && ASSERT_LEVEL >= 2
+    ਜੇ (p > 31) abort();
+#ਜੇ_ਅੰਤ
+    ਜੇ (av_builtin_constant_p(p))
+        ਵਾਪਸ a & ((1U << p) - 1);
+    ਨਹੀਂਤਾਂ {
+        ਬਿਨਾਨਿਸ਼ਾਨੀ x;
         __asm__ ("bzhi %2, %1, %0 \n\t" : "=r"(x) : "rm"(a), "r"(p));
-        return x;
+        ਵਾਪਸ x;
     }
 }
-#endif /* AV_GCC_VERSION_AT_LEAST */
+#ਜੇ_ਅੰਤ /* AV_GCC_VERSION_AT_LEAST */
 
-#endif /* __BMI2__ */
+#ਜੇ_ਅੰਤ /* __BMI2__ */
 
-#endif /* __GNUC__ */
+#ਜੇ_ਅੰਤ /* __GNUC__ */
 
-#endif /* AVUTIL_X86_INTMATH_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_X86_INTMATH_H */

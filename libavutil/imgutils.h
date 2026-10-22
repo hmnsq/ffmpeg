@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_IMGUTILS_H
-#define AVUTIL_IMGUTILS_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_IMGUTILS_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_IMGUTILS_H
 
 /**
  * @file
@@ -27,11 +27,11 @@
  * @{
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include "pixdesc.h"
-#include "pixfmt.h"
-#include "rational.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "pixdesc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "pixfmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "rational.h"
 
 /**
  * Compute the max pixel step for each plane of an image with a
@@ -50,8 +50,8 @@
  * for each plane which has the max pixel step. May be NULL.
  * @param pixdesc the AVPixFmtDescriptor for the image, describing its format
  */
-void av_image_fill_max_pixsteps(int max_pixsteps[4], int max_pixstep_comps[4],
-                                const AVPixFmtDescriptor *pixdesc);
+ਖਾਲੀ av_image_fill_max_pixsteps(ਪੂਰਨ max_pixsteps[4], ਪੂਰਨ max_pixstep_comps[4],
+                                ਅਚਲ AVPixFmtDescriptor *pixdesc);
 
 /**
  * Compute the size of an image line with format pix_fmt and width
@@ -59,7 +59,7 @@ void av_image_fill_max_pixsteps(int max_pixsteps[4], int max_pixstep_comps[4],
  *
  * @return the computed size in bytes
  */
-int av_image_get_linesize(enum AVPixelFormat pix_fmt, int width, int plane);
+ਪੂਰਨ av_image_get_linesize(ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ ਚੌੜਾਈ, ਪੂਰਨ plane);
 
 /**
  * Fill plane linesizes for an image with pixel format pix_fmt and
@@ -70,7 +70,7 @@ int av_image_get_linesize(enum AVPixelFormat pix_fmt, int width, int plane);
  * @param width width of the image in pixels
  * @return >= 0 in case of success, a negative error code otherwise
  */
-int av_image_fill_linesizes(int linesizes[4], enum AVPixelFormat pix_fmt, int width);
+ਪੂਰਨ av_image_fill_linesizes(ਪੂਰਨ linesizes[4], ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ ਚੌੜਾਈ);
 
 /**
  * Fill plane sizes for an image with pixel format pix_fmt and height height.
@@ -85,8 +85,8 @@ int av_image_fill_linesizes(int linesizes[4], enum AVPixelFormat pix_fmt, int wi
  * @note The linesize parameters have the type ptrdiff_t here, while they are
  *       int for av_image_fill_linesizes().
  */
-int av_image_fill_plane_sizes(size_t size[4], enum AVPixelFormat pix_fmt,
-                              int height, const ptrdiff_t linesizes[4]);
+ਪੂਰਨ av_image_fill_plane_sizes(size_t ਮਾਪ[4], ਗਿਣਤੀ AVPixelFormat pix_fmt,
+                              ਪੂਰਨ ਉਚਾਈ, ਅਚਲ ptrdiff_t linesizes[4]);
 
 /**
  * Fill plane data pointers for an image with pixel format pix_fmt and
@@ -101,8 +101,8 @@ int av_image_fill_plane_sizes(size_t size[4], enum AVPixelFormat pix_fmt,
  * @return the size in bytes required for the image buffer, a negative
  * error code in case of failure
  */
-int av_image_fill_pointers(uint8_t *data[4], enum AVPixelFormat pix_fmt, int height,
-                           uint8_t *ptr, const int linesizes[4]);
+ਪੂਰਨ av_image_fill_ਸੂਚਕ_ਸਾਰੇ(uint8_t *ਅੰਕੜੇ[4], ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ ਉਚਾਈ,
+                           uint8_t *ptr, ਅਚਲ ਪੂਰਨ linesizes[4]);
 
 /**
  * Allocate an image with size w and h and pixel format pix_fmt, and
@@ -119,8 +119,8 @@ int av_image_fill_pointers(uint8_t *data[4], enum AVPixelFormat pix_fmt, int hei
  * @return the size in bytes required for the image buffer, a negative
  * error code in case of failure
  */
-int av_image_alloc(uint8_t *pointers[4], int linesizes[4],
-                   int w, int h, enum AVPixelFormat pix_fmt, int align);
+ਪੂਰਨ av_image_alloc(uint8_t *ਸੂਚਕ_ਸਾਰੇ[4], ਪੂਰਨ linesizes[4],
+                   ਪੂਰਨ w, ਪੂਰਨ h, ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ align);
 
 /**
  * Copy image plane from src to dst.
@@ -137,9 +137,9 @@ int av_image_alloc(uint8_t *pointers[4], int linesizes[4],
  * @param src_linesize linesize for the image plane in src
  * @param height       height (number of lines) of the plane
  */
-void av_image_copy_plane(uint8_t       *dst, int dst_linesize,
-                         const uint8_t *src, int src_linesize,
-                         int bytewidth, int height);
+ਖਾਲੀ av_image_copy_plane(uint8_t       *dst, ਪੂਰਨ dst_linesize,
+                         ਅਚਲ uint8_t *src, ਪੂਰਨ src_linesize,
+                         ਪੂਰਨ bytewidth, ਪੂਰਨ ਉਚਾਈ);
 
 /**
  * Copy image data located in uncacheable (e.g. GPU mapped) memory. Where
@@ -155,9 +155,9 @@ void av_image_copy_plane(uint8_t       *dst, int dst_linesize,
  * @note On x86, the linesizes currently need to be aligned to the cacheline
  *       size (i.e. 64) to get improved performance.
  */
-void av_image_copy_plane_uc_from(uint8_t       *dst, ptrdiff_t dst_linesize,
-                                 const uint8_t *src, ptrdiff_t src_linesize,
-                                 ptrdiff_t bytewidth, int height);
+ਖਾਲੀ av_image_copy_plane_uc_from(uint8_t       *dst, ptrdiff_t dst_linesize,
+                                 ਅਚਲ uint8_t *src, ptrdiff_t src_linesize,
+                                 ptrdiff_t bytewidth, ਪੂਰਨ ਉਚਾਈ);
 
 /**
  * Copy image in src_data to dst_data.
@@ -170,9 +170,9 @@ void av_image_copy_plane_uc_from(uint8_t       *dst, ptrdiff_t dst_linesize,
  * @param width         width of the image in pixels
  * @param height        height of the image in pixels
  */
-void av_image_copy(uint8_t * const dst_data[4], const int dst_linesizes[4],
-                   const uint8_t * const src_data[4], const int src_linesizes[4],
-                   enum AVPixelFormat pix_fmt, int width, int height);
+ਖਾਲੀ av_image_copy(uint8_t * ਅਚਲ dst_ਅੰਕੜੇ[4], ਅਚਲ ਪੂਰਨ dst_linesizes[4],
+                   ਅਚਲ uint8_t * ਅਚਲ src_ਅੰਕੜੇ[4], ਅਚਲ ਪੂਰਨ src_linesizes[4],
+                   ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ ਚੌੜਾਈ, ਪੂਰਨ ਉਚਾਈ);
 
 /**
  * Wrapper around av_image_copy() to workaround the limitation
@@ -180,14 +180,14 @@ void av_image_copy(uint8_t * const dst_data[4], const int dst_linesizes[4],
  * is not performed automatically in C.
  * @see av_image_copy()
  */
-static inline
-void av_image_copy2(uint8_t * const dst_data[4], const int dst_linesizes[4],
-                    uint8_t * const src_data[4], const int src_linesizes[4],
-                    enum AVPixelFormat pix_fmt, int width, int height)
+ਸਥਿਰ ਸਤਰਅੰਦਰ
+ਖਾਲੀ av_image_copy2(uint8_t * ਅਚਲ dst_ਅੰਕੜੇ[4], ਅਚਲ ਪੂਰਨ dst_linesizes[4],
+                    uint8_t * ਅਚਲ src_ਅੰਕੜੇ[4], ਅਚਲ ਪੂਰਨ src_linesizes[4],
+                    ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ ਚੌੜਾਈ, ਪੂਰਨ ਉਚਾਈ)
 {
-    av_image_copy(dst_data, dst_linesizes,
-                  (const uint8_t * const *)src_data, src_linesizes,
-                  pix_fmt, width, height);
+    av_image_copy(dst_ਅੰਕੜੇ, dst_linesizes,
+                  (ਅਚਲ uint8_t * ਅਚਲ *)src_ਅੰਕੜੇ, src_linesizes,
+                  pix_fmt, ਚੌੜਾਈ, ਉਚਾਈ);
 }
 
 /**
@@ -204,9 +204,9 @@ void av_image_copy2(uint8_t * const dst_data[4], const int dst_linesizes[4],
  * @note On x86, the linesizes currently need to be aligned to the cacheline
  *       size (i.e. 64) to get improved performance.
  */
-void av_image_copy_uc_from(uint8_t * const dst_data[4],       const ptrdiff_t dst_linesizes[4],
-                           const uint8_t * const src_data[4], const ptrdiff_t src_linesizes[4],
-                           enum AVPixelFormat pix_fmt, int width, int height);
+ਖਾਲੀ av_image_copy_uc_from(uint8_t * ਅਚਲ dst_ਅੰਕੜੇ[4],       ਅਚਲ ptrdiff_t dst_linesizes[4],
+                           ਅਚਲ uint8_t * ਅਚਲ src_ਅੰਕੜੇ[4], ਅਚਲ ptrdiff_t src_linesizes[4],
+                           ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ ਚੌੜਾਈ, ਪੂਰਨ ਉਚਾਈ);
 
 /**
  * Setup the data pointers and linesizes based on the specified image
@@ -234,9 +234,9 @@ void av_image_copy_uc_from(uint8_t * const dst_data[4],       const ptrdiff_t ds
  * @return the size in bytes required for src, a negative error code
  * in case of failure
  */
-int av_image_fill_arrays(uint8_t *dst_data[4], int dst_linesize[4],
-                         const uint8_t *src,
-                         enum AVPixelFormat pix_fmt, int width, int height, int align);
+ਪੂਰਨ av_image_fill_arrays(uint8_t *dst_ਅੰਕੜੇ[4], ਪੂਰਨ dst_linesize[4],
+                         ਅਚਲ uint8_t *src,
+                         ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ ਚੌੜਾਈ, ਪੂਰਨ ਉਚਾਈ, ਪੂਰਨ align);
 
 /**
  * Return the size in bytes of the amount of data required to store an
@@ -248,7 +248,7 @@ int av_image_fill_arrays(uint8_t *dst_data[4], int dst_linesize[4],
  * @param align    the assumed linesize alignment
  * @return the buffer size in bytes, a negative error code in case of failure
  */
-int av_image_get_buffer_size(enum AVPixelFormat pix_fmt, int width, int height, int align);
+ਪੂਰਨ av_image_get_ਬਫਰ_ਮਾਪ(ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ ਚੌੜਾਈ, ਪੂਰਨ ਉਚਾਈ, ਪੂਰਨ align);
 
 /**
  * Copy image data from an image into a buffer.
@@ -267,9 +267,9 @@ int av_image_get_buffer_size(enum AVPixelFormat pix_fmt, int width, int height, 
  * @return the number of bytes written to dst, or a negative value
  * (error code) on error
  */
-int av_image_copy_to_buffer(uint8_t *dst, int dst_size,
-                            const uint8_t * const src_data[4], const int src_linesize[4],
-                            enum AVPixelFormat pix_fmt, int width, int height, int align);
+ਪੂਰਨ av_image_copy_ਮੰਜ਼ਿਲ_ਬਫਰ(uint8_t *dst, ਪੂਰਨ dst_ਮਾਪ,
+                            ਅਚਲ uint8_t * ਅਚਲ src_ਅੰਕੜੇ[4], ਅਚਲ ਪੂਰਨ src_linesize[4],
+                            ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ ਚੌੜਾਈ, ਪੂਰਨ ਉਚਾਈ, ਪੂਰਨ align);
 
 /**
  * Check if the given dimension of an image is valid, meaning that all
@@ -281,7 +281,7 @@ int av_image_copy_to_buffer(uint8_t *dst, int dst_size,
  * @param log_ctx the parent logging context, it may be NULL
  * @return >= 0 if valid, a negative error code otherwise
  */
-int av_image_check_size(unsigned int w, unsigned int h, int log_offset, void *log_ctx);
+ਪੂਰਨ av_image_check_ਮਾਪ(ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ w, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ h, ਪੂਰਨ log_ਵਿੱਥ, ਖਾਲੀ *log_ctx);
 
 /**
  * Check if the given dimension of an image is valid, meaning that all
@@ -296,7 +296,7 @@ int av_image_check_size(unsigned int w, unsigned int h, int log_offset, void *lo
  * @param log_ctx the parent logging context, it may be NULL
  * @return >= 0 if valid, a negative error code otherwise
  */
-int av_image_check_size2(unsigned int w, unsigned int h, int64_t max_pixels, enum AVPixelFormat pix_fmt, int log_offset, void *log_ctx);
+ਪੂਰਨ av_image_check_size2(ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ w, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ h, int64_t max_pixels, ਗਿਣਤੀ AVPixelFormat pix_fmt, ਪੂਰਨ log_ਵਿੱਥ, ਖਾਲੀ *log_ctx);
 
 /**
  * Check if the given sample aspect ratio of an image is valid.
@@ -310,7 +310,7 @@ int av_image_check_size2(unsigned int w, unsigned int h, int64_t max_pixels, enu
  * @param sar sample aspect ratio of the image
  * @return 0 if valid, a negative AVERROR code otherwise
  */
-int av_image_check_sar(unsigned int w, unsigned int h, AVRational sar);
+ਪੂਰਨ av_image_check_sar(ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ w, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ h, AVRational sar);
 
 /**
  * Overwrite the image data with black. This is suitable for filling a
@@ -335,9 +335,9 @@ int av_image_check_sar(unsigned int w, unsigned int h, AVRational sar);
  * @param height        the height of the image in pixels
  * @return 0 if the image data was cleared, a negative AVERROR code otherwise
  */
-int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
-                        enum AVPixelFormat pix_fmt, enum AVColorRange range,
-                        int width, int height);
+ਪੂਰਨ av_image_fill_black(uint8_t * ਅਚਲ dst_ਅੰਕੜੇ[4], ਅਚਲ ptrdiff_t dst_linesize[4],
+                        ਗਿਣਤੀ AVPixelFormat pix_fmt, ਗਿਣਤੀ AVColorRange range,
+                        ਪੂਰਨ ਚੌੜਾਈ, ਪੂਰਨ ਉਚਾਈ);
 
 /**
  * Overwrite the image data with a color. This is suitable for filling a
@@ -365,13 +365,13 @@ int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesiz
  * @param flags         currently unused
  * @return 0 if the image data was filled, a negative AVERROR code otherwise
  */
-int av_image_fill_color(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
-                        enum AVPixelFormat pix_fmt, const uint32_t color[4],
-                        int width, int height, int flags);
+ਪੂਰਨ av_image_fill_color(uint8_t * ਅਚਲ dst_ਅੰਕੜੇ[4], ਅਚਲ ptrdiff_t dst_linesize[4],
+                        ਗਿਣਤੀ AVPixelFormat pix_fmt, ਅਚਲ uint32_t color[4],
+                        ਪੂਰਨ ਚੌੜਾਈ, ਪੂਰਨ ਉਚਾਈ, ਪੂਰਨ flags);
 
 /**
  * @}
  */
 
 
-#endif /* AVUTIL_IMGUTILS_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_IMGUTILS_H */

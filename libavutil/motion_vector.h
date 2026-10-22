@@ -16,18 +16,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MOTION_VECTOR_H
-#define AVUTIL_MOTION_VECTOR_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_MOTION_ਸਦਿਸ਼_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_MOTION_ਸਦਿਸ਼_H
 
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
-typedef struct AVMotionVector {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ AVMotion_ਸਦਿਸ਼ {
     /**
      * Where the current macroblock comes from; negative value when it comes
      * from the past, positive value when it comes from the future.
      * XXX: set exact relative ref frame reference instead of a +/- 1 "direction".
      */
-    int32_t source;
+    int32_t ਸਰੋਤ;
     /**
      * Width and height of the block.
      */
@@ -52,6 +52,6 @@ typedef struct AVMotionVector {
      */
     int32_t motion_x, motion_y;
     uint16_t motion_scale;
-} AVMotionVector;
+} AVMotion_ਸਦਿਸ਼;
 
-#endif /* AVUTIL_MOTION_VECTOR_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_MOTION_VECTOR_H */

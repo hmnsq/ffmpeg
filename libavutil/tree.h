@@ -24,10 +24,10 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_TREE_H
-#define AVUTIL_TREE_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_ਰੁੱਖ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_ਰੁੱਖ_H
 
-#include "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
 
 /**
  * @addtogroup lavu_tree AVTree
@@ -41,13 +41,13 @@
  */
 
 
-struct AVTreeNode;
-extern const int av_tree_node_size;
+ਬਣਤਰ AVTree_ਗੰਢ;
+ਬਾਹਰੀ ਅਚਲ ਪੂਰਨ av_ਰੁੱਖ_ਗੰਢ_ਮਾਪ;
 
 /**
  * Allocate an AVTreeNode.
  */
-struct AVTreeNode *av_tree_node_alloc(void);
+ਬਣਤਰ AVTree_ਗੰਢ *av_ਰੁੱਖ_ਗੰਢ_alloc(ਖਾਲੀ);
 
 /**
  * Find an element.
@@ -63,8 +63,8 @@ struct AVTreeNode *av_tree_node_alloc(void);
  * @return An element with cmp(key, elem) == 0 or NULL if no such element
  *         exists in the tree.
  */
-void *av_tree_find(const struct AVTreeNode *root, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2]);
+ਖਾਲੀ *av_ਰੁੱਖ_ਲੱਭੋ(ਅਚਲ ਬਣਤਰ AVTree_ਗੰਢ *ਜੜ੍ਹ, ਖਾਲੀ *ਕੁੰਜੀ,
+                   ਪੂਰਨ (*cmp)(ਅਚਲ ਖਾਲੀ *ਕੁੰਜੀ, ਅਚਲ ਖਾਲੀ *b), ਖਾਲੀ *ਅਗਲਾ[2]);
 
 /**
  * Insert or remove an element.
@@ -110,11 +110,11 @@ void *av_tree_find(const struct AVTreeNode *root, void *key,
  *         Which one it is depends on the tree state and the implementation. You
  *         should make no assumptions that it's one or the other in the code.
  */
-void *av_tree_insert(struct AVTreeNode **rootp, void *key,
-                     int (*cmp)(const void *key, const void *b),
-                     struct AVTreeNode **next);
+ਖਾਲੀ *av_ਰੁੱਖ_ਪਾਓ(ਬਣਤਰ AVTree_ਗੰਢ **rootp, ਖਾਲੀ *ਕੁੰਜੀ,
+                     ਪੂਰਨ (*cmp)(ਅਚਲ ਖਾਲੀ *ਕੁੰਜੀ, ਅਚਲ ਖਾਲੀ *b),
+                     ਬਣਤਰ AVTree_ਗੰਢ **ਅਗਲਾ);
 
-void av_tree_destroy(struct AVTreeNode *t);
+ਖਾਲੀ av_ਰੁੱਖ_destroy(ਬਣਤਰ AVTree_ਗੰਢ *t);
 
 /**
  * Apply enu(opaque, &elem) to all the elements in the tree in a given range.
@@ -126,12 +126,12 @@ void av_tree_destroy(struct AVTreeNode *t);
  * @note The cmp function should use the same ordering used to construct the
  *       tree.
  */
-void av_tree_enumerate(struct AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem));
+ਖਾਲੀ av_ਰੁੱਖ_enumerate(ਬਣਤਰ AVTree_ਗੰਢ *t, ਖਾਲੀ *opaque,
+                       ਪੂਰਨ (*cmp)(ਖਾਲੀ *opaque, ਖਾਲੀ *elem),
+                       ਪੂਰਨ (*enu)(ਖਾਲੀ *opaque, ਖਾਲੀ *elem));
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_TREE_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_TREE_H */

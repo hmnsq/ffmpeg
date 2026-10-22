@@ -16,254 +16,254 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "macros.h"
-#include "mem.h"
-#include "samplefmt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "samplefmt.h"
 
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-typedef struct SampleFmtInfo {
-    char name[8];
-    int bits;
-    int planar;
-    enum AVSampleFormat altform; ///< planar<->packed alternative form
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ SampleFmtInfo {
+    ਅੱਖਰ name[8];
+    ਪੂਰਨ ਬਿੱਟ;
+    ਪੂਰਨ planar;
+    ਗਿਣਤੀ AVSampleFormat altform; ///< planar<->packed alternative form
 } SampleFmtInfo;
 
 /** this table gives more information about formats */
-static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
-    [AV_SAMPLE_FMT_U8]   = { .name =   "u8", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_U8P  },
-    [AV_SAMPLE_FMT_S16]  = { .name =  "s16", .bits = 16, .planar = 0, .altform = AV_SAMPLE_FMT_S16P },
-    [AV_SAMPLE_FMT_S32]  = { .name =  "s32", .bits = 32, .planar = 0, .altform = AV_SAMPLE_FMT_S32P },
-    [AV_SAMPLE_FMT_S64]  = { .name =  "s64", .bits = 64, .planar = 0, .altform = AV_SAMPLE_FMT_S64P },
-    [AV_SAMPLE_FMT_FLT]  = { .name =  "flt", .bits = 32, .planar = 0, .altform = AV_SAMPLE_FMT_FLTP },
-    [AV_SAMPLE_FMT_DBL]  = { .name =  "dbl", .bits = 64, .planar = 0, .altform = AV_SAMPLE_FMT_DBLP },
-    [AV_SAMPLE_FMT_U8P]  = { .name =  "u8p", .bits =  8, .planar = 1, .altform = AV_SAMPLE_FMT_U8   },
-    [AV_SAMPLE_FMT_S16P] = { .name = "s16p", .bits = 16, .planar = 1, .altform = AV_SAMPLE_FMT_S16  },
-    [AV_SAMPLE_FMT_S32P] = { .name = "s32p", .bits = 32, .planar = 1, .altform = AV_SAMPLE_FMT_S32  },
-    [AV_SAMPLE_FMT_S64P] = { .name = "s64p", .bits = 64, .planar = 1, .altform = AV_SAMPLE_FMT_S64  },
-    [AV_SAMPLE_FMT_FLTP] = { .name = "fltp", .bits = 32, .planar = 1, .altform = AV_SAMPLE_FMT_FLT  },
-    [AV_SAMPLE_FMT_DBLP] = { .name = "dblp", .bits = 64, .planar = 1, .altform = AV_SAMPLE_FMT_DBL  },
-    [AV_SAMPLE_FMT_DSD]  = { .name =  "dsd", .bits =  8, .planar = 0, .altform = AV_SAMPLE_FMT_DSD  },
+ਸਥਿਰ ਅਚਲ SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
+    [AV_SAMPLE_FMT_U8]   = { .name =   "u8", .ਬਿੱਟ =  8, .planar = 0, .altform = AV_SAMPLE_FMT_U8P  },
+    [AV_SAMPLE_FMT_S16]  = { .name =  "s16", .ਬਿੱਟ = 16, .planar = 0, .altform = AV_SAMPLE_FMT_S16P },
+    [AV_SAMPLE_FMT_S32]  = { .name =  "s32", .ਬਿੱਟ = 32, .planar = 0, .altform = AV_SAMPLE_FMT_S32P },
+    [AV_SAMPLE_FMT_S64]  = { .name =  "s64", .ਬਿੱਟ = 64, .planar = 0, .altform = AV_SAMPLE_FMT_S64P },
+    [AV_SAMPLE_FMT_FLT]  = { .name =  "flt", .ਬਿੱਟ = 32, .planar = 0, .altform = AV_SAMPLE_FMT_FLTP },
+    [AV_SAMPLE_FMT_DBL]  = { .name =  "dbl", .ਬਿੱਟ = 64, .planar = 0, .altform = AV_SAMPLE_FMT_DBLP },
+    [AV_SAMPLE_FMT_U8P]  = { .name =  "u8p", .ਬਿੱਟ =  8, .planar = 1, .altform = AV_SAMPLE_FMT_U8   },
+    [AV_SAMPLE_FMT_S16P] = { .name = "s16p", .ਬਿੱਟ = 16, .planar = 1, .altform = AV_SAMPLE_FMT_S16  },
+    [AV_SAMPLE_FMT_S32P] = { .name = "s32p", .ਬਿੱਟ = 32, .planar = 1, .altform = AV_SAMPLE_FMT_S32  },
+    [AV_SAMPLE_FMT_S64P] = { .name = "s64p", .ਬਿੱਟ = 64, .planar = 1, .altform = AV_SAMPLE_FMT_S64  },
+    [AV_SAMPLE_FMT_FLTP] = { .name = "fltp", .ਬਿੱਟ = 32, .planar = 1, .altform = AV_SAMPLE_FMT_FLT  },
+    [AV_SAMPLE_FMT_DBLP] = { .name = "dblp", .ਬਿੱਟ = 64, .planar = 1, .altform = AV_SAMPLE_FMT_DBL  },
+    [AV_SAMPLE_FMT_DSD]  = { .name =  "dsd", .ਬਿੱਟ =  8, .planar = 0, .altform = AV_SAMPLE_FMT_DSD  },
 };
 
-const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt)
+ਅਚਲ ਅੱਖਰ *av_get_sample_fmt_name(ਗਿਣਤੀ AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return NULL;
-    return sample_fmt_info[sample_fmt].name;
+    ਜੇ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ਵਾਪਸ ਨਿਰਾ;
+    ਵਾਪਸ sample_fmt_info[sample_fmt].name;
 }
 
-enum AVSampleFormat av_get_sample_fmt(const char *name)
+ਗਿਣਤੀ AVSampleFormat av_get_sample_fmt(ਅਚਲ ਅੱਖਰ *name)
 {
-    int i;
+    ਪੂਰਨ i;
 
-    for (i = 0; i < AV_SAMPLE_FMT_NB; i++)
-        if (!strcmp(sample_fmt_info[i].name, name))
-            return i;
-    return AV_SAMPLE_FMT_NONE;
+    ਲਈ (i = 0; i < AV_SAMPLE_FMT_NB; i++)
+        ਜੇ (!strcmp(sample_fmt_info[i].name, name))
+            ਵਾਪਸ i;
+    ਵਾਪਸ AV_SAMPLE_FMT_NONE;
 }
 
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar)
+ਗਿਣਤੀ AVSampleFormat av_get_alt_sample_fmt(ਗਿਣਤੀ AVSampleFormat sample_fmt, ਪੂਰਨ planar)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar == planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    ਜੇ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ਵਾਪਸ AV_SAMPLE_FMT_NONE;
+    ਜੇ (sample_fmt_info[sample_fmt].planar == planar)
+        ਵਾਪਸ sample_fmt;
+    ਵਾਪਸ sample_fmt_info[sample_fmt].altform;
 }
 
-enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt)
+ਗਿਣਤੀ AVSampleFormat av_get_packed_sample_fmt(ਗਿਣਤੀ AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt_info[sample_fmt].altform;
-    return sample_fmt;
+    ਜੇ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ਵਾਪਸ AV_SAMPLE_FMT_NONE;
+    ਜੇ (sample_fmt_info[sample_fmt].planar)
+        ਵਾਪਸ sample_fmt_info[sample_fmt].altform;
+    ਵਾਪਸ sample_fmt;
 }
 
-enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt)
+ਗਿਣਤੀ AVSampleFormat av_get_planar_sample_fmt(ਗਿਣਤੀ AVSampleFormat sample_fmt)
 {
-    if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-        return AV_SAMPLE_FMT_NONE;
-    if (sample_fmt_info[sample_fmt].planar)
-        return sample_fmt;
-    return sample_fmt_info[sample_fmt].altform;
+    ਜੇ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+        ਵਾਪਸ AV_SAMPLE_FMT_NONE;
+    ਜੇ (sample_fmt_info[sample_fmt].planar)
+        ਵਾਪਸ sample_fmt;
+    ਵਾਪਸ sample_fmt_info[sample_fmt].altform;
 }
 
-char *av_get_sample_fmt_string (char *buf, int buf_size, enum AVSampleFormat sample_fmt)
+ਅੱਖਰ *av_get_sample_fmt_string (ਅੱਖਰ *buf, ਪੂਰਨ buf_ਮਾਪ, ਗਿਣਤੀ AVSampleFormat sample_fmt)
 {
     /* print header */
-    if (sample_fmt < 0)
-        snprintf(buf, buf_size, "name  " " depth");
-    else if (sample_fmt < AV_SAMPLE_FMT_NB) {
+    ਜੇ (sample_fmt < 0)
+        snprintf(buf, buf_ਮਾਪ, "name  " " depth");
+    ਨਹੀਂਤਾਂ ਜੇ (sample_fmt < AV_SAMPLE_FMT_NB) {
         SampleFmtInfo info = sample_fmt_info[sample_fmt];
-        snprintf (buf, buf_size, "%-6s" "   %2d ", info.name, info.bits);
+        snprintf (buf, buf_ਮਾਪ, "%-6s" "   %2d ", info.name, info.ਬਿੱਟ);
     }
 
-    return buf;
+    ਵਾਪਸ buf;
 }
 
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt)
+ਪੂਰਨ av_get_ਬਾਈਟਾਂ_ਪ੍ਰਤੀ_sample(ਗਿਣਤੀ AVSampleFormat sample_fmt)
 {
-     return sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
-        0 : sample_fmt_info[sample_fmt].bits >> 3;
+     ਵਾਪਸ sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB ?
+        0 : sample_fmt_info[sample_fmt].ਬਿੱਟ >> 3;
 }
 
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt)
+ਪੂਰਨ av_sample_fmt_is_planar(ਗਿਣਤੀ AVSampleFormat sample_fmt)
 {
-     if (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
-         return 0;
-     return sample_fmt_info[sample_fmt].planar;
+     ਜੇ (sample_fmt < 0 || sample_fmt >= AV_SAMPLE_FMT_NB)
+         ਵਾਪਸ 0;
+     ਵਾਪਸ sample_fmt_info[sample_fmt].planar;
 }
 
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align)
+ਪੂਰਨ av_samples_get_ਬਫਰ_ਮਾਪ(ਪੂਰਨ *linesize, ਪੂਰਨ nb_channels, ਪੂਰਨ nb_samples,
+                               ਗਿਣਤੀ AVSampleFormat sample_fmt, ਪੂਰਨ align)
 {
-    int line_size;
-    int sample_size = av_get_bytes_per_sample(sample_fmt);
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
+    ਪੂਰਨ ਸਤਰ_ਮਾਪ;
+    ਪੂਰਨ sample_ਮਾਪ = av_get_ਬਾਈਟਾਂ_ਪ੍ਰਤੀ_sample(sample_fmt);
+    ਪੂਰਨ planar      = av_sample_fmt_is_planar(sample_fmt);
 
     /* validate parameter ranges */
-    if (!sample_size || nb_samples <= 0 || nb_channels <= 0)
-        return AVERROR(EINVAL);
+    ਜੇ (!sample_ਮਾਪ || nb_samples <= 0 || nb_channels <= 0)
+        ਵਾਪਸ AVERROR(EINVAL);
 
     /* auto-select alignment if not specified */
-    if (!align) {
-        if (nb_samples > INT_MAX - 31)
-            return AVERROR(EINVAL);
+    ਜੇ (!align) {
+        ਜੇ (nb_samples > ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ - 31)
+            ਵਾਪਸ AVERROR(EINVAL);
         align = 1;
         nb_samples = FFALIGN(nb_samples, 32);
     }
 
     /* check for integer overflow */
-    if (nb_channels > INT_MAX / align ||
-        (int64_t)nb_channels * nb_samples > (INT_MAX - (align * nb_channels)) / sample_size)
-        return AVERROR(EINVAL);
+    ਜੇ (nb_channels > ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ / align ||
+        (int64_t)nb_channels * nb_samples > (ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ - (align * nb_channels)) / sample_ਮਾਪ)
+        ਵਾਪਸ AVERROR(EINVAL);
 
-    line_size = planar ? FFALIGN(nb_samples * sample_size,               align) :
-                         FFALIGN(nb_samples * sample_size * nb_channels, align);
-    if (linesize)
-        *linesize = line_size;
+    ਸਤਰ_ਮਾਪ = planar ? FFALIGN(nb_samples * sample_ਮਾਪ,               align) :
+                         FFALIGN(nb_samples * sample_ਮਾਪ * nb_channels, align);
+    ਜੇ (linesize)
+        *linesize = ਸਤਰ_ਮਾਪ;
 
-    return planar ? line_size * nb_channels : line_size;
+    ਵਾਪਸ planar ? ਸਤਰ_ਮਾਪ * nb_channels : ਸਤਰ_ਮਾਪ;
 }
 
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
-                           const uint8_t *buf, int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align)
+ਪੂਰਨ av_samples_fill_arrays(uint8_t **audio_ਅੰਕੜੇ, ਪੂਰਨ *linesize,
+                           ਅਚਲ uint8_t *buf, ਪੂਰਨ nb_channels, ਪੂਰਨ nb_samples,
+                           ਗਿਣਤੀ AVSampleFormat sample_fmt, ਪੂਰਨ align)
 {
-    int ch, planar, buf_size, line_size;
+    ਪੂਰਨ ch, planar, buf_ਮਾਪ, ਸਤਰ_ਮਾਪ;
 
     planar   = av_sample_fmt_is_planar(sample_fmt);
-    buf_size = av_samples_get_buffer_size(&line_size, nb_channels, nb_samples,
+    buf_ਮਾਪ = av_samples_get_ਬਫਰ_ਮਾਪ(&ਸਤਰ_ਮਾਪ, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (buf_size < 0)
-        return buf_size;
+    ਜੇ (buf_ਮਾਪ < 0)
+        ਵਾਪਸ buf_ਮਾਪ;
 
-    if (linesize)
-        *linesize = line_size;
+    ਜੇ (linesize)
+        *linesize = ਸਤਰ_ਮਾਪ;
 
-    memset(audio_data, 0, planar
-                          ? sizeof(*audio_data) * nb_channels
-                          : sizeof(*audio_data));
+    memset(audio_ਅੰਕੜੇ, 0, planar
+                          ? ਆਕਾਰ(*audio_ਅੰਕੜੇ) * nb_channels
+                          : ਆਕਾਰ(*audio_ਅੰਕੜੇ));
 
-    if (!buf)
-        return buf_size;
+    ਜੇ (!buf)
+        ਵਾਪਸ buf_ਮਾਪ;
 
-    audio_data[0] = (uint8_t *)buf;
-    for (ch = 1; planar && ch < nb_channels; ch++)
-        audio_data[ch] = audio_data[ch-1] + line_size;
+    audio_ਅੰਕੜੇ[0] = (uint8_t *)buf;
+    ਲਈ (ch = 1; planar && ch < nb_channels; ch++)
+        audio_ਅੰਕੜੇ[ch] = audio_ਅੰਕੜੇ[ch-1] + ਸਤਰ_ਮਾਪ;
 
-    return buf_size;
+    ਵਾਪਸ buf_ਮਾਪ;
 }
 
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align)
+ਪੂਰਨ av_samples_alloc(uint8_t **audio_ਅੰਕੜੇ, ਪੂਰਨ *linesize, ਪੂਰਨ nb_channels,
+                     ਪੂਰਨ nb_samples, ਗਿਣਤੀ AVSampleFormat sample_fmt, ਪੂਰਨ align)
 {
     uint8_t *buf;
-    int size = av_samples_get_buffer_size(NULL, nb_channels, nb_samples,
+    ਪੂਰਨ ਮਾਪ = av_samples_get_ਬਫਰ_ਮਾਪ(ਨਿਰਾ, nb_channels, nb_samples,
                                           sample_fmt, align);
-    if (size < 0)
-        return size;
+    ਜੇ (ਮਾਪ < 0)
+        ਵਾਪਸ ਮਾਪ;
 
-    buf = av_malloc(size);
-    if (!buf)
-        return AVERROR(ENOMEM);
+    buf = av_malloc(ਮਾਪ);
+    ਜੇ (!buf)
+        ਵਾਪਸ AVERROR(ENOMEM);
 
-    size = av_samples_fill_arrays(audio_data, linesize, buf, nb_channels,
+    ਮਾਪ = av_samples_fill_arrays(audio_ਅੰਕੜੇ, linesize, buf, nb_channels,
                                   nb_samples, sample_fmt, align);
-    if (size < 0) {
+    ਜੇ (ਮਾਪ < 0) {
         av_free(buf);
-        return size;
+        ਵਾਪਸ ਮਾਪ;
     }
 
-    av_samples_set_silence(audio_data, 0, nb_samples, nb_channels, sample_fmt);
+    av_samples_ਸੈੱਟ_silence(audio_ਅੰਕੜੇ, 0, nb_samples, nb_channels, sample_fmt);
 
-    return size;
+    ਵਾਪਸ ਮਾਪ;
 }
 
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align)
+ਪੂਰਨ av_samples_alloc_array_and_samples(uint8_t ***audio_ਅੰਕੜੇ, ਪੂਰਨ *linesize, ਪੂਰਨ nb_channels,
+                                       ਪੂਰਨ nb_samples, ਗਿਣਤੀ AVSampleFormat sample_fmt, ਪੂਰਨ align)
 {
-    int ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
+    ਪੂਰਨ ret, nb_planes = av_sample_fmt_is_planar(sample_fmt) ? nb_channels : 1;
 
-    *audio_data = av_calloc(nb_planes, sizeof(**audio_data));
-    if (!*audio_data)
-        return AVERROR(ENOMEM);
-    ret = av_samples_alloc(*audio_data, linesize, nb_channels,
+    *audio_ਅੰਕੜੇ = av_calloc(nb_planes, ਆਕਾਰ(**audio_ਅੰਕੜੇ));
+    ਜੇ (!*audio_ਅੰਕੜੇ)
+        ਵਾਪਸ AVERROR(ENOMEM);
+    ret = av_samples_alloc(*audio_ਅੰਕੜੇ, linesize, nb_channels,
                            nb_samples, sample_fmt, align);
-    if (ret < 0)
-        av_freep(audio_data);
-    return ret;
+    ਜੇ (ret < 0)
+        av_freep(audio_ਅੰਕੜੇ);
+    ਵਾਪਸ ret;
 }
 
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
-                    enum AVSampleFormat sample_fmt)
+ਪੂਰਨ av_samples_copy(uint8_t * ਅਚਲ *dst, uint8_t * ਅਚਲ *src, ਪੂਰਨ dst_ਵਿੱਥ,
+                    ਪੂਰਨ src_ਵਿੱਥ, ਪੂਰਨ nb_samples, ਪੂਰਨ nb_channels,
+                    ਗਿਣਤੀ AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int i;
+    ਪੂਰਨ planar      = av_sample_fmt_is_planar(sample_fmt);
+    ਪੂਰਨ planes      = planar ? nb_channels : 1;
+    ਪੂਰਨ ਖੰਡ_align = av_get_ਬਾਈਟਾਂ_ਪ੍ਰਤੀ_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    ਪੂਰਨ ਅੰਕੜੇ_ਮਾਪ   = nb_samples * ਖੰਡ_align;
+    ਪੂਰਨ i;
 
-    dst_offset *= block_align;
-    src_offset *= block_align;
+    dst_ਵਿੱਥ *= ਖੰਡ_align;
+    src_ਵਿੱਥ *= ਖੰਡ_align;
 
-    if((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= data_size) {
-        for (i = 0; i < planes; i++)
-            memcpy(dst[i] + dst_offset, src[i] + src_offset, data_size);
-    } else {
-        for (i = 0; i < planes; i++)
-            memmove(dst[i] + dst_offset, src[i] + src_offset, data_size);
+    ਜੇ((dst[0] < src[0] ? src[0] - dst[0] : dst[0] - src[0]) >= ਅੰਕੜੇ_ਮਾਪ) {
+        ਲਈ (i = 0; i < planes; i++)
+            ਸਮ੍ਰਿਤੀ_ਨਕਲ(dst[i] + dst_ਵਿੱਥ, src[i] + src_ਵਿੱਥ, ਅੰਕੜੇ_ਮਾਪ);
+    } ਨਹੀਂਤਾਂ {
+        ਲਈ (i = 0; i < planes; i++)
+            memmove(dst[i] + dst_ਵਿੱਥ, src[i] + src_ਵਿੱਥ, ਅੰਕੜੇ_ਮਾਪ);
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt)
+ਪੂਰਨ av_samples_ਸੈੱਟ_silence(uint8_t * ਅਚਲ *audio_ਅੰਕੜੇ, ਪੂਰਨ ਵਿੱਥ, ਪੂਰਨ nb_samples,
+                           ਪੂਰਨ nb_channels, ਗਿਣਤੀ AVSampleFormat sample_fmt)
 {
-    int planar      = av_sample_fmt_is_planar(sample_fmt);
-    int planes      = planar ? nb_channels : 1;
-    int block_align = av_get_bytes_per_sample(sample_fmt) * (planar ? 1 : nb_channels);
-    int data_size   = nb_samples * block_align;
-    int fill_char, i;
+    ਪੂਰਨ planar      = av_sample_fmt_is_planar(sample_fmt);
+    ਪੂਰਨ planes      = planar ? nb_channels : 1;
+    ਪੂਰਨ ਖੰਡ_align = av_get_ਬਾਈਟਾਂ_ਪ੍ਰਤੀ_sample(sample_fmt) * (planar ? 1 : nb_channels);
+    ਪੂਰਨ ਅੰਕੜੇ_ਮਾਪ   = nb_samples * ਖੰਡ_align;
+    ਪੂਰਨ fill_char, i;
 
-    if (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
+    ਜੇ (sample_fmt == AV_SAMPLE_FMT_U8 || sample_fmt == AV_SAMPLE_FMT_U8P)
         fill_char = 0x80;
-    else if (sample_fmt == AV_SAMPLE_FMT_DSD)
+    ਨਹੀਂਤਾਂ ਜੇ (sample_fmt == AV_SAMPLE_FMT_DSD)
         fill_char = 0x69; // only ultrasonic tones, filtered out on playback
-    else
+    ਨਹੀਂਤਾਂ
         fill_char = 0x00;
 
-    offset *= block_align;
+    ਵਿੱਥ *= ਖੰਡ_align;
 
-    for (i = 0; i < planes; i++)
-        memset(audio_data[i] + offset, fill_char, data_size);
+    ਲਈ (i = 0; i < planes; i++)
+        memset(audio_ਅੰਕੜੇ[i] + ਵਿੱਥ, fill_char, ਅੰਕੜੇ_ਮਾਪ);
 
-    return 0;
+    ਵਾਪਸ 0;
 }

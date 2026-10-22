@@ -21,101 +21,101 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <errno.h>
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <float.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <errno.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <math.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdarg.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <float.h>
 
-#include "avstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "avstring.h"
 
-typedef struct FFFILE {
-    size_t buf_size;
-    unsigned char *buf;
-    unsigned char *rpos, *rend;
-    unsigned char *shend;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ FFFILE {
+    size_t buf_ਮਾਪ;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *buf;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *rpos, *rend;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *shend;
     ptrdiff_t shlim, shcnt;
-    void *cookie;
-    size_t (*read)(struct FFFILE *, unsigned char *, size_t);
+    ਖਾਲੀ *cookie;
+    size_t (*ਪਠ)(ਬਣਤਰ FFFILE *, ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *, size_t);
 } FFFILE;
 
-#define SIZE_hh -2
-#define SIZE_h  -1
-#define SIZE_def 0
-#define SIZE_l   1
-#define SIZE_L   2
-#define SIZE_ll  3
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਮਾਪ_hh -2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਮਾਪ_h  -1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਮਾਪ_def 0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਮਾਪ_l   1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਮਾਪ_L   2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਮਾਪ_ll  3
 
-#define shcnt(f) ((f)->shcnt + ((f)->rpos - (f)->buf))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ shcnt(f) ((f)->shcnt + ((f)->rpos - (f)->buf))
 
-static int fftoread(FFFILE *f)
+ਸਥਿਰ ਪੂਰਨ fftoread(FFFILE *f)
 {
-    f->rpos = f->rend = f->buf + f->buf_size;
-    return 0;
+    f->rpos = f->rend = f->buf + f->buf_ਮਾਪ;
+    ਵਾਪਸ 0;
 }
 
-static size_t ffstring_read(FFFILE *f, unsigned char *buf, size_t len)
+ਸਥਿਰ size_t ffstring_read(FFFILE *f, ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *buf, size_t len)
 {
-    char *src = f->cookie;
+    ਅੱਖਰ *src = f->cookie;
     size_t k = len+256;
-    char *end = memchr(src, 0, k);
+    ਅੱਖਰ *ਸਿਰਾ = memchr(src, 0, k);
 
-    if (end) k = end-src;
-    if (k < len) len = k;
-    memcpy(buf, src, len);
-    f->rpos = (void *)(src+len);
-    f->rend = (void *)(src+k);
+    ਜੇ (ਸਿਰਾ) k = ਸਿਰਾ-src;
+    ਜੇ (k < len) len = k;
+    ਸਮ੍ਰਿਤੀ_ਨਕਲ(buf, src, len);
+    f->rpos = (ਖਾਲੀ *)(src+len);
+    f->rend = (ਖਾਲੀ *)(src+k);
     f->cookie = src+k;
 
-    return len;
+    ਵਾਪਸ len;
 }
 
-static int ffuflow(FFFILE *f)
+ਸਥਿਰ ਪੂਰਨ ffuflow(FFFILE *f)
 {
-    unsigned char c;
-    if (!fftoread(f) && f->read(f, &c, 1)==1) return c;
-    return EOF;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ c;
+    ਜੇ (!fftoread(f) && f->ਪਠ(f, &c, 1)==1) ਵਾਪਸ c;
+    ਵਾਪਸ EOF;
 }
 
-static void ffshlim(FFFILE *f, ptrdiff_t lim)
+ਸਥਿਰ ਖਾਲੀ ffshlim(FFFILE *f, ptrdiff_t lim)
 {
     f->shlim = lim;
     f->shcnt = f->buf - f->rpos;
     /* If lim is nonzero, rend must be a valid pointer. */
-    if (lim && f->rend - f->rpos > lim)
+    ਜੇ (lim && f->rend - f->rpos > lim)
         f->shend = f->rpos + lim;
-    else
+    ਨਹੀਂਤਾਂ
         f->shend = f->rend;
 }
 
-static int ffshgetc(FFFILE *f)
+ਸਥਿਰ ਪੂਰਨ ffshgetc(FFFILE *f)
 {
-    int c;
+    ਪੂਰਨ c;
     ptrdiff_t cnt = shcnt(f);
-    if (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
+    ਜੇ (f->shlim && cnt >= f->shlim || (c=ffuflow(f)) < 0) {
         f->shcnt = f->buf - f->rpos + cnt;
         f->shend = 0;
-        return EOF;
+        ਵਾਪਸ EOF;
     }
     cnt++;
-    if (f->shlim && f->rend - f->rpos > f->shlim - cnt)
+    ਜੇ (f->shlim && f->rend - f->rpos > f->shlim - cnt)
         f->shend = f->rpos + (f->shlim - cnt);
-    else
+    ਨਹੀਂਤਾਂ
         f->shend = f->rend;
     f->shcnt = f->buf - f->rpos + cnt;
-    if (f->rpos[-1] != c) f->rpos[-1] = c;
-    return c;
+    ਜੇ (f->rpos[-1] != c) f->rpos[-1] = c;
+    ਵਾਪਸ c;
 }
 
-#define shlim(f, lim) ffshlim((f), (lim))
-#define shgetc(f) (((f)->rpos < (f)->shend) ? *(f)->rpos++ : ffshgetc(f))
-#define shunget(f) ((f)->shend ? (void)(f)->rpos-- : (void)0)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ shlim(f, lim) ffshlim((f), (lim))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ shgetc(f) (((f)->rpos < (f)->shend) ? *(f)->rpos++ : ffshgetc(f))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ shunget(f) ((f)->shend ? (ਖਾਲੀ)(f)->rpos-- : (ਖਾਲੀ)0)
 
-static const unsigned char table[] = { -1,
+ਸਥਿਰ ਅਚਲ ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ ਸਾਰਣੀ[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -134,207 +134,207 @@ static const unsigned char table[] = { -1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 };
 
-static unsigned long long ffintscan(FFFILE *f, unsigned base, int pok, unsigned long long lim)
+ਸਥਿਰ ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ ਲੰਮਾ ffintscan(FFFILE *f, ਬਿਨਾਨਿਸ਼ਾਨੀ ਅਧਾਰ_2, ਪੂਰਨ pok, ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ ਲੰਮਾ lim)
 {
-    const unsigned char *val = table+1;
-    int c, neg=0;
-    unsigned x;
-    unsigned long long y;
-    if (base > 36 || base == 1) {
+    ਅਚਲ ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *val = ਸਾਰਣੀ+1;
+    ਪੂਰਨ c, neg=0;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ x;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ ਲੰਮਾ y;
+    ਜੇ (ਅਧਾਰ_2 > 36 || ਅਧਾਰ_2 == 1) {
         errno = EINVAL;
-        return 0;
+        ਵਾਪਸ 0;
     }
-    while (av_isspace((c=shgetc(f))));
-    if (c=='+' || c=='-') {
+    ਜਦੋਂ (av_isspace((c=shgetc(f))));
+    ਜੇ (c=='+' || c=='-') {
         neg = -(c=='-');
         c = shgetc(f);
     }
-    if ((base == 0 || base == 16) && c=='0') {
+    ਜੇ ((ਅਧਾਰ_2 == 0 || ਅਧਾਰ_2 == 16) && c=='0') {
         c = shgetc(f);
-        if ((c|32)=='x') {
+        ਜੇ ((c|32)=='x') {
             c = shgetc(f);
-            if (val[c]>=16) {
+            ਜੇ (val[c]>=16) {
                 shunget(f);
-                if (pok) shunget(f);
-                else shlim(f, 0);
-                return 0;
+                ਜੇ (pok) shunget(f);
+                ਨਹੀਂਤਾਂ shlim(f, 0);
+                ਵਾਪਸ 0;
             }
-            base = 16;
-        } else if (base == 0) {
-            base = 8;
+            ਅਧਾਰ_2 = 16;
+        } ਨਹੀਂਤਾਂ ਜੇ (ਅਧਾਰ_2 == 0) {
+            ਅਧਾਰ_2 = 8;
         }
-    } else {
-        if (base == 0) base = 10;
-        if (val[c] >= base) {
+    } ਨਹੀਂਤਾਂ {
+        ਜੇ (ਅਧਾਰ_2 == 0) ਅਧਾਰ_2 = 10;
+        ਜੇ (val[c] >= ਅਧਾਰ_2) {
             shunget(f);
             shlim(f, 0);
             errno = EINVAL;
-            return 0;
+            ਵਾਪਸ 0;
         }
     }
-    if (base == 10) {
-        for (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
+    ਜੇ (ਅਧਾਰ_2 == 10) {
+        ਲਈ (x=0; c-'0'<10U && x<=UINT_MAX/10-1; c=shgetc(f))
             x = x*10 + (c-'0');
-        for (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
+        ਲਈ (y=x; c-'0'<10U && y<=ULLONG_MAX/10 && 10*y<=ULLONG_MAX-(c-'0'); c=shgetc(f))
             y = y*10 + (c-'0');
-        if (c-'0'>=10U) goto done;
-    } else if (!(base & base-1)) {
-        int bs = "\0\1\2\4\7\3\6\5"[(0x17*base)>>5&7];
-        for (x=0; val[c]<base && x<=UINT_MAX/32; c=shgetc(f))
+        ਜੇ (c-'0'>=10U) ਜਾਓ ਪੂਰਾ;
+    } ਨਹੀਂਤਾਂ ਜੇ (!(ਅਧਾਰ_2 & ਅਧਾਰ_2-1)) {
+        ਪੂਰਨ bs = "\0\1\2\4\7\3\6\5"[(0x17*ਅਧਾਰ_2)>>5&7];
+        ਲਈ (x=0; val[c]<ਅਧਾਰ_2 && x<=UINT_MAX/32; c=shgetc(f))
             x = x<<bs | val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX>>bs; c=shgetc(f))
+        ਲਈ (y=x; val[c]<ਅਧਾਰ_2 && y<=ULLONG_MAX>>bs; c=shgetc(f))
             y = y<<bs | val[c];
-    } else {
-        for (x=0; val[c]<base && x<=UINT_MAX/36-1; c=shgetc(f))
-            x = x*base + val[c];
-        for (y=x; val[c]<base && y<=ULLONG_MAX/base && base*y<=ULLONG_MAX-val[c]; c=shgetc(f))
-            y = y*base + val[c];
+    } ਨਹੀਂਤਾਂ {
+        ਲਈ (x=0; val[c]<ਅਧਾਰ_2 && x<=UINT_MAX/36-1; c=shgetc(f))
+            x = x*ਅਧਾਰ_2 + val[c];
+        ਲਈ (y=x; val[c]<ਅਧਾਰ_2 && y<=ULLONG_MAX/ਅਧਾਰ_2 && ਅਧਾਰ_2*y<=ULLONG_MAX-val[c]; c=shgetc(f))
+            y = y*ਅਧਾਰ_2 + val[c];
     }
-    if (val[c]<base) {
-        for (; val[c]<base; c=shgetc(f));
+    ਜੇ (val[c]<ਅਧਾਰ_2) {
+        ਲਈ (; val[c]<ਅਧਾਰ_2; c=shgetc(f));
         errno = ERANGE;
         y = lim;
-        if (lim&1) neg = 0;
+        ਜੇ (lim&1) neg = 0;
     }
-done:
+ਪੂਰਾ:
     shunget(f);
-    if (y>=lim) {
-        if (!(lim&1) && !neg) {
+    ਜੇ (y>=lim) {
+        ਜੇ (!(lim&1) && !neg) {
             errno = ERANGE;
-            return lim-1;
-        } else if (y>lim) {
+            ਵਾਪਸ lim-1;
+        } ਨਹੀਂਤਾਂ ਜੇ (y>lim) {
             errno = ERANGE;
-            return lim;
+            ਵਾਪਸ lim;
         }
     }
-    return (y^neg)-neg;
+    ਵਾਪਸ (y^neg)-neg;
 }
 
-static long long scanexp(FFFILE *f, int pok)
+ਸਥਿਰ ਲੰਮਾ ਲੰਮਾ scanexp(FFFILE *f, ਪੂਰਨ pok)
 {
-    int c;
-    int x;
-    long long y;
-    int neg = 0;
+    ਪੂਰਨ c;
+    ਪੂਰਨ x;
+    ਲੰਮਾ ਲੰਮਾ y;
+    ਪੂਰਨ neg = 0;
 
     c = shgetc(f);
-    if (c=='+' || c=='-') {
+    ਜੇ (c=='+' || c=='-') {
         neg = (c=='-');
         c = shgetc(f);
-        if (c-'0'>=10U && pok) shunget(f);
+        ਜੇ (c-'0'>=10U && pok) shunget(f);
     }
-    if (c-'0'>=10U) {
+    ਜੇ (c-'0'>=10U) {
         shunget(f);
-        return LLONG_MIN;
+        ਵਾਪਸ LLONG_MIN;
     }
-    for (x=0; c-'0'<10U && x<INT_MAX/10; c = shgetc(f))
+    ਲਈ (x=0; c-'0'<10U && x<ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ/10; c = shgetc(f))
         x = 10*x + (c-'0');
-    for (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
+    ਲਈ (y=x; c-'0'<10U && y<LLONG_MAX/100; c = shgetc(f))
         y = 10*y + (c-'0');
-    for (; c-'0'<10U; c = shgetc(f));
+    ਲਈ (; c-'0'<10U; c = shgetc(f));
     shunget(f);
-    return neg ? -y : y;
+    ਵਾਪਸ neg ? -y : y;
 }
 
-#define LD_B1B_DIG 2
-#define LD_B1B_MAX 9007199, 254740991
-#define KMAX 128
-#define MASK (KMAX-1)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LD_B1B_DIG 2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LD_B1B_MAX 9007199, 254740991
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ KMAX 128
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਨਕਾਬ (KMAX-1)
 
-static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
+ਸਥਿਰ ਦੁੱਗਣਾ decfloat(FFFILE *f, ਪੂਰਨ c, ਪੂਰਨ ਬਿੱਟ, ਪੂਰਨ emin, ਪੂਰਨ sign, ਪੂਰਨ pok)
 {
     uint32_t x[KMAX];
-    static const uint32_t th[] = { LD_B1B_MAX };
-    int i, j, k, a, z;
-    long long lrp=0, dc=0;
-    long long e10=0;
-    int lnz = 0;
-    int gotdig = 0, gotrad = 0;
-    int rp;
-    int e2;
-    int emax = -emin-bits+3;
-    int denormal = 0;
-    double y;
-    double frac=0;
-    double bias=0;
-    static const int p10s[] = { 10, 100, 1000, 10000,
+    ਸਥਿਰ ਅਚਲ uint32_t th[] = { LD_B1B_MAX };
+    ਪੂਰਨ i, j, k, a, z;
+    ਲੰਮਾ ਲੰਮਾ lrp=0, dc=0;
+    ਲੰਮਾ ਲੰਮਾ e10=0;
+    ਪੂਰਨ lnz = 0;
+    ਪੂਰਨ gotdig = 0, gotrad = 0;
+    ਪੂਰਨ rp;
+    ਪੂਰਨ e2;
+    ਪੂਰਨ emax = -emin-ਬਿੱਟ+3;
+    ਪੂਰਨ denormal = 0;
+    ਦੁੱਗਣਾ y;
+    ਦੁੱਗਣਾ frac=0;
+    ਦੁੱਗਣਾ bias=0;
+    ਸਥਿਰ ਅਚਲ ਪੂਰਨ p10s[] = { 10, 100, 1000, 10000,
         100000, 1000000, 10000000, 100000000 };
 
     j=0;
     k=0;
 
     /* Don't let leading zeros consume buffer space */
-    for (; c=='0'; c = shgetc(f)) gotdig=1;
-    if (c=='.') {
+    ਲਈ (; c=='0'; c = shgetc(f)) gotdig=1;
+    ਜੇ (c=='.') {
         gotrad = 1;
-        for (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
+        ਲਈ (c = shgetc(f); c=='0'; c = shgetc(f)) gotdig=1, lrp--;
     }
 
     x[0] = 0;
-    for (; c-'0'<10U || c=='.'; c = shgetc(f)) {
-        if (c == '.') {
-            if (gotrad) break;
+    ਲਈ (; c-'0'<10U || c=='.'; c = shgetc(f)) {
+        ਜੇ (c == '.') {
+            ਜੇ (gotrad) ਰੋਕੋ;
             gotrad = 1;
             lrp = dc;
-        } else if (k < KMAX-3) {
+        } ਨਹੀਂਤਾਂ ਜੇ (k < KMAX-3) {
             dc++;
-            if (c!='0') lnz = dc;
-            if (j) x[k] = x[k]*10 + c-'0';
-            else x[k] = c-'0';
-            if (++j==9) {
+            ਜੇ (c!='0') lnz = dc;
+            ਜੇ (j) x[k] = x[k]*10 + c-'0';
+            ਨਹੀਂਤਾਂ x[k] = c-'0';
+            ਜੇ (++j==9) {
                 k++;
                 j=0;
             }
             gotdig=1;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             dc++;
-            if (c!='0') {
+            ਜੇ (c!='0') {
                 lnz = (KMAX-4)*9;
                 x[KMAX-4] |= 1;
             }
         }
     }
-    if (!gotrad) lrp=dc;
+    ਜੇ (!gotrad) lrp=dc;
 
-    if (gotdig && (c|32)=='e') {
+    ਜੇ (gotdig && (c|32)=='e') {
         e10 = scanexp(f, pok);
-        if (e10 == LLONG_MIN) {
-            if (pok) {
+        ਜੇ (e10 == LLONG_MIN) {
+            ਜੇ (pok) {
                 shunget(f);
-            } else {
+            } ਨਹੀਂਤਾਂ {
                 shlim(f, 0);
-                return 0;
+                ਵਾਪਸ 0;
             }
             e10 = 0;
         }
         lrp += e10;
-    } else if (c>=0) {
+    } ਨਹੀਂਤਾਂ ਜੇ (c>=0) {
         shunget(f);
     }
-    if (!gotdig) {
+    ਜੇ (!gotdig) {
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        ਵਾਪਸ 0;
     }
 
     /* Handle zero specially to avoid nasty special cases later */
-    if (!x[0]) return sign * 0.0;
+    ਜੇ (!x[0]) ਵਾਪਸ sign * 0.0;
 
     /* Optimize small integers (w/no exponent) and over/under-flow */
-    if (lrp==dc && dc<10 && (bits>30 || x[0]>>bits==0))
-        return sign * (double)x[0];
-    if (lrp > -emin/2) {
+    ਜੇ (lrp==dc && dc<10 && (ਬਿੱਟ>30 || x[0]>>ਬਿੱਟ==0))
+        ਵਾਪਸ sign * (ਦੁੱਗਣਾ)x[0];
+    ਜੇ (lrp > -emin/2) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        ਵਾਪਸ sign * DBL_MAX * DBL_MAX;
     }
-    if (lrp < emin-2*DBL_MANT_DIG) {
+    ਜੇ (lrp < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        ਵਾਪਸ sign * DBL_MIN * DBL_MIN;
     }
 
     /* Align incomplete final B1B digit */
-    if (j) {
-        for (; j<9; j++) x[k]*=10;
+    ਜੇ (j) {
+        ਲਈ (; j<9; j++) x[k]*=10;
         k++;
         j=0;
     }
@@ -345,514 +345,514 @@ static double decfloat(FFFILE *f, int c, int bits, int emin, int sign, int pok)
     rp = lrp;
 
     /* Optimize small to mid-size integers (even in exp. notation) */
-    if (lnz<9 && lnz<=rp && rp < 18) {
-        int bitlim;
-        if (rp == 9) return sign * (double)x[0];
-        if (rp < 9) return sign * (double)x[0] / p10s[8-rp];
-        bitlim = bits-3*(int)(rp-9);
-        if (bitlim>30 || x[0]>>bitlim==0)
-            return sign * (double)x[0] * p10s[rp-10];
+    ਜੇ (lnz<9 && lnz<=rp && rp < 18) {
+        ਪੂਰਨ bitlim;
+        ਜੇ (rp == 9) ਵਾਪਸ sign * (ਦੁੱਗਣਾ)x[0];
+        ਜੇ (rp < 9) ਵਾਪਸ sign * (ਦੁੱਗਣਾ)x[0] / p10s[8-rp];
+        bitlim = ਬਿੱਟ-3*(ਪੂਰਨ)(rp-9);
+        ਜੇ (bitlim>30 || x[0]>>bitlim==0)
+            ਵਾਪਸ sign * (ਦੁੱਗਣਾ)x[0] * p10s[rp-10];
     }
 
     /* Drop trailing zeros */
-    for (; !x[z-1]; z--);
+    ਲਈ (; !x[z-1]; z--);
 
     /* Align radix point to B1B digit boundary */
-    if (rp % 9) {
-        int rpm9 = rp>=0 ? rp%9 : rp%9+9;
-        int p10 = p10s[8-rpm9];
-        uint32_t carry = 0;
-        for (k=a; k!=z; k++) {
+    ਜੇ (rp % 9) {
+        ਪੂਰਨ rpm9 = rp>=0 ? rp%9 : rp%9+9;
+        ਪੂਰਨ p10 = p10s[8-rpm9];
+        uint32_t ਹਾਸਲ = 0;
+        ਲਈ (k=a; k!=z; k++) {
             uint32_t tmp = x[k] % p10;
-            x[k] = x[k]/p10 + carry;
-            carry = 1000000000/p10 * tmp;
-            if (k==a && !x[k]) {
-                a = (a+1 & MASK);
+            x[k] = x[k]/p10 + ਹਾਸਲ;
+            ਹਾਸਲ = 1000000000/p10 * tmp;
+            ਜੇ (k==a && !x[k]) {
+                a = (a+1 & ਨਕਾਬ);
                 rp -= 9;
             }
         }
-        if (carry) x[z++] = carry;
+        ਜੇ (ਹਾਸਲ) x[z++] = ਹਾਸਲ;
         rp += 9-rpm9;
     }
 
     /* Upscale until desired number of bits are left of radix point */
-    while (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
-        uint32_t carry = 0;
+    ਜਦੋਂ (rp < 9*LD_B1B_DIG || (rp == 9*LD_B1B_DIG && x[a]<th[0])) {
+        uint32_t ਹਾਸਲ = 0;
         e2 -= 29;
-        for (k=(z-1 & MASK); ; k=(k-1 & MASK)) {
-            uint64_t tmp = ((uint64_t)x[k] << 29) + carry;
-            if (tmp > 1000000000) {
-                carry = tmp / 1000000000;
+        ਲਈ (k=(z-1 & ਨਕਾਬ); ; k=(k-1 & ਨਕਾਬ)) {
+            uint64_t tmp = ((uint64_t)x[k] << 29) + ਹਾਸਲ;
+            ਜੇ (tmp > 1000000000) {
+                ਹਾਸਲ = tmp / 1000000000;
                 x[k] = tmp % 1000000000;
-            } else {
-                carry = 0;
+            } ਨਹੀਂਤਾਂ {
+                ਹਾਸਲ = 0;
                 x[k] = tmp;
             }
-            if (k==(z-1 & MASK) && k!=a && !x[k]) z = k;
-            if (k==a) break;
+            ਜੇ (k==(z-1 & ਨਕਾਬ) && k!=a && !x[k]) z = k;
+            ਜੇ (k==a) ਰੋਕੋ;
         }
-        if (carry) {
+        ਜੇ (ਹਾਸਲ) {
             rp += 9;
-            a = (a-1 & MASK);
-            if (a == z) {
-                z = (z-1 & MASK);
-                x[z-1 & MASK] |= x[z];
+            a = (a-1 & ਨਕਾਬ);
+            ਜੇ (a == z) {
+                z = (z-1 & ਨਕਾਬ);
+                x[z-1 & ਨਕਾਬ] |= x[z];
             }
-            x[a] = carry;
+            x[a] = ਹਾਸਲ;
         }
     }
 
     /* Downscale until exactly number of bits are left of radix point */
-    for (;;) {
-        uint32_t carry = 0;
-        int sh = 1;
-        for (i=0; i<LD_B1B_DIG; i++) {
-            k = (a+i & MASK);
-            if (k == z || x[k] < th[i]) {
+    ਲਈ (;;) {
+        uint32_t ਹਾਸਲ = 0;
+        ਪੂਰਨ sh = 1;
+        ਲਈ (i=0; i<LD_B1B_DIG; i++) {
+            k = (a+i & ਨਕਾਬ);
+            ਜੇ (k == z || x[k] < th[i]) {
                 i=LD_B1B_DIG;
-                break;
+                ਰੋਕੋ;
             }
-            if (x[a+i & MASK] > th[i]) break;
+            ਜੇ (x[a+i & ਨਕਾਬ] > th[i]) ਰੋਕੋ;
         }
-        if (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) break;
+        ਜੇ (i==LD_B1B_DIG && rp==9*LD_B1B_DIG) ਰੋਕੋ;
         /* FIXME: find a way to compute optimal sh */
-        if (rp > 9+9*LD_B1B_DIG) sh = 9;
+        ਜੇ (rp > 9+9*LD_B1B_DIG) sh = 9;
         e2 += sh;
-        for (k=a; k!=z; k=(k+1 & MASK)) {
+        ਲਈ (k=a; k!=z; k=(k+1 & ਨਕਾਬ)) {
             uint32_t tmp = x[k] & (1<<sh)-1;
-            x[k] = (x[k]>>sh) + carry;
-            carry = (1000000000>>sh) * tmp;
-            if (k==a && !x[k]) {
-                a = (a+1 & MASK);
+            x[k] = (x[k]>>sh) + ਹਾਸਲ;
+            ਹਾਸਲ = (1000000000>>sh) * tmp;
+            ਜੇ (k==a && !x[k]) {
+                a = (a+1 & ਨਕਾਬ);
                 i--;
                 rp -= 9;
             }
         }
-        if (carry) {
-            if ((z+1 & MASK) != a) {
-                x[z] = carry;
-                z = (z+1 & MASK);
-            } else x[z-1 & MASK] |= 1;
+        ਜੇ (ਹਾਸਲ) {
+            ਜੇ ((z+1 & ਨਕਾਬ) != a) {
+                x[z] = ਹਾਸਲ;
+                z = (z+1 & ਨਕਾਬ);
+            } ਨਹੀਂਤਾਂ x[z-1 & ਨਕਾਬ] |= 1;
         }
     }
 
     /* Assemble desired bits into floating point variable */
-    for (y=i=0; i<LD_B1B_DIG; i++) {
-        if ((a+i & MASK)==z) x[(z=(z+1 & MASK))-1 & MASK] = 0;
-        y = 1000000000.0L * y + x[a+i & MASK];
+    ਲਈ (y=i=0; i<LD_B1B_DIG; i++) {
+        ਜੇ ((a+i & ਨਕਾਬ)==z) x[(z=(z+1 & ਨਕਾਬ))-1 & ਨਕਾਬ] = 0;
+        y = 1000000000.0L * y + x[a+i & ਨਕਾਬ];
     }
 
     y *= sign;
 
     /* Limit precision for denormal results */
-    if (bits > DBL_MANT_DIG+e2-emin) {
-        bits = DBL_MANT_DIG+e2-emin;
-        if (bits<0) bits=0;
+    ਜੇ (ਬਿੱਟ > DBL_MANT_DIG+e2-emin) {
+        ਬਿੱਟ = DBL_MANT_DIG+e2-emin;
+        ਜੇ (ਬਿੱਟ<0) ਬਿੱਟ=0;
         denormal = 1;
     }
 
     /* Calculate bias term to force rounding, move out lower bits */
-    if (bits < DBL_MANT_DIG) {
-        bias = copysign(scalbn(1, 2*DBL_MANT_DIG-bits-1), y);
-        frac = fmod(y, scalbn(1, DBL_MANT_DIG-bits));
+    ਜੇ (ਬਿੱਟ < DBL_MANT_DIG) {
+        bias = copysign(scalbn(1, 2*DBL_MANT_DIG-ਬਿੱਟ-1), y);
+        frac = fmod(y, scalbn(1, DBL_MANT_DIG-ਬਿੱਟ));
         y -= frac;
         y += bias;
     }
 
     /* Process tail of decimal input so it can affect rounding */
-    if ((a+i & MASK) != z) {
-        uint32_t t = x[a+i & MASK];
-        if (t < 500000000 && (t || (a+i+1 & MASK) != z))
+    ਜੇ ((a+i & ਨਕਾਬ) != z) {
+        uint32_t t = x[a+i & ਨਕਾਬ];
+        ਜੇ (t < 500000000 && (t || (a+i+1 & ਨਕਾਬ) != z))
             frac += 0.25*sign;
-        else if (t > 500000000)
+        ਨਹੀਂਤਾਂ ਜੇ (t > 500000000)
             frac += 0.75*sign;
-        else if (t == 500000000) {
-            if ((a+i+1 & MASK) == z)
+        ਨਹੀਂਤਾਂ ਜੇ (t == 500000000) {
+            ਜੇ ((a+i+1 & ਨਕਾਬ) == z)
                 frac += 0.5*sign;
-            else
+            ਨਹੀਂਤਾਂ
                 frac += 0.75*sign;
         }
-        if (DBL_MANT_DIG-bits >= 2 && !fmod(frac, 1))
+        ਜੇ (DBL_MANT_DIG-ਬਿੱਟ >= 2 && !fmod(frac, 1))
             frac++;
     }
 
     y += frac;
     y -= bias;
 
-    if ((e2+DBL_MANT_DIG & INT_MAX) > emax-5) {
-        if (fabs(y) >= pow(2, DBL_MANT_DIG)) {
-            if (denormal && bits==DBL_MANT_DIG+e2-emin)
+    ਜੇ ((e2+DBL_MANT_DIG & ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ) > emax-5) {
+        ਜੇ (fabs(y) >= ਘਾਤ(2, DBL_MANT_DIG)) {
+            ਜੇ (denormal && ਬਿੱਟ==DBL_MANT_DIG+e2-emin)
                 denormal = 0;
             y *= 0.5;
             e2++;
         }
-        if (e2+DBL_MANT_DIG>emax || (denormal && frac))
+        ਜੇ (e2+DBL_MANT_DIG>emax || (denormal && frac))
             errno = ERANGE;
     }
 
-    return scalbn(y, e2);
+    ਵਾਪਸ scalbn(y, e2);
 }
 
-static double hexfloat(FFFILE *f, int bits, int emin, int sign, int pok)
+ਸਥਿਰ ਦੁੱਗਣਾ hexfloat(FFFILE *f, ਪੂਰਨ ਬਿੱਟ, ਪੂਰਨ emin, ਪੂਰਨ sign, ਪੂਰਨ pok)
 {
     uint32_t x = 0;
-    double y = 0;
-    double scale = 1;
-    double bias = 0;
-    int gottail = 0, gotrad = 0, gotdig = 0;
-    long long rp = 0;
-    long long dc = 0;
-    long long e2 = 0;
-    int d;
-    int c;
+    ਦੁੱਗਣਾ y = 0;
+    ਦੁੱਗਣਾ scale = 1;
+    ਦੁੱਗਣਾ bias = 0;
+    ਪੂਰਨ gottail = 0, gotrad = 0, gotdig = 0;
+    ਲੰਮਾ ਲੰਮਾ rp = 0;
+    ਲੰਮਾ ਲੰਮਾ dc = 0;
+    ਲੰਮਾ ਲੰਮਾ e2 = 0;
+    ਪੂਰਨ d;
+    ਪੂਰਨ c;
 
     c = shgetc(f);
 
     /* Skip leading zeros */
-    for (; c=='0'; c = shgetc(f))
+    ਲਈ (; c=='0'; c = shgetc(f))
         gotdig = 1;
 
-    if (c=='.') {
+    ਜੇ (c=='.') {
         gotrad = 1;
         c = shgetc(f);
         /* Count zeros after the radix point before significand */
-        for (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
+        ਲਈ (rp=0; c=='0'; c = shgetc(f), rp--) gotdig = 1;
     }
 
-    for (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
-        if (c=='.') {
-            if (gotrad) break;
+    ਲਈ (; c-'0'<10U || (c|32)-'a'<6U || c=='.'; c = shgetc(f)) {
+        ਜੇ (c=='.') {
+            ਜੇ (gotrad) ਰੋਕੋ;
             rp = dc;
             gotrad = 1;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             gotdig = 1;
-            if (c > '9') d = (c|32)+10-'a';
-            else d = c-'0';
-            if (dc<8) {
+            ਜੇ (c > '9') d = (c|32)+10-'a';
+            ਨਹੀਂਤਾਂ d = c-'0';
+            ਜੇ (dc<8) {
                 x = x*16 + d;
-            } else if (dc < DBL_MANT_DIG/4+1) {
+            } ਨਹੀਂਤਾਂ ਜੇ (dc < DBL_MANT_DIG/4+1) {
                 y += d*(scale/=16);
-            } else if (d && !gottail) {
+            } ਨਹੀਂਤਾਂ ਜੇ (d && !gottail) {
                 y += 0.5*scale;
                 gottail = 1;
             }
             dc++;
         }
     }
-    if (!gotdig) {
+    ਜੇ (!gotdig) {
         shunget(f);
-        if (pok) {
+        ਜੇ (pok) {
             shunget(f);
-            if (gotrad) shunget(f);
-        } else {
+            ਜੇ (gotrad) shunget(f);
+        } ਨਹੀਂਤਾਂ {
             shlim(f, 0);
         }
-        return sign * 0.0;
+        ਵਾਪਸ sign * 0.0;
     }
-    if (!gotrad) rp = dc;
-    while (dc<8) x *= 16, dc++;
-    if ((c|32)=='p') {
+    ਜੇ (!gotrad) rp = dc;
+    ਜਦੋਂ (dc<8) x *= 16, dc++;
+    ਜੇ ((c|32)=='p') {
         e2 = scanexp(f, pok);
-        if (e2 == LLONG_MIN) {
-            if (pok) {
+        ਜੇ (e2 == LLONG_MIN) {
+            ਜੇ (pok) {
                 shunget(f);
-            } else {
+            } ਨਹੀਂਤਾਂ {
                 shlim(f, 0);
-                return 0;
+                ਵਾਪਸ 0;
             }
             e2 = 0;
         }
-    } else {
+    } ਨਹੀਂਤਾਂ {
         shunget(f);
     }
     e2 += 4*rp - 32;
 
-    if (!x) return sign * 0.0;
-    if (e2 > -emin) {
+    ਜੇ (!x) ਵਾਪਸ sign * 0.0;
+    ਜੇ (e2 > -emin) {
         errno = ERANGE;
-        return sign * DBL_MAX * DBL_MAX;
+        ਵਾਪਸ sign * DBL_MAX * DBL_MAX;
     }
-    if (e2 < emin-2*DBL_MANT_DIG) {
+    ਜੇ (e2 < emin-2*DBL_MANT_DIG) {
         errno = ERANGE;
-        return sign * DBL_MIN * DBL_MIN;
+        ਵਾਪਸ sign * DBL_MIN * DBL_MIN;
     }
 
-    while (x < 0x80000000) {
-        if (y>=0.5) {
+    ਜਦੋਂ (x < 0x80000000) {
+        ਜੇ (y>=0.5) {
             x += x + 1;
             y += y - 1;
-        } else {
+        } ਨਹੀਂਤਾਂ {
             x += x;
             y += y;
         }
         e2--;
     }
 
-    if (bits > 32+e2-emin) {
-        bits = 32+e2-emin;
-        if (bits<0) bits=0;
+    ਜੇ (ਬਿੱਟ > 32+e2-emin) {
+        ਬਿੱਟ = 32+e2-emin;
+        ਜੇ (ਬਿੱਟ<0) ਬਿੱਟ=0;
     }
 
-    if (bits < DBL_MANT_DIG)
-        bias = copysign(scalbn(1, 32+DBL_MANT_DIG-bits-1), sign);
+    ਜੇ (ਬਿੱਟ < DBL_MANT_DIG)
+        bias = copysign(scalbn(1, 32+DBL_MANT_DIG-ਬਿੱਟ-1), sign);
 
-    if (bits<32 && y && !(x&1)) x++, y=0;
+    ਜੇ (ਬਿੱਟ<32 && y && !(x&1)) x++, y=0;
 
-    y = bias + sign*(double)x + sign*y;
+    y = bias + sign*(ਦੁੱਗਣਾ)x + sign*y;
     y -= bias;
 
-    if (!y) errno = ERANGE;
+    ਜੇ (!y) errno = ERANGE;
 
-    return scalbn(y, e2);
+    ਵਾਪਸ scalbn(y, e2);
 }
 
-static double fffloatscan(FFFILE *f, int prec, int pok)
+ਸਥਿਰ ਦੁੱਗਣਾ fffloatscan(FFFILE *f, ਪੂਰਨ prec, ਪੂਰਨ pok)
 {
-    int sign = 1;
+    ਪੂਰਨ sign = 1;
     size_t i;
-    int bits;
-    int emin;
-    int c;
+    ਪੂਰਨ ਬਿੱਟ;
+    ਪੂਰਨ emin;
+    ਪੂਰਨ c;
 
-    switch (prec) {
-    case 0:
-        bits = FLT_MANT_DIG;
-        emin = FLT_MIN_EXP-bits;
-        break;
-    case 1:
-        bits = DBL_MANT_DIG;
-        emin = DBL_MIN_EXP-bits;
-        break;
-    case 2:
-        bits = DBL_MANT_DIG;
-        emin = DBL_MIN_EXP-bits;
-        break;
-    default:
-        return 0;
+    ਚੋਣ (prec) {
+    ਹਾਲਤ 0:
+        ਬਿੱਟ = FLT_MANT_DIG;
+        emin = FLT_MIN_EXP-ਬਿੱਟ;
+        ਰੋਕੋ;
+    ਹਾਲਤ 1:
+        ਬਿੱਟ = DBL_MANT_DIG;
+        emin = DBL_MIN_EXP-ਬਿੱਟ;
+        ਰੋਕੋ;
+    ਹਾਲਤ 2:
+        ਬਿੱਟ = DBL_MANT_DIG;
+        emin = DBL_MIN_EXP-ਬਿੱਟ;
+        ਰੋਕੋ;
+    ਮੂਲ:
+        ਵਾਪਸ 0;
     }
 
-    while (av_isspace((c = shgetc(f))));
+    ਜਦੋਂ (av_isspace((c = shgetc(f))));
 
-    if (c=='+' || c=='-') {
+    ਜੇ (c=='+' || c=='-') {
         sign -= 2*(c=='-');
         c = shgetc(f);
     }
 
-    for (i=0; i<8 && (c|32)=="infinity"[i]; i++)
-        if (i<7) c = shgetc(f);
-    if (i==3 || i==8 || (i>3 && pok)) {
-        if (i!=8) {
+    ਲਈ (i=0; i<8 && (c|32)=="infinity"[i]; i++)
+        ਜੇ (i<7) c = shgetc(f);
+    ਜੇ (i==3 || i==8 || (i>3 && pok)) {
+        ਜੇ (i!=8) {
             shunget(f);
-            if (pok) for (; i>3; i--) shunget(f);
+            ਜੇ (pok) ਲਈ (; i>3; i--) shunget(f);
         }
-        return sign * INFINITY;
+        ਵਾਪਸ sign * INFINITY;
     }
-    if (!i) for (i=0; i<3 && (c|32)=="nan"[i]; i++)
-        if (i<2) c = shgetc(f);
-    if (i==3) {
-        if (shgetc(f) != '(') {
+    ਜੇ (!i) ਲਈ (i=0; i<3 && (c|32)=="nan"[i]; i++)
+        ਜੇ (i<2) c = shgetc(f);
+    ਜੇ (i==3) {
+        ਜੇ (shgetc(f) != '(') {
             shunget(f);
-            return NAN;
+            ਵਾਪਸ NAN;
         }
-        for (i=1; ; i++) {
+        ਲਈ (i=1; ; i++) {
             c = shgetc(f);
-            if (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
-                continue;
-            if (c==')') return NAN;
+            ਜੇ (c-'0'<10U || c-'A'<26U || c-'a'<26U || c=='_')
+                ਜਾਰੀ;
+            ਜੇ (c==')') ਵਾਪਸ NAN;
             shunget(f);
-            if (!pok) {
+            ਜੇ (!pok) {
                 errno = EINVAL;
                 shlim(f, 0);
-                return 0;
+                ਵਾਪਸ 0;
             }
-            while (i--) shunget(f);
-            return NAN;
+            ਜਦੋਂ (i--) shunget(f);
+            ਵਾਪਸ NAN;
         }
     }
 
-    if (i) {
+    ਜੇ (i) {
         shunget(f);
         errno = EINVAL;
         shlim(f, 0);
-        return 0;
+        ਵਾਪਸ 0;
     }
 
-    if (c=='0') {
+    ਜੇ (c=='0') {
         c = shgetc(f);
-        if ((c|32) == 'x')
-            return hexfloat(f, bits, emin, sign, pok);
+        ਜੇ ((c|32) == 'x')
+            ਵਾਪਸ hexfloat(f, ਬਿੱਟ, emin, sign, pok);
         shunget(f);
         c = '0';
     }
 
-    return decfloat(f, c, bits, emin, sign, pok);
+    ਵਾਪਸ decfloat(f, c, ਬਿੱਟ, emin, sign, pok);
 }
 
-static void *arg_n(va_list ap, unsigned int n)
+ਸਥਿਰ ਖਾਲੀ *arg_n(va_list ap, ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ n)
 {
-    void *p;
-    unsigned int i;
+    ਖਾਲੀ *p;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ i;
     va_list ap2;
     va_copy(ap2, ap);
-    for (i=n; i>1; i--) va_arg(ap2, void *);
-    p = va_arg(ap2, void *);
+    ਲਈ (i=n; i>1; i--) va_arg(ap2, ਖਾਲੀ *);
+    p = va_arg(ap2, ਖਾਲੀ *);
     va_end(ap2);
-    return p;
+    ਵਾਪਸ p;
 }
 
-static void store_int(void *dest, int size, unsigned long long i)
+ਸਥਿਰ ਖਾਲੀ store_int(ਖਾਲੀ *dest, ਪੂਰਨ ਮਾਪ, ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ ਲੰਮਾ i)
 {
-    if (!dest) return;
-    switch (size) {
-    case SIZE_hh:
-        *(char *)dest = i;
-        break;
-    case SIZE_h:
-        *(short *)dest = i;
-        break;
-    case SIZE_def:
-        *(int *)dest = i;
-        break;
-    case SIZE_l:
-        *(long *)dest = i;
-        break;
-    case SIZE_ll:
-        *(long long *)dest = i;
-        break;
+    ਜੇ (!dest) ਵਾਪਸ;
+    ਚੋਣ (ਮਾਪ) {
+    ਹਾਲਤ ਮਾਪ_hh:
+        *(ਅੱਖਰ *)dest = i;
+        ਰੋਕੋ;
+    ਹਾਲਤ ਮਾਪ_h:
+        *(ਛੋਟਾ *)dest = i;
+        ਰੋਕੋ;
+    ਹਾਲਤ ਮਾਪ_def:
+        *(ਪੂਰਨ *)dest = i;
+        ਰੋਕੋ;
+    ਹਾਲਤ ਮਾਪ_l:
+        *(ਲੰਮਾ *)dest = i;
+        ਰੋਕੋ;
+    ਹਾਲਤ ਮਾਪ_ll:
+        *(ਲੰਮਾ ਲੰਮਾ *)dest = i;
+        ਰੋਕੋ;
     }
 }
 
-static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
+ਸਥਿਰ ਪੂਰਨ ff_vfscanf(FFFILE *f, ਅਚਲ ਅੱਖਰ *fmt, va_list ap)
 {
-    int width;
-    int size;
-    int base;
-    const unsigned char *p;
-    int c, t;
-    char *s;
-    void *dest=NULL;
-    int invert;
-    int matches=0;
-    unsigned long long x;
-    double y;
+    ਪੂਰਨ ਚੌੜਾਈ;
+    ਪੂਰਨ ਮਾਪ;
+    ਪੂਰਨ ਅਧਾਰ_2;
+    ਅਚਲ ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *p;
+    ਪੂਰਨ c, t;
+    ਅੱਖਰ *s;
+    ਖਾਲੀ *dest=ਨਿਰਾ;
+    ਪੂਰਨ invert;
+    ਪੂਰਨ matches=0;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ ਲੰਮਾ x;
+    ਦੁੱਗਣਾ y;
     ptrdiff_t pos = 0;
-    unsigned char scanset[257];
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ scanset[257];
     size_t i;
 
-    for (p=(const unsigned char *)fmt; *p; p++) {
+    ਲਈ (p=(ਅਚਲ ਬਿਨਾਨਿਸ਼ਾਨੀ ਅੱਖਰ *)fmt; *p; p++) {
 
-        if (av_isspace(*p)) {
-            while (av_isspace(p[1])) p++;
+        ਜੇ (av_isspace(*p)) {
+            ਜਦੋਂ (av_isspace(p[1])) p++;
             shlim(f, 0);
-            while (av_isspace(shgetc(f)));
+            ਜਦੋਂ (av_isspace(shgetc(f)));
             shunget(f);
             pos += shcnt(f);
-            continue;
+            ਜਾਰੀ;
         }
-        if (*p != '%' || p[1] == '%') {
+        ਜੇ (*p != '%' || p[1] == '%') {
             shlim(f, 0);
-            if (*p == '%') {
+            ਜੇ (*p == '%') {
                 p++;
-                while (av_isspace((c=shgetc(f))));
-            } else {
+                ਜਦੋਂ (av_isspace((c=shgetc(f))));
+            } ਨਹੀਂਤਾਂ {
                 c = shgetc(f);
             }
-            if (c!=*p) {
+            ਜੇ (c!=*p) {
                 shunget(f);
-                if (c<0) goto input_fail;
-                goto match_fail;
+                ਜੇ (c<0) ਜਾਓ ਨਿਵੇਸ਼_fail;
+                ਜਾਓ ਮੇਲ_fail;
             }
             pos += shcnt(f);
-            continue;
+            ਜਾਰੀ;
         }
 
         p++;
-        if (*p=='*') {
+        ਜੇ (*p=='*') {
             dest = 0; p++;
-        } else if (av_isdigit(*p) && p[1]=='$') {
+        } ਨਹੀਂਤਾਂ ਜੇ (av_isdigit(*p) && p[1]=='$') {
             dest = arg_n(ap, *p-'0'); p+=2;
-        } else {
-            dest = va_arg(ap, void *);
+        } ਨਹੀਂਤਾਂ {
+            dest = va_arg(ap, ਖਾਲੀ *);
         }
 
-        for (width=0; av_isdigit(*p); p++) {
-            width = 10*width + *p - '0';
+        ਲਈ (ਚੌੜਾਈ=0; av_isdigit(*p); p++) {
+            ਚੌੜਾਈ = 10*ਚੌੜਾਈ + *p - '0';
         }
 
-        if (*p=='m') {
+        ਜੇ (*p=='m') {
             s = 0;
             p++;
         }
 
-        size = SIZE_def;
-        switch (*p++) {
-        case 'h':
-            if (*p == 'h') p++, size = SIZE_hh;
-            else size = SIZE_h;
-            break;
-        case 'l':
-            if (*p == 'l') p++, size = SIZE_ll;
-            else size = SIZE_l;
-            break;
-        case 'j':
-            size = SIZE_ll;
-            break;
-        case 'z':
-        case 't':
-            size = SIZE_l;
-            break;
-        case 'L':
-            size = SIZE_L;
-            break;
-        case 'd': case 'i': case 'o': case 'u': case 'x':
-        case 'a': case 'e': case 'f': case 'g':
-        case 'A': case 'E': case 'F': case 'G': case 'X':
-        case 's': case 'c': case '[':
-        case 'S': case 'C':
-        case 'p': case 'n':
+        ਮਾਪ = ਮਾਪ_def;
+        ਚੋਣ (*p++) {
+        ਹਾਲਤ 'h':
+            ਜੇ (*p == 'h') p++, ਮਾਪ = ਮਾਪ_hh;
+            ਨਹੀਂਤਾਂ ਮਾਪ = ਮਾਪ_h;
+            ਰੋਕੋ;
+        ਹਾਲਤ 'l':
+            ਜੇ (*p == 'l') p++, ਮਾਪ = ਮਾਪ_ll;
+            ਨਹੀਂਤਾਂ ਮਾਪ = ਮਾਪ_l;
+            ਰੋਕੋ;
+        ਹਾਲਤ 'j':
+            ਮਾਪ = ਮਾਪ_ll;
+            ਰੋਕੋ;
+        ਹਾਲਤ 'z':
+        ਹਾਲਤ 't':
+            ਮਾਪ = ਮਾਪ_l;
+            ਰੋਕੋ;
+        ਹਾਲਤ 'L':
+            ਮਾਪ = ਮਾਪ_L;
+            ਰੋਕੋ;
+        ਹਾਲਤ 'd': ਹਾਲਤ 'i': ਹਾਲਤ 'o': ਹਾਲਤ 'u': ਹਾਲਤ 'x':
+        ਹਾਲਤ 'a': ਹਾਲਤ 'e': ਹਾਲਤ 'f': ਹਾਲਤ 'g':
+        ਹਾਲਤ 'A': ਹਾਲਤ 'E': ਹਾਲਤ 'F': ਹਾਲਤ 'G': ਹਾਲਤ 'X':
+        ਹਾਲਤ 's': ਹਾਲਤ 'c': ਹਾਲਤ '[':
+        ਹਾਲਤ 'S': ਹਾਲਤ 'C':
+        ਹਾਲਤ 'p': ਹਾਲਤ 'n':
             p--;
-            break;
-        default:
-            goto fmt_fail;
+            ਰੋਕੋ;
+        ਮੂਲ:
+            ਜਾਓ fmt_fail;
         }
 
         t = *p;
 
         /* C or S */
-        if ((t&0x2f) == 3) {
+        ਜੇ ((t&0x2f) == 3) {
             t |= 32;
-            size = SIZE_l;
+            ਮਾਪ = ਮਾਪ_l;
         }
 
-        switch (t) {
-            case 'c':
-                if (width < 1) width = 1;
-                break;
-            case '[':
-                break;
-            case 'n':
-                store_int(dest, size, pos);
+        ਚੋਣ (t) {
+            ਹਾਲਤ 'c':
+                ਜੇ (ਚੌੜਾਈ < 1) ਚੌੜਾਈ = 1;
+                ਰੋਕੋ;
+            ਹਾਲਤ '[':
+                ਰੋਕੋ;
+            ਹਾਲਤ 'n':
+                store_int(dest, ਮਾਪ, pos);
                 /* do not increment match count, etc! */
-                continue;
-            default:
+                ਜਾਰੀ;
+            ਮੂਲ:
                 shlim(f, 0);
-                while (av_isspace(shgetc(f)));
+                ਜਦੋਂ (av_isspace(shgetc(f)));
                 shunget(f);
                 pos += shcnt(f);
         }
 
-        shlim(f, width);
-        if (shgetc(f) < 0) goto input_fail;
+        shlim(f, ਚੌੜਾਈ);
+        ਜੇ (shgetc(f) < 0) ਜਾਓ ਨਿਵੇਸ਼_fail;
         shunget(f);
 
-        switch (t) {
-            case 's':
-            case 'c':
-            case '[':
-                if (t == 'c' || t == 's') {
-                    memset(scanset, -1, sizeof scanset);
+        ਚੋਣ (t) {
+            ਹਾਲਤ 's':
+            ਹਾਲਤ 'c':
+            ਹਾਲਤ '[':
+                ਜੇ (t == 'c' || t == 's') {
+                    memset(scanset, -1, ਆਕਾਰ scanset);
                     scanset[0] = 0;
-                    if (t == 's') {
+                    ਜੇ (t == 's') {
                         scanset[1 + '\t'] = 0;
                         scanset[1 + '\n'] = 0;
                         scanset[1 + '\v'] = 0;
@@ -860,110 +860,110 @@ static int ff_vfscanf(FFFILE *f, const char *fmt, va_list ap)
                         scanset[1 + '\r'] = 0;
                         scanset[1 + ' ' ] = 0;
                     }
-                } else {
-                    if (*++p == '^') p++, invert = 1;
-                    else invert = 0;
-                    memset(scanset, invert, sizeof scanset);
+                } ਨਹੀਂਤਾਂ {
+                    ਜੇ (*++p == '^') p++, invert = 1;
+                    ਨਹੀਂਤਾਂ invert = 0;
+                    memset(scanset, invert, ਆਕਾਰ scanset);
                     scanset[0] = 0;
-                    if (*p == '-') p++, scanset[1+'-'] = 1-invert;
-                    else if (*p == ']') p++, scanset[1+']'] = 1-invert;
-                    for (; *p != ']'; p++) {
-                        if (!*p) goto fmt_fail;
-                        if (*p=='-' && p[1] && p[1] != ']')
-                            for (c=p++[-1]; c<*p; c++)
+                    ਜੇ (*p == '-') p++, scanset[1+'-'] = 1-invert;
+                    ਨਹੀਂਤਾਂ ਜੇ (*p == ']') p++, scanset[1+']'] = 1-invert;
+                    ਲਈ (; *p != ']'; p++) {
+                        ਜੇ (!*p) ਜਾਓ fmt_fail;
+                        ਜੇ (*p=='-' && p[1] && p[1] != ']')
+                            ਲਈ (c=p++[-1]; c<*p; c++)
                                 scanset[1+c] = 1-invert;
                         scanset[1+*p] = 1-invert;
                     }
                 }
                 s = 0;
                 i = 0;
-                if ((s = dest)) {
-                    while (scanset[(c=shgetc(f))+1])
+                ਜੇ ((s = dest)) {
+                    ਜਦੋਂ (scanset[(c=shgetc(f))+1])
                         s[i++] = c;
-                } else {
-                    while (scanset[(c=shgetc(f))+1]);
+                } ਨਹੀਂਤਾਂ {
+                    ਜਦੋਂ (scanset[(c=shgetc(f))+1]);
                 }
                 shunget(f);
-                if (!shcnt(f)) goto match_fail;
-                if (t == 'c' && shcnt(f) != width) goto match_fail;
-                if (t != 'c') {
-                    if (s) s[i] = 0;
+                ਜੇ (!shcnt(f)) ਜਾਓ ਮੇਲ_fail;
+                ਜੇ (t == 'c' && shcnt(f) != ਚੌੜਾਈ) ਜਾਓ ਮੇਲ_fail;
+                ਜੇ (t != 'c') {
+                    ਜੇ (s) s[i] = 0;
                 }
-                break;
-            case 'p':
-            case 'X':
-            case 'x':
-                base = 16;
-                goto int_common;
-            case 'o':
-                base = 8;
-                goto int_common;
-            case 'd':
-            case 'u':
-                base = 10;
-                goto int_common;
-            case 'i':
-                base = 0;
+                ਰੋਕੋ;
+            ਹਾਲਤ 'p':
+            ਹਾਲਤ 'X':
+            ਹਾਲਤ 'x':
+                ਅਧਾਰ_2 = 16;
+                ਜਾਓ int_common;
+            ਹਾਲਤ 'o':
+                ਅਧਾਰ_2 = 8;
+                ਜਾਓ int_common;
+            ਹਾਲਤ 'd':
+            ਹਾਲਤ 'u':
+                ਅਧਾਰ_2 = 10;
+                ਜਾਓ int_common;
+            ਹਾਲਤ 'i':
+                ਅਧਾਰ_2 = 0;
 int_common:
-                x = ffintscan(f, base, 0, ULLONG_MAX);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (t=='p' && dest)
-                    *(void **)dest = (void *)(uintptr_t)x;
-                else
-                    store_int(dest, size, x);
-                break;
-            case 'a': case 'A':
-            case 'e': case 'E':
-            case 'f': case 'F':
-            case 'g': case 'G':
-                y = fffloatscan(f, size, 0);
-                if (!shcnt(f))
-                    goto match_fail;
-                if (dest) {
-                    switch (size) {
-                    case SIZE_def:
-                        *(float *)dest = y;
-                        break;
-                    case SIZE_l:
-                        *(double *)dest = y;
-                        break;
-                    case SIZE_L:
-                        *(double *)dest = y;
-                        break;
+                x = ffintscan(f, ਅਧਾਰ_2, 0, ULLONG_MAX);
+                ਜੇ (!shcnt(f))
+                    ਜਾਓ ਮੇਲ_fail;
+                ਜੇ (t=='p' && dest)
+                    *(ਖਾਲੀ **)dest = (ਖਾਲੀ *)(uintptr_t)x;
+                ਨਹੀਂਤਾਂ
+                    store_int(dest, ਮਾਪ, x);
+                ਰੋਕੋ;
+            ਹਾਲਤ 'a': ਹਾਲਤ 'A':
+            ਹਾਲਤ 'e': ਹਾਲਤ 'E':
+            ਹਾਲਤ 'f': ਹਾਲਤ 'F':
+            ਹਾਲਤ 'g': ਹਾਲਤ 'G':
+                y = fffloatscan(f, ਮਾਪ, 0);
+                ਜੇ (!shcnt(f))
+                    ਜਾਓ ਮੇਲ_fail;
+                ਜੇ (dest) {
+                    ਚੋਣ (ਮਾਪ) {
+                    ਹਾਲਤ ਮਾਪ_def:
+                        *(ਦਸ਼ਮਲਵ *)dest = y;
+                        ਰੋਕੋ;
+                    ਹਾਲਤ ਮਾਪ_l:
+                        *(ਦੁੱਗਣਾ *)dest = y;
+                        ਰੋਕੋ;
+                    ਹਾਲਤ ਮਾਪ_L:
+                        *(ਦੁੱਗਣਾ *)dest = y;
+                        ਰੋਕੋ;
                     }
                 }
-                break;
+                ਰੋਕੋ;
         }
 
         pos += shcnt(f);
-        if (dest) matches++;
+        ਜੇ (dest) matches++;
     }
-    if (0) {
+    ਜੇ (0) {
 fmt_fail:
-input_fail:
-        if (!matches) matches--;
+ਨਿਵੇਸ਼_fail:
+        ਜੇ (!matches) matches--;
     }
-match_fail:
-    return matches;
+ਮੇਲ_fail:
+    ਵਾਪਸ matches;
 }
 
-static int ff_vsscanf(const char *s, const char *fmt, va_list ap)
+ਸਥਿਰ ਪੂਰਨ ff_vsscanf(ਅਚਲ ਅੱਖਰ *s, ਅਚਲ ਅੱਖਰ *fmt, va_list ap)
 {
     FFFILE f = {
-        .buf = (void *)s, .cookie = (void *)s,
-        .read = ffstring_read,
+        .buf = (ਖਾਲੀ *)s, .cookie = (ਖਾਲੀ *)s,
+        .ਪਠ = ffstring_read,
     };
 
-    return ff_vfscanf(&f, fmt, ap);
+    ਵਾਪਸ ff_vfscanf(&f, fmt, ap);
 }
 
-int av_sscanf(const char *string, const char *format, ...)
+ਪੂਰਨ av_sscanf(ਅਚਲ ਅੱਖਰ *string, ਅਚਲ ਅੱਖਰ *format, ...)
 {
-    int ret;
+    ਪੂਰਨ ret;
     va_list ap;
     va_start(ap, format);
     ret = ff_vsscanf(string, format, ap);
     va_end(ap);
-    return ret;
+    ਵਾਪਸ ret;
 }

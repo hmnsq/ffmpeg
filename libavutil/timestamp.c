@@ -16,21 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "timestamp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "timestamp.h"
 
-char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb)
+ਅੱਖਰ *av_ts_make_ਸਮਾਂ_string2(ਅੱਖਰ *buf, int64_t ts, AVRational tb)
 {
-    if (ts == AV_NOPTS_VALUE) {
-        snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    } else {
-        double val = av_q2d(tb) * ts;
-        double log = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
-        int precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
-        int last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
-        last = FFMIN(last, AV_TS_MAX_STRING_SIZE - 1) - 1;
-        for (; last && buf[last] == '0'; last--);
-        for (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
-        buf[last + 1] = '\0';
+    ਜੇ (ts == AV_NOPTS_ਮੁੱਲ) {
+        snprintf(buf, AV_TS_MAX_STRING_ਮਾਪ, "NOPTS");
+    } ਨਹੀਂਤਾਂ {
+        ਦੁੱਗਣਾ val = av_q2d(tb) * ts;
+        ਦੁੱਗਣਾ ਲਘੂਗਣਕ = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
+        ਪੂਰਨ precision = (isfinite(ਲਘੂਗਣਕ) && ਲਘੂਗਣਕ < 0) ? -ਲਘੂਗਣਕ + 5 : 6;
+        ਪੂਰਨ ਆਖਰੀ = snprintf(buf, AV_TS_MAX_STRING_ਮਾਪ, "%.*f", precision, val);
+        ਆਖਰੀ = FFMIN(ਆਖਰੀ, AV_TS_MAX_STRING_ਮਾਪ - 1) - 1;
+        ਲਈ (; ਆਖਰੀ && buf[ਆਖਰੀ] == '0'; ਆਖਰੀ--);
+        ਲਈ (; ਆਖਰੀ && buf[ਆਖਰੀ] != 'f' && (buf[ਆਖਰੀ] < '0' || buf[0] > '9'); ਆਖਰੀ--);
+        buf[ਆਖਰੀ + 1] = '\0';
     }
-    return buf;
+    ਵਾਪਸ buf;
 }

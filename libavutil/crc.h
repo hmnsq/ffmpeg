@@ -24,12 +24,12 @@
  * Public header for CRC hash function implementation.
  */
 
-#ifndef AVUTIL_CRC_H
-#define AVUTIL_CRC_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_ਚੱਕਰੀ_ਜਾਂਚ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_ਚੱਕਰੀ_ਜਾਂਚ_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
 
 /**
  * @defgroup lavu_crc32 CRC
@@ -43,18 +43,18 @@
  * @{
  */
 
-typedef uint32_t AVCRC;
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ uint32_t AVCRC;
 
-typedef enum {
-    AV_CRC_8_ATM,
-    AV_CRC_16_ANSI,
-    AV_CRC_16_CCITT,
-    AV_CRC_32_IEEE,
-    AV_CRC_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
-    AV_CRC_16_ANSI_LE,  /*< reversed bitorder version of AV_CRC_16_ANSI */
-    AV_CRC_24_IEEE,
-    AV_CRC_8_EBU,
-    AV_CRC_MAX,         /*< Not part of public API! Do not use outside libavutil. */
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਗਿਣਤੀ {
+    AV_ਚੱਕਰੀ_ਜਾਂਚ_8_ATM,
+    AV_ਚੱਕਰੀ_ਜਾਂਚ_16_ANSI,
+    AV_ਚੱਕਰੀ_ਜਾਂਚ_16_CCITT,
+    AV_ਚੱਕਰੀ_ਜਾਂਚ_32_IEEE,
+    AV_ਚੱਕਰੀ_ਜਾਂਚ_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
+    AV_ਚੱਕਰੀ_ਜਾਂਚ_16_ANSI_LE,  /*< reversed bitorder version of AV_CRC_16_ANSI */
+    AV_ਚੱਕਰੀ_ਜਾਂਚ_24_IEEE,
+    AV_ਚੱਕਰੀ_ਜਾਂਚ_8_EBU,
+    AV_ਚੱਕਰੀ_ਜਾਂਚ_MAX,         /*< Not part of public API! Do not use outside libavutil. */
 }AVCRCId;
 
 /**
@@ -73,14 +73,14 @@ typedef enum {
  * @param ctx_size size of ctx in bytes
  * @return <0 on failure
  */
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
+ਪੂਰਨ av_ਚੱਕਰੀ_ਜਾਂਚ_init(AVCRC *ctx, ਪੂਰਨ le, ਪੂਰਨ ਬਿੱਟ, uint32_t poly, ਪੂਰਨ ctx_ਮਾਪ);
 
 /**
  * Get an initialized standard CRC table.
  * @param crc_id ID of a standard CRC
  * @return a pointer to the CRC table or NULL on failure
  */
-const AVCRC *av_crc_get_table(AVCRCId crc_id);
+ਅਚਲ AVCRC *av_ਚੱਕਰੀ_ਜਾਂਚ_get_ਸਾਰਣੀ(AVCRCId ਚੱਕਰੀ_ਜਾਂਚ_id);
 
 /**
  * Calculate the CRC of a block.
@@ -92,11 +92,11 @@ const AVCRC *av_crc_get_table(AVCRCId crc_id);
  *
  * @see av_crc_init() "le" parameter
  */
-uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
-                const uint8_t *buffer, size_t length) av_pure;
+uint32_t av_ਚੱਕਰੀ_ਜਾਂਚ(ਅਚਲ AVCRC *ctx, uint32_t ਚੱਕਰੀ_ਜਾਂਚ,
+                ਅਚਲ uint8_t *ਬਫਰ, size_t ਲੰਮਾਈ) av_ਸ਼ੁੱਧ;
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_CRC_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_CRC_H */

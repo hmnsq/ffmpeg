@@ -16,63 +16,63 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_X86_PIXELUTILS_H
-#define AVUTIL_X86_PIXELUTILS_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_X86_PIXELUTILS_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_X86_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/pixelutils.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad_8x8_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                               const uint8_t *src2, ptrdiff_t stride2);
+ਪੂਰਨ ff_pixelutils_sad_8x8_sse2(ਅਚਲ uint8_t *src1, ptrdiff_t stride1,
+                               ਅਚਲ uint8_t *src2, ptrdiff_t stride2);
 
-int ff_pixelutils_sad_16x16_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                 const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad_a_16x16_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                   const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad_u_16x16_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                   const uint8_t *src2, ptrdiff_t stride2);
+ਪੂਰਨ ff_pixelutils_sad_16x16_sse2(ਅਚਲ uint8_t *src1, ptrdiff_t stride1,
+                                 ਅਚਲ uint8_t *src2, ptrdiff_t stride2);
+ਪੂਰਨ ff_pixelutils_sad_a_16x16_sse2(ਅਚਲ uint8_t *src1, ptrdiff_t stride1,
+                                   ਅਚਲ uint8_t *src2, ptrdiff_t stride2);
+ਪੂਰਨ ff_pixelutils_sad_u_16x16_sse2(ਅਚਲ uint8_t *src1, ptrdiff_t stride1,
+                                   ਅਚਲ uint8_t *src2, ptrdiff_t stride2);
 
-int ff_pixelutils_sad_32x32_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                 const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad_a_32x32_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                   const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad_u_32x32_sse2(const uint8_t *src1, ptrdiff_t stride1,
-                                   const uint8_t *src2, ptrdiff_t stride2);
+ਪੂਰਨ ff_pixelutils_sad_32x32_sse2(ਅਚਲ uint8_t *src1, ptrdiff_t stride1,
+                                 ਅਚਲ uint8_t *src2, ptrdiff_t stride2);
+ਪੂਰਨ ff_pixelutils_sad_a_32x32_sse2(ਅਚਲ uint8_t *src1, ptrdiff_t stride1,
+                                   ਅਚਲ uint8_t *src2, ptrdiff_t stride2);
+ਪੂਰਨ ff_pixelutils_sad_u_32x32_sse2(ਅਚਲ uint8_t *src1, ptrdiff_t stride1,
+                                   ਅਚਲ uint8_t *src2, ptrdiff_t stride2);
 
-int ff_pixelutils_sad_32x32_avx2(const uint8_t *src1, ptrdiff_t stride1,
-                                 const uint8_t *src2, ptrdiff_t stride2);
+ਪੂਰਨ ff_pixelutils_sad_32x32_avx2(ਅਚਲ uint8_t *src1, ptrdiff_t stride1,
+                                 ਅਚਲ uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_x86(av_pixelutils_sad_fn *sad, int aligned)
+ਸਥਿਰ ਸਤਰਅੰਦਰ av_cold ਖਾਲੀ ff_pixelutils_sad_init_x86(av_pixelutils_sad_fn *sad, ਪੂਰਨ aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ਪੂਰਨ cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_SSE2(cpu_flags)) {
+    ਜੇ (EXTERNAL_SSE2(cpu_flags)) {
         sad[2] = ff_pixelutils_sad_8x8_sse2;
-        switch (aligned) {
-        case 0: sad[3] = ff_pixelutils_sad_16x16_sse2;   break; // src1 unaligned, src2 unaligned
-        case 1: sad[3] = ff_pixelutils_sad_u_16x16_sse2; break; // src1   aligned, src2 unaligned
-        case 2: sad[3] = ff_pixelutils_sad_a_16x16_sse2; break; // src1   aligned, src2   aligned
+        ਚੋਣ (aligned) {
+        ਹਾਲਤ 0: sad[3] = ff_pixelutils_sad_16x16_sse2;   ਰੋਕੋ; // src1 unaligned, src2 unaligned
+        ਹਾਲਤ 1: sad[3] = ff_pixelutils_sad_u_16x16_sse2; ਰੋਕੋ; // src1   aligned, src2 unaligned
+        ਹਾਲਤ 2: sad[3] = ff_pixelutils_sad_a_16x16_sse2; ਰੋਕੋ; // src1   aligned, src2   aligned
         }
     }
 
-    if (EXTERNAL_SSE2(cpu_flags)) {
-        switch (aligned) {
-        case 0: sad[4] = ff_pixelutils_sad_32x32_sse2;   break; // src1 unaligned, src2 unaligned
-        case 1: sad[4] = ff_pixelutils_sad_u_32x32_sse2; break; // src1   aligned, src2 unaligned
-        case 2: sad[4] = ff_pixelutils_sad_a_32x32_sse2; break; // src1   aligned, src2   aligned
+    ਜੇ (EXTERNAL_SSE2(cpu_flags)) {
+        ਚੋਣ (aligned) {
+        ਹਾਲਤ 0: sad[4] = ff_pixelutils_sad_32x32_sse2;   ਰੋਕੋ; // src1 unaligned, src2 unaligned
+        ਹਾਲਤ 1: sad[4] = ff_pixelutils_sad_u_32x32_sse2; ਰੋਕੋ; // src1   aligned, src2 unaligned
+        ਹਾਲਤ 2: sad[4] = ff_pixelutils_sad_a_32x32_sse2; ਰੋਕੋ; // src1   aligned, src2   aligned
         }
     }
 
-#if HAVE_AVX2_EXTERNAL
-    if (EXTERNAL_AVX2_FAST(cpu_flags)) {
+#ਜੇ HAVE_AVX2_EXTERNAL
+    ਜੇ (EXTERNAL_AVX2_FAST(cpu_flags)) {
         sad[4] = ff_pixelutils_sad_32x32_avx2;
     }
-#endif
+#ਜੇ_ਅੰਤ
 }
-#endif
+#ਜੇ_ਅੰਤ

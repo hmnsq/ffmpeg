@@ -18,85 +18,85 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/mem.h"
 
-#include "libavutil/dict.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/dict.c"
 
-static const AVDictionaryEntry *dict_iterate(const AVDictionary *m,
-                                             const AVDictionaryEntry *prev)
+ਸਥਿਰ ਅਚਲ AVDictionary_ਇੰਦਰਾਜ *dict_iterate(ਅਚਲ AVDictionary *m,
+                                             ਅਚਲ AVDictionary_ਇੰਦਰਾਜ *prev)
 {
-    const AVDictionaryEntry *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
-    const AVDictionaryEntry *dict_iterate = av_dict_iterate(m, prev);
+    ਅਚਲ AVDictionary_ਇੰਦਰਾਜ *dict_get = av_dict_get(m, "", prev, AV_DICT_IGNORE_SUFFIX);
+    ਅਚਲ AVDictionary_ਇੰਦਰਾਜ *dict_iterate = av_dict_iterate(m, prev);
 
-    if (dict_get != dict_iterate) {
-#define GET(entry, mem) ((entry) ? (entry)->mem : "N/A")
-        printf("Iterating with av_dict_iterate() yields a different result "
+    ਜੇ (dict_get != dict_iterate) {
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ GET(ਇੰਦਰਾਜ, mem) ((ਇੰਦਰਾਜ) ? (ਇੰਦਰਾਜ)->mem : "N/A")
+        ਲਿਖੋ("Iterating with av_dict_iterate() yields a different result "
                "than iterating with av_dict_get() and AV_DICT_IGNORE_SUFFIX "
                "(prev: %p, key %s; av_dict_iterate() %p, key %s, value %s; "
                "av_dict_get() %p, key %s, value %s)\n",
-               prev, GET(prev, key),
-               dict_iterate, GET(dict_iterate, key), GET(dict_iterate, value),
-               dict_get, GET(dict_get, key), GET(dict_get, value));
-#undef GET
+               prev, GET(prev, ਕੁੰਜੀ),
+               dict_iterate, GET(dict_iterate, ਕੁੰਜੀ), GET(dict_iterate, ਮੁੱਲ),
+               dict_get, GET(dict_get, ਕੁੰਜੀ), GET(dict_get, ਮੁੱਲ));
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ GET
     }
-    return dict_iterate;
+    ਵਾਪਸ dict_iterate;
 }
 
-static void print_dict(const AVDictionary *m)
+ਸਥਿਰ ਖਾਲੀ print_dict(ਅਚਲ AVDictionary *m)
 {
-    const AVDictionaryEntry *t = NULL;
-    const char *sep = "";
-    while ((t = dict_iterate(m, t))) {
-        printf("%s%s %s", sep, t->key, t->value);
+    ਅਚਲ AVDictionary_ਇੰਦਰਾਜ *t = ਨਿਰਾ;
+    ਅਚਲ ਅੱਖਰ *sep = "";
+    ਜਦੋਂ ((t = dict_iterate(m, t))) {
+        ਲਿਖੋ("%s%s %s", sep, t->ਕੁੰਜੀ, t->ਮੁੱਲ);
         sep = "   ";
     }
-    printf("\n");
+    ਲਿਖੋ("\n");
 }
 
-static void test_separators(const AVDictionary *m, const char pair, const char val)
+ਸਥਿਰ ਖਾਲੀ test_separators(ਅਚਲ AVDictionary *m, ਅਚਲ ਅੱਖਰ pair, ਅਚਲ ਅੱਖਰ val)
 {
-    AVDictionary *dict = NULL;
-    char pairs[] = {pair , '\0'};
-    char vals[]  = {val, '\0'};
+    AVDictionary *dict = ਨਿਰਾ;
+    ਅੱਖਰ ਜੋੜੇ[] = {pair , '\0'};
+    ਅੱਖਰ vals[]  = {val, '\0'};
 
-    char *buffer = NULL;
-    int ret;
+    ਅੱਖਰ *ਬਫਰ = ਨਿਰਾ;
+    ਪੂਰਨ ret;
 
     av_dict_copy(&dict, m, 0);
     print_dict(dict);
-    av_dict_get_string(dict, &buffer, val, pair);
-    printf("%s\n", buffer);
+    av_dict_get_string(dict, &ਬਫਰ, val, pair);
+    ਲਿਖੋ("%s\n", ਬਫਰ);
     av_dict_free(&dict);
-    ret = av_dict_parse_string(&dict, buffer, vals, pairs, 0);
-    printf("ret %d\n", ret);
-    av_freep(&buffer);
+    ret = av_dict_parse_string(&dict, ਬਫਰ, vals, ਜੋੜੇ, 0);
+    ਲਿਖੋ("ret %d\n", ret);
+    av_freep(&ਬਫਰ);
     print_dict(dict);
     av_dict_free(&dict);
 }
 
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
-    AVDictionary *dict = NULL;
-    const AVDictionaryEntry *e;
-    char *buffer = NULL;
+    AVDictionary *dict = ਨਿਰਾ;
+    ਅਚਲ AVDictionary_ਇੰਦਰਾਜ *e;
+    ਅੱਖਰ *ਬਫਰ = ਨਿਰਾ;
 
-    printf("Testing av_dict_get_string() and av_dict_parse_string()\n");
-    av_dict_get_string(dict, &buffer, '=', ',');
-    printf("%s\n", buffer);
-    av_freep(&buffer);
-    av_dict_set(&dict, "aaa", "aaa", 0);
-    av_dict_set(&dict, "b,b", "bbb", 0);
-    av_dict_set(&dict, "c=c", "ccc", 0);
-    av_dict_set(&dict, "ddd", "d,d", 0);
-    av_dict_set(&dict, "eee", "e=e", 0);
-    av_dict_set(&dict, "f,f", "f=f", 0);
-    av_dict_set(&dict, "g=g", "g,g", 0);
+    ਲਿਖੋ("Testing av_dict_get_string() and av_dict_parse_string()\n");
+    av_dict_get_string(dict, &ਬਫਰ, '=', ',');
+    ਲਿਖੋ("%s\n", ਬਫਰ);
+    av_freep(&ਬਫਰ);
+    av_dict_ਸੈੱਟ(&dict, "aaa", "aaa", 0);
+    av_dict_ਸੈੱਟ(&dict, "b,b", "bbb", 0);
+    av_dict_ਸੈੱਟ(&dict, "c=c", "ccc", 0);
+    av_dict_ਸੈੱਟ(&dict, "ddd", "d,d", 0);
+    av_dict_ਸੈੱਟ(&dict, "eee", "e=e", 0);
+    av_dict_ਸੈੱਟ(&dict, "f,f", "f=f", 0);
+    av_dict_ਸੈੱਟ(&dict, "g=g", "g,g", 0);
     test_separators(dict, ',', '=');
     av_dict_free(&dict);
-    av_dict_set(&dict, "aaa", "aaa", 0);
-    av_dict_set(&dict, "bbb", "bbb", 0);
-    av_dict_set(&dict, "ccc", "ccc", 0);
-    av_dict_set(&dict, "\\,=\'\"", "\\,=\'\"", 0);
+    av_dict_ਸੈੱਟ(&dict, "aaa", "aaa", 0);
+    av_dict_ਸੈੱਟ(&dict, "bbb", "bbb", 0);
+    av_dict_ਸੈੱਟ(&dict, "ccc", "ccc", 0);
+    av_dict_ਸੈੱਟ(&dict, "\\,=\'\"", "\\,=\'\"", 0);
     test_separators(dict, '"',  '=');
     test_separators(dict, '\'', '=');
     test_separators(dict, ',', '"');
@@ -105,66 +105,66 @@ int main(void)
     test_separators(dict, '"', '\'');
     av_dict_free(&dict);
 
-    printf("\nTesting av_dict_set()\n");
-    av_dict_set(&dict, "a", "a", 0);
-    av_dict_set(&dict, "b", av_strdup("b"), AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set(&dict, "e", "e", AV_DICT_DONT_OVERWRITE);
-    av_dict_set(&dict, "e", "f", AV_DICT_DONT_OVERWRITE);
-    av_dict_set(&dict, "f", "f", 0);
-    av_dict_set(&dict, "f", NULL, 0);
-    av_dict_set(&dict, "ff", "f", 0);
-    av_dict_set(&dict, "ff", "f", AV_DICT_APPEND);
-    if (av_dict_get(dict, NULL, NULL, 0))
-        printf("av_dict_get() does not correctly handle NULL key.\n");
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    ਲਿਖੋ("\nTesting av_dict_set()\n");
+    av_dict_ਸੈੱਟ(&dict, "a", "a", 0);
+    av_dict_ਸੈੱਟ(&dict, "b", av_strdup("b"), AV_DICT_DONT_STRDUP_VAL);
+    av_dict_ਸੈੱਟ(&dict, av_strdup("c"), "c", AV_DICT_DONT_STRDUP_ਕੁੰਜੀ);
+    av_dict_ਸੈੱਟ(&dict, av_strdup("d"), av_strdup("d"), AV_DICT_DONT_STRDUP_ਕੁੰਜੀ | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_ਸੈੱਟ(&dict, "e", "e", AV_DICT_DONT_OVERWRITE);
+    av_dict_ਸੈੱਟ(&dict, "e", "f", AV_DICT_DONT_OVERWRITE);
+    av_dict_ਸੈੱਟ(&dict, "f", "f", 0);
+    av_dict_ਸੈੱਟ(&dict, "f", ਨਿਰਾ, 0);
+    av_dict_ਸੈੱਟ(&dict, "ff", "f", 0);
+    av_dict_ਸੈੱਟ(&dict, "ff", "f", AV_DICT_APPEND);
+    ਜੇ (av_dict_get(dict, ਨਿਰਾ, ਨਿਰਾ, 0))
+        ਲਿਖੋ("av_dict_get() does not correctly handle NULL key.\n");
+    e = ਨਿਰਾ;
+    ਜਦੋਂ ((e = dict_iterate(dict, e)))
+        ਲਿਖੋ("%s %s\n", e->ਕੁੰਜੀ, e->ਮੁੱਲ);
     av_dict_free(&dict);
 
-    if (av_dict_set(&dict, NULL, "a", 0) >= 0 ||
-        av_dict_set(&dict, NULL, "b", 0) >= 0 ||
-        av_dict_set(&dict, NULL, NULL, AV_DICT_DONT_STRDUP_KEY) >= 0 ||
-        av_dict_set(&dict, NULL, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
-        av_dict_count(dict))
-        printf("av_dict_set does not correctly handle NULL key\n");
+    ਜੇ (av_dict_ਸੈੱਟ(&dict, ਨਿਰਾ, "a", 0) >= 0 ||
+        av_dict_ਸੈੱਟ(&dict, ਨਿਰਾ, "b", 0) >= 0 ||
+        av_dict_ਸੈੱਟ(&dict, ਨਿਰਾ, ਨਿਰਾ, AV_DICT_DONT_STRDUP_ਕੁੰਜੀ) >= 0 ||
+        av_dict_ਸੈੱਟ(&dict, ਨਿਰਾ, av_strdup("b"), AV_DICT_DONT_STRDUP_VAL) >= 0 ||
+        av_dict_ਗਿਣਤੀ(dict))
+        ਲਿਖੋ("av_dict_set does not correctly handle NULL key\n");
 
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("'%s' '%s'\n", e->key, e->value);
+    e = ਨਿਰਾ;
+    ਜਦੋਂ ((e = dict_iterate(dict, e)))
+        ਲਿਖੋ("'%s' '%s'\n", e->ਕੁੰਜੀ, e->ਮੁੱਲ);
     av_dict_free(&dict);
 
 
     //valgrind sensible test
-    printf("\nTesting av_dict_set_int()\n");
-    av_dict_set_int(&dict, "1", 1, AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_KEY);
-    av_dict_set_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_KEY | AV_DICT_DONT_STRDUP_VAL);
-    av_dict_set_int(&dict, "4", 4, 0);
-    av_dict_set_int(&dict, "5", 5, AV_DICT_DONT_OVERWRITE);
-    av_dict_set_int(&dict, "5", 6, AV_DICT_DONT_OVERWRITE);
-    av_dict_set_int(&dict, "12", 1, 0);
-    av_dict_set_int(&dict, "12", 2, AV_DICT_APPEND);
-    e = NULL;
-    while ((e = dict_iterate(dict, e)))
-        printf("%s %s\n", e->key, e->value);
+    ਲਿਖੋ("\nTesting av_dict_set_int()\n");
+    av_dict_ਸੈੱਟ_int(&dict, "1", 1, AV_DICT_DONT_STRDUP_VAL);
+    av_dict_ਸੈੱਟ_int(&dict, av_strdup("2"), 2, AV_DICT_DONT_STRDUP_ਕੁੰਜੀ);
+    av_dict_ਸੈੱਟ_int(&dict, av_strdup("3"), 3, AV_DICT_DONT_STRDUP_ਕੁੰਜੀ | AV_DICT_DONT_STRDUP_VAL);
+    av_dict_ਸੈੱਟ_int(&dict, "4", 4, 0);
+    av_dict_ਸੈੱਟ_int(&dict, "5", 5, AV_DICT_DONT_OVERWRITE);
+    av_dict_ਸੈੱਟ_int(&dict, "5", 6, AV_DICT_DONT_OVERWRITE);
+    av_dict_ਸੈੱਟ_int(&dict, "12", 1, 0);
+    av_dict_ਸੈੱਟ_int(&dict, "12", 2, AV_DICT_APPEND);
+    e = ਨਿਰਾ;
+    ਜਦੋਂ ((e = dict_iterate(dict, e)))
+        ਲਿਖੋ("%s %s\n", e->ਕੁੰਜੀ, e->ਮੁੱਲ);
     av_dict_free(&dict);
 
     //valgrind sensible test
-    printf("\nTesting av_dict_set() with existing AVDictionaryEntry.key as key\n");
-    if (av_dict_set(&dict, "key", "old", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    if (av_dict_set(&dict, e->key, "new val OK", 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
-    if (av_dict_set(&dict, e->key, e->value, 0) < 0)
-        return 1;
-    e = av_dict_get(dict, "key", NULL, 0);
-    printf("%s\n", e->value);
+    ਲਿਖੋ("\nTesting av_dict_set() with existing AVDictionaryEntry.key as key\n");
+    ਜੇ (av_dict_ਸੈੱਟ(&dict, "key", "old", 0) < 0)
+        ਵਾਪਸ 1;
+    e = av_dict_get(dict, "key", ਨਿਰਾ, 0);
+    ਜੇ (av_dict_ਸੈੱਟ(&dict, e->ਕੁੰਜੀ, "new val OK", 0) < 0)
+        ਵਾਪਸ 1;
+    e = av_dict_get(dict, "key", ਨਿਰਾ, 0);
+    ਲਿਖੋ("%s\n", e->ਮੁੱਲ);
+    ਜੇ (av_dict_ਸੈੱਟ(&dict, e->ਕੁੰਜੀ, e->ਮੁੱਲ, 0) < 0)
+        ਵਾਪਸ 1;
+    e = av_dict_get(dict, "key", ਨਿਰਾ, 0);
+    ਲਿਖੋ("%s\n", e->ਮੁੱਲ);
     av_dict_free(&dict);
 
-    return 0;
+    ਵਾਪਸ 0;
 }

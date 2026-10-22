@@ -16,70 +16,70 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#if HAVE_SCHED_GETAFFINITY
-#ifndef _GNU_SOURCE
-# define _GNU_SOURCE
-#endif
-#include <sched.h>
-#endif
+#ਜੇ HAVE_SCHED_GETAFFINITY
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ GNU_ਸਰੋਤ
+# define GNU_ਸਰੋਤ
+#ਜੇ_ਅੰਤ
+#ਅਨ੍ਤਰ੍ਭਾਵ <sched.h>
+#ਜੇ_ਅੰਤ
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdatomic.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdatomic.h>
 
-#include "attributes.h"
-#include "cpu.h"
-#include "cpu_internal.h"
-#include "opt.h"
-#include "common.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cpu.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "cpu_internal.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "opt.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "common.h"
 
-#if HAVE_GETPROCESSAFFINITYMASK || HAVE_WINRT
-#include <windows.h>
-#endif
-#if HAVE_SYSCTL
-#if HAVE_SYS_PARAM_H
-#include <sys/param.h>
-#endif
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#endif
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
+#ਜੇ HAVE_GETPROCESSAFFINITYMASK || HAVE_WINRT
+#ਅਨ੍ਤਰ੍ਭਾਵ <windows.h>
+#ਜੇ_ਅੰਤ
+#ਜੇ HAVE_SYSCTL
+#ਜੇ HAVE_SYS_PARAM_H
+#ਅਨ੍ਤਰ੍ਭਾਵ <sys/param.h>
+#ਜੇ_ਅੰਤ
+#ਅਨ੍ਤਰ੍ਭਾਵ <sys/types.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <sys/sysctl.h>
+#ਜੇ_ਅੰਤ
+#ਜੇ HAVE_UNISTD_H
+#ਅਨ੍ਤਰ੍ਭਾਵ <unistd.h>
+#ਜੇ_ਅੰਤ
 
-#if HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-#include <sys/auxv.h>
-#endif
+#ਜੇ HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
+#ਅਨ੍ਤਰ੍ਭਾਵ <sys/auxv.h>
+#ਜੇ_ਅੰਤ
 
-static atomic_int cpu_flags = -1;
-static atomic_int cpu_count = -1;
+ਸਥਿਰ atomic_int cpu_flags = -1;
+ਸਥਿਰ atomic_int cpu_ਗਿਣਤੀ = -1;
 
-static int get_cpu_flags(void)
+ਸਥਿਰ ਪੂਰਨ get_cpu_flags(ਖਾਲੀ)
 {
-#if ARCH_MIPS
-    return ff_get_cpu_flags_mips();
-#elif ARCH_AARCH64
-    return ff_get_cpu_flags_aarch64();
-#elif ARCH_ARM
-    return ff_get_cpu_flags_arm();
-#elif ARCH_PPC
-    return ff_get_cpu_flags_ppc();
-#elif ARCH_RISCV
-    return ff_get_cpu_flags_riscv();
-#elif ARCH_WASM
-    return ff_get_cpu_flags_wasm();
-#elif ARCH_X86
-    return ff_get_cpu_flags_x86();
-#elif ARCH_LOONGARCH
-    return ff_get_cpu_flags_loongarch();
-#endif
-    return 0;
+#ਜੇ ARCH_MIPS
+    ਵਾਪਸ ff_get_cpu_flags_mips();
+#ਜਾਂਜੇ ARCH_AARCH64
+    ਵਾਪਸ ff_get_cpu_flags_aarch64();
+#ਜਾਂਜੇ ARCH_ARM
+    ਵਾਪਸ ff_get_cpu_flags_arm();
+#ਜਾਂਜੇ ARCH_PPC
+    ਵਾਪਸ ff_get_cpu_flags_ppc();
+#ਜਾਂਜੇ ARCH_RISCV
+    ਵਾਪਸ ff_get_cpu_flags_riscv();
+#ਜਾਂਜੇ ARCH_WASM
+    ਵਾਪਸ ff_get_cpu_flags_wasm();
+#ਜਾਂਜੇ ARCH_X86
+    ਵਾਪਸ ff_get_cpu_flags_x86();
+#ਜਾਂਜੇ ARCH_LOONGARCH
+    ਵਾਪਸ ff_get_cpu_flags_loongarch();
+#ਜੇ_ਅੰਤ
+    ਵਾਪਸ 0;
 }
 
-void av_force_cpu_flags(int arg){
-    if (ARCH_X86 &&
+ਖਾਲੀ av_force_cpu_flags(ਪੂਰਨ arg){
+    ਜੇ (ARCH_X86 &&
            (arg & ( AV_CPU_FLAG_3DNOW    |
                     AV_CPU_FLAG_3DNOWEXT |
                     AV_CPU_FLAG_MMXEXT   |
@@ -99,228 +99,228 @@ void av_force_cpu_flags(int arg){
                     AV_CPU_FLAG_AVX2     |
                     AV_CPU_FLAG_AVX512   ))
         && !(arg & AV_CPU_FLAG_MMX)) {
-        av_log(NULL, AV_LOG_WARNING, "MMX implied by specified flags\n");
+        av_log(ਨਿਰਾ, AV_LOG_WARNING, "MMX implied by specified flags\n");
         arg |= AV_CPU_FLAG_MMX;
     }
 
     atomic_store_explicit(&cpu_flags, arg, memory_order_relaxed);
 }
 
-int av_get_cpu_flags(void)
+ਪੂਰਨ av_get_cpu_flags(ਖਾਲੀ)
 {
-    int flags = atomic_load_explicit(&cpu_flags, memory_order_relaxed);
-    if (flags == -1) {
+    ਪੂਰਨ flags = atomic_load_explicit(&cpu_flags, memory_order_relaxed);
+    ਜੇ (flags == -1) {
         flags = get_cpu_flags();
         atomic_store_explicit(&cpu_flags, flags, memory_order_relaxed);
     }
-    return flags;
+    ਵਾਪਸ flags;
 }
 
-int av_parse_cpu_caps(unsigned *flags, const char *s)
+ਪੂਰਨ av_parse_cpu_caps(ਬਿਨਾਨਿਸ਼ਾਨੀ *flags, ਅਚਲ ਅੱਖਰ *s)
 {
-        static const AVOption cpuflags_opts[] = {
-        { "flags"   , NULL, 0, AV_OPT_TYPE_FLAGS, { .i64 = 0 }, INT64_MIN, INT64_MAX, .unit = "flags" },
-#if   ARCH_PPC
-        { "altivec" , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ALTIVEC  },    .unit = "flags" },
-        { "vsx"     , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VSX      },    .unit = "flags" },
-        { "power8"  , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_POWER8   },    .unit = "flags" },
-#elif ARCH_X86
-        { "mmx"     , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMX      },    .unit = "flags" },
-        { "mmx2"    , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMX2     },    .unit = "flags" },
-        { "mmxext"  , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMX2     },    .unit = "flags" },
-        { "sse"     , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE      },    .unit = "flags" },
-        { "sse2"    , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE2     },    .unit = "flags" },
-        { "sse2slow", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE2SLOW },    .unit = "flags" },
-        { "sse3"    , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE3     },    .unit = "flags" },
-        { "sse3slow", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE3SLOW },    .unit = "flags" },
-        { "ssse3"   , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSSE3    },    .unit = "flags" },
-        { "atom"    , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ATOM     },    .unit = "flags" },
-        { "sse4.1"  , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE4     },    .unit = "flags" },
-        { "sse4.2"  , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE42    },    .unit = "flags" },
-        { "avx"     , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVX      },    .unit = "flags" },
-        { "avxslow" , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVXSLOW  },    .unit = "flags" },
-        { "xop"     , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_XOP      },    .unit = "flags" },
-        { "fma3"    , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_FMA3     },    .unit = "flags" },
-        { "fma4"    , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_FMA4     },    .unit = "flags" },
-        { "avx2"    , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVX2     },    .unit = "flags" },
-        { "bmi1"    , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_BMI1     },    .unit = "flags" },
-        { "bmi2"    , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_BMI2     },    .unit = "flags" },
-        { "3dnow"   , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_3DNOW    },    .unit = "flags" },
-        { "3dnowext", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_3DNOWEXT },    .unit = "flags" },
-        { "cmov",     NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_CMOV     },    .unit = "flags" },
-        { "aesni",    NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AESNI    },    .unit = "flags" },
-        { "clmul",    NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_CLMUL    },    .unit = "flags" },
-        { "avx512"  , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVX512   },    .unit = "flags" },
-        { "avx512icl",  NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVX512ICL   }, .unit = "flags" },
-        { "slowgather", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SLOW_GATHER }, .unit = "flags" },
+        ਸਥਿਰ ਅਚਲ AVOption cpuflags_opts[] = {
+        { "flags"   , ਨਿਰਾ, 0, AV_OPT_TYPE_FLAGS, { .i64 = 0 }, INT64_MIN, INT64_MAX, .unit = "flags" },
+#ਜੇ   ARCH_PPC
+        { "altivec" , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ALTIVEC  },    .unit = "flags" },
+        { "vsx"     , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VSX      },    .unit = "flags" },
+        { "power8"  , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_POWER8   },    .unit = "flags" },
+#ਜਾਂਜੇ ARCH_X86
+        { "mmx"     , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMX      },    .unit = "flags" },
+        { "mmx2"    , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMX2     },    .unit = "flags" },
+        { "mmxext"  , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMX2     },    .unit = "flags" },
+        { "sse"     , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE      },    .unit = "flags" },
+        { "sse2"    , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE2     },    .unit = "flags" },
+        { "sse2slow", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE2SLOW },    .unit = "flags" },
+        { "sse3"    , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE3     },    .unit = "flags" },
+        { "sse3slow", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE3SLOW },    .unit = "flags" },
+        { "ssse3"   , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSSE3    },    .unit = "flags" },
+        { "atom"    , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ATOM     },    .unit = "flags" },
+        { "sse4.1"  , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE4     },    .unit = "flags" },
+        { "sse4.2"  , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SSE42    },    .unit = "flags" },
+        { "avx"     , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVX      },    .unit = "flags" },
+        { "avxslow" , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVXSLOW  },    .unit = "flags" },
+        { "xop"     , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_XOP      },    .unit = "flags" },
+        { "fma3"    , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_FMA3     },    .unit = "flags" },
+        { "fma4"    , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_FMA4     },    .unit = "flags" },
+        { "avx2"    , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVX2     },    .unit = "flags" },
+        { "bmi1"    , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_BMI1     },    .unit = "flags" },
+        { "bmi2"    , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_BMI2     },    .unit = "flags" },
+        { "3dnow"   , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_3DNOW    },    .unit = "flags" },
+        { "3dnowext", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_3DNOWEXT },    .unit = "flags" },
+        { "cmov",     ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_CMOV     },    .unit = "flags" },
+        { "aesni",    ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AESNI    },    .unit = "flags" },
+        { "clmul",    ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_CLMUL    },    .unit = "flags" },
+        { "avx512"  , ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVX512   },    .unit = "flags" },
+        { "avx512icl",  ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_AVX512ICL   }, .unit = "flags" },
+        { "slowgather", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SLOW_GATHER }, .unit = "flags" },
 
-#define CPU_FLAG_P2 AV_CPU_FLAG_CMOV | AV_CPU_FLAG_MMX
-#define CPU_FLAG_P3 CPU_FLAG_P2 | AV_CPU_FLAG_MMX2 | AV_CPU_FLAG_SSE
-#define CPU_FLAG_P4 CPU_FLAG_P3| AV_CPU_FLAG_SSE2
-        { "pentium2", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_P2          },    .unit = "flags" },
-        { "pentium3", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_P3          },    .unit = "flags" },
-        { "pentium4", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_P4          },    .unit = "flags" },
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPU_FLAG_P2 AV_CPU_FLAG_CMOV | AV_CPU_FLAG_MMX
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPU_FLAG_P3 CPU_FLAG_P2 | AV_CPU_FLAG_MMX2 | AV_CPU_FLAG_SSE
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPU_FLAG_P4 CPU_FLAG_P3| AV_CPU_FLAG_SSE2
+        { "pentium2", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_P2          },    .unit = "flags" },
+        { "pentium3", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_P3          },    .unit = "flags" },
+        { "pentium4", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_P4          },    .unit = "flags" },
 
-#define CPU_FLAG_K62 AV_CPU_FLAG_MMX | AV_CPU_FLAG_3DNOW
-#define CPU_FLAG_ATHLON   CPU_FLAG_K62 | AV_CPU_FLAG_CMOV | AV_CPU_FLAG_3DNOWEXT | AV_CPU_FLAG_MMX2
-#define CPU_FLAG_ATHLONXP CPU_FLAG_ATHLON | AV_CPU_FLAG_SSE
-#define CPU_FLAG_K8  CPU_FLAG_ATHLONXP | AV_CPU_FLAG_SSE2
-        { "k6",       NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMX      },    .unit = "flags" },
-        { "k62",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_K62         },    .unit = "flags" },
-        { "athlon",   NULL, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_ATHLON      },    .unit = "flags" },
-        { "athlonxp", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_ATHLONXP    },    .unit = "flags" },
-        { "k8",       NULL, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_K8          },    .unit = "flags" },
-#elif ARCH_ARM
-        { "armv5te",  NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARMV5TE  },    .unit = "flags" },
-        { "armv6",    NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARMV6    },    .unit = "flags" },
-        { "armv6t2",  NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARMV6T2  },    .unit = "flags" },
-        { "vfp",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VFP      },    .unit = "flags" },
-        { "vfp_vm",   NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VFP_VM   },    .unit = "flags" },
-        { "vfpv3",    NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VFPV3    },    .unit = "flags" },
-        { "neon",     NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_NEON     },    .unit = "flags" },
-        { "setend",   NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SETEND   },    .unit = "flags" },
-#elif ARCH_AARCH64
-        { "armv8",    NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARMV8    },    .unit = "flags" },
-        { "neon",     NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_NEON     },    .unit = "flags" },
-        { "vfp",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VFP      },    .unit = "flags" },
-        { "dotprod",  NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_DOTPROD  },    .unit = "flags" },
-        { "i8mm",     NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_I8MM     },    .unit = "flags" },
-        { "sve",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SVE      },    .unit = "flags" },
-        { "sve2",     NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SVE2     },    .unit = "flags" },
-        { "sme",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SME      },    .unit = "flags" },
-        { "crc",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARM_CRC  },    .unit = "flags" },
-        { "sme_i16i64", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SME_I16I64 },    .unit = "flags" },
-        { "sme2",     NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SME2     },    .unit = "flags" },
-        { "pmull",    NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_PMULL    },    .unit = "flags" },
-        { "eor3",     NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_EOR3     },    .unit = "flags" },
-        { "aes",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARM_AES  },    .unit = "flags" },
-#elif ARCH_MIPS
-        { "mmi",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMI      },    .unit = "flags" },
-        { "msa",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MSA      },    .unit = "flags" },
-#elif ARCH_LOONGARCH
-        { "lsx",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_LSX      },    .unit = "flags" },
-        { "lasx",     NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_LASX     },    .unit = "flags" },
-#elif ARCH_RISCV
-        { "rvi",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVI      },    .unit = "flags" },
-        { "rvb",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVB      },    .unit = "flags" },
-        { "zve32x",   NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVV_I32  },    .unit = "flags" },
-        { "zve32f",   NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVV_F32  },    .unit = "flags" },
-        { "zve64x",   NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVV_I64  },    .unit = "flags" },
-        { "zve64d",   NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVV_F64  },    .unit = "flags" },
-        { "zbb",      NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVB_BASIC },   .unit = "flags" },
-        { "zvbb",     NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RV_ZVBB },   .unit = "flags" },
-        { "misaligned", NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RV_MISALIGNED },   .unit = "flags" },
-#elif ARCH_WASM
-        { "simd128",  NULL, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SIMD128  },    .unit = "flags" },
-#endif
-        { NULL },
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPU_FLAG_K62 AV_CPU_FLAG_MMX | AV_CPU_FLAG_3DNOW
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPU_FLAG_ATHLON   CPU_FLAG_K62 | AV_CPU_FLAG_CMOV | AV_CPU_FLAG_3DNOWEXT | AV_CPU_FLAG_MMX2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPU_FLAG_ATHLONXP CPU_FLAG_ATHLON | AV_CPU_FLAG_SSE
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CPU_FLAG_K8  CPU_FLAG_ATHLONXP | AV_CPU_FLAG_SSE2
+        { "k6",       ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMX      },    .unit = "flags" },
+        { "k62",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_K62         },    .unit = "flags" },
+        { "athlon",   ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_ATHLON      },    .unit = "flags" },
+        { "athlonxp", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_ATHLONXP    },    .unit = "flags" },
+        { "k8",       ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = CPU_FLAG_K8          },    .unit = "flags" },
+#ਜਾਂਜੇ ARCH_ARM
+        { "armv5te",  ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARMV5TE  },    .unit = "flags" },
+        { "armv6",    ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARMV6    },    .unit = "flags" },
+        { "armv6t2",  ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARMV6T2  },    .unit = "flags" },
+        { "vfp",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VFP      },    .unit = "flags" },
+        { "vfp_vm",   ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VFP_VM   },    .unit = "flags" },
+        { "vfpv3",    ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VFPV3    },    .unit = "flags" },
+        { "neon",     ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_NEON     },    .unit = "flags" },
+        { "setend",   ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SETEND   },    .unit = "flags" },
+#ਜਾਂਜੇ ARCH_AARCH64
+        { "armv8",    ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARMV8    },    .unit = "flags" },
+        { "neon",     ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_NEON     },    .unit = "flags" },
+        { "vfp",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_VFP      },    .unit = "flags" },
+        { "dotprod",  ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_DOTPROD  },    .unit = "flags" },
+        { "i8mm",     ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_I8MM     },    .unit = "flags" },
+        { "sve",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SVE      },    .unit = "flags" },
+        { "sve2",     ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SVE2     },    .unit = "flags" },
+        { "sme",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SME      },    .unit = "flags" },
+        { "crc",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARM_ਚੱਕਰੀ_ਜਾਂਚ  },    .unit = "flags" },
+        { "sme_i16i64", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SME_I16I64 },    .unit = "flags" },
+        { "sme2",     ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SME2     },    .unit = "flags" },
+        { "pmull",    ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_PMULL    },    .unit = "flags" },
+        { "eor3",     ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_EOR3     },    .unit = "flags" },
+        { "aes",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_ARM_AES  },    .unit = "flags" },
+#ਜਾਂਜੇ ARCH_MIPS
+        { "mmi",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MMI      },    .unit = "flags" },
+        { "msa",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_MSA      },    .unit = "flags" },
+#ਜਾਂਜੇ ARCH_LOONGARCH
+        { "lsx",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_LSX      },    .unit = "flags" },
+        { "lasx",     ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_LASX     },    .unit = "flags" },
+#ਜਾਂਜੇ ARCH_RISCV
+        { "rvi",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVI      },    .unit = "flags" },
+        { "rvb",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVB      },    .unit = "flags" },
+        { "zve32x",   ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVV_I32  },    .unit = "flags" },
+        { "zve32f",   ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVV_F32  },    .unit = "flags" },
+        { "zve64x",   ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVV_I64  },    .unit = "flags" },
+        { "zve64d",   ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVV_F64  },    .unit = "flags" },
+        { "zbb",      ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RVB_BASIC },   .unit = "flags" },
+        { "zvbb",     ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RV_ZVBB },   .unit = "flags" },
+        { "misaligned", ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_RV_MISALIGNED },   .unit = "flags" },
+#ਜਾਂਜੇ ARCH_WASM
+        { "simd128",  ਨਿਰਾ, 0, AV_OPT_TYPE_CONST, { .i64 = AV_CPU_FLAG_SIMD128  },    .unit = "flags" },
+#ਜੇ_ਅੰਤ
+        { ਨਿਰਾ },
     };
-    static const AVClass class = {
+    ਸਥਿਰ ਅਚਲ AVClass class = {
         .class_name = "cpuflags",
-        .item_name  = av_default_item_name,
+        .ਵਸਤੂ_name  = av_default_ਵਸਤੂ_name,
         .option     = cpuflags_opts,
-        .version    = LIBAVUTIL_VERSION_INT,
+        .ਸੰਸਕਰਣ    = LIBAVUTIL_ਸੰਸਕਰਣ_INT,
     };
-    const AVClass *pclass = &class;
+    ਅਚਲ AVClass *pclass = &class;
 
-    return av_opt_eval_flags(&pclass, &cpuflags_opts[0], s, flags);
+    ਵਾਪਸ av_opt_eval_flags(&pclass, &cpuflags_opts[0], s, flags);
 }
 
-int av_cpu_count(void)
+ਪੂਰਨ av_cpu_ਗਿਣਤੀ(ਖਾਲੀ)
 {
-    static atomic_int printed = 0;
+    ਸਥਿਰ atomic_int printed = 0;
 
-    int nb_cpus = 1;
-    int count   = 0;
-#if HAVE_WINRT
+    ਪੂਰਨ nb_cpus = 1;
+    ਪੂਰਨ ਗਿਣਤੀ_2   = 0;
+#ਜੇ HAVE_WINRT
     SYSTEM_INFO sysinfo;
-#endif
-#if HAVE_SCHED_GETAFFINITY && defined(CPU_COUNT)
-    cpu_set_t cpuset;
+#ਜੇ_ਅੰਤ
+#ਜੇ HAVE_SCHED_GETAFFINITY && defined(CPU_ਗਿਣਤੀ)
+    cpu_ਸੈੱਟ_t cpuset;
 
     CPU_ZERO(&cpuset);
 
-    if (!sched_getaffinity(0, sizeof(cpuset), &cpuset))
-        nb_cpus = CPU_COUNT(&cpuset);
-#elif HAVE_GETPROCESSAFFINITYMASK
+    ਜੇ (!sched_getaffinity(0, ਆਕਾਰ(cpuset), &cpuset))
+        nb_cpus = CPU_ਗਿਣਤੀ(&cpuset);
+#ਜਾਂਜੇ HAVE_GETPROCESSAFFINITYMASK
     DWORD_PTR proc_aff, sys_aff;
-    if (GetProcessAffinityMask(GetCurrentProcess(), &proc_aff, &sys_aff))
+    ਜੇ (Get_Process_Affinity_ਨਕਾਬ(GetCurrentProcess(), &proc_aff, &sys_aff))
         nb_cpus = av_popcount64(proc_aff);
-#elif HAVE_SYSCTL && defined(HW_NCPUONLINE)
-    int mib[2] = { CTL_HW, HW_NCPUONLINE };
-    size_t len = sizeof(nb_cpus);
+#ਜਾਂਜੇ HAVE_SYSCTL && defined(HW_NCPUONLINE)
+    ਪੂਰਨ mib[2] = { CTL_HW, HW_NCPUONLINE };
+    size_t len = ਆਕਾਰ(nb_cpus);
 
-    if (sysctl(mib, 2, &nb_cpus, &len, NULL, 0) == -1)
+    ਜੇ (sysctl(mib, 2, &nb_cpus, &len, ਨਿਰਾ, 0) == -1)
         nb_cpus = 0;
-#elif HAVE_SYSCTL && defined(HW_NCPU)
-    int mib[2] = { CTL_HW, HW_NCPU };
-    size_t len = sizeof(nb_cpus);
+#ਜਾਂਜੇ HAVE_SYSCTL && defined(HW_NCPU)
+    ਪੂਰਨ mib[2] = { CTL_HW, HW_NCPU };
+    size_t len = ਆਕਾਰ(nb_cpus);
 
-    if (sysctl(mib, 2, &nb_cpus, &len, NULL, 0) == -1)
+    ਜੇ (sysctl(mib, 2, &nb_cpus, &len, ਨਿਰਾ, 0) == -1)
         nb_cpus = 0;
-#elif HAVE_SYSCONF && defined(_SC_NPROC_ONLN)
+#ਜਾਂਜੇ HAVE_SYSCONF && defined(_SC_NPROC_ONLN)
     nb_cpus = sysconf(_SC_NPROC_ONLN);
-#elif HAVE_SYSCONF && defined(_SC_NPROCESSORS_ONLN)
+#ਜਾਂਜੇ HAVE_SYSCONF && defined(_SC_NPROCESSORS_ONLN)
     nb_cpus = sysconf(_SC_NPROCESSORS_ONLN);
-#elif HAVE_WINRT
+#ਜਾਂਜੇ HAVE_WINRT
     GetNativeSystemInfo(&sysinfo);
-    nb_cpus = sysinfo.dwNumberOfProcessors;
-#endif
+    nb_cpus = sysinfo.dw_ਸੰਖਿਆ_ਦਾ_Processors;
+#ਜੇ_ਅੰਤ
 
-    if (!atomic_exchange_explicit(&printed, 1, memory_order_relaxed))
-        av_log(NULL, AV_LOG_DEBUG, "detected %d logical cores\n", nb_cpus);
+    ਜੇ (!atomic_exchange_explicit(&printed, 1, memory_order_relaxed))
+        av_log(ਨਿਰਾ, AV_LOG_DEBUG, "detected %d logical cores\n", nb_cpus);
 
-    count = atomic_load_explicit(&cpu_count, memory_order_relaxed);
+    ਗਿਣਤੀ_2 = atomic_load_explicit(&cpu_ਗਿਣਤੀ, memory_order_relaxed);
 
-    if (count > 0) {
-        nb_cpus = count;
-        av_log(NULL, AV_LOG_DEBUG, "overriding to %d logical cores\n", nb_cpus);
+    ਜੇ (ਗਿਣਤੀ_2 > 0) {
+        nb_cpus = ਗਿਣਤੀ_2;
+        av_log(ਨਿਰਾ, AV_LOG_DEBUG, "overriding to %d logical cores\n", nb_cpus);
     }
 
-    return nb_cpus;
+    ਵਾਪਸ nb_cpus;
 }
 
-void av_cpu_force_count(int count)
+ਖਾਲੀ av_cpu_force_ਗਿਣਤੀ(ਪੂਰਨ ਗਿਣਤੀ_2)
 {
-    atomic_store_explicit(&cpu_count, count, memory_order_relaxed);
+    atomic_store_explicit(&cpu_ਗਿਣਤੀ, ਗਿਣਤੀ_2, memory_order_relaxed);
 }
 
-size_t av_cpu_max_align(void)
+size_t av_cpu_max_align(ਖਾਲੀ)
 {
-#if ARCH_MIPS
-    return ff_get_cpu_max_align_mips();
-#elif ARCH_AARCH64
-    return ff_get_cpu_max_align_aarch64();
-#elif ARCH_ARM
-    return ff_get_cpu_max_align_arm();
-#elif ARCH_PPC
-    return ff_get_cpu_max_align_ppc();
-#elif ARCH_WASM
-    return ff_get_cpu_max_align_wasm();
-#elif ARCH_X86
-    return ff_get_cpu_max_align_x86();
-#elif ARCH_LOONGARCH
-    return ff_get_cpu_max_align_loongarch();
-#endif
+#ਜੇ ARCH_MIPS
+    ਵਾਪਸ ff_get_cpu_max_align_mips();
+#ਜਾਂਜੇ ARCH_AARCH64
+    ਵਾਪਸ ff_get_cpu_max_align_aarch64();
+#ਜਾਂਜੇ ARCH_ARM
+    ਵਾਪਸ ff_get_cpu_max_align_arm();
+#ਜਾਂਜੇ ARCH_PPC
+    ਵਾਪਸ ff_get_cpu_max_align_ppc();
+#ਜਾਂਜੇ ARCH_WASM
+    ਵਾਪਸ ff_get_cpu_max_align_wasm();
+#ਜਾਂਜੇ ARCH_X86
+    ਵਾਪਸ ff_get_cpu_max_align_x86();
+#ਜਾਂਜੇ ARCH_LOONGARCH
+    ਵਾਪਸ ff_get_cpu_max_align_loongarch();
+#ਜੇ_ਅੰਤ
 
-    return 8;
+    ਵਾਪਸ 8;
 }
 
-#if !ARCH_X86
-unsigned long ff_getauxval(unsigned long type)
+#ਜੇ !ARCH_X86
+ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ ff_getauxval(ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ type)
 {
-#if HAVE_GETAUXVAL
-    return getauxval(type);
-#elif HAVE_ELF_AUX_INFO
-    unsigned long aux = 0;
-    int ret = elf_aux_info(type, &aux, sizeof(aux));
-    if (ret != 0) {
+#ਜੇ HAVE_GETAUXVAL
+    ਵਾਪਸ getauxval(type);
+#ਜਾਂਜੇ HAVE_ELF_AUX_INFO
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ aux = 0;
+    ਪੂਰਨ ret = elf_aux_info(type, &aux, ਆਕਾਰ(aux));
+    ਜੇ (ret != 0) {
         errno = ret;
     }
-    return aux;
-#else
+    ਵਾਪਸ aux;
+#ਨਹੀਂਤਾਂ
     errno = ENOSYS;
-    return 0;
-#endif
+    ਵਾਪਸ 0;
+#ਜੇ_ਅੰਤ
 }
-#endif
+#ਜੇ_ਅੰਤ

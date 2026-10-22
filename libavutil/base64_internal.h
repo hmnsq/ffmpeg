@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_BASE64_INTERNAL_H
-#define AVUTIL_BASE64_INTERNAL_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_BASE64_ਅੰਦਰੂਨੀ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_BASE64_ਅੰਦਰੂਨੀ_H
 
-#include <stdint.h>
-#include "intreadwrite.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ "intreadwrite.h"
 
 /*****************************************************************************
 * b64_encode: Stolen from VLC's http.c.
@@ -30,37 +30,37 @@
 * Fixed edge cases and made it work from data (vs. strings) by Ryan.
 *****************************************************************************/
 
-static inline char *ff_base64_encode_c(char *out, const uint8_t *in, int in_size, const char *b64)
+ਸਥਿਰ ਸਤਰਅੰਦਰ ਅੱਖਰ *ff_base64_encode_c(ਅੱਖਰ *ਬਾਹਰਲਾ, ਅਚਲ uint8_t *ਵਿੱਚ_2, ਪੂਰਨ ਵਿੱਚ_ਮਾਪ, ਅਚਲ ਅੱਖਰ *b64)
 {
-    char *ret, *dst;
-    unsigned i_bits = 0;
-    int i_shift = 0;
-    int bytes_remaining = in_size;
+    ਅੱਖਰ *ret, *dst;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ i_ਬਿੱਟ = 0;
+    ਪੂਰਨ i_ਖਿਸਕਾਓ = 0;
+    ਪੂਰਨ ਬਾਈਟਾਂ_ਬਚਿਆ = ਵਿੱਚ_ਮਾਪ;
 
-    ret = dst = out;
-    while (bytes_remaining > 3) {
-        i_bits = AV_RB32(in);
-        in += 3; bytes_remaining -= 3;
-        *dst++ = b64[ i_bits>>26        ];
-        *dst++ = b64[(i_bits>>20) & 0x3F];
-        *dst++ = b64[(i_bits>>14) & 0x3F];
-        *dst++ = b64[(i_bits>>8 ) & 0x3F];
+    ret = dst = ਬਾਹਰਲਾ;
+    ਜਦੋਂ (ਬਾਈਟਾਂ_ਬਚਿਆ > 3) {
+        i_ਬਿੱਟ = AV_RB32(ਵਿੱਚ_2);
+        ਵਿੱਚ_2 += 3; ਬਾਈਟਾਂ_ਬਚਿਆ -= 3;
+        *dst++ = b64[ i_ਬਿੱਟ>>26        ];
+        *dst++ = b64[(i_ਬਿੱਟ>>20) & 0x3F];
+        *dst++ = b64[(i_ਬਿੱਟ>>14) & 0x3F];
+        *dst++ = b64[(i_ਬਿੱਟ>>8 ) & 0x3F];
     }
-    i_bits = 0;
-    while (bytes_remaining) {
-        i_bits = (i_bits << 8) + *in++;
-        bytes_remaining--;
-        i_shift += 8;
+    i_ਬਿੱਟ = 0;
+    ਜਦੋਂ (ਬਾਈਟਾਂ_ਬਚਿਆ) {
+        i_ਬਿੱਟ = (i_ਬਿੱਟ << 8) + *ਵਿੱਚ_2++;
+        ਬਾਈਟਾਂ_ਬਚਿਆ--;
+        i_ਖਿਸਕਾਓ += 8;
     }
-    while (i_shift > 0) {
-        *dst++ = b64[(i_bits << 6 >> i_shift) & 0x3f];
-        i_shift -= 6;
+    ਜਦੋਂ (i_ਖਿਸਕਾਓ > 0) {
+        *dst++ = b64[(i_ਬਿੱਟ << 6 >> i_ਖਿਸਕਾਓ) & 0x3f];
+        i_ਖਿਸਕਾਓ -= 6;
     }
-    while ((dst - ret) & 3)
+    ਜਦੋਂ ((dst - ret) & 3)
         *dst++ = '=';
     *dst = '\0';
 
-    return ret;
+    ਵਾਪਸ ret;
 }
 
-#endif /* AVUTIL_BASE64_INTERNAL_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_BASE64_INTERNAL_H */

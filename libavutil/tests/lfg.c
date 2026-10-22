@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/timer.h"
-#include "libavutil/lfg.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/log.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/timer.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/lfg.h"
 
-static const double Z_TABLE[31][10] = {
+ਸਥਿਰ ਅਚਲ ਦੁੱਗਣਾ Z_ਸਾਰਣੀ[31][10] = {
     {0.5000,  0.5040,  0.5080,  0.5120,  0.5160,  0.5199,  0.5239,  0.5279,  0.5319,  0.5359},
     {0.5398,  0.5438,  0.5478,  0.5517,  0.5557,  0.5596,  0.5636,  0.5675,  0.5714,  0.5753},
     {0.5793,  0.5832,  0.5871,  0.5910,  0.5948,  0.5987,  0.6026,  0.6064,  0.6103,  0.6141},
@@ -55,19 +55,19 @@ static const double Z_TABLE[31][10] = {
     {0.9987,  0.9987,  0.9987,  0.9988,  0.9988,  0.9989,  0.9989,  0.9989,  0.9990,  0.9990} };
 
 // Inverse cumulative distribution function
-static double inv_cdf(double u)
+ਸਥਿਰ ਦੁੱਗਣਾ inv_cdf(ਦੁੱਗਣਾ u)
 {
-    const double a[4] = { 2.50662823884,
+    ਅਚਲ ਦੁੱਗਣਾ a[4] = { 2.50662823884,
                          -18.61500062529,
                           41.39119773534,
                          -25.44106049637};
 
-    const double b[4] = {-8.47351093090,
+    ਅਚਲ ਦੁੱਗਣਾ b[4] = {-8.47351093090,
                           23.08336743743,
                          -21.06224101826,
                            3.13082909833};
 
-    const double c[9] = {0.3374754822726147,
+    ਅਚਲ ਦੁੱਗਣਾ c[9] = {0.3374754822726147,
                           0.9761690190917186,
                           0.1607979714918209,
                           0.0276438810333863,
@@ -77,98 +77,98 @@ static double inv_cdf(double u)
                           0.0000002888167364,
                           0.0000003960315187};
 
-    double r;
-    double x = u - 0.5;
+    ਦੁੱਗਣਾ r;
+    ਦੁੱਗਣਾ x = u - 0.5;
 
     // Beasley-Springer
-     if (fabs(x) < 0.42) {
+     ਜੇ (fabs(x) < 0.42) {
 
-        double y = x * x;
+        ਦੁੱਗਣਾ y = x * x;
         r        = x * (((a[3]*y+a[2])*y+a[1])*y+a[0]) /
                         ((((b[3]*y+b[2])*y+b[1])*y+b[0])*y+1.0);
     }
-    else {// Moro
+    ਨਹੀਂਤਾਂ {// Moro
         r = u;
-        if (x > 0.0)
+        ਜੇ (x > 0.0)
             r = 1.0 - u;
-        r = log(-log(r));
+        r = ਲਘੂਗਣਕ(-ਲਘੂਗਣਕ(r));
         r = c[0] + r*(c[1]+r*(c[2]+r*(c[3]+r*(c[4]+r*(c[5]+r*(c[6]+
                                                         r*(c[7]+r*c[8])))))));
-        if (x < 0.0)
+        ਜੇ (x < 0.0)
             r = -r;
     }
 
-    return r;
+    ਵਾਪਸ r;
 }
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
-    int x = 0;
-    int i, j;
+    ਪੂਰਨ x = 0;
+    ਪੂਰਨ i, j;
     AVLFG state;
     av_lfg_init(&state, 0xdeadbeef);
-    for (j = 0; j < 10000; j++) {
-        for (i = 0; i < 624; i++) {
+    ਲਈ (j = 0; j < 10000; j++) {
+        ਲਈ (i = 0; i < 624; i++) {
             //av_log(NULL, AV_LOG_ERROR, "%X\n", av_lfg_get(&state));
             x += av_lfg_get(&state);
         }
     }
-    av_log(NULL, AV_LOG_ERROR, "final value:%X\n", x);
+    av_log(ਨਿਰਾ, AV_LOG_ERROR, "final value:%X\n", x);
 
     /* BMG usage example */
     {
-        double mean   = 1000;
-        double stddev = 53;
-        double samp_mean = 0.0, samp_stddev = 0.0, QH = 0;
-        double Z, p_value = -1, tot_samp = 1000;
-        double *PRN_arr = av_malloc_array(tot_samp, sizeof(double));
+        ਦੁੱਗਣਾ ਔਸਤ   = 1000;
+        ਦੁੱਗਣਾ stddev = 53;
+        ਦੁੱਗਣਾ samp_ਔਸਤ = 0.0, samp_stddev = 0.0, QH = 0;
+        ਦੁੱਗਣਾ Z, p_ਮੁੱਲ = -1, tot_samp = 1000;
+        ਦੁੱਗਣਾ *PRN_arr = av_malloc_array(tot_samp, ਆਕਾਰ(ਦੁੱਗਣਾ));
 
-        if (!PRN_arr) {
+        ਜੇ (!PRN_arr) {
             fprintf(stderr, "failed to allocate memory!\n");
-            return 1;
+            ਵਾਪਸ 1;
         }
 
         av_lfg_init(&state, 42);
-        for (i = 0; i < tot_samp; i += 2) {
-            double bmg_out[2];
-            av_bmg_get(&state, bmg_out);
-            PRN_arr[i  ] = bmg_out[0] * stddev + mean;
-            PRN_arr[i+1] = bmg_out[1] * stddev + mean;
-            samp_mean   += PRN_arr[i] + PRN_arr[i+1];
+        ਲਈ (i = 0; i < tot_samp; i += 2) {
+            ਦੁੱਗਣਾ bmg_ਬਾਹਰਲਾ[2];
+            av_bmg_get(&state, bmg_ਬਾਹਰਲਾ);
+            PRN_arr[i  ] = bmg_ਬਾਹਰਲਾ[0] * stddev + ਔਸਤ;
+            PRN_arr[i+1] = bmg_ਬਾਹਰਲਾ[1] * stddev + ਔਸਤ;
+            samp_ਔਸਤ   += PRN_arr[i] + PRN_arr[i+1];
             samp_stddev += PRN_arr[i] * PRN_arr[i] + PRN_arr[i+1] * PRN_arr[i+1];
-            printf("PRN%d : %f\n"
+            ਲਿਖੋ("PRN%d : %f\n"
                    "PRN%d : %f\n",
                    i, PRN_arr[i], i+1, PRN_arr[i+1]);
         }
-        samp_mean /= tot_samp;
+        samp_ਔਸਤ /= tot_samp;
         samp_stddev /= (tot_samp - 1);
-        samp_stddev -= (tot_samp * 1.0 / (tot_samp - 1))*samp_mean*samp_mean;
-        samp_stddev = sqrt(samp_stddev);
-        Z = (mean - samp_mean) / (stddev / sqrt(tot_samp));
+        samp_stddev -= (tot_samp * 1.0 / (tot_samp - 1))*samp_ਔਸਤ*samp_ਔਸਤ;
+        samp_stddev = ਵਰਗਮੂਲ(samp_stddev);
+        Z = (ਔਸਤ - samp_ਔਸਤ) / (stddev / ਵਰਗਮੂਲ(tot_samp));
         {
-            int x, y, a, b, flag = 0;
+            ਪੂਰਨ x, y, a, b, flag = 0;
 
-            if (Z < 0.0) {
+            ਜੇ (Z < 0.0) {
                 flag = !flag;
                 Z = Z * -1.0;
             }
 
-            a = (int)(Z * 100);
-            b = ((int)Z * 100);
+            a = (ਪੂਰਨ)(Z * 100);
+            b = ((ਪੂਰਨ)Z * 100);
             x = Z * 10;
             y = (b > 0) ? a % b : a;
             y = y % 10;
-            if (x > 30 || y > 9) {
-                av_log(NULL, AV_LOG_INFO, "error: out of bounds! tried to access"
+            ਜੇ (x > 30 || y > 9) {
+                av_log(ਨਿਰਾ, AV_LOG_INFO, "error: out of bounds! tried to access"
                                           "Z_TABLE[%d][%d]\n", x, y);
-                goto SKIP;
+                ਜਾਓ SKIP;
             }
-            p_value = flag ? 1 - Z_TABLE[x][y] : Z_TABLE[x][y];
+            p_ਮੁੱਲ = flag ? 1 - Z_ਸਾਰਣੀ[x][y] : Z_ਸਾਰਣੀ[x][y];
         }
 
-SKIP:   for (i = 0; i < tot_samp; ++i) {
+SKIP:   ਲਈ (i = 0; i < tot_samp; ++i) {
 
-            if ( i < (tot_samp - 1)) {
-                double H_diff;
+            ਜੇ ( i < (tot_samp - 1)) {
+                ਦੁੱਗਣਾ H_diff;
                 H_diff  = inv_cdf((i + 2.0 - (3.0/8.0)) / (tot_samp + (1.0/4.0)));
                 H_diff -= inv_cdf((i + 1.0 - (3.0/8.0)) / (tot_samp + (1.0/4.0)));
 
@@ -177,16 +177,16 @@ SKIP:   for (i = 0; i < tot_samp; ++i) {
         }
         QH = 1.0 - QH / ((tot_samp - 1.0) * samp_stddev);
 
-        printf("sample mean  : %f\n"
+        ਲਿਖੋ("sample mean  : %f\n"
                "true mean    : %f\n"
                "sample stddev: %f\n"
                "true stddev  : %f\n"
                "z-score      : %f\n"
                "p-value      : %f\n"
                "QH[normality]: %f\n",
-               samp_mean, mean, samp_stddev, stddev, Z, p_value, QH);
+               samp_ਔਸਤ, ਔਸਤ, samp_stddev, stddev, Z, p_ਮੁੱਲ, QH);
 
         av_freep(&PRN_arr);
     }
-    return 0;
+    ਵਾਪਸ 0;
 }

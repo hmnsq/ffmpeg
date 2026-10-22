@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_AES_CTR_H
-#define AVUTIL_AES_CTR_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_AES_CTR_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_AES_CTR_H
 
 /**
  * @defgroup lavu_aes_ctr AES-CTR
@@ -28,19 +28,19 @@
  * @{
  */
 
-#include <stdint.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
 
-#include "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
 
-#define AES_CTR_KEY_SIZE (16)
-#define AES_CTR_IV_SIZE (8)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AES_CTR_ਕੁੰਜੀ_ਮਾਪ (16)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AES_CTR_IV_ਮਾਪ (8)
 
-struct AVAESCTR;
+ਬਣਤਰ AVAESCTR;
 
 /**
  * Allocate an AVAESCTR context.
  */
-struct AVAESCTR *av_aes_ctr_alloc(void);
+ਬਣਤਰ AVAESCTR *av_aes_ctr_alloc(ਖਾਲੀ);
 
 /**
  * Initialize an AVAESCTR context.
@@ -48,14 +48,14 @@ struct AVAESCTR *av_aes_ctr_alloc(void);
  * @param a The AVAESCTR context to initialize
  * @param key encryption key, must have a length of AES_CTR_KEY_SIZE
  */
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key);
+ਪੂਰਨ av_aes_ctr_init(ਬਣਤਰ AVAESCTR *a, ਅਚਲ uint8_t *ਕੁੰਜੀ);
 
 /**
  * Release an AVAESCTR context.
  *
  * @param a The AVAESCTR context
  */
-void av_aes_ctr_free(struct AVAESCTR *a);
+ਖਾਲੀ av_aes_ctr_free(ਬਣਤਰ AVAESCTR *a);
 
 /**
  * Process a buffer using a previously initialized context.
@@ -65,35 +65,35 @@ void av_aes_ctr_free(struct AVAESCTR *a);
  * @param src source array, can be equal to dst
  * @param size the size of src and dst
  */
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int size);
+ਖਾਲੀ av_aes_ctr_crypt(ਬਣਤਰ AVAESCTR *a, uint8_t *dst, ਅਚਲ uint8_t *src, ਪੂਰਨ ਮਾਪ);
 
 /**
  * Get the current iv
  */
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a);
+ਅਚਲ uint8_t* av_aes_ctr_get_iv(ਬਣਤਰ AVAESCTR *a);
 
 /**
  * Generate a random iv
  */
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a);
+ਖਾਲੀ av_aes_ctr_ਸੈੱਟ_random_iv(ਬਣਤਰ AVAESCTR *a);
 
 /**
  * Forcefully change the 8-byte iv
  */
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv);
+ਖਾਲੀ av_aes_ctr_ਸੈੱਟ_iv(ਬਣਤਰ AVAESCTR *a, ਅਚਲ uint8_t* iv);
 
 /**
  * Forcefully change the "full" 16-byte iv, including the counter
  */
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv);
+ਖਾਲੀ av_aes_ctr_ਸੈੱਟ_ਭਰਿਆ_iv(ਬਣਤਰ AVAESCTR *a, ਅਚਲ uint8_t* iv);
 
 /**
  * Increment the top 64 bit of the iv (performed after each frame)
  */
-void av_aes_ctr_increment_iv(struct AVAESCTR *a);
+ਖਾਲੀ av_aes_ctr_increment_iv(ਬਣਤਰ AVAESCTR *a);
 
 /**
  * @}
  */
 
-#endif /* AVUTIL_AES_CTR_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_AES_CTR_H */

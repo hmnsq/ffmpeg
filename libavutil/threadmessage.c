@@ -18,223 +18,223 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
 
-#include "error.h"
-#include "fifo.h"
-#include "mem.h"
-#include "threadmessage.h"
-#include "thread.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "error.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "fifo.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "threadmessage.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "thread.h"
 
-struct AVThreadMessageQueue {
-#if HAVE_THREADS
+ਬਣਤਰ AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ {
+#ਜੇ HAVE_ਧਾਗੇ
     AVFifo *fifo;
-    pthread_mutex_t lock;
+    pthread_mutex_t ਤਾਲਾ;
     pthread_cond_t cond_recv;
     pthread_cond_t cond_send;
-    int err_send;
-    int err_recv;
-    unsigned elsize;
-    void (*free_func)(void *msg);
-#else
-    int dummy;
-#endif
+    ਪੂਰਨ err_send;
+    ਪੂਰਨ err_recv;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ elsize;
+    ਖਾਲੀ (*free_func)(ਖਾਲੀ *ਸੁਨੇਹਾ);
+#ਨਹੀਂਤਾਂ
+    ਪੂਰਨ dummy;
+#ਜੇ_ਅੰਤ
 };
 
-int av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
-                                  unsigned nelem,
-                                  unsigned elsize)
+ਪੂਰਨ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_alloc(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ **mq,
+                                  ਬਿਨਾਨਿਸ਼ਾਨੀ nelem,
+                                  ਬਿਨਾਨਿਸ਼ਾਨੀ elsize)
 {
-#if HAVE_THREADS
-    AVThreadMessageQueue *rmq;
-    int ret = 0;
+#ਜੇ HAVE_ਧਾਗੇ
+    AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *rmq;
+    ਪੂਰਨ ret = 0;
 
-    if (nelem > INT_MAX / elsize)
-        return AVERROR(EINVAL);
-    if (!(rmq = av_mallocz(sizeof(*rmq))))
-        return AVERROR(ENOMEM);
-    if ((ret = pthread_mutex_init(&rmq->lock, NULL))) {
+    ਜੇ (nelem > ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ / elsize)
+        ਵਾਪਸ AVERROR(EINVAL);
+    ਜੇ (!(rmq = av_mallocz(ਆਕਾਰ(*rmq))))
+        ਵਾਪਸ AVERROR(ENOMEM);
+    ਜੇ ((ret = pthread_mutex_init(&rmq->ਤਾਲਾ, ਨਿਰਾ))) {
         av_free(rmq);
-        return AVERROR(ret);
+        ਵਾਪਸ AVERROR(ret);
     }
-    if ((ret = pthread_cond_init(&rmq->cond_recv, NULL))) {
-        pthread_mutex_destroy(&rmq->lock);
+    ਜੇ ((ret = pthread_cond_init(&rmq->cond_recv, ਨਿਰਾ))) {
+        pthread_mutex_destroy(&rmq->ਤਾਲਾ);
         av_free(rmq);
-        return AVERROR(ret);
+        ਵਾਪਸ AVERROR(ret);
     }
-    if ((ret = pthread_cond_init(&rmq->cond_send, NULL))) {
+    ਜੇ ((ret = pthread_cond_init(&rmq->cond_send, ਨਿਰਾ))) {
         pthread_cond_destroy(&rmq->cond_recv);
-        pthread_mutex_destroy(&rmq->lock);
+        pthread_mutex_destroy(&rmq->ਤਾਲਾ);
         av_free(rmq);
-        return AVERROR(ret);
+        ਵਾਪਸ AVERROR(ret);
     }
-    if (!(rmq->fifo = av_fifo_alloc2(nelem, elsize, 0))) {
+    ਜੇ (!(rmq->fifo = av_fifo_alloc2(nelem, elsize, 0))) {
         pthread_cond_destroy(&rmq->cond_send);
         pthread_cond_destroy(&rmq->cond_recv);
-        pthread_mutex_destroy(&rmq->lock);
+        pthread_mutex_destroy(&rmq->ਤਾਲਾ);
         av_free(rmq);
-        return AVERROR(ENOMEM);
+        ਵਾਪਸ AVERROR(ENOMEM);
     }
     rmq->elsize = elsize;
     *mq = rmq;
-    return 0;
-#else
-    *mq = NULL;
-    return AVERROR(ENOSYS);
-#endif /* HAVE_THREADS */
+    ਵਾਪਸ 0;
+#ਨਹੀਂਤਾਂ
+    *mq = ਨਿਰਾ;
+    ਵਾਪਸ AVERROR(ENOSYS);
+#ਜੇ_ਅੰਤ /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
-                                           void (*free_func)(void *msg))
+ਖਾਲੀ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_ਸੈੱਟ_free_func(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq,
+                                           ਖਾਲੀ (*free_func)(ਖਾਲੀ *ਸੁਨੇਹਾ))
 {
-#if HAVE_THREADS
+#ਜੇ HAVE_ਧਾਗੇ
     mq->free_func = free_func;
-#endif
+#ਜੇ_ਅੰਤ
 }
 
-void av_thread_message_queue_free(AVThreadMessageQueue **mq)
+ਖਾਲੀ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_free(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ **mq)
 {
-#if HAVE_THREADS
-    if (*mq) {
-        av_thread_message_flush(*mq);
+#ਜੇ HAVE_ਧਾਗੇ
+    ਜੇ (*mq) {
+        av_thread_ਸੁਨੇਹਾ_flush(*mq);
         av_fifo_freep2(&(*mq)->fifo);
         pthread_cond_destroy(&(*mq)->cond_send);
         pthread_cond_destroy(&(*mq)->cond_recv);
-        pthread_mutex_destroy(&(*mq)->lock);
+        pthread_mutex_destroy(&(*mq)->ਤਾਲਾ);
         av_freep(mq);
     }
-#endif
+#ਜੇ_ਅੰਤ
 }
 
-int av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq)
+ਪੂਰਨ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_nb_elems(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq)
 {
-#if HAVE_THREADS
-    int ret;
-    pthread_mutex_lock(&mq->lock);
+#ਜੇ HAVE_ਧਾਗੇ
+    ਪੂਰਨ ret;
+    pthread_mutex_ਤਾਲਾ(&mq->ਤਾਲਾ);
     ret = av_fifo_can_read(mq->fifo);
-    pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
-#endif
+    pthread_mutex_unlock(&mq->ਤਾਲਾ);
+    ਵਾਪਸ ret;
+#ਨਹੀਂਤਾਂ
+    ਵਾਪਸ AVERROR(ENOSYS);
+#ਜੇ_ਅੰਤ
 }
 
-#if HAVE_THREADS
+#ਜੇ HAVE_ਧਾਗੇ
 
-static int av_thread_message_queue_send_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
-                                               unsigned flags)
+ਸਥਿਰ ਪੂਰਨ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_send_locked(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq,
+                                               ਖਾਲੀ *ਸੁਨੇਹਾ,
+                                               ਬਿਨਾਨਿਸ਼ਾਨੀ flags)
 {
-    while (!mq->err_send && !av_fifo_can_write(mq->fifo)) {
-        if ((flags & AV_THREAD_MESSAGE_NONBLOCK))
-            return AVERROR(EAGAIN);
-        pthread_cond_wait(&mq->cond_send, &mq->lock);
+    ਜਦੋਂ (!mq->err_send && !av_fifo_can_write(mq->fifo)) {
+        ਜੇ ((flags & AV_THREAD_ਸੁਨੇਹਾ_NONBLOCK))
+            ਵਾਪਸ AVERROR(EAGAIN);
+        pthread_cond_wait(&mq->cond_send, &mq->ਤਾਲਾ);
     }
-    if (mq->err_send)
-        return mq->err_send;
-    av_fifo_write(mq->fifo, msg, 1);
+    ਜੇ (mq->err_send)
+        ਵਾਪਸ mq->err_send;
+    av_fifo_write(mq->fifo, ਸੁਨੇਹਾ, 1);
     /* one message is sent, signal one receiver */
     pthread_cond_signal(&mq->cond_recv);
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-static int av_thread_message_queue_recv_locked(AVThreadMessageQueue *mq,
-                                               void *msg,
-                                               unsigned flags)
+ਸਥਿਰ ਪੂਰਨ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_recv_locked(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq,
+                                               ਖਾਲੀ *ਸੁਨੇਹਾ,
+                                               ਬਿਨਾਨਿਸ਼ਾਨੀ flags)
 {
-    while (!mq->err_recv && !av_fifo_can_read(mq->fifo)) {
-        if ((flags & AV_THREAD_MESSAGE_NONBLOCK))
-            return AVERROR(EAGAIN);
-        pthread_cond_wait(&mq->cond_recv, &mq->lock);
+    ਜਦੋਂ (!mq->err_recv && !av_fifo_can_read(mq->fifo)) {
+        ਜੇ ((flags & AV_THREAD_ਸੁਨੇਹਾ_NONBLOCK))
+            ਵਾਪਸ AVERROR(EAGAIN);
+        pthread_cond_wait(&mq->cond_recv, &mq->ਤਾਲਾ);
     }
-    if (!av_fifo_can_read(mq->fifo))
-        return mq->err_recv;
-    av_fifo_read(mq->fifo, msg, 1);
+    ਜੇ (!av_fifo_can_read(mq->fifo))
+        ਵਾਪਸ mq->err_recv;
+    av_fifo_read(mq->fifo, ਸੁਨੇਹਾ, 1);
     /* one message space appeared, signal one sender */
     pthread_cond_signal(&mq->cond_send);
-    return 0;
+    ਵਾਪਸ 0;
 }
 
-#endif /* HAVE_THREADS */
+#ਜੇ_ਅੰਤ /* HAVE_THREADS */
 
-int av_thread_message_queue_send(AVThreadMessageQueue *mq,
-                                 void *msg,
-                                 unsigned flags)
+ਪੂਰਨ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_send(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq,
+                                 ਖਾਲੀ *ਸੁਨੇਹਾ,
+                                 ਬਿਨਾਨਿਸ਼ਾਨੀ flags)
 {
-#if HAVE_THREADS
-    int ret;
+#ਜੇ HAVE_ਧਾਗੇ
+    ਪੂਰਨ ret;
 
-    pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_send_locked(mq, msg, flags);
-    pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
-#endif /* HAVE_THREADS */
+    pthread_mutex_ਤਾਲਾ(&mq->ਤਾਲਾ);
+    ret = av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_send_locked(mq, ਸੁਨੇਹਾ, flags);
+    pthread_mutex_unlock(&mq->ਤਾਲਾ);
+    ਵਾਪਸ ret;
+#ਨਹੀਂਤਾਂ
+    ਵਾਪਸ AVERROR(ENOSYS);
+#ਜੇ_ਅੰਤ /* HAVE_THREADS */
 }
 
-int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
-                                 void *msg,
-                                 unsigned flags)
+ਪੂਰਨ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_recv(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq,
+                                 ਖਾਲੀ *ਸੁਨੇਹਾ,
+                                 ਬਿਨਾਨਿਸ਼ਾਨੀ flags)
 {
-#if HAVE_THREADS
-    int ret;
+#ਜੇ HAVE_ਧਾਗੇ
+    ਪੂਰਨ ret;
 
-    pthread_mutex_lock(&mq->lock);
-    ret = av_thread_message_queue_recv_locked(mq, msg, flags);
-    pthread_mutex_unlock(&mq->lock);
-    return ret;
-#else
-    return AVERROR(ENOSYS);
-#endif /* HAVE_THREADS */
+    pthread_mutex_ਤਾਲਾ(&mq->ਤਾਲਾ);
+    ret = av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_recv_locked(mq, ਸੁਨੇਹਾ, flags);
+    pthread_mutex_unlock(&mq->ਤਾਲਾ);
+    ਵਾਪਸ ret;
+#ਨਹੀਂਤਾਂ
+    ਵਾਪਸ AVERROR(ENOSYS);
+#ਜੇ_ਅੰਤ /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
-                                          int err)
+ਖਾਲੀ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_ਸੈੱਟ_err_send(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq,
+                                          ਪੂਰਨ err)
 {
-#if HAVE_THREADS
-    pthread_mutex_lock(&mq->lock);
+#ਜੇ HAVE_ਧਾਗੇ
+    pthread_mutex_ਤਾਲਾ(&mq->ਤਾਲਾ);
     mq->err_send = err;
-    pthread_cond_broadcast(&mq->cond_send);
-    pthread_mutex_unlock(&mq->lock);
-#endif /* HAVE_THREADS */
+    pthread_cond_ਪ੍ਰਸਾਰਣ(&mq->cond_send);
+    pthread_mutex_unlock(&mq->ਤਾਲਾ);
+#ਜੇ_ਅੰਤ /* HAVE_THREADS */
 }
 
-void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
-                                          int err)
+ਖਾਲੀ av_thread_ਸੁਨੇਹਾ_ਕਤਾਰ_ਸੈੱਟ_err_recv(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq,
+                                          ਪੂਰਨ err)
 {
-#if HAVE_THREADS
-    pthread_mutex_lock(&mq->lock);
+#ਜੇ HAVE_ਧਾਗੇ
+    pthread_mutex_ਤਾਲਾ(&mq->ਤਾਲਾ);
     mq->err_recv = err;
-    pthread_cond_broadcast(&mq->cond_recv);
-    pthread_mutex_unlock(&mq->lock);
-#endif /* HAVE_THREADS */
+    pthread_cond_ਪ੍ਰਸਾਰਣ(&mq->cond_recv);
+    pthread_mutex_unlock(&mq->ਤਾਲਾ);
+#ਜੇ_ਅੰਤ /* HAVE_THREADS */
 }
 
-#if HAVE_THREADS
-static int free_func_wrap(void *arg, void *buf, size_t *nb_elems)
+#ਜੇ HAVE_ਧਾਗੇ
+ਸਥਿਰ ਪੂਰਨ free_func_wrap(ਖਾਲੀ *arg, ਖਾਲੀ *buf, size_t *nb_elems)
 {
-    AVThreadMessageQueue *mq = arg;
-    uint8_t *msg = buf;
-    for (size_t i = 0; i < *nb_elems; i++)
-        mq->free_func(msg + i * mq->elsize);
-    return 0;
+    AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq = arg;
+    uint8_t *ਸੁਨੇਹਾ = buf;
+    ਲਈ (size_t i = 0; i < *nb_elems; i++)
+        mq->free_func(ਸੁਨੇਹਾ + i * mq->elsize);
+    ਵਾਪਸ 0;
 }
-#endif
+#ਜੇ_ਅੰਤ
 
-void av_thread_message_flush(AVThreadMessageQueue *mq)
+ਖਾਲੀ av_thread_ਸੁਨੇਹਾ_flush(AVThread_ਸੁਨੇਹਾ_ਕਤਾਰ *mq)
 {
-#if HAVE_THREADS
-    size_t used;
+#ਜੇ HAVE_ਧਾਗੇ
+    size_t ਵਰਤਿਆ;
 
-    pthread_mutex_lock(&mq->lock);
-    used = av_fifo_can_read(mq->fifo);
-    if (mq->free_func)
-        av_fifo_read_to_cb(mq->fifo, free_func_wrap, mq, &used);
+    pthread_mutex_ਤਾਲਾ(&mq->ਤਾਲਾ);
+    ਵਰਤਿਆ = av_fifo_can_read(mq->fifo);
+    ਜੇ (mq->free_func)
+        av_fifo_read_ਮੰਜ਼ਿਲ_cb(mq->fifo, free_func_wrap, mq, &ਵਰਤਿਆ);
     /* only the senders need to be notified since the queue is empty and there
      * is nothing to read */
-    pthread_cond_broadcast(&mq->cond_send);
-    pthread_mutex_unlock(&mq->lock);
-#endif /* HAVE_THREADS */
+    pthread_cond_ਪ੍ਰਸਾਰਣ(&mq->cond_send);
+    pthread_mutex_unlock(&mq->ਤਾਲਾ);
+#ਜੇ_ਅੰਤ /* HAVE_THREADS */
 }

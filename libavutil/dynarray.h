@@ -16,11 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_DYNARRAY_H
-#define AVUTIL_DYNARRAY_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_DYNARRAY_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_DYNARRAY_H
 
-#include "log.h"
-#include "mem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "log.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "mem.h"
 
 /**
  * Add an element to a dynamic array.
@@ -42,29 +42,29 @@
  *                     array and size are not changed; the statement can end
  *                     with a return or a goto
  */
-#define FF_DYNARRAY_ADD(av_size_max, av_elt_size, av_array, av_size, \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FF_DYNARRAY_ਜੋੜੋ(av_ਮਾਪ_max, av_elt_ਮਾਪ, av_array, av_ਮਾਪ, \
                         av_success, av_failure) \
-    do { \
-        size_t av_size_new = (av_size); \
-        if (!((av_size) & ((av_size) - 1))) { \
-            av_size_new = (av_size) ? (av_size) << 1 : 1; \
-            if (av_size_new > (av_size_max) / (av_elt_size)) { \
-                av_size_new = 0; \
-            } else { \
-                void *av_array_new = \
-                    av_realloc((av_array), av_size_new * (av_elt_size)); \
-                if (!av_array_new) \
-                    av_size_new = 0; \
-                else \
+    ਕਰੋ { \
+        size_t av_ਮਾਪ_new = (av_ਮਾਪ); \
+        ਜੇ (!((av_ਮਾਪ) & ((av_ਮਾਪ) - 1))) { \
+            av_ਮਾਪ_new = (av_ਮਾਪ) ? (av_ਮਾਪ) << 1 : 1; \
+            ਜੇ (av_ਮਾਪ_new > (av_ਮਾਪ_max) / (av_elt_ਮਾਪ)) { \
+                av_ਮਾਪ_new = 0; \
+            } ਨਹੀਂਤਾਂ { \
+                ਖਾਲੀ *av_array_new = \
+                    av_realloc((av_array), av_ਮਾਪ_new * (av_elt_ਮਾਪ)); \
+                ਜੇ (!av_array_new) \
+                    av_ਮਾਪ_new = 0; \
+                ਨਹੀਂਤਾਂ \
                     (av_array) = av_array_new; \
             } \
         } \
-        if (av_size_new) { \
+        ਜੇ (av_ਮਾਪ_new) { \
             { av_success } \
-            (av_size)++; \
-        } else { \
+            (av_ਮਾਪ)++; \
+        } ਨਹੀਂਤਾਂ { \
             av_failure \
         } \
-    } while (0)
+    } ਜਦੋਂ (0)
 
-#endif /* AVUTIL_DYNARRAY_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_DYNARRAY_H */

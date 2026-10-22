@@ -16,27 +16,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <inttypes.h>
-#include <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <inttypes.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
 
-#include "libavutil/avutil.h"
-#include "libavutil/macros.h"
-#include "libavutil/rational.h"
-#include "libavutil/timestamp.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/avutil.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/rational.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "libavutil/timestamp.h"
 
-int main(void)
+ਪੂਰਨ ਮੁੱਖ(ਖਾਲੀ)
 {
-    char buf[AV_TS_MAX_STRING_SIZE];
-    static const struct { const char *label; int64_t ts; } ts_vals[] = {
-        { "NOPTS",       AV_NOPTS_VALUE  },
+    ਅੱਖਰ buf[AV_TS_MAX_STRING_ਮਾਪ];
+    ਸਥਿਰ ਅਚਲ ਬਣਤਰ { ਅਚਲ ਅੱਖਰ *label; int64_t ts; } ts_vals[] = {
+        { "NOPTS",       AV_NOPTS_ਮੁੱਲ  },
         { "0",           0               },
         { "90000",       90000           },
         { "-1",          -1              },
         { "INT64_MAX",   INT64_MAX       },
         { "INT64_MIN+1", INT64_MIN + 1   },
     };
-    static const struct { const char *label; int64_t ts; AVRational tb; } time_vals[] = {
-        { "NOPTS",             AV_NOPTS_VALUE, {1, 90000} },
+    ਸਥਿਰ ਅਚਲ ਬਣਤਰ { ਅਚਲ ਅੱਖਰ *label; int64_t ts; AVRational tb; } ਸਮਾਂ_vals[] = {
+        { "NOPTS",             AV_NOPTS_ਮੁੱਲ, {1, 90000} },
         { "90000 at 1/90000",  90000,          {1, 90000} },
         { "0 at 1/1000",       0,              {1, 1000}  },
         { "48000 at 1/48000",  48000,          {1, 48000} },
@@ -45,31 +45,31 @@ int main(void)
     };
 
     /* av_ts_make_string */
-    printf("Testing av_ts_make_string()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(ts_vals); i++)
-        printf("%s: %s\n", ts_vals[i].label,
+    ਲਿਖੋ("Testing av_ts_make_string()\n");
+    ਲਈ (ਪੂਰਨ i = 0; i < FF_ARRAY_ELEMS(ts_vals); i++)
+        ਲਿਖੋ("%s: %s\n", ts_vals[i].label,
                av_ts_make_string(buf, ts_vals[i].ts));
 
     /* av_ts2str macro */
-    printf("\nTesting av_ts2str()\n");
-    printf("NOPTS: %s\n", av_ts2str(AV_NOPTS_VALUE));
-    printf("48000: %s\n", av_ts2str(48000));
+    ਲਿਖੋ("\nTesting av_ts2str()\n");
+    ਲਿਖੋ("NOPTS: %s\n", av_ts2str(AV_NOPTS_ਮੁੱਲ));
+    ਲਿਖੋ("48000: %s\n", av_ts2str(48000));
 
     /* av_ts_make_time_string2 */
-    printf("\nTesting av_ts_make_time_string2()\n");
-    for (int i = 0; i < FF_ARRAY_ELEMS(time_vals); i++)
-        printf("%s: %s\n", time_vals[i].label,
-               av_ts_make_time_string2(buf, time_vals[i].ts, time_vals[i].tb));
+    ਲਿਖੋ("\nTesting av_ts_make_time_string2()\n");
+    ਲਈ (ਪੂਰਨ i = 0; i < FF_ARRAY_ELEMS(ਸਮਾਂ_vals); i++)
+        ਲਿਖੋ("%s: %s\n", ਸਮਾਂ_vals[i].label,
+               av_ts_make_ਸਮਾਂ_string2(buf, ਸਮਾਂ_vals[i].ts, ਸਮਾਂ_vals[i].tb));
 
     /* av_ts_make_time_string (AVRational pointer version) */
-    printf("\nTesting av_ts_make_time_string()\n");
+    ਲਿਖੋ("\nTesting av_ts_make_time_string()\n");
     {
         AVRational tb = {1, 1000};
-        printf("5000 at 1/1000: %s\n",
-               av_ts_make_time_string(buf, 5000, &tb));
-        printf("NOPTS: %s\n",
-               av_ts_make_time_string(buf, AV_NOPTS_VALUE, &tb));
+        ਲਿਖੋ("5000 at 1/1000: %s\n",
+               av_ts_make_ਸਮਾਂ_string(buf, 5000, &tb));
+        ਲਿਖੋ("NOPTS: %s\n",
+               av_ts_make_ਸਮਾਂ_string(buf, AV_NOPTS_ਮੁੱਲ, &tb));
     }
 
-    return 0;
+    ਵਾਪਸ 0;
 }

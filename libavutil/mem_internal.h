@@ -18,18 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_MEM_INTERNAL_H
-#define AVUTIL_MEM_INTERNAL_H
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ AVUTIL_MEM_ਅੰਦਰੂਨੀ_H
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ AVUTIL_MEM_ਅੰਦਰੂਨੀ_H
 
-#include "config.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "config.h"
 
-#include <stdint.h>
-#ifndef _MSC_VER
-#include <stdalign.h>
-#endif
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdint.h>
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ _MSC_VER
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdalign.h>
+#ਜੇ_ਅੰਤ
 
-#include "attributes.h"
-#include "macros.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "attributes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "macros.h"
 
 /**
  * @def DECLARE_ALIGNED(n,t,v)
@@ -76,61 +76,61 @@
  * @param v Name of the variable
  */
 
-#if defined(__DJGPP__)
-    #define DECLARE_ALIGNED_T(n,t,v)    alignas(FFMIN(n, 16)) t v
-    #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(FFMIN(n, 16)) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    alignas(FFMIN(n, 16)) static const t av_used v
-#elif defined(_MSC_VER)
-    #define DECLARE_ALIGNED_T(n,t,v)    __declspec(align(n)) t v
-    #define DECLARE_ASM_ALIGNED(n,t,v)  __declspec(align(n)) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t av_used v
-#else
-    #define DECLARE_ALIGNED_T(n,t,v)    alignas(n) t v
-    #define DECLARE_ASM_ALIGNED(n,t,v)  alignas(n) t av_used v
-    #define DECLARE_ASM_CONST(n,t,v)    alignas(n) static const t av_used v
-#endif
+#ਜੇ defined(__DJGPP__)
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED_T(n,t,v)    alignas(FFMIN(n, 16)) t v
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ASM_ALIGNED(n,t,v)  alignas(FFMIN(n, 16)) t av_ਵਰਤਿਆ v
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ASM_CONST(n,t,v)    alignas(FFMIN(n, 16)) ਸਥਿਰ ਅਚਲ t av_ਵਰਤਿਆ v
+#ਜਾਂਜੇ defined(_MSC_VER)
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED_T(n,t,v)    __declspec(align(n)) t v
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ASM_ALIGNED(n,t,v)  __declspec(align(n)) t av_ਵਰਤਿਆ v
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) ਸਥਿਰ ਅਚਲ t av_ਵਰਤਿਆ v
+#ਨਹੀਂਤਾਂ
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED_T(n,t,v)    alignas(n) t v
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ASM_ALIGNED(n,t,v)  alignas(n) t av_ਵਰਤਿਆ v
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ASM_CONST(n,t,v)    alignas(n) ਸਥਿਰ ਅਚਲ t av_ਵਰਤਿਆ v
+#ਜੇ_ਅੰਤ
 
-#if HAVE_SIMD_ALIGN_64
-    #define ALIGN_64 64
-    #define ALIGN_32 32
-#elif HAVE_SIMD_ALIGN_32
-    #define ALIGN_64 32
-    #define ALIGN_32 32
-#else
-    #define ALIGN_64 16
-    #define ALIGN_32 16
-#endif
+#ਜੇ HAVE_SIMD_ALIGN_64
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ALIGN_64 64
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ALIGN_32 32
+#ਜਾਂਜੇ HAVE_SIMD_ALIGN_32
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ALIGN_64 32
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ALIGN_32 32
+#ਨਹੀਂਤਾਂ
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ALIGN_64 16
+    #ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ALIGN_32 16
+#ਜੇ_ਅੰਤ
 
-#define DECLARE_ALIGNED(n,t,v) DECLARE_ALIGNED_V(n,t,v)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED(n,t,v) DECLARE_ALIGNED_V(n,t,v)
 
 // Macro needs to be double-wrapped in order to expand
 // possible other macros being passed for n.
-#define DECLARE_ALIGNED_V(n,t,v) DECLARE_ALIGNED_##n(t,v)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED_V(n,t,v) DECLARE_ALIGNED_##n(t,v)
 
-#define DECLARE_ALIGNED_4(t,v)  DECLARE_ALIGNED_T(       4, t, v)
-#define DECLARE_ALIGNED_8(t,v)  DECLARE_ALIGNED_T(       8, t, v)
-#define DECLARE_ALIGNED_16(t,v) DECLARE_ALIGNED_T(      16, t, v)
-#define DECLARE_ALIGNED_32(t,v) DECLARE_ALIGNED_T(ALIGN_32, t, v)
-#define DECLARE_ALIGNED_64(t,v) DECLARE_ALIGNED_T(ALIGN_64, t, v)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED_4(t,v)  DECLARE_ALIGNED_T(       4, t, v)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED_8(t,v)  DECLARE_ALIGNED_T(       8, t, v)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED_16(t,v) DECLARE_ALIGNED_T(      16, t, v)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED_32(t,v) DECLARE_ALIGNED_T(ALIGN_32, t, v)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DECLARE_ALIGNED_64(t,v) DECLARE_ALIGNED_T(ALIGN_64, t, v)
 
 // Some broken preprocessors need a second expansion
 // to be forced to tokenize __VA_ARGS__
-#define E1(x) x
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ E1(x) x
 
-#define LOCAL_ALIGNED_D(a, t, v, s, o, ...)             \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCAL_ALIGNED_D(a, t, v, s, o, ...)             \
     DECLARE_ALIGNED(a, t, la_##v) s o;                  \
     t (*v) o = la_##v
 
-#define LOCAL_ALIGNED(a, t, v, ...) LOCAL_ALIGNED_##a(t, v, __VA_ARGS__)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCAL_ALIGNED(a, t, v, ...) LOCAL_ALIGNED_##a(t, v, __VA_ARGS__)
 
-#define LOCAL_ALIGNED_4(t, v, ...) E1(LOCAL_ALIGNED_D(4, t, v, __VA_ARGS__,,))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCAL_ALIGNED_4(t, v, ...) E1(LOCAL_ALIGNED_D(4, t, v, __VA_ARGS__,,))
 
-#define LOCAL_ALIGNED_8(t, v, ...) E1(LOCAL_ALIGNED_D(8, t, v, __VA_ARGS__,,))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCAL_ALIGNED_8(t, v, ...) E1(LOCAL_ALIGNED_D(8, t, v, __VA_ARGS__,,))
 
-#define LOCAL_ALIGNED_16(t, v, ...) E1(LOCAL_ALIGNED_D(16, t, v, __VA_ARGS__,,))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCAL_ALIGNED_16(t, v, ...) E1(LOCAL_ALIGNED_D(16, t, v, __VA_ARGS__,,))
 
-#define LOCAL_ALIGNED_32(t, v, ...) E1(LOCAL_ALIGNED_D(32, t, v, __VA_ARGS__,,))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCAL_ALIGNED_32(t, v, ...) E1(LOCAL_ALIGNED_D(32, t, v, __VA_ARGS__,,))
 
-#define LOCAL_ALIGNED_64(t, v, ...) E1(LOCAL_ALIGNED_D(64, t, v, __VA_ARGS__,,))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LOCAL_ALIGNED_64(t, v, ...) E1(LOCAL_ALIGNED_D(64, t, v, __VA_ARGS__,,))
 
-#endif /* AVUTIL_MEM_INTERNAL_H */
+#ਜੇ_ਅੰਤ /* AVUTIL_MEM_INTERNAL_H */
