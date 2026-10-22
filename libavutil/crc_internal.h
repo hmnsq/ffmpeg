@@ -19,50 +19,50 @@
 #ifndef AVUTIL_CRC_INTERNAL_H
 #define AVUTIL_CRC_INTERNAL_H
 
-#include <stdint.h>
-#include "libavutil/attributes.h"
-#include "libavutil/reverse.h"
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "libavutil/attributes.h"
+#अन्तर्भाव "libavutil/reverse.h"
 
-static uint64_t reverse(uint64_t p, unsigned int deg)
+स्थिर uint64_t reverse(uint64_t p, unsigned पूर्णाङ्क deg)
 {
     uint64_t ret = 0;
-    int i;
-    for (i = 0; i < (deg / 8); i += 1) {
+    पूर्णाङ्क i;
+    प्रति (i = 0; i < (deg / 8); i += 1) {
         ret = (ret << 8) | (ff_reverse[p & 0xff]);
         p >>= 8;
     }
-    int rem = (deg + 1) - 8 * i;
+    पूर्णाङ्क rem = (deg + 1) - 8 * i;
     ret = (ret << rem) | (ff_reverse[p & 0xff] >> (8 - rem));
-    return ret;
+    प्रत्यागम ret;
 }
 
-av_unused static uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
-                                 uint64_t *div, int bitreverse)
+av_unused स्थिर uint64_t xnmodp(unsigned n, uint64_t poly, unsigned deg,
+                                 uint64_t *div, पूर्णाङ्क bitreverse)
 {
-    uint64_t mod, mask, high;
+    uint64_t mod, mask, उच्चः;
 
-    if (n < deg) {
+    जइ (n < deg) {
         *div = 0;
-        return poly;
+        प्रत्यागम poly;
     }
     mask = ((uint64_t)1 << deg) - 1;
     poly &= mask;
     mod = poly;
     *div = 1;
     deg--;
-    while (--n > deg) {
-        high = (mod >> deg) & 1;
-        *div = (*div << 1) | high;
+    जाव (--n > deg) {
+        उच्चः = (mod >> deg) & 1;
+        *div = (*div << 1) | उच्चः;
         mod <<= 1;
-        if (high)
+        जइ (उच्चः)
             mod ^= poly;
     }
     uint64_t ret = mod & mask;
-    if (bitreverse) {
+    जइ (bitreverse) {
         *div = reverse(*div, deg) << 1;
-        return reverse(ret, deg) << 1;
+        प्रत्यागम reverse(ret, deg) << 1;
     }
-    return ret;
+    प्रत्यागम ret;
 }
 
 #endif /* AVUTIL_CRC_INTERNAL_H */

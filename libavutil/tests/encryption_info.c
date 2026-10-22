@@ -16,82 +16,82 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/encryption_info.h"
+#अन्तर्भाव "libavutil/encryption_info.h"
 
-#include <stdio.h>
-#include <string.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <string.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/mem.h"
+#अन्तर्भाव "libavutil/avassert.h"
+#अन्तर्भाव "libavutil/mem.h"
 
-static const AVSubsampleEncryptionInfo test_subsamples[] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
-static const size_t test_subsample_count = sizeof(test_subsamples) / sizeof(test_subsamples[0]);
-static const uint8_t test_iv[] = {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18};
-static const uint8_t test_key_id[] = {0x21, 0x22, 0x23, 0x24};
-static const uint8_t test_key_id_2[] = {0x31, 0x32, 0x33, 0x34};
-static const uint8_t test_system_id[] = {0x41, 0x42, 0x43};
-static const uint8_t test_data[] = {0x51, 0x52};
+स्थिर ध्रुव AVSubsampleEncryptionInfo test_subsamples[] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
+स्थिर ध्रुव size_t test_subsample_गणनम् = परिमाण(test_subsamples) / परिमाण(test_subsamples[0]);
+स्थिर ध्रुव uint8_t test_iv[] = {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18};
+स्थिर ध्रुव uint8_t test_कुञ्चिका_id[] = {0x21, 0x22, 0x23, 0x24};
+स्थिर ध्रुव uint8_t test_कुञ्चिका_id_2[] = {0x31, 0x32, 0x33, 0x34};
+स्थिर ध्रुव uint8_t test_system_id[] = {0x41, 0x42, 0x43};
+स्थिर ध्रुव uint8_t test_data[] = {0x51, 0x52};
 
-static int compare_encryption_info(const AVEncryptionInfo *a, const AVEncryptionInfo *b) {
-    if (!a || !b || a->scheme != b->scheme || a->crypt_byte_block != b->crypt_byte_block ||
-        a->skip_byte_block != b->skip_byte_block || a->key_id_size != b->key_id_size ||
-        a->iv_size != b->iv_size || a->subsample_count != b->subsample_count)
-        return 1;
+स्थिर पूर्णाङ्क compare_encryption_info(ध्रुव AVEncryptionInfo *a, ध्रुव AVEncryptionInfo *b) {
+    जइ (!a || !b || a->scheme != b->scheme || a->crypt_byte_block != b->crypt_byte_block ||
+        a->skip_byte_block != b->skip_byte_block || a->कुञ्चिका_id_size != b->कुञ्चिका_id_size ||
+        a->iv_size != b->iv_size || a->subsample_गणनम् != b->subsample_गणनम्)
+        प्रत्यागम 1;
 
-    if (memcmp(a->key_id, b->key_id, a->key_id_size) != 0 ||
+    जइ (memcmp(a->कुञ्चिका_id, b->कुञ्चिका_id, a->कुञ्चिका_id_size) != 0 ||
         memcmp(a->iv, b->iv, a->iv_size) != 0 ||
-        memcmp(a->subsamples, b->subsamples, a->subsample_count * sizeof(a->subsamples[0])))
-        return 1;
+        memcmp(a->subsamples, b->subsamples, a->subsample_गणनम् * परिमाण(a->subsamples[0])))
+        प्रत्यागम 1;
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static int compare_encryption_init_info(const AVEncryptionInitInfo *a, const AVEncryptionInitInfo *b) {
-    if (!a || !b || a->system_id_size != b->system_id_size ||
-        a->num_key_ids != b->num_key_ids || a->key_id_size != b->key_id_size ||
+स्थिर पूर्णाङ्क compare_encryption_init_info(ध्रुव AVEncryptionInitInfo *a, ध्रुव AVEncryptionInitInfo *b) {
+    जइ (!a || !b || a->system_id_size != b->system_id_size ||
+        a->अङ्कः_कुञ्चिका_ids != b->अङ्कः_कुञ्चिका_ids || a->कुञ्चिका_id_size != b->कुञ्चिका_id_size ||
         a->data_size != b->data_size)
-        return 1;
+        प्रत्यागम 1;
 
-    if (memcmp(a->system_id, b->system_id, a->system_id_size) != 0 ||
+    जइ (memcmp(a->system_id, b->system_id, a->system_id_size) != 0 ||
         memcmp(a->data, b->data, a->data_size) != 0)
-        return 1;
+        प्रत्यागम 1;
 
-    for (uint32_t i = 0; i < a->num_key_ids; i++) {
-        if (memcmp(a->key_ids[i], b->key_ids[i], a->key_id_size) != 0)
-            return 1;
+    प्रति (uint32_t i = 0; i < a->अङ्कः_कुञ्चिका_ids; i++) {
+        जइ (memcmp(a->कुञ्चिका_ids[i], b->कुञ्चिका_ids[i], a->कुञ्चिका_id_size) != 0)
+            प्रत्यागम 1;
     }
 
-    if (a->next || b->next) {
-        if (!a->next || !b->next)
-            return 1;
-        if (compare_encryption_init_info(a->next, b->next) != 0)
-            return 1;
+    जइ (a->next || b->next) {
+        जइ (!a->next || !b->next)
+            प्रत्यागम 1;
+        जइ (compare_encryption_init_info(a->next, b->next) != 0)
+            प्रत्यागम 1;
     }
 
-    return 0;
+    प्रत्यागम 0;
 }
 
-static void run_encryption_info_test(void)
+स्थिर शून्य run_encryption_info_test(शून्य)
 {
     AVEncryptionInfo *info, *copy;
     uint8_t *side_data;
     size_t side_data_size;
 
-    info = av_encryption_info_alloc(test_subsample_count, sizeof(test_key_id), sizeof(test_iv));
+    info = av_encryption_info_alloc(test_subsample_गणनम्, परिमाण(test_कुञ्चिका_id), परिमाण(test_iv));
     av_assert0(info);
-    av_assert0(info->key_id);
-    av_assert0(info->key_id_size == sizeof(test_key_id));
+    av_assert0(info->कुञ्चिका_id);
+    av_assert0(info->कुञ्चिका_id_size == परिमाण(test_कुञ्चिका_id));
     av_assert0(info->iv);
-    av_assert0(info->iv_size == sizeof(test_iv));
+    av_assert0(info->iv_size == परिमाण(test_iv));
     av_assert0(info->subsamples);
-    av_assert0(info->subsample_count == test_subsample_count);
+    av_assert0(info->subsample_गणनम् == test_subsample_गणनम्);
 
     info->scheme = 1234;
     info->crypt_byte_block = 333;
     info->skip_byte_block = 444;
-    memcpy(info->key_id, test_key_id, sizeof(test_key_id));
-    memcpy(info->iv, test_iv, sizeof(test_iv));
-    memcpy(info->subsamples, test_subsamples, sizeof(test_subsamples));
+    memcpy(info->कुञ्चिका_id, test_कुञ्चिका_id, परिमाण(test_कुञ्चिका_id));
+    memcpy(info->iv, test_iv, परिमाण(test_iv));
+    memcpy(info->subsamples, test_subsamples, परिमाण(test_subsamples));
 
     copy = av_encryption_info_clone(info);
     av_assert0(copy);
@@ -113,37 +113,37 @@ static void run_encryption_info_test(void)
     av_encryption_info_free(info);
 }
 
-static AVEncryptionInitInfo *create_init_info(void)
+स्थिर AVEncryptionInitInfo *create_init_info(शून्य)
 {
     AVEncryptionInitInfo *info;
 
-    info = av_encryption_init_info_alloc(sizeof(test_system_id), 2, sizeof(test_key_id), sizeof(test_data));
+    info = av_encryption_init_info_alloc(परिमाण(test_system_id), 2, परिमाण(test_कुञ्चिका_id), परिमाण(test_data));
     av_assert0(info);
     av_assert0(info->system_id);
-    av_assert0(info->system_id_size == sizeof(test_system_id));
-    av_assert0(info->key_ids);
-    av_assert0(info->num_key_ids == 2);
-    av_assert0(info->key_id_size == sizeof(test_key_id));
-    av_assert0(info->key_ids[0]);
-    av_assert0(info->key_ids[1]);
+    av_assert0(info->system_id_size == परिमाण(test_system_id));
+    av_assert0(info->कुञ्चिका_ids);
+    av_assert0(info->अङ्कः_कुञ्चिका_ids == 2);
+    av_assert0(info->कुञ्चिका_id_size == परिमाण(test_कुञ्चिका_id));
+    av_assert0(info->कुञ्चिका_ids[0]);
+    av_assert0(info->कुञ्चिका_ids[1]);
     av_assert0(info->data);
-    av_assert0(info->data_size == sizeof(test_data));
+    av_assert0(info->data_size == परिमाण(test_data));
     av_assert0(!info->next);
 
-    memcpy(info->system_id, test_system_id, sizeof(test_system_id));
-    memcpy(info->key_ids[0], test_key_id, sizeof(test_key_id));
-    memcpy(info->key_ids[1], test_key_id_2, sizeof(test_key_id_2));
-    memcpy(info->data, test_data, sizeof(test_data));
+    memcpy(info->system_id, test_system_id, परिमाण(test_system_id));
+    memcpy(info->कुञ्चिका_ids[0], test_कुञ्चिका_id, परिमाण(test_कुञ्चिका_id));
+    memcpy(info->कुञ्चिका_ids[1], test_कुञ्चिका_id_2, परिमाण(test_कुञ्चिका_id_2));
+    memcpy(info->data, test_data, परिमाण(test_data));
 
-    return info;
+    प्रत्यागम info;
 }
 
-static void run_encryption_init_info_test(void)
+स्थिर शून्य run_encryption_init_info_test(शून्य)
 {
     AVEncryptionInitInfo *info, *copy;
     uint8_t *side_data, *appended;
     size_t side_data_size, appended_size;
-    unsigned int allocated_size = 0;
+    unsigned पूर्णाङ्क allocated_size = 0;
 
     info = create_init_info();
 
@@ -177,9 +177,9 @@ static void run_encryption_init_info_test(void)
     av_encryption_init_info_free(info);
 }
 
-int main(int argc, char **argv)
+पूर्णाङ्क main(पूर्णाङ्क argc, वर्ण **argv)
 {
     run_encryption_info_test();
     run_encryption_init_info_test();
-    return 0;
+    प्रत्यागम 0;
 }

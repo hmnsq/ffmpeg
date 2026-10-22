@@ -19,55 +19,55 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/rational.c"
-#include "libavutil/integer.h"
-#include "libavutil/intfloat.h"
+#अन्तर्भाव "libavutil/rational.c"
+#अन्तर्भाव "libavutil/integer.h"
+#अन्तर्भाव "libavutil/intfloat.h"
 
-static int check_q2intfloat(AVRational q)
+स्थिर पूर्णाङ्क check_q2intfloat(AVRational q)
 {
-    float f  = av_int2float(av_q2intfloat(q));
-    float f2 = av_q2d(q);
-    int fail;
+    भिन्न f  = av_int2float(av_q2intfloat(q));
+    भिन्न f2 = av_q2d(q);
+    पूर्णाङ्क fail;
 
-    if (isnan(f) || isnan(f2))
+    जइ (isnan(f) || isnan(f2))
         fail = !isnan(f) || !isnan(f2);
-    else if (isinf(f) || isinf(f2))
+    अण्णहा जइ (isinf(f) || isinf(f2))
         fail = f != f2;
-    else
+    अण्णहा
         fail = fabs(f - f2) > fabs(f)/5000000;
-    if (fail)
-        av_log(NULL, AV_LOG_ERROR, "%d/%d %f %f\n", q.num, q.den, f, f2);
-    return fail;
+    जइ (fail)
+        av_log(रिक्त, AV_LOG_ERROR, "%d/%d %f %f\n", q.अङ्कः, q.den, f, f2);
+    प्रत्यागम fail;
 }
 
-int main(void)
+पूर्णाङ्क main(शून्य)
 {
     AVRational a,b,r;
-    int i,j,k;
-    int ret = 0;
-    static const int64_t numlist[] = {
+    पूर्णाङ्क i,j,k;
+    पूर्णाङ्क ret = 0;
+    स्थिर ध्रुव int64_t numlist[] = {
         INT64_MIN, INT64_MIN+1, INT64_MAX, INT32_MIN, INT32_MAX, 1,0,-1,
         123456789, INT32_MAX-1, INT32_MAX+1LL, UINT32_MAX-1, UINT32_MAX, UINT32_MAX+1LL
     };
 
-    for (a.num = -2; a.num <= 2; a.num++) {
-        for (a.den = -2; a.den <= 2; a.den++) {
-            for (b.num = -2; b.num <= 2; b.num++) {
-                for (b.den = -2; b.den <= 2; b.den++) {
-                    int c = av_cmp_q(a,b);
-                    double d = av_q2d(a) == av_q2d(b) ?
+    प्रति (a.अङ्कः = -2; a.अङ्कः <= 2; a.अङ्कः++) {
+        प्रति (a.den = -2; a.den <= 2; a.den++) {
+            प्रति (b.अङ्कः = -2; b.अङ्कः <= 2; b.अङ्कः++) {
+                प्रति (b.den = -2; b.den <= 2; b.den++) {
+                    पूर्णाङ्क c = av_cmp_q(a,b);
+                    द्विगुण d = av_q2d(a) == av_q2d(b) ?
                                0 : (av_q2d(a) - av_q2d(b));
-                    if (d > 0)       d = 1;
-                    else if (d < 0)  d = -1;
-                    else if (d != d) d = INT_MIN;
-                    if (c != d) {
-                        av_log(NULL, AV_LOG_ERROR, "%d/%d %d/%d, %d %f\n", a.num,
-                               a.den, b.num, b.den, c,d);
+                    जइ (d > 0)       d = 1;
+                    अण्णहा जइ (d < 0)  d = -1;
+                    अण्णहा जइ (d != d) d = INT_MIN;
+                    जइ (c != d) {
+                        av_log(रिक्त, AV_LOG_ERROR, "%d/%d %d/%d, %d %f\n", a.अङ्कः,
+                               a.den, b.अङ्कः, b.den, c,d);
                         ret = 1;
                     }
                     r = av_sub_q(av_add_q(b,a), b);
-                    if(b.den && (r.num*a.den != a.num*r.den || !r.num != !a.num || !r.den != !a.den)) {
-                        av_log(NULL, AV_LOG_ERROR, "%d/%d ", r.num, r.den);
+                    जइ(b.den && (r.अङ्कः*a.den != a.अङ्कः*r.den || !r.अङ्कः != !a.अङ्कः || !r.den != !a.den)) {
+                        av_log(रिक्त, AV_LOG_ERROR, "%d/%d ", r.अङ्कः, r.den);
                         ret = 1;
                     }
                 }
@@ -76,7 +76,7 @@ int main(void)
     }
 
     /* Check overflow behavior and edge cases */
-    static const AVRational unit_mul_q[][3] = {
+    स्थिर ध्रुव AVRational unit_mul_q[][3] = {
         {{INT_MAX, 2},      { 2, 1},            { INT_MAX, 1}},
         {{INT_MAX, 2},      {-2, 1},            {-INT_MAX, 1}},
         {{INT_MAX, 2},      { 0, 1},            {0, 1}},
@@ -89,21 +89,21 @@ int main(void)
         {{0, 1},            {0, 0},             {0, 0}},
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(unit_mul_q); i++) {
-        for (int c = 0; c < 2; c++) { /* test commutativity */
+    प्रति (i = 0; i < FF_ARRAY_ELEMS(unit_mul_q); i++) {
+        प्रति (पूर्णाङ्क c = 0; c < 2; c++) { /* test commutativity */
             AVRational a = unit_mul_q[i][c ? 1 : 0];
             AVRational b = unit_mul_q[i][c ? 0 : 1];
             AVRational c = unit_mul_q[i][2];
             AVRational r = av_mul_q(a, b);
-            if (r.num != c.num || r.den != c.den) {
-                av_log(NULL, AV_LOG_ERROR, "%d/%d * %d/%d = %d/%d, expected %d/%d\n",
-                       a.num, a.den, b.num, b.den, r.num, r.den, c.num, c.den);
+            जइ (r.अङ्कः != c.अङ्कः || r.den != c.den) {
+                av_log(रिक्त, AV_LOG_ERROR, "%d/%d * %d/%d = %d/%d, expected %d/%d\n",
+                       a.अङ्कः, a.den, b.अङ्कः, b.den, r.अङ्कः, r.den, c.अङ्कः, c.den);
                 ret = 1;
             }
         }
     }
 
-    static const AVRational unit_add_q[][3] = {
+    स्थिर ध्रुव AVRational unit_add_q[][3] = {
         {{INT_MAX, 1},      { 2, 2},            { INT_MAX, 1}},
         {{INT_MAX, 1},      {-2, 2},            { INT_MAX - 1, 1}},
         {{INT_MAX, 1},      { 0, 2},            { INT_MAX, 1}},
@@ -116,78 +116,78 @@ int main(void)
         {{0, 1},            {0, 0},             {0, 0}},
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(unit_add_q); i++) {
-        for (int c = 0; c < 2; c++) { /* test commutativity */
+    प्रति (i = 0; i < FF_ARRAY_ELEMS(unit_add_q); i++) {
+        प्रति (पूर्णाङ्क c = 0; c < 2; c++) { /* test commutativity */
             AVRational a = unit_add_q[i][c ? 1 : 0];
             AVRational b = unit_add_q[i][c ? 0 : 1];
             AVRational c = unit_add_q[i][2];
             AVRational r = av_add_q(a, b);
-            if (r.num != c.num || r.den != c.den) {
-                av_log(NULL, AV_LOG_ERROR, "%d/%d + %d/%d = %d/%d, expected %d/%d\n",
-                       a.num, a.den, b.num, b.den, r.num, r.den, c.num, c.den);
+            जइ (r.अङ्कः != c.अङ्कः || r.den != c.den) {
+                av_log(रिक्त, AV_LOG_ERROR, "%d/%d + %d/%d = %d/%d, expected %d/%d\n",
+                       a.अङ्कः, a.den, b.अङ्कः, b.den, r.अङ्कः, r.den, c.अङ्कः, c.den);
                 ret = 1;
             }
         }
     }
 
-    for (i = 0; i < FF_ARRAY_ELEMS(numlist); i++) {
+    प्रति (i = 0; i < FF_ARRAY_ELEMS(numlist); i++) {
         int64_t a = numlist[i];
 
-        for (j = 0; j < FF_ARRAY_ELEMS(numlist); j++) {
+        प्रति (j = 0; j < FF_ARRAY_ELEMS(numlist); j++) {
             int64_t b = numlist[j];
-            if (b<=0)
-                continue;
-            for (k = 0; k < FF_ARRAY_ELEMS(numlist); k++) {
+            जइ (b<=0)
+                अनुवर्त;
+            प्रति (k = 0; k < FF_ARRAY_ELEMS(numlist); k++) {
                 int64_t c = numlist[k];
                 int64_t res;
                 AVInteger ai;
 
-                if (c<=0)
-                    continue;
+                जइ (c<=0)
+                    अनुवर्त;
                 res = av_rescale_rnd(a,b,c, AV_ROUND_ZERO);
 
                 ai = av_mul_i(av_int2i(a), av_int2i(b));
                 ai = av_div_i(ai, av_int2i(c));
 
-                if (av_cmp_i(ai, av_int2i(INT64_MAX)) > 0 && res == INT64_MIN)
-                    continue;
-                if (av_cmp_i(ai, av_int2i(INT64_MIN)) < 0 && res == INT64_MIN)
-                    continue;
-                if (av_cmp_i(ai, av_int2i(res)) == 0)
-                    continue;
+                जइ (av_cmp_i(ai, av_int2i(INT64_MAX)) > 0 && res == INT64_MIN)
+                    अनुवर्त;
+                जइ (av_cmp_i(ai, av_int2i(INT64_MIN)) < 0 && res == INT64_MIN)
+                    अनुवर्त;
+                जइ (av_cmp_i(ai, av_int2i(res)) == 0)
+                    अनुवर्त;
 
                 // Special exception for INT64_MIN, remove this in case INT64_MIN is handled without off by 1 error
-                if (av_cmp_i(ai, av_int2i(res-1)) == 0 && a == INT64_MIN)
-                    continue;
+                जइ (av_cmp_i(ai, av_int2i(res-1)) == 0 && a == INT64_MIN)
+                    अनुवर्त;
 
-                av_log(NULL, AV_LOG_ERROR, "%"PRId64" * %"PRId64" / %"PRId64" = %"PRId64" or %"PRId64"\n", a,b,c, res, av_i2int(ai));
+                av_log(रिक्त, AV_LOG_ERROR, "%"PRId64" * %"PRId64" / %"PRId64" = %"PRId64" or %"PRId64"\n", a,b,c, res, av_i2int(ai));
                 ret = 1;
             }
         }
     }
 
-    for (a.num = 1; a.num <= 10; a.num++) {
-        for (a.den = 1; a.den <= 10; a.den++) {
-            if (av_gcd(a.num, a.den) > 1)
-                continue;
-            for (b.num = 1; b.num <= 10; b.num++) {
-                for (b.den = 1; b.den <= 10; b.den++) {
-                    int start;
-                    if (av_gcd(b.num, b.den) > 1)
-                        continue;
-                    if (av_cmp_q(b, a) < 0)
-                        continue;
-                    for (start = 0; start < 10 ; start++) {
-                        int acc= start;
-                        int i;
+    प्रति (a.अङ्कः = 1; a.अङ्कः <= 10; a.अङ्कः++) {
+        प्रति (a.den = 1; a.den <= 10; a.den++) {
+            जइ (av_gcd(a.अङ्कः, a.den) > 1)
+                अनुवर्त;
+            प्रति (b.अङ्कः = 1; b.अङ्कः <= 10; b.अङ्कः++) {
+                प्रति (b.den = 1; b.den <= 10; b.den++) {
+                    पूर्णाङ्क start;
+                    जइ (av_gcd(b.अङ्कः, b.den) > 1)
+                        अनुवर्त;
+                    जइ (av_cmp_q(b, a) < 0)
+                        अनुवर्त;
+                    प्रति (start = 0; start < 10 ; start++) {
+                        पूर्णाङ्क acc= start;
+                        पूर्णाङ्क i;
 
-                        for (i = 0; i<100; i++) {
-                            int exact = start + av_rescale_q(i+1, b, a);
+                        प्रति (i = 0; i<100; i++) {
+                            पूर्णाङ्क exact = start + av_rescale_q(i+1, b, a);
                             acc = av_add_stable(a, acc, b, 1);
-                            if (FFABS(acc - exact) > 2) {
-                                av_log(NULL, AV_LOG_ERROR, "%d/%d %d/%d, %d %d\n", a.num,
-                                       a.den, b.num, b.den, acc, exact);
-                                return 1;
+                            जइ (FFABS(acc - exact) > 2) {
+                                av_log(रिक्त, AV_LOG_ERROR, "%d/%d %d/%d, %d %d\n", a.अङ्कः,
+                                       a.den, b.अङ्कः, b.den, acc, exact);
+                                प्रत्यागम 1;
                             }
                         }
                     }
@@ -196,22 +196,22 @@ int main(void)
         }
     }
 
-    for (int64_t den = 1; den <= INT_MAX; den *= 3) {
+    प्रति (int64_t den = 1; den <= INT_MAX; den *= 3) {
         a.den = den;
-        for (a.num = -1; a.num < (1<<27); a.num += 1 + a.num/100) {
-            if (check_q2intfloat(a))
-                return 1;
+        प्रति (a.अङ्कः = -1; a.अङ्कः < (1<<27); a.अङ्कः += 1 + a.अङ्कः/100) {
+            जइ (check_q2intfloat(a))
+                प्रत्यागम 1;
         }
     }
 
-    static const AVRational q2intfloat_list[] = {
+    स्थिर ध्रुव AVRational q2intfloat_list[] = {
         {INT_MIN, 1}, {1, INT_MIN}, {INT_MIN, INT_MIN}, {INT_MIN, -1}, {-1, INT_MIN},
         {INT_MAX, INT_MIN}, {INT_MIN, INT_MAX}, {-3, -7}, {3, -7},
         {1, 0}, {-1, 0}, {INT_MIN, 0}, {0, 0}, {0, 1}, {0, INT_MIN},
     };
 
-    for (i = 0; i < FF_ARRAY_ELEMS(q2intfloat_list); i++)
+    प्रति (i = 0; i < FF_ARRAY_ELEMS(q2intfloat_list); i++)
         ret |= check_q2intfloat(q2intfloat_list[i]);
 
-    return ret;
+    प्रत्यागम ret;
 }
