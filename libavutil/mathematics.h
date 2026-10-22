@@ -27,11 +27,11 @@
 #ifndef AVUTIL_MATHEMATICS_H
 #define AVUTIL_MATHEMATICS_H
 
-#include <stdint.h>
-#include <math.h>
-#include "attributes.h"
-#include "rational.h"
-#include "intfloat.h"
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव <math.h>
+#अन्तर्भाव "attributes.h"
+#अन्तर्भाव "rational.h"
+#अन्तर्भाव "intfloat.h"
 
 #ifndef M_E
 #define M_E            2.7182818284590452354   /* e */
@@ -111,11 +111,11 @@
 #ifndef M_SQRT2f
 #define M_SQRT2f       1.41421356237309504880f /* sqrt(2) */
 #endif
-#ifndef NAN
-#define NAN            av_int2float(0x7fc00000)
+#ifndef न_अंक
+#define न_अंक            av_int2float(0x7fc00000)
 #endif
-#ifndef INFINITY
-#define INFINITY       av_int2float(0x7f800000)
+#ifndef अनन्त
+#define अनन्त       av_int2float(0x7f800000)
 #endif
 
 /**
@@ -127,7 +127,7 @@
 /**
  * Rounding methods.
  */
-enum AVRounding {
+गणना AVRounding {
     AV_ROUND_ZERO     = 0, ///< Round toward zero.
     AV_ROUND_INF      = 1, ///< Round away from zero.
     AV_ROUND_DOWN     = 2, ///< Round toward -infinity.
@@ -190,7 +190,7 @@ int64_t av_rescale(int64_t a, int64_t b, int64_t c) av_const;
  *
  * @see av_rescale(), av_rescale_q(), av_rescale_q_rnd()
  */
-int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding rnd) av_const;
+int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, गणना AVRounding rnd) av_const;
 
 /**
  * Rescale a 64-bit integer by 2 rational numbers.
@@ -211,7 +211,7 @@ int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq) av_const;
  * @see av_rescale(), av_rescale_rnd(), av_rescale_q()
  */
 int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
-                         enum AVRounding rnd) av_const;
+                         गणना AVRounding rnd) av_const;
 
 /**
  * Compare two timestamps each in its own time base.
@@ -225,7 +225,7 @@ int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
  * The result of the function is undefined if one of the timestamps is outside
  * the `int64_t` range when represented in the other's timebase.
  */
-int av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b);
+पूर्णाङ्क av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b);
 
 /**
  * Compare the remainders of two integer operands divided by a common divisor.
@@ -273,7 +273,7 @@ int64_t av_compare_mod(uint64_t a, uint64_t b, uint64_t mod);
  * @note In the context of this function, "duration" is in term of samples, not
  *       seconds.
  */
-int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, int duration, int64_t *last, AVRational out_tb);
+int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, पूर्णाङ्क duration, int64_t *last, AVRational out_tb);
 
 /**
  * Add a value to a timestamp.
@@ -291,7 +291,7 @@ int64_t av_add_stable(AVRational ts_tb, int64_t ts, AVRational inc_tb, int64_t i
 /**
  * 0th order modified bessel function of the first kind.
  */
-double av_bessel_i0(double x);
+द्विगुण av_bessel_i0(द्विगुण x);
 
 /**
  * @}

@@ -16,103 +16,103 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#अन्तर्भाव <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/macros.h"
-#include "libavutil/mem.h"
-#include "libavutil/stereo3d.h"
+#अन्तर्भाव "libavutil/frame.h"
+#अन्तर्भाव "libavutil/macros.h"
+#अन्तर्भाव "libavutil/mem.h"
+#अन्तर्भाव "libavutil/stereo3d.h"
 
-int main(void)
+पूर्णाङ्क main(शून्य)
 {
     AVStereo3D *s3d;
     AVFrame *frame;
-    size_t size;
-    int ret;
+    माप_प्रकार size;
+    पूर्णाङ्क ret;
 
     /* av_stereo3d_alloc_size with size output */
-    printf("Testing av_stereo3d_alloc_size()\n");
+    म_लिखो("Testing av_stereo3d_alloc_size()\n");
     s3d = av_stereo3d_alloc_size(&size);
-    printf("alloc_size: %s, size>0: %s\n",
+    म_लिखो("alloc_size: %s, size>0: %s\n",
            s3d ? "OK" : "FAIL", size > 0 ? "yes" : "no");
     av_free(s3d);
 
     /* av_stereo3d_alloc (no size) */
     s3d = av_stereo3d_alloc();
-    printf("alloc: %s\n", s3d ? "OK" : "FAIL");
+    म_लिखो("alloc: %s\n", s3d ? "OK" : "FAIL");
     av_free(s3d);
 
     /* av_stereo3d_create_side_data */
-    printf("\nTesting av_stereo3d_create_side_data()\n");
+    म_लिखो("\nTesting av_stereo3d_create_side_data()\n");
     frame = av_frame_alloc();
     s3d = av_stereo3d_create_side_data(frame);
-    printf("create_side_data: %s\n", s3d ? "OK" : "FAIL");
+    म_लिखो("create_side_data: %s\n", s3d ? "OK" : "FAIL");
     av_frame_free(&frame);
 
     /* av_stereo3d_type_name - all valid types */
-    printf("\nTesting av_stereo3d_type_name()\n");
-    for (int i = 0; i <= AV_STEREO3D_UNSPEC; i++)
-        printf("type %d: %s\n", i, av_stereo3d_type_name(i));
-    printf("out of range: %s\n", av_stereo3d_type_name(100));
+    म_लिखो("\nTesting av_stereo3d_type_name()\n");
+    प्रति (पूर्णाङ्क i = 0; i <= AV_STEREO3D_UNSPEC; i++)
+        म_लिखो("type %d: %s\n", i, av_stereo3d_type_name(i));
+    म_लिखो("out of range: %s\n", av_stereo3d_type_name(100));
 
     /* av_stereo3d_from_name - all valid names and unknown */
-    printf("\nTesting av_stereo3d_from_name()\n");
+    म_लिखो("\nTesting av_stereo3d_from_name()\n");
     {
-        static const char * const names[] = {
+        स्थिर ध्रुव वर्ण * ध्रुव names[] = {
             "2D", "side by side", "top and bottom", "frame alternate",
             "checkerboard", "side by side (quincunx subsampling)",
             "interleaved lines", "interleaved columns", "unspecified",
         };
-        for (int i = 0; i < FF_ARRAY_ELEMS(names); i++)
-            printf("%s: %d\n", names[i], av_stereo3d_from_name(names[i]));
+        प्रति (पूर्णाङ्क i = 0; i < FF_ARRAY_ELEMS(names); i++)
+            म_लिखो("%s: %d\n", names[i], av_stereo3d_from_name(names[i]));
     }
     ret = av_stereo3d_from_name("nonexistent");
-    printf("nonexistent: %d\n", ret);
+    म_लिखो("nonexistent: %d\n", ret);
 
     /* av_stereo3d_type_name / av_stereo3d_from_name round-trip */
-    printf("\nTesting type name round-trip\n");
-    for (int i = 0; i <= AV_STEREO3D_UNSPEC; i++) {
-        const char *name = av_stereo3d_type_name(i);
-        int rt = av_stereo3d_from_name(name);
-        printf("type roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
+    म_लिखो("\nTesting type name round-trip\n");
+    प्रति (पूर्णाङ्क i = 0; i <= AV_STEREO3D_UNSPEC; i++) {
+        ध्रुव वर्ण *name = av_stereo3d_type_name(i);
+        पूर्णाङ्क rt = av_stereo3d_from_name(name);
+        म_लिखो("type roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
     }
 
     /* av_stereo3d_view_name - all valid views */
-    printf("\nTesting av_stereo3d_view_name()\n");
-    for (int i = 0; i <= AV_STEREO3D_VIEW_UNSPEC; i++)
-        printf("view %d: %s\n", i, av_stereo3d_view_name(i));
-    printf("out of range: %s\n", av_stereo3d_view_name(100));
+    म_लिखो("\nTesting av_stereo3d_view_name()\n");
+    प्रति (पूर्णाङ्क i = 0; i <= AV_STEREO3D_VIEW_UNSPEC; i++)
+        म_लिखो("view %d: %s\n", i, av_stereo3d_view_name(i));
+    म_लिखो("out of range: %s\n", av_stereo3d_view_name(100));
 
     /* av_stereo3d_view_name / av_stereo3d_view_from_name round-trip */
-    printf("\nTesting view name round-trip\n");
-    for (int i = 0; i <= AV_STEREO3D_VIEW_UNSPEC; i++) {
-        const char *name = av_stereo3d_view_name(i);
-        int rt = av_stereo3d_view_from_name(name);
-        printf("view roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
+    म_लिखो("\nTesting view name round-trip\n");
+    प्रति (पूर्णाङ्क i = 0; i <= AV_STEREO3D_VIEW_UNSPEC; i++) {
+        ध्रुव वर्ण *name = av_stereo3d_view_name(i);
+        पूर्णाङ्क rt = av_stereo3d_view_from_name(name);
+        म_लिखो("view roundtrip %d (%s): %s\n", i, name, rt == i ? "OK" : "FAIL");
     }
 
     /* av_stereo3d_view_from_name */
-    printf("\nTesting av_stereo3d_view_from_name()\n");
-    printf("packed: %d\n", av_stereo3d_view_from_name("packed"));
-    printf("left: %d\n", av_stereo3d_view_from_name("left"));
-    printf("right: %d\n", av_stereo3d_view_from_name("right"));
-    printf("unspecified: %d\n", av_stereo3d_view_from_name("unspecified"));
+    म_लिखो("\nTesting av_stereo3d_view_from_name()\n");
+    म_लिखो("packed: %d\n", av_stereo3d_view_from_name("packed"));
+    म_लिखो("left: %d\n", av_stereo3d_view_from_name("left"));
+    म_लिखो("right: %d\n", av_stereo3d_view_from_name("right"));
+    म_लिखो("unspecified: %d\n", av_stereo3d_view_from_name("unspecified"));
     ret = av_stereo3d_view_from_name("nonexistent");
-    printf("nonexistent: %d\n", ret);
+    म_लिखो("nonexistent: %d\n", ret);
 
     /* av_stereo3d_primary_eye_name - all valid values */
-    printf("\nTesting av_stereo3d_primary_eye_name()\n");
-    for (int i = 0; i <= AV_PRIMARY_EYE_RIGHT; i++)
-        printf("eye %d: %s\n", i, av_stereo3d_primary_eye_name(i));
-    printf("out of range: %s\n", av_stereo3d_primary_eye_name(100));
+    म_लिखो("\nTesting av_stereo3d_primary_eye_name()\n");
+    प्रति (पूर्णाङ्क i = 0; i <= AV_PRIMARY_EYE_दायाँ; i++)
+        म_लिखो("eye %d: %s\n", i, av_stereo3d_primary_eye_name(i));
+    म_लिखो("out of range: %s\n", av_stereo3d_primary_eye_name(100));
 
     /* av_stereo3d_primary_eye_from_name */
-    printf("\nTesting av_stereo3d_primary_eye_from_name()\n");
-    printf("none: %d\n", av_stereo3d_primary_eye_from_name("none"));
-    printf("left: %d\n", av_stereo3d_primary_eye_from_name("left"));
-    printf("right: %d\n", av_stereo3d_primary_eye_from_name("right"));
+    म_लिखो("\nTesting av_stereo3d_primary_eye_from_name()\n");
+    म_लिखो("none: %d\n", av_stereo3d_primary_eye_from_name("none"));
+    म_लिखो("left: %d\n", av_stereo3d_primary_eye_from_name("left"));
+    म_लिखो("right: %d\n", av_stereo3d_primary_eye_from_name("right"));
     ret = av_stereo3d_primary_eye_from_name("nonexistent");
-    printf("nonexistent: %d\n", ret);
+    म_लिखो("nonexistent: %d\n", ret);
 
-    return 0;
+    प्रत्यागम 0;
 }

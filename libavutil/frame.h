@@ -25,17 +25,17 @@
 #ifndef AVUTIL_FRAME_H
 #define AVUTIL_FRAME_H
 
-#include <stddef.h>
-#include <stdint.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdint.h>
 
-#include "avutil.h"
-#include "buffer.h"
-#include "channel_layout.h"
-#include "dict.h"
-#include "rational.h"
-#include "samplefmt.h"
-#include "pixfmt.h"
-#include "version.h"
+#अन्तर्भाव "avutil.h"
+#अन्तर्भाव "buffer.h"
+#अन्तर्भाव "channel_layout.h"
+#अन्तर्भाव "dict.h"
+#अन्तर्भाव "rational.h"
+#अन्तर्भाव "samplefmt.h"
+#अन्तर्भाव "pixfmt.h"
+#अन्तर्भाव "version.h"
 
 
 /**
@@ -46,7 +46,7 @@
  * AVFrame is an abstraction for reference-counted raw multimedia data.
  */
 
-enum AVFrameSideDataType {
+गणना AVFrameSideDataType {
     /**
      * The data is the AVPanScan struct defined in libavcodec.
      */
@@ -314,7 +314,7 @@ enum AVFrameSideDataType {
     AV_FRAME_DATA_GAIN_MAP_PARAMS,
 };
 
-enum AVActiveFormatDescription {
+गणना AVActiveFormatDescription {
     AV_AFD_SAME         = 8,
     AV_AFD_4_3          = 9,
     AV_AFD_16_9         = 10,
@@ -331,15 +331,15 @@ enum AVActiveFormatDescription {
  * sizeof(AVFrameSideData) is not a part of the public ABI, so new fields may be added
  * to the end with a minor bump.
  */
-typedef struct AVFrameSideData {
-    enum AVFrameSideDataType type;
+प्रकारनिर्देश संरचना AVFrameSideData {
+    गणना AVFrameSideDataType type;
     uint8_t *data;
-    size_t   size;
+    माप_प्रकार   size;
     AVDictionary *metadata;
     AVBufferRef *buf;
 } AVFrameSideData;
 
-enum AVSideDataProps {
+गणना AVSideDataProps {
     /**
      * The side data type can be used in stream-global structures.
      * Side data types without this property are only meaningful on per-frame
@@ -379,16 +379,16 @@ enum AVSideDataProps {
  * This struct describes the properties of a side data type. Its instance
  * corresponding to a given type can be obtained from av_frame_side_data_desc().
  */
-typedef struct AVSideDataDescriptor {
+प्रकारनिर्देश संरचना AVSideDataDescriptor {
     /**
      * Human-readable side data description.
      */
-    const char      *name;
+    ध्रुव वर्ण      *name;
 
     /**
      * Side data property flags, a combination of AVSideDataProps values.
      */
-    unsigned         props;
+    अचिन्हित         props;
 } AVSideDataDescriptor;
 
 /**
@@ -402,7 +402,7 @@ typedef struct AVSideDataDescriptor {
  * When overlapping regions are defined, the first region containing a given
  * area of the frame applies.
  */
-typedef struct AVRegionOfInterest {
+प्रकारनिर्देश संरचना AVRegionOfInterest {
     /**
      * Must be set to the size of this data structure (that is,
      * sizeof(AVRegionOfInterest)).
@@ -417,10 +417,10 @@ typedef struct AVRegionOfInterest {
      * actually affected may be slightly larger for alignment or other
      * reasons.
      */
-    int top;
-    int bottom;
-    int left;
-    int right;
+    पूर्णाङ्क शीर्ष;
+    पूर्णाङ्क bottom;
+    पूर्णाङ्क बायाँ;
+    पूर्णाङ्क दायाँ;
     /**
      * Quantisation offset.
      *
@@ -476,8 +476,8 @@ typedef struct AVRegionOfInterest {
  * Fields can be accessed through AVOptions, the name string used, matches the
  * C structure field name for fields accessible through AVOptions.
  */
-typedef struct AVFrame {
-#define AV_NUM_DATA_POINTERS 8
+प्रकारनिर्देश संरचना AVFrame {
+#define AV_अंक_DATA_POINTERS 8
     /**
      * pointer to the picture/channel planes.
      * This might be different from the first allocated byte. For video,
@@ -497,7 +497,7 @@ typedef struct AVFrame {
      * end of image data in order to reverse line order, when used in
      * combination with negative values in the linesize[] array.
      */
-    uint8_t *data[AV_NUM_DATA_POINTERS];
+    uint8_t *data[AV_अंक_DATA_POINTERS];
 
     /**
      * For video, a positive or negative value, which is typically indicating
@@ -521,7 +521,7 @@ typedef struct AVFrame {
      * @attention In case of video, line size values can be negative to achieve
      * a vertically inverted iteration over image lines.
      */
-    int linesize[AV_NUM_DATA_POINTERS];
+    पूर्णाङ्क linesize[AV_अंक_DATA_POINTERS];
 
     /**
      * pointers to the data planes/channels.
@@ -548,7 +548,7 @@ typedef struct AVFrame {
      * restricted by the @ref cropping "Cropping rectangle".
      * @{
      */
-    int width, height;
+    पूर्णाङ्क width, height;
     /**
      * @}
      */
@@ -556,19 +556,19 @@ typedef struct AVFrame {
     /**
      * number of audio samples (per channel) described by this frame
      */
-    int nb_samples;
+    पूर्णाङ्क nb_samples;
 
     /**
      * format of the frame, -1 if unknown or unset
      * Values correspond to enum AVPixelFormat for video frames,
      * enum AVSampleFormat for audio)
      */
-    int format;
+    पूर्णाङ्क format;
 
     /**
      * Picture type of the frame.
      */
-    enum AVPictureType pict_type;
+    गणना AVPictureType pict_type;
 
     /**
      * Sample aspect ratio for the video frame, 0/1 if unknown/unspecified.
@@ -598,7 +598,7 @@ typedef struct AVFrame {
     /**
      * quality (between 1 (good) and FF_LAMBDA_MAX (bad))
      */
-    int quality;
+    पूर्णाङ्क quality;
 
     /**
      * Frame owner's private data.
@@ -614,7 +614,7 @@ typedef struct AVFrame {
      *
      * @see opaque_ref the reference-counted analogue
      */
-    void *opaque;
+    शून्य *opaque;
 
     /**
      * Number of fields in this frame which should be repeated, i.e. the total
@@ -634,12 +634,12 @@ typedef struct AVFrame {
      * their analogues in other codecs. Typically it should only be used when
      * higher-layer timing information is not available.
      */
-    int repeat_pict;
+    पूर्णाङ्क repeat_pict;
 
     /**
      * Sample rate of the audio data.
      */
-    int sample_rate;
+    पूर्णाङ्क sample_rate;
 
     /**
      * AVBuffer references backing the data for this frame. All the pointers in
@@ -653,7 +653,7 @@ typedef struct AVFrame {
      * this array. Then the extra AVBufferRef pointers are stored in the
      * extended_buf array.
      */
-    AVBufferRef *buf[AV_NUM_DATA_POINTERS];
+    AVBufferRef *buf[AV_अंक_DATA_POINTERS];
 
     /**
      * For planar audio which requires more than AV_NUM_DATA_POINTERS
@@ -671,10 +671,10 @@ typedef struct AVFrame {
     /**
      * Number of elements in extended_buf.
      */
-    int        nb_extended_buf;
+    पूर्णाङ्क        nb_extended_buf;
 
     AVFrameSideData **side_data;
-    int            nb_side_data;
+    पूर्णाङ्क            nb_side_data;
 
 /**
  * @defgroup lavu_frame_flags AV_FRAME_FLAGS
@@ -691,7 +691,7 @@ typedef struct AVFrame {
 /**
  * A flag to mark frames that are keyframes.
  */
-#define AV_FRAME_FLAG_KEY (1 << 1)
+#define AV_FRAME_FLAG_कुंजी (1 << 1)
 /**
  * A flag to mark the frames which need to be decoded, but shouldn't be output.
  */
@@ -704,7 +704,7 @@ typedef struct AVFrame {
  * A flag to mark frames where the top field is displayed first if the content
  * is interlaced.
  */
-#define AV_FRAME_FLAG_TOP_FIELD_FIRST (1 << 4)
+#define AV_FRAME_FLAG_शीर्ष_FIELD_FIRST (1 << 4)
 /**
  * A decoder can use this flag to mark frames which were originally encoded losslessly.
  *
@@ -720,27 +720,27 @@ typedef struct AVFrame {
     /**
      * Frame flags, a combination of @ref lavu_frame_flags
      */
-    int flags;
+    पूर्णाङ्क flags;
 
     /**
      * MPEG vs JPEG YUV range.
      * - encoding: Set by user
      * - decoding: Set by libavcodec
      */
-    enum AVColorRange color_range;
+    गणना AVColorRange color_range;
 
-    enum AVColorPrimaries color_primaries;
+    गणना AVColorPrimaries color_primaries;
 
-    enum AVColorTransferCharacteristic color_trc;
+    गणना AVColorTransferCharacteristic color_trc;
 
     /**
      * YUV colorspace type.
      * - encoding: Set by user
      * - decoding: Set by libavcodec
      */
-    enum AVColorSpace colorspace;
+    गणना AVColorSpace colorspace;
 
-    enum AVChromaLocation chroma_location;
+    गणना AVChromaLocation chroma_location;
 
     /**
      * frame timestamp estimated using various heuristics, in stream time base
@@ -763,7 +763,7 @@ typedef struct AVFrame {
      * - encoding: unused
      * - decoding: set by libavcodec, read by user.
      */
-    int decode_error_flags;
+    पूर्णाङ्क decode_error_flags;
 #define FF_DECODE_ERROR_INVALID_BITSTREAM   1
 #define FF_DECODE_ERROR_MISSING_REFERENCE   2
 #define FF_DECODE_ERROR_CONCEALMENT_ACTIVE  4
@@ -799,10 +799,10 @@ typedef struct AVFrame {
      * the frame intended for presentation.
      * @{
      */
-    size_t crop_top;
-    size_t crop_bottom;
-    size_t crop_left;
-    size_t crop_right;
+    माप_प्रकार crop_शीर्ष;
+    माप_प्रकार crop_bottom;
+    माप_प्रकार crop_बायाँ;
+    माप_प्रकार crop_दायाँ;
     /**
      * @}
      */
@@ -814,7 +814,7 @@ typedef struct AVFrame {
      *
      * Code outside the FFmpeg libs must never check or change private_ref.
      */
-    void *private_ref;
+    शून्य *private_ref;
 
     /**
      * Channel layout of the audio data.
@@ -831,7 +831,7 @@ typedef struct AVFrame {
      * - encoding: Set by user
      * - decoding: Set by libavcodec
      */
-    enum AVAlphaMode alpha_mode;
+    गणना AVAlphaMode alpha_mode;
 } AVFrame;
 
 
@@ -845,7 +845,7 @@ typedef struct AVFrame {
  * must be allocated through other means, e.g. with av_frame_get_buffer() or
  * manually.
  */
-AVFrame *av_frame_alloc(void);
+AVFrame *av_frame_alloc(शून्य);
 
 /**
  * Free the frame and any dynamically allocated objects in it,
@@ -854,7 +854,7 @@ AVFrame *av_frame_alloc(void);
  *
  * @param frame frame to be freed. The pointer will be set to NULL.
  */
-void av_frame_free(AVFrame **frame);
+शून्य av_frame_free(AVFrame **frame);
 
 /**
  * Set up a new reference to the data described by the source frame.
@@ -871,7 +871,7 @@ void av_frame_free(AVFrame **frame);
  *
  * @return 0 on success, a negative AVERROR on error
  */
-int av_frame_ref(AVFrame *dst, const AVFrame *src);
+पूर्णाङ्क av_frame_ref(AVFrame *dst, ध्रुव AVFrame *src);
 
 /**
  * Ensure the destination frame refers to the same data described by the source
@@ -884,7 +884,7 @@ int av_frame_ref(AVFrame *dst, const AVFrame *src);
  * @return 0 on success, a negative AVERROR on error. On error, dst is
  *         unreferenced.
  */
-int av_frame_replace(AVFrame *dst, const AVFrame *src);
+पूर्णाङ्क av_frame_replace(AVFrame *dst, ध्रुव AVFrame *src);
 
 /**
  * Create a new frame that references the same data as src.
@@ -893,12 +893,12 @@ int av_frame_replace(AVFrame *dst, const AVFrame *src);
  *
  * @return newly created AVFrame on success, NULL on error.
  */
-AVFrame *av_frame_clone(const AVFrame *src);
+AVFrame *av_frame_clone(ध्रुव AVFrame *src);
 
 /**
  * Unreference all the buffers referenced by frame and reset the frame fields.
  */
-void av_frame_unref(AVFrame *frame);
+शून्य av_frame_unref(AVFrame *frame);
 
 /**
  * Move everything contained in src to dst and reset src.
@@ -907,7 +907,7 @@ void av_frame_unref(AVFrame *frame);
  *           or deallocating its contents. Call av_frame_unref(dst) manually
  *           before calling this function to ensure that no memory is leaked.
  */
-void av_frame_move_ref(AVFrame *dst, AVFrame *src);
+शून्य av_frame_move_ref(AVFrame *dst, AVFrame *src);
 
 /**
  * Allocate new buffer(s) for audio or video data.
@@ -933,7 +933,7 @@ void av_frame_move_ref(AVFrame *dst, AVFrame *src);
  *
  * @return 0 on success, a negative AVERROR on error.
  */
-int av_frame_get_buffer(AVFrame *frame, int align);
+पूर्णाङ्क av_frame_get_buffer(AVFrame *frame, पूर्णाङ्क align);
 
 /**
  * Check if the frame data is writable.
@@ -947,7 +947,7 @@ int av_frame_get_buffer(AVFrame *frame, int align);
  *
  * @see av_frame_make_writable(), av_buffer_is_writable()
  */
-int av_frame_is_writable(AVFrame *frame);
+पूर्णाङ्क av_frame_is_writable(AVFrame *frame);
 
 /**
  * Ensure that the frame data is writable, avoiding data copy if possible.
@@ -961,7 +961,7 @@ int av_frame_is_writable(AVFrame *frame);
  * @see av_frame_is_writable(), av_buffer_is_writable(),
  * av_buffer_make_writable()
  */
-int av_frame_make_writable(AVFrame *frame);
+पूर्णाङ्क av_frame_make_writable(AVFrame *frame);
 
 /**
  * Copy the frame data from src to dst.
@@ -974,7 +974,7 @@ int av_frame_make_writable(AVFrame *frame);
  *
  * @return >= 0 on success, a negative AVERROR on error.
  */
-int av_frame_copy(AVFrame *dst, const AVFrame *src);
+पूर्णाङ्क av_frame_copy(AVFrame *dst, ध्रुव AVFrame *src);
 
 /**
  * Copy only "metadata" fields from src to dst.
@@ -984,7 +984,7 @@ int av_frame_copy(AVFrame *dst, const AVFrame *src);
  * aspect ratio (for video), but not width/height or channel layout.
  * Side data is also copied.
  */
-int av_frame_copy_props(AVFrame *dst, const AVFrame *src);
+पूर्णाङ्क av_frame_copy_props(AVFrame *dst, ध्रुव AVFrame *src);
 
 /**
  * Get the buffer reference a given data plane is stored in.
@@ -995,7 +995,7 @@ int av_frame_copy_props(AVFrame *dst, const AVFrame *src);
  * @return the buffer reference that contains the plane or NULL if the input
  * frame is not valid.
  */
-AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane);
+AVBufferRef *av_frame_get_plane_buffer(ध्रुव AVFrame *frame, पूर्णाङ्क plane);
 
 /**
  * Add a new side data to a frame.
@@ -1007,8 +1007,8 @@ AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane);
  * @return newly added side data on success, NULL on error
  */
 AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
-                                        enum AVFrameSideDataType type,
-                                        size_t size);
+                                        गणना AVFrameSideDataType type,
+                                        माप_प्रकार size);
 
 /**
  * Add a new side data to a frame from an existing AVBufferRef
@@ -1023,26 +1023,26 @@ AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
  *         the caller.
  */
 AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
-                                                 enum AVFrameSideDataType type,
+                                                 गणना AVFrameSideDataType type,
                                                  AVBufferRef *buf);
 
 /**
  * @return a pointer to the side data of a given type on success, NULL if there
  * is no side data with such type in this frame.
  */
-AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
-                                        enum AVFrameSideDataType type);
+AVFrameSideData *av_frame_get_side_data(ध्रुव AVFrame *frame,
+                                        गणना AVFrameSideDataType type);
 
 /**
  * Remove and free all side data instances of the given type.
  */
-void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type);
+शून्य av_frame_remove_side_data(AVFrame *frame, गणना AVFrameSideDataType type);
 
 
 /**
  * Flags for frame cropping.
  */
-enum {
+गणना {
     /**
      * Apply the maximum possible cropping, even if it requires setting the
      * AVFrame.data[] entries to unaligned pointers. Passing unaligned data
@@ -1070,18 +1070,18 @@ enum {
  * @return >= 0 on success, a negative AVERROR on error. If the cropping fields
  * were invalid, AVERROR(ERANGE) is returned, and nothing is changed.
  */
-int av_frame_apply_cropping(AVFrame *frame, int flags);
+पूर्णाङ्क av_frame_apply_cropping(AVFrame *frame, पूर्णाङ्क flags);
 
 /**
  * @return a string identifying the side data type
  */
-const char *av_frame_side_data_name(enum AVFrameSideDataType type);
+ध्रुव वर्ण *av_frame_side_data_name(गणना AVFrameSideDataType type);
 
 /**
  * @return side data descriptor corresponding to a given side data type, NULL
  *         when not available.
  */
-const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type);
+ध्रुव AVSideDataDescriptor *av_frame_side_data_desc(गणना AVFrameSideDataType type);
 
 /**
  * Free all side data entries and their contents, then zeroes out the
@@ -1092,7 +1092,7 @@ const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType typ
  * @param nb_sd pointer to an integer containing the number of entries in
  *              the array. Will be set to 0 upon return.
  */
-void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd);
+शून्य av_frame_side_data_free(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd);
 
 /**
  * Remove existing entries before adding new ones.
@@ -1127,9 +1127,9 @@ void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd);
  * @note In case of AV_FRAME_SIDE_DATA_FLAG_REPLACE being set, if an
  *       entry of the same type already exists, it will be replaced instead.
  */
-AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        size_t size, unsigned int flags);
+AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                                        गणना AVFrameSideDataType type,
+                                        माप_प्रकार size, अचिन्हित पूर्णाङ्क flags);
 
 /**
  * Add a new side data entry to an array from an existing AVBufferRef.
@@ -1153,9 +1153,9 @@ AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
  *       entry of the same type already exists, it will be replaced instead.
  *
  */
-AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
-                                        enum AVFrameSideDataType type,
-                                        AVBufferRef **buf, unsigned int flags);
+AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                                        गणना AVFrameSideDataType type,
+                                        AVBufferRef **buf, अचिन्हित पूर्णाङ्क flags);
 
 /**
  * Add a new side data entry to an array based on existing side data, taking
@@ -1176,8 +1176,8 @@ AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
  * @note In case of AV_FRAME_SIDE_DATA_FLAG_REPLACE being set, if an
  *       entry of the same type already exists, it will be replaced instead.
  */
-int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
-                             const AVFrameSideData *src, unsigned int flags);
+पूर्णाङ्क av_frame_side_data_clone(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                             ध्रुव AVFrameSideData *src, अचिन्हित पूर्णाङ्क flags);
 
 /**
  * Get a side data entry of a specific type from an array.
@@ -1189,9 +1189,9 @@ int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
  * @return a pointer to the side data of a given type on success, NULL if there
  *         is no side data with such type in this set.
  */
-const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
-                                                const int nb_sd,
-                                                enum AVFrameSideDataType type);
+ध्रुव AVFrameSideData *av_frame_side_data_get_c(ध्रुव AVFrameSideData * ध्रुव *sd,
+                                                ध्रुव पूर्णाङ्क nb_sd,
+                                                गणना AVFrameSideDataType type);
 
 /**
  * Wrapper around av_frame_side_data_get_c() to workaround the limitation
@@ -1199,27 +1199,27 @@ const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *s
  * is not performed automatically in C.
  * @see av_frame_side_data_get_c()
  */
-static inline
-const AVFrameSideData *av_frame_side_data_get(AVFrameSideData * const *sd,
-                                              const int nb_sd,
-                                              enum AVFrameSideDataType type)
+स्थिर अन्तःस्थ
+ध्रुव AVFrameSideData *av_frame_side_data_get(AVFrameSideData * ध्रुव *sd,
+                                              ध्रुव पूर्णाङ्क nb_sd,
+                                              गणना AVFrameSideDataType type)
 {
-    return av_frame_side_data_get_c((const AVFrameSideData * const *)sd,
+    प्रत्यागम av_frame_side_data_get_c((ध्रुव AVFrameSideData * ध्रुव *)sd,
                                     nb_sd, type);
 }
 
 /**
  * Remove and free all side data instances of the given type from an array.
  */
-void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
-                               enum AVFrameSideDataType type);
+शून्य av_frame_side_data_remove(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                               गणना AVFrameSideDataType type);
 
 /**
  * Remove and free all side data instances that match any of the given
  * side data properties. (See enum AVSideDataProps)
  */
-void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
-                                        int props);
+शून्य av_frame_side_data_remove_by_props(AVFrameSideData ***sd, पूर्णाङ्क *nb_sd,
+                                        पूर्णाङ्क props);
 
 /**
  * @}

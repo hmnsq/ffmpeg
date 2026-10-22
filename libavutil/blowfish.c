@@ -21,14 +21,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#अन्तर्भाव <string.h>
 
-#include "attributes.h"
-#include "intreadwrite.h"
-#include "mem.h"
-#include "blowfish.h"
+#अन्तर्भाव "attributes.h"
+#अन्तर्भाव "intreadwrite.h"
+#अन्तर्भाव "mem.h"
+#अन्तर्भाव "blowfish.h"
 
-static const uint32_t orig_p[AV_BF_ROUNDS + 2] = {
+स्थिर ध्रुव uint32_t orig_p[AV_BF_ROUNDS + 2] = {
     0x243F6A88, 0x85A308D3, 0x13198A2E, 0x03707344,
     0xA4093822, 0x299F31D0, 0x082EFA98, 0xEC4E6C89,
     0x452821E6, 0x38D01377, 0xBE5466CF, 0x34E90C6C,
@@ -36,7 +36,7 @@ static const uint32_t orig_p[AV_BF_ROUNDS + 2] = {
     0x9216D5D9, 0x8979FB1B
 };
 
-static const uint32_t orig_s[4][256] = {
+स्थिर ध्रुव uint32_t orig_s[4][256] = {
     { 0xD1310BA6, 0x98DFB5AC, 0x2FFD72DB, 0xD01ADFB7,
       0xB8E1AFED, 0x6A267E96, 0xBA7C9045, 0xF12C7F99,
       0x24A19947, 0xB3916CF7, 0x0801F2E2, 0x858EFC16,
@@ -302,24 +302,24 @@ static const uint32_t orig_s[4][256] = {
            + ctx->s[3][ Xl        & 0xFF])\
            ^ P;
 
-AVBlowfish *av_blowfish_alloc(void)
+AVBlowfish *av_blowfish_alloc(शून्य)
 {
-    return av_mallocz(sizeof(struct AVBlowfish));
+    प्रत्यागम av_mallocz(परिमाण(संरचना AVBlowfish));
 }
 
-av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
+av_cold शून्य av_blowfish_init(AVBlowfish *ctx, ध्रुव uint8_t *कुंजी, पूर्णाङ्क कुंजी_len)
 {
     uint32_t data, data_l, data_r;
-    int i, j, k;
+    पूर्णाङ्क i, j, k;
 
-    memcpy(ctx->s, orig_s, sizeof(orig_s));
+    स_नकल(ctx->s, orig_s, परिमाण(orig_s));
 
     j = 0;
-    for (i = 0; i < AV_BF_ROUNDS + 2; ++i) {
+    प्रति (i = 0; i < AV_BF_ROUNDS + 2; ++i) {
         data = 0;
-        for (k = 0; k < 4; k++) {
-            data = (data << 8) | key[j];
-            if (++j >= key_len)
+        प्रति (k = 0; k < 4; k++) {
+            data = (data << 8) | कुंजी[j];
+            यदि (++j >= कुंजी_len)
                 j = 0;
         }
         ctx->p[i] = orig_p[i] ^ data;
@@ -327,14 +327,14 @@ av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
 
     data_l = data_r = 0;
 
-    for (i = 0; i < AV_BF_ROUNDS + 2; i += 2) {
+    प्रति (i = 0; i < AV_BF_ROUNDS + 2; i += 2) {
         av_blowfish_crypt_ecb(ctx, &data_l, &data_r, 0);
         ctx->p[i]     = data_l;
         ctx->p[i + 1] = data_r;
     }
 
-    for (i = 0; i < 4; ++i) {
-        for (j = 0; j < 256; j += 2) {
+    प्रति (i = 0; i < 4; ++i) {
+        प्रति (j = 0; j < 256; j += 2) {
             av_blowfish_crypt_ecb(ctx, &data_l, &data_r, 0);
             ctx->s[i][j]     = data_l;
             ctx->s[i][j + 1] = data_r;
@@ -342,26 +342,26 @@ av_cold void av_blowfish_init(AVBlowfish *ctx, const uint8_t *key, int key_len)
     }
 }
 
-void av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
-                           int decrypt)
+शून्य av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
+                           पूर्णाङ्क decrypt)
 {
     uint32_t Xl, Xr;
-    int i;
+    पूर्णाङ्क i;
 
     Xl = *xl;
     Xr = *xr;
 
-    if (decrypt) {
+    यदि (decrypt) {
         Xl ^= ctx->p[AV_BF_ROUNDS + 1];
-        for (i = AV_BF_ROUNDS; i > 0; i-=2) {
+        प्रति (i = AV_BF_ROUNDS; i > 0; i-=2) {
             F(Xl, Xr, ctx->p[i  ]);
             F(Xr, Xl, ctx->p[i-1]);
         }
 
         Xr ^= ctx->p[0];
-    } else {
+    } अन्यथा {
         Xl ^= ctx->p[0];
-        for (i = 1; i < AV_BF_ROUNDS+1; i+=2){
+        प्रति (i = 1; i < AV_BF_ROUNDS+1; i+=2){
             F(Xl, Xr, ctx->p[i  ]);
             F(Xr, Xl, ctx->p[i+1]);
         }
@@ -373,23 +373,23 @@ void av_blowfish_crypt_ecb(AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
     *xr = Xl;
 }
 
-void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
-                       int count, uint8_t *iv, int decrypt)
+शून्य av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, ध्रुव uint8_t *src,
+                       पूर्णाङ्क गिनती, uint8_t *iv, पूर्णाङ्क decrypt)
 {
     uint32_t v0, v1;
-    int i;
+    पूर्णाङ्क i;
 
-    if (decrypt) {
-        while (count--) {
+    यदि (decrypt) {
+        यावत् (गिनती--) {
             v0 = AV_RB32(src);
             v1 = AV_RB32(src + 4);
 
             av_blowfish_crypt_ecb(ctx, &v0, &v1, decrypt);
 
-            if (iv) {
+            यदि (iv) {
                 v0 ^= AV_RB32(iv);
                 v1 ^= AV_RB32(iv + 4);
-                memcpy(iv, src, 8);
+                स_नकल(iv, src, 8);
             }
 
             AV_WB32(dst, v0);
@@ -398,14 +398,14 @@ void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
             src   += 8;
             dst   += 8;
         }
-    } else {
-        while (count--) {
-            if (iv) {
-                for (i = 0; i < 8; i++)
+    } अन्यथा {
+        यावत् (गिनती--) {
+            यदि (iv) {
+                प्रति (i = 0; i < 8; i++)
                     dst[i] = src[i] ^ iv[i];
                 v0 = AV_RB32(dst);
                 v1 = AV_RB32(dst + 4);
-            } else {
+            } अन्यथा {
                 v0 = AV_RB32(src);
                 v1 = AV_RB32(src + 4);
             }
@@ -415,8 +415,8 @@ void av_blowfish_crypt(AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
             AV_WB32(dst, v0);
             AV_WB32(dst + 4, v1);
 
-            if (iv)
-                memcpy(iv, dst, 8);
+            यदि (iv)
+                स_नकल(iv, dst, 8);
 
             src   += 8;
             dst   += 8;

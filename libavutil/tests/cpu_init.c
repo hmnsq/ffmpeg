@@ -21,45 +21,45 @@
  * av_get_cpu_flags() has data races.
  */
 
-#include <stdio.h>
-#include <string.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <string.h>
 
-#include "libavutil/cpu.h"
-#include "libavutil/thread.h"
+#अन्तर्भाव "libavutil/cpu.h"
+#अन्तर्भाव "libavutil/thread.h"
 
-static void *thread_main(void *arg)
+स्थिर शून्य *thread_main(शून्य *arg)
 {
-    int *flags = arg;
+    पूर्णाङ्क *flags = arg;
 
     *flags = av_get_cpu_flags();
-    return NULL;
+    प्रत्यागम रिक्त;
 }
 
-int main(void)
+पूर्णाङ्क main(शून्य)
 {
-    int cpu_flags1;
-    int cpu_flags2;
-    int ret;
+    पूर्णाङ्क cpu_flags1;
+    पूर्णाङ्क cpu_flags2;
+    पूर्णाङ्क ret;
     pthread_t thread1;
     pthread_t thread2;
 
-    if ((ret = pthread_create(&thread1, NULL, thread_main, &cpu_flags1))) {
-        fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+    यदि ((ret = pthread_create(&thread1, रिक्त, thread_main, &cpu_flags1))) {
+        ख_लिखो(मानक_त्रुटि, "pthread_create failed: %s.\n", म_त्रुटि(ret));
+        प्रत्यागम 1;
     }
-    if ((ret = pthread_create(&thread2, NULL, thread_main, &cpu_flags2))) {
-        fprintf(stderr, "pthread_create failed: %s.\n", strerror(ret));
-        return 1;
+    यदि ((ret = pthread_create(&thread2, रिक्त, thread_main, &cpu_flags2))) {
+        ख_लिखो(मानक_त्रुटि, "pthread_create failed: %s.\n", म_त्रुटि(ret));
+        प्रत्यागम 1;
     }
-    pthread_join(thread1, NULL);
-    pthread_join(thread2, NULL);
+    pthread_join(thread1, रिक्त);
+    pthread_join(thread2, रिक्त);
 
-    if (cpu_flags1 < 0)
-        return 2;
-    if (cpu_flags2 < 0)
-        return 2;
-    if (cpu_flags1 != cpu_flags2)
-        return 3;
+    यदि (cpu_flags1 < 0)
+        प्रत्यागम 2;
+    यदि (cpu_flags2 < 0)
+        प्रत्यागम 2;
+    यदि (cpu_flags1 != cpu_flags2)
+        प्रत्यागम 3;
 
-    return 0;
+    प्रत्यागम 0;
 }

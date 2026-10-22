@@ -27,10 +27,10 @@
 #ifndef AVUTIL_BPRINT_H
 #define AVUTIL_BPRINT_H
 
-#include <stdarg.h>
+#अन्तर्भाव <stdarg.h>
 
-#include "attributes.h"
-#include "avstring.h"
+#अन्तर्भाव "attributes.h"
+#अन्तर्भाव "avstring.h"
 
 /**
  * @defgroup lavu_avbprint AVBPrint
@@ -46,10 +46,10 @@
  */
 
 #define FF_PAD_STRUCTURE(name, size, ...) \
-struct ff_pad_helper_##name { __VA_ARGS__ }; \
-typedef struct name { \
+संरचना ff_pad_helper_##name { __VA_ARGS__ }; \
+प्रकारनिर्देश संरचना name { \
     __VA_ARGS__ \
-    char reserved_padding[size - sizeof(struct ff_pad_helper_##name)]; \
+    वर्ण reserved_padding[size - परिमाण(संरचना ff_pad_helper_##name)]; \
 } name;
 
 /**
@@ -91,11 +91,11 @@ typedef struct name { \
  */
 
 FF_PAD_STRUCTURE(AVBPrint, 1024,
-    char *str;         /**< string so far */
-    unsigned len;      /**< length so far */
-    unsigned size;     /**< allocated memory */
-    unsigned size_max; /**< maximum allocated memory */
-    char reserved_internal_buffer[1];
+    वर्ण *str;         /**< string so far */
+    अचिन्हित len;      /**< length so far */
+    अचिन्हित size;     /**< allocated memory */
+    अचिन्हित size_max; /**< maximum allocated memory */
+    वर्ण reserved_internal_buffer[1];
 )
 
 /**
@@ -108,7 +108,7 @@ FF_PAD_STRUCTURE(AVBPrint, 1024,
 /**
  * Buffer will be reallocated as necessary, with an amortized linear cost.
  */
-#define AV_BPRINT_SIZE_UNLIMITED  ((unsigned)-1)
+#define AV_BPRINT_SIZE_UNLIMITED  ((अचिन्हित)-1)
 /**
  * Use the exact size available in the AVBPrint structure itself.
  *
@@ -122,7 +122,7 @@ FF_PAD_STRUCTURE(AVBPrint, 1024,
  * The write operations can then possibly be repeated in a buffer with
  * exactly the necessary size (using `size_init = size_max = AVBPrint.len + 1`).
  */
-#define AV_BPRINT_SIZE_COUNT_ONLY 0
+#define AV_BPRINT_SIZE_गिनती_ONLY 0
 /** @} */
 
 /**
@@ -138,7 +138,7 @@ FF_PAD_STRUCTURE(AVBPrint, 1024,
  *                   - `-1` is converted to `UINT_MAX`, the largest limit possible.
  *                   Check also `AV_BPRINT_SIZE_*` macros.
  */
-void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max);
+शून्य av_bprint_init(AVBPrint *buf, अचिन्हित size_init, अचिन्हित size_max);
 
 /**
  * Init a print buffer using a pre-existing buffer.
@@ -152,22 +152,22 @@ void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max);
  * @param buffer  byte buffer to use for the string data
  * @param size    size of buffer
  */
-void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size);
+शून्य av_bprint_init_for_buffer(AVBPrint *buf, वर्ण *buffer, अचिन्हित size);
 
 /**
  * Append a formatted string to a print buffer.
  */
-void av_bprintf(AVBPrint *buf, const char *fmt, ...) av_printf_format(2, 3);
+शून्य av_bprintf(AVBPrint *buf, ध्रुव वर्ण *fmt, ...) av_printf_format(2, 3);
 
 /**
  * Append a formatted string to a print buffer.
  */
-void av_vbprintf(AVBPrint *buf, const char *fmt, va_list vl_arg);
+शून्य av_vbprintf(AVBPrint *buf, ध्रुव वर्ण *fmt, बहु_सूची vl_arg);
 
 /**
  * Append char c n times to a print buffer.
  */
-void av_bprint_chars(AVBPrint *buf, char c, unsigned n);
+शून्य av_bprint_chars(AVBPrint *buf, वर्ण c, अचिन्हित n);
 
 /**
  * Append data to a print buffer.
@@ -176,9 +176,9 @@ void av_bprint_chars(AVBPrint *buf, char c, unsigned n);
  * @param data pointer to data
  * @param size size of data
  */
-void av_bprint_append_data(AVBPrint *buf, const char *data, unsigned size);
+शून्य av_bprint_append_data(AVBPrint *buf, ध्रुव वर्ण *data, अचिन्हित size);
 
-struct tm;
+संरचना पंचांग;
 /**
  * Append a formatted date and time to a print buffer.
  *
@@ -190,7 +190,7 @@ struct tm;
  * produce poor results if the format string expands to a very long text and
  * the bprint buffer is near the limit stated by the size_max option.
  */
-void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm);
+शून्य av_bprint_strftime(AVBPrint *buf, ध्रुव वर्ण *fmt, ध्रुव संरचना पंचांग *पंचांग);
 
 /**
  * Allocate bytes in the buffer for external use.
@@ -201,13 +201,13 @@ void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm);
  * @param[out] actual_size  size of the memory area after allocation;
  *                          can be larger or smaller than size
  */
-void av_bprint_get_buffer(AVBPrint *buf, unsigned size,
-                          unsigned char **mem, unsigned *actual_size);
+शून्य av_bprint_get_buffer(AVBPrint *buf, अचिन्हित size,
+                          अचिन्हित वर्ण **mem, अचिन्हित *actual_size);
 
 /**
  * Reset the string to "" but keep internal allocated data.
  */
-void av_bprint_clear(AVBPrint *buf);
+शून्य av_bprint_clear(AVBPrint *buf);
 
 /**
  * Test if the print buffer is complete (not truncated).
@@ -215,9 +215,9 @@ void av_bprint_clear(AVBPrint *buf);
  * It may have been truncated due to a memory allocation failure
  * or the size_max limit (compare size and size_max if necessary).
  */
-static inline int av_bprint_is_complete(const AVBPrint *buf)
+स्थिर अन्तःस्थ पूर्णाङ्क av_bprint_is_complete(ध्रुव AVBPrint *buf)
 {
-    return buf->len < buf->size;
+    प्रत्यागम buf->len < buf->size;
 }
 
 /**
@@ -231,7 +231,7 @@ static inline int av_bprint_is_complete(const AVBPrint *buf)
  *                    if NULL, the buffer is discarded and freed
  * @return  0 for success or error code (probably AVERROR(ENOMEM))
  */
-int av_bprint_finalize(AVBPrint *buf, char **ret_str);
+पूर्णाङ्क av_bprint_finalize(AVBPrint *buf, वर्ण **ret_str);
 
 /**
  * Escape the content in src and append it to dstbuf.
@@ -246,8 +246,8 @@ int av_bprint_finalize(AVBPrint *buf, char **ret_str);
  *                      notice.
  * @param flags         flags which control how to escape, see AV_ESCAPE_FLAG_* macros
  */
-void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
-                      enum AVEscapeMode mode, int flags);
+शून्य av_bprint_escape(AVBPrint *dstbuf, ध्रुव वर्ण *src, ध्रुव वर्ण *special_chars,
+                      गणना AVEscapeMode mode, पूर्णाङ्क flags);
 
 /** @} */
 

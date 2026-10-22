@@ -19,60 +19,60 @@
 #ifndef AVUTIL_ZLIB_UTILS_H
 #define AVUTIL_ZLIB_UTILS_H
 
-#include <stdint.h>
-#include "log.h"
-#include "error.h"
-#include "mem.h"
+#अन्तर्भाव <stdint.h>
+#अन्तर्भाव "log.h"
+#अन्तर्भाव "error.h"
+#अन्तर्भाव "mem.h"
 
-#include <zlib.h>
+#अन्तर्भाव <zlib.h>
 #define CHUNK_SIZE 1024 * 64
 
-static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
-                                 const uint8_t *src, int src_len)
+स्थिर अन्तःस्थ पूर्णाङ्क ff_zlib_expand(शून्य *ctx, uint8_t **out, माप_प्रकार *out_len,
+                                 ध्रुव uint8_t *src, पूर्णाङ्क src_len)
 {
-    int ret;
+    पूर्णाङ्क ret;
 
     z_stream stream = { 0 };
-    if (inflateInit2(&stream, 32 + 15) != Z_OK) {
+    यदि (inflateInit2(&stream, 32 + 15) != Z_OK) {
         av_log(ctx, AV_LOG_ERROR, "Error during zlib initialisation: %s\n",
-               stream.msg);
-        return AVERROR(ENOSYS);
+               stream.संदेश);
+        प्रत्यागम AVERROR(ENOSYS);
     }
 
     uint64_t buf_size = CHUNK_SIZE * 4;
-    uint8_t *buf = av_realloc(NULL, buf_size);
-    if (!buf) {
+    uint8_t *buf = av_realloc(रिक्त, buf_size);
+    यदि (!buf) {
         inflateEnd(&stream);
-        return AVERROR(ENOMEM);
+        प्रत्यागम AVERROR(ENOMEM);
     }
 
     stream.next_in = src;
     stream.avail_in = src_len;
 
-    do {
+    कुरु {
         stream.avail_out = buf_size - stream.total_out;
         stream.next_out = buf + stream.total_out;
 
         ret = inflate(&stream, Z_FINISH);
-        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
+        यदि (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) {
             av_log(ctx, AV_LOG_ERROR, "zlib inflate error(%d): %s\n",
-                   ret, stream.msg);
+                   ret, stream.संदेश);
             inflateEnd(&stream);
             av_free(buf);
-            return AVERROR(EINVAL);
+            प्रत्यागम AVERROR(EINVAL);
         }
 
-        if (stream.avail_out == 0) {
+        यदि (stream.avail_out == 0) {
             buf_size += CHUNK_SIZE;
             uint8_t *tmp = av_realloc(buf, buf_size);
-            if (!tmp) {
+            यदि (!tmp) {
                 inflateEnd(&stream);
                 av_free(buf);
-                return AVERROR(ENOMEM);
+                प्रत्यागम AVERROR(ENOMEM);
             }
             buf = tmp;
         }
-    } while (ret != Z_STREAM_END);
+    } यावत् (ret != Z_STREAM_END);
 
     // NULL-terminate string
     // there is guaranteed to be space for this, due to condition in loop
@@ -83,6 +83,6 @@ static inline int ff_zlib_expand(void *ctx, uint8_t **out, size_t *out_len,
     *out = buf;
     *out_len = stream.total_out;
 
-    return 0;
+    प्रत्यागम 0;
 }
 #endif /* AVUTIL_ZLIB_UTILS_H */
