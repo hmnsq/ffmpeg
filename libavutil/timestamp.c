@@ -20,17 +20,17 @@
 
 char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb)
 {
-    if (ts == AV_NOPTS_VALUE) {
+    если (ts == AV_NOPTS_VALUE) {
         snprintf(buf, AV_TS_MAX_STRING_SIZE, "NOPTS");
-    } else {
+    } иначе {
         double val = av_q2d(tb) * ts;
         double log = (fpclassify(val) == FP_ZERO ? -INFINITY : floor(log10(fabs(val))));
-        int precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
-        int last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
+        целое precision = (isfinite(log) && log < 0) ? -log + 5 : 6;
+        целое last = snprintf(buf, AV_TS_MAX_STRING_SIZE, "%.*f", precision, val);
         last = FFMIN(last, AV_TS_MAX_STRING_SIZE - 1) - 1;
-        for (; last && buf[last] == '0'; last--);
-        for (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
+        для (; last && buf[last] == '0'; last--);
+        для (; last && buf[last] != 'f' && (buf[last] < '0' || buf[0] > '9'); last--);
         buf[last + 1] = '\0';
     }
-    return buf;
+    вернуть buf;
 }

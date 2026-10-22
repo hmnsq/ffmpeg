@@ -41,7 +41,7 @@ static void test_check_frame_rate(void)
         {30000, 1001}, {15, 1}, {12, 1},
         {0, 0}, {30, 0},
     };
-    for (int i = 0; i < FF_ARRAY_ELEMS(rates); i++)
+    для (целое i = 0; i < FF_ARRAY_ELEMS(rates); i++)
         printf("check_frame_rate %d/%d: %d\n",
                rates[i].num, rates[i].den,
                av_timecode_check_frame_rate(rates[i]));
@@ -52,8 +52,8 @@ static void test_init(void)
     AVTimecode tc;
     static const struct {
         AVRational rate;
-        int flags;
-        int start;
+        целое flags;
+        целое start;
     } cases[] = {
         { {25, 1}, 0, 0 },
         { {30, 1}, AV_TIMECODE_FLAG_DROPFRAME, 0 },
@@ -64,13 +64,13 @@ static void test_init(void)
         { {25, 1}, AV_TIMECODE_FLAG_ALLOWNEGATIVE, -100 },
     };
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
-        int ret = av_timecode_init(&tc, cases[i].rate, cases[i].flags, cases[i].start, NULL);
+    для (целое i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
+        целое ret = av_timecode_init(&tc, cases[i].rate, cases[i].flags, cases[i].start, NULL);
         printf("init %d/%d flags:%d start:%d: ",
                cases[i].rate.num, cases[i].rate.den, cases[i].flags, cases[i].start);
-        if (ret < 0) {
+        если (ret < 0) {
             printf("error\n");
-        } else {
+        } иначе {
             printf("ok fps=%d start=%d rate=%d/%d\n",
                    tc.fps, tc.start, tc.rate.num, tc.rate.den);
         }
@@ -80,7 +80,7 @@ static void test_init(void)
 static void test_init_from_components(void)
 {
     AVTimecode tc;
-    int ret;
+    целое ret;
 
     ret = av_timecode_init_from_components(&tc, (AVRational){25, 1},
                                            0, 0, 0, 0, 0, NULL);
@@ -104,7 +104,7 @@ static void test_init_from_components(void)
 static void test_init_from_string(void)
 {
     AVTimecode tc;
-    int ret;
+    целое ret;
 
     ret = av_timecode_init_from_string(&tc, (AVRational){30, 1},
                                        "00:01:02:03", NULL);
@@ -203,8 +203,8 @@ static void test_make_mpeg_tc_string(void)
 static void test_adjust_ntsc(void)
 {
     static const struct {
-        int framenum;
-        int fps;
+        целое framenum;
+        целое fps;
     } cases[] = {
         { 0, 30 },
         { 1800, 30 },
@@ -213,7 +213,7 @@ static void test_adjust_ntsc(void)
         { 3600, 60 },
     };
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
+    для (целое i = 0; i < FF_ARRAY_ELEMS(cases); i++) {
         printf("adjust_ntsc %d %d: %d\n",
                cases[i].framenum, cases[i].fps,
                av_timecode_adjust_ntsc_framenum2(cases[i].framenum,
@@ -262,7 +262,7 @@ static void test_get_smpte_roundtrip(void)
                                              smpte, 0, 0));
 }
 
-int main(void)
+целое основной(void)
 {
     test_check_frame_rate();
     test_init();
@@ -274,5 +274,5 @@ int main(void)
     test_make_mpeg_tc_string();
     test_adjust_ntsc();
     test_get_smpte_roundtrip();
-    return 0;
+    вернуть 0;
 }

@@ -25,63 +25,63 @@
 #include "mem.h"
 
 static void vector_fmul_c(float *dst, const float *src0, const float *src1,
-                          int len)
+                          целое len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    целое i;
+    для (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
 static void vector_dmul_c(double *dst, const double *src0, const double *src1,
-                          int len)
+                          целое len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    целое i;
+    для (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i];
 }
 
 static void vector_fmac_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+                                 целое len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    целое i;
+    для (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
 static void vector_dmac_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+                                 целое len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    целое i;
+    для (i = 0; i < len; i++)
         dst[i] += src[i] * mul;
 }
 
 static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
-                                 int len)
+                                 целое len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    целое i;
+    для (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
 static void vector_dmul_scalar_c(double *dst, const double *src, double mul,
-                                 int len)
+                                 целое len)
 {
-    int i;
-    for (i = 0; i < len; i++)
+    целое i;
+    для (i = 0; i < len; i++)
         dst[i] = src[i] * mul;
 }
 
 static void vector_fmul_window_c(float *dst, const float *src0,
-                                 const float *src1, const float *win, int len)
+                                 const float *src1, const float *win, целое len)
 {
-    int i, j;
+    целое i, j;
 
     dst  += len;
     win  += len;
     src0 += len;
 
-    for (i = -len, j = len - 1; i < 0; i++, j--) {
+    для (i = -len, j = len - 1; i < 0; i++, j--) {
         float s0 = src0[i];
         float s1 = src1[j];
         float wi = win[i];
@@ -92,29 +92,29 @@ static void vector_fmul_window_c(float *dst, const float *src0,
 }
 
 static void vector_fmul_add_c(float *dst, const float *src0, const float *src1,
-                              const float *src2, int len){
-    int i;
+                              const float *src2, целое len){
+    целое i;
 
-    for (i = 0; i < len; i++)
+    для (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[i] + src2[i];
 }
 
 static void vector_fmul_reverse_c(float *dst, const float *src0,
-                                  const float *src1, int len)
+                                  const float *src1, целое len)
 {
-    int i;
+    целое i;
 
     src1 += len-1;
-    for (i = 0; i < len; i++)
+    для (i = 0; i < len; i++)
         dst[i] = src0[i] * src1[-i];
 }
 
 static void butterflies_float_c(float *restrict v1, float *restrict v2,
-                                int len)
+                                целое len)
 {
-    int i;
+    целое i;
 
-    for (i = 0; i < len; i++) {
+    для (i = 0; i < len; i++) {
         float t = v1[i] - v2[i];
         v1[i] += v2[i];
         v2[i] = t;
@@ -126,17 +126,17 @@ double ff_scalarproduct_double_c(const double *v1, const double *v2,
 {
     double p = 0.0;
 
-    for (size_t i = 0; i < len; i++)
+    для (size_t i = 0; i < len; i++)
         p += v1[i] * v2[i];
 
-    return p;
+    вернуть p;
 }
 
-av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
+av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(целое bit_exact)
 {
     AVFloatDSPContext *fdsp = av_mallocz(sizeof(AVFloatDSPContext));
-    if (!fdsp)
-        return NULL;
+    если (!fdsp)
+        вернуть NULL;
 
     fdsp->vector_fmul = vector_fmul_c;
     fdsp->vector_dmul = vector_dmul_c;
@@ -151,7 +151,7 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
     fdsp->scalarproduct_float = ff_scalarproduct_float_c;
     fdsp->scalarproduct_double = ff_scalarproduct_double_c;
 
-#if ARCH_AARCH64
+#если ARCH_AARCH64
     ff_float_dsp_init_aarch64(fdsp);
 #elif ARCH_ARM
     ff_float_dsp_init_arm(fdsp);
@@ -164,5 +164,5 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
 #elif ARCH_MIPS
     ff_float_dsp_init_mips(fdsp);
 #endif
-    return fdsp;
+    вернуть fdsp;
 }

@@ -29,7 +29,7 @@
 #include <asm/cputable.h>
 #include <linux/auxvec.h>
 #include <fcntl.h>
-#if HAVE_UNISTD_H
+#если HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #elif defined(__NetBSD__) || defined(__OpenBSD__)
@@ -61,71 +61,71 @@
  * This function MAY rely on signal() or fork() in order to make sure AltiVec
  * is present.
  */
-int ff_get_cpu_flags_ppc(void)
+целое ff_get_cpu_flags_ppc(void)
 {
-#if HAVE_ALTIVEC
+#если HAVE_ALTIVEC
 #ifdef __AMIGAOS4__
     ULONG result = 0;
     extern struct ExecIFace *IExec;
 
     IExec->GetCPUInfoTags(GCIT_VectorUnit, &result, TAG_DONE);
-    if (result == VECTORTYPE_ALTIVEC)
-        return AV_CPU_FLAG_ALTIVEC;
-    return 0;
+    если (result == VECTORTYPE_ALTIVEC)
+        вернуть AV_CPU_FLAG_ALTIVEC;
+    вернуть 0;
 #elif HAVE_GETAUXVAL || HAVE_ELF_AUX_INFO
-    int flags = 0;
+    целое flags = 0;
 
     unsigned long hwcap = ff_getauxval(AT_HWCAP);
     unsigned long hwcap2 = ff_getauxval(AT_HWCAP2);
 
-    if (hwcap & HWCAP_PPC_ALTIVEC)
+    если (hwcap & HWCAP_PPC_ALTIVEC)
        flags |= AV_CPU_FLAG_ALTIVEC;
-    if (hwcap & HWCAP_PPC_VSX)
+    если (hwcap & HWCAP_PPC_VSX)
        flags |= AV_CPU_FLAG_VSX;
-    if (hwcap2 & HWCAP2_PPC_ARCH_2_07)
+    если (hwcap2 & HWCAP2_PPC_ARCH_2_07)
        flags |= AV_CPU_FLAG_POWER8;
 
-    return flags;
+    вернуть flags;
 #elif defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__)
-#if defined(__NetBSD__) || defined(__OpenBSD__)
-    int sels[2] = {CTL_MACHDEP, CPU_ALTIVEC};
-#else
-    int sels[2] = {CTL_HW, HW_VECTORUNIT};
+#если defined(__NetBSD__) || defined(__OpenBSD__)
+    целое sels[2] = {CTL_MACHDEP, CPU_ALTIVEC};
+#иначе
+    целое sels[2] = {CTL_HW, HW_VECTORUNIT};
 #endif
-    int has_vu = 0;
+    целое has_vu = 0;
     size_t len = sizeof(has_vu);
-    int err;
+    целое err;
 
     err = sysctl(sels, 2, &has_vu, &len, NULL, 0);
 
-    if (err == 0)
-        return has_vu ? AV_CPU_FLAG_ALTIVEC : 0;
-    return 0;
+    если (err == 0)
+        вернуть has_vu ? AV_CPU_FLAG_ALTIVEC : 0;
+    вернуть 0;
 #elif defined(__linux__)
     // The linux kernel could have the altivec support disabled
     // even if the cpu has it.
-    int i, ret = 0;
-    int fd = open("/proc/self/auxv", O_RDONLY);
+    целое i, ret = 0;
+    целое fd = open("/proc/self/auxv", O_RDONLY);
     unsigned long buf[64] = { 0 };
     ssize_t count;
 
-    if (fd < 0)
-        return 0;
+    если (fd < 0)
+        вернуть 0;
 
-    while ((count = read(fd, buf, sizeof(buf))) > 0) {
-        for (i = 0; i < count / sizeof(*buf); i += 2) {
-            if (buf[i] == AT_NULL)
+    пока ((count = read(fd, buf, sizeof(buf))) > 0) {
+        для (i = 0; i < count / sizeof(*buf); i += 2) {
+            если (buf[i] == AT_NULL)
                 goto out;
-            if (buf[i] == AT_HWCAP) {
-                if (buf[i + 1] & HWCAP_PPC_ALTIVEC)
+            если (buf[i] == AT_HWCAP) {
+                если (buf[i + 1] & HWCAP_PPC_ALTIVEC)
                     ret = AV_CPU_FLAG_ALTIVEC;
-                if (buf[i + 1] & HWCAP_PPC_VSX)
+                если (buf[i + 1] & HWCAP_PPC_VSX)
                     ret |= AV_CPU_FLAG_VSX;
-                if (ret & AV_CPU_FLAG_VSX)
+                если (ret & AV_CPU_FLAG_VSX)
                     av_assert0(ret & AV_CPU_FLAG_ALTIVEC);
             }
-            else if (buf[i] == AT_HWCAP2) {
-                if (buf[i + 1] & HWCAP2_PPC_ARCH_2_07)
+            иначе если (buf[i] == AT_HWCAP2) {
+                если (buf[i + 1] & HWCAP2_PPC_ARCH_2_07)
                     ret |= AV_CPU_FLAG_POWER8;
             }
         }
@@ -133,24 +133,24 @@ int ff_get_cpu_flags_ppc(void)
 
 out:
     close(fd);
-    return ret;
-#else
+    вернуть ret;
+#иначе
     // Since we were compiled for AltiVec, just assume we have it
     // until someone comes up with a proper way (not involving signal hacks).
-    return AV_CPU_FLAG_ALTIVEC;
+    вернуть AV_CPU_FLAG_ALTIVEC;
 #endif /* __AMIGAOS4__ */
 #endif /* HAVE_ALTIVEC */
-    return 0;
+    вернуть 0;
 }
 
 size_t ff_get_cpu_max_align_ppc(void)
 {
-    int flags = av_get_cpu_flags();
+    целое flags = av_get_cpu_flags();
 
-    if (flags & (AV_CPU_FLAG_ALTIVEC   |
+    если (flags & (AV_CPU_FLAG_ALTIVEC   |
                  AV_CPU_FLAG_VSX       |
                  AV_CPU_FLAG_POWER8))
-        return 16;
+        вернуть 16;
 
-    return 8;
+    вернуть 8;
 }

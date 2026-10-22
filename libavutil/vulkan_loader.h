@@ -34,7 +34,7 @@
     },
 
 static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
-                                                int nb_extensions)
+                                                целое nb_extensions)
 {
     static const struct ExtensionMap {
         const char *name;
@@ -115,16 +115,16 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
 
     FFVulkanExtensions mask = 0x0;
 
-    for (int i = 0; i < nb_extensions; i++) {
-        for (int j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
-            if (!strcmp(extensions[i], extension_map[j].name)) {
+    для (целое i = 0; i < nb_extensions; i++) {
+        для (целое j = 0; j < FF_ARRAY_ELEMS(extension_map); j++) {
+            если (!strcmp(extensions[i], extension_map[j].name)) {
                 mask |= extension_map[j].flag;
                 continue;
             }
         }
     }
 
-    return mask;
+    вернуть mask;
 }
 
 /**
@@ -140,10 +140,10 @@ static inline uint64_t ff_vk_extensions_to_mask(const char * const *extensions,
  * plus you can be sure that any extensions you've enabled during device
  * initialization will be available.
  */
-static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
+static inline целое ff_vk_load_functions(AVHWDeviceContext *ctx,
                                        FFVulkanFunctions *vk,
                                        uint64_t extensions_mask,
-                                       int has_inst, int has_dev)
+                                       целое has_inst, целое has_dev)
 {
     AVVulkanDeviceContext *hwctx = ctx->hwctx;
 
@@ -169,45 +169,45 @@ static inline int ff_vk_load_functions(AVHWDeviceContext *ctx,
     ;
 #undef FUNC_NAME
 
-    for (int i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
+    для (целое i = 0; i < FF_ARRAY_ELEMS(vk_load_info); name += strlen(name) + 1, i++) {
         const struct FunctionLoadInfo *load = &vk_load_info[i];
         static const char extensions[][4] = { "", "EXT", "KHR" };
         PFN_vkVoidFunction fn;
 
-        if (load->req_dev  && !has_dev)
+        если (load->req_dev  && !has_dev)
             continue;
-        if (load->req_inst && !has_inst)
+        если (load->req_inst && !has_inst)
             continue;
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
+        для (целое j = 0; j < FF_ARRAY_ELEMS(extensions); j++) {
             char ext_name[128];
-            av_unused int n;
+            av_unused целое n;
 
             n = snprintf(ext_name, sizeof(ext_name), "%s%s", name, extensions[j]);
             av_assert1(n < sizeof(ext_name));
 
-            if (load->req_dev)
+            если (load->req_dev)
                 fn = vk->GetDeviceProcAddr(hwctx->act_dev, ext_name);
-            else if (load->req_inst)
+            иначе если (load->req_inst)
                 fn = hwctx->get_proc_addr(hwctx->inst, ext_name);
-            else
+            иначе
                 fn = hwctx->get_proc_addr(NULL, ext_name);
 
-            if (fn)
+            если (fn)
                 break;
         }
 
-        if (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
+        если (!fn && ((extensions_mask &~ FF_VK_EXT_NO_FLAG) & load->ext_flag)) {
             av_log(ctx, AV_LOG_ERROR, "Loader error, function \"%s\" indicated "
                    "as supported, but got NULL function pointer!\n", name);
-            return AVERROR_EXTERNAL;
+            вернуть AVERROR_EXTERNAL;
         }
 
         *(PFN_vkVoidFunction *)((uint8_t *)vk + load->struct_offset) = fn;
     }
     av_assert1(*name == '\0');
 
-    return 0;
+    вернуть 0;
 }
 
 #endif /* AVUTIL_VULKAN_LOADER_H */

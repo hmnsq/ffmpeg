@@ -41,7 +41,7 @@
  * @{
  */
 
-extern const int av_ripemd_size;
+extern const целое av_ripemd_size;
 
 struct AVRIPEMD;
 
@@ -57,7 +57,7 @@ struct AVRIPEMD *av_ripemd_alloc(void);
  * @param bits    number of bits in digest (128, 160, 256 or 320 bits)
  * @return        zero if initialization succeeded, -1 otherwise
  */
-int av_ripemd_init(struct AVRIPEMD* context, int bits);
+целое av_ripemd_init(struct AVRIPEMD* context, целое bits);
 
 /**
  * Update hash value.

@@ -100,7 +100,7 @@ void av_display_rotation_set(int32_t matrix[9], double angle);
  * @param hflip whether the matrix should be flipped horizontally
  * @param vflip whether the matrix should be flipped vertically
  */
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip);
+void av_display_matrix_flip(int32_t matrix[9], целое hflip, целое vflip);
 
 /**
  * @}

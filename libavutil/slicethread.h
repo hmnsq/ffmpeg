@@ -33,10 +33,10 @@ typedef struct AVSliceThread AVSliceThread;
  * @param nb_threads number of threads, 0 for automatic, must be >= 0
  * @return return number of threads or negative AVERROR on failure
  */
-int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
-                               int (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
-                               int (*main_func)(void *priv),
-                               int nb_threads);
+целое avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
+                               целое (*worker_func)(void *priv, целое jobnr, целое threadnr, целое nb_jobs, целое nb_threads),
+                               целое (*main_func)(void *priv),
+                               целое nb_threads);
 
 /**
  * Execute slice threading. If any job returns a nonzero value,
@@ -50,7 +50,7 @@ int avpriv_slicethread_create2(AVSliceThread **pctx, void *priv,
  * @param execute_main also execute main_func
  * @return 0 on success, else first seen return value
  */
-int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_main);
+целое avpriv_slicethread_execute2(AVSliceThread *ctx, целое nb_jobs, целое execute_main);
 
 /**
  * Destroy slice threading context.
@@ -58,23 +58,23 @@ int avpriv_slicethread_execute2(AVSliceThread *ctx, int nb_jobs, int execute_mai
  */
 void avpriv_slicethread_free(AVSliceThread **pctx);
 
-#if LIBAVUTIL_VERSION_MAJOR < 62
+#если LIBAVUTIL_VERSION_MAJOR < 62
 /**
  * @deprecated
  * Wrapper around avpriv_slicethread_create2() for ABI backwards compatibility.
  */
 attribute_deprecated
-int avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
-                              void (*worker_func)(void *priv, int jobnr, int threadnr, int nb_jobs, int nb_threads),
+целое avpriv_slicethread_create(AVSliceThread **pctx, void *priv,
+                              void (*worker_func)(void *priv, целое jobnr, целое threadnr, целое nb_jobs, целое nb_threads),
                               void (*main_func)(void *priv),
-                              int nb_threads);
+                              целое nb_threads);
 
 /**
  * @deprecated
  * Wrapper around avpriv_slicethread_execute2() for ABI backwards compatibility.
  */
 attribute_deprecated
-void avpriv_slicethread_execute(AVSliceThread *ctx, int nb_jobs, int execute_main);
+void avpriv_slicethread_execute(AVSliceThread *ctx, целое nb_jobs, целое execute_main);
 #endif /* LIBAVUTIL_VERSION_MAJOR < 62 */
 
 #endif

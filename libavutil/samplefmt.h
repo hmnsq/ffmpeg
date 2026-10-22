@@ -97,7 +97,7 @@ enum AVSampleFormat av_get_sample_fmt(const char *name);
  * requested planar/packed format, the format returned is the same as the
  * input.
  */
-enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar);
+enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, целое planar);
 
 /**
  * Get the packed alternative form of the given sample format.
@@ -132,7 +132,7 @@ enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt);
  * corresponding header.
  * @return the pointer to the filled buffer or NULL in case of other errors
  */
-char *av_get_sample_fmt_string(char *buf, int buf_size, enum AVSampleFormat sample_fmt);
+char *av_get_sample_fmt_string(char *buf, целое buf_size, enum AVSampleFormat sample_fmt);
 
 /**
  * Return number of bytes per sample.
@@ -141,7 +141,7 @@ char *av_get_sample_fmt_string(char *buf, int buf_size, enum AVSampleFormat samp
  * @return number of bytes per sample or zero if unknown for the given
  * sample format
  */
-int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt);
+целое av_get_bytes_per_sample(enum AVSampleFormat sample_fmt);
 
 /**
  * Check if the sample format is planar.
@@ -149,7 +149,7 @@ int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt);
  * @param sample_fmt the sample format to inspect
  * @return 1 if the sample format is planar, 0 if it is interleaved
  */
-int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt);
+целое av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt);
 
 /**
  * Get the required buffer size for the given audio parameters.
@@ -161,8 +161,8 @@ int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt);
  * @param align         buffer size alignment (0 = default, 1 = no alignment)
  * @return              required buffer size, or negative error code on failure
  */
-int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align);
+целое av_samples_get_buffer_size(целое *linesize, целое nb_channels, целое nb_samples,
+                               enum AVSampleFormat sample_fmt, целое align);
 
 /**
  * @}
@@ -202,10 +202,10 @@ int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
  * @return                 minimum size in bytes required for the buffer on success,
  *                         or a negative error code on failure
  */
-int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
+целое av_samples_fill_arrays(uint8_t **audio_data, целое *linesize,
                            const uint8_t *buf,
-                           int nb_channels, int nb_samples,
-                           enum AVSampleFormat sample_fmt, int align);
+                           целое nb_channels, целое nb_samples,
+                           enum AVSampleFormat sample_fmt, целое align);
 
 /**
  * Allocate a samples buffer for nb_samples samples, and fill data pointers and
@@ -227,8 +227,8 @@ int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
  * @see av_samples_fill_arrays()
  * @see av_samples_alloc_array_and_samples()
  */
-int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
-                     int nb_samples, enum AVSampleFormat sample_fmt, int align);
+целое av_samples_alloc(uint8_t **audio_data, целое *linesize, целое nb_channels,
+                     целое nb_samples, enum AVSampleFormat sample_fmt, целое align);
 
 /**
  * Allocate a data pointers array, samples buffer for nb_samples
@@ -239,8 +239,8 @@ int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
  *
  * @see av_samples_alloc()
  */
-int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
-                                       int nb_samples, enum AVSampleFormat sample_fmt, int align);
+целое av_samples_alloc_array_and_samples(uint8_t ***audio_data, целое *linesize, целое nb_channels,
+                                       целое nb_samples, enum AVSampleFormat sample_fmt, целое align);
 
 /**
  * Copy samples from src to dst.
@@ -253,8 +253,8 @@ int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int
  * @param nb_channels number of audio channels
  * @param sample_fmt audio sample format
  */
-int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
-                    int src_offset, int nb_samples, int nb_channels,
+целое av_samples_copy(uint8_t * const *dst, uint8_t * const *src, целое dst_offset,
+                    целое src_offset, целое nb_samples, целое nb_channels,
                     enum AVSampleFormat sample_fmt);
 
 /**
@@ -266,8 +266,8 @@ int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
  * @param nb_channels number of audio channels
  * @param sample_fmt  audio sample format
  */
-int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
-                           int nb_channels, enum AVSampleFormat sample_fmt);
+целое av_samples_set_silence(uint8_t * const *audio_data, целое offset, целое nb_samples,
+                           целое nb_channels, enum AVSampleFormat sample_fmt);
 
 /**
  * @}

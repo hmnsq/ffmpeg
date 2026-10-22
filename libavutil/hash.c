@@ -89,39 +89,39 @@ enum {
 
 static const struct {
     const char name[MAX_HASH_NAME_SIZE];
-    int size;
+    целое size;
 } hashdesc[] = {
 #define HASH_DESC(TYPE, NAME, SIZE) [TYPE] = { NAME, SIZE },
     HASHES(HASH_DESC)
 };
 
-const char *av_hash_names(int i)
+const char *av_hash_names(целое i)
 {
-    if (i < 0 || i >= NUM_HASHES) return NULL;
-    return hashdesc[i].name;
+    если (i < 0 || i >= NUM_HASHES) вернуть NULL;
+    вернуть hashdesc[i].name;
 }
 
 const char *av_hash_get_name(const AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].name;
+    вернуть hashdesc[ctx->type].name;
 }
 
-int av_hash_get_size(const AVHashContext *ctx)
+целое av_hash_get_size(const AVHashContext *ctx)
 {
-    return hashdesc[ctx->type].size;
+    вернуть hashdesc[ctx->type].size;
 }
 
-int av_hash_alloc(AVHashContext **ctx, const char *name)
+целое av_hash_alloc(AVHashContext **ctx, const char *name)
 {
     AVHashContext *res;
-    int i;
+    целое i;
     *ctx = NULL;
-    for (i = 0; i < NUM_HASHES; i++)
-        if (av_strcasecmp(name, hashdesc[i].name) == 0)
+    для (i = 0; i < NUM_HASHES; i++)
+        если (av_strcasecmp(name, hashdesc[i].name) == 0)
             break;
-    if (i >= NUM_HASHES) return AVERROR(EINVAL);
+    если (i >= NUM_HASHES) вернуть AVERROR(EINVAL);
     res = av_mallocz(sizeof(*res));
-    if (!res) return AVERROR(ENOMEM);
+    если (!res) вернуть AVERROR(ENOMEM);
     res->type = i;
     switch (i) {
     case MD5:     res->ctx = av_md5_alloc(); break;
@@ -140,12 +140,12 @@ int av_hash_alloc(AVHashContext **ctx, const char *name)
     case CRC32:   res->crctab = av_crc_get_table(AV_CRC_32_IEEE_LE); break;
     case ADLER32: break;
     }
-    if (i != ADLER32 && i != CRC32 && !res->ctx) {
+    если (i != ADLER32 && i != CRC32 && !res->ctx) {
         av_free(res);
-        return AVERROR(ENOMEM);
+        вернуть AVERROR(ENOMEM);
     }
     *ctx = res;
-    return 0;
+    вернуть 0;
 }
 
 void av_hash_init(AVHashContext *ctx)
@@ -211,28 +211,28 @@ void av_hash_final(AVHashContext *ctx, uint8_t *dst)
     }
 }
 
-void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size)
+void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, целое size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE];
     unsigned rsize = av_hash_get_size(ctx);
 
     av_hash_final(ctx, buf);
     memcpy(dst, buf, FFMIN(size, rsize));
-    if (size > rsize)
+    если (size > rsize)
         memset(dst + rsize, 0, size - rsize);
 }
 
-void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size)
+void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, целое size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE];
     unsigned rsize = av_hash_get_size(ctx), i;
 
     av_hash_final(ctx, buf);
-    for (i = 0; i < FFMIN(rsize, size / 2); i++)
+    для (i = 0; i < FFMIN(rsize, size / 2); i++)
         snprintf(dst + i * 2, size - i * 2, "%02x", buf[i]);
 }
 
-void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size)
+void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, целое size)
 {
     uint8_t buf[AV_HASH_MAX_SIZE], b64[AV_BASE64_SIZE(AV_HASH_MAX_SIZE)];
     unsigned rsize = av_hash_get_size(ctx), osize;
@@ -241,13 +241,13 @@ void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size)
     av_base64_encode(b64, sizeof(b64), buf, rsize);
     osize = AV_BASE64_SIZE(rsize);
     memcpy(dst, b64, FFMIN(osize, size));
-    if (size < osize)
+    если (size < osize)
         dst[size - 1] = 0;
 }
 
 void av_hash_freep(AVHashContext **ctx)
 {
-    if (*ctx)
+    если (*ctx)
         av_freep(&(*ctx)->ctx);
     av_freep(ctx);
 }

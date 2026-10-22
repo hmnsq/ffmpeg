@@ -46,16 +46,16 @@
 
 #define testxmmclobbers(func, ctx, ...)                         \
     uint64_t xmm[2][10][2];                                     \
-    int ret;                                                    \
+    целое ret;                                                    \
     storexmmregs(xmm[0]);                                       \
     ret = __real_ ## func(ctx, __VA_ARGS__);                    \
     storexmmregs(xmm[1]);                                       \
-    if (memcmp(xmm[0], xmm[1], sizeof(xmm[0]))) {               \
-        int i;                                                  \
+    если (memcmp(xmm[0], xmm[1], sizeof(xmm[0]))) {               \
+        целое i;                                                  \
         av_log(ctx, AV_LOG_ERROR,                               \
                "XMM REGS CLOBBERED IN %s!\n", #func);           \
-        for (i = 0; i < 10; i ++)                               \
-            if (xmm[0][i][0] != xmm[1][i][0] ||                 \
+        для (i = 0; i < 10; i ++)                               \
+            если (xmm[0][i][0] != xmm[1][i][0] ||                 \
                 xmm[0][i][1] != xmm[1][i][1]) {                 \
                 av_log(ctx, AV_LOG_ERROR,                       \
                        "xmm%-2d = %016"PRIx64"%016"PRIx64"\n",  \
@@ -68,11 +68,11 @@
             }                                                   \
         abort();                                                \
     }                                                           \
-    return ret
+    вернуть ret
 
 #define wrap(func)      \
-int __real_ ## func;    \
-int __wrap_ ## func;    \
-int __wrap_ ## func
+целое __real_ ## func;    \
+целое __wrap_ ## func;    \
+целое __wrap_ ## func
 
 #endif /* AVUTIL_X86_W64XMMTEST_H */

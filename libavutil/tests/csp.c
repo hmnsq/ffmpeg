@@ -28,27 +28,27 @@ static void print_cie(const char *label, AVCIExy xy)
            xy.x.num, xy.x.den, xy.y.num, xy.y.den);
 }
 
-static int cie_eq(AVCIExy a, AVCIExy b)
+static целое cie_eq(AVCIExy a, AVCIExy b)
 {
-    return av_cmp_q(a.x, b.x) == 0 && av_cmp_q(a.y, b.y) == 0;
+    вернуть av_cmp_q(a.x, b.x) == 0 && av_cmp_q(a.y, b.y) == 0;
 }
 
-static int desc_eq(const AVColorPrimariesDesc *a, const AVColorPrimariesDesc *b)
+static целое desc_eq(const AVColorPrimariesDesc *a, const AVColorPrimariesDesc *b)
 {
-    return cie_eq(a->wp,     b->wp)     &&
+    вернуть cie_eq(a->wp,     b->wp)     &&
            cie_eq(a->prim.r, b->prim.r) &&
            cie_eq(a->prim.g, b->prim.g) &&
            cie_eq(a->prim.b, b->prim.b);
 }
 
-int main(void)
+целое основной(void)
 {
     /* av_csp_luma_coeffs_from_avcsp: iterate every defined colorspace */
     printf("Testing av_csp_luma_coeffs_from_avcsp()\n");
-    for (enum AVColorSpace csp = 0; csp < AVCOL_SPC_NB; csp++) {
+    для (enum AVColorSpace csp = 0; csp < AVCOL_SPC_NB; csp++) {
         const AVLumaCoefficients *c = av_csp_luma_coeffs_from_avcsp(csp);
         const char *name = av_color_space_name(csp);
-        if (!c) {
+        если (!c) {
             printf("csp=%-16s -> NULL\n", name ? name : "?");
             continue;
         }
@@ -64,18 +64,18 @@ int main(void)
 
     /* av_csp_primaries_desc_from_id + av_csp_primaries_id_from_desc */
     printf("\nTesting av_csp_primaries_desc_from_id() round trip\n");
-    for (enum AVColorPrimaries prm = 0; prm < AVCOL_PRI_EXT_NB; prm++) {
+    для (enum AVColorPrimaries prm = 0; prm < AVCOL_PRI_EXT_NB; prm++) {
         const AVColorPrimariesDesc *d;
         const AVColorPrimariesDesc *d_back;
         enum AVColorPrimaries back;
         const char *name, *back_name, *status;
 
-        if (prm == AVCOL_PRI_NB)
+        если (prm == AVCOL_PRI_NB)
             prm = AVCOL_PRI_EXT_BASE;
 
         d    = av_csp_primaries_desc_from_id(prm);
         name = av_color_primaries_name(prm);
-        if (!d) {
+        если (!d) {
             printf("prm=%-16s -> NULL\n", name ? name : "?");
             continue;
         }
@@ -93,10 +93,10 @@ int main(void)
         back      = av_csp_primaries_id_from_desc(d);
         d_back    = av_csp_primaries_desc_from_id(back);
         back_name = av_color_primaries_name(back);
-        if (back == AVCOL_PRI_UNSPECIFIED)
+        если (back == AVCOL_PRI_UNSPECIFIED)
             status = prm >= AVCOL_PRI_EXT_BASE ? "ext-no-base-match"
                                                : "MISMATCH";
-        else
+        иначе
             status = d_back && desc_eq(d, d_back) ? "OK" : "MISMATCH";
         printf("  round-trip id=%-16s desc=%s\n",
                back_name ? back_name : "?", status);
@@ -123,11 +123,11 @@ int main(void)
     /* av_csp_approximate_trc_gamma + av_csp_approximate_eotf_gamma:
      * both return values from static tables, so output is bitexact. */
     printf("\nTesting av_csp_approximate_{trc,eotf}_gamma()\n");
-    for (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
+    для (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
         const char *name;
         double g_trc, g_eotf;
 
-        if (trc == AVCOL_TRC_NB)
+        если (trc == AVCOL_TRC_NB)
             trc = AVCOL_TRC_EXT_BASE;
 
         name   = av_color_transfer_name(trc);
@@ -141,5 +141,5 @@ int main(void)
            av_csp_approximate_trc_gamma(AVCOL_TRC_NB),
            av_csp_approximate_eotf_gamma(AVCOL_TRC_NB));
 
-    return 0;
+    вернуть 0;
 }

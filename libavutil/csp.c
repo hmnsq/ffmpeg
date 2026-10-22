@@ -35,7 +35,7 @@
 #include "pixfmt.h"
 #include "rational.h"
 
-#define AVR(d) { (int)(d * 100000 + 0.5), 100000 }
+#define AVR(d) { (целое)(d * 100000 + 0.5), 100000 }
 
 /*
  * All constants explained in e.g. https://linuxtv.org/downloads/v4l-dvb-apis/ch02s06.html
@@ -59,13 +59,13 @@ const struct AVLumaCoefficients *av_csp_luma_coeffs_from_avcsp(enum AVColorSpace
 {
     const AVLumaCoefficients *coeffs;
 
-    if ((unsigned)csp >= AVCOL_SPC_NB)
-        return NULL;
+    если ((unsigned)csp >= AVCOL_SPC_NB)
+        вернуть NULL;
     coeffs = &luma_coefficients[csp];
-    if (!coeffs->cr.num)
-        return NULL;
+    если (!coeffs->cr.num)
+        вернуть NULL;
 
-    return coeffs;
+    вернуть coeffs;
 }
 
 #define WP_D65 { AVR(0.3127), AVR(0.3290) }
@@ -95,30 +95,30 @@ static const AVColorPrimariesDesc color_primaries_ext[AVCOL_PRI_EXT_NB -
 const AVColorPrimariesDesc *av_csp_primaries_desc_from_id(enum AVColorPrimaries prm)
 {
     const AVColorPrimariesDesc *p = NULL;
-    if ((unsigned)prm < AVCOL_PRI_NB)
+    если ((unsigned)prm < AVCOL_PRI_NB)
         p = &color_primaries[prm];
-    else if (((unsigned)prm >= AVCOL_PRI_EXT_BASE) &&
+    иначе если (((unsigned)prm >= AVCOL_PRI_EXT_BASE) &&
              ((unsigned)prm < AVCOL_PRI_EXT_NB))
         p = &color_primaries_ext[prm - AVCOL_PRI_EXT_BASE];
-    if (!p || !p->prim.r.x.num)
-        return NULL;
-    return p;
+    если (!p || !p->prim.r.x.num)
+        вернуть NULL;
+    вернуть p;
 }
 
 static av_always_inline AVRational abs_sub_q(AVRational r1, AVRational r2)
 {
     AVRational diff = av_sub_q(r1, r2);
     /* denominator assumed to be positive */
-    return av_make_q(abs(diff.num), diff.den);
+    вернуть av_make_q(abs(diff.num), diff.den);
 }
 
 enum AVColorPrimaries av_csp_primaries_id_from_desc(const AVColorPrimariesDesc *prm)
 {
     AVRational delta;
 
-    for (enum AVColorPrimaries p = 0; p < AVCOL_PRI_NB; p++) {
+    для (enum AVColorPrimaries p = 0; p < AVCOL_PRI_NB; p++) {
         const AVColorPrimariesDesc *ref = &color_primaries[p];
-        if (!ref->prim.r.x.num)
+        если (!ref->prim.r.x.num)
             continue;
 
         delta = abs_sub_q(prm->prim.r.x, ref->prim.r.x);
@@ -130,11 +130,11 @@ enum AVColorPrimaries av_csp_primaries_id_from_desc(const AVColorPrimariesDesc *
         delta = av_add_q(delta, abs_sub_q(prm->wp.x, ref->wp.x));
         delta = av_add_q(delta, abs_sub_q(prm->wp.y, ref->wp.y));
 
-        if (av_cmp_q(delta, av_make_q(1, 1000)) < 0)
-            return p;
+        если (av_cmp_q(delta, av_make_q(1, 1000)) < 0)
+            вернуть p;
     }
 
-    return AVCOL_PRI_UNSPECIFIED;
+    вернуть AVCOL_PRI_UNSPECIFIED;
 }
 
 static const double approximate_gamma[AVCOL_TRC_NB] = {
@@ -158,11 +158,11 @@ static const double approximate_gamma_ext[AVCOL_TRC_EXT_NB -
 
 double av_csp_approximate_trc_gamma(enum AVColorTransferCharacteristic trc)
 {
-    if (trc < AVCOL_TRC_NB)
-        return approximate_gamma[trc];
-    else if ((trc >= AVCOL_TRC_EXT_BASE) && (trc < AVCOL_TRC_EXT_NB))
-        return approximate_gamma_ext[trc - AVCOL_TRC_EXT_BASE];
-    return 0.0;
+    если (trc < AVCOL_TRC_NB)
+        вернуть approximate_gamma[trc];
+    иначе если ((trc >= AVCOL_TRC_EXT_BASE) && (trc < AVCOL_TRC_EXT_NB))
+        вернуть approximate_gamma_ext[trc - AVCOL_TRC_EXT_BASE];
+    вернуть 0.0;
 }
 
 static const double approximate_eotf_gamma[AVCOL_TRC_NB] = {
@@ -186,12 +186,12 @@ static const double approximate_eotf_gamma_ext[AVCOL_TRC_EXT_NB -
 
 double av_csp_approximate_eotf_gamma(enum AVColorTransferCharacteristic trc)
 {
-    if ((unsigned)trc < AVCOL_TRC_NB)
-        return approximate_eotf_gamma[trc];
-    else if (((unsigned)trc >= AVCOL_TRC_EXT_BASE) &&
+    если ((unsigned)trc < AVCOL_TRC_NB)
+        вернуть approximate_eotf_gamma[trc];
+    иначе если (((unsigned)trc >= AVCOL_TRC_EXT_BASE) &&
              ((unsigned)trc < AVCOL_TRC_EXT_NB))
-        return approximate_eotf_gamma_ext[trc - AVCOL_TRC_EXT_BASE];
-    return 0.0;
+        вернуть approximate_eotf_gamma_ext[trc - AVCOL_TRC_EXT_BASE];
+    вернуть 0.0;
 }
 
 #define BT709_alpha 1.099296826809442
@@ -202,7 +202,7 @@ static double trc_bt709(double Lc)
     const double a = BT709_alpha;
     const double b = BT709_beta;
 
-    return (0.0 > Lc) ? 0.0
+    вернуть (0.0 > Lc) ? 0.0
          : (  b > Lc) ? 4.500 * Lc
          :              a * pow(Lc, 0.45) - (a - 1.0);
 }
@@ -212,29 +212,29 @@ static double trc_bt709_inv(double E)
     const double a = BT709_alpha;
     const double b = 4.500 * BT709_beta;
 
-    return (0.0 > E) ? 0.0
+    вернуть (0.0 > E) ? 0.0
          : (  b > E) ? E / 4.500
          :             pow((E + (a - 1.0)) / a, 1.0 / 0.45);
 }
 
 static double trc_gamma22(double Lc)
 {
-    return (0.0 > Lc) ? 0.0 : pow(Lc, 1.0/ 2.2);
+    вернуть (0.0 > Lc) ? 0.0 : pow(Lc, 1.0/ 2.2);
 }
 
 static double trc_gamma22_inv(double E)
 {
-    return (0.0 > E) ? 0.0 : pow(E, 2.2);
+    вернуть (0.0 > E) ? 0.0 : pow(E, 2.2);
 }
 
 static double trc_gamma28(double Lc)
 {
-    return (0.0 > Lc) ? 0.0 : pow(Lc, 1.0/ 2.8);
+    вернуть (0.0 > Lc) ? 0.0 : pow(Lc, 1.0/ 2.8);
 }
 
 static double trc_gamma28_inv(double E)
 {
-    return (0.0 > E) ? 0.0 : pow(E, 2.8);
+    вернуть (0.0 > E) ? 0.0 : pow(E, 2.8);
 }
 
 static double trc_smpte240M(double Lc)
@@ -242,7 +242,7 @@ static double trc_smpte240M(double Lc)
     const double a = 1.1115;
     const double b = 0.0228;
 
-    return (0.0 > Lc) ? 0.0
+    вернуть (0.0 > Lc) ? 0.0
          : (  b > Lc) ? 4.000 * Lc
          :              a * pow(Lc, 0.45) - (a - 1.0);
 }
@@ -252,35 +252,35 @@ static double trc_smpte240M_inv(double E)
     const double a = 1.1115;
     const double b = 4.000 * 0.0228;
 
-    return (0.0 > E) ? 0.0
+    вернуть (0.0 > E) ? 0.0
          : (  b > E) ? E / 4.000
          :             pow((E + (a - 1.0)) / a, 1.0 / 0.45);
 }
 
 static double trc_linear(double Lc)
 {
-    return Lc;
+    вернуть Lc;
 }
 
 static double trc_log(double Lc)
 {
-    return (0.01 > Lc) ? 0.0 : 1.0 + log10(Lc) / 2.0;
+    вернуть (0.01 > Lc) ? 0.0 : 1.0 + log10(Lc) / 2.0;
 }
 
 static double trc_log_inv(double E)
 {
-    return (0.0 > E) ? 0.01 : pow(10.0, 2.0 * (E - 1.0));
+    вернуть (0.0 > E) ? 0.01 : pow(10.0, 2.0 * (E - 1.0));
 }
 
 static double trc_log_sqrt(double Lc)
 {
     // sqrt(10) / 1000
-    return (0.00316227766 > Lc) ? 0.0 : 1.0 + log10(Lc) / 2.5;
+    вернуть (0.00316227766 > Lc) ? 0.0 : 1.0 + log10(Lc) / 2.5;
 }
 
 static double trc_log_sqrt_inv(double E)
 {
-    return (0.0 > E) ? 0.00316227766 : pow(10.0, 2.5 * (E - 1.0));
+    вернуть (0.0 > E) ? 0.00316227766 : pow(10.0, 2.5 * (E - 1.0));
 }
 
 static double trc_iec61966_2_4(double Lc)
@@ -288,7 +288,7 @@ static double trc_iec61966_2_4(double Lc)
     const double a = BT709_alpha;
     const double b = BT709_beta;
 
-    return (-b >= Lc) ? -a * pow(-Lc, 0.45) + (a - 1.0)
+    вернуть (-b >= Lc) ? -a * pow(-Lc, 0.45) + (a - 1.0)
          : ( b >  Lc) ? 4.500 * Lc
          :               a * pow( Lc, 0.45) - (a - 1.0);
 }
@@ -298,7 +298,7 @@ static double trc_iec61966_2_4_inv(double E)
     const double a = BT709_alpha;
     const double b = 4.500 * BT709_beta;
 
-    return (-b >= E) ? -pow((-E + (a - 1.0)) / a, 1.0 / 0.45)
+    вернуть (-b >= E) ? -pow((-E + (a - 1.0)) / a, 1.0 / 0.45)
          : ( b >  E) ? E / 4.500
          :              pow(( E + (a - 1.0)) / a, 1.0 / 0.45);
 }
@@ -308,7 +308,7 @@ static double trc_bt1361(double Lc)
     const double a = BT709_alpha;
     const double b = BT709_beta;
 
-    return (-0.0045 >= Lc) ? -(a * pow(-4.0 * Lc, 0.45) + (a - 1.0)) / 4.0
+    вернуть (-0.0045 >= Lc) ? -(a * pow(-4.0 * Lc, 0.45) + (a - 1.0)) / 4.0
          : ( b >  Lc) ? 4.500 * Lc
          :               a * pow( Lc, 0.45) - (a - 1.0);
 }
@@ -318,7 +318,7 @@ static double trc_bt1361_inv(double E)
     const double a = BT709_alpha;
     const double b = 4.500 * BT709_beta;
 
-    return (-0.02025 >= E) ? -pow((-4.0 * E - (a - 1.0)) / a, 1.0 / 0.45) / 4.0
+    вернуть (-0.02025 >= E) ? -pow((-4.0 * E - (a - 1.0)) / a, 1.0 / 0.45) / 4.0
          : ( b       >  E) ? E / 4.500
          :                    pow(( E + (a - 1.0)) / a, 1.0 / 0.45);
 }
@@ -328,7 +328,7 @@ static double trc_iec61966_2_1(double Lc)
     const double a = 1.055;
     const double b = 0.0031308;
 
-    return (0.0 > Lc) ? 0.0
+    вернуть (0.0 > Lc) ? 0.0
          : (  b > Lc) ? 12.92 * Lc
          :              a * pow(Lc, 1.0  / 2.4) - (a - 1.0);
 }
@@ -338,10 +338,10 @@ static double trc_iec61966_2_1_inv(double E)
     const double a = 1.055;
     const double b = 12.92 * 0.0031308;
 
-    return (0.0 > E) ? 0.0
+    вернуть (0.0 > E) ? 0.0
          : (  b > E) ? E / 12.92
                      : pow((E + (a - 1.0)) / a, 2.4);
-    return E;
+    вернуть E;
 }
 
 #define PQ_c1 (        3424.0 / 4096.0) /* c3-c2 + 1 */
@@ -360,7 +360,7 @@ static double trc_smpte_st2084(double Lc)
     const double L  = Lc / 10000.0;
     const double Ln = pow(L, n);
 
-    return (0.0 > Lc) ? 0.0
+    вернуть (0.0 > Lc) ? 0.0
          :              pow((c1 + c2 * Ln) / (1.0 + c3 * Ln), m);
 
 }
@@ -374,7 +374,7 @@ static double trc_smpte_st2084_inv(double E)
     const double n  = PQ_n;
     const double Em = pow(E, 1.0 / m);
 
-    return (c1 > Em) ? 0.0
+    вернуть (c1 > Em) ? 0.0
                      : 10000.0 * pow((Em - c1) / (c2 - c3 * Em), 1.0 / n);
 }
 
@@ -383,12 +383,12 @@ static double trc_smpte_st2084_inv(double E)
 
 static double trc_smpte_st428_1(double Lc)
 {
-    return (0.0 > Lc) ? 0.0 : pow(DCI_L / DCI_P * Lc, 1.0 / 2.6);
+    вернуть (0.0 > Lc) ? 0.0 : pow(DCI_L / DCI_P * Lc, 1.0 / 2.6);
 }
 
 static double trc_smpte_st428_1_inv(double E)
 {
-    return (0.0 > E) ? 0.0 : DCI_P / DCI_L * pow(E, 2.6);
+    вернуть (0.0 > E) ? 0.0 : DCI_P / DCI_L * pow(E, 2.6);
 }
 
 #define HLG_a 0.17883277
@@ -402,7 +402,7 @@ static double trc_arib_std_b67(double Lc) {
     const double a = HLG_a;
     const double b = HLG_b;
     const double c = HLG_c;
-    return (0.0 > Lc) ? 0.0 :
+    вернуть (0.0 > Lc) ? 0.0 :
         (Lc <= 1.0 / 12.0 ? sqrt(3.0 * Lc) : a * log(12.0 * Lc - b) + c);
 }
 
@@ -411,7 +411,7 @@ static double trc_arib_std_b67_inv(double E)
     const double a = HLG_a;
     const double b = HLG_b;
     const double c = HLG_c;
-    return (0.0 > E) ? 0.0 :
+    вернуть (0.0 > E) ? 0.0 :
         (E <= 0.5 ? E * E / 3.0 : (exp((E - c) / a) + b) / 12.0);
 }
 
@@ -427,7 +427,7 @@ static double trc_v_log(double E)
     const double b = VLOG_b;
     const double c = VLOG_c;
     const double d = VLOG_d;
-    return (E < c1) ? (5.6 * E + 0.125) :
+    вернуть (E < c1) ? (5.6 * E + 0.125) :
         (c * log10(E + b) + d);
 }
 
@@ -437,7 +437,7 @@ static double trc_v_log_inv(double E)
     const double b = VLOG_b;
     const double c = VLOG_c;
     const double d = VLOG_d;
-    return (E < c2) ? (E - 0.125) / 5.6 :
+    вернуть (E < c2) ? (E - 0.125) / 5.6 :
         (pow(10.0, ((E - d) / c)) - b);
 }
 
@@ -467,12 +467,12 @@ static const av_csp_trc_function trc_funcs_ext[AVCOL_TRC_EXT_NB -
 
 av_csp_trc_function av_csp_trc_func_from_id(enum AVColorTransferCharacteristic trc)
 {
-    if ((unsigned)trc < AVCOL_TRC_NB)
-        return trc_funcs[trc];
-    else if (((unsigned)trc >= AVCOL_TRC_EXT_BASE) &&
+    если ((unsigned)trc < AVCOL_TRC_NB)
+        вернуть trc_funcs[trc];
+    иначе если (((unsigned)trc >= AVCOL_TRC_EXT_BASE) &&
              ((unsigned)trc < AVCOL_TRC_EXT_NB))
-        return trc_funcs_ext[trc - AVCOL_TRC_EXT_BASE];
-    return NULL;
+        вернуть trc_funcs_ext[trc - AVCOL_TRC_EXT_BASE];
+    вернуть NULL;
 }
 
 static const av_csp_trc_function trc_inv_funcs[AVCOL_TRC_NB] = {
@@ -501,36 +501,36 @@ static const av_csp_trc_function trc_inv_funcs_ext[AVCOL_TRC_EXT_NB -
 
 av_csp_trc_function av_csp_trc_func_inv_from_id(enum AVColorTransferCharacteristic trc)
 {
-    if ((unsigned)trc < AVCOL_TRC_NB)
-        return trc_inv_funcs[trc];
-    else if (((unsigned)trc >= AVCOL_TRC_EXT_BASE) &&
+    если ((unsigned)trc < AVCOL_TRC_NB)
+        вернуть trc_inv_funcs[trc];
+    иначе если (((unsigned)trc >= AVCOL_TRC_EXT_BASE) &&
              ((unsigned)trc < AVCOL_TRC_EXT_NB))
-        return trc_inv_funcs_ext[trc - AVCOL_TRC_EXT_BASE];
-    return NULL;
+        вернуть trc_inv_funcs_ext[trc - AVCOL_TRC_EXT_BASE];
+    вернуть NULL;
 }
 
 static void eotf_linear(const double Lw, const double Lb, double E[3])
 {
-    for (int i = 0; i < 3; i++)
+    для (целое i = 0; i < 3; i++)
         E[i] = (Lw - Lb) * E[i] + Lb;
 }
 
 static void eotf_linear_inv(const double Lw, const double Lb, double L[3])
 {
-    for (int i = 0; i < 3; i++)
+    для (целое i = 0; i < 3; i++)
         L[i] = (L[i] - Lb) / (Lw - Lb);
 }
 
 #define WRAP_SDR_OETF(name)                                         \
 static void oetf_##name(double L[3])                                \
 {                                                                   \
-    for (int i = 0; i < 3; i++)                                     \
+    для (целое i = 0; i < 3; i++)                                     \
         L[i] = trc_##name(L[i]);                                    \
 }                                                                   \
                                                                     \
 static void oetf_##name##_inv(double E[3])                          \
 {                                                                   \
-    for (int i = 0; i < 3; i++)                                     \
+    для (целое i = 0; i < 3; i++)                                     \
         E[i] = trc_##name##_inv(E[i]);                              \
 }
 
@@ -562,7 +562,7 @@ static void eotf_bt1886(const double Lw, const double Lb, double E[3])
     const double a = pow(Lw_inv - Lb_inv, 2.4);
     const double b = Lb_inv / (Lw_inv - Lb_inv);
 
-    for (int i = 0; i < 3; i++)
+    для (целое i = 0; i < 3; i++)
         E[i] = (-b > E[i]) ? 0.0 : a * pow(E[i] + b, 2.4);
 }
 
@@ -573,19 +573,19 @@ static void eotf_bt1886_inv(const double Lw, const double Lb, double L[3])
     const double a = pow(Lw_inv - Lb_inv, 2.4);
     const double b = Lb_inv / (Lw_inv - Lb_inv);
 
-    for (int i = 0; i < 3; i++)
+    для (целое i = 0; i < 3; i++)
         L[i] = (0.0 > L[i]) ? 0.0 : pow(L[i] / a, 1.0 / 2.4) - b;
 }
 
 static void eotf_smpte_st2084(const double Lw, const double Lb, double E[3])
 {
-    for (int i = 0; i < 3; i++)
+    для (целое i = 0; i < 3; i++)
         E[i] = trc_smpte_st2084_inv(E[i]);
 }
 
 static void eotf_smpte_st2084_inv(const double Lw, const double Lb, double L[3])
 {
-    for (int i = 0; i < 3; i++)
+    для (целое i = 0; i < 3; i++)
         L[i] = trc_smpte_st2084(L[i]);
 }
 
@@ -600,7 +600,7 @@ static void eotf_smpte_st428_1(const double Lw_Y, const double Lb_Y, double E[3]
     const double Lw[3] = { DCI_X * Lw_Y, Lw_Y, DCI_Z * Lw_Y };
     const double Lb[3] = { DCI_X * Lb_Y, Lb_Y, DCI_Z * Lb_Y };
 
-    for (int i = 0; i < 3; i++) {
+    для (целое i = 0; i < 3; i++) {
         E[i] = (0.0 > E[i]) ? 0.0 : pow(E[i], 2.6) * DCI_P / DCI_L;
         E[i] = E[i] * (Lw[i] - Lb[i]) + Lb[i];
     }
@@ -611,7 +611,7 @@ static void eotf_smpte_st428_1_inv(const double Lw_Y, const double Lb_Y, double 
     const double Lw[3] = { DCI_X * Lw_Y, Lw_Y, DCI_Z * Lw_Y };
     const double Lb[3] = { DCI_X * Lb_Y, Lb_Y, DCI_Z * Lb_Y };
 
-    for (int i = 0; i < 3; i++) {
+    для (целое i = 0; i < 3; i++) {
         L[i] = (L[i] - Lb[i]) / (Lw[i] - Lb[i]);
         L[i] = (0.0 > L[i]) ? 0.0 : pow(L[i] * DCI_L / DCI_P, 1.0 / 2.6);
     }
@@ -631,12 +631,12 @@ static void eotf_arib_std_b67(const double Lw, const double Lb, double E[3])
     const double beta = sqrt(3 * pow(Lb / Lw, 1.0 / gamma));
     double luma;
 
-    for (int i = 0; i < 3; i++)
+    для (целое i = 0; i < 3; i++)
         E[i] = trc_arib_std_b67_inv((1 - beta) * E[i] + beta);
 
     luma = 0.2627 * E[0] + 0.6780 * E[1] + 0.0593 * E[2];
     luma = pow(fmax(luma, 0.0), gamma - 1.0);
-    for (int i = 0; i < 3; i++)
+    для (целое i = 0; i < 3; i++)
         E[i] *= Lw * luma;
 }
 
@@ -646,15 +646,15 @@ static void eotf_arib_std_b67_inv(const double Lw, const double Lb, double L[3])
     const double beta = sqrt(3 * pow(Lb / Lw, 1 / gamma));
     double luma = 0.2627 * L[0] + 0.6780 * L[1] + 0.0593 * L[2];
 
-    if (luma > 0.0) {
+    если (luma > 0.0) {
         luma = pow(luma / Lw, (1 - gamma) / gamma);
-        for (int i = 0; i < 3; i++)
+        для (целое i = 0; i < 3; i++)
             L[i] *= luma / Lw;
-    } else {
+    } иначе {
         L[0] = L[1] = L[2] = 0.0;
     }
 
-    for (int i = 0; i < 3; i++)
+    для (целое i = 0; i < 3; i++)
         L[i] = (trc_arib_std_b67(L[i]) - beta) / (1 - beta);
 }
 
@@ -683,9 +683,9 @@ static const av_csp_eotf_function eotf_funcs[AVCOL_TRC_NB] = {
 
 av_csp_eotf_function av_csp_itu_eotf(enum AVColorTransferCharacteristic trc)
 {
-    if ((unsigned)trc >= AVCOL_TRC_NB)
-        return NULL;
-    return eotf_funcs[trc];
+    если ((unsigned)trc >= AVCOL_TRC_NB)
+        вернуть NULL;
+    вернуть eotf_funcs[trc];
 }
 
 static const av_csp_eotf_function eotf_inv_funcs[AVCOL_TRC_NB] = {
@@ -709,7 +709,7 @@ static const av_csp_eotf_function eotf_inv_funcs[AVCOL_TRC_NB] = {
 
 av_csp_eotf_function av_csp_itu_eotf_inv(enum AVColorTransferCharacteristic trc)
 {
-    if ((unsigned)trc >= AVCOL_TRC_NB)
-        return NULL;
-    return eotf_inv_funcs[trc];
+    если ((unsigned)trc >= AVCOL_TRC_NB)
+        вернуть NULL;
+    вернуть eotf_inv_funcs[trc];
 }

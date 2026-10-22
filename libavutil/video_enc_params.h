@@ -78,7 +78,7 @@ typedef struct AVVideoEncParams {
      * the values of blocks_offset / block_size are unspecified and should not
      * be accessed.
      */
-    unsigned int nb_blocks;
+    unsigned целое nb_blocks;
     /**
      * Offset in bytes from the beginning of this structure at which the array
      * of blocks starts.
@@ -123,11 +123,11 @@ typedef struct AVVideoBlockParams {
      * to the top-left corner of the block.
      * Can be negative if top/right padding is present on the coded frame.
      */
-    int src_x, src_y;
+    целое src_x, src_y;
     /**
      * Width and height of the block in luma pixels.
      */
-    int w, h;
+    целое w, h;
 
     /**
      * Difference between this block's final quantization parameter and the
@@ -140,10 +140,10 @@ typedef struct AVVideoBlockParams {
  * Get the block at the specified {@code idx}. Must be between 0 and nb_blocks - 1.
  */
 static av_always_inline AVVideoBlockParams*
-av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
+av_video_enc_params_block(AVVideoEncParams *par, unsigned целое idx)
 {
     av_assert0(idx < par->nb_blocks);
-    return (AVVideoBlockParams *)((uint8_t *)par + par->blocks_offset +
+    вернуть (AVVideoBlockParams *)((uint8_t *)par + par->blocks_offset +
                                   idx * par->block_size);
 }
 
@@ -156,7 +156,7 @@ av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
  * written here.
  */
 AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
-                                            unsigned int nb_blocks, size_t *out_size);
+                                            unsigned целое nb_blocks, size_t *out_size);
 
 /**
  * Allocates memory for AVEncodeInfoFrame plus an array of
@@ -166,6 +166,6 @@ AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
  */
 AVVideoEncParams*
 av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,
-                                     unsigned int nb_blocks);
+                                     unsigned целое nb_blocks);
 
 #endif /* AVUTIL_VIDEO_ENC_PARAMS_H */

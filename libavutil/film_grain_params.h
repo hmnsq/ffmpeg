@@ -46,32 +46,32 @@ typedef struct AVFilmGrainAOMParams {
      * Number of points, and the scale and value for each point of the
      * piecewise linear scaling function for the uma plane.
      */
-    int num_y_points;
+    целое num_y_points;
     uint8_t y_points[14][2 /* value, scaling */];
 
     /**
      * Signals whether to derive the chroma scaling function from the luma.
      * Not equivalent to copying the luma values and scales.
      */
-    int chroma_scaling_from_luma;
+    целое chroma_scaling_from_luma;
 
     /**
      * If chroma_scaling_from_luma is set to 0, signals the chroma scaling
      * function parameters.
      */
-    int num_uv_points[2 /* cb, cr */];
+    целое num_uv_points[2 /* cb, cr */];
     uint8_t uv_points[2 /* cb, cr */][10][2 /* value, scaling */];
 
     /**
      * Specifies the shift applied to the chroma components. For AV1, its within
      * [8; 11] and determines the range and quantization of the film grain.
      */
-    int scaling_shift;
+    целое scaling_shift;
 
     /**
      * Specifies the auto-regression lag.
      */
-    int ar_coeff_lag;
+    целое ar_coeff_lag;
 
     /**
      * Luma auto-regression coefficients. The number of coefficients is given by
@@ -90,36 +90,36 @@ typedef struct AVFilmGrainAOMParams {
      * 7, 8 and so on represent a range of [-2, 2), [-1, 1), [-0.5, 0.5) and
      * so on. For AV1 must be between 6 and 9.
      */
-    int ar_coeff_shift;
+    целое ar_coeff_shift;
 
     /**
      * Signals the down shift applied to the generated gaussian numbers during
      * synthesis.
      */
-    int grain_scale_shift;
+    целое grain_scale_shift;
 
     /**
      * Specifies the luma/chroma multipliers for the index to the component
      * scaling function.
      */
-    int uv_mult[2 /* cb, cr */];
-    int uv_mult_luma[2 /* cb, cr */];
+    целое uv_mult[2 /* cb, cr */];
+    целое uv_mult_luma[2 /* cb, cr */];
 
     /**
      * Offset used for component scaling function. For AV1 its a 9-bit value
      * with a range [-256, 255]
      */
-    int uv_offset[2 /* cb, cr */];
+    целое uv_offset[2 /* cb, cr */];
 
     /**
      * Signals whether to overlap film grain blocks.
      */
-    int overlap_flag;
+    целое overlap_flag;
 
     /**
      * Signals to clip to limited color levels after film grain application.
      */
-    int limit_output_range;
+    целое limit_output_range;
 } AVFilmGrainAOMParams;
 
 /**
@@ -134,7 +134,7 @@ typedef struct AVFilmGrainH274Params {
      * Specifies the film grain simulation mode.
      * 0 = Frequency filtering, 1 = Auto-regression
      */
-    int model_id;
+    целое model_id;
 
     /**
      * Specifies the blending mode used to blend the simulated film grain
@@ -142,17 +142,17 @@ typedef struct AVFilmGrainH274Params {
      *
      * 0 = Additive, 1 = Multiplicative
      */
-    int blending_mode_id;
+    целое blending_mode_id;
 
     /**
      * Specifies a scale factor used in the film grain characterization equations.
      */
-    int log2_scale_factor;
+    целое log2_scale_factor;
 
     /**
      * Indicates if the modelling of film grain for a given component is present.
      */
-    int component_model_present[3 /* y, cb, cr */];
+    целое component_model_present[3 /* y, cb, cr */];
 
     /**
      * Specifies the number of intensity intervals for which a specific set of
@@ -217,12 +217,12 @@ typedef struct AVFilmGrainParams {
      * any restrictions.
      */
 
-    int width, height;
+    целое width, height;
 
     /**
      * Intended subsampling ratio, or 0 for luma-only streams.
      */
-    int subsampling_x, subsampling_y;
+    целое subsampling_x, subsampling_y;
 
     /**
      * Intended video signal characteristics.
@@ -235,8 +235,8 @@ typedef struct AVFilmGrainParams {
     /**
      * Intended bit depth, or 0 for unknown/unspecified.
      */
-    int bit_depth_luma;
-    int bit_depth_chroma;
+    целое bit_depth_luma;
+    целое bit_depth_chroma;
 
     /**
      * Additional fields may be added both here and in any structure included.

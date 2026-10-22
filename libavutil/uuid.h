@@ -71,7 +71,7 @@ typedef uint8_t AVUUID[AV_UUID_LEN];
  * @param[out] uu  AVUUID
  * @return         A non-zero value in case of an error.
  */
-int av_uuid_parse(const char *in, AVUUID uu);
+целое av_uuid_parse(const char *in, AVUUID uu);
 
 /**
  * Parses a URN representation of a UUID, as specified at IETF RFC 4122,
@@ -84,7 +84,7 @@ int av_uuid_parse(const char *in, AVUUID uu);
  * @param[out] uu  AVUUID
  * @return         A non-zero value in case of an error.
  */
-int av_uuid_urn_parse(const char *in, AVUUID uu);
+целое av_uuid_urn_parse(const char *in, AVUUID uu);
 
 /**
  * Parses a string representation of a UUID formatted according to IETF RFC 4122
@@ -97,7 +97,7 @@ int av_uuid_urn_parse(const char *in, AVUUID uu);
  * @param[out] uu       AVUUID
  * @return              A non-zero value in case of an error.
  */
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu);
+целое av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu);
 
 /**
  * Serializes a AVUUID into a string representation according to IETF RFC 4122.
@@ -116,9 +116,9 @@ void av_uuid_unparse(const AVUUID uu, char *out);
  * @param[in]  uu2  AVUUID
  * @return          Nonzero if uu1 and uu2 are identical, 0 otherwise
  */
-static inline int av_uuid_equal(const AVUUID uu1, const AVUUID uu2)
+static inline целое av_uuid_equal(const AVUUID uu1, const AVUUID uu2)
 {
-    return memcmp(uu1, uu2, AV_UUID_LEN) == 0;
+    вернуть memcmp(uu1, uu2, AV_UUID_LEN) == 0;
 }
 
 /**

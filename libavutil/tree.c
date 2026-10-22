@@ -26,66 +26,66 @@
 typedef struct AVTreeNode {
     struct AVTreeNode *child[2];
     void *elem;
-    int state;
+    целое state;
 } AVTreeNode;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+const целое av_tree_node_size = sizeof(AVTreeNode);
 
 struct AVTreeNode *av_tree_node_alloc(void)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    вернуть av_mallocz(sizeof(struct AVTreeNode));
 }
 
 void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+                   целое (*cmp)(const void *key, const void *b), void *next[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
+    если (t) {
+        unsigned целое v = cmp(key, t->elem);
+        если (v) {
+            если (next)
                 next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
+            вернуть av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
+        } иначе {
+            если (next) {
                 av_tree_find(t->child[0], key, cmp, next);
                 av_tree_find(t->child[1], key, cmp, next);
             }
-            return t->elem;
+            вернуть t->elem;
         }
     }
-    return NULL;
+    вернуть NULL;
 }
 
 void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+                     целое (*cmp)(const void *key, const void *b), AVTreeNode **next)
 {
     AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
+    если (t) {
+        unsigned целое v = cmp(t->elem, key);
         void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
+        если (!v) {
+            если (*next)
+                вернуть t->elem;
+            иначе если (t->child[0] || t->child[1]) {
+                целое i = !t->child[0];
                 void *next_elem[2];
                 av_tree_find(t->child[i], key, cmp, next_elem);
                 key = t->elem = next_elem[i];
                 v   = -i;
-            } else {
+            } иначе {
                 *next = t;
                 *tp   = NULL;
-                return NULL;
+                вернуть NULL;
             }
         }
         ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
+        если (!ret) {
+            целое i              = (v >> 31) ^ !!*next;
             AVTreeNode **child = &t->child[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            если (!(t->state & 1)) {
+                если (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,7 +106,7 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
+                    если ((*child)->state * 2 == -t->state) {
                         *tp                    = (*child)->child[i ^ 1];
                         (*child)->child[i ^ 1] = (*tp)->child[i];
                         (*tp)->child[i]        = *child;
@@ -116,36 +116,36 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                         (*tp)->child[0]->state = -((*tp)->state > 0);
                         (*tp)->child[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
+                    } иначе {
                         *tp                 = *child;
                         *child              = (*child)->child[i ^ 1];
                         (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                        если ((*tp)->state)
                             t->state = 0;
-                        else
+                        иначе
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            если (!(*tp)->state ^ !!*next)
+                вернуть key;
         }
-        return ret;
-    } else {
+        вернуть ret;
+    } иначе {
         *tp   = *next;
         *next = NULL;
-        if (*tp) {
+        если (*tp) {
             (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+            вернуть NULL;
+        } иначе
+            вернуть key;
     }
 }
 
 void av_tree_destroy(AVTreeNode *t)
 {
-    if (t) {
+    если (t) {
         av_tree_destroy(t->child[0]);
         av_tree_destroy(t->child[1]);
         av_free(t);
@@ -153,16 +153,16 @@ void av_tree_destroy(AVTreeNode *t)
 }
 
 void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+                       целое (*cmp)(void *opaque, void *elem),
+                       целое (*enu)(void *opaque, void *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
+    если (t) {
+        целое v = cmp ? cmp(opaque, t->elem) : 0;
+        если (v >= 0)
             av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+        если (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
+        если (v <= 0)
             av_tree_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

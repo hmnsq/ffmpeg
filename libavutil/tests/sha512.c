@@ -26,32 +26,32 @@
 #include "libavutil/mem.h"
 #include "libavutil/sha512.h"
 
-int main(void)
+целое основной(void)
 {
-    int i, j, k;
+    целое i, j, k;
     struct AVSHA512 *ctx;
     unsigned char digest[64];
-    static const int lengths[4] = { 224, 256, 384, 512 };
+    static const целое lengths[4] = { 224, 256, 384, 512 };
 
     ctx = av_sha512_alloc();
-    if (!ctx)
-        return 1;
+    если (!ctx)
+        вернуть 1;
 
-    for (j = 0; j < 4; j++) {
-        if (j < 2) printf("Testing SHA-512/%d\n", lengths[j]);
-        else       printf("Testing SHA-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+    для (j = 0; j < 4; j++) {
+        если (j < 2) printf("Testing SHA-512/%d\n", lengths[j]);
+        иначе       printf("Testing SHA-%d\n", lengths[j]);
+        для (k = 0; k < 3; k++) {
             av_sha512_init(ctx, lengths[j]);
-            if (k == 0)
+            если (k == 0)
                 av_sha512_update(ctx, "abc", 3);
-            else if (k == 1)
+            иначе если (k == 1)
                 av_sha512_update(ctx, "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmn"
                                        "hijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu", 112);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            иначе
+                для (i = 0; i < 1000*1000; i++)
                     av_sha512_update(ctx, "a", 1);
             av_sha512_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
+            для (i = 0; i < lengths[j] >> 3; i++)
                 printf("%02X", digest[i]);
             putchar('\n');
         }
@@ -86,5 +86,5 @@ int main(void)
     }
     av_free(ctx);
 
-    return 0;
+    вернуть 0;
 }

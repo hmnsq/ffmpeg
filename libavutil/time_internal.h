@@ -22,26 +22,26 @@
 #include <time.h>
 #include "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
+#если !HAVE_GMTIME_R && !defined(gmtime_r)
 static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
 {
     struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
+    если (!ptr)
+        вернуть NULL;
     *result = *ptr;
-    return result;
+    вернуть result;
 }
 #define gmtime_r ff_gmtime_r
 #endif
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
+#если !HAVE_LOCALTIME_R && !defined(localtime_r)
 static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
 {
     struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
+    если (!ptr)
+        вернуть NULL;
     *result = *ptr;
-    return result;
+    вернуть result;
 }
 #define localtime_r ff_localtime_r
 #endif

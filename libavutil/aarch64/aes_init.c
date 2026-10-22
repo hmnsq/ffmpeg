@@ -23,28 +23,28 @@
 #include "libavutil/aarch64/cpu.h"
 
 void ff_aes_decrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            целое count, uint8_t *iv, целое rounds);
 void ff_aes_decrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            целое count, uint8_t *iv, целое rounds);
 void ff_aes_decrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            целое count, uint8_t *iv, целое rounds);
 void ff_aes_encrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            целое count, uint8_t *iv, целое rounds);
 void ff_aes_encrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            целое count, uint8_t *iv, целое rounds);
 void ff_aes_encrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+                            целое count, uint8_t *iv, целое rounds);
 
-void ff_init_aes_aarch64(AVAES *a, int decrypt)
+void ff_init_aes_aarch64(AVAES *a, целое decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    целое cpu_flags = av_get_cpu_flags();
 
-    if (have_arm_aes(cpu_flags)) {
-        if (a->rounds == 10)
+    если (have_arm_aes(cpu_flags)) {
+        если (a->rounds == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_neon : ff_aes_encrypt_10_neon;
-        else if (a->rounds == 12)
+        иначе если (a->rounds == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_neon : ff_aes_encrypt_12_neon;
-        else if (a->rounds == 14)
+        иначе если (a->rounds == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_neon : ff_aes_encrypt_14_neon;
     }
 }

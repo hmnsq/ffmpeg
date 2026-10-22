@@ -44,7 +44,7 @@
 #define ST_UW(...) ST_V(v4u32, __VA_ARGS__)
 #define ST_SW(...) ST_V(v4i32, __VA_ARGS__)
 
-#if HAVE_MIPS32R6 || HAVE_MIPS64R6
+#если HAVE_MIPS32R6 || HAVE_MIPS64R6
     #define LH(psrc)                              \
     ( {                                           \
         uint16_t val_lh_m = *(uint16_t *)(psrc);  \
@@ -57,13 +57,13 @@
         val_lw_m;                                 \
     } )
 
-    #if (__mips == 64)
+    #если (__mips == 64)
         #define LD(psrc)                               \
         ( {                                            \
             uint64_t val_ld_m =  *(uint64_t *)(psrc);  \
             val_ld_m;                                  \
         } )
-    #else  // !(__mips == 64)
+    #иначе  // !(__mips == 64)
         #define LD(psrc)                                                    \
         ( {                                                                 \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);                        \
@@ -85,7 +85,7 @@
     #define SW(val, pdst)  *(uint32_t *)(pdst) = (val);
     #define SD(val, pdst)  *(uint64_t *)(pdst) = (val);
 
-#else  // !HAVE_MIPS32R6 && !HAVE_MIPS64R6
+#иначе  // !HAVE_MIPS32R6 && !HAVE_MIPS64R6
     #define LH(psrc)                                 \
     ( {                                              \
         uint8_t *psrc_lh_m = (uint8_t *) (psrc);     \
@@ -117,7 +117,7 @@
         val_lw_m;                                    \
     } )
 
-    #if (__mips == 64)
+    #если (__mips == 64)
         #define LD(psrc)                                 \
         ( {                                              \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);     \
@@ -133,7 +133,7 @@
                                                          \
             val_ld_m;                                    \
         } )
-    #else  // !(__mips == 64)
+    #иначе  // !(__mips == 64)
         #define LD(psrc)                                                    \
         ( {                                                                 \
             uint8_t *psrc_ld_m = (uint8_t *) (psrc);                        \

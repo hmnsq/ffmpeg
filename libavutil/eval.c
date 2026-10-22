@@ -45,7 +45,7 @@
 
 typedef struct Parser {
     const AVClass *class;
-    int stack_index;
+    целое stack_index;
     char *s;
     const double *const_values;
     const char * const *const_names;          // NULL terminated
@@ -54,7 +54,7 @@ typedef struct Parser {
     double (* const *funcs2)(void *, double a, double b); // NULL terminated
     const char * const *func2_names;          // NULL terminated
     void *opaque;
-    int log_offset;
+    целое log_offset;
     void *log_ctx;
 #define VARS 10
     double *var;
@@ -111,51 +111,51 @@ double av_strtod(const char *numstr, char **tail)
 {
     double d;
     char *next;
-    if(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
+    если(numstr[0]=='0' && (numstr[1]|0x20)=='x') {
         d = strtoul(numstr, &next, 16);
-    } else
+    } иначе
         d = strtod(numstr, &next);
     /* if parsing succeeded, check for and interpret postfixes */
-    if (next!=numstr) {
-        if (next[0] == 'd' && next[1] == 'B') {
+    если (next!=numstr) {
+        если (next[0] == 'd' && next[1] == 'B') {
             /* treat dB as decibels instead of decibytes */
             d = ff_exp10(d / 20);
             next += 2;
-        } else if (*next >= 'E' && *next <= 'z') {
-            int e= si_prefixes[*next - 'E'].exp;
-            if (e) {
-                if (next[1] == 'i') {
+        } иначе если (*next >= 'E' && *next <= 'z') {
+            целое e= si_prefixes[*next - 'E'].exp;
+            если (e) {
+                если (next[1] == 'i') {
                     d*= si_prefixes[*next - 'E'].bin_val;
                     next+=2;
-                } else {
+                } иначе {
                     d*= si_prefixes[*next - 'E'].dec_val;
                     next++;
                 }
             }
         }
 
-        if (*next=='B') {
+        если (*next=='B') {
             d*=8;
             next++;
         }
     }
     /* if requested, fill in tail with the position after the last parsed
        character */
-    if (tail)
+    если (tail)
         *tail = next;
-    return d;
+    вернуть d;
 }
 
 #define IS_IDENTIFIER_CHAR(c) ((c) - '0' <= 9U || (c) - 'a' <= 25U || (c) - 'A' <= 25U || (c) == '_')
 
-static int strmatch(const char *s, const char *prefix)
+static целое strmatch(const char *s, const char *prefix)
 {
-    int i;
-    for (i=0; prefix[i]; i++) {
-        if (prefix[i] != s[i]) return 0;
+    целое i;
+    для (i=0; prefix[i]; i++) {
+        если (prefix[i] != s[i]) вернуть 0;
     }
     /* return 1 only if the s identifier is terminated */
-    return !IS_IDENTIFIER_CHAR(s[i]);
+    вернуть !IS_IDENTIFIER_CHAR(s[i]);
 }
 
 enum {
@@ -172,7 +172,7 @@ struct AVExpr {
     unsigned char type;
     unsigned char root;
     short depth;
-    int const_index;
+    целое const_index;
     double value; // is sign in other types
     union {
         double (*func0)(double);
@@ -190,64 +190,64 @@ typedef struct {
 
 static double etime(double v)
 {
-    return av_gettime() * 0.000001;
+    вернуть av_gettime() * 0.000001;
 }
 
 static double eval_expr(Parser *p, AVExpr *e)
 {
     switch (e->type) {
-        case e_value:  return e->value;
-        case e_const:  return e->value * p->const_values[e->const_index];
-        case e_func0:  return e->value * e->func0(eval_expr(p, e->param[0]));
-        case e_func1:  return e->value * e->func1(p->opaque, eval_expr(p, e->param[0]));
-        case e_func2:  return e->value * e->func2(p->opaque, eval_expr(p, e->param[0]), eval_expr(p, e->param[1]));
-        case e_squish: return e->value/(1+exp(4*eval_expr(p, e->param[0])));
-        case e_gauss: { double d = eval_expr(p, e->param[0]); return e->value * exp(-d*d/2)/sqrt(2*M_PI); }
-        case e_ld:     return e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
-        case e_isnan:  return e->value * !!isnan(eval_expr(p, e->param[0]));
-        case e_isinf:  return e->value * !!isinf(eval_expr(p, e->param[0]));
-        case e_floor:  return e->value * floor(eval_expr(p, e->param[0]));
-        case e_ceil :  return e->value * ceil (eval_expr(p, e->param[0]));
-        case e_trunc:  return e->value * trunc(eval_expr(p, e->param[0]));
-        case e_round:  return e->value * round(eval_expr(p, e->param[0]));
-        case e_sgn:    return e->value * FFDIFFSIGN(eval_expr(p, e->param[0]), 0);
-        case e_sqrt:   return e->value * sqrt (eval_expr(p, e->param[0]));
-        case e_not:    return e->value * (eval_expr(p, e->param[0]) == 0);
-        case e_if:     return e->value * (eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
+        case e_value:  вернуть e->value;
+        case e_const:  вернуть e->value * p->const_values[e->const_index];
+        case e_func0:  вернуть e->value * e->func0(eval_expr(p, e->param[0]));
+        case e_func1:  вернуть e->value * e->func1(p->opaque, eval_expr(p, e->param[0]));
+        case e_func2:  вернуть e->value * e->func2(p->opaque, eval_expr(p, e->param[0]), eval_expr(p, e->param[1]));
+        case e_squish: вернуть e->value/(1+exp(4*eval_expr(p, e->param[0])));
+        case e_gauss: { double d = eval_expr(p, e->param[0]); вернуть e->value * exp(-d*d/2)/sqrt(2*M_PI); }
+        case e_ld:     вернуть e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
+        case e_isnan:  вернуть e->value * !!isnan(eval_expr(p, e->param[0]));
+        case e_isinf:  вернуть e->value * !!isinf(eval_expr(p, e->param[0]));
+        case e_floor:  вернуть e->value * floor(eval_expr(p, e->param[0]));
+        case e_ceil :  вернуть e->value * ceil (eval_expr(p, e->param[0]));
+        case e_trunc:  вернуть e->value * trunc(eval_expr(p, e->param[0]));
+        case e_round:  вернуть e->value * round(eval_expr(p, e->param[0]));
+        case e_sgn:    вернуть e->value * FFDIFFSIGN(eval_expr(p, e->param[0]), 0);
+        case e_sqrt:   вернуть e->value * sqrt (eval_expr(p, e->param[0]));
+        case e_not:    вернуть e->value * (eval_expr(p, e->param[0]) == 0);
+        case e_if:     вернуть e->value * (eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
                                           e->param[2] ? eval_expr(p, e->param[2]) : 0);
-        case e_ifnot:  return e->value * (!eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
+        case e_ifnot:  вернуть e->value * (!eval_expr(p, e->param[0]) ? eval_expr(p, e->param[1]) :
                                           e->param[2] ? eval_expr(p, e->param[2]) : 0);
         case e_clip: {
             double x = eval_expr(p, e->param[0]);
             double min = eval_expr(p, e->param[1]), max = eval_expr(p, e->param[2]);
-            if (isnan(min) || isnan(max) || isnan(x) || min > max)
-                return NAN;
-            return e->value * av_clipd(x, min, max);
+            если (isnan(min) || isnan(max) || isnan(x) || min > max)
+                вернуть NAN;
+            вернуть e->value * av_clipd(x, min, max);
         }
         case e_between: {
             double d = eval_expr(p, e->param[0]);
-            return e->value * (d >= eval_expr(p, e->param[1]) &&
+            вернуть e->value * (d >= eval_expr(p, e->param[1]) &&
                                d <= eval_expr(p, e->param[2]));
         }
         case e_lerp: {
             double v0 = eval_expr(p, e->param[0]);
             double v1 = eval_expr(p, e->param[1]);
             double f  = eval_expr(p, e->param[2]);
-            return e->value * (v0 + (v1 - v0) * f);
+            вернуть e->value * (v0 + (v1 - v0) * f);
         }
         case e_print: {
             double x = eval_expr(p, e->param[0]);
-            int level = e->param[1] ? av_clip(eval_expr(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
+            целое level = e->param[1] ? av_clip(eval_expr(p, e->param[1]), INT_MIN, INT_MAX) : AV_LOG_INFO;
             av_log(p, level, "%f\n", x);
-            return e->value * x;
+            вернуть e->value * x;
         }
 
 #define COMPUTE_NEXT_RANDOM()                                        \
-            int idx = av_clip(eval_expr(p, e->param[0]), 0, VARS-1); \
+            целое idx = av_clip(eval_expr(p, e->param[0]), 0, VARS-1); \
             FFSFC64 *s = p->prng_state + idx;                        \
             uint64_t r;                                              \
                                                                      \
-            if (!s->counter) {                                       \
+            если (!s->counter) {                                       \
                 r = isnan(p->var[idx]) ? 0 : p->var[idx];            \
                 ff_sfc64_init(s, r, r, r, 12);                       \
             }                                                        \
@@ -256,70 +256,70 @@ static double eval_expr(Parser *p, AVExpr *e)
 
         case e_random: {
             COMPUTE_NEXT_RANDOM();
-            return r * (1.0/UINT64_MAX);
+            вернуть r * (1.0/UINT64_MAX);
         }
         case e_randomi: {
             double min = eval_expr(p, e->param[1]);
             double max = eval_expr(p, e->param[2]);
             COMPUTE_NEXT_RANDOM();
-            return min + (max - min) * r / UINT64_MAX;
+            вернуть min + (max - min) * r / UINT64_MAX;
         }
         case e_while: {
             double d = NAN;
-            while (eval_expr(p, e->param[0]))
+            пока (eval_expr(p, e->param[0]))
                 d=eval_expr(p, e->param[1]);
-            return d;
+            вернуть d;
         }
         case e_taylor: {
             double t = 1, d = 0, v;
             double x = eval_expr(p, e->param[1]);
-            int id = e->param[2] ? av_clip(eval_expr(p, e->param[2]), 0, VARS-1) : 0;
-            int i;
+            целое id = e->param[2] ? av_clip(eval_expr(p, e->param[2]), 0, VARS-1) : 0;
+            целое i;
             double var0 = p->var[id];
-            for(i=0; i<1000; i++) {
+            для(i=0; i<1000; i++) {
                 double ld = d;
                 p->var[id] = i;
                 v = eval_expr(p, e->param[0]);
                 d += t*v;
-                if(ld==d && v)
+                если(ld==d && v)
                     break;
                 t *= x / (i+1);
             }
             p->var[id] = var0;
-            return d;
+            вернуть d;
         }
         case e_root: {
-            int i, j;
+            целое i, j;
             double low = -1, high = -1, v, low_v = -DBL_MAX, high_v = DBL_MAX;
             double var0 = p->var[0];
             double x_max = eval_expr(p, e->param[1]);
-            for(i=-1; i<1024; i++) {
-                if(i<255) {
+            для(i=-1; i<1024; i++) {
+                если(i<255) {
                     p->var[0] = ff_reverse[i&255]*x_max/255;
-                } else {
+                } иначе {
                     p->var[0] = x_max*pow(0.9, i-255);
-                    if (i&1) p->var[0] *= -1;
-                    if (i&2) p->var[0] += low;
-                    else     p->var[0] += high;
+                    если (i&1) p->var[0] *= -1;
+                    если (i&2) p->var[0] += low;
+                    иначе     p->var[0] += high;
                 }
                 v = eval_expr(p, e->param[0]);
-                if (v<=0 && v>low_v) {
+                если (v<=0 && v>low_v) {
                     low    = p->var[0];
                     low_v  = v;
                 }
-                if (v>=0 && v<high_v) {
+                если (v>=0 && v<high_v) {
                     high   = p->var[0];
                     high_v = v;
                 }
-                if (low>=0 && high>=0){
-                    for (j=0; j<1000; j++) {
+                если (low>=0 && high>=0){
+                    для (j=0; j<1000; j++) {
                         p->var[0] = (low+high)*0.5;
-                        if (low == p->var[0] || high == p->var[0])
+                        если (low == p->var[0] || high == p->var[0])
                             break;
                         v = eval_expr(p, e->param[0]);
-                        if (v<=0) low = p->var[0];
-                        if (v>=0) high= p->var[0];
-                        if (isnan(v)) {
+                        если (v<=0) low = p->var[0];
+                        если (v>=0) high= p->var[0];
+                        если (isnan(v)) {
                             low = high = v;
                             break;
                         }
@@ -328,50 +328,50 @@ static double eval_expr(Parser *p, AVExpr *e)
                 }
             }
             p->var[0] = var0;
-            return -low_v<high_v ? low : high;
+            вернуть -low_v<high_v ? low : high;
         }
         default: {
             double d = eval_expr(p, e->param[0]);
             double d2 = eval_expr(p, e->param[1]);
             switch (e->type) {
-                case e_mod: return e->value * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
-                case e_gcd: return e->value * av_gcd(d,d2);
-                case e_max: return e->value * (d >  d2 ?   d : d2);
-                case e_min: return e->value * (d <  d2 ?   d : d2);
-                case e_eq:  return e->value * (d == d2 ? 1.0 : 0.0);
-                case e_gt:  return e->value * (d >  d2 ? 1.0 : 0.0);
-                case e_gte: return e->value * (d >= d2 ? 1.0 : 0.0);
-                case e_lt:  return e->value * (d <  d2 ? 1.0 : 0.0);
-                case e_lte: return e->value * (d <= d2 ? 1.0 : 0.0);
-                case e_pow: return e->value * pow(d, d2);
-                case e_mul: return e->value * (d * d2);
-                case e_div: return e->value * (d2 ? (d / d2) : d * INFINITY);
-                case e_add: return e->value * (d + d2);
-                case e_last:return e->value * d2;
+                case e_mod: вернуть e->value * (d - floor(d2 ? d / d2 : d * INFINITY) * d2);
+                case e_gcd: вернуть e->value * av_gcd(d,d2);
+                case e_max: вернуть e->value * (d >  d2 ?   d : d2);
+                case e_min: вернуть e->value * (d <  d2 ?   d : d2);
+                case e_eq:  вернуть e->value * (d == d2 ? 1.0 : 0.0);
+                case e_gt:  вернуть e->value * (d >  d2 ? 1.0 : 0.0);
+                case e_gte: вернуть e->value * (d >= d2 ? 1.0 : 0.0);
+                case e_lt:  вернуть e->value * (d <  d2 ? 1.0 : 0.0);
+                case e_lte: вернуть e->value * (d <= d2 ? 1.0 : 0.0);
+                case e_pow: вернуть e->value * pow(d, d2);
+                case e_mul: вернуть e->value * (d * d2);
+                case e_div: вернуть e->value * (d2 ? (d / d2) : d * INFINITY);
+                case e_add: вернуть e->value * (d + d2);
+                case e_last:вернуть e->value * d2;
                 case e_st :  {
-                    int index = av_clip(d, 0, VARS-1);
+                    целое index = av_clip(d, 0, VARS-1);
                     p->prng_state[index].counter = 0;
-                    return e->value * (p->var[index]= d2);
+                    вернуть e->value * (p->var[index]= d2);
                 }
-                case e_hypot:return e->value * hypot(d, d2);
-                case e_atan2:return e->value * atan2(d, d2);
-                case e_bitand: return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d & (long int)d2);
-                case e_bitor:  return isnan(d) || isnan(d2) ? NAN : e->value * ((long int)d | (long int)d2);
+                case e_hypot:вернуть e->value * hypot(d, d2);
+                case e_atan2:вернуть e->value * atan2(d, d2);
+                case e_bitand: вернуть isnan(d) || isnan(d2) ? NAN : e->value * ((long целое)d & (long целое)d2);
+                case e_bitor:  вернуть isnan(d) || isnan(d2) ? NAN : e->value * ((long целое)d | (long целое)d2);
             }
         }
     }
-    return NAN;
+    вернуть NAN;
 }
 
-static int parse_expr(AVExpr **e, Parser *p);
+static целое parse_expr(AVExpr **e, Parser *p);
 
 void av_expr_free(AVExpr *e)
 {
-    if (!e) return;
+    если (!e) вернуть;
     av_expr_free(e->param[0]);
     av_expr_free(e->param[1]);
     av_expr_free(e->param[2]);
-    if (e->root) {
+    если (e->root) {
         AVExprRoot *r = (AVExprRoot*)e;
         av_freep(&r->var);
         av_freep(&r->prng_state);
@@ -379,324 +379,324 @@ void av_expr_free(AVExpr *e)
     av_freep(&e);
 }
 
-static int parse_primary(AVExpr **e, Parser *p)
+static целое parse_primary(AVExpr **e, Parser *p)
 {
     AVExpr *d = av_mallocz(sizeof(AVExpr));
     char *next = p->s, *s0 = p->s;
-    int ret, i;
+    целое ret, i;
 
-    if (!d)
-        return AVERROR(ENOMEM);
+    если (!d)
+        вернуть AVERROR(ENOMEM);
 
     /* number */
     d->value = av_strtod(p->s, &next);
-    if (next != p->s) {
+    если (next != p->s) {
         d->type = e_value;
         p->s= next;
         *e = d;
-        return 0;
+        вернуть 0;
     }
     d->value = 1;
 
     /* named constants */
-    for (i=0; p->const_names && p->const_names[i]; i++) {
-        if (strmatch(p->s, p->const_names[i])) {
+    для (i=0; p->const_names && p->const_names[i]; i++) {
+        если (strmatch(p->s, p->const_names[i])) {
             p->s+= strlen(p->const_names[i]);
             d->type = e_const;
             d->const_index = i;
             *e = d;
-            return 0;
+            вернуть 0;
         }
     }
-    for (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
-        if (strmatch(p->s, constants[i].name)) {
+    для (i = 0; i < FF_ARRAY_ELEMS(constants); i++) {
+        если (strmatch(p->s, constants[i].name)) {
             p->s += strlen(constants[i].name);
             d->type = e_value;
             d->value = constants[i].value;
             *e = d;
-            return 0;
+            вернуть 0;
         }
     }
 
     p->s= strchr(p->s, '(');
-    if (!p->s) {
+    если (!p->s) {
         av_log(p, AV_LOG_ERROR, "Undefined constant or missing '(' in '%s'\n", s0);
         p->s= next;
         av_expr_free(d);
-        return AVERROR(EINVAL);
+        вернуть AVERROR(EINVAL);
     }
     p->s++; // "("
-    if (*next == '(') { // special case do-nothing
+    если (*next == '(') { // special case do-nothing
         av_freep(&d);
-        if ((ret = parse_expr(&d, p)) < 0)
-            return ret;
-        if (p->s[0] != ')') {
+        если ((ret = parse_expr(&d, p)) < 0)
+            вернуть ret;
+        если (p->s[0] != ')') {
             av_log(p, AV_LOG_ERROR, "Missing ')' in '%s'\n", s0);
             av_expr_free(d);
-            return AVERROR(EINVAL);
+            вернуть AVERROR(EINVAL);
         }
         p->s++; // ")"
         *e = d;
-        return 0;
+        вернуть 0;
     }
-    if ((ret = parse_expr(&(d->param[0]), p)) < 0) {
+    если ((ret = parse_expr(&(d->param[0]), p)) < 0) {
         av_expr_free(d);
-        return ret;
+        вернуть ret;
     }
-    if (p->s[0]== ',') {
+    если (p->s[0]== ',') {
         p->s++; // ","
         parse_expr(&d->param[1], p);
     }
-    if (p->s[0]== ',') {
+    если (p->s[0]== ',') {
         p->s++; // ","
         parse_expr(&d->param[2], p);
     }
-    if (p->s[0] != ')') {
+    если (p->s[0] != ')') {
         av_log(p, AV_LOG_ERROR, "Missing ')' or too many args in '%s'\n", s0);
         av_expr_free(d);
-        return AVERROR(EINVAL);
+        вернуть AVERROR(EINVAL);
     }
     p->s++; // ")"
 
-    for (int i = 0; i<3; i++)
-        if (d->param[i])
+    для (целое i = 0; i<3; i++)
+        если (d->param[i])
             d->depth = FFMAX(d->depth, d->param[i]->depth+1);
-    if (d->depth > MAX_DEPTH) {
+    если (d->depth > MAX_DEPTH) {
         av_expr_free(d);
-        return AVERROR(EINVAL);
+        вернуть AVERROR(EINVAL);
     }
 
     d->type = e_func0;
-         if (strmatch(next, "sinh"  )) d->func0 = sinh;
-    else if (strmatch(next, "cosh"  )) d->func0 = cosh;
-    else if (strmatch(next, "tanh"  )) d->func0 = tanh;
-    else if (strmatch(next, "sin"   )) d->func0 = sin;
-    else if (strmatch(next, "cos"   )) d->func0 = cos;
-    else if (strmatch(next, "tan"   )) d->func0 = tan;
-    else if (strmatch(next, "atan"  )) d->func0 = atan;
-    else if (strmatch(next, "asin"  )) d->func0 = asin;
-    else if (strmatch(next, "acos"  )) d->func0 = acos;
-    else if (strmatch(next, "exp"   )) d->func0 = exp;
-    else if (strmatch(next, "log"   )) d->func0 = log;
-    else if (strmatch(next, "abs"   )) d->func0 = fabs;
-    else if (strmatch(next, "time"  )) d->func0 = etime;
-    else if (strmatch(next, "squish")) d->type = e_squish;
-    else if (strmatch(next, "gauss" )) d->type = e_gauss;
-    else if (strmatch(next, "mod"   )) d->type = e_mod;
-    else if (strmatch(next, "max"   )) d->type = e_max;
-    else if (strmatch(next, "min"   )) d->type = e_min;
-    else if (strmatch(next, "eq"    )) d->type = e_eq;
-    else if (strmatch(next, "gte"   )) d->type = e_gte;
-    else if (strmatch(next, "gt"    )) d->type = e_gt;
-    else if (strmatch(next, "lte"   )) d->type = e_lte;
-    else if (strmatch(next, "lt"    )) d->type = e_lt;
-    else if (strmatch(next, "ld"    )) d->type = e_ld;
-    else if (strmatch(next, "isnan" )) d->type = e_isnan;
-    else if (strmatch(next, "isinf" )) d->type = e_isinf;
-    else if (strmatch(next, "st"    )) d->type = e_st;
-    else if (strmatch(next, "while" )) d->type = e_while;
-    else if (strmatch(next, "taylor")) d->type = e_taylor;
-    else if (strmatch(next, "root"  )) d->type = e_root;
-    else if (strmatch(next, "floor" )) d->type = e_floor;
-    else if (strmatch(next, "ceil"  )) d->type = e_ceil;
-    else if (strmatch(next, "trunc" )) d->type = e_trunc;
-    else if (strmatch(next, "round" )) d->type = e_round;
-    else if (strmatch(next, "sqrt"  )) d->type = e_sqrt;
-    else if (strmatch(next, "not"   )) d->type = e_not;
-    else if (strmatch(next, "pow"   )) d->type = e_pow;
-    else if (strmatch(next, "print" )) d->type = e_print;
-    else if (strmatch(next, "random")) d->type = e_random;
-    else if (strmatch(next, "randomi")) d->type = e_randomi;
-    else if (strmatch(next, "hypot" )) d->type = e_hypot;
-    else if (strmatch(next, "gcd"   )) d->type = e_gcd;
-    else if (strmatch(next, "if"    )) d->type = e_if;
-    else if (strmatch(next, "ifnot" )) d->type = e_ifnot;
-    else if (strmatch(next, "bitand")) d->type = e_bitand;
-    else if (strmatch(next, "bitor" )) d->type = e_bitor;
-    else if (strmatch(next, "between"))d->type = e_between;
-    else if (strmatch(next, "clip"  )) d->type = e_clip;
-    else if (strmatch(next, "atan2" )) d->type = e_atan2;
-    else if (strmatch(next, "lerp"  )) d->type = e_lerp;
-    else if (strmatch(next, "sgn"   )) d->type = e_sgn;
-    else {
-        for (i=0; p->func1_names && p->func1_names[i]; i++) {
-            if (strmatch(next, p->func1_names[i])) {
+         если (strmatch(next, "sinh"  )) d->func0 = sinh;
+    иначе если (strmatch(next, "cosh"  )) d->func0 = cosh;
+    иначе если (strmatch(next, "tanh"  )) d->func0 = tanh;
+    иначе если (strmatch(next, "sin"   )) d->func0 = sin;
+    иначе если (strmatch(next, "cos"   )) d->func0 = cos;
+    иначе если (strmatch(next, "tan"   )) d->func0 = tan;
+    иначе если (strmatch(next, "atan"  )) d->func0 = atan;
+    иначе если (strmatch(next, "asin"  )) d->func0 = asin;
+    иначе если (strmatch(next, "acos"  )) d->func0 = acos;
+    иначе если (strmatch(next, "exp"   )) d->func0 = exp;
+    иначе если (strmatch(next, "log"   )) d->func0 = log;
+    иначе если (strmatch(next, "abs"   )) d->func0 = fabs;
+    иначе если (strmatch(next, "time"  )) d->func0 = etime;
+    иначе если (strmatch(next, "squish")) d->type = e_squish;
+    иначе если (strmatch(next, "gauss" )) d->type = e_gauss;
+    иначе если (strmatch(next, "mod"   )) d->type = e_mod;
+    иначе если (strmatch(next, "max"   )) d->type = e_max;
+    иначе если (strmatch(next, "min"   )) d->type = e_min;
+    иначе если (strmatch(next, "eq"    )) d->type = e_eq;
+    иначе если (strmatch(next, "gte"   )) d->type = e_gte;
+    иначе если (strmatch(next, "gt"    )) d->type = e_gt;
+    иначе если (strmatch(next, "lte"   )) d->type = e_lte;
+    иначе если (strmatch(next, "lt"    )) d->type = e_lt;
+    иначе если (strmatch(next, "ld"    )) d->type = e_ld;
+    иначе если (strmatch(next, "isnan" )) d->type = e_isnan;
+    иначе если (strmatch(next, "isinf" )) d->type = e_isinf;
+    иначе если (strmatch(next, "st"    )) d->type = e_st;
+    иначе если (strmatch(next, "while" )) d->type = e_while;
+    иначе если (strmatch(next, "taylor")) d->type = e_taylor;
+    иначе если (strmatch(next, "root"  )) d->type = e_root;
+    иначе если (strmatch(next, "floor" )) d->type = e_floor;
+    иначе если (strmatch(next, "ceil"  )) d->type = e_ceil;
+    иначе если (strmatch(next, "trunc" )) d->type = e_trunc;
+    иначе если (strmatch(next, "round" )) d->type = e_round;
+    иначе если (strmatch(next, "sqrt"  )) d->type = e_sqrt;
+    иначе если (strmatch(next, "not"   )) d->type = e_not;
+    иначе если (strmatch(next, "pow"   )) d->type = e_pow;
+    иначе если (strmatch(next, "print" )) d->type = e_print;
+    иначе если (strmatch(next, "random")) d->type = e_random;
+    иначе если (strmatch(next, "randomi")) d->type = e_randomi;
+    иначе если (strmatch(next, "hypot" )) d->type = e_hypot;
+    иначе если (strmatch(next, "gcd"   )) d->type = e_gcd;
+    иначе если (strmatch(next, "if"    )) d->type = e_if;
+    иначе если (strmatch(next, "ifnot" )) d->type = e_ifnot;
+    иначе если (strmatch(next, "bitand")) d->type = e_bitand;
+    иначе если (strmatch(next, "bitor" )) d->type = e_bitor;
+    иначе если (strmatch(next, "between"))d->type = e_between;
+    иначе если (strmatch(next, "clip"  )) d->type = e_clip;
+    иначе если (strmatch(next, "atan2" )) d->type = e_atan2;
+    иначе если (strmatch(next, "lerp"  )) d->type = e_lerp;
+    иначе если (strmatch(next, "sgn"   )) d->type = e_sgn;
+    иначе {
+        для (i=0; p->func1_names && p->func1_names[i]; i++) {
+            если (strmatch(next, p->func1_names[i])) {
                 d->func1 = p->funcs1[i];
                 d->type = e_func1;
                 d->const_index = i;
                 *e = d;
-                return 0;
+                вернуть 0;
             }
         }
 
-        for (i=0; p->func2_names && p->func2_names[i]; i++) {
-            if (strmatch(next, p->func2_names[i])) {
+        для (i=0; p->func2_names && p->func2_names[i]; i++) {
+            если (strmatch(next, p->func2_names[i])) {
                 d->func2 = p->funcs2[i];
                 d->type = e_func2;
                 d->const_index = i;
                 *e = d;
-                return 0;
+                вернуть 0;
             }
         }
 
         av_log(p, AV_LOG_ERROR, "Unknown function in '%s'\n", s0);
         av_expr_free(d);
-        return AVERROR(EINVAL);
+        вернуть AVERROR(EINVAL);
     }
 
     *e = d;
-    return 0;
+    вернуть 0;
 }
 
-static AVExpr *make_eval_expr(int type, int value, AVExpr *p0, AVExpr *p1)
+static AVExpr *make_eval_expr(целое type, целое value, AVExpr *p0, AVExpr *p1)
 {
-    int depth = FFMAX(p0->depth, p1->depth) + 1;
-    if (depth > MAX_DEPTH)
-        return NULL;
+    целое depth = FFMAX(p0->depth, p1->depth) + 1;
+    если (depth > MAX_DEPTH)
+        вернуть NULL;
     AVExpr *e = av_mallocz(sizeof(AVExpr));
-    if (!e)
-        return NULL;
+    если (!e)
+        вернуть NULL;
     e->type     =type   ;
     e->value    =value  ;
     e->param[0] =p0     ;
     e->param[1] =p1     ;
     e->depth    = depth;
-    return e;
+    вернуть e;
 }
 
-static int parse_pow(AVExpr **e, Parser *p, int *sign)
+static целое parse_pow(AVExpr **e, Parser *p, целое *sign)
 {
     *sign= (*p->s == '+') - (*p->s == '-');
     p->s += *sign&1;
-    return parse_primary(e, p);
+    вернуть parse_primary(e, p);
 }
 
-static int parse_dB(AVExpr **e, Parser *p, int *sign)
+static целое parse_dB(AVExpr **e, Parser *p, целое *sign)
 {
     /* do not filter out the negative sign when parsing a dB value.
        for example, -3dB is not the same as -(3dB) */
-    if (*p->s == '-') {
+    если (*p->s == '-') {
         char *next;
         av_unused double ignored = strtod(p->s, &next);
-        if (next != p->s && next[0] == 'd' && next[1] == 'B') {
+        если (next != p->s && next[0] == 'd' && next[1] == 'B') {
             *sign = 0;
-            return parse_primary(e, p);
+            вернуть parse_primary(e, p);
         }
     }
-    return parse_pow(e, p, sign);
+    вернуть parse_pow(e, p, sign);
 }
 
-static int parse_factor(AVExpr **e, Parser *p)
+static целое parse_factor(AVExpr **e, Parser *p)
 {
-    int sign, sign2, ret;
+    целое sign, sign2, ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_dB(&e0, p, &sign)) < 0)
-        return ret;
-    while(p->s[0]=='^'){
+    если ((ret = parse_dB(&e0, p, &sign)) < 0)
+        вернуть ret;
+    пока(p->s[0]=='^'){
         e1 = e0;
         p->s++;
-        if ((ret = parse_dB(&e2, p, &sign2)) < 0) {
+        если ((ret = parse_dB(&e2, p, &sign2)) < 0) {
             av_expr_free(e1);
-            return ret;
+            вернуть ret;
         }
         e0 = make_eval_expr(e_pow, 1, e1, e2);
-        if (!e0) {
+        если (!e0) {
             av_expr_free(e1);
             av_expr_free(e2);
-            return AVERROR(ENOMEM);
+            вернуть AVERROR(ENOMEM);
         }
-        if (e0->param[1]) e0->param[1]->value *= (sign2|1);
+        если (e0->param[1]) e0->param[1]->value *= (sign2|1);
     }
-    if (e0) e0->value *= (sign|1);
+    если (e0) e0->value *= (sign|1);
 
     *e = e0;
-    return 0;
+    вернуть 0;
 }
 
-static int parse_term(AVExpr **e, Parser *p)
+static целое parse_term(AVExpr **e, Parser *p)
 {
-    int ret;
+    целое ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_factor(&e0, p)) < 0)
-        return ret;
-    while (p->s[0]=='*' || p->s[0]=='/') {
-        int c= *p->s++;
+    если ((ret = parse_factor(&e0, p)) < 0)
+        вернуть ret;
+    пока (p->s[0]=='*' || p->s[0]=='/') {
+        целое c= *p->s++;
         e1 = e0;
-        if ((ret = parse_factor(&e2, p)) < 0) {
+        если ((ret = parse_factor(&e2, p)) < 0) {
             av_expr_free(e1);
-            return ret;
+            вернуть ret;
         }
         e0 = make_eval_expr(c == '*' ? e_mul : e_div, 1, e1, e2);
-        if (!e0) {
+        если (!e0) {
             av_expr_free(e1);
             av_expr_free(e2);
-            return AVERROR(ENOMEM);
+            вернуть AVERROR(ENOMEM);
         }
     }
     *e = e0;
-    return 0;
+    вернуть 0;
 }
 
-static int parse_subexpr(AVExpr **e, Parser *p)
+static целое parse_subexpr(AVExpr **e, Parser *p)
 {
-    int ret;
+    целое ret;
     AVExpr *e0, *e1, *e2;
-    if ((ret = parse_term(&e0, p)) < 0)
-        return ret;
-    while (*p->s == '+' || *p->s == '-') {
+    если ((ret = parse_term(&e0, p)) < 0)
+        вернуть ret;
+    пока (*p->s == '+' || *p->s == '-') {
         e1 = e0;
-        if ((ret = parse_term(&e2, p)) < 0) {
+        если ((ret = parse_term(&e2, p)) < 0) {
             av_expr_free(e1);
-            return ret;
+            вернуть ret;
         }
         e0 = make_eval_expr(e_add, 1, e1, e2);
-        if (!e0) {
+        если (!e0) {
             av_expr_free(e1);
             av_expr_free(e2);
-            return AVERROR(ENOMEM);
+            вернуть AVERROR(ENOMEM);
         }
     };
 
     *e = e0;
-    return 0;
+    вернуть 0;
 }
 
-static int parse_expr(AVExpr **e, Parser *p)
+static целое parse_expr(AVExpr **e, Parser *p)
 {
-    int ret;
+    целое ret;
     AVExpr *e0, *e1, *e2;
-    if (p->stack_index <= 0) //protect against stack overflows
-        return AVERROR(EINVAL);
+    если (p->stack_index <= 0) //protect against stack overflows
+        вернуть AVERROR(EINVAL);
     p->stack_index--;
 
-    if ((ret = parse_subexpr(&e0, p)) < 0)
-        return ret;
-    while (*p->s == ';') {
+    если ((ret = parse_subexpr(&e0, p)) < 0)
+        вернуть ret;
+    пока (*p->s == ';') {
         p->s++;
         e1 = e0;
-        if ((ret = parse_subexpr(&e2, p)) < 0) {
+        если ((ret = parse_subexpr(&e2, p)) < 0) {
             av_expr_free(e1);
-            return ret;
+            вернуть ret;
         }
         e0 = make_eval_expr(e_last, 1, e1, e2);
-        if (!e0) {
+        если (!e0) {
             av_expr_free(e1);
             av_expr_free(e2);
-            return AVERROR(ENOMEM);
+            вернуть AVERROR(ENOMEM);
         }
     };
 
     p->stack_index++;
     *e = e0;
-    return 0;
+    вернуть 0;
 }
 
-static int verify_expr(AVExpr *e)
+static целое verify_expr(AVExpr *e)
 {
-    if (!e) return 0;
+    если (!e) вернуть 0;
     switch (e->type) {
         case e_value:
-        case e_const: return 1;
+        case e_const: вернуть 1;
         case e_func0:
         case e_func1:
         case e_squish:
@@ -712,44 +712,44 @@ static int verify_expr(AVExpr *e)
         case e_not:
         case e_random:
         case e_sgn:
-            return verify_expr(e->param[0]) && !e->param[1];
+            вернуть verify_expr(e->param[0]) && !e->param[1];
         case e_print:
-            return verify_expr(e->param[0])
+            вернуть verify_expr(e->param[0])
                    && (!e->param[1] || verify_expr(e->param[1]));
         case e_if:
         case e_ifnot:
         case e_taylor:
-            return verify_expr(e->param[0]) && verify_expr(e->param[1])
+            вернуть verify_expr(e->param[0]) && verify_expr(e->param[1])
                    && (!e->param[2] || verify_expr(e->param[2]));
         case e_between:
         case e_clip:
         case e_lerp:
         case e_randomi:
-            return verify_expr(e->param[0]) &&
+            вернуть verify_expr(e->param[0]) &&
                    verify_expr(e->param[1]) &&
                    verify_expr(e->param[2]);
-        default: return verify_expr(e->param[0]) && verify_expr(e->param[1]) && !e->param[2];
+        default: вернуть verify_expr(e->param[0]) && verify_expr(e->param[1]) && !e->param[2];
     }
 }
 
-int av_expr_parse(AVExpr **expr, const char *s,
+целое av_expr_parse(AVExpr **expr, const char *s,
                   const char * const *const_names,
                   const char * const *func1_names, double (* const *funcs1)(void *, double),
                   const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                  int log_offset, void *log_ctx)
+                  целое log_offset, void *log_ctx)
 {
     Parser p = { 0 };
     AVExpr *e = NULL;
     char *w = av_malloc(strlen(s) + 1);
     char *wp = w;
     const char *s0 = s;
-    int ret = 0;
+    целое ret = 0;
 
-    if (!w)
-        return AVERROR(ENOMEM);
+    если (!w)
+        вернуть AVERROR(ENOMEM);
 
-    while (*s)
-        if (!av_isspace(*s++)) *wp++ = s[-1];
+    пока (*s)
+        если (!av_isspace(*s++)) *wp++ = s[-1];
     *wp++ = 0;
 
     p.class      = &eval_class;
@@ -763,19 +763,19 @@ int av_expr_parse(AVExpr **expr, const char *s,
     p.log_offset = log_offset;
     p.log_ctx    = log_ctx;
 
-    if ((ret = parse_expr(&e, &p)) < 0)
+    если ((ret = parse_expr(&e, &p)) < 0)
         goto end;
-    if (*p.s) {
+    если (*p.s) {
         av_log(&p, AV_LOG_ERROR, "Invalid chars '%s' at the end of expression '%s'\n", p.s, s0);
         ret = AVERROR(EINVAL);
         goto end;
     }
-    if (!verify_expr(e)) {
+    если (!verify_expr(e)) {
         ret = AVERROR(EINVAL);
         goto end;
     }
     AVExprRoot *r = av_realloc(e, sizeof(*r));
-    if (!r) {
+    если (!r) {
         ret = AVERROR(ENOMEM);
         goto end;
     }
@@ -783,7 +783,7 @@ int av_expr_parse(AVExpr **expr, const char *s,
     e->root = 1;
     r->var= av_mallocz(sizeof(double) *VARS);
     r->prng_state = av_mallocz(sizeof(*r->prng_state) *VARS);
-    if (!r->var || !r->prng_state) {
+    если (!r->var || !r->prng_state) {
         ret = AVERROR(ENOMEM);
         goto end;
     }
@@ -792,33 +792,33 @@ int av_expr_parse(AVExpr **expr, const char *s,
 end:
     av_expr_free(e);
     av_free(w);
-    return ret;
+    вернуть ret;
 }
 
-static int expr_count(AVExpr *e, unsigned *counter, int size, int type)
+static целое expr_count(AVExpr *e, unsigned *counter, целое size, целое type)
 {
-    int i;
+    целое i;
 
-    if (!e || !counter || !size)
-        return AVERROR(EINVAL);
+    если (!e || !counter || !size)
+        вернуть AVERROR(EINVAL);
 
-    for (i = 0; e->type != type && i < 3 && e->param[i]; i++)
+    для (i = 0; e->type != type && i < 3 && e->param[i]; i++)
         expr_count(e->param[i], counter, size, type);
 
-    if (e->type == type && e->const_index < size)
+    если (e->type == type && e->const_index < size)
         counter[e->const_index]++;
 
-    return 0;
+    вернуть 0;
 }
 
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size)
+целое av_expr_count_vars(AVExpr *e, unsigned *counter, целое size)
 {
-    return expr_count(e, counter, size, e_const);
+    вернуть expr_count(e, counter, size, e_const);
 }
 
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg)
+целое av_expr_count_func(AVExpr *e, unsigned *counter, целое size, целое arg)
 {
-    return expr_count(e, counter, size, ((int[]){e_const, e_func1, e_func2})[arg]);
+    вернуть expr_count(e, counter, size, ((целое[]){e_const, e_func1, e_func2})[arg]);
 }
 
 double av_expr_eval(AVExpr *e, const double *const_values, void *opaque)
@@ -833,23 +833,23 @@ double av_expr_eval(AVExpr *e, const double *const_values, void *opaque)
         .prng_state   = r->prng_state,
     };
 
-    return eval_expr(&p, e);
+    вернуть eval_expr(&p, e);
 }
 
-int av_expr_parse_and_eval(double *d, const char *s,
+целое av_expr_parse_and_eval(double *d, const char *s,
                            const char * const *const_names, const double *const_values,
                            const char * const *func1_names, double (* const *funcs1)(void *, double),
                            const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                           void *opaque, int log_offset, void *log_ctx)
+                           void *opaque, целое log_offset, void *log_ctx)
 {
     AVExpr *e = NULL;
-    int ret = av_expr_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
+    целое ret = av_expr_parse(&e, s, const_names, func1_names, funcs1, func2_names, funcs2, log_offset, log_ctx);
 
-    if (ret < 0) {
+    если (ret < 0) {
         *d = NAN;
-        return ret;
+        вернуть ret;
     }
     *d = av_expr_eval(e, const_values, opaque);
     av_expr_free(e);
-    return isnan(*d) ? AVERROR(EINVAL) : 0;
+    вернуть isnan(*d) ? AVERROR(EINVAL) : 0;
 }

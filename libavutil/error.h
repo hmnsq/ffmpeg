@@ -37,16 +37,16 @@
 
 
 /* error handling */
-#if EDOM > 0
+#если EDOM > 0
 #define AVERROR(e) (-(e))   ///< Returns a negative error code from a POSIX error code, to return from library functions.
 #define AVUNERROR(e) (-(e)) ///< Returns a POSIX error code from a library function error return value.
-#else
+#иначе
 /* Some platforms have E* and errno already negated. */
 #define AVERROR(e) (e)
 #define AVUNERROR(e) (e)
 #endif
 
-#define FFERRTAG(a, b, c, d) (-(int)MKTAG(a, b, c, d))
+#define FFERRTAG(a, b, c, d) (-(целое)MKTAG(a, b, c, d))
 
 #define AVERROR_BSF_NOT_FOUND      FFERRTAG(0xF8,'B','S','F') ///< Bitstream filter not found
 #define AVERROR_BUG                FFERRTAG( 'B','U','G','!') ///< Internal bug, also see AVERROR_BUG2
@@ -97,7 +97,7 @@
  * @return 0 on success, a negative value if a description for errnum
  * cannot be found
  */
-int av_strerror(int errnum, char *errbuf, size_t errbuf_size);
+целое av_strerror(целое errnum, char *errbuf, size_t errbuf_size);
 
 /**
  * Fill the provided buffer with a string containing an error string
@@ -109,10 +109,10 @@ int av_strerror(int errnum, char *errbuf, size_t errbuf_size);
  * @return the buffer in input, filled with the error description
  * @see av_strerror()
  */
-static inline char *av_make_error_string(char *errbuf, size_t errbuf_size, int errnum)
+static inline char *av_make_error_string(char *errbuf, size_t errbuf_size, целое errnum)
 {
     av_strerror(errnum, errbuf, errbuf_size);
-    return errbuf;
+    вернуть errbuf;
 }
 
 /**

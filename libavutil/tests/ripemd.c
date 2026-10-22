@@ -24,30 +24,30 @@
 #include "libavutil/mem.h"
 #include "libavutil/ripemd.h"
 
-int main(void)
+целое основной(void)
 {
-    int i, j, k;
+    целое i, j, k;
     struct AVRIPEMD *ctx;
     unsigned char digest[40];
-    static const int lengths[4] = { 128, 160, 256, 320 };
+    static const целое lengths[4] = { 128, 160, 256, 320 };
 
     ctx = av_ripemd_alloc();
-    if (!ctx)
-        return 1;
+    если (!ctx)
+        вернуть 1;
 
-    for (j = 0; j < 4; j++) {
+    для (j = 0; j < 4; j++) {
         printf("Testing RIPEMD-%d\n", lengths[j]);
-        for (k = 0; k < 3; k++) {
+        для (k = 0; k < 3; k++) {
             av_ripemd_init(ctx, lengths[j]);
-            if (k == 0)
+            если (k == 0)
                 av_ripemd_update(ctx, "abc", 3);
-            else if (k == 1)
+            иначе если (k == 1)
                 av_ripemd_update(ctx, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 56);
-            else
-                for (i = 0; i < 1000*1000; i++)
+            иначе
+                для (i = 0; i < 1000*1000; i++)
                     av_ripemd_update(ctx, "a", 1);
             av_ripemd_final(ctx, digest);
-            for (i = 0; i < lengths[j] >> 3; i++)
+            для (i = 0; i < lengths[j] >> 3; i++)
                 printf("%02X", digest[i]);
             putchar('\n');
         }
@@ -76,5 +76,5 @@ int main(void)
     }
     av_free(ctx);
 
-    return 0;
+    вернуть 0;
 }

@@ -32,155 +32,155 @@
 #include "pixdesc.h"
 #include "rational.h"
 
-void av_image_fill_max_pixsteps(int max_pixsteps[4], int max_pixstep_comps[4],
+void av_image_fill_max_pixsteps(целое max_pixsteps[4], целое max_pixstep_comps[4],
                                 const AVPixFmtDescriptor *pixdesc)
 {
-    int i;
+    целое i;
     memset(max_pixsteps, 0, 4*sizeof(max_pixsteps[0]));
-    if (max_pixstep_comps)
+    если (max_pixstep_comps)
         memset(max_pixstep_comps, 0, 4*sizeof(max_pixstep_comps[0]));
 
-    for (i = 0; i < 4; i++) {
+    для (i = 0; i < 4; i++) {
         const AVComponentDescriptor *comp = &(pixdesc->comp[i]);
-        if (comp->step > max_pixsteps[comp->plane]) {
+        если (comp->step > max_pixsteps[comp->plane]) {
             max_pixsteps[comp->plane] = comp->step;
-            if (max_pixstep_comps)
+            если (max_pixstep_comps)
                 max_pixstep_comps[comp->plane] = i;
         }
     }
 }
 
 static inline
-int image_get_linesize(int width, int plane,
-                       int max_step, int max_step_comp,
+целое image_get_linesize(целое width, целое plane,
+                       целое max_step, целое max_step_comp,
                        const AVPixFmtDescriptor *desc)
 {
-    int s, shifted_w, linesize;
+    целое s, shifted_w, linesize;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    если (!desc)
+        вернуть AVERROR(EINVAL);
 
-    if (width < 0)
-        return AVERROR(EINVAL);
+    если (width < 0)
+        вернуть AVERROR(EINVAL);
     s = (max_step_comp == 1 || max_step_comp == 2) ? desc->log2_chroma_w : 0;
     shifted_w = AV_CEIL_RSHIFT(width, s);
-    if (shifted_w && max_step > INT_MAX / shifted_w)
-        return AVERROR(EINVAL);
+    если (shifted_w && max_step > INT_MAX / shifted_w)
+        вернуть AVERROR(EINVAL);
     linesize = max_step * shifted_w;
 
-    if (desc->flags & AV_PIX_FMT_FLAG_BITSTREAM)
+    если (desc->flags & AV_PIX_FMT_FLAG_BITSTREAM)
         linesize = (linesize >> 3) + !!(linesize & 7);
-    return linesize;
+    вернуть linesize;
 }
 
-int av_image_get_linesize(enum AVPixelFormat pix_fmt, int width, int plane)
+целое av_image_get_linesize(enum AVPixelFormat pix_fmt, целое width, целое plane)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int max_step     [4];       /* max pixel step for each plane */
-    int max_step_comp[4];       /* the component for each plane which has the max pixel step */
+    целое max_step     [4];       /* max pixel step for each plane */
+    целое max_step_comp[4];       /* the component for each plane which has the max pixel step */
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    если (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        вернуть AVERROR(EINVAL);
 
     av_image_fill_max_pixsteps(max_step, max_step_comp, desc);
-    return image_get_linesize(width, plane, max_step[plane], max_step_comp[plane], desc);
+    вернуть image_get_linesize(width, plane, max_step[plane], max_step_comp[plane], desc);
 }
 
-int av_image_fill_linesizes(int linesizes[4], enum AVPixelFormat pix_fmt, int width)
+целое av_image_fill_linesizes(целое linesizes[4], enum AVPixelFormat pix_fmt, целое width)
 {
-    int i, ret;
+    целое i, ret;
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int max_step     [4];       /* max pixel step for each plane */
-    int max_step_comp[4];       /* the component for each plane which has the max pixel step */
+    целое max_step     [4];       /* max pixel step for each plane */
+    целое max_step_comp[4];       /* the component for each plane which has the max pixel step */
 
     memset(linesizes, 0, 4*sizeof(linesizes[0]));
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    если (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        вернуть AVERROR(EINVAL);
 
     av_image_fill_max_pixsteps(max_step, max_step_comp, desc);
-    for (i = 0; i < 4; i++) {
-        if ((ret = image_get_linesize(width, i, max_step[i], max_step_comp[i], desc)) < 0)
-            return ret;
+    для (i = 0; i < 4; i++) {
+        если ((ret = image_get_linesize(width, i, max_step[i], max_step_comp[i], desc)) < 0)
+            вернуть ret;
         linesizes[i] = ret;
     }
 
-    return 0;
+    вернуть 0;
 }
 
-int av_image_fill_plane_sizes(size_t sizes[4], enum AVPixelFormat pix_fmt,
-                              int height, const ptrdiff_t linesizes[4])
+целое av_image_fill_plane_sizes(size_t sizes[4], enum AVPixelFormat pix_fmt,
+                              целое height, const ptrdiff_t linesizes[4])
 {
-    int i, has_plane[4] = { 0 };
+    целое i, has_plane[4] = { 0 };
 
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
     memset(sizes    , 0, sizeof(sizes[0])*4);
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    если (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        вернуть AVERROR(EINVAL);
 
-    if (linesizes[0] > SIZE_MAX / height)
-        return AVERROR(EINVAL);
+    если (linesizes[0] > SIZE_MAX / height)
+        вернуть AVERROR(EINVAL);
     sizes[0] = linesizes[0] * (size_t)height;
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    если (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         sizes[1] = 256 * 4; /* palette is stored here as 256 32 bits words */
-        return 0;
+        вернуть 0;
     }
 
-    for (i = 0; i < 4; i++)
+    для (i = 0; i < 4; i++)
         has_plane[desc->comp[i].plane] = 1;
 
-    for (i = 1; i < 4 && has_plane[i]; i++) {
-        int h, s = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    для (i = 1; i < 4 && has_plane[i]; i++) {
+        целое h, s = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
         h = AV_CEIL_RSHIFT(height, s);
-        if (linesizes[i] > SIZE_MAX / h)
-            return AVERROR(EINVAL);
+        если (linesizes[i] > SIZE_MAX / h)
+            вернуть AVERROR(EINVAL);
         sizes[i] = (size_t)h * linesizes[i];
     }
 
-    return 0;
+    вернуть 0;
 }
 
-int av_image_fill_pointers(uint8_t *data[4], enum AVPixelFormat pix_fmt, int height,
-                           uint8_t *ptr, const int linesizes[4])
+целое av_image_fill_pointers(uint8_t *data[4], enum AVPixelFormat pix_fmt, целое height,
+                           uint8_t *ptr, const целое linesizes[4])
 {
-    int i, ret;
+    целое i, ret;
     ptrdiff_t linesizes1[4];
     size_t sizes[4];
 
     memset(data     , 0, sizeof(data[0])*4);
 
-    for (i = 0; i < 4; i++)
+    для (i = 0; i < 4; i++)
         linesizes1[i] = linesizes[i];
 
     ret = av_image_fill_plane_sizes(sizes, pix_fmt, height, linesizes1);
-    if (ret < 0)
-        return ret;
+    если (ret < 0)
+        вернуть ret;
 
     ret = 0;
-    for (i = 0; i < 4; i++) {
-        if (sizes[i] > INT_MAX - ret)
-            return AVERROR(EINVAL);
+    для (i = 0; i < 4; i++) {
+        если (sizes[i] > INT_MAX - ret)
+            вернуть AVERROR(EINVAL);
         ret += sizes[i];
     }
 
-    if (!ptr)
-        return ret;
+    если (!ptr)
+        вернуть ret;
 
     data[0] = ptr;
-    for (i = 1; i < 4 && sizes[i]; i++)
+    для (i = 1; i < 4 && sizes[i]; i++)
         data[i] = data[i - 1] + sizes[i - 1];
 
-    return ret;
+    вернуть ret;
 }
 
-int avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt)
+целое avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt)
 {
-    int i;
+    целое i;
 
-    for (i = 0; i < 256; i++) {
-        int r, g, b;
+    для (i = 0; i < 256; i++) {
+        целое r, g, b;
 
         switch (pix_fmt) {
         case AV_PIX_FMT_RGB8:
@@ -207,73 +207,73 @@ int avpriv_set_systematic_pal2(uint32_t pal[256], enum AVPixelFormat pix_fmt)
             r = b = g = i;
             break;
         default:
-            return AVERROR(EINVAL);
+            вернуть AVERROR(EINVAL);
         }
         pal[i] = b + (g << 8) + (r << 16) + (0xFFU << 24);
     }
 
-    return 0;
+    вернуть 0;
 }
 
-int av_image_alloc(uint8_t *pointers[4], int linesizes[4],
-                   int w, int h, enum AVPixelFormat pix_fmt, int align)
+целое av_image_alloc(uint8_t *pointers[4], целое linesizes[4],
+                   целое w, целое h, enum AVPixelFormat pix_fmt, целое align)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int i, ret;
+    целое i, ret;
     ptrdiff_t linesizes1[4];
     size_t total_size, sizes[4];
     uint8_t *buf;
 
-    if (!desc)
-        return AVERROR(EINVAL);
+    если (!desc)
+        вернуть AVERROR(EINVAL);
 
-    if ((ret = av_image_check_size(w, h, 0, NULL)) < 0)
-        return ret;
-    if ((ret = av_image_fill_linesizes(linesizes, pix_fmt, align>7 ? FFALIGN(w, 8) : w)) < 0)
-        return ret;
+    если ((ret = av_image_check_size(w, h, 0, NULL)) < 0)
+        вернуть ret;
+    если ((ret = av_image_fill_linesizes(linesizes, pix_fmt, align>7 ? FFALIGN(w, 8) : w)) < 0)
+        вернуть ret;
 
-    for (i = 0; i < 4; i++) {
+    для (i = 0; i < 4; i++) {
         linesizes[i] = FFALIGN(linesizes[i], align);
         linesizes1[i] = linesizes[i];
     }
 
-    if ((ret = av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1)) < 0)
-        return ret;
+    если ((ret = av_image_fill_plane_sizes(sizes, pix_fmt, h, linesizes1)) < 0)
+        вернуть ret;
     total_size = align;
-    for (i = 0; i < 4; i++) {
-        if (total_size > SIZE_MAX - sizes[i])
-            return AVERROR(EINVAL);
+    для (i = 0; i < 4; i++) {
+        если (total_size > SIZE_MAX - sizes[i])
+            вернуть AVERROR(EINVAL);
         total_size += sizes[i];
     }
     buf = av_malloc(total_size);
-    if (!buf)
-        return AVERROR(ENOMEM);
-    if ((ret = av_image_fill_pointers(pointers, pix_fmt, h, buf, linesizes)) < 0) {
+    если (!buf)
+        вернуть AVERROR(ENOMEM);
+    если ((ret = av_image_fill_pointers(pointers, pix_fmt, h, buf, linesizes)) < 0) {
         av_free(buf);
-        return ret;
+        вернуть ret;
     }
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    если (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         avpriv_set_systematic_pal2((uint32_t*)pointers[1], pix_fmt);
-        if (align < 4) {
+        если (align < 4) {
             av_log(NULL, AV_LOG_ERROR, "Formats with a palette require a minimum alignment of 4\n");
             av_free(buf);
-            return AVERROR(EINVAL);
+            вернуть AVERROR(EINVAL);
         }
     }
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL && pointers[1] &&
+    если (desc->flags & AV_PIX_FMT_FLAG_PAL && pointers[1] &&
         pointers[1] - pointers[0] > linesizes[0] * h) {
         /* zero-initialize the padding before the palette */
         memset(pointers[0] + linesizes[0] * h, 0,
                pointers[1] - pointers[0] - linesizes[0] * h);
     }
 
-    return ret;
+    вернуть ret;
 }
 
 typedef struct ImgUtils {
     const AVClass *class;
-    int   log_offset;
+    целое   log_offset;
     void *log_ctx;
 } ImgUtils;
 
@@ -286,7 +286,7 @@ static const AVClass imgutils_class = {
     .parent_log_context_offset = offsetof(ImgUtils, log_ctx),
 };
 
-int av_image_check_size2(unsigned int w, unsigned int h, int64_t max_pixels, enum AVPixelFormat pix_fmt, int log_offset, void *log_ctx)
+целое av_image_check_size2(unsigned целое w, unsigned целое h, int64_t max_pixels, enum AVPixelFormat pix_fmt, целое log_offset, void *log_ctx)
 {
     ImgUtils imgutils = {
         .class      = &imgutils_class,
@@ -294,62 +294,62 @@ int av_image_check_size2(unsigned int w, unsigned int h, int64_t max_pixels, enu
         .log_ctx    = log_ctx,
     };
     int64_t stride = av_image_get_linesize(pix_fmt, w, 0);
-    if (stride <= 0)
+    если (stride <= 0)
         stride = 8LL*w;
     stride += 128*8;
 
-    if (w==0 || h==0 || w > INT32_MAX || h > INT32_MAX || stride >= INT_MAX || stride*(h + 128ULL) >= INT_MAX) {
+    если (w==0 || h==0 || w > INT32_MAX || h > INT32_MAX || stride >= INT_MAX || stride*(h + 128ULL) >= INT_MAX) {
         av_log(&imgutils, AV_LOG_ERROR, "Picture size %ux%u is invalid\n", w, h);
-        return AVERROR(EINVAL);
+        вернуть AVERROR(EINVAL);
     }
 
-    if (max_pixels < INT64_MAX) {
-        if (w*(int64_t)h > max_pixels) {
+    если (max_pixels < INT64_MAX) {
+        если (w*(int64_t)h > max_pixels) {
             av_log(&imgutils, AV_LOG_ERROR,
                     "Picture size %ux%u exceeds specified max pixel count %"PRId64", see the documentation if you wish to increase it\n",
                     w, h, max_pixels);
-            return AVERROR(EINVAL);
+            вернуть AVERROR(EINVAL);
         }
     }
 
-    return 0;
+    вернуть 0;
 }
 
-int av_image_check_size(unsigned int w, unsigned int h, int log_offset, void *log_ctx)
+целое av_image_check_size(unsigned целое w, unsigned целое h, целое log_offset, void *log_ctx)
 {
-    return av_image_check_size2(w, h, INT64_MAX, AV_PIX_FMT_NONE, log_offset, log_ctx);
+    вернуть av_image_check_size2(w, h, INT64_MAX, AV_PIX_FMT_NONE, log_offset, log_ctx);
 }
 
-int av_image_check_sar(unsigned int w, unsigned int h, AVRational sar)
+целое av_image_check_sar(unsigned целое w, unsigned целое h, AVRational sar)
 {
     int64_t scaled_dim;
 
-    if (sar.den <= 0 || sar.num < 0)
-        return AVERROR(EINVAL);
+    если (sar.den <= 0 || sar.num < 0)
+        вернуть AVERROR(EINVAL);
 
-    if (!sar.num || sar.num == sar.den)
-        return 0;
+    если (!sar.num || sar.num == sar.den)
+        вернуть 0;
 
-    if (sar.num < sar.den)
+    если (sar.num < sar.den)
         scaled_dim = av_rescale_rnd(w, sar.num, sar.den, AV_ROUND_ZERO);
-    else
+    иначе
         scaled_dim = av_rescale_rnd(h, sar.den, sar.num, AV_ROUND_ZERO);
 
-    if (scaled_dim > 0)
-        return 0;
+    если (scaled_dim > 0)
+        вернуть 0;
 
-    return AVERROR(EINVAL);
+    вернуть AVERROR(EINVAL);
 }
 
 static void image_copy_plane(uint8_t       *dst, ptrdiff_t dst_linesize,
                              const uint8_t *src, ptrdiff_t src_linesize,
-                             ptrdiff_t bytewidth, int height)
+                             ptrdiff_t bytewidth, целое height)
 {
-    if (!dst || !src)
-        return;
+    если (!dst || !src)
+        вернуть;
     av_assert0(FFABS(src_linesize) >= bytewidth);
     av_assert0(FFABS(dst_linesize) >= bytewidth);
-    for (;height > 0; height--) {
+    для (;height > 0; height--) {
         memcpy(dst, src, bytewidth);
         dst += dst_linesize;
         src += src_linesize;
@@ -358,58 +358,58 @@ static void image_copy_plane(uint8_t       *dst, ptrdiff_t dst_linesize,
 
 void av_image_copy_plane_uc_from(uint8_t *dst, ptrdiff_t dst_linesize,
                                  const uint8_t *src, ptrdiff_t src_linesize,
-                                 ptrdiff_t bytewidth, int height)
+                                 ptrdiff_t bytewidth, целое height)
 {
-    int ret = -1;
+    целое ret = -1;
 
-#if ARCH_X86 && HAVE_X86ASM
+#если ARCH_X86 && HAVE_X86ASM
     ret = ff_image_copy_plane_uc_from_x86(dst, dst_linesize, src, src_linesize,
                                           bytewidth, height);
 #endif
 
-    if (ret < 0)
+    если (ret < 0)
         image_copy_plane(dst, dst_linesize, src, src_linesize, bytewidth, height);
 }
 
-void av_image_copy_plane(uint8_t       *dst, int dst_linesize,
-                         const uint8_t *src, int src_linesize,
-                         int bytewidth, int height)
+void av_image_copy_plane(uint8_t       *dst, целое dst_linesize,
+                         const uint8_t *src, целое src_linesize,
+                         целое bytewidth, целое height)
 {
     image_copy_plane(dst, dst_linesize, src, src_linesize, bytewidth, height);
 }
 
 static void image_copy(uint8_t *const dst_data[4], const ptrdiff_t dst_linesizes[4],
                        const uint8_t *const src_data[4], const ptrdiff_t src_linesizes[4],
-                       enum AVPixelFormat pix_fmt, int width, int height,
+                       enum AVPixelFormat pix_fmt, целое width, целое height,
                        void (*copy_plane)(uint8_t *, ptrdiff_t, const uint8_t *,
-                                          ptrdiff_t, ptrdiff_t, int))
+                                          ptrdiff_t, ptrdiff_t, целое))
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
 
-    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return;
+    если (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        вернуть;
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    если (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         copy_plane(dst_data[0], dst_linesizes[0],
                    src_data[0], src_linesizes[0],
                    width, height);
         /* copy the palette */
-        if ((desc->flags & AV_PIX_FMT_FLAG_PAL) || (dst_data[1] && src_data[1]))
+        если ((desc->flags & AV_PIX_FMT_FLAG_PAL) || (dst_data[1] && src_data[1]))
             memcpy(dst_data[1], src_data[1], 4*256);
-    } else {
-        int i, planes_nb = 0;
+    } иначе {
+        целое i, planes_nb = 0;
 
-        for (i = 0; i < desc->nb_components; i++)
+        для (i = 0; i < desc->nb_components; i++)
             planes_nb = FFMAX(planes_nb, desc->comp[i].plane + 1);
 
-        for (i = 0; i < planes_nb; i++) {
-            int h = height;
+        для (i = 0; i < planes_nb; i++) {
+            целое h = height;
             ptrdiff_t bwidth = av_image_get_linesize(pix_fmt, width, i);
-            if (bwidth < 0) {
+            если (bwidth < 0) {
                 av_log(NULL, AV_LOG_ERROR, "av_image_get_linesize failed\n");
-                return;
+                вернуть;
             }
-            if (i == 1 || i == 2) {
+            если (i == 1 || i == 2) {
                 h = AV_CEIL_RSHIFT(height, desc->log2_chroma_h);
             }
             copy_plane(dst_data[i], dst_linesizes[i],
@@ -419,14 +419,14 @@ static void image_copy(uint8_t *const dst_data[4], const ptrdiff_t dst_linesizes
     }
 }
 
-void av_image_copy(uint8_t *const dst_data[4], const int dst_linesizes[4],
-                   const uint8_t * const src_data[4], const int src_linesizes[4],
-                   enum AVPixelFormat pix_fmt, int width, int height)
+void av_image_copy(uint8_t *const dst_data[4], const целое dst_linesizes[4],
+                   const uint8_t * const src_data[4], const целое src_linesizes[4],
+                   enum AVPixelFormat pix_fmt, целое width, целое height)
 {
     ptrdiff_t dst_linesizes1[4], src_linesizes1[4];
-    int i;
+    целое i;
 
-    for (i = 0; i < 4; i++) {
+    для (i = 0; i < 4; i++) {
         dst_linesizes1[i] = dst_linesizes[i];
         src_linesizes1[i] = src_linesizes[i];
     }
@@ -437,82 +437,82 @@ void av_image_copy(uint8_t *const dst_data[4], const int dst_linesizes[4],
 
 void av_image_copy_uc_from(uint8_t * const dst_data[4], const ptrdiff_t dst_linesizes[4],
                            const uint8_t * const src_data[4], const ptrdiff_t src_linesizes[4],
-                           enum AVPixelFormat pix_fmt, int width, int height)
+                           enum AVPixelFormat pix_fmt, целое width, целое height)
 {
     image_copy(dst_data, dst_linesizes, src_data, src_linesizes, pix_fmt,
                width, height, av_image_copy_plane_uc_from);
 }
 
-int av_image_fill_arrays(uint8_t *dst_data[4], int dst_linesize[4],
+целое av_image_fill_arrays(uint8_t *dst_data[4], целое dst_linesize[4],
                          const uint8_t *src, enum AVPixelFormat pix_fmt,
-                         int width, int height, int align)
+                         целое width, целое height, целое align)
 {
-    int ret, i;
+    целое ret, i;
 
     ret = av_image_check_size(width, height, 0, NULL);
-    if (ret < 0)
-        return ret;
+    если (ret < 0)
+        вернуть ret;
 
     ret = av_image_fill_linesizes(dst_linesize, pix_fmt, width);
-    if (ret < 0)
-        return ret;
+    если (ret < 0)
+        вернуть ret;
 
-    for (i = 0; i < 4; i++)
+    для (i = 0; i < 4; i++)
         dst_linesize[i] = FFALIGN(dst_linesize[i], align);
 
-    return av_image_fill_pointers(dst_data, pix_fmt, height, (uint8_t *)src, dst_linesize);
+    вернуть av_image_fill_pointers(dst_data, pix_fmt, height, (uint8_t *)src, dst_linesize);
 }
 
-int av_image_get_buffer_size(enum AVPixelFormat pix_fmt,
-                             int width, int height, int align)
+целое av_image_get_buffer_size(enum AVPixelFormat pix_fmt,
+                             целое width, целое height, целое align)
 {
-    int ret, i;
-    int linesize[4];
+    целое ret, i;
+    целое linesize[4];
     ptrdiff_t aligned_linesize[4];
     size_t sizes[4];
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    if (!desc)
-        return AVERROR(EINVAL);
+    если (!desc)
+        вернуть AVERROR(EINVAL);
 
     ret = av_image_check_size(width, height, 0, NULL);
-    if (ret < 0)
-        return ret;
+    если (ret < 0)
+        вернуть ret;
 
     ret = av_image_fill_linesizes(linesize, pix_fmt, width);
-    if (ret < 0)
-        return ret;
+    если (ret < 0)
+        вернуть ret;
 
-    for (i = 0; i < 4; i++)
+    для (i = 0; i < 4; i++)
         aligned_linesize[i] = FFALIGN(linesize[i], align);
 
     ret = av_image_fill_plane_sizes(sizes, pix_fmt, height, aligned_linesize);
-    if (ret < 0)
-        return ret;
+    если (ret < 0)
+        вернуть ret;
 
     ret = 0;
-    for (i = 0; i < 4; i++) {
-        if (sizes[i] > INT_MAX - ret)
-            return AVERROR(EINVAL);
+    для (i = 0; i < 4; i++) {
+        если (sizes[i] > INT_MAX - ret)
+            вернуть AVERROR(EINVAL);
         ret += sizes[i];
     }
-    return ret;
+    вернуть ret;
 }
 
-int av_image_copy_to_buffer(uint8_t *dst, int dst_size,
+целое av_image_copy_to_buffer(uint8_t *dst, целое dst_size,
                             const uint8_t * const src_data[4],
-                            const int src_linesize[4],
+                            const целое src_linesize[4],
                             enum AVPixelFormat pix_fmt,
-                            int width, int height, int align)
+                            целое width, целое height, целое align)
 {
-    int i, j, nb_planes = 0, linesize[4];
-    int size = av_image_get_buffer_size(pix_fmt, width, height, align);
+    целое i, j, nb_planes = 0, linesize[4];
+    целое size = av_image_get_buffer_size(pix_fmt, width, height, align);
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int ret;
+    целое ret;
 
-    if (size > dst_size || size < 0 || !desc)
-        return AVERROR(EINVAL);
+    если (size > dst_size || size < 0 || !desc)
+        вернуть AVERROR(EINVAL);
 
-    for (i = 0; i < desc->nb_components; i++)
+    для (i = 0; i < desc->nb_components; i++)
         nb_planes = FFMAX(desc->comp[i].plane, nb_planes);
 
     nb_planes++;
@@ -520,26 +520,26 @@ int av_image_copy_to_buffer(uint8_t *dst, int dst_size,
     ret = av_image_fill_linesizes(linesize, pix_fmt, width);
     av_assert0(ret >= 0); // was checked previously
 
-    for (i = 0; i < nb_planes; i++) {
-        int h, shift = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
+    для (i = 0; i < nb_planes; i++) {
+        целое h, shift = (i == 1 || i == 2) ? desc->log2_chroma_h : 0;
         const uint8_t *src = src_data[i];
         h = AV_CEIL_RSHIFT(height, shift);
 
-        for (j = 0; j < h; j++) {
+        для (j = 0; j < h; j++) {
             memcpy(dst, src, linesize[i]);
             dst += FFALIGN(linesize[i], align);
             src += src_linesize[i];
         }
     }
 
-    if (desc->flags & AV_PIX_FMT_FLAG_PAL) {
+    если (desc->flags & AV_PIX_FMT_FLAG_PAL) {
         uint32_t *d32 = (uint32_t *)dst;
 
-        for (i = 0; i<256; i++)
+        для (i = 0; i<256; i++)
             AV_WL32(d32 + i, AV_RN32(src_data[1] + 4*i));
     }
 
-    return size;
+    вернуть size;
 }
 
 // Fill dst[0..dst_size] with the bytes in clear[0..clear_size]. The clear
@@ -549,26 +549,26 @@ int av_image_copy_to_buffer(uint8_t *dst, int dst_size,
 static void memset_bytes(uint8_t *dst, size_t dst_size, uint8_t *clear,
                          size_t clear_size)
 {
-    int same = 1;
-    int i;
+    целое same = 1;
+    целое i;
 
-    if (!clear_size)
-        return;
+    если (!clear_size)
+        вернуть;
 
     // Reduce to memset() if possible.
-    for (i = 0; i < clear_size; i++) {
-        if (clear[i] != clear[0]) {
+    для (i = 0; i < clear_size; i++) {
+        если (clear[i] != clear[0]) {
             same = 0;
             break;
         }
     }
-    if (same)
+    если (same)
         clear_size = 1;
 
-    if (clear_size == 1) {
+    если (clear_size == 1) {
         memset(dst, clear[0], dst_size);
-    } else {
-        if (clear_size > dst_size)
+    } иначе {
+        если (clear_size > dst_size)
             clear_size = dst_size;
         memcpy(dst, clear, clear_size);
         av_memcpy_backptr(dst + clear_size, clear_size, dst_size - clear_size);
@@ -579,95 +579,95 @@ static void memset_bytes(uint8_t *dst, size_t dst_size, uint8_t *clear,
 // if it's a subsampled packed format).
 #define MAX_BLOCK_SIZE 32
 
-int av_image_fill_color(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
+целое av_image_fill_color(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
                         enum AVPixelFormat pix_fmt, const uint32_t color[4],
-                        int width, int height, int flags)
+                        целое width, целое height, целое flags)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int nb_planes = av_pix_fmt_count_planes(pix_fmt);
+    целое nb_planes = av_pix_fmt_count_planes(pix_fmt);
     // A pixel or a group of pixels on each plane, with a value that represents the color.
     // Consider e.g. AV_PIX_FMT_UYVY422 for non-trivial cases.
     uint8_t clear_block[4][MAX_BLOCK_SIZE] = {{0}}; // clear padding with 0
-    int clear_block_size[4] = {0};
+    целое clear_block_size[4] = {0};
     ptrdiff_t plane_line_bytes[4] = {0};
-    int bitstream;
-    int plane, c;
+    целое bitstream;
+    целое plane, c;
 
-    if (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    если (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        вернуть AVERROR(EINVAL);
 
     bitstream = !!(desc->flags & AV_PIX_FMT_FLAG_BITSTREAM);
 
-    for (c = 0; c < desc->nb_components; c++) {
+    для (c = 0; c < desc->nb_components; c++) {
         const AVComponentDescriptor comp = desc->comp[c];
 
         // We try to operate on entire non-subsampled pixel groups (for
         // AV_PIX_FMT_UYVY422 this would mean two consecutive pixels).
         clear_block_size[comp.plane] = FFMAX(clear_block_size[comp.plane], comp.step);
 
-        if (clear_block_size[comp.plane] > MAX_BLOCK_SIZE)
-            return AVERROR(EINVAL);
+        если (clear_block_size[comp.plane] > MAX_BLOCK_SIZE)
+            вернуть AVERROR(EINVAL);
     }
 
     // Create a byte array for clearing 1 pixel (sometimes several pixels).
-    for (c = 0; c < desc->nb_components; c++) {
+    для (c = 0; c < desc->nb_components; c++) {
         const AVComponentDescriptor comp = desc->comp[c];
         // (Multiple pixels happen e.g. with AV_PIX_FMT_UYVY422.)
-        int w = (bitstream ? 8 : 1) * clear_block_size[comp.plane] / comp.step;
+        целое w = (bitstream ? 8 : 1) * clear_block_size[comp.plane] / comp.step;
         uint8_t *c_data[4];
-        const int c_linesize[4] = {0};
+        const целое c_linesize[4] = {0};
         uint32_t src_array[MAX_BLOCK_SIZE];
-        int x;
+        целое x;
 
-        if (comp.depth > 32)
-            return AVERROR(EINVAL);
-        if (w < 1)
-            return AVERROR(EINVAL);
+        если (comp.depth > 32)
+            вернуть AVERROR(EINVAL);
+        если (w < 1)
+            вернуть AVERROR(EINVAL);
 
-        for (x = 0; x < w; x++)
+        для (x = 0; x < w; x++)
             src_array[x] = color[c];
 
-        for (x = 0; x < 4; x++)
+        для (x = 0; x < 4; x++)
             c_data[x] = &clear_block[x][0];
 
         av_write_image_line2(src_array, c_data, c_linesize, desc, 0, 0, c, w, 4);
     }
 
-    for (plane = 0; plane < nb_planes; plane++) {
+    для (plane = 0; plane < nb_planes; plane++) {
         plane_line_bytes[plane] = av_image_get_linesize(pix_fmt, width, plane);
-        if (plane_line_bytes[plane] < 0)
-            return AVERROR(EINVAL);
+        если (plane_line_bytes[plane] < 0)
+            вернуть AVERROR(EINVAL);
     }
 
-    if (!dst_data)
-        return 0;
+    если (!dst_data)
+        вернуть 0;
 
-    for (plane = 0; plane < nb_planes; plane++) {
+    для (plane = 0; plane < nb_planes; plane++) {
         size_t bytewidth = plane_line_bytes[plane];
         uint8_t *data = dst_data[plane];
-        int chroma_div = plane == 1 || plane == 2 ? desc->log2_chroma_h : 0;
-        int plane_h = AV_CEIL_RSHIFT(height, chroma_div);
+        целое chroma_div = plane == 1 || plane == 2 ? desc->log2_chroma_h : 0;
+        целое plane_h = AV_CEIL_RSHIFT(height, chroma_div);
 
-        for (; plane_h > 0; plane_h--) {
+        для (; plane_h > 0; plane_h--) {
             memset_bytes(data, bytewidth, &clear_block[plane][0], clear_block_size[plane]);
             data += dst_linesize[plane];
         }
     }
 
-    return 0;
+    вернуть 0;
 }
 
-int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
+целое av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesize[4],
                         enum AVPixelFormat pix_fmt, enum AVColorRange range,
-                        int width, int height)
+                        целое width, целое height)
 {
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
-    int nb_planes = av_pix_fmt_count_planes(pix_fmt);
-    int rgb, xyz, pal, limited, alpha, fltp;
+    целое nb_planes = av_pix_fmt_count_planes(pix_fmt);
+    целое rgb, xyz, pal, limited, alpha, fltp;
     uint32_t colors[4] = {0};
 
-    if (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
-        return AVERROR(EINVAL);
+    если (!desc || nb_planes < 1 || nb_planes > 4 || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        вернуть AVERROR(EINVAL);
 
     rgb = !!(desc->flags & AV_PIX_FMT_FLAG_RGB);
     xyz = !!(desc->flags & AV_PIX_FMT_FLAG_XYZ);
@@ -676,42 +676,42 @@ int av_image_fill_black(uint8_t * const dst_data[4], const ptrdiff_t dst_linesiz
     alpha = !pal && !!(desc->flags & AV_PIX_FMT_FLAG_ALPHA);
     fltp = !!(desc->flags & AV_PIX_FMT_FLAG_FLOAT);
 
-    for (int c = 0; c < desc->nb_components; c++) {
+    для (целое c = 0; c < desc->nb_components; c++) {
         const AVComponentDescriptor comp = desc->comp[c];
         uint32_t color = 0;
 
-        if (comp.depth > 32)
-            return AVERROR(EINVAL);
+        если (comp.depth > 32)
+            вернуть AVERROR(EINVAL);
 
-        if (pix_fmt == AV_PIX_FMT_MONOWHITE) {
+        если (pix_fmt == AV_PIX_FMT_MONOWHITE) {
             color = 1;
-        } else if (c + 1 == desc->nb_components && alpha) {
+        } иначе если (c + 1 == desc->nb_components && alpha) {
             // (Assume even limited YUV uses full range alpha.)
-            if (fltp) {
-                if (comp.depth != 16 && comp.depth != 32)
-                    return AVERROR(EINVAL);
+            если (fltp) {
+                если (comp.depth != 16 && comp.depth != 32)
+                    вернуть AVERROR(EINVAL);
                 color = (comp.depth == 16 ? 0x3C00 : 0x3F800000); // 1.0
-             } else {
+             } иначе {
                 color = (comp.depth == 32 ? 0 : (1 << comp.depth)) - 1;
              }
-        } else if (c == 0 && limited && comp.depth > 1) {
-            if (comp.depth < 8 || (fltp && comp.depth != 16 && comp.depth != 32))
-                return AVERROR(EINVAL);
-            if (fltp)
+        } иначе если (c == 0 && limited && comp.depth > 1) {
+            если (comp.depth < 8 || (fltp && comp.depth != 16 && comp.depth != 32))
+                вернуть AVERROR(EINVAL);
+            если (fltp)
                 color = (comp.depth == 16 ? 0x2C00 : 0x3D800000); // 0.0625
-            else
+            иначе
                 color = 16 << (comp.depth - 8);
-        } else if ((c == 1 || c == 2) && !rgb && !xyz) {
-            if (comp.depth < 8 || fltp && comp.depth != 16 && comp.depth != 32)
-                return AVERROR(EINVAL);
-            if (fltp)
+        } иначе если ((c == 1 || c == 2) && !rgb && !xyz) {
+            если (comp.depth < 8 || fltp && comp.depth != 16 && comp.depth != 32)
+                вернуть AVERROR(EINVAL);
+            если (fltp)
                 color = (comp.depth == 16 ? 0x3800 : 0x3F000000); // 0.5
-            else
+            иначе
                 color = 128 << (comp.depth - 8);
         }
 
         colors[c] = color;
     }
 
-    return av_image_fill_color(dst_data, dst_linesize, pix_fmt, colors, width, height, 0);
+    вернуть av_image_fill_color(dst_data, dst_linesize, pix_fmt, colors, width, height, 0);
 }

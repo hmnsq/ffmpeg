@@ -21,7 +21,7 @@
 
 #ifdef __APPLE__
 #include <OpenCL/cl.h>
-#else
+#иначе
 #include <CL/cl.h>
 #endif
 
@@ -48,7 +48,7 @@ typedef struct AVOpenCLFrameDescriptor {
     /**
      * Number of planes in the frame.
      */
-    int nb_planes;
+    целое nb_planes;
     /**
      * OpenCL image2d objects for each plane of the frame.
      */

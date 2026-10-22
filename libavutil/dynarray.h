@@ -46,25 +46,25 @@
                         av_success, av_failure) \
     do { \
         size_t av_size_new = (av_size); \
-        if (!((av_size) & ((av_size) - 1))) { \
+        если (!((av_size) & ((av_size) - 1))) { \
             av_size_new = (av_size) ? (av_size) << 1 : 1; \
-            if (av_size_new > (av_size_max) / (av_elt_size)) { \
+            если (av_size_new > (av_size_max) / (av_elt_size)) { \
                 av_size_new = 0; \
-            } else { \
+            } иначе { \
                 void *av_array_new = \
                     av_realloc((av_array), av_size_new * (av_elt_size)); \
-                if (!av_array_new) \
+                если (!av_array_new) \
                     av_size_new = 0; \
-                else \
+                иначе \
                     (av_array) = av_array_new; \
             } \
         } \
-        if (av_size_new) { \
+        если (av_size_new) { \
             { av_success } \
             (av_size)++; \
-        } else { \
+        } иначе { \
             av_failure \
         } \
-    } while (0)
+    } пока (0)
 
 #endif /* AVUTIL_DYNARRAY_H */

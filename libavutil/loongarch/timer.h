@@ -25,21 +25,21 @@
 #include <stdint.h>
 #include "config.h"
 
-#if HAVE_INLINE_ASM
+#если HAVE_INLINE_ASM
 
 #define AV_READ_TIME read_time
 
 static inline uint64_t read_time(void)
 {
 
-#if ARCH_LOONGARCH64
+#если ARCH_LOONGARCH64
     uint64_t a, id;
     __asm__ volatile ( "rdtime.d  %0, %1" : "=r"(a), "=r"(id) :: );
-    return a;
-#else
+    вернуть a;
+#иначе
     uint32_t a, id;
     __asm__ volatile ( "rdtimel.w  %0, %1" : "=r"(a), "=r"(id) :: );
-    return (uint64_t)a;
+    вернуть (uint64_t)a;
 #endif
 }
 
