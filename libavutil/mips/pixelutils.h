@@ -19,22 +19,22 @@
 #ifndef AVUTIL_MIPS_PIXELUTILS_H
 #define AVUTIL_MIPS_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#ଅନ୍ତର୍ଭାଵ "cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/attributes.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_msa(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ff_pixelutils_sad16_msa(ଅଚଳ uint8_t *src1, ptrdiff_t stride1,
+                            ଅଚଳ uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, int aligned)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ av_cold ଶୂନ୍ୟ ff_pixelutils_sad_init_mips(av_pixelutils_sad_fn *sad, ପୂର୍ଣ୍ଣସଂଖ୍ୟା aligned)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା cpu_flags = av_get_cpu_flags();
 
-    if (have_msa(cpu_flags)) {
+    ଯଦି (have_msa(cpu_flags)) {
         sad[3] = ff_pixelutils_sad16_msa;
     }
 }

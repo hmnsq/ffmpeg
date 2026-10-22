@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <limits.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
 
-#include "libavutil/downmix_info.h"
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/downmix_info.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/frame.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/mem.h"
 
-int main(void)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ଶୂନ୍ୟ)
 {
     AVFrame *frame;
     AVDownmixInfo *info, *info2;
@@ -31,11 +31,11 @@ int main(void)
     /* First call: allocates side data, zero-initialized. */
     printf("Testing av_downmix_info_update_side_data()\n");
     frame = av_frame_alloc();
-    if (!frame)
-        return 1;
+    ଯଦି (!frame)
+        ଫେରନ୍ତୁ 1;
 
     info = av_downmix_info_update_side_data(frame);
-    if (info) {
+    ଯଦି (info) {
         printf("create: OK\n");
         printf("defaults: type=%d center=%.3f center_ltrt=%.3f surround=%.3f"
                " surround_ltrt=%.3f lfe=%.3f\n",
@@ -60,13 +60,13 @@ int main(void)
                info->center_mix_level, info->center_mix_level_ltrt,
                info->surround_mix_level, info->surround_mix_level_ltrt,
                info->lfe_mix_level);
-    } else {
+    } ଅନ୍ୟଥା {
         printf("create: FAIL\n");
     }
 
     /* Second call must reuse the existing side data (same pointer, values kept). */
     info2 = av_downmix_info_update_side_data(frame);
-    if (info && info2) {
+    ଯଦି (info && info2) {
         printf("reuse: same_pointer=%s preserved_type=%d preserved_center=%.3f\n",
                info == info2 ? "yes" : "no",
                info2->preferred_downmix_type, info2->center_mix_level);
@@ -77,7 +77,7 @@ int main(void)
     /* OOM path: av_max_alloc(1) forces the internal side data allocation to fail. */
     printf("\nTesting OOM path\n");
     frame = av_frame_alloc();
-    if (frame) {
+    ଯଦି (frame) {
         av_max_alloc(1);
         info = av_downmix_info_update_side_data(frame);
         printf("OOM: %s\n", info ? "FAIL" : "OK");
@@ -85,5 +85,5 @@ int main(void)
         av_frame_free(&frame);
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }

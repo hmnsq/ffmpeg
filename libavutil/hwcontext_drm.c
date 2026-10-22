@@ -16,54 +16,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
 
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#ଅନ୍ତର୍ଭାଵ <fcntl.h>
+#ଅନ୍ତର୍ଭାଵ <sys/mman.h>
+#ଅନ୍ତର୍ଭାଵ <unistd.h>
 
 /* This was introduced in version 4.6. And may not exist all without an
  * optional package. So to prevent a hard dependency on needing the Linux
  * kernel headers to compile, make this optional. */
-#if HAVE_LINUX_DMA_BUF_H
-#include <linux/dma-buf.h>
-#include <sys/ioctl.h>
+#ଯଦି HAVE_LINUX_DMA_BUF_H
+#ଅନ୍ତର୍ଭାଵ <linux/dma-buf.h>
+#ଅନ୍ତର୍ଭାଵ <sys/ioctl.h>
 #endif
 
-#include <drm.h>
-#include <xf86drm.h>
+#ଅନ୍ତର୍ଭାଵ <drm.h>
+#ଅନ୍ତର୍ଭାଵ <xf86drm.h>
 
-#include "avassert.h"
-#include "hwcontext.h"
-#include "hwcontext_drm.h"
-#include "hwcontext_internal.h"
-#include "imgutils.h"
-#include "mem.h"
+#ଅନ୍ତର୍ଭାଵ "avassert.h"
+#ଅନ୍ତର୍ଭାଵ "hwcontext.h"
+#ଅନ୍ତର୍ଭାଵ "hwcontext_drm.h"
+#ଅନ୍ତର୍ଭାଵ "hwcontext_internal.h"
+#ଅନ୍ତର୍ଭାଵ "imgutils.h"
+#ଅନ୍ତର୍ଭାଵ "mem.h"
 
 
-static void drm_device_free(AVHWDeviceContext *hwdev)
+ସ୍ଥିର ଶୂନ୍ୟ drm_device_free(AVHWDeviceContext *hwdev)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
 
     close(hwctx->fd);
 }
 
-static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
-                             AVDictionary *opts, int flags)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା drm_device_create(AVHWDeviceContext *hwdev, ଅଚଳ ଅକ୍ଷର *device,
+                             AVDictionary *opts, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags)
 {
     AVDRMDeviceContext *hwctx = hwdev->hwctx;
     drmVersionPtr version;
 
     hwctx->fd = open(device, O_RDWR);
-    if (hwctx->fd < 0)
-        return AVERROR(errno);
+    ଯଦି (hwctx->fd < 0)
+        ଫେରନ୍ତୁ AVERROR(errno);
 
     version = drmGetVersion(hwctx->fd);
-    if (!version) {
+    ଯଦି (!version) {
         av_log(hwdev, AV_LOG_ERROR, "Failed to get version information "
                "from %s: probably not a DRM device?\n", device);
         close(hwctx->fd);
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
     av_log(hwdev, AV_LOG_VERBOSE, "Opened DRM device %s: driver %s "
@@ -73,43 +73,43 @@ static int drm_device_create(AVHWDeviceContext *hwdev, const char *device,
 
     drmFreeVersion(version);
 
-    hwdev->free = &drm_device_free;
+    hwdev->ମୁକ୍ତ = &drm_device_free;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static int drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା drm_get_buffer(AVHWFramesContext *hwfc, AVFrame *frame)
 {
     frame->buf[0] = av_buffer_pool_get(hwfc->pool);
-    if (!frame->buf[0])
-        return AVERROR(ENOMEM);
+    ଯଦି (!frame->buf[0])
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
 
     frame->data[0] = (uint8_t*)frame->buf[0]->data;
 
-    frame->format = AV_PIX_FMT_DRM_PRIME;
+    frame->format = AV_PIX_FMT_DRM_ମୌଳିକ;
     frame->width  = hwfc->width;
     frame->height = hwfc->height;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-typedef struct DRMMapping {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା DRMMapping {
     // Address and length of each mmap()ed region.
-    int nb_regions;
-    int sync_flags;
-    int object[AV_DRM_MAX_PLANES];
-    void *address[AV_DRM_MAX_PLANES];
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା nb_regions;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା sync_flags;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା object[AV_DRM_MAX_PLANES];
+    ଶୂନ୍ୟ *address[AV_DRM_MAX_PLANES];
     size_t length[AV_DRM_MAX_PLANES];
 } DRMMapping;
 
-static void drm_unmap_frame(AVHWFramesContext *hwfc,
+ସ୍ଥିର ଶୂନ୍ୟ drm_unmap_frame(AVHWFramesContext *hwfc,
                             HWMapDescriptor *hwmap)
 {
     DRMMapping *map = hwmap->priv;
 
-    for (int i = 0; i < map->nb_regions; i++) {
-#if HAVE_LINUX_DMA_BUF_H
-        struct dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
+    ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < map->nb_regions; i++) {
+#ଯଦି HAVE_LINUX_DMA_BUF_H
+        ସଂରଚନା dma_buf_sync sync = { .flags = DMA_BUF_SYNC_END | map->sync_flags };
         ioctl(map->object[i], DMA_BUF_IOCTL_SYNC, &sync);
 #endif
         munmap(map->address[i], map->length[i]);
@@ -118,52 +118,52 @@ static void drm_unmap_frame(AVHWFramesContext *hwfc,
     av_free(map);
 }
 
-static int drm_map_frame(AVHWFramesContext *hwfc,
-                         AVFrame *dst, const AVFrame *src, int flags)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା drm_map_frame(AVHWFramesContext *hwfc,
+                         AVFrame *dst, ଅଚଳ AVFrame *src, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags)
 {
-    const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->data[0];
-#if HAVE_LINUX_DMA_BUF_H
-    struct dma_buf_sync sync_start = { 0 };
+    ଅଚଳ AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)src->data[0];
+#ଯଦି HAVE_LINUX_DMA_BUF_H
+    ସଂରଚନା dma_buf_sync sync_start = { 0 };
 #endif
     DRMMapping *map;
-    int err, i, p, plane;
-    int mmap_prot;
-    void *addr;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା err, i, p, plane;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା mmap_prot;
+    ଶୂନ୍ୟ *addr;
 
-    map = av_mallocz(sizeof(*map));
-    if (!map)
-        return AVERROR(ENOMEM);
+    map = av_mallocz(ଆକାର(*map));
+    ଯଦି (!map)
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
 
     mmap_prot = 0;
-    if (flags & AV_HWFRAME_MAP_READ)
+    ଯଦି (flags & AV_HWFRAME_MAP_READ)
         mmap_prot |= PROT_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    ଯଦି (flags & AV_HWFRAME_MAP_WRITE)
         mmap_prot |= PROT_WRITE;
 
-#if HAVE_LINUX_DMA_BUF_H
-    if (flags & AV_HWFRAME_MAP_READ)
+#ଯଦି HAVE_LINUX_DMA_BUF_H
+    ଯଦି (flags & AV_HWFRAME_MAP_READ)
         map->sync_flags |= DMA_BUF_SYNC_READ;
-    if (flags & AV_HWFRAME_MAP_WRITE)
+    ଯଦି (flags & AV_HWFRAME_MAP_WRITE)
         map->sync_flags |= DMA_BUF_SYNC_WRITE;
     sync_start.flags = DMA_BUF_SYNC_START | map->sync_flags;
 #endif
 
     av_assert0(desc->nb_objects <= AV_DRM_MAX_PLANES);
-    for (i = 0; i < desc->nb_objects; i++) {
-        addr = mmap(NULL, desc->objects[i].size, mmap_prot, MAP_SHARED,
+    ପାଇଁ (i = 0; i < desc->nb_objects; i++) {
+        addr = mmap(ଖାଲି, desc->objects[i].size, mmap_prot, MAP_SHARED,
                     desc->objects[i].fd, 0);
-        if (addr == MAP_FAILED) {
+        ଯଦି (addr == MAP_FAILED) {
             err = AVERROR(errno);
             av_log(hwfc, AV_LOG_ERROR, "Failed to map DRM object %d to "
                    "memory: %d.\n", desc->objects[i].fd, errno);
-            goto fail;
+            ଯାଅ fail;
         }
 
         map->address[i] = addr;
         map->length[i]  = desc->objects[i].size;
         map->object[i] = desc->objects[i].fd;
 
-#if HAVE_LINUX_DMA_BUF_H
+#ଯଦି HAVE_LINUX_DMA_BUF_H
         /* We're not checking for errors here because the kernel may not
          * support the ioctl, in which case its okay to carry on */
         ioctl(desc->objects[i].fd, DMA_BUF_IOCTL_SYNC, &sync_start);
@@ -172,9 +172,9 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
     map->nb_regions = i;
 
     plane = 0;
-    for (i = 0; i < desc->nb_layers; i++) {
-        const AVDRMLayerDescriptor *layer = &desc->layers[i];
-        for (p = 0; p < layer->nb_planes; p++) {
+    ପାଇଁ (i = 0; i < desc->nb_layers; i++) {
+        ଅଚଳ AVDRMLayerDescriptor *layer = &desc->layers[i];
+        ପାଇଁ (p = 0; p < layer->nb_planes; p++) {
             dst->data[plane] =
                 (uint8_t*)map->address[layer->planes[p].object_index] +
                                        layer->planes[p].offset;
@@ -189,126 +189,126 @@ static int drm_map_frame(AVHWFramesContext *hwfc,
 
     err = ff_hwframe_map_create(src->hw_frames_ctx, dst, src,
                                 &drm_unmap_frame, map);
-    if (err < 0)
-        goto fail;
+    ଯଦି (err < 0)
+        ଯାଅ fail;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 
 fail:
-    for (i = 0; i < desc->nb_objects; i++) {
-        if (map->address[i])
+    ପାଇଁ (i = 0; i < desc->nb_objects; i++) {
+        ଯଦି (map->address[i])
             munmap(map->address[i], map->length[i]);
     }
     av_free(map);
-    return err;
+    ଫେରନ୍ତୁ err;
 }
 
-static int drm_transfer_get_formats(AVHWFramesContext *ctx,
-                                    enum AVHWFrameTransferDirection dir,
-                                    enum AVPixelFormat **formats)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା drm_transfer_get_formats(AVHWFramesContext *ctx,
+                                    ଗଣନା AVHWFrameTransferDirection dir,
+                                    ଗଣନା AVPixelFormat **formats)
 {
-    enum AVPixelFormat *pix_fmts;
+    ଗଣନା AVPixelFormat *pix_fmts;
 
-    pix_fmts = av_malloc_array(2, sizeof(*pix_fmts));
-    if (!pix_fmts)
-        return AVERROR(ENOMEM);
+    pix_fmts = av_malloc_array(2, ଆକାର(*pix_fmts));
+    ଯଦି (!pix_fmts)
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
 
     pix_fmts[0] = ctx->sw_format;
     pix_fmts[1] = AV_PIX_FMT_NONE;
 
     *formats = pix_fmts;
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static int drm_transfer_data_from(AVHWFramesContext *hwfc,
-                                  AVFrame *dst, const AVFrame *src)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା drm_transfer_data_from(AVHWFramesContext *hwfc,
+                                  AVFrame *dst, ଅଚଳ AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା err;
 
-    if (dst->width > hwfc->width || dst->height > hwfc->height)
-        return AVERROR(EINVAL);
+    ଯଦି (dst->width > hwfc->width || dst->height > hwfc->height)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    ଯଦି (!map)
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
     map->format = dst->format;
 
     err = drm_map_frame(hwfc, map, src, AV_HWFRAME_MAP_READ);
-    if (err)
-        goto fail;
+    ଯଦି (err)
+        ଯାଅ fail;
 
     map->width  = dst->width;
     map->height = dst->height;
 
     err = av_frame_copy(dst, map);
-    if (err)
-        goto fail;
+    ଯଦି (err)
+        ଯାଅ fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    ଫେରନ୍ତୁ err;
 }
 
-static int drm_transfer_data_to(AVHWFramesContext *hwfc,
-                                AVFrame *dst, const AVFrame *src)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା drm_transfer_data_to(AVHWFramesContext *hwfc,
+                                AVFrame *dst, ଅଚଳ AVFrame *src)
 {
     AVFrame *map;
-    int err;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା err;
 
-    if (src->width > hwfc->width || src->height > hwfc->height)
-        return AVERROR(EINVAL);
+    ଯଦି (src->width > hwfc->width || src->height > hwfc->height)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     map = av_frame_alloc();
-    if (!map)
-        return AVERROR(ENOMEM);
+    ଯଦି (!map)
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
     map->format = src->format;
 
     err = drm_map_frame(hwfc, map, dst, AV_HWFRAME_MAP_WRITE |
                                         AV_HWFRAME_MAP_OVERWRITE);
-    if (err)
-        goto fail;
+    ଯଦି (err)
+        ଯାଅ fail;
 
     map->width  = src->width;
     map->height = src->height;
 
     err = av_frame_copy(map, src);
-    if (err)
-        goto fail;
+    ଯଦି (err)
+        ଯାଅ fail;
 
     err = 0;
 fail:
     av_frame_free(&map);
-    return err;
+    ଫେରନ୍ତୁ err;
 }
 
-static int drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
-                        const AVFrame *src, int flags)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା drm_map_from(AVHWFramesContext *hwfc, AVFrame *dst,
+                        ଅଚଳ AVFrame *src, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags)
 {
-    int err;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା err;
 
-    if (dst->format == AV_PIX_FMT_NONE)
+    ଯଦି (dst->format == AV_PIX_FMT_NONE)
         dst->format = hwfc->sw_format;
-    else if (hwfc->sw_format != dst->format)
-        return AVERROR(ENOSYS);
+    ଅନ୍ୟଥା ଯଦି (hwfc->sw_format != dst->format)
+        ଫେରନ୍ତୁ AVERROR(ENOSYS);
 
     err = drm_map_frame(hwfc, dst, src, flags);
-    if (err)
-        return err;
+    ଯଦି (err)
+        ଫେରନ୍ତୁ err;
 
     err = av_frame_copy_props(dst, src);
-    if (err)
-        return err;
+    ଯଦି (err)
+        ଫେରନ୍ତୁ err;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-const HWContextType ff_hwcontext_type_drm = {
+ଅଚଳ HWContextType ff_hwcontext_type_drm = {
     .type                   = AV_HWDEVICE_TYPE_DRM,
     .name                   = "DRM",
 
-    .device_hwctx_size      = sizeof(AVDRMDeviceContext),
+    .device_hwctx_size      = ଆକାର(AVDRMDeviceContext),
 
     .device_create          = &drm_device_create,
 
@@ -319,8 +319,8 @@ const HWContextType ff_hwcontext_type_drm = {
     .transfer_data_from     = &drm_transfer_data_from,
     .map_from               = &drm_map_from,
 
-    .pix_fmts = (const enum AVPixelFormat[]) {
-        AV_PIX_FMT_DRM_PRIME,
+    .pix_fmts = (ଅଚଳ ଗଣନା AVPixelFormat[]) {
+        AV_PIX_FMT_DRM_ମୌଳିକ,
         AV_PIX_FMT_NONE
     },
 };

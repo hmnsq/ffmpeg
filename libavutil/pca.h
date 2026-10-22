@@ -27,9 +27,9 @@
 #ifndef AVUTIL_PCA_H
 #define AVUTIL_PCA_H
 
-struct PCA *ff_pca_init(int n);
-void ff_pca_free(struct PCA *pca);
-void ff_pca_add(struct PCA *pca, const double *v);
-int ff_pca(struct PCA *pca, double *eigenvector, double *eigenvalue);
+ସଂରଚନା PCA *ff_pca_init(ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
+ଶୂନ୍ୟ ff_pca_free(ସଂରଚନା PCA *pca);
+ଶୂନ୍ୟ ff_pca_add(ସଂରଚନା PCA *pca, ଅଚଳ ଦ୍ୱିଗୁଣ *v);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ff_pca(ସଂରଚନା PCA *pca, ଦ୍ୱିଗୁଣ *eigenvector, ଦ୍ୱିଗୁଣ *eigenvalue);
 
 #endif /* AVUTIL_PCA_H */

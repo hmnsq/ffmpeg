@@ -19,8 +19,8 @@
 #ifndef AVUTIL_MIPS_CPU_H
 #define AVUTIL_MIPS_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu_internal.h"
 
 #define have_mmi(flags) CPUEXT(flags, MMI)
 #define have_msa(flags) CPUEXT(flags, MSA)

@@ -16,23 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
 
-#include "libavutil/frame.h"
-#include "libavutil/mem.h"
-#include "libavutil/video_enc_params.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/frame.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/mem.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/video_enc_params.h"
 
-int main(void)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ଶୂନ୍ୟ)
 {
     AVVideoEncParams *par;
     AVVideoBlockParams *block;
     AVFrame *frame;
     size_t size;
 
-    static const struct {
-        enum AVVideoEncParamsType type;
-        const char *name;
+    ସ୍ଥିର ଅଚଳ ସଂରଚନା {
+        ଗଣନା AVVideoEncParamsType type;
+        ଅଚଳ ଅକ୍ଷର *name;
     } types[] = {
         { AV_VIDEO_ENC_PARAMS_VP9,   "VP9"   },
         { AV_VIDEO_ENC_PARAMS_H264,  "H264"  },
@@ -41,45 +41,45 @@ int main(void)
 
     /* av_video_enc_params_alloc - each type with blocks */
     printf("Testing av_video_enc_params_alloc()\n");
-    for (int i = 0; i < 3; i++) {
+    ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < 3; i++) {
         par = av_video_enc_params_alloc(types[i].type, 4, &size);
-        if (par) {
+        ଯଦି (par) {
             printf("%s: OK, type=%d, nb_blocks=%u, size>0=%s\n",
                    types[i].name, par->type, par->nb_blocks,
                    size > 0 ? "yes" : "no");
             av_free(par);
-        } else {
+        } ଅନ୍ୟଥା {
             printf("%s: FAIL\n", types[i].name);
         }
     }
 
     /* zero blocks */
     par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_VP9, 0, &size);
-    if (par) {
+    ଯଦି (par) {
         printf("zero blocks: OK, nb_blocks=%u\n", par->nb_blocks);
         av_free(par);
-    } else {
+    } ଅନ୍ୟଥା {
         printf("zero blocks: FAIL\n");
     }
 
     /* alloc without size */
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 1, NULL);
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 1, ଖାଲି);
     printf("alloc (no size): %s\n", par ? "OK" : "FAIL");
     av_free(par);
 
     /* av_video_enc_params_block - write and read back */
     printf("\nTesting av_video_enc_params_block()\n");
-    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 3, NULL);
-    if (par) {
+    par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_H264, 3, ଖାଲି);
+    ଯଦି (par) {
         par->qp = 26;
         par->delta_qp[0][0] = -2;
         par->delta_qp[0][1] = -1;
         printf("frame qp=%d, delta_qp[0]={%d,%d}\n",
                par->qp, par->delta_qp[0][0], par->delta_qp[0][1]);
 
-        for (int i = 0; i < 3; i++) {
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < 3; i++) {
             block = av_video_enc_params_block(par, i);
-            if ((uint8_t *)block != (uint8_t *)par + par->blocks_offset +
+            ଯଦି ((uint8_t *)block != (uint8_t *)par + par->blocks_offset +
                                     (size_t)i * par->block_size)
                 printf("block %d: pointer inconsistent with blocks_offset/block_size\n", i);
             block->src_x = i * 16;
@@ -88,7 +88,7 @@ int main(void)
             block->h = 16;
             block->delta_qp = i - 1;
         }
-        for (int i = 0; i < 3; i++) {
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < 3; i++) {
             block = av_video_enc_params_block(par, i);
             printf("block %d: src=(%d,%d) size=%dx%d delta_qp=%d\n",
                    i, block->src_x, block->src_y,
@@ -100,17 +100,17 @@ int main(void)
     /* av_video_enc_params_create_side_data */
     printf("\nTesting av_video_enc_params_create_side_data()\n");
     frame = av_frame_alloc();
-    if (frame) {
+    ଯଦି (frame) {
         par = av_video_enc_params_create_side_data(frame,
                   AV_VIDEO_ENC_PARAMS_VP9, 2);
-        if (par) {
+        ଯଦି (par) {
             printf("side_data: OK, type=%d, nb_blocks=%u\n",
                    par->type, par->nb_blocks);
             block = av_video_enc_params_block(par, 0);
             block->delta_qp = 5;
             block = av_video_enc_params_block(par, 0);
             printf("side_data block 0: delta_qp=%d\n", block->delta_qp);
-        } else {
+        } ଅନ୍ୟଥା {
             printf("side_data: FAIL\n");
         }
         av_frame_free(&frame);
@@ -119,12 +119,12 @@ int main(void)
     /* NONE type */
     printf("\nTesting NONE type\n");
     par = av_video_enc_params_alloc(AV_VIDEO_ENC_PARAMS_NONE, 0, &size);
-    if (par) {
+    ଯଦି (par) {
         printf("NONE: OK, type=%d\n", par->type);
         av_free(par);
-    } else {
+    } ଅନ୍ୟଥା {
         printf("NONE: FAIL\n");
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }

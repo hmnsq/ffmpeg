@@ -18,83 +18,83 @@
 
 // LCOV_EXCL_START
 
-#include "libavutil/timer.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/timer.h"
 
-#include <stdint.h>
-#include <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
 
-#include "libavutil/common.h"
-#include "libavutil/base64.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/common.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/base64.h"
 
 #define MAX_DATA_SIZE    1024
 #define MAX_ENCODED_SIZE 2048
 
-static int test_encode_decode(const uint8_t *data, unsigned int data_size,
-                              const char *encoded_ref)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା test_encode_decode(ଅଚଳ uint8_t *data, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା data_size,
+                              ଅଚଳ ଅକ୍ଷର *encoded_ref)
 {
-    char  encoded[MAX_ENCODED_SIZE];
+    ଅକ୍ଷର  encoded[MAX_ENCODED_SIZE];
     uint8_t data2[MAX_DATA_SIZE];
-    int data2_size, max_data2_size = MAX_DATA_SIZE;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା data2_size, max_data2_size = MAX_DATA_SIZE;
 
-    if (!av_base64_encode(encoded, MAX_ENCODED_SIZE, data, data_size)) {
+    ଯଦି (!av_base64_encode(encoded, MAX_ENCODED_SIZE, data, data_size)) {
         printf("Failed: cannot encode the input data\n");
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
-    if (encoded_ref && strcmp(encoded, encoded_ref)) {
+    ଯଦି (encoded_ref && strcmp(encoded, encoded_ref)) {
         printf("Failed: encoded string differs from reference\n"
                "Encoded:\n%s\nReference:\n%s\n", encoded, encoded_ref);
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
 
-    if ((data2_size = av_base64_decode(data2, encoded, max_data2_size)) != data_size) {
+    ଯଦି ((data2_size = av_base64_decode(data2, encoded, max_data2_size)) != data_size) {
         printf("Failed: cannot decode the encoded string\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
-    if ((data2_size = av_base64_decode(data2, encoded, data_size)) != data_size) {
+    ଯଦି ((data2_size = av_base64_decode(data2, encoded, data_size)) != data_size) {
         printf("Failed: cannot decode with minimal buffer\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
-    if (memcmp(data2, data, data_size)) {
+    ଯଦି (memcmp(data2, data, data_size)) {
         printf("Failed: encoded/decoded data differs from original data\n");
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
-    if (av_base64_decode(NULL, encoded, 0) != 0) {
+    ଯଦି (av_base64_decode(ଖାଲି, encoded, 0) != 0) {
         printf("Failed: decode to NULL buffer\n");
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
-    if (data_size > 0 && (data2_size = av_base64_decode(data2, encoded, data_size - 1)) != data_size - 1) {
+    ଯଦି (data_size > 0 && (data2_size = av_base64_decode(data2, encoded, data_size - 1)) != data_size - 1) {
         printf("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
-    if (data_size > 1 && (data2_size = av_base64_decode(data2, encoded, data_size - 2)) != data_size - 2) {
+    ଯଦି (data_size > 1 && (data2_size = av_base64_decode(data2, encoded, data_size - 2)) != data_size - 2) {
         printf("Failed: out of array write\n"
                "Encoded:\n%s\n", encoded);
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
-    if (strlen(encoded)) {
-        char *end = strchr(encoded, '=');
-        if (!end)
+    ଯଦି (strlen(encoded)) {
+        ଅକ୍ଷର *end = strchr(encoded, '=');
+        ଯଦି (!end)
             end = encoded + strlen(encoded) - 1;
         *end = '%';
-        if (av_base64_decode(NULL, encoded, 0) >= 0) {
+        ଯଦି (av_base64_decode(ଖାଲି, encoded, 0) >= 0) {
             printf("Failed: error detection\n");
-            return 1;
+            ଫେରନ୍ତୁ 1;
         }
     }
 
     printf("Passed!\n");
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int main(int argc, char ** argv)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର ** argv)
 {
-    int i, error_count = 0;
-    struct test {
-        const uint8_t *data;
-        const char *encoded_ref;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i, error_ଗଣନା = 0;
+    ସଂରଚନା test {
+        ଅଚଳ uint8_t *data;
+        ଅଚଳ ଅକ୍ଷର *encoded_ref;
     } tests[] = {
         { "",        ""},
         { "1",       "MQ=="},
@@ -105,36 +105,36 @@ int main(int argc, char ** argv)
         { "666666",  "NjY2NjY2"},
         { "abc:def", "YWJjOmRlZg=="},
     };
-    char in[1024], out[2048];
+    ଅକ୍ଷର in[1024], out[2048];
 
     printf("Encoding/decoding tests\n");
-    for (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
-        error_count += test_encode_decode(tests[i].data, strlen(tests[i].data), tests[i].encoded_ref);
+    ପାଇଁ (i = 0; i < FF_ARRAY_ELEMS(tests); i++)
+        error_ଗଣନା += test_encode_decode(tests[i].data, strlen(tests[i].data), tests[i].encoded_ref);
 
-    if (argc>1 && !strcmp(argv[1], "-t")) {
-        memset(in, 123, sizeof(in));
-        for(i=0; i<10000; i++){
+    ଯଦି (argc>1 && !strcmp(argv[1], "-t")) {
+        memset(in, 123, ଆକାର(in));
+        ପାଇଁ(i=0; i<10000; i++){
             START_TIMER
-            av_base64_encode(out, sizeof(out), in, sizeof(in));
+            av_base64_encode(out, ଆକାର(out), in, ଆକାର(in));
             STOP_TIMER("encode")
         }
-        for(i=0; i<10000; i++){
+        ପାଇଁ(i=0; i<10000; i++){
             START_TIMER
-            av_base64_decode(in, out, sizeof(in));
+            av_base64_decode(in, out, ଆକାର(in));
             STOP_TIMER("decode")
         }
 
-        for(i=0; i<10000; i++){
+        ପାଇଁ(i=0; i<10000; i++){
             START_TIMER
-            av_base64_decode(NULL, out, 0);
+            av_base64_decode(ଖାଲି, out, 0);
             STOP_TIMER("syntax check")
         }
     }
 
-    if (error_count)
-        printf("Error Count: %d.\n", error_count);
+    ଯଦି (error_ଗଣନା)
+        printf("Error Count: %d.\n", error_ଗଣନା);
 
-    return !!error_count;
+    ଫେରନ୍ତୁ !!error_ଗଣନା;
 }
 
 // LCOV_EXCL_STOP

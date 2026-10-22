@@ -19,43 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
 
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/attributes.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/float_dsp.h"
+#ଅନ୍ତର୍ଭାଵ "cpu.h"
 
-void ff_vector_fmul_neon(float *dst, const float *src0, const float *src1,
-                         int len);
+ଶୂନ୍ୟ ff_vector_fmul_neon(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src0, ଅଚଳ ଦଶମିକ *src1,
+                         ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_vector_fmac_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+ଶୂନ୍ୟ ff_vector_fmac_scalar_neon(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src, ଦଶମିକ mul,
+                                ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_vector_fmul_scalar_neon(float *dst, const float *src, float mul,
-                                int len);
+ଶୂନ୍ୟ ff_vector_fmul_scalar_neon(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src, ଦଶମିକ mul,
+                                ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_vector_dmul_scalar_neon(double *dst, const double *src, double mul,
-                                int len);
+ଶୂନ୍ୟ ff_vector_dmul_scalar_neon(ଦ୍ୱିଗୁଣ *dst, ଅଚଳ ଦ୍ୱିଗୁଣ *src, ଦ୍ୱିଗୁଣ mul,
+                                ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_vector_fmul_window_neon(float *dst, const float *src0,
-                                const float *src1, const float *win, int len);
+ଶୂନ୍ୟ ff_vector_fmul_window_neon(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src0,
+                                ଅଚଳ ଦଶମିକ *src1, ଅଚଳ ଦଶମିକ *win, ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_vector_fmul_add_neon(float *dst, const float *src0, const float *src1,
-                             const float *src2, int len);
+ଶୂନ୍ୟ ff_vector_fmul_add_neon(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src0, ଅଚଳ ଦଶମିକ *src1,
+                             ଅଚଳ ଦଶମିକ *src2, ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_vector_fmul_reverse_neon(float *dst, const float *src0,
-                                 const float *src1, int len);
+ଶୂନ୍ୟ ff_vector_fmul_reverse_neon(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src0,
+                                 ଅଚଳ ଦଶମିକ *src1, ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_butterflies_float_neon(float *v1, float *v2, int len);
+ଶୂନ୍ୟ ff_butterflies_float_neon(ଦଶମିକ *v1, ଦଶମିକ *v2, ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-float ff_scalarproduct_float_neon(const float *v1, const float *v2, int len);
+ଦଶମିକ ff_scalarproduct_float_neon(ଅଚଳ ଦଶମିକ *v1, ଅଚଳ ଦଶମିକ *v2, ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-av_cold void ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp)
+av_cold ଶୂନ୍ୟ ff_float_dsp_init_aarch64(AVFloatDSPContext *fdsp)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା cpu_flags = av_get_cpu_flags();
 
-    if (have_neon(cpu_flags)) {
+    ଯଦି (have_neon(cpu_flags)) {
         fdsp->butterflies_float   = ff_butterflies_float_neon;
         fdsp->scalarproduct_float = ff_scalarproduct_float_neon;
         fdsp->vector_dmul_scalar  = ff_vector_dmul_scalar_neon;

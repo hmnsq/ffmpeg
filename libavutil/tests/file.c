@@ -16,48 +16,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <stdarg.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
 
-#include "libavutil/file.c"
-#include "libavutil/log.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/file.c"
+#ଅନ୍ତର୍ଭାଵ "libavutil/log.h"
 
-static int last_log_level = -1;
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା last_log_level = -1;
 
-static void log_callback(void *ctx, int level, const char *fmt, va_list args)
+ସ୍ଥିର ଶୂନ୍ୟ log_callback(ଶୂନ୍ୟ *ctx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା level, ଅଚଳ ଅକ୍ଷର *fmt, va_list args)
 {
-    (void)ctx; (void)fmt; (void)args;
+    (ଶୂନ୍ୟ)ctx; (ଶୂନ୍ୟ)fmt; (ଶୂନ୍ୟ)args;
     last_log_level = level;
 }
 
-int main(int argc, char **argv)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "file.c";
+    ଅଚଳ ଅକ୍ଷର *path = argc > 1 ? argv[1] : "file.c";
     uint8_t *buf;
     size_t size;
 
     av_log_set_callback(log_callback);
 
     /* map an existing file and verify it is non-empty and readable */
-    if (av_file_map(path, &buf, &size, 0, NULL) < 0)
-        return 1;
+    ଯଦି (av_file_map(path, &buf, &size, 0, ଖାଲି) < 0)
+        ଫେରନ୍ତୁ 1;
     av_file_unmap(buf, size);
-    if (size == 0)
-        return 1;
+    ଯଦି (size == 0)
+        ଫେରନ୍ତୁ 1;
 
     /* for offset i, error must be logged at AV_LOG_ERROR + i */
-    for (int i = 0; i < 2; i++) {
+    ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < 2; i++) {
         last_log_level = -1;
-        if (av_file_map("no_such_file_xyz", &buf, &size, i, NULL) >= 0) {
+        ଯଦି (av_file_map("no_such_file_xyz", &buf, &size, i, ଖାଲି) >= 0) {
             av_file_unmap(buf, size);
-            return 2;
+            ଫେରନ୍ତୁ 2;
         }
-        if (last_log_level != AV_LOG_ERROR + i) {
+        ଯଦି (last_log_level != AV_LOG_ERROR + i) {
             fprintf(stderr, "expected level %d with offset=%d, got %d\n",
                     AV_LOG_ERROR + i, i, last_log_level);
-            return 3;
+            ଫେରନ୍ତୁ 3;
         }
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }

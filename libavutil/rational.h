@@ -29,9 +29,9 @@
 #ifndef AVUTIL_RATIONAL_H
 #define AVUTIL_RATIONAL_H
 
-#include <stdint.h>
-#include <limits.h>
-#include "attributes.h"
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <limits.h>
+#ଅନ୍ତର୍ଭାଵ "attributes.h"
 
 /**
  * @defgroup lavu_math_rational AVRational
@@ -55,9 +55,9 @@
 /**
  * Rational number (pair of numerator and denominator).
  */
-typedef struct AVRational{
-    int num; ///< Numerator
-    int den; ///< Denominator
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVRational{
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଅଙ୍କ; ///< Numerator
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା den; ///< Denominator
 } AVRational;
 
 /**
@@ -68,10 +68,10 @@ typedef struct AVRational{
  * @note The return value is not reduced.
  * @see av_reduce()
  */
-static inline AVRational av_make_q(int num, int den)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ AVRational av_make_q(ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଅଙ୍କ, ପୂର୍ଣ୍ଣସଂଖ୍ୟା den)
 {
-    AVRational r = { num, den };
-    return r;
+    AVRational r = { ଅଙ୍କ, den };
+    ଫେରନ୍ତୁ r;
 }
 
 /**
@@ -86,13 +86,13 @@ static inline AVRational av_make_q(int num, int den)
  *         - -1 if `a < b`
  *         - `INT_MIN` if one of the values is of the form `0 / 0`
  */
-static inline int av_cmp_q(AVRational a, AVRational b){
-    const int64_t tmp= a.num * (int64_t)b.den - b.num * (int64_t)a.den;
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_cmp_q(AVRational a, AVRational b){
+    ଅଚଳ int64_t tmp= a.ଅଙ୍କ * (int64_t)b.den - b.ଅଙ୍କ * (int64_t)a.den;
 
-    if(tmp) return (int)((tmp ^ a.den ^ b.den)>>63)|1;
-    else if(b.den && a.den) return 0;
-    else if(a.num && b.num) return (a.num>>31) - (b.num>>31);
-    else                    return INT_MIN;
+    ଯଦି(tmp) ଫେରନ୍ତୁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)((tmp ^ a.den ^ b.den)>>63)|1;
+    ଅନ୍ୟଥା ଯଦି(b.den && a.den) ଫେରନ୍ତୁ 0;
+    ଅନ୍ୟଥା ଯଦି(a.ଅଙ୍କ && b.ଅଙ୍କ) ଫେରନ୍ତୁ (a.ଅଙ୍କ>>31) - (b.ଅଙ୍କ>>31);
+    ଅନ୍ୟଥା                    ଫେରନ୍ତୁ INT_MIN;
 }
 
 /**
@@ -101,8 +101,8 @@ static inline int av_cmp_q(AVRational a, AVRational b){
  * @return `a` in floating-point form
  * @see av_d2q()
  */
-static inline double av_q2d(AVRational a){
-    return a.num / (double) a.den;
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଦ୍ୱିଗୁଣ av_q2d(AVRational a){
+    ଫେରନ୍ତୁ a.ଅଙ୍କ / (ଦ୍ୱିଗୁଣ) a.den;
 }
 
 /**
@@ -117,7 +117,7 @@ static inline double av_q2d(AVRational a){
  * @param[in]      max Maximum allowed values for `dst_num` & `dst_den`
  * @return 1 if the operation is exact, 0 otherwise
  */
-int av_reduce(int *dst_num, int *dst_den, int64_t num, int64_t den, int64_t max);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_reduce(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *dst_ଅଙ୍କ, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *dst_den, int64_t ଅଙ୍କ, int64_t den, int64_t max);
 
 /**
  * Multiply two rationals.
@@ -156,10 +156,10 @@ AVRational av_sub_q(AVRational b, AVRational c) av_const;
  * @param q value
  * @return 1 / q
  */
-static av_always_inline AVRational av_inv_q(AVRational q)
+ସ୍ଥିର av_always_inline AVRational av_inv_q(AVRational q)
 {
-    AVRational r = { q.den, q.num };
-    return r;
+    AVRational r = { q.den, q.ଅଙ୍କ };
+    ଫେରନ୍ତୁ r;
 }
 
 /**
@@ -177,7 +177,7 @@ static av_always_inline AVRational av_inv_q(AVRational q)
  * @return `d` in AVRational form
  * @see av_q2d()
  */
-AVRational av_d2q(double d, int max) av_const;
+AVRational av_d2q(ଦ୍ୱିଗୁଣ d, ପୂର୍ଣ୍ଣସଂଖ୍ୟା max) av_const;
 
 /**
  * Find which of the two rationals is closer to another rational.
@@ -190,7 +190,7 @@ AVRational av_d2q(double d, int max) av_const;
  *         - -1 if `q2` is nearer to `q` than `q1`
  *         - 0 if they have the same distance
  */
-int av_nearer_q(AVRational q, AVRational q1, AVRational q2);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_nearer_q(AVRational q, AVRational q1, AVRational q2);
 
 /**
  * Find the value in a list of rationals nearest a given reference rational.
@@ -199,7 +199,7 @@ int av_nearer_q(AVRational q, AVRational q1, AVRational q2);
  * @param q_list Array of rationals terminated by `{0, 0}`
  * @return Index of the nearest value found in the array
  */
-int av_find_nearest_q_idx(AVRational q, const AVRational* q_list);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_find_nearest_q_idx(AVRational q, ଅଚଳ AVRational* q_list);
 
 /**
  * Convert an AVRational to a IEEE 32-bit `float` expressed in fixed-point
@@ -216,7 +216,7 @@ uint32_t av_q2intfloat(AVRational q);
  * Return the best rational so that a and b are multiple of it.
  * If the resulting denominator is larger than max_den, return def.
  */
-AVRational av_gcd_q(AVRational a, AVRational b, int max_den, AVRational def);
+AVRational av_gcd_q(AVRational a, AVRational b, ପୂର୍ଣ୍ଣସଂଖ୍ୟା max_den, AVRational def);
 
 /**
  * @}

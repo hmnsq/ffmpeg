@@ -18,14 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
 
 #ifndef __riscv_zbb
-unsigned char ff_rv_zbb_supported = 0;
+unsigned ଅକ୍ଷର ff_rv_zbb_supported = 0;
 
 #ifdef __ELF__
 __attribute__((constructor))
-static void probe_zbb(void)
+ସ୍ଥିର ଶୂନ୍ୟ probe_zbb(ଶୂନ୍ୟ)
 {
     ff_rv_zbb_supported = (av_get_cpu_flags() & AV_CPU_FLAG_RVB_BASIC) != 0;
 }

@@ -19,29 +19,29 @@
 #ifndef AVUTIL_TIME_INTERNAL_H
 #define AVUTIL_TIME_INTERNAL_H
 
-#include <time.h>
-#include "config.h"
+#ଅନ୍ତର୍ଭାଵ <time.h>
+#ଅନ୍ତର୍ଭାଵ "config.h"
 
-#if !HAVE_GMTIME_R && !defined(gmtime_r)
-static inline struct tm *ff_gmtime_r(const time_t* clock, struct tm *result)
+#ଯଦି !HAVE_GMTIME_R && !defined(gmtime_r)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ସଂରଚନା tm *ff_gmtime_r(ଅଚଳ time_t* clock, ସଂରଚନା tm *result)
 {
-    struct tm *ptr = gmtime(clock);
-    if (!ptr)
-        return NULL;
+    ସଂରଚନା tm *ptr = gmtime(clock);
+    ଯଦି (!ptr)
+        ଫେରନ୍ତୁ ଖାଲି;
     *result = *ptr;
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 #define gmtime_r ff_gmtime_r
 #endif
 
-#if !HAVE_LOCALTIME_R && !defined(localtime_r)
-static inline struct tm *ff_localtime_r(const time_t* clock, struct tm *result)
+#ଯଦି !HAVE_LOCALTIME_R && !defined(localtime_r)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ସଂରଚନା tm *ff_localtime_r(ଅଚଳ time_t* clock, ସଂରଚନା tm *result)
 {
-    struct tm *ptr = localtime(clock);
-    if (!ptr)
-        return NULL;
+    ସଂରଚନା tm *ptr = localtime(clock);
+    ଯଦି (!ptr)
+        ଫେରନ୍ତୁ ଖାଲି;
     *result = *ptr;
-    return result;
+    ଫେରନ୍ତୁ result;
 }
 #define localtime_r ff_localtime_r
 #endif

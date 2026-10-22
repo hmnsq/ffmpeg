@@ -18,42 +18,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include <string.h>
-#include <math.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <string.h>
+#ଅନ୍ତର୍ଭାଵ <math.h>
 
-#include "display.h"
-#include "mathematics.h"
+#ଅନ୍ତର୍ଭାଵ "display.h"
+#ଅନ୍ତର୍ଭାଵ "mathematics.h"
 
 // fixed point to double
-#define CONV_FP(x) ((double) (x)) / (1 << 16)
+#define CONV_FP(x) ((ଦ୍ୱିଗୁଣ) (x)) / (1 << 16)
 
 // double to fixed point
 #define CONV_DB(x) (int32_t) ((x) * (1 << 16))
 
-double av_display_rotation_get(const int32_t matrix[9])
+ଦ୍ୱିଗୁଣ av_display_rotation_get(ଅଚଳ int32_t matrix[9])
 {
-    double rotation, scale[2];
+    ଦ୍ୱିଗୁଣ rotation, scale[2];
 
     scale[0] = hypot(CONV_FP(matrix[0]), CONV_FP(matrix[3]));
     scale[1] = hypot(CONV_FP(matrix[1]), CONV_FP(matrix[4]));
 
-    if (scale[0] == 0.0 || scale[1] == 0.0)
-        return NAN;
+    ଯଦି (scale[0] == 0.0 || scale[1] == 0.0)
+        ଫେରନ୍ତୁ NAN;
 
     rotation = atan2(CONV_FP(matrix[1]) / scale[1],
                      CONV_FP(matrix[0]) / scale[0]) * 180 / M_PI;
 
-    return -rotation;
+    ଫେରନ୍ତୁ -rotation;
 }
 
-void av_display_rotation_set(int32_t matrix[9], double angle)
+ଶୂନ୍ୟ av_display_rotation_set(int32_t matrix[9], ଦ୍ୱିଗୁଣ angle)
 {
-    double radians = -angle * M_PI / 180.0f;
-    double c = cos(radians);
-    double s = sin(radians);
+    ଦ୍ୱିଗୁଣ radians = -angle * M_PI / 180.0f;
+    ଦ୍ୱିଗୁଣ c = cos(radians);
+    ଦ୍ୱିଗୁଣ s = sin(radians);
 
-    memset(matrix, 0, 9 * sizeof(int32_t));
+    memset(matrix, 0, 9 * ଆକାର(int32_t));
 
     matrix[0] = CONV_DB(c);
     matrix[1] = CONV_DB(-s);
@@ -62,12 +62,12 @@ void av_display_rotation_set(int32_t matrix[9], double angle)
     matrix[8] = 1 << 30;
 }
 
-void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip)
+ଶୂନ୍ୟ av_display_matrix_flip(int32_t matrix[9], ପୂର୍ଣ୍ଣସଂଖ୍ୟା hflip, ପୂର୍ଣ୍ଣସଂଖ୍ୟା vflip)
 {
-    int i;
-    const int flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
+    ଅଚଳ ପୂର୍ଣ୍ଣସଂଖ୍ୟା flip[] = { 1 - 2 * (!!hflip), 1 - 2 * (!!vflip), 1 };
 
-    if (hflip || vflip)
-        for (i = 0; i < 9; i++)
+    ଯଦି (hflip || vflip)
+        ପାଇଁ (i = 0; i < 9; i++)
             matrix[i] *= flip[i % 3];
 }

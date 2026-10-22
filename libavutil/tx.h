@@ -19,24 +19,24 @@
 #ifndef AVUTIL_TX_H
 #define AVUTIL_TX_H
 
-#include <stdint.h>
-#include <stddef.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
 
-typedef struct AVTXContext AVTXContext;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVTXContext AVTXContext;
 
-typedef struct AVComplexFloat {
-    float re, im;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVComplexFloat {
+    ଦଶମିକ re, im;
 } AVComplexFloat;
 
-typedef struct AVComplexDouble {
-    double re, im;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVComplexDouble {
+    ଦ୍ୱିଗୁଣ re, im;
 } AVComplexDouble;
 
-typedef struct AVComplexInt32 {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVComplexInt32 {
     int32_t re, im;
 } AVComplexInt32;
 
-enum AVTXType {
+ଗଣନା AVTXType {
     /**
      * Standard complex to complex FFT with sample data type of AVComplexFloat,
      * AVComplexDouble or AVComplexInt32, for each respective variant.
@@ -148,12 +148,12 @@ enum AVTXType {
  * architecture unless the AV_TX_UNALIGNED flag was set in av_tx_init().
  * The stride must follow the constraints the transform type has specified.
  */
-typedef void (*av_tx_fn)(AVTXContext *s, void *out, void *in, ptrdiff_t stride);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ (*av_tx_fn)(AVTXContext *s, ଶୂନ୍ୟ *out, ଶୂନ୍ୟ *in, ptrdiff_t stride);
 
 /**
  * Flags for av_tx_init()
  */
-enum AVTXFlags {
+ଗଣନା AVTXFlags {
     /**
      * Allows for in-place transformations, where input == output.
      * May be unsupported or slower for some transform types.
@@ -199,12 +199,12 @@ enum AVTXFlags {
  *
  * @return 0 on success, negative error code on failure
  */
-int av_tx_init(AVTXContext **ctx, av_tx_fn *tx, enum AVTXType type,
-               int inv, int len, const void *scale, uint64_t flags);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_tx_init(AVTXContext **ctx, av_tx_fn *tx, ଗଣନା AVTXType type,
+               ପୂର୍ଣ୍ଣସଂଖ୍ୟା inv, ପୂର୍ଣ୍ଣସଂଖ୍ୟା len, ଅଚଳ ଶୂନ୍ୟ *scale, uint64_t flags);
 
 /**
  * Frees a context and sets *ctx to NULL, does nothing when *ctx == NULL.
  */
-void av_tx_uninit(AVTXContext **ctx);
+ଶୂନ୍ୟ av_tx_uninit(AVTXContext **ctx);
 
 #endif /* AVUTIL_TX_H */

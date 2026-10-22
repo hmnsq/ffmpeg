@@ -16,29 +16,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
-#include "config.h"
-#if defined __linux__ || defined __ANDROID__
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/auxv.h>
-#include "asmdefs.h"
-#include "libavutil/avstring.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu_internal.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
+#ଯଦି defined __linux__ || defined __ANDROID__
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <string.h>
+#ଅନ୍ତର୍ଭାଵ <sys/auxv.h>
+#ଅନ୍ତର୍ଭାଵ "asmdefs.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/avstring.h"
 #endif
 
-#if defined __linux__ || defined __ANDROID__
+#ଯଦି defined __linux__ || defined __ANDROID__
 
 #define HWCAP_LOONGSON_CPUCFG (1 << 14)
 
-static int cpucfg_available(void)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା cpucfg_available(ଶୂନ୍ୟ)
 {
-    return ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
+    ଫେରନ୍ତୁ ff_getauxval(AT_HWCAP) & HWCAP_LOONGSON_CPUCFG;
 }
 
 /* Most toolchains have no CPUCFG support yet */
-static uint32_t read_cpucfg(uint32_t reg)
+ସ୍ଥିର uint32_t read_cpucfg(uint32_t reg)
 {
         uint32_t __res;
 
@@ -51,7 +51,7 @@ static uint32_t read_cpucfg(uint32_t reg)
                 :"r"(reg)
                 :
                 );
-        return __res;
+        ଫେରନ୍ତୁ __res;
 }
 
 #define LOONGSON_CFG1 0x1
@@ -59,76 +59,76 @@ static uint32_t read_cpucfg(uint32_t reg)
 #define LOONGSON_CFG1_MMI    (1 << 4)
 #define LOONGSON_CFG1_MSA1   (1 << 5)
 
-static int cpu_flags_cpucfg(void)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା cpu_flags_cpucfg(ଶୂନ୍ୟ)
 {
-    int flags = 0;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags = 0;
     uint32_t cfg1 = read_cpucfg(LOONGSON_CFG1);
 
-    if (cfg1 & LOONGSON_CFG1_MMI)
+    ଯଦି (cfg1 & LOONGSON_CFG1_MMI)
         flags |= AV_CPU_FLAG_MMI;
 
-    if (cfg1 & LOONGSON_CFG1_MSA1)
+    ଯଦି (cfg1 & LOONGSON_CFG1_MSA1)
         flags |= AV_CPU_FLAG_MSA;
 
-    return flags;
+    ଫେରନ୍ତୁ flags;
 }
 
-static int cpu_flags_cpuinfo(void)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା cpu_flags_cpuinfo(ଶୂନ୍ୟ)
 {
     FILE *f = fopen("/proc/cpuinfo", "r");
-    char buf[200];
-    int flags = 0;
+    ଅକ୍ଷର buf[200];
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags = 0;
 
-    if (!f)
-        return -1;
+    ଯଦି (!f)
+        ଫେରନ୍ତୁ -1;
 
-    while (fgets(buf, sizeof(buf), f)) {
+    ଯେତେବେଳେ (fgets(buf, ଆକାର(buf), f)) {
         /* Legacy kernel may not export MMI in ASEs implemented */
-        if (av_strstart(buf, "cpu model", NULL)) {
-            if (strstr(buf, "Loongson-3 "))
+        ଯଦି (av_strstart(buf, "cpu model", ଖାଲି)) {
+            ଯଦି (strstr(buf, "Loongson-3 "))
                 flags |= AV_CPU_FLAG_MMI;
         }
 
-        if (av_strstart(buf, "ASEs implemented", NULL)) {
-            if (strstr(buf, " loongson-mmi"))
+        ଯଦି (av_strstart(buf, "ASEs implemented", ଖାଲି)) {
+            ଯଦି (strstr(buf, " loongson-mmi"))
                 flags |= AV_CPU_FLAG_MMI;
-            if (strstr(buf, " msa"))
+            ଯଦି (strstr(buf, " msa"))
                 flags |= AV_CPU_FLAG_MSA;
 
-            break;
+            ଭାଙ୍ଗ;
         }
     }
     fclose(f);
-    return flags;
+    ଫେରନ୍ତୁ flags;
 }
 #endif
 
-int ff_get_cpu_flags_mips(void)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ff_get_cpu_flags_mips(ଶୂନ୍ୟ)
 {
-#if defined __linux__ || defined __ANDROID__
-    if (cpucfg_available())
-        return cpu_flags_cpucfg();
-    else
-        return cpu_flags_cpuinfo();
-#else
+#ଯଦି defined __linux__ || defined __ANDROID__
+    ଯଦି (cpucfg_available())
+        ଫେରନ୍ତୁ cpu_flags_cpucfg();
+    ଅନ୍ୟଥା
+        ଫେରନ୍ତୁ cpu_flags_cpuinfo();
+#ଅନ୍ୟଥା
     /* Assume no SIMD ASE supported */
-    return 0;
+    ଫେରନ୍ତୁ 0;
 #endif
 }
 
-size_t ff_get_cpu_max_align_mips(void)
+size_t ff_get_cpu_max_align_mips(ଶୂନ୍ୟ)
 {
-    int flags = av_get_cpu_flags();
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_MSA)
-        return 16;
+    ଯଦି (flags & AV_CPU_FLAG_MSA)
+        ଫେରନ୍ତୁ 16;
 
     /*
      * MMI itself is 64-bit but quad word load & store
      * needs 128-bit align.
      */
-    if (flags & AV_CPU_FLAG_MMI)
-        return 16;
+    ଯଦି (flags & AV_CPU_FLAG_MMI)
+        ଫେରନ୍ତୁ 16;
 
-    return 8;
+    ଫେରନ୍ତୁ 8;
 }

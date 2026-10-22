@@ -18,9 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "downmix_info.h"
-#include "frame.h"
-#include "mem.h"
+#ଅନ୍ତର୍ଭାଵ "downmix_info.h"
+#ଅନ୍ତର୍ଭାଵ "frame.h"
+#ଅନ୍ତର୍ଭାଵ "mem.h"
 
 AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame)
 {
@@ -28,58 +28,58 @@ AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame)
 
     side_data = av_frame_get_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO);
 
-    if (!side_data) {
+    ଯଦି (!side_data) {
         side_data = av_frame_new_side_data(frame, AV_FRAME_DATA_DOWNMIX_INFO,
-                                           sizeof(AVDownmixInfo));
-        if (side_data)
-            memset(side_data->data, 0, sizeof(AVDownmixInfo));
+                                           ଆକାର(AVDownmixInfo));
+        ଯଦି (side_data)
+            memset(side_data->data, 0, ଆକାର(AVDownmixInfo));
     }
 
-    if (!side_data)
-        return NULL;
+    ଯଦି (!side_data)
+        ଫେରନ୍ତୁ ଖାଲି;
 
-    return (AVDownmixInfo*)side_data->data;
+    ଫେରନ୍ତୁ (AVDownmixInfo*)side_data->data;
 }
 
 #define MAX_CHANNELS 64
 
-static const int type_map[] = {
+ସ୍ଥିର ଅଚଳ ପୂର୍ଣ୍ଣସଂଖ୍ୟା type_map[] = {
     [AV_DOWNMIX_TYPE_UNKNOWN] = 0,
     [AV_DOWNMIX_TYPE_LORO]    = 2,
     [AV_DOWNMIX_TYPE_LTRT]    = 2,
     [AV_DOWNMIX_TYPE_DPLII]   = 2,
 };
 
-AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
-                                         int in_ch_count, size_t *out_size)
+AVDownmixMatrix *av_downmix_matrix_alloc(ଗଣନା AVDownmixType type,
+                                         ପୂର୍ଣ୍ଣସଂଖ୍ୟା in_ch_ଗଣନା, size_t *out_size)
 {
-    struct TestStruct {
+    ସଂରଚନା TestStruct {
         AVDownmixMatrix p;
         AVDownmixCoeff  b;
     };
-    const size_t coeffs_offset = offsetof(struct TestStruct, b);
+    ଅଚଳ size_t coeffs_offset = offsetof(ସଂରଚନା TestStruct, b);
     size_t size = coeffs_offset;
-    unsigned int nb_coeffs;
+    unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା nb_coeffs;
     AVDownmixMatrix *dc;
 
-    if ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
-        (unsigned)in_ch_count > MAX_CHANNELS)
-        return NULL;
+    ଯଦି ((unsigned)type >= FF_ARRAY_ELEMS(type_map) ||
+        (unsigned)in_ch_ଗଣନା > MAX_CHANNELS)
+        ଫେରନ୍ତୁ ଖାଲି;
 
-    nb_coeffs = type_map[type] * in_ch_count;
-    size += sizeof(AVDownmixCoeff) * nb_coeffs;
+    nb_coeffs = type_map[type] * in_ch_ଗଣନା;
+    size += ଆକାର(AVDownmixCoeff) * nb_coeffs;
 
     dc = av_mallocz(size);
-    if (!dc)
-        return NULL;
+    ଯଦି (!dc)
+        ଫେରନ୍ତୁ ଖାଲି;
 
     dc->downmix_type  = type;
     dc->nb_coeffs     = nb_coeffs;
-    dc->in_ch_count   = in_ch_count;
+    dc->in_ch_ଗଣନା   = in_ch_ଗଣନା;
     dc->coeffs_offset = coeffs_offset;
 
-    if (out_size)
+    ଯଦି (out_size)
         *out_size = size;
 
-    return dc;
+    ଫେରନ୍ତୁ dc;
 }

@@ -25,133 +25,133 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#include "avutil.h"
-#include "avassert.h"
-#include "avstring.h"
-#include "channel_layout.h"
-#include "dict.h"
-#include "eval.h"
-#include "log.h"
-#include "mem.h"
-#include "parseutils.h"
-#include "pixdesc.h"
-#include "mathematics.h"
-#include "opt.h"
-#include "samplefmt.h"
-#include "bprint.h"
+#ଅନ୍ତର୍ଭାଵ "avutil.h"
+#ଅନ୍ତର୍ଭାଵ "avassert.h"
+#ଅନ୍ତର୍ଭାଵ "avstring.h"
+#ଅନ୍ତର୍ଭାଵ "channel_layout.h"
+#ଅନ୍ତର୍ଭାଵ "dict.h"
+#ଅନ୍ତର୍ଭାଵ "eval.h"
+#ଅନ୍ତର୍ଭାଵ "log.h"
+#ଅନ୍ତର୍ଭାଵ "mem.h"
+#ଅନ୍ତର୍ଭାଵ "parseutils.h"
+#ଅନ୍ତର୍ଭାଵ "pixdesc.h"
+#ଅନ୍ତର୍ଭାଵ "mathematics.h"
+#ଅନ୍ତର୍ଭାଵ "opt.h"
+#ଅନ୍ତର୍ଭାଵ "samplefmt.h"
+#ଅନ୍ତର୍ଭାଵ "bprint.h"
 
-#include <float.h>
+#ଅନ୍ତର୍ଭାଵ <float.h>
 
 #define TYPE_BASE(type) ((type) & ~AV_OPT_TYPE_FLAG_ARRAY)
 
-const AVOption *av_opt_next(const void *obj, const AVOption *last)
+ଅଚଳ AVOption *av_opt_next(ଅଚଳ ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *last)
 {
-    const AVClass *class;
-    if (!obj)
-        return NULL;
-    class = *(const AVClass**)obj;
-    if (!last && class && class->option && class->option[0].name)
-        return class->option;
-    if (last && last[1].name)
-        return ++last;
-    return NULL;
+    ଅଚଳ AVClass *class;
+    ଯଦି (!obj)
+        ଫେରନ୍ତୁ ଖାଲି;
+    class = *(ଅଚଳ AVClass**)obj;
+    ଯଦି (!last && class && class->option && class->option[0].name)
+        ଫେରନ୍ତୁ class->option;
+    ଯଦି (last && last[1].name)
+        ଫେରନ୍ତୁ ++last;
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
-static const struct {
+ସ୍ଥିର ଅଚଳ ସଂରଚନା {
     size_t      size;
-    const char *name;
+    ଅଚଳ ଅକ୍ଷର *name;
 } opt_type_desc[] = {
-    [AV_OPT_TYPE_FLAGS]         = { sizeof(unsigned),       "<flags>" },
-    [AV_OPT_TYPE_INT]           = { sizeof(int),            "<int>" },
-    [AV_OPT_TYPE_INT64]         = { sizeof(int64_t),        "<int64>" },
-    [AV_OPT_TYPE_UINT]          = { sizeof(unsigned),       "<unsigned>" },
-    [AV_OPT_TYPE_UINT64]        = { sizeof(uint64_t),       "<uint64>" },
-    [AV_OPT_TYPE_DOUBLE]        = { sizeof(double),         "<double>" },
-    [AV_OPT_TYPE_FLOAT]         = { sizeof(float),          "<float>" },
-    [AV_OPT_TYPE_STRING]        = { sizeof(char *),         "<string>" },
-    [AV_OPT_TYPE_RATIONAL]      = { sizeof(AVRational),     "<rational>" },
-    [AV_OPT_TYPE_BINARY]        = { sizeof(uint8_t *),      "<binary>" },
-    [AV_OPT_TYPE_DICT]          = { sizeof(AVDictionary *), "<dictionary>" },
-    [AV_OPT_TYPE_IMAGE_SIZE]    = { sizeof(int[2]),         "<image_size>" },
-    [AV_OPT_TYPE_VIDEO_RATE]    = { sizeof(AVRational),     "<video_rate>" },
-    [AV_OPT_TYPE_PIXEL_FMT]     = { sizeof(enum AVPixelFormat),  "<pix_fmt>" },
-    [AV_OPT_TYPE_SAMPLE_FMT]    = { sizeof(enum AVSampleFormat), "<sample_fmt>" },
-    [AV_OPT_TYPE_DURATION]      = { sizeof(int64_t),        "<duration>" },
-    [AV_OPT_TYPE_COLOR]         = { sizeof(uint8_t[4]),     "<color>" },
-    [AV_OPT_TYPE_CHLAYOUT]      = { sizeof(AVChannelLayout),"<channel_layout>" },
-    [AV_OPT_TYPE_BOOL]          = { sizeof(int),            "<boolean>" },
+    [AV_OPT_TYPE_FLAGS]         = { ଆକାର(unsigned),       "<flags>" },
+    [AV_OPT_TYPE_INT]           = { ଆକାର(ପୂର୍ଣ୍ଣସଂଖ୍ୟା),            "<int>" },
+    [AV_OPT_TYPE_INT64]         = { ଆକାର(int64_t),        "<int64>" },
+    [AV_OPT_TYPE_UINT]          = { ଆକାର(unsigned),       "<unsigned>" },
+    [AV_OPT_TYPE_UINT64]        = { ଆକାର(uint64_t),       "<uint64>" },
+    [AV_OPT_TYPE_DOUBLE]        = { ଆକାର(ଦ୍ୱିଗୁଣ),         "<double>" },
+    [AV_OPT_TYPE_FLOAT]         = { ଆକାର(ଦଶମିକ),          "<float>" },
+    [AV_OPT_TYPE_STRING]        = { ଆକାର(ଅକ୍ଷର *),         "<string>" },
+    [AV_OPT_TYPE_RATIONAL]      = { ଆକାର(AVRational),     "<rational>" },
+    [AV_OPT_TYPE_ଦ୍ୱିମିକ]        = { ଆକାର(uint8_t *),      "<binary>" },
+    [AV_OPT_TYPE_DICT]          = { ଆକାର(AVDictionary *), "<dictionary>" },
+    [AV_OPT_TYPE_IMAGE_SIZE]    = { ଆକାର(ପୂର୍ଣ୍ଣସଂଖ୍ୟା[2]),         "<image_size>" },
+    [AV_OPT_TYPE_VIDEO_RATE]    = { ଆକାର(AVRational),     "<video_rate>" },
+    [AV_OPT_TYPE_PIXEL_FMT]     = { ଆକାର(ଗଣନା AVPixelFormat),  "<pix_fmt>" },
+    [AV_OPT_TYPE_SAMPLE_FMT]    = { ଆକାର(ଗଣନା AVSampleFormat), "<sample_fmt>" },
+    [AV_OPT_TYPE_DURATION]      = { ଆକାର(int64_t),        "<duration>" },
+    [AV_OPT_TYPE_COLOR]         = { ଆକାର(uint8_t[4]),     "<color>" },
+    [AV_OPT_TYPE_CHLAYOUT]      = { ଆକାର(AVChannelLayout),"<channel_layout>" },
+    [AV_OPT_TYPE_BOOL]          = { ଆକାର(ପୂର୍ଣ୍ଣସଂଖ୍ୟା),            "<boolean>" },
 };
 
 // option is plain old data
-static int opt_is_pod(enum AVOptionType type)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_is_pod(ଗଣନା AVOptionType type)
 {
-    switch (type) {
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_FLOAT:
-    case AV_OPT_TYPE_RATIONAL:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_IMAGE_SIZE:
-    case AV_OPT_TYPE_PIXEL_FMT:
-    case AV_OPT_TYPE_SAMPLE_FMT:
-    case AV_OPT_TYPE_VIDEO_RATE:
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_COLOR:
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_UINT:
-        return 1;
+    ବାଛ (type) {
+    ସ୍ଥିତି AV_OPT_TYPE_FLAGS:
+    ସ୍ଥିତି AV_OPT_TYPE_INT:
+    ସ୍ଥିତି AV_OPT_TYPE_INT64:
+    ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+    ସ୍ଥିତି AV_OPT_TYPE_FLOAT:
+    ସ୍ଥିତି AV_OPT_TYPE_RATIONAL:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT64:
+    ସ୍ଥିତି AV_OPT_TYPE_IMAGE_SIZE:
+    ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:
+    ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT:
+    ସ୍ଥିତି AV_OPT_TYPE_VIDEO_RATE:
+    ସ୍ଥିତି AV_OPT_TYPE_DURATION:
+    ସ୍ଥିତି AV_OPT_TYPE_COLOR:
+    ସ୍ଥିତି AV_OPT_TYPE_BOOL:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT:
+        ଫେରନ୍ତୁ 1;
     }
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static uint8_t opt_array_sep(const AVOption *o)
+ସ୍ଥିର uint8_t opt_array_sep(ଅଚଳ AVOption *o)
 {
-    const AVOptionArrayDef *d = o->default_val.arr;
+    ଅଚଳ AVOptionArrayDef *d = o->default_val.arr;
     av_assert1(o->type & AV_OPT_TYPE_FLAG_ARRAY);
-    return (d && d->sep) ? d->sep : ',';
+    ଫେରନ୍ତୁ (d && d->sep) ? d->sep : ',';
 }
 
-static void *opt_array_pelem(const AVOption *o, void *array, unsigned idx)
+ସ୍ଥିର ଶୂନ୍ୟ *opt_array_pelem(ଅଚଳ AVOption *o, ଶୂନ୍ୟ *array, unsigned idx)
 {
     av_assert1(o->type & AV_OPT_TYPE_FLAG_ARRAY);
-    return (uint8_t *)array + idx * opt_type_desc[TYPE_BASE(o->type)].size;
+    ଫେରନ୍ତୁ (uint8_t *)array + idx * opt_type_desc[TYPE_BASE(o->type)].size;
 }
 
-static unsigned *opt_array_pcount(const void *parray)
+ସ୍ଥିର unsigned *opt_array_pcount(ଅଚଳ ଶୂନ୍ୟ *parray)
 {
-    return (unsigned *)((const void * const *)parray + 1);
+    ଫେରନ୍ତୁ (unsigned *)((ଅଚଳ ଶୂନ୍ୟ * ଅଚଳ *)parray + 1);
 }
 
-static void opt_free_elem(enum AVOptionType type, void *ptr)
+ସ୍ଥିର ଶୂନ୍ୟ opt_free_elem(ଗଣନା AVOptionType type, ଶୂନ୍ୟ *ptr)
 {
-    switch (TYPE_BASE(type)) {
-    case AV_OPT_TYPE_STRING:
-    case AV_OPT_TYPE_BINARY:
+    ବାଛ (TYPE_BASE(type)) {
+    ସ୍ଥିତି AV_OPT_TYPE_STRING:
+    ସ୍ଥିତି AV_OPT_TYPE_ଦ୍ୱିମିକ:
         av_freep(ptr);
-        break;
+        ଭାଙ୍ଗ;
 
-    case AV_OPT_TYPE_DICT:
+    ସ୍ଥିତି AV_OPT_TYPE_DICT:
         av_dict_free((AVDictionary **)ptr);
-        break;
+        ଭାଙ୍ଗ;
 
-    case AV_OPT_TYPE_CHLAYOUT:
+    ସ୍ଥିତି AV_OPT_TYPE_CHLAYOUT:
         av_channel_layout_uninit((AVChannelLayout *)ptr);
-        break;
+        ଭାଙ୍ଗ;
 
-    default:
-        break;
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
+        ଭାଙ୍ଗ;
     }
 }
 
-static void opt_free_array(const AVOption *o, void *parray, unsigned *count)
+ସ୍ଥିର ଶୂନ୍ୟ opt_free_array(ଅଚଳ AVOption *o, ଶୂନ୍ୟ *parray, unsigned *ଗଣନା_2)
 {
-    for (unsigned i = 0; i < *count; i++)
-        opt_free_elem(o->type, opt_array_pelem(o, *(void **)parray, i));
+    ପାଇଁ (unsigned i = 0; i < *ଗଣନା_2; i++)
+        opt_free_elem(o->type, opt_array_pelem(o, *(ଶୂନ୍ୟ **)parray, i));
 
     av_freep(parray);
-    *count = 0;
+    *ଗଣନା_2 = 0;
 }
 
 /**
@@ -162,258 +162,258 @@ static void opt_free_array(const AVOption *o, void *parray, unsigned *count)
  * @param po           the option is written here
  * @param pdst         pointer to option value is written here
  */
-static int opt_set_init(void *obj, const char *name, int search_flags,
-                        int require_type,
-                        void **ptgt, const AVOption **po, void **pdst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_set_init(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags,
+                        ପୂର୍ଣ୍ଣସଂଖ୍ୟା require_type,
+                        ଶୂନ୍ୟ **ptgt, ଅଚଳ AVOption **po, ଶୂନ୍ୟ **pdst)
 {
-    void *logctx;
-    const AVOption *o;
-    void *tgt;
+    ଶୂନ୍ୟ *logctx;
+    ଅଚଳ AVOption *o;
+    ଶୂନ୍ୟ *tgt;
 
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &tgt);
-    if (!o || (!tgt && !(search_flags & AV_OPT_SEARCH_FAKE_OBJ)))
-        return AVERROR_OPTION_NOT_FOUND;
+    o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &tgt);
+    ଯଦି (!o || (!tgt && !(ସନ୍ଧାନ_flags & AV_OPT_ସନ୍ଧାନ_FAKE_OBJ)))
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
 
-    if (o->flags & AV_OPT_FLAG_READONLY)
-        return AVERROR(EINVAL);
+    ଯଦି (o->flags & AV_OPT_FLAG_READONLY)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
-    logctx = tgt ? obj : NULL;
+    logctx = tgt ? obj : ଖାଲି;
 
-    if (require_type && (o->type != require_type)) {
+    ଯଦି (require_type && (o->type != require_type)) {
         av_log(logctx, AV_LOG_ERROR,
                "Tried to set option '%s' of type %s from value of type %s, "
                "this is not supported\n", o->name, opt_type_desc[o->type].name,
                opt_type_desc[require_type].name);
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
-    if (!(o->flags & AV_OPT_FLAG_RUNTIME_PARAM)) {
-        unsigned *state_flags = NULL;
-        const AVClass *class;
+    ଯଦି (!(o->flags & AV_OPT_FLAG_RUNTIME_PARAM)) {
+        unsigned *state_flags = ଖାଲି;
+        ଅଚଳ AVClass *class;
 
         // try state flags first from the target (child), then from its parent
-        class = *(const AVClass**)tgt;
-        if (class->state_flags_offset)
+        class = *(ଅଚଳ AVClass**)tgt;
+        ଯଦି (class->state_flags_offset)
             state_flags = (unsigned*)((uint8_t*)tgt + class->state_flags_offset);
 
-        if (!state_flags && obj != tgt) {
-            class = *(const AVClass**)obj;
-            if (class->state_flags_offset)
+        ଯଦି (!state_flags && obj != tgt) {
+            class = *(ଅଚଳ AVClass**)obj;
+            ଯଦି (class->state_flags_offset)
                 state_flags = (unsigned*)((uint8_t*)obj + class->state_flags_offset);
         }
 
-        if (state_flags && (*state_flags & AV_CLASS_STATE_INITIALIZED)) {
+        ଯଦି (state_flags && (*state_flags & AV_CLASS_STATE_INITIALIZED)) {
             av_log(logctx, AV_LOG_ERROR, "Option '%s' is not a runtime option and "
                    "so cannot be set after the object has been initialized\n",
                    o->name);
-            return AVERROR(EINVAL);
+            ଫେରନ୍ତୁ AVERROR(EINVAL);
         }
     }
 
-    if (o->flags & AV_OPT_FLAG_DEPRECATED)
+    ଯଦି (o->flags & AV_OPT_FLAG_DEPRECATED)
         av_log(logctx, AV_LOG_WARNING, "The \"%s\" option is deprecated: %s\n", name, o->help);
 
-    if (po)
+    ଯଦି (po)
         *po   = o;
-    if (ptgt)
+    ଯଦି (ptgt)
         *ptgt = tgt;
-    if (pdst)
-        *pdst = tgt ? ((uint8_t *)tgt) + o->offset : NULL;
+    ଯଦି (pdst)
+        *pdst = tgt ? ((uint8_t *)tgt) + o->offset : ଖାଲି;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static AVRational double_to_rational(double d)
+ସ୍ଥିର AVRational double_to_rational(ଦ୍ୱିଗୁଣ d)
 {
      AVRational r = av_d2q(d, 1 << 24);
-     if ((!r.num || !r.den) && d)
+     ଯଦି ((!r.ଅଙ୍କ || !r.den) && d)
          r = av_d2q(d, INT_MAX);
-     return r;
+     ଫେରନ୍ତୁ r;
 }
 
-static int read_number(const AVOption *o, const void *dst, double *num, int *den, int64_t *intnum)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା read_ସଂଖ୍ୟା(ଅଚଳ AVOption *o, ଅଚଳ ଶୂନ୍ୟ *dst, ଦ୍ୱିଗୁଣ *ଅଙ୍କ, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *den, int64_t *intnum)
 {
-    switch (TYPE_BASE(o->type)) {
-    case AV_OPT_TYPE_FLAGS:
-        *intnum = *(unsigned int*)dst;
-        return 0;
-    case AV_OPT_TYPE_PIXEL_FMT:
-        *intnum = *(enum AVPixelFormat *)dst;
-        return 0;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        *intnum = *(enum AVSampleFormat *)dst;
-        return 0;
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_INT:
-        *intnum = *(int *)dst;
-        return 0;
-    case AV_OPT_TYPE_UINT:
-        *intnum = *(unsigned int *)dst;
-        return 0;
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
+    ବାଛ (TYPE_BASE(o->type)) {
+    ସ୍ଥିତି AV_OPT_TYPE_FLAGS:
+        *intnum = *(unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା*)dst;
+        ଫେରନ୍ତୁ 0;
+    ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:
+        *intnum = *(ଗଣନା AVPixelFormat *)dst;
+        ଫେରନ୍ତୁ 0;
+    ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT:
+        *intnum = *(ଗଣନା AVSampleFormat *)dst;
+        ଫେରନ୍ତୁ 0;
+    ସ୍ଥିତି AV_OPT_TYPE_BOOL:
+    ସ୍ଥିତି AV_OPT_TYPE_INT:
+        *intnum = *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst;
+        ଫେରନ୍ତୁ 0;
+    ସ୍ଥିତି AV_OPT_TYPE_UINT:
+        *intnum = *(unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst;
+        ଫେରନ୍ତୁ 0;
+    ସ୍ଥିତି AV_OPT_TYPE_DURATION:
+    ସ୍ଥିତି AV_OPT_TYPE_INT64:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT64:
         *intnum = *(int64_t *)dst;
-        return 0;
-    case AV_OPT_TYPE_FLOAT:
-        *num = *(float *)dst;
-        return 0;
-    case AV_OPT_TYPE_DOUBLE:
-        *num = *(double *)dst;
-        return 0;
-    case AV_OPT_TYPE_RATIONAL:
-        *intnum = ((AVRational *)dst)->num;
+        ଫେରନ୍ତୁ 0;
+    ସ୍ଥିତି AV_OPT_TYPE_FLOAT:
+        *ଅଙ୍କ = *(ଦଶମିକ *)dst;
+        ଫେରନ୍ତୁ 0;
+    ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+        *ଅଙ୍କ = *(ଦ୍ୱିଗୁଣ *)dst;
+        ଫେରନ୍ତୁ 0;
+    ସ୍ଥିତି AV_OPT_TYPE_RATIONAL:
+        *intnum = ((AVRational *)dst)->ଅଙ୍କ;
         *den    = ((AVRational *)dst)->den;
-        return 0;
-    case AV_OPT_TYPE_CONST:
+        ଫେରନ୍ତୁ 0;
+    ସ୍ଥିତି AV_OPT_TYPE_CONST:
         *intnum = o->default_val.i64;
-        return 0;
+        ଫେରନ୍ତୁ 0;
     }
-    return AVERROR(EINVAL);
+    ଫେରନ୍ତୁ AVERROR(EINVAL);
 }
 
-static int write_number(void *obj, const AVOption *o, void *dst,
-                        double num, int den, int64_t intnum,
-                        int ignore_range)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା write_ସଂଖ୍ୟା(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଶୂନ୍ୟ *dst,
+                        ଦ୍ୱିଗୁଣ ଅଙ୍କ, ପୂର୍ଣ୍ଣସଂଖ୍ୟା den, int64_t intnum,
+                        ପୂର୍ଣ୍ଣସଂଖ୍ୟା ignore_range)
 {
-    void *logctx = dst ? obj : NULL;
-    const enum AVOptionType type = TYPE_BASE(o->type);
+    ଶୂନ୍ୟ *logctx = dst ? obj : ଖାଲି;
+    ଅଚଳ ଗଣନା AVOptionType type = TYPE_BASE(o->type);
 
-    if (!ignore_range && type != AV_OPT_TYPE_FLAGS &&
-        (!den || o->max * den < num * intnum || o->min * den > num * intnum)) {
-        num = den ? num * intnum / den : (num && intnum ? INFINITY : NAN);
+    ଯଦି (!ignore_range && type != AV_OPT_TYPE_FLAGS &&
+        (!den || o->max * den < ଅଙ୍କ * intnum || o->min * den > ଅଙ୍କ * intnum)) {
+        ଅଙ୍କ = den ? ଅଙ୍କ * intnum / den : (ଅଙ୍କ && intnum ? INFINITY : NAN);
         av_log(obj, AV_LOG_ERROR, "Value %f for parameter '%s' out of range [%g - %g]\n",
-               num, o->name, o->min, o->max);
-        return AVERROR(ERANGE);
+               ଅଙ୍କ, o->name, o->min, o->max);
+        ଫେରନ୍ତୁ AVERROR(ERANGE);
     }
-    if (!ignore_range && type == AV_OPT_TYPE_FLAGS) {
-        double d = num*intnum/den;
-        if (d < -1.5 || d > 0xFFFFFFFF+0.5 || (llrint(d*256) & 255)) {
+    ଯଦି (!ignore_range && type == AV_OPT_TYPE_FLAGS) {
+        ଦ୍ୱିଗୁଣ d = ଅଙ୍କ*intnum/den;
+        ଯଦି (d < -1.5 || d > 0xFFFFFFFF+0.5 || (llrint(d*256) & 255)) {
             av_log(logctx, AV_LOG_ERROR,
                    "Value %f for parameter '%s' is not a valid set of 32bit integer flags\n",
-                   num*intnum/den, o->name);
-            return AVERROR(ERANGE);
+                   ଅଙ୍କ*intnum/den, o->name);
+            ଫେରନ୍ତୁ AVERROR(ERANGE);
         }
     }
 
-    if (!dst)
-        return 0;
+    ଯଦି (!dst)
+        ଫେରନ୍ତୁ 0;
 
-    switch (type) {
-    case AV_OPT_TYPE_PIXEL_FMT:
-        *(enum AVPixelFormat *)dst = llrint(num / den) * intnum;
-        break;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        *(enum AVSampleFormat *)dst = llrint(num / den) * intnum;
-        break;
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-        *(int *)dst = llrint(num / den) * intnum;
-        break;
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_INT64:{
-        double d = num / den;
-        if (intnum == 1 && d == (double)INT64_MAX) {
+    ବାଛ (type) {
+    ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:
+        *(ଗଣନା AVPixelFormat *)dst = llrint(ଅଙ୍କ / den) * intnum;
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT:
+        *(ଗଣନା AVSampleFormat *)dst = llrint(ଅଙ୍କ / den) * intnum;
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_BOOL:
+    ସ୍ଥିତି AV_OPT_TYPE_FLAGS:
+    ସ୍ଥିତି AV_OPT_TYPE_INT:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT:
+        *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst = llrint(ଅଙ୍କ / den) * intnum;
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_DURATION:
+    ସ୍ଥିତି AV_OPT_TYPE_INT64:{
+        ଦ୍ୱିଗୁଣ d = ଅଙ୍କ / den;
+        ଯଦି (intnum == 1 && d == (ଦ୍ୱିଗୁଣ)INT64_MAX) {
             *(int64_t *)dst = INT64_MAX;
-        } else
+        } ଅନ୍ୟଥା
             *(int64_t *)dst = llrint(d) * intnum;
-        break;}
-    case AV_OPT_TYPE_UINT64:{
-        double d = num / den;
+        ଭାଙ୍ଗ;}
+    ସ୍ଥିତି AV_OPT_TYPE_UINT64:{
+        ଦ୍ୱିଗୁଣ d = ଅଙ୍କ / den;
         // We must special case uint64_t here as llrint() does not support values
         // outside the int64_t range and there is no portable function which does
         // "INT64_MAX + 1ULL" is used as it is representable exactly as IEEE double
         // while INT64_MAX is not
-        if (intnum == 1 && d == (double)UINT64_MAX) {
+        ଯଦି (intnum == 1 && d == (ଦ୍ୱିଗୁଣ)UINT64_MAX) {
             *(uint64_t *)dst = UINT64_MAX;
-        } else if (d > INT64_MAX + 1ULL) {
+        } ଅନ୍ୟଥା ଯଦି (d > INT64_MAX + 1ULL) {
             *(uint64_t *)dst = (llrint(d - (INT64_MAX + 1ULL)) + (INT64_MAX + 1ULL))*intnum;
-        } else {
+        } ଅନ୍ୟଥା {
             *(uint64_t *)dst = llrint(d) * intnum;
         }
-        break;}
-    case AV_OPT_TYPE_FLOAT:
-        *(float *)dst = num * intnum / den;
-        break;
-    case AV_OPT_TYPE_DOUBLE:
-        *(double    *)dst = num * intnum / den;
-        break;
-    case AV_OPT_TYPE_RATIONAL:
-    case AV_OPT_TYPE_VIDEO_RATE:
-        if ((int) num == num)
-            *(AVRational *)dst = (AVRational) { num *intnum, den };
-        else
-            *(AVRational *)dst = double_to_rational(num * intnum / den);
-        break;
-    default:
-        return AVERROR(EINVAL);
+        ଭାଙ୍ଗ;}
+    ସ୍ଥିତି AV_OPT_TYPE_FLOAT:
+        *(ଦଶମିକ *)dst = ଅଙ୍କ * intnum / den;
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+        *(ଦ୍ୱିଗୁଣ    *)dst = ଅଙ୍କ * intnum / den;
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_RATIONAL:
+    ସ୍ଥିତି AV_OPT_TYPE_VIDEO_RATE:
+        ଯଦି ((ପୂର୍ଣ୍ଣସଂଖ୍ୟା) ଅଙ୍କ == ଅଙ୍କ)
+            *(AVRational *)dst = (AVRational) { ଅଙ୍କ *intnum, den };
+        ଅନ୍ୟଥା
+            *(AVRational *)dst = double_to_rational(ଅଙ୍କ * intnum / den);
+        ଭାଙ୍ଗ;
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static int hexchar2int(char c) {
-    if (c >= '0' && c <= '9')
-        return c - '0';
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
-    if (c >= 'A' && c <= 'F')
-        return c - 'A' + 10;
-    return -1;
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା hexchar2int(ଅକ୍ଷର c) {
+    ଯଦି (c >= '0' && c <= '9')
+        ଫେରନ୍ତୁ c - '0';
+    ଯଦି (c >= 'a' && c <= 'f')
+        ଫେରନ୍ତୁ c - 'a' + 10;
+    ଯଦି (c >= 'A' && c <= 'F')
+        ଫେରନ୍ତୁ c - 'A' + 10;
+    ଫେରନ୍ତୁ -1;
 }
 
-static int set_string_binary(void *obj, const AVOption *o, const char *val, uint8_t **dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_ଦ୍ୱିମିକ(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, uint8_t **dst)
 {
-    int *lendst;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା *lendst;
     uint8_t *bin, *ptr;
-    int len;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା len;
 
-    if (dst) {
-        lendst = (int *)(dst + 1);
+    ଯଦି (dst) {
+        lendst = (ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)(dst + 1);
         av_freep(dst);
         *lendst = 0;
     }
 
-    if (!val || !(len = strlen(val)))
-        return 0;
+    ଯଦି (!val || !(len = strlen(val)))
+        ଫେରନ୍ତୁ 0;
 
-    if (len & 1)
-        return AVERROR(EINVAL);
+    ଯଦି (len & 1)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     len /= 2;
 
     ptr = bin = av_malloc(len);
-    if (!ptr)
-        return AVERROR(ENOMEM);
-    while (*val) {
-        int a = hexchar2int(*val++);
-        int b = hexchar2int(*val++);
-        if (a < 0 || b < 0) {
+    ଯଦି (!ptr)
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
+    ଯେତେବେଳେ (*val) {
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା a = hexchar2int(*val++);
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା b = hexchar2int(*val++);
+        ଯଦି (a < 0 || b < 0) {
             av_free(bin);
-            return AVERROR(EINVAL);
+            ଫେରନ୍ତୁ AVERROR(EINVAL);
         }
         *ptr++ = (a << 4) | b;
     }
 
-    if (dst) {
+    ଯଦି (dst) {
         *dst    = bin;
         *lendst = len;
-    } else {
+    } ଅନ୍ୟଥା {
         av_free(bin);
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static int set_string(void *obj, const AVOption *o, const char *val, uint8_t **dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, uint8_t **dst)
 {
-    if (!dst)
-        return 0;
+    ଯଦି (!dst)
+        ଫେରନ୍ତୁ 0;
     av_freep(dst);
-    if (!val)
-        return 0;
+    ଯଦି (!val)
+        ଫେରନ୍ତୁ 0;
     *dst = av_strdup(val);
-    return *dst ? 0 : AVERROR(ENOMEM);
+    ଫେରନ୍ତୁ *dst ? 0 : AVERROR(ENOMEM);
 }
 
 #define DEFAULT_NUMVAL(opt) ((opt->type == AV_OPT_TYPE_INT64 || \
@@ -425,215 +425,215 @@ static int set_string(void *obj, const AVOption *o, const char *val, uint8_t **d
                              ? opt->default_val.i64             \
                              : opt->default_val.dbl)
 
-static int set_string_number(void *obj, void *target_obj, const AVOption *o, const char *val, void *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_ସଂଖ୍ୟା(ଶୂନ୍ୟ *obj, ଶୂନ୍ୟ *target_obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, ଶୂନ୍ୟ *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    const enum AVOptionType type = TYPE_BASE(o->type);
-    int ret = 0;
+    ଶୂନ୍ୟ *logctx = dst ? obj : ଖାଲି;
+    ଅଚଳ ଗଣନା AVOptionType type = TYPE_BASE(o->type);
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret = 0;
 
-    if (type == AV_OPT_TYPE_RATIONAL || type == AV_OPT_TYPE_VIDEO_RATE) {
-        int num, den;
-        char c;
-        if (sscanf(val, "%d%*1[:/]%d%c", &num, &den, &c) == 2) {
-            if ((ret = write_number(obj, o, dst, 1, den, num, 0)) >= 0)
-                return ret;
+    ଯଦି (type == AV_OPT_TYPE_RATIONAL || type == AV_OPT_TYPE_VIDEO_RATE) {
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଅଙ୍କ, den;
+        ଅକ୍ଷର c;
+        ଯଦି (sscanf(val, "%d%*1[:/]%d%c", &ଅଙ୍କ, &den, &c) == 2) {
+            ଯଦି ((ret = write_ସଂଖ୍ୟା(obj, o, dst, 1, den, ଅଙ୍କ, 0)) >= 0)
+                ଫେରନ୍ତୁ ret;
             ret = 0;
         }
     }
 
-    for (;;) {
-        int i = 0;
-        char buf[256];
-        int cmd = 0;
-        double d;
+    ପାଇଁ (;;) {
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0;
+        ଅକ୍ଷର buf[256];
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା cmd = 0;
+        ଦ୍ୱିଗୁଣ d;
         int64_t intnum = 1;
 
-        if (type == AV_OPT_TYPE_FLAGS) {
-            if (*val == '+' || *val == '-')
+        ଯଦି (type == AV_OPT_TYPE_FLAGS) {
+            ଯଦି (*val == '+' || *val == '-')
                 cmd = *(val++);
-            for (; i < sizeof(buf) - 1 && val[i] && val[i] != '+' && val[i] != '-'; i++)
+            ପାଇଁ (; i < ଆକାର(buf) - 1 && val[i] && val[i] != '+' && val[i] != '-'; i++)
                 buf[i] = val[i];
             buf[i] = 0;
         }
 
         {
-            int res;
-            int ci = 0;
-            double const_values[64];
-            const char * const_names[64];
-            int search_flags = (o->flags & AV_OPT_FLAG_CHILD_CONSTS) ? AV_OPT_SEARCH_CHILDREN : 0;
-            const AVOption *o_named = av_opt_find(target_obj, i ? buf : val, o->unit, 0, search_flags);
-            if (o_named && o_named->type == AV_OPT_TYPE_CONST) {
+            ପୂର୍ଣ୍ଣସଂଖ୍ୟା res;
+            ପୂର୍ଣ୍ଣସଂଖ୍ୟା ci = 0;
+            ଦ୍ୱିଗୁଣ const_ମୂଲ୍ୟଗୁଡ଼ିକ[64];
+            ଅଚଳ ଅକ୍ଷର * const_names[64];
+            ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags = (o->flags & AV_OPT_FLAG_CHILD_CONSTS) ? AV_OPT_ସନ୍ଧାନ_CHILDREN : 0;
+            ଅଚଳ AVOption *o_named = av_opt_find(target_obj, i ? buf : val, o->unit, 0, ସନ୍ଧାନ_flags);
+            ଯଦି (o_named && o_named->type == AV_OPT_TYPE_CONST) {
                 d = DEFAULT_NUMVAL(o_named);
-                if (o_named->flags & AV_OPT_FLAG_DEPRECATED)
+                ଯଦି (o_named->flags & AV_OPT_FLAG_DEPRECATED)
                     av_log(logctx, AV_LOG_WARNING, "The \"%s\" option is deprecated: %s\n",
                            o_named->name, o_named->help);
-            } else {
-                if (o->unit) {
-                    for (o_named = NULL; o_named = av_opt_next(target_obj, o_named); ) {
-                        if (o_named->type == AV_OPT_TYPE_CONST &&
+            } ଅନ୍ୟଥା {
+                ଯଦି (o->unit) {
+                    ପାଇଁ (o_named = ଖାଲି; o_named = av_opt_next(target_obj, o_named); ) {
+                        ଯଦି (o_named->type == AV_OPT_TYPE_CONST &&
                             o_named->unit &&
                             !strcmp(o_named->unit, o->unit)) {
-                            if (ci + 6 >= FF_ARRAY_ELEMS(const_values)) {
+                            ଯଦି (ci + 6 >= FF_ARRAY_ELEMS(const_ମୂଲ୍ୟଗୁଡ଼ିକ)) {
                                 av_log(logctx, AV_LOG_ERROR, "const_values array too small for %s\n", o->unit);
-                                return AVERROR_PATCHWELCOME;
+                                ଫେରନ୍ତୁ AVERROR_PATCHWELCOME;
                             }
                             const_names [ci  ] = o_named->name;
-                            const_values[ci++] = DEFAULT_NUMVAL(o_named);
+                            const_ମୂଲ୍ୟଗୁଡ଼ିକ[ci++] = DEFAULT_NUMVAL(o_named);
                         }
                     }
                 }
                 const_names [ci  ] = "default";
-                const_values[ci++] = DEFAULT_NUMVAL(o);
+                const_ମୂଲ୍ୟଗୁଡ଼ିକ[ci++] = DEFAULT_NUMVAL(o);
                 const_names [ci  ] = "max";
-                const_values[ci++] = o->max;
+                const_ମୂଲ୍ୟଗୁଡ଼ିକ[ci++] = o->max;
                 const_names [ci  ] = "min";
-                const_values[ci++] = o->min;
+                const_ମୂଲ୍ୟଗୁଡ଼ିକ[ci++] = o->min;
                 const_names [ci  ] = "none";
-                const_values[ci++] = 0;
+                const_ମୂଲ୍ୟଗୁଡ଼ିକ[ci++] = 0;
                 const_names [ci  ] = "all";
-                const_values[ci++] = ~0;
-                const_names [ci] = NULL;
-                const_values[ci] = 0;
+                const_ମୂଲ୍ୟଗୁଡ଼ିକ[ci++] = ~0;
+                const_names [ci] = ଖାଲି;
+                const_ମୂଲ୍ୟଗୁଡ଼ିକ[ci] = 0;
 
-                res = av_expr_parse_and_eval(&d, i ? buf : val, const_names,
-                                            const_values, NULL, NULL, NULL, NULL, NULL, 0, obj);
-                if (res < 0) {
+                res = av_ପଦସମଷ୍ଟି_parse_and_eval(&d, i ? buf : val, const_names,
+                                            const_ମୂଲ୍ୟଗୁଡ଼ିକ, ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, 0, obj);
+                ଯଦି (res < 0) {
                     av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\"\n", o->name, val);
-                    return res;
+                    ଫେରନ୍ତୁ res;
                 }
             }
         }
-        if (type == AV_OPT_TYPE_FLAGS && dst) {
-            intnum = *(unsigned int*)dst;
-            if (cmd == '+')
+        ଯଦି (type == AV_OPT_TYPE_FLAGS && dst) {
+            intnum = *(unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା*)dst;
+            ଯଦି (cmd == '+')
                 d = intnum | (int64_t)d;
-            else if (cmd == '-')
+            ଅନ୍ୟଥା ଯଦି (cmd == '-')
                 d = intnum &~(int64_t)d;
         }
 
-        if ((ret = write_number(obj, o, dst, d, 1, 1, 0)) < 0)
-            return ret;
+        ଯଦି ((ret = write_ସଂଖ୍ୟା(obj, o, dst, d, 1, 1, 0)) < 0)
+            ଫେରନ୍ତୁ ret;
         val += i;
-        if (!i || !*val)
-            return 0;
+        ଯଦି (!i || !*val)
+            ଫେରନ୍ତୁ 0;
     }
 }
 
-static int set_string_image_size(void *obj, const AVOption *o, const char *val, int *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_image_size(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    int tmp[2];
-    int ret;
+    ଶୂନ୍ୟ *logctx = dst ? obj : ଖାଲି;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା tmp[2];
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    if (!val || !strcmp(val, "none")) {
-        if (dst) {
+    ଯଦି (!val || !strcmp(val, "none")) {
+        ଯଦି (dst) {
         dst[0] =
         dst[1] = 0;
         }
-        return 0;
+        ଫେରନ୍ତୁ 0;
     }
     ret = av_parse_video_size(&tmp[0], &tmp[1], val);
-    if (ret < 0) {
+    ଯଦି (ret < 0) {
         av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as image size\n", o->name, val);
-        return ret;
+        ଫେରନ୍ତୁ ret;
     }
-    if (dst)
-        memcpy(dst, tmp, sizeof(tmp));
-    return ret;
+    ଯଦି (dst)
+        memcpy(dst, tmp, ଆକାର(tmp));
+    ଫେରନ୍ତୁ ret;
 }
 
-static int set_string_video_rate(void *obj, const AVOption *o, const char *val, AVRational *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_video_rate(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, AVRational *dst)
 {
-    void *logctx = dst ? obj : NULL;
+    ଶୂନ୍ୟ *logctx = dst ? obj : ଖାଲି;
     AVRational tmp;
-    int ret = av_parse_video_rate(&tmp, val);
-    if (ret < 0)
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret = av_parse_video_rate(&tmp, val);
+    ଯଦି (ret < 0)
         av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as video rate\n", o->name, val);
-    if (dst)
+    ଯଦି (dst)
         *dst = tmp;
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-static int set_string_color(void *obj, const AVOption *o, const char *val, uint8_t *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_color(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, uint8_t *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    int ret;
+    ଶୂନ୍ୟ *logctx = dst ? obj : ଖାଲି;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    if (!val) {
-        return 0;
-    } else {
+    ଯଦି (!val) {
+        ଫେରନ୍ତୁ 0;
+    } ଅନ୍ୟଥା {
         uint8_t tmp[4];
         ret = av_parse_color(tmp, val, -1, obj);
-        if (ret < 0) {
+        ଯଦି (ret < 0) {
             av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as color\n", o->name, val);
-            return ret;
+            ଫେରନ୍ତୁ ret;
         }
-        if (dst)
-            memcpy(dst, tmp, sizeof(tmp));
-        return ret;
+        ଯଦି (dst)
+            memcpy(dst, tmp, ଆକାର(tmp));
+        ଫେରନ୍ତୁ ret;
     }
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static const char *get_bool_name(int val)
+ସ୍ଥିର ଅଚଳ ଅକ୍ଷର *get_bool_name(ପୂର୍ଣ୍ଣସଂଖ୍ୟା val)
 {
-    if (val < 0)
-        return "auto";
-    return val ? "true" : "false";
+    ଯଦି (val < 0)
+        ଫେରନ୍ତୁ "auto";
+    ଫେରନ୍ତୁ val ? "true" : "false";
 }
 
-static int set_string_bool(void *obj, const AVOption *o, const char *val, int *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_bool(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    int n;
+    ଶୂନ୍ୟ *logctx = dst ? obj : ଖାଲି;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା n;
 
-    if (!val)
-        return 0;
+    ଯଦି (!val)
+        ଫେରନ୍ତୁ 0;
 
-    if (!strcmp(val, "auto")) {
+    ଯଦି (!strcmp(val, "auto")) {
         n = -1;
-    } else if (av_match_name(val, "true,y,yes,enable,enabled,on")) {
+    } ଅନ୍ୟଥା ଯଦି (av_match_name(val, "true,y,yes,enable,enabled,on")) {
         n = 1;
-    } else if (av_match_name(val, "false,n,no,disable,disabled,off")) {
+    } ଅନ୍ୟଥା ଯଦି (av_match_name(val, "false,n,no,disable,disabled,off")) {
         n = 0;
-    } else {
-        char *end = NULL;
+    } ଅନ୍ୟଥା {
+        ଅକ୍ଷର *end = ଖାଲି;
         n = strtol(val, &end, 10);
-        if (val + strlen(val) != end)
-            goto fail;
+        ଯଦି (val + strlen(val) != end)
+            ଯାଅ fail;
     }
 
-    if (n < o->min || n > o->max)
-        goto fail;
+    ଯଦି (n < o->min || n > o->max)
+        ଯାଅ fail;
 
-    if (dst)
+    ଯଦି (dst)
     *dst = n;
-    return 0;
+    ଫେରନ୍ତୁ 0;
 
 fail:
     av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as boolean\n", o->name, val);
-    return AVERROR(EINVAL);
+    ଫେରନ୍ତୁ AVERROR(EINVAL);
 }
 
-static int set_string_fmt(void *obj, const AVOption *o, const char *val, uint8_t *dst,
-                          int fmt_nb, int ((*get_fmt)(const char *)), const char *desc,
-                          enum AVOptionType type)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_fmt(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, uint8_t *dst,
+                          ପୂର୍ଣ୍ଣସଂଖ୍ୟା fmt_nb, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ((*get_fmt)(ଅଚଳ ଅକ୍ଷର *)), ଅଚଳ ଅକ୍ଷର *desc,
+                          ଗଣନା AVOptionType type)
 {
-    void *logctx = dst ? obj : NULL;
-    int fmt, min, max;
+    ଶୂନ୍ୟ *logctx = dst ? obj : ଖାଲି;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା fmt, min, max;
 
-    if (!val || !strcmp(val, "none")) {
+    ଯଦି (!val || !strcmp(val, "none")) {
         fmt = -1;
-    } else {
+    } ଅନ୍ୟଥା {
         fmt = get_fmt(val);
-        if (fmt == -1) {
-            char *tail;
+        ଯଦି (fmt == -1) {
+            ଅକ୍ଷର *tail;
             fmt = strtol(val, &tail, 0);
-            if (*tail || (unsigned)fmt >= fmt_nb) {
+            ଯଦି (*tail || (unsigned)fmt >= fmt_nb) {
                 av_log(logctx, AV_LOG_ERROR,
                        "Unable to parse \"%s\" option value \"%s\" as %s\n", o->name, val, desc);
-                return AVERROR(EINVAL);
+                ଫେରନ୍ତୁ AVERROR(EINVAL);
             }
         }
     }
@@ -642,219 +642,219 @@ static int set_string_fmt(void *obj, const AVOption *o, const char *val, uint8_t
     max = FFMIN(o->max, fmt_nb-1);
 
     // hack for compatibility with old ffmpeg
-    if(min == 0 && max == 0) {
+    ଯଦି(min == 0 && max == 0) {
         min = -1;
         max = fmt_nb-1;
     }
 
-    if (fmt < min || fmt > max) {
+    ଯଦି (fmt < min || fmt > max) {
         av_log(logctx, AV_LOG_ERROR,
                "Value %d for parameter '%s' out of %s format range [%d - %d]\n",
                fmt, o->name, desc, min, max);
-        return AVERROR(ERANGE);
+        ଫେରନ୍ତୁ AVERROR(ERANGE);
     }
 
-    if (dst)
-    switch (type) {
-    case AV_OPT_TYPE_PIXEL_FMT:  *(enum AVPixelFormat *)dst = fmt; break;
-    case AV_OPT_TYPE_SAMPLE_FMT: *(enum AVSampleFormat*)dst = fmt; break;
-    default: av_unreachable("set_string_fmt() is only called for pixel and sample formats");
+    ଯଦି (dst)
+    ବାଛ (type) {
+    ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:  *(ଗଣନା AVPixelFormat *)dst = fmt; ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT: *(ଗଣନା AVSampleFormat*)dst = fmt; ଭାଙ୍ଗ;
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ: av_unreachable("set_string_fmt() is only called for pixel and sample formats");
     }
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static int get_pix_fmt(const char *name)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା get_pix_fmt(ଅଚଳ ଅକ୍ଷର *name)
 {
-    return av_get_pix_fmt(name);
+    ଫେରନ୍ତୁ av_get_pix_fmt(name);
 }
 
-static int set_string_pixel_fmt(void *obj, const AVOption *o, const char *val, uint8_t *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_pixel_fmt(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, uint8_t *dst)
 {
-    return set_string_fmt(obj, o, val, dst,
+    ଫେରନ୍ତୁ set_string_fmt(obj, o, val, dst,
                           AV_PIX_FMT_NB, get_pix_fmt,
                           "pixel format", AV_OPT_TYPE_PIXEL_FMT);
 }
 
-static int get_sample_fmt(const char *name)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା get_sample_fmt(ଅଚଳ ଅକ୍ଷର *name)
 {
-    return av_get_sample_fmt(name);
+    ଫେରନ୍ତୁ av_get_sample_fmt(name);
 }
 
-static int set_string_sample_fmt(void *obj, const AVOption *o, const char *val, uint8_t *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_sample_fmt(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, uint8_t *dst)
 {
-    return set_string_fmt(obj, o, val, dst,
+    ଫେରନ୍ତୁ set_string_fmt(obj, o, val, dst,
                           AV_SAMPLE_FMT_NB, get_sample_fmt,
                           "sample format", AV_OPT_TYPE_SAMPLE_FMT);
 }
 
-static int set_string_dict(void *obj, const AVOption *o, const char *val, uint8_t **dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_dict(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o, ଅଚଳ ଅକ୍ଷର *val, uint8_t **dst)
 {
-    AVDictionary *options = NULL;
+    AVDictionary *options = ଖାଲି;
 
-    if (val) {
-        int ret = av_dict_parse_string(&options, val, "=", ":", 0);
-        if (ret < 0) {
+    ଯଦି (val) {
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret = av_dict_parse_string(&options, val, "=", ":", 0);
+        ଯଦି (ret < 0) {
             av_dict_free(&options);
-            return ret;
+            ଫେରନ୍ତୁ ret;
         }
     }
 
-    if (!dst) {
+    ଯଦି (!dst) {
         av_dict_free(&options);
-        return 0;
+        ଫେରନ୍ତୁ 0;
     }
 
     av_dict_free((AVDictionary **)dst);
     *dst = (uint8_t *)options;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static int set_string_channel_layout(void *obj, const AVOption *o,
-                                     const char *val, void *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_string_channel_layout(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o,
+                                     ଅଚଳ ଅକ୍ଷର *val, ଶୂନ୍ୟ *dst)
 {
     AVChannelLayout tmp;
     AVChannelLayout *channel_layout = dst;
-    int ret;
-    if (dst)
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
+    ଯଦି (dst)
     av_channel_layout_uninit(channel_layout);
-    else
+    ଅନ୍ୟଥା
         channel_layout = &tmp;
-    if (!val)
-        return 0;
+    ଯଦି (!val)
+        ଫେରନ୍ତୁ 0;
     ret = av_channel_layout_from_string(channel_layout, val);
-    if (ret < 0)
-        return ret;
-    if (!dst)
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
+    ଯଦି (!dst)
         av_channel_layout_uninit(channel_layout);
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static int opt_set_elem(void *obj, void *target_obj, const AVOption *o,
-                        const char *val, void *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_set_elem(ଶୂନ୍ୟ *obj, ଶୂନ୍ୟ *target_obj, ଅଚଳ AVOption *o,
+                        ଅଚଳ ଅକ୍ଷର *val, ଶୂନ୍ୟ *dst)
 {
-    void *logctx = dst ? obj : NULL;
-    const enum AVOptionType type = TYPE_BASE(o->type);
-    int ret;
+    ଶୂନ୍ୟ *logctx = dst ? obj : ଖାଲି;
+    ଅଚଳ ଗଣନା AVOptionType type = TYPE_BASE(o->type);
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    if (!val && (type != AV_OPT_TYPE_STRING &&
+    ଯଦି (!val && (type != AV_OPT_TYPE_STRING &&
                  type != AV_OPT_TYPE_PIXEL_FMT && type != AV_OPT_TYPE_SAMPLE_FMT &&
                  type != AV_OPT_TYPE_IMAGE_SIZE &&
                  type != AV_OPT_TYPE_DURATION && type != AV_OPT_TYPE_COLOR &&
                  type != AV_OPT_TYPE_BOOL))
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
-    switch (type) {
-    case AV_OPT_TYPE_BOOL:
-        return set_string_bool(obj, o, val, dst);
-    case AV_OPT_TYPE_STRING:
-        return set_string(obj, o, val, dst);
-    case AV_OPT_TYPE_BINARY:
-        return set_string_binary(obj, o, val, dst);
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_FLOAT:
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_RATIONAL:
-        return set_string_number(obj, target_obj, o, val, dst);
-    case AV_OPT_TYPE_IMAGE_SIZE:
-        return set_string_image_size(obj, o, val, dst);
-    case AV_OPT_TYPE_VIDEO_RATE: {
+    ବାଛ (type) {
+    ସ୍ଥିତି AV_OPT_TYPE_BOOL:
+        ଫେରନ୍ତୁ set_string_bool(obj, o, val, dst);
+    ସ୍ଥିତି AV_OPT_TYPE_STRING:
+        ଫେରନ୍ତୁ set_string(obj, o, val, dst);
+    ସ୍ଥିତି AV_OPT_TYPE_ଦ୍ୱିମିକ:
+        ଫେରନ୍ତୁ set_string_ଦ୍ୱିମିକ(obj, o, val, dst);
+    ସ୍ଥିତି AV_OPT_TYPE_FLAGS:
+    ସ୍ଥିତି AV_OPT_TYPE_INT:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT:
+    ସ୍ଥିତି AV_OPT_TYPE_INT64:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT64:
+    ସ୍ଥିତି AV_OPT_TYPE_FLOAT:
+    ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+    ସ୍ଥିତି AV_OPT_TYPE_RATIONAL:
+        ଫେରନ୍ତୁ set_string_ସଂଖ୍ୟା(obj, target_obj, o, val, dst);
+    ସ୍ଥିତି AV_OPT_TYPE_IMAGE_SIZE:
+        ଫେରନ୍ତୁ set_string_image_size(obj, o, val, dst);
+    ସ୍ଥିତି AV_OPT_TYPE_VIDEO_RATE: {
         AVRational tmp;
         ret = set_string_video_rate(obj, o, val, &tmp);
-        if (ret < 0)
-            return ret;
-        return write_number(obj, o, dst, 1, tmp.den, tmp.num, 0);
+        ଯଦି (ret < 0)
+            ଫେରନ୍ତୁ ret;
+        ଫେରନ୍ତୁ write_ସଂଖ୍ୟା(obj, o, dst, 1, tmp.den, tmp.ଅଙ୍କ, 0);
     }
-    case AV_OPT_TYPE_PIXEL_FMT:
-        return set_string_pixel_fmt(obj, o, val, dst);
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        return set_string_sample_fmt(obj, o, val, dst);
-    case AV_OPT_TYPE_DURATION:
+    ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:
+        ଫେରନ୍ତୁ set_string_pixel_fmt(obj, o, val, dst);
+    ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT:
+        ଫେରନ୍ତୁ set_string_sample_fmt(obj, o, val, dst);
+    ସ୍ଥିତି AV_OPT_TYPE_DURATION:
         {
             int64_t usecs = 0;
-            if (val) {
-                if ((ret = av_parse_time(&usecs, val, 1)) < 0) {
+            ଯଦି (val) {
+                ଯଦି ((ret = av_parse_time(&usecs, val, 1)) < 0) {
                     av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as duration\n", o->name, val);
-                    return ret;
+                    ଫେରନ୍ତୁ ret;
                 }
             }
-            if (usecs < o->min || usecs > o->max) {
+            ଯଦି (usecs < o->min || usecs > o->max) {
                 av_log(logctx, AV_LOG_ERROR, "Value %f for parameter '%s' out of range [%g - %g]\n",
                        usecs / 1000000.0, o->name, o->min / 1000000.0, o->max / 1000000.0);
-                return AVERROR(ERANGE);
+                ଫେରନ୍ତୁ AVERROR(ERANGE);
             }
-            if (dst)
+            ଯଦି (dst)
             *(int64_t *)dst = usecs;
-            return 0;
+            ଫେରନ୍ତୁ 0;
         }
-    case AV_OPT_TYPE_COLOR:
-        return set_string_color(obj, o, val, dst);
-    case AV_OPT_TYPE_CHLAYOUT:
+    ସ୍ଥିତି AV_OPT_TYPE_COLOR:
+        ଫେରନ୍ତୁ set_string_color(obj, o, val, dst);
+    ସ୍ଥିତି AV_OPT_TYPE_CHLAYOUT:
         ret = set_string_channel_layout(obj, o, val, dst);
-        if (ret < 0) {
+        ଯଦି (ret < 0) {
             av_log(logctx, AV_LOG_ERROR, "Unable to parse \"%s\" option value \"%s\" as channel layout\n", o->name, val);
             ret = AVERROR(EINVAL);
         }
-        return ret;
-    case AV_OPT_TYPE_DICT:
-        return set_string_dict(obj, o, val, dst);
+        ଫେରନ୍ତୁ ret;
+    ସ୍ଥିତି AV_OPT_TYPE_DICT:
+        ଫେରନ୍ତୁ set_string_dict(obj, o, val, dst);
     }
 
     av_log(logctx, AV_LOG_ERROR, "Invalid option type.\n");
-    return AVERROR(EINVAL);
+    ଫେରନ୍ତୁ AVERROR(EINVAL);
 }
 
-static int opt_set_array(void *obj, void *target_obj, const AVOption *o,
-                         const char *val, void *dst)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_set_array(ଶୂନ୍ୟ *obj, ଶୂନ୍ୟ *target_obj, ଅଚଳ AVOption *o,
+                         ଅଚଳ ଅକ୍ଷର *val, ଶୂନ୍ୟ *dst)
 {
-    const AVOptionArrayDef *arr = o->default_val.arr;
-    const size_t      elem_size = opt_type_desc[TYPE_BASE(o->type)].size;
-    const uint8_t           sep = opt_array_sep(o);
-    uint8_t                *str = NULL;
+    ଅଚଳ AVOptionArrayDef *arr = o->default_val.arr;
+    ଅଚଳ size_t      elem_size = opt_type_desc[TYPE_BASE(o->type)].size;
+    ଅଚଳ uint8_t           sep = opt_array_sep(o);
+    uint8_t                *str = ଖାଲି;
 
-    void      *logctx = dst ? obj : NULL;
-    void       *elems = NULL;
+    ଶୂନ୍ୟ      *logctx = dst ? obj : ଖାଲି;
+    ଶୂନ୍ୟ       *elems = ଖାଲି;
     unsigned nb_elems = 0;
-    int ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    if (val && *val) {
+    ଯଦି (val && *val) {
         str = av_malloc(strlen(val) + 1);
-        if (!str)
-            return AVERROR(ENOMEM);
+        ଯଦି (!str)
+            ଫେରନ୍ତୁ AVERROR(ENOMEM);
     }
 
     // split and unescape the string
-    while (val && *val) {
+    ଯେତେବେଳେ (val && *val) {
         uint8_t *p = str;
-        void *tmp;
+        ଶୂନ୍ୟ *tmp;
 
-        if (arr && arr->size_max && nb_elems >= arr->size_max) {
+        ଯଦି (arr && arr->size_max && nb_elems >= arr->size_max) {
             av_log(logctx, AV_LOG_ERROR,
                    "Cannot assign more than %u elements to array option %s\n",
                    arr->size_max, o->name);
             ret = AVERROR(EINVAL);
-            goto fail;
+            ଯାଅ fail;
         }
 
-        for (; *val; val++, p++) {
-            if (*val == '\\' && val[1])
+        ପାଇଁ (; *val; val++, p++) {
+            ଯଦି (*val == '\\' && val[1])
                 val++;
-            else if (*val == sep) {
+            ଅନ୍ୟଥା ଯଦି (*val == sep) {
                 val++;
-                break;
+                ଭାଙ୍ଗ;
             }
             *p = *val;
         }
         *p = 0;
 
         tmp = av_realloc_array(elems, nb_elems + 1, elem_size);
-        if (!tmp) {
+        ଯଦି (!tmp) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ଯାଅ fail;
         }
         elems = tmp;
 
@@ -862,840 +862,840 @@ static int opt_set_array(void *obj, void *target_obj, const AVOption *o,
         memset(tmp, 0, elem_size);
 
         ret = opt_set_elem(obj, target_obj, o, str, tmp);
-        if (ret < 0)
-            goto fail;
+        ଯଦି (ret < 0)
+            ଯାଅ fail;
         nb_elems++;
     }
     av_freep(&str);
 
-    if (dst)
+    ଯଦି (dst)
     opt_free_array(o, dst, opt_array_pcount(dst));
 
-    if (arr && nb_elems < arr->size_min) {
+    ଯଦି (arr && nb_elems < arr->size_min) {
         av_log(logctx, AV_LOG_ERROR,
                "Cannot assign fewer than %u elements to array option %s\n",
                arr->size_min, o->name);
         ret = AVERROR(EINVAL);
-        goto fail;
+        ଯାଅ fail;
     }
 
-    if (dst) {
-    *((void **)dst)        = elems;
+    ଯଦି (dst) {
+    *((ଶୂନ୍ୟ **)dst)        = elems;
     *opt_array_pcount(dst) = nb_elems;
-    } else
+    } ଅନ୍ୟଥା
         opt_free_array(o, &elems, &nb_elems);
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 fail:
     av_freep(&str);
     opt_free_array(o, &elems, &nb_elems);
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int av_opt_set(void *obj, const char *name, const char *val, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଅଚଳ ଅକ୍ଷର *val, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    void *dst, *target_obj;
-    const AVOption *o;
-    int ret;
+    ଶୂନ୍ୟ *dst, *target_obj;
+    ଅଚଳ AVOption *o;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    ret = opt_set_init(obj, name, search_flags, 0, &target_obj, &o, &dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_set_init(obj, name, ସନ୍ଧାନ_flags, 0, &target_obj, &o, &dst);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
 
-    return ((o->type & AV_OPT_TYPE_FLAG_ARRAY) ?
+    ଫେରନ୍ତୁ ((o->type & AV_OPT_TYPE_FLAG_ARRAY) ?
             opt_set_array : opt_set_elem)(obj, target_obj, o, val, dst);
 }
 
-#define OPT_EVAL_NUMBER(name, opttype, vartype)                         \
-int av_opt_eval_ ## name(void *obj, const AVOption *o,                  \
-                         const char *val, vartype *name ## _out)        \
+#define OPT_EVAL_ସଂଖ୍ୟା(name, opttype, vartype)                         \
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_eval_ ## name(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o,                  \
+                         ଅଚଳ ଅକ୍ଷର *val, vartype *name ## _out)        \
 {                                                                       \
-    if (!o || o->type != opttype || o->flags & AV_OPT_FLAG_READONLY)    \
-        return AVERROR(EINVAL);                                         \
-    return set_string_number(obj, obj, o, val, name ## _out);           \
+    ଯଦି (!o || o->type != opttype || o->flags & AV_OPT_FLAG_READONLY)    \
+        ଫେରନ୍ତୁ AVERROR(EINVAL);                                         \
+    ଫେରନ୍ତୁ set_string_ସଂଖ୍ୟା(obj, obj, o, val, name ## _out);           \
 }
 
-OPT_EVAL_NUMBER(flags,  AV_OPT_TYPE_FLAGS,    int)
-OPT_EVAL_NUMBER(int,    AV_OPT_TYPE_INT,      int)
-OPT_EVAL_NUMBER(uint,   AV_OPT_TYPE_UINT,     unsigned)
-OPT_EVAL_NUMBER(int64,  AV_OPT_TYPE_INT64,    int64_t)
-OPT_EVAL_NUMBER(float,  AV_OPT_TYPE_FLOAT,    float)
-OPT_EVAL_NUMBER(double, AV_OPT_TYPE_DOUBLE,   double)
-OPT_EVAL_NUMBER(q,      AV_OPT_TYPE_RATIONAL, AVRational)
+OPT_EVAL_ସଂଖ୍ୟା(flags,  AV_OPT_TYPE_FLAGS,    ପୂର୍ଣ୍ଣସଂଖ୍ୟା)
+OPT_EVAL_ସଂଖ୍ୟା(ପୂର୍ଣ୍ଣସଂଖ୍ୟା,    AV_OPT_TYPE_INT,      ପୂର୍ଣ୍ଣସଂଖ୍ୟା)
+OPT_EVAL_ସଂଖ୍ୟା(uint,   AV_OPT_TYPE_UINT,     unsigned)
+OPT_EVAL_ସଂଖ୍ୟା(int64,  AV_OPT_TYPE_INT64,    int64_t)
+OPT_EVAL_ସଂଖ୍ୟା(ଦଶମିକ,  AV_OPT_TYPE_FLOAT,    ଦଶମିକ)
+OPT_EVAL_ସଂଖ୍ୟା(ଦ୍ୱିଗୁଣ, AV_OPT_TYPE_DOUBLE,   ଦ୍ୱିଗୁଣ)
+OPT_EVAL_ସଂଖ୍ୟା(q,      AV_OPT_TYPE_RATIONAL, AVRational)
 
-static int set_number(void *obj, const char *name, double num, int den, int64_t intnum,
-                      int search_flags, int require_type)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_ସଂଖ୍ୟା(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଦ୍ୱିଗୁଣ ଅଙ୍କ, ପୂର୍ଣ୍ଣସଂଖ୍ୟା den, int64_t intnum,
+                      ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, ପୂର୍ଣ୍ଣସଂଖ୍ୟା require_type)
 {
-    void *dst;
-    const AVOption *o;
-    int ret;
+    ଶୂନ୍ୟ *dst;
+    ଅଚଳ AVOption *o;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    ret = opt_set_init(obj, name, search_flags, require_type, NULL, &o, &dst);
-    if (ret < 0)
-        return ret;
-    if (dst)
-        ret = write_number(obj, o, dst, num, den, intnum, 0);
+    ret = opt_set_init(obj, name, ସନ୍ଧାନ_flags, require_type, ଖାଲି, &o, &dst);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
+    ଯଦି (dst)
+        ret = write_ସଂଖ୍ୟା(obj, o, dst, ଅଙ୍କ, den, intnum, 0);
 
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int av_opt_set_int(void *obj, const char *name, int64_t val, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_int(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, int64_t val, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    return set_number(obj, name, 1, 1, val, search_flags, 0);
+    ଫେରନ୍ତୁ set_ସଂଖ୍ୟା(obj, name, 1, 1, val, ସନ୍ଧାନ_flags, 0);
 }
 
-int av_opt_set_double(void *obj, const char *name, double val, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_double(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଦ୍ୱିଗୁଣ val, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    return set_number(obj, name, val, 1, 1, search_flags, 0);
+    ଫେରନ୍ତୁ set_ସଂଖ୍ୟା(obj, name, val, 1, 1, ସନ୍ଧାନ_flags, 0);
 }
 
-int av_opt_set_q(void *obj, const char *name, AVRational val, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_q(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, AVRational val, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    return set_number(obj, name, val.num, val.den, 1, search_flags, 0);
+    ଫେରନ୍ତୁ set_ସଂଖ୍ୟା(obj, name, val.ଅଙ୍କ, val.den, 1, ସନ୍ଧାନ_flags, 0);
 }
 
-int av_opt_set_bin(void *obj, const char *name, const uint8_t *val, int len, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_bin(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଅଚଳ uint8_t *val, ପୂର୍ଣ୍ଣସଂଖ୍ୟା len, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
     uint8_t *ptr;
     uint8_t **dst;
-    int *lendst;
-    int ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା *lendst;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_BINARY,
-                       NULL, NULL, (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_set_init(obj, name, ସନ୍ଧାନ_flags, AV_OPT_TYPE_ଦ୍ୱିମିକ,
+                       ଖାଲି, ଖାଲି, (ଶୂନ୍ୟ**)&dst);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
 
-    if (dst) {
-    ptr = len ? av_malloc(len) : NULL;
-    if (len && !ptr)
-        return AVERROR(ENOMEM);
+    ଯଦି (dst) {
+    ptr = len ? av_malloc(len) : ଖାଲି;
+    ଯଦି (len && !ptr)
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
 
-    lendst = (int *)(dst + 1);
+    lendst = (ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)(dst + 1);
 
     av_free(*dst);
     *dst    = ptr;
     *lendst = len;
-    if (len)
+    ଯଦି (len)
         memcpy(ptr, val, len);
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_set_image_size(void *obj, const char *name, int w, int h, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_image_size(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା w, ପୂର୍ଣ୍ଣସଂଖ୍ୟା h, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    const AVOption *o;
-    void *logctx;
-    int *dst;
-    int ret;
+    ଅଚଳ AVOption *o;
+    ଶୂନ୍ୟ *logctx;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା *dst;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_IMAGE_SIZE,
-                       NULL, &o, (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_set_init(obj, name, ସନ୍ଧାନ_flags, AV_OPT_TYPE_IMAGE_SIZE,
+                       ଖାଲି, &o, (ଶୂନ୍ୟ**)&dst);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
 
-    logctx = dst ? obj : NULL;
+    logctx = dst ? obj : ଖାଲି;
 
-    if (w<0 || h<0) {
+    ଯଦି (w<0 || h<0) {
         av_log(logctx, AV_LOG_ERROR,
                "Invalid negative size value %dx%d for size '%s'\n", w, h, o->name);
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
-    if (dst) {
+    ଯଦି (dst) {
     dst[0] = w;
     dst[1] = h;
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_set_video_rate(void *obj, const char *name, AVRational val, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_video_rate(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, AVRational val, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    return set_number(obj, name, val.num, val.den, 1, search_flags, AV_OPT_TYPE_VIDEO_RATE);
+    ଫେରନ୍ତୁ set_ସଂଖ୍ୟା(obj, name, val.ଅଙ୍କ, val.den, 1, ସନ୍ଧାନ_flags, AV_OPT_TYPE_VIDEO_RATE);
 }
 
-static int set_format(void *obj, const char *name, int fmt, int search_flags,
-                      enum AVOptionType type, const char *desc, int nb_fmts)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା set_format(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା fmt, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags,
+                      ଗଣନା AVOptionType type, ଅଚଳ ଅକ୍ଷର *desc, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nb_fmts)
 {
-    const AVOption *o;
-    void *logctx;
-    int *dst;
-    int min, max, ret;
+    ଅଚଳ AVOption *o;
+    ଶୂନ୍ୟ *logctx;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା *dst;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା min, max, ret;
 
-    ret = opt_set_init(obj, name, search_flags, type, NULL, &o, (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_set_init(obj, name, ସନ୍ଧାନ_flags, type, ଖାଲି, &o, (ଶୂନ୍ୟ**)&dst);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
 
-    logctx = dst ? obj : NULL;
+    logctx = dst ? obj : ଖାଲି;
 
     min = FFMAX(o->min, -1);
     max = FFMIN(o->max, nb_fmts-1);
 
-    if (fmt < min || fmt > max) {
+    ଯଦି (fmt < min || fmt > max) {
         av_log(logctx, AV_LOG_ERROR,
                "Value %d for parameter '%s' out of %s format range [%d - %d]\n",
                fmt, name, desc, min, max);
-        return AVERROR(ERANGE);
+        ଫେରନ୍ତୁ AVERROR(ERANGE);
     }
-    if (dst)
+    ଯଦି (dst)
     *dst = fmt;
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_set_pixel_fmt(void *obj, const char *name, enum AVPixelFormat fmt, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_pixel_fmt(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଗଣନା AVPixelFormat fmt, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    return set_format(obj, name, fmt, search_flags, AV_OPT_TYPE_PIXEL_FMT, "pixel", AV_PIX_FMT_NB);
+    ଫେରନ୍ତୁ set_format(obj, name, fmt, ସନ୍ଧାନ_flags, AV_OPT_TYPE_PIXEL_FMT, "pixel", AV_PIX_FMT_NB);
 }
 
-int av_opt_set_sample_fmt(void *obj, const char *name, enum AVSampleFormat fmt, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_sample_fmt(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଗଣନା AVSampleFormat fmt, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    return set_format(obj, name, fmt, search_flags, AV_OPT_TYPE_SAMPLE_FMT, "sample", AV_SAMPLE_FMT_NB);
+    ଫେରନ୍ତୁ set_format(obj, name, fmt, ସନ୍ଧାନ_flags, AV_OPT_TYPE_SAMPLE_FMT, "sample", AV_SAMPLE_FMT_NB);
 }
 
-int av_opt_set_dict_val(void *obj, const char *name, const AVDictionary *val,
-                        int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_dict_val(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଅଚଳ AVDictionary *val,
+                        ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
     AVDictionary **dst;
-    int ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_DICT, NULL, NULL,
-                       (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_set_init(obj, name, ସନ୍ଧାନ_flags, AV_OPT_TYPE_DICT, ଖାଲି, ଖାଲି,
+                       (ଶୂନ୍ୟ**)&dst);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
 
-    if (dst) {
+    ଯଦି (dst) {
     av_dict_free(dst);
 
         ret = av_dict_copy(dst, val, 0);
     }
 
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int av_opt_set_chlayout(void *obj, const char *name,
-                        const AVChannelLayout *channel_layout,
-                        int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_chlayout(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name,
+                        ଅଚଳ AVChannelLayout *channel_layout,
+                        ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
     AVChannelLayout *dst;
-    int ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    ret = opt_set_init(obj, name, search_flags, AV_OPT_TYPE_CHLAYOUT, NULL, NULL,
-                       (void**)&dst);
-    if (ret < 0)
-        return ret;
+    ret = opt_set_init(obj, name, ସନ୍ଧାନ_flags, AV_OPT_TYPE_CHLAYOUT, ଖାଲି, ଖାଲି,
+                       (ଶୂନ୍ୟ**)&dst);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
 
-    if (dst)
+    ଯଦି (dst)
         ret = av_channel_layout_copy(dst, channel_layout);
 
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-static void format_duration(char *buf, size_t size, int64_t d)
+ସ୍ଥିର ଶୂନ୍ୟ format_duration(ଅକ୍ଷର *buf, size_t size, int64_t d)
 {
-    char *e;
+    ଅକ୍ଷର *e;
 
     av_assert0(size >= 25);
-    if (d < 0 && d != INT64_MIN) {
+    ଯଦି (d < 0 && d != INT64_MIN) {
         *(buf++) = '-';
         size--;
         d = -d;
     }
-    if (d == INT64_MAX)
+    ଯଦି (d == INT64_MAX)
         snprintf(buf, size, "INT64_MAX");
-    else if (d == INT64_MIN)
+    ଅନ୍ୟଥା ଯଦି (d == INT64_MIN)
         snprintf(buf, size, "INT64_MIN");
-    else if (d > (int64_t)3600*1000000)
+    ଅନ୍ୟଥା ଯଦି (d > (int64_t)3600*1000000)
         snprintf(buf, size, "%"PRId64":%02d:%02d.%06d", d / 3600000000,
-                 (int)((d / 60000000) % 60),
-                 (int)((d / 1000000) % 60),
-                 (int)(d % 1000000));
-    else if (d > 60*1000000)
+                 (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)((d / 60000000) % 60),
+                 (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)((d / 1000000) % 60),
+                 (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)(d % 1000000));
+    ଅନ୍ୟଥା ଯଦି (d > 60*1000000)
         snprintf(buf, size, "%d:%02d.%06d",
-                 (int)(d / 60000000),
-                 (int)((d / 1000000) % 60),
-                 (int)(d % 1000000));
-    else
+                 (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)(d / 60000000),
+                 (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)((d / 1000000) % 60),
+                 (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)(d % 1000000));
+    ଅନ୍ୟଥା
         snprintf(buf, size, "%d.%06d",
-                 (int)(d / 1000000),
-                 (int)(d % 1000000));
+                 (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)(d / 1000000),
+                 (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)(d % 1000000));
     e = buf + strlen(buf);
-    while (e > buf && e[-1] == '0')
+    ଯେତେବେଳେ (e > buf && e[-1] == '0')
         *(--e) = 0;
-    if (e > buf && e[-1] == '.')
+    ଯଦି (e > buf && e[-1] == '.')
         *(--e) = 0;
 }
 
-static int opt_get_elem(const AVOption *o, uint8_t **pbuf, size_t buf_len,
-                        const void *dst, int search_flags)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_get_elem(ଅଚଳ AVOption *o, uint8_t **pbuf, size_t buf_len,
+                        ଅଚଳ ଶୂନ୍ୟ *dst, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    int ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    switch (TYPE_BASE(o->type)) {
-    case AV_OPT_TYPE_BOOL:
-        ret = snprintf(*pbuf, buf_len, "%s", get_bool_name(*(int *)dst));
-        break;
-    case AV_OPT_TYPE_FLAGS:
-        ret = snprintf(*pbuf, buf_len, "0x%08X", *(int *)dst);
-        break;
-    case AV_OPT_TYPE_INT:
-        ret = snprintf(*pbuf, buf_len, "%d", *(int *)dst);
-        break;
-    case AV_OPT_TYPE_UINT:
+    ବାଛ (TYPE_BASE(o->type)) {
+    ସ୍ଥିତି AV_OPT_TYPE_BOOL:
+        ret = snprintf(*pbuf, buf_len, "%s", get_bool_name(*(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst));
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_FLAGS:
+        ret = snprintf(*pbuf, buf_len, "0x%08X", *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst);
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_INT:
+        ret = snprintf(*pbuf, buf_len, "%d", *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst);
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_UINT:
         ret = snprintf(*pbuf, buf_len, "%u", *(unsigned *)dst);
-        break;
-    case AV_OPT_TYPE_INT64:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_INT64:
         ret = snprintf(*pbuf, buf_len, "%"PRId64, *(int64_t *)dst);
-        break;
-    case AV_OPT_TYPE_UINT64:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_UINT64:
         ret = snprintf(*pbuf, buf_len, "%"PRIu64, *(uint64_t *)dst);
-        break;
-    case AV_OPT_TYPE_FLOAT:
-        ret = snprintf(*pbuf, buf_len, "%f", *(float *)dst);
-        break;
-    case AV_OPT_TYPE_DOUBLE:
-        ret = snprintf(*pbuf, buf_len, "%f", *(double *)dst);
-        break;
-    case AV_OPT_TYPE_VIDEO_RATE:
-    case AV_OPT_TYPE_RATIONAL:
-        ret = snprintf(*pbuf, buf_len, "%d/%d", ((AVRational *)dst)->num, ((AVRational *)dst)->den);
-        break;
-    case AV_OPT_TYPE_CONST:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_FLOAT:
+        ret = snprintf(*pbuf, buf_len, "%f", *(ଦଶମିକ *)dst);
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+        ret = snprintf(*pbuf, buf_len, "%f", *(ଦ୍ୱିଗୁଣ *)dst);
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_VIDEO_RATE:
+    ସ୍ଥିତି AV_OPT_TYPE_RATIONAL:
+        ret = snprintf(*pbuf, buf_len, "%d/%d", ((AVRational *)dst)->ଅଙ୍କ, ((AVRational *)dst)->den);
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_CONST:
         ret = snprintf(*pbuf, buf_len, "%"PRId64, o->default_val.i64);
-        break;
-    case AV_OPT_TYPE_STRING:
-        if (*(uint8_t **)dst) {
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_STRING:
+        ଯଦି (*(uint8_t **)dst) {
             *pbuf = av_strdup(*(uint8_t **)dst);
-        } else if (search_flags & AV_OPT_ALLOW_NULL) {
-            *pbuf = NULL;
-            return 0;
-        } else {
+        } ଅନ୍ୟଥା ଯଦି (ସନ୍ଧାନ_flags & AV_OPT_ALLOW_NULL) {
+            *pbuf = ଖାଲି;
+            ଫେରନ୍ତୁ 0;
+        } ଅନ୍ୟଥା {
             *pbuf = av_strdup("");
         }
-        return *pbuf ? 0 : AVERROR(ENOMEM);
-    case AV_OPT_TYPE_BINARY: {
-        const uint8_t *bin;
-        int len;
+        ଫେରନ୍ତୁ *pbuf ? 0 : AVERROR(ENOMEM);
+    ସ୍ଥିତି AV_OPT_TYPE_ଦ୍ୱିମିକ: {
+        ଅଚଳ uint8_t *bin;
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା len;
 
-        if (!*(uint8_t **)dst && (search_flags & AV_OPT_ALLOW_NULL)) {
-            *pbuf = NULL;
-            return 0;
+        ଯଦି (!*(uint8_t **)dst && (ସନ୍ଧାନ_flags & AV_OPT_ALLOW_NULL)) {
+            *pbuf = ଖାଲି;
+            ଫେରନ୍ତୁ 0;
         }
-        len = *(int *)(((uint8_t *)dst) + sizeof(uint8_t *));
-        if ((uint64_t)len * 2 + 1 > INT_MAX)
-            return AVERROR(EINVAL);
-        if (!(*pbuf = av_malloc(len * 2 + 1)))
-            return AVERROR(ENOMEM);
-        if (!len) {
+        len = *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)(((uint8_t *)dst) + ଆକାର(uint8_t *));
+        ଯଦି ((uint64_t)len * 2 + 1 > INT_MAX)
+            ଫେରନ୍ତୁ AVERROR(EINVAL);
+        ଯଦି (!(*pbuf = av_malloc(len * 2 + 1)))
+            ଫେରନ୍ତୁ AVERROR(ENOMEM);
+        ଯଦି (!len) {
             *pbuf[0] = '\0';
-            return 0;
+            ଫେରନ୍ତୁ 0;
         }
         bin = *(uint8_t **)dst;
-        for (int i = 0; i < len; i++)
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < len; i++)
             snprintf(*pbuf + i * 2, 3, "%02X", bin[i]);
-        return 0;
+        ଫେରନ୍ତୁ 0;
     }
-    case AV_OPT_TYPE_IMAGE_SIZE:
-        ret = snprintf(*pbuf, buf_len, "%dx%d", ((int *)dst)[0], ((int *)dst)[1]);
-        break;
-    case AV_OPT_TYPE_PIXEL_FMT:
-        ret = snprintf(*pbuf, buf_len, "%s", (char *)av_x_if_null(av_get_pix_fmt_name(*(enum AVPixelFormat *)dst), "none"));
-        break;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        ret = snprintf(*pbuf, buf_len, "%s", (char *)av_x_if_null(av_get_sample_fmt_name(*(enum AVSampleFormat *)dst), "none"));
-        break;
-    case AV_OPT_TYPE_DURATION: {
+    ସ୍ଥିତି AV_OPT_TYPE_IMAGE_SIZE:
+        ret = snprintf(*pbuf, buf_len, "%dx%d", ((ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst)[0], ((ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst)[1]);
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:
+        ret = snprintf(*pbuf, buf_len, "%s", (ଅକ୍ଷର *)av_x_if_null(av_get_pix_fmt_name(*(ଗଣନା AVPixelFormat *)dst), "none"));
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT:
+        ret = snprintf(*pbuf, buf_len, "%s", (ଅକ୍ଷର *)av_x_if_null(av_get_sample_fmt_name(*(ଗଣନା AVSampleFormat *)dst), "none"));
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_DURATION: {
         int64_t i64 = *(int64_t *)dst;
         format_duration(*pbuf, buf_len, i64);
         ret = strlen(*pbuf); // no overflow possible, checked by an assert
-        break;
+        ଭାଙ୍ଗ;
     }
-    case AV_OPT_TYPE_COLOR:
+    ସ୍ଥିତି AV_OPT_TYPE_COLOR:
         ret = snprintf(*pbuf, buf_len, "0x%02x%02x%02x%02x",
-                       (int)((uint8_t *)dst)[0], (int)((uint8_t *)dst)[1],
-                       (int)((uint8_t *)dst)[2], (int)((uint8_t *)dst)[3]);
-        break;
-    case AV_OPT_TYPE_CHLAYOUT:
+                       (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)((uint8_t *)dst)[0], (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)((uint8_t *)dst)[1],
+                       (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)((uint8_t *)dst)[2], (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)((uint8_t *)dst)[3]);
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_CHLAYOUT:
         ret = av_channel_layout_describe(dst, *pbuf, buf_len);
-        break;
-    case AV_OPT_TYPE_DICT:
-        if (!*(AVDictionary **)dst && (search_flags & AV_OPT_ALLOW_NULL)) {
-            *pbuf = NULL;
-            return 0;
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_DICT:
+        ଯଦି (!*(AVDictionary **)dst && (ସନ୍ଧାନ_flags & AV_OPT_ALLOW_NULL)) {
+            *pbuf = ଖାଲି;
+            ଫେରନ୍ତୁ 0;
         }
-        return av_dict_get_string(*(AVDictionary **)dst, (char **)pbuf, '=', ':');
-    default:
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ av_dict_get_string(*(AVDictionary **)dst, (ଅକ୍ଷର **)pbuf, '=', ':');
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-static int opt_get_array(const AVOption *o, void *dst, uint8_t **out_val)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_get_array(ଅଚଳ AVOption *o, ଶୂନ୍ୟ *dst, uint8_t **out_val)
 {
-    const unsigned count = *opt_array_pcount(dst);
-    const uint8_t    sep = opt_array_sep(o);
+    ଅଚଳ unsigned ଗଣନା_2 = *opt_array_pcount(dst);
+    ଅଚଳ uint8_t    sep = opt_array_sep(o);
 
-    uint8_t *str     = NULL;
+    uint8_t *str     = ଖାଲି;
     size_t   str_len = 0;
-    int ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    *out_val = NULL;
+    *out_val = ଖାଲି;
 
-    for (unsigned i = 0; i < count; i++) {
+    ପାଇଁ (unsigned i = 0; i < ଗଣନା_2; i++) {
         uint8_t buf[128], *out = buf;
         size_t out_len;
 
-        ret = opt_get_elem(o, &out, sizeof(buf),
-                           opt_array_pelem(o, *(void **)dst, i), 0);
-        if (ret < 0)
-            goto fail;
+        ret = opt_get_elem(o, &out, ଆକାର(buf),
+                           opt_array_pelem(o, *(ଶୂନ୍ୟ **)dst, i), 0);
+        ଯଦି (ret < 0)
+            ଯାଅ fail;
 
         out_len = strlen(out);
-        if (out_len > SIZE_MAX / 2 - !!i ||
+        ଯଦି (out_len > SIZE_MAX / 2 - !!i ||
             !!i + out_len * 2 > SIZE_MAX - str_len - 1) {
             ret = AVERROR(ERANGE);
-            goto fail;
+            ଯାଅ fail;
         }
 
         //                         terminator     escaping  separator
         //                                ↓             ↓     ↓
         ret = av_reallocp(&str, str_len + 1 + out_len * 2 + !!i);
-        if (ret < 0)
-            goto fail;
+        ଯଦି (ret < 0)
+            ଯାଅ fail;
 
         // add separator if needed
-        if (i)
+        ଯଦି (i)
             str[str_len++] = sep;
 
         // escape the element
-        for (unsigned j = 0; j < out_len; j++) {
+        ପାଇଁ (unsigned j = 0; j < out_len; j++) {
             uint8_t val = out[j];
-            if (val == sep || val == '\\')
+            ଯଦି (val == sep || val == '\\')
                 str[str_len++] = '\\';
             str[str_len++] = val;
         }
         str[str_len] = 0;
 
 fail:
-        if (out != buf)
+        ଯଦି (out != buf)
             av_freep(&out);
-        if (ret < 0) {
+        ଯଦି (ret < 0) {
             av_freep(&str);
-            return ret;
+            ଫେରନ୍ତୁ ret;
         }
     }
 
     *out_val = str;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_get(void *obj, const char *name, int search_flags, uint8_t **out_val)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, uint8_t **out_val)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
+    ଶୂନ୍ୟ *dst, *target_obj;
+    ଅଚଳ AVOption *o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &target_obj);
     uint8_t *out, buf[128];
-    int ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    if (!o || !target_obj || (o->offset<=0 && o->type != AV_OPT_TYPE_CONST))
-        return AVERROR_OPTION_NOT_FOUND;
+    ଯଦି (!o || !target_obj || (o->offset<=0 && o->type != AV_OPT_TYPE_CONST))
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
 
-    if (o->flags & AV_OPT_FLAG_DEPRECATED)
+    ଯଦି (o->flags & AV_OPT_FLAG_DEPRECATED)
         av_log(obj, AV_LOG_WARNING, "The \"%s\" option is deprecated: %s\n", name, o->help);
 
     dst = (uint8_t *)target_obj + o->offset;
 
-    if (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
+    ଯଦି (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
         ret = opt_get_array(o, dst, out_val);
-        if (ret < 0)
-            return ret;
-        if (!*out_val && !(search_flags & AV_OPT_ALLOW_NULL)) {
+        ଯଦି (ret < 0)
+            ଫେରନ୍ତୁ ret;
+        ଯଦି (!*out_val && !(ସନ୍ଧାନ_flags & AV_OPT_ALLOW_NULL)) {
             *out_val = av_strdup("");
-            if (!*out_val)
-               return AVERROR(ENOMEM);
+            ଯଦି (!*out_val)
+               ଫେରନ୍ତୁ AVERROR(ENOMEM);
         }
-        return 0;
+        ଫେରନ୍ତୁ 0;
     }
 
     buf[0] = 0;
     out = buf;
-    ret = opt_get_elem(o, &out, sizeof(buf), dst, search_flags);
-    if (ret < 0)
-        return ret;
-    if (out != buf) {
+    ret = opt_get_elem(o, &out, ଆକାର(buf), dst, ସନ୍ଧାନ_flags);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
+    ଯଦି (out != buf) {
         *out_val = out;
-        return 0;
+        ଫେରନ୍ତୁ 0;
     }
 
-    if (ret >= sizeof(buf))
-        return AVERROR(EINVAL);
+    ଯଦି (ret >= ଆକାର(buf))
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     *out_val = av_strdup(out);
-    return *out_val ? 0 : AVERROR(ENOMEM);
+    ଫେରନ୍ତୁ *out_val ? 0 : AVERROR(ENOMEM);
 }
 
-static int get_number(void *obj, const char *name, double *num, int *den, int64_t *intnum,
-                      int search_flags)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା get_ସଂଖ୍ୟା(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଦ୍ୱିଗୁଣ *ଅଙ୍କ, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *den, int64_t *intnum,
+                      ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type & AV_OPT_TYPE_FLAG_ARRAY)
-        return AVERROR(EINVAL);
+    ଶୂନ୍ୟ *dst, *target_obj;
+    ଅଚଳ AVOption *o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &target_obj);
+    ଯଦି (!o || !target_obj)
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
+    ଯଦି (o->type & AV_OPT_TYPE_FLAG_ARRAY)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     dst = ((uint8_t *)target_obj) + o->offset;
 
-    return read_number(o, dst, num, den, intnum);
+    ଫେରନ୍ତୁ read_ସଂଖ୍ୟା(o, dst, ଅଙ୍କ, den, intnum);
 }
 
-int av_opt_get_int(void *obj, const char *name, int search_flags, int64_t *out_val)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_int(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, int64_t *out_val)
 {
     int64_t intnum = 1;
-    double num = 1;
-    int ret, den = 1;
+    ଦ୍ୱିଗୁଣ ଅଙ୍କ = 1;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret, den = 1;
 
-    if ((ret = get_number(obj, name, &num, &den, &intnum, search_flags)) < 0)
-        return ret;
-    if (num == den)
+    ଯଦି ((ret = get_ସଂଖ୍ୟା(obj, name, &ଅଙ୍କ, &den, &intnum, ସନ୍ଧାନ_flags)) < 0)
+        ଫେରନ୍ତୁ ret;
+    ଯଦି (ଅଙ୍କ == den)
         *out_val = intnum;
-    else
-        *out_val = num * intnum / den;
-    return 0;
+    ଅନ୍ୟଥା
+        *out_val = ଅଙ୍କ * intnum / den;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_get_double(void *obj, const char *name, int search_flags, double *out_val)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_double(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, ଦ୍ୱିଗୁଣ *out_val)
 {
     int64_t intnum = 1;
-    double num = 1;
-    int ret, den = 1;
+    ଦ୍ୱିଗୁଣ ଅଙ୍କ = 1;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret, den = 1;
 
-    if ((ret = get_number(obj, name, &num, &den, &intnum, search_flags)) < 0)
-        return ret;
-    *out_val = num * intnum / den;
-    return 0;
+    ଯଦି ((ret = get_ସଂଖ୍ୟା(obj, name, &ଅଙ୍କ, &den, &intnum, ସନ୍ଧାନ_flags)) < 0)
+        ଫେରନ୍ତୁ ret;
+    *out_val = ଅଙ୍କ * intnum / den;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_get_q(void *obj, const char *name, int search_flags, AVRational *out_val)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_q(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, AVRational *out_val)
 {
     int64_t intnum = 1;
-    double num = 1;
-    int ret, den = 1;
+    ଦ୍ୱିଗୁଣ ଅଙ୍କ = 1;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret, den = 1;
 
-    if ((ret = get_number(obj, name, &num, &den, &intnum, search_flags)) < 0)
-        return ret;
+    ଯଦି ((ret = get_ସଂଖ୍ୟା(obj, name, &ଅଙ୍କ, &den, &intnum, ସନ୍ଧାନ_flags)) < 0)
+        ଫେରନ୍ତୁ ret;
 
-    if (num == 1.0 && (int)intnum == intnum)
+    ଯଦି (ଅଙ୍କ == 1.0 && (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)intnum == intnum)
         *out_val = (AVRational){intnum, den};
-    else
-        *out_val = double_to_rational(num*intnum/den);
-    return 0;
+    ଅନ୍ୟଥା
+        *out_val = double_to_rational(ଅଙ୍କ*intnum/den);
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_get_image_size(void *obj, const char *name, int search_flags, int *w_out, int *h_out)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_image_size(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *w_out, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *h_out)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != AV_OPT_TYPE_IMAGE_SIZE) {
+    ଶୂନ୍ୟ *dst, *target_obj;
+    ଅଚଳ AVOption *o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &target_obj);
+    ଯଦି (!o || !target_obj)
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
+    ଯଦି (o->type != AV_OPT_TYPE_IMAGE_SIZE) {
         av_log(obj, AV_LOG_ERROR,
                "The value for option '%s' is not a image size.\n", name);
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
     dst = ((uint8_t*)target_obj) + o->offset;
-    if (w_out) *w_out = *(int *)dst;
-    if (h_out) *h_out = *((int *)dst+1);
-    return 0;
+    ଯଦି (w_out) *w_out = *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst;
+    ଯଦି (h_out) *h_out = *((ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst+1);
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_get_video_rate(void *obj, const char *name, int search_flags, AVRational *out_val)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_video_rate(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, AVRational *out_val)
 {
-    return av_opt_get_q(obj, name, search_flags, out_val);
+    ଫେରନ୍ତୁ av_opt_get_q(obj, name, ସନ୍ଧାନ_flags, out_val);
 }
 
-static int get_format(void *obj, const char *name, int search_flags, void *out_fmt,
-                      enum AVOptionType type, const char *desc)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା get_format(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, ଶୂନ୍ୟ *out_fmt,
+                      ଗଣନା AVOptionType type, ଅଚଳ ଅକ୍ଷର *desc)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != type) {
+    ଶୂନ୍ୟ *dst, *target_obj;
+    ଅଚଳ AVOption *o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &target_obj);
+    ଯଦି (!o || !target_obj)
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
+    ଯଦି (o->type != type) {
         av_log(obj, AV_LOG_ERROR,
                "The value for option '%s' is not a %s format.\n", desc, name);
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
     dst = ((uint8_t*)target_obj) + o->offset;
-    if (type == AV_OPT_TYPE_PIXEL_FMT)
-        *(enum AVPixelFormat *)out_fmt = *(enum AVPixelFormat *)dst;
-    else
-        *(enum AVSampleFormat*)out_fmt = *(enum AVSampleFormat*)dst;
+    ଯଦି (type == AV_OPT_TYPE_PIXEL_FMT)
+        *(ଗଣନା AVPixelFormat *)out_fmt = *(ଗଣନା AVPixelFormat *)dst;
+    ଅନ୍ୟଥା
+        *(ଗଣନା AVSampleFormat*)out_fmt = *(ଗଣନା AVSampleFormat*)dst;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_get_pixel_fmt(void *obj, const char *name, int search_flags, enum AVPixelFormat *out_fmt)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_pixel_fmt(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, ଗଣନା AVPixelFormat *out_fmt)
 {
-    return get_format(obj, name, search_flags, out_fmt, AV_OPT_TYPE_PIXEL_FMT, "pixel");
+    ଫେରନ୍ତୁ get_format(obj, name, ସନ୍ଧାନ_flags, out_fmt, AV_OPT_TYPE_PIXEL_FMT, "pixel");
 }
 
-int av_opt_get_sample_fmt(void *obj, const char *name, int search_flags, enum AVSampleFormat *out_fmt)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_sample_fmt(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, ଗଣନା AVSampleFormat *out_fmt)
 {
-    return get_format(obj, name, search_flags, out_fmt, AV_OPT_TYPE_SAMPLE_FMT, "sample");
+    ଫେରନ୍ତୁ get_format(obj, name, ସନ୍ଧାନ_flags, out_fmt, AV_OPT_TYPE_SAMPLE_FMT, "sample");
 }
 
-int av_opt_get_chlayout(void *obj, const char *name, int search_flags, AVChannelLayout *cl)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_chlayout(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, AVChannelLayout *cl)
 {
-    void *dst, *target_obj;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != AV_OPT_TYPE_CHLAYOUT) {
+    ଶୂନ୍ୟ *dst, *target_obj;
+    ଅଚଳ AVOption *o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &target_obj);
+    ଯଦି (!o || !target_obj)
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
+    ଯଦି (o->type != AV_OPT_TYPE_CHLAYOUT) {
         av_log(obj, AV_LOG_ERROR,
                "The value for option '%s' is not a channel layout.\n", name);
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
     dst = ((uint8_t*)target_obj) + o->offset;
-    return av_channel_layout_copy(cl, dst);
+    ଫେରନ୍ତୁ av_channel_layout_copy(cl, dst);
 }
 
-int av_opt_get_dict_val(void *obj, const char *name, int search_flags, AVDictionary **out_val)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_dict_val(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, AVDictionary **out_val)
 {
-    void *target_obj;
+    ଶୂନ୍ୟ *target_obj;
     AVDictionary *src;
-    const AVOption *o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
+    ଅଚଳ AVOption *o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &target_obj);
 
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (o->type != AV_OPT_TYPE_DICT)
-        return AVERROR(EINVAL);
+    ଯଦି (!o || !target_obj)
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
+    ଯଦି (o->type != AV_OPT_TYPE_DICT)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     src = *(AVDictionary **)(((uint8_t *)target_obj) + o->offset);
 
-    return av_dict_copy(out_val, src, 0);
+    ଫେରନ୍ତୁ av_dict_copy(out_val, src, 0);
 }
 
-int av_opt_flag_is_set(void *obj, const char *field_name, const char *flag_name)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_flag_is_set(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *field_name, ଅଚଳ ଅକ୍ଷର *flag_name)
 {
-    const AVOption *field = av_opt_find(obj, field_name, NULL, 0, 0);
-    const AVOption *flag  = av_opt_find(obj, flag_name,
-                                        field ? field->unit : NULL, 0, 0);
+    ଅଚଳ AVOption *field = av_opt_find(obj, field_name, ଖାଲି, 0, 0);
+    ଅଚଳ AVOption *flag  = av_opt_find(obj, flag_name,
+                                        field ? field->unit : ଖାଲି, 0, 0);
     int64_t res;
 
-    if (!field || !flag || flag->type != AV_OPT_TYPE_CONST ||
+    ଯଦି (!field || !flag || flag->type != AV_OPT_TYPE_CONST ||
         av_opt_get_int(obj, field_name, 0, &res) < 0)
-        return 0;
-    return res & flag->default_val.i64;
+        ଫେରନ୍ତୁ 0;
+    ଫେରନ୍ତୁ res & flag->default_val.i64;
 }
 
-static void log_int_value(void *av_log_obj, int level, int64_t i)
+ସ୍ଥିର ଶୂନ୍ୟ log_int_ମୂଲ୍ୟ(ଶୂନ୍ୟ *av_log_obj, ପୂର୍ଣ୍ଣସଂଖ୍ୟା level, int64_t i)
 {
-    if (i == INT_MAX) {
+    ଯଦି (i == INT_MAX) {
         av_log(av_log_obj, level, "INT_MAX");
-    } else if (i == INT_MIN) {
+    } ଅନ୍ୟଥା ଯଦି (i == INT_MIN) {
         av_log(av_log_obj, level, "INT_MIN");
-    } else if (i == UINT32_MAX) {
+    } ଅନ୍ୟଥା ଯଦି (i == UINT32_MAX) {
         av_log(av_log_obj, level, "UINT32_MAX");
-    } else if (i == INT64_MAX) {
+    } ଅନ୍ୟଥା ଯଦି (i == INT64_MAX) {
         av_log(av_log_obj, level, "I64_MAX");
-    } else if (i == INT64_MIN) {
+    } ଅନ୍ୟଥା ଯଦି (i == INT64_MIN) {
         av_log(av_log_obj, level, "I64_MIN");
-    } else {
+    } ଅନ୍ୟଥା {
         av_log(av_log_obj, level, "%"PRId64, i);
     }
 }
 
-static void log_value(void *av_log_obj, int level, double d)
+ସ୍ଥିର ଶୂନ୍ୟ log_ମୂଲ୍ୟ(ଶୂନ୍ୟ *av_log_obj, ପୂର୍ଣ୍ଣସଂଖ୍ୟା level, ଦ୍ୱିଗୁଣ d)
 {
-    if      (d == INT_MAX) {
+    ଯଦି      (d == INT_MAX) {
         av_log(av_log_obj, level, "INT_MAX");
-    } else if (d == INT_MIN) {
+    } ଅନ୍ୟଥା ଯଦି (d == INT_MIN) {
         av_log(av_log_obj, level, "INT_MIN");
-    } else if (d == UINT32_MAX) {
+    } ଅନ୍ୟଥା ଯଦି (d == UINT32_MAX) {
         av_log(av_log_obj, level, "UINT32_MAX");
-    } else if (d == (double)INT64_MAX) {
+    } ଅନ୍ୟଥା ଯଦି (d == (ଦ୍ୱିଗୁଣ)INT64_MAX) {
         av_log(av_log_obj, level, "I64_MAX");
-    } else if (d == INT64_MIN) {
+    } ଅନ୍ୟଥା ଯଦି (d == INT64_MIN) {
         av_log(av_log_obj, level, "I64_MIN");
-    } else if (d == FLT_MAX) {
+    } ଅନ୍ୟଥା ଯଦି (d == FLT_MAX) {
         av_log(av_log_obj, level, "FLT_MAX");
-    } else if (d == FLT_MIN) {
+    } ଅନ୍ୟଥା ଯଦି (d == FLT_MIN) {
         av_log(av_log_obj, level, "FLT_MIN");
-    } else if (d == -FLT_MAX) {
+    } ଅନ୍ୟଥା ଯଦି (d == -FLT_MAX) {
         av_log(av_log_obj, level, "-FLT_MAX");
-    } else if (d == -FLT_MIN) {
+    } ଅନ୍ୟଥା ଯଦି (d == -FLT_MIN) {
         av_log(av_log_obj, level, "-FLT_MIN");
-    } else if (d == DBL_MAX) {
+    } ଅନ୍ୟଥା ଯଦି (d == DBL_MAX) {
         av_log(av_log_obj, level, "DBL_MAX");
-    } else if (d == DBL_MIN) {
+    } ଅନ୍ୟଥା ଯଦି (d == DBL_MIN) {
         av_log(av_log_obj, level, "DBL_MIN");
-    } else if (d == -DBL_MAX) {
+    } ଅନ୍ୟଥା ଯଦି (d == -DBL_MAX) {
         av_log(av_log_obj, level, "-DBL_MAX");
-    } else if (d == -DBL_MIN) {
+    } ଅନ୍ୟଥା ଯଦି (d == -DBL_MIN) {
         av_log(av_log_obj, level, "-DBL_MIN");
-    } else {
+    } ଅନ୍ୟଥା {
         av_log(av_log_obj, level, "%g", d);
     }
 }
 
-static const char *get_opt_const_name(void *obj, const char *unit, int64_t value)
+ସ୍ଥିର ଅଚଳ ଅକ୍ଷର *get_opt_const_name(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *unit, int64_t ମୂଲ୍ୟ)
 {
-    const AVOption *opt = NULL;
+    ଅଚଳ AVOption *opt = ଖାଲି;
 
-    if (!unit)
-        return NULL;
-    while ((opt = av_opt_next(obj, opt)))
-        if (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
-            opt->default_val.i64 == value)
-            return opt->name;
-    return NULL;
+    ଯଦି (!unit)
+        ଫେରନ୍ତୁ ଖାଲି;
+    ଯେତେବେଳେ ((opt = av_opt_next(obj, opt)))
+        ଯଦି (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
+            opt->default_val.i64 == ମୂଲ୍ୟ)
+            ଫେରନ୍ତୁ opt->name;
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
-static char *get_opt_flags_string(void *obj, const char *unit, int64_t value)
+ସ୍ଥିର ଅକ୍ଷର *get_opt_flags_string(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *unit, int64_t ମୂଲ୍ୟ)
 {
-    const AVOption *opt = NULL;
-    char flags[512];
+    ଅଚଳ AVOption *opt = ଖାଲି;
+    ଅକ୍ଷର flags[512];
 
     flags[0] = 0;
-    if (!unit)
-        return NULL;
-    while ((opt = av_opt_next(obj, opt))) {
-        if (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
-            opt->default_val.i64 & value) {
-            if (flags[0])
-                av_strlcatf(flags, sizeof(flags), "+");
-            av_strlcatf(flags, sizeof(flags), "%s", opt->name);
+    ଯଦି (!unit)
+        ଫେରନ୍ତୁ ଖାଲି;
+    ଯେତେବେଳେ ((opt = av_opt_next(obj, opt))) {
+        ଯଦି (opt->type == AV_OPT_TYPE_CONST && !strcmp(opt->unit, unit) &&
+            opt->default_val.i64 & ମୂଲ୍ୟ) {
+            ଯଦି (flags[0])
+                av_strlcatf(flags, ଆକାର(flags), "+");
+            av_strlcatf(flags, ଆକାର(flags), "%s", opt->name);
         }
     }
-    if (flags[0])
-        return av_strdup(flags);
-    return NULL;
+    ଯଦି (flags[0])
+        ଫେରନ୍ତୁ av_strdup(flags);
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
-static void log_type(void *av_log_obj, const AVOption *o,
-                     enum AVOptionType parent_type)
+ସ୍ଥିର ଶୂନ୍ୟ log_type(ଶୂନ୍ୟ *av_log_obj, ଅଚଳ AVOption *o,
+                     ଗଣନା AVOptionType parent_type)
 {
-    const enum AVOptionType type = TYPE_BASE(o->type);
+    ଅଚଳ ଗଣନା AVOptionType type = TYPE_BASE(o->type);
 
-    if (o->type == AV_OPT_TYPE_CONST && (TYPE_BASE(parent_type) == AV_OPT_TYPE_INT || TYPE_BASE(parent_type) == AV_OPT_TYPE_INT64))
+    ଯଦି (o->type == AV_OPT_TYPE_CONST && (TYPE_BASE(parent_type) == AV_OPT_TYPE_INT || TYPE_BASE(parent_type) == AV_OPT_TYPE_INT64))
         av_log(av_log_obj, AV_LOG_INFO, "%-12"PRId64" ", o->default_val.i64);
-    else if (type < FF_ARRAY_ELEMS(opt_type_desc) && opt_type_desc[type].name) {
-        if (o->type & AV_OPT_TYPE_FLAG_ARRAY)
+    ଅନ୍ୟଥା ଯଦି (type < FF_ARRAY_ELEMS(opt_type_desc) && opt_type_desc[type].name) {
+        ଯଦି (o->type & AV_OPT_TYPE_FLAG_ARRAY)
             av_log(av_log_obj, AV_LOG_INFO, "[%-10s]", opt_type_desc[type].name);
-        else
+        ଅନ୍ୟଥା
             av_log(av_log_obj, AV_LOG_INFO, "%-12s ", opt_type_desc[type].name);
     }
-    else
+    ଅନ୍ୟଥା
         av_log(av_log_obj, AV_LOG_INFO, "%-12s ", "");
 }
 
-static void log_default(void *obj, void *av_log_obj, const AVOption *opt)
+ସ୍ଥିର ଶୂନ୍ୟ log_default(ଶୂନ୍ୟ *obj, ଶୂନ୍ୟ *av_log_obj, ଅଚଳ AVOption *opt)
 {
-    if (opt->type == AV_OPT_TYPE_CONST || opt->type == AV_OPT_TYPE_BINARY)
-        return;
-    if ((opt->type == AV_OPT_TYPE_COLOR      ||
+    ଯଦି (opt->type == AV_OPT_TYPE_CONST || opt->type == AV_OPT_TYPE_ଦ୍ୱିମିକ)
+        ଫେରନ୍ତୁ;
+    ଯଦି ((opt->type == AV_OPT_TYPE_COLOR      ||
          opt->type == AV_OPT_TYPE_IMAGE_SIZE ||
          opt->type == AV_OPT_TYPE_STRING     ||
          opt->type == AV_OPT_TYPE_DICT       ||
          opt->type == AV_OPT_TYPE_CHLAYOUT   ||
          opt->type == AV_OPT_TYPE_VIDEO_RATE) &&
         !opt->default_val.str)
-        return;
+        ଫେରନ୍ତୁ;
 
-    if (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
-        const AVOptionArrayDef *arr = opt->default_val.arr;
-        if (arr && arr->def)
+    ଯଦି (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
+        ଅଚଳ AVOptionArrayDef *arr = opt->default_val.arr;
+        ଯଦି (arr && arr->def)
             av_log(av_log_obj, AV_LOG_INFO, " (default %s)", arr->def);
-        return;
+        ଫେରନ୍ତୁ;
     }
 
     av_log(av_log_obj, AV_LOG_INFO, " (default ");
-    switch (opt->type) {
-    case AV_OPT_TYPE_BOOL:
+    ବାଛ (opt->type) {
+    ସ୍ଥିତି AV_OPT_TYPE_BOOL:
         av_log(av_log_obj, AV_LOG_INFO, "%s", get_bool_name(opt->default_val.i64));
-        break;
-    case AV_OPT_TYPE_FLAGS: {
-        char *def_flags = get_opt_flags_string(obj, opt->unit, opt->default_val.i64);
-        if (def_flags) {
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_FLAGS: {
+        ଅକ୍ଷର *def_flags = get_opt_flags_string(obj, opt->unit, opt->default_val.i64);
+        ଯଦି (def_flags) {
             av_log(av_log_obj, AV_LOG_INFO, "%s", def_flags);
             av_freep(&def_flags);
-        } else {
+        } ଅନ୍ୟଥା {
             av_log(av_log_obj, AV_LOG_INFO, "%"PRIX64, opt->default_val.i64);
         }
-        break;
+        ଭାଙ୍ଗ;
     }
-    case AV_OPT_TYPE_DURATION: {
-        char buf[25];
-        format_duration(buf, sizeof(buf), opt->default_val.i64);
+    ସ୍ଥିତି AV_OPT_TYPE_DURATION: {
+        ଅକ୍ଷର buf[25];
+        format_duration(buf, ଆକାର(buf), opt->default_val.i64);
         av_log(av_log_obj, AV_LOG_INFO, "%s", buf);
-        break;
+        ଭାଙ୍ଗ;
     }
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_INT64: {
-        const char *def_const = get_opt_const_name(obj, opt->unit, opt->default_val.i64);
-        if (def_const)
+    ସ୍ଥିତି AV_OPT_TYPE_UINT:
+    ସ୍ଥିତି AV_OPT_TYPE_INT:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT64:
+    ସ୍ଥିତି AV_OPT_TYPE_INT64: {
+        ଅଚଳ ଅକ୍ଷର *def_const = get_opt_const_name(obj, opt->unit, opt->default_val.i64);
+        ଯଦି (def_const)
             av_log(av_log_obj, AV_LOG_INFO, "%s", def_const);
-        else
-            log_int_value(av_log_obj, AV_LOG_INFO, opt->default_val.i64);
-        break;
+        ଅନ୍ୟଥା
+            log_int_ମୂଲ୍ୟ(av_log_obj, AV_LOG_INFO, opt->default_val.i64);
+        ଭାଙ୍ଗ;
     }
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_FLOAT:
-        log_value(av_log_obj, AV_LOG_INFO, opt->default_val.dbl);
-        break;
-    case AV_OPT_TYPE_RATIONAL: {
+    ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+    ସ୍ଥିତି AV_OPT_TYPE_FLOAT:
+        log_ମୂଲ୍ୟ(av_log_obj, AV_LOG_INFO, opt->default_val.dbl);
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_RATIONAL: {
         AVRational q = av_d2q(opt->default_val.dbl, INT_MAX);
-        av_log(av_log_obj, AV_LOG_INFO, "%d/%d", q.num, q.den); }
-        break;
-    case AV_OPT_TYPE_PIXEL_FMT:
-        av_log(av_log_obj, AV_LOG_INFO, "%s", (char *)av_x_if_null(av_get_pix_fmt_name(opt->default_val.i64), "none"));
-        break;
-    case AV_OPT_TYPE_SAMPLE_FMT:
-        av_log(av_log_obj, AV_LOG_INFO, "%s", (char *)av_x_if_null(av_get_sample_fmt_name(opt->default_val.i64), "none"));
-        break;
-    case AV_OPT_TYPE_COLOR:
-    case AV_OPT_TYPE_IMAGE_SIZE:
-    case AV_OPT_TYPE_STRING:
-    case AV_OPT_TYPE_DICT:
-    case AV_OPT_TYPE_VIDEO_RATE:
-    case AV_OPT_TYPE_CHLAYOUT:
+        av_log(av_log_obj, AV_LOG_INFO, "%d/%d", q.ଅଙ୍କ, q.den); }
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:
+        av_log(av_log_obj, AV_LOG_INFO, "%s", (ଅକ୍ଷର *)av_x_if_null(av_get_pix_fmt_name(opt->default_val.i64), "none"));
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT:
+        av_log(av_log_obj, AV_LOG_INFO, "%s", (ଅକ୍ଷର *)av_x_if_null(av_get_sample_fmt_name(opt->default_val.i64), "none"));
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_COLOR:
+    ସ୍ଥିତି AV_OPT_TYPE_IMAGE_SIZE:
+    ସ୍ଥିତି AV_OPT_TYPE_STRING:
+    ସ୍ଥିତି AV_OPT_TYPE_DICT:
+    ସ୍ଥିତି AV_OPT_TYPE_VIDEO_RATE:
+    ସ୍ଥିତି AV_OPT_TYPE_CHLAYOUT:
         av_log(av_log_obj, AV_LOG_INFO, "\"%s\"", opt->default_val.str);
-        break;
+        ଭାଙ୍ଗ;
     }
     av_log(av_log_obj, AV_LOG_INFO, ")");
 }
 
-static void opt_list(void *obj, void *av_log_obj, const char *unit,
-                     int req_flags, int rej_flags, enum AVOptionType parent_type)
+ସ୍ଥିର ଶୂନ୍ୟ opt_list(ଶୂନ୍ୟ *obj, ଶୂନ୍ୟ *av_log_obj, ଅଚଳ ଅକ୍ଷର *unit,
+                     ପୂର୍ଣ୍ଣସଂଖ୍ୟା req_flags, ପୂର୍ଣ୍ଣସଂଖ୍ୟା rej_flags, ଗଣନା AVOptionType parent_type)
 {
-    const AVOption *opt = NULL;
+    ଅଚଳ AVOption *opt = ଖାଲି;
     AVOptionRanges *r;
-    int i;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
 
-    while ((opt = av_opt_next(obj, opt))) {
-        if (!(opt->flags & req_flags) || (opt->flags & rej_flags))
-            continue;
+    ଯେତେବେଳେ ((opt = av_opt_next(obj, opt))) {
+        ଯଦି (!(opt->flags & req_flags) || (opt->flags & rej_flags))
+            ଜାରି;
 
         /* Don't print CONST's on level one.
          * Don't print anything but CONST's on level two.
          * Only print items from the requested unit.
          */
-        if (!unit && opt->type == AV_OPT_TYPE_CONST)
-            continue;
-        else if (unit && opt->type != AV_OPT_TYPE_CONST)
-            continue;
-        else if (unit && opt->type == AV_OPT_TYPE_CONST && strcmp(unit, opt->unit))
-            continue;
-        else if (unit && opt->type == AV_OPT_TYPE_CONST)
+        ଯଦି (!unit && opt->type == AV_OPT_TYPE_CONST)
+            ଜାରି;
+        ଅନ୍ୟଥା ଯଦି (unit && opt->type != AV_OPT_TYPE_CONST)
+            ଜାରି;
+        ଅନ୍ୟଥା ଯଦି (unit && opt->type == AV_OPT_TYPE_CONST && strcmp(unit, opt->unit))
+            ଜାରି;
+        ଅନ୍ୟଥା ଯଦି (unit && opt->type == AV_OPT_TYPE_CONST)
             av_log(av_log_obj, AV_LOG_INFO, "     %-15s ", opt->name);
-        else
+        ଅନ୍ୟଥା
             av_log(av_log_obj, AV_LOG_INFO, "  %s%-17s ",
                    (opt->flags & AV_OPT_FLAG_FILTERING_PARAM) ? " " : "-",
                    opt->name);
@@ -1715,26 +1715,26 @@ static void opt_list(void *obj, void *av_log_obj, const char *unit,
                (opt->flags & AV_OPT_FLAG_RUNTIME_PARAM)   ? 'T' : '.',
                (opt->flags & AV_OPT_FLAG_DEPRECATED)      ? 'P' : '.');
 
-        if (opt->help)
+        ଯଦି (opt->help)
             av_log(av_log_obj, AV_LOG_INFO, " %s", opt->help);
 
-        if (av_opt_query_ranges(&r, obj, opt->name, AV_OPT_SEARCH_FAKE_OBJ) >= 0) {
-            switch (opt->type) {
-            case AV_OPT_TYPE_INT:
-            case AV_OPT_TYPE_UINT:
-            case AV_OPT_TYPE_INT64:
-            case AV_OPT_TYPE_UINT64:
-            case AV_OPT_TYPE_DOUBLE:
-            case AV_OPT_TYPE_FLOAT:
-            case AV_OPT_TYPE_RATIONAL:
-                for (i = 0; i < r->nb_ranges; i++) {
+        ଯଦି (av_opt_query_ranges(&r, obj, opt->name, AV_OPT_ସନ୍ଧାନ_FAKE_OBJ) >= 0) {
+            ବାଛ (opt->type) {
+            ସ୍ଥିତି AV_OPT_TYPE_INT:
+            ସ୍ଥିତି AV_OPT_TYPE_UINT:
+            ସ୍ଥିତି AV_OPT_TYPE_INT64:
+            ସ୍ଥିତି AV_OPT_TYPE_UINT64:
+            ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+            ସ୍ଥିତି AV_OPT_TYPE_FLOAT:
+            ସ୍ଥିତି AV_OPT_TYPE_RATIONAL:
+                ପାଇଁ (i = 0; i < r->nb_ranges; i++) {
                     av_log(av_log_obj, AV_LOG_INFO, " (from ");
-                    log_value(av_log_obj, AV_LOG_INFO, r->range[i]->value_min);
+                    log_ମୂଲ୍ୟ(av_log_obj, AV_LOG_INFO, r->range[i]->ମୂଲ୍ୟ_min);
                     av_log(av_log_obj, AV_LOG_INFO, " to ");
-                    log_value(av_log_obj, AV_LOG_INFO, r->range[i]->value_max);
+                    log_ମୂଲ୍ୟ(av_log_obj, AV_LOG_INFO, r->range[i]->ମୂଲ୍ୟ_max);
                     av_log(av_log_obj, AV_LOG_INFO, ")");
                 }
-                break;
+                ଭାଙ୍ଗ;
             }
             av_opt_freep_ranges(&r);
         }
@@ -1742,105 +1742,105 @@ static void opt_list(void *obj, void *av_log_obj, const char *unit,
         log_default(obj, av_log_obj, opt);
 
         av_log(av_log_obj, AV_LOG_INFO, "\n");
-        if (opt->unit && opt->type != AV_OPT_TYPE_CONST)
+        ଯଦି (opt->unit && opt->type != AV_OPT_TYPE_CONST)
             opt_list(obj, av_log_obj, opt->unit, req_flags, rej_flags, opt->type);
     }
 }
 
-int av_opt_show2(void *obj, void *av_log_obj, int req_flags, int rej_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_show2(ଶୂନ୍ୟ *obj, ଶୂନ୍ୟ *av_log_obj, ପୂର୍ଣ୍ଣସଂଖ୍ୟା req_flags, ପୂର୍ଣ୍ଣସଂଖ୍ୟା rej_flags)
 {
-    if (!obj)
-        return -1;
+    ଯଦି (!obj)
+        ଫେରନ୍ତୁ -1;
 
     av_log(av_log_obj, AV_LOG_INFO, "%s AVOptions:\n", (*(AVClass **)obj)->class_name);
 
-    opt_list(obj, av_log_obj, NULL, req_flags, rej_flags, -1);
+    opt_list(obj, av_log_obj, ଖାଲି, req_flags, rej_flags, -1);
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-void av_opt_set_defaults(void *s)
+ଶୂନ୍ୟ av_opt_set_defaults(ଶୂନ୍ୟ *s)
 {
     av_opt_set_defaults2(s, 0, 0);
 }
 
-void av_opt_set_defaults2(void *s, int mask, int flags)
+ଶୂନ୍ୟ av_opt_set_defaults2(ଶୂନ୍ୟ *s, ପୂର୍ଣ୍ଣସଂଖ୍ୟା mask, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags)
 {
-    const AVOption *opt = NULL;
-    while ((opt = av_opt_next(s, opt))) {
-        void *dst = ((uint8_t*)s) + opt->offset;
+    ଅଚଳ AVOption *opt = ଖାଲି;
+    ଯେତେବେଳେ ((opt = av_opt_next(s, opt))) {
+        ଶୂନ୍ୟ *dst = ((uint8_t*)s) + opt->offset;
 
-        if ((opt->flags & mask) != flags)
-            continue;
+        ଯଦି ((opt->flags & mask) != flags)
+            ଜାରି;
 
-        if (opt->flags & AV_OPT_FLAG_READONLY)
-            continue;
+        ଯଦି (opt->flags & AV_OPT_FLAG_READONLY)
+            ଜାରି;
 
-        if (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
-            const AVOptionArrayDef *arr = opt->default_val.arr;
-            const char              sep = opt_array_sep(opt);
+        ଯଦି (opt->type & AV_OPT_TYPE_FLAG_ARRAY) {
+            ଅଚଳ AVOptionArrayDef *arr = opt->default_val.arr;
+            ଅଚଳ ଅକ୍ଷର              sep = opt_array_sep(opt);
 
             av_assert0(sep && sep != '\\' &&
                        (sep < 'a' || sep > 'z') &&
                        (sep < 'A' || sep > 'Z') &&
                        (sep < '0' || sep > '9'));
 
-            if (arr && arr->def)
+            ଯଦି (arr && arr->def)
                 opt_set_array(s, s, opt, arr->def, dst);
 
-            continue;
+            ଜାରି;
         }
 
-        switch (opt->type) {
-            case AV_OPT_TYPE_CONST:
+        ବାଛ (opt->type) {
+            ସ୍ଥିତି AV_OPT_TYPE_CONST:
                 /* Nothing to be done here */
-                break;
-            case AV_OPT_TYPE_BOOL:
-            case AV_OPT_TYPE_FLAGS:
-            case AV_OPT_TYPE_INT:
-            case AV_OPT_TYPE_UINT:
-            case AV_OPT_TYPE_INT64:
-            case AV_OPT_TYPE_UINT64:
-            case AV_OPT_TYPE_DURATION:
-            case AV_OPT_TYPE_PIXEL_FMT:
-            case AV_OPT_TYPE_SAMPLE_FMT:
-                write_number(s, opt, dst, 1, 1, opt->default_val.i64, 1);
-                break;
-            case AV_OPT_TYPE_DOUBLE:
-            case AV_OPT_TYPE_FLOAT: {
-                double val;
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_BOOL:
+            ସ୍ଥିତି AV_OPT_TYPE_FLAGS:
+            ସ୍ଥିତି AV_OPT_TYPE_INT:
+            ସ୍ଥିତି AV_OPT_TYPE_UINT:
+            ସ୍ଥିତି AV_OPT_TYPE_INT64:
+            ସ୍ଥିତି AV_OPT_TYPE_UINT64:
+            ସ୍ଥିତି AV_OPT_TYPE_DURATION:
+            ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:
+            ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT:
+                write_ସଂଖ୍ୟା(s, opt, dst, 1, 1, opt->default_val.i64, 1);
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+            ସ୍ଥିତି AV_OPT_TYPE_FLOAT: {
+                ଦ୍ୱିଗୁଣ val;
                 val = opt->default_val.dbl;
-                write_number(s, opt, dst, val, 1, 1, 1);
+                write_ସଂଖ୍ୟା(s, opt, dst, val, 1, 1, 1);
             }
-            break;
-            case AV_OPT_TYPE_RATIONAL: {
+            ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_RATIONAL: {
                 AVRational val;
                 val = av_d2q(opt->default_val.dbl, INT_MAX);
-                write_number(s, opt, dst, 1, val.den, val.num, 1);
+                write_ସଂଖ୍ୟା(s, opt, dst, 1, val.den, val.ଅଙ୍କ, 1);
             }
-            break;
-            case AV_OPT_TYPE_COLOR:
+            ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_COLOR:
                 set_string_color(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_STRING:
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_STRING:
                 set_string(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_IMAGE_SIZE:
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_IMAGE_SIZE:
                 set_string_image_size(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_VIDEO_RATE:
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_VIDEO_RATE:
                 set_string_video_rate(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_BINARY:
-                set_string_binary(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_CHLAYOUT:
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_ଦ୍ୱିମିକ:
+                set_string_ଦ୍ୱିମିକ(s, opt, opt->default_val.str, dst);
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_CHLAYOUT:
                 set_string_channel_layout(s, opt, opt->default_val.str, dst);
-                break;
-            case AV_OPT_TYPE_DICT:
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_DICT:
                 set_string_dict(s, opt, opt->default_val.str, dst);
-                break;
-        default:
+                ଭାଙ୍ଗ;
+        ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
             av_log(s, AV_LOG_DEBUG, "AVOption type %d of option %s not implemented yet\n",
                    opt->type, opt->name);
         }
@@ -1864,65 +1864,65 @@ void av_opt_set_defaults2(void *s, int mask, int flags)
  * the error code issued by av_opt_set() if the key/value pair
  * cannot be set
  */
-static int parse_key_value_pair(void *ctx, const char **buf,
-                                const char *key_val_sep, const char *pairs_sep)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା parse_ଚାବି_ମୂଲ୍ୟ_pair(ଶୂନ୍ୟ *ctx, ଅଚଳ ଅକ୍ଷର **buf,
+                                ଅଚଳ ଅକ୍ଷର *ଚାବି_val_sep, ଅଚଳ ଅକ୍ଷର *pairs_sep)
 {
-    char *key = av_get_token(buf, key_val_sep);
-    char *val;
-    int ret;
+    ଅକ୍ଷର *ଚାବି = av_get_token(buf, ଚାବି_val_sep);
+    ଅକ୍ଷର *val;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    if (!key)
-        return AVERROR(ENOMEM);
+    ଯଦି (!ଚାବି)
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
 
-    if (*key && strspn(*buf, key_val_sep)) {
+    ଯଦି (*ଚାବି && strspn(*buf, ଚାବି_val_sep)) {
         (*buf)++;
         val = av_get_token(buf, pairs_sep);
-        if (!val) {
-            av_freep(&key);
-            return AVERROR(ENOMEM);
+        ଯଦି (!val) {
+            av_freep(&ଚାବି);
+            ଫେରନ୍ତୁ AVERROR(ENOMEM);
         }
-    } else {
-        av_log(ctx, AV_LOG_ERROR, "Missing key or no key/value separator found after key '%s'\n", key);
-        av_free(key);
-        return AVERROR(EINVAL);
+    } ଅନ୍ୟଥା {
+        av_log(ctx, AV_LOG_ERROR, "Missing key or no key/value separator found after key '%s'\n", ଚାବି);
+        av_free(ଚାବି);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
-    av_log(ctx, AV_LOG_DEBUG, "Setting entry with key '%s' to value '%s'\n", key, val);
+    av_log(ctx, AV_LOG_DEBUG, "Setting entry with key '%s' to value '%s'\n", ଚାବି, val);
 
-    ret = av_opt_set(ctx, key, val, AV_OPT_SEARCH_CHILDREN);
-    if (ret == AVERROR_OPTION_NOT_FOUND)
-        av_log(ctx, AV_LOG_ERROR, "Key '%s' not found.\n", key);
+    ret = av_opt_set(ctx, ଚାବି, val, AV_OPT_ସନ୍ଧାନ_CHILDREN);
+    ଯଦି (ret == AVERROR_OPTION_NOT_FOUND)
+        av_log(ctx, AV_LOG_ERROR, "Key '%s' not found.\n", ଚାବି);
 
-    av_free(key);
+    av_free(ଚାବି);
     av_free(val);
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int av_set_options_string(void *ctx, const char *opts,
-                          const char *key_val_sep, const char *pairs_sep)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_set_options_string(ଶୂନ୍ୟ *ctx, ଅଚଳ ଅକ୍ଷର *opts,
+                          ଅଚଳ ଅକ୍ଷର *ଚାବି_val_sep, ଅଚଳ ଅକ୍ଷର *pairs_sep)
 {
-    int ret, count = 0;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret, ଗଣନା_2 = 0;
 
-    if (!opts)
-        return 0;
+    ଯଦି (!opts)
+        ଫେରନ୍ତୁ 0;
 
-    while (*opts) {
-        if ((ret = parse_key_value_pair(ctx, &opts, key_val_sep, pairs_sep)) < 0)
-            return ret;
-        count++;
+    ଯେତେବେଳେ (*opts) {
+        ଯଦି ((ret = parse_ଚାବି_ମୂଲ୍ୟ_pair(ctx, &opts, ଚାବି_val_sep, pairs_sep)) < 0)
+            ଫେରନ୍ତୁ ret;
+        ଗଣନା_2++;
 
-        if (*opts)
+        ଯଦି (*opts)
             opts++;
     }
 
-    return count;
+    ଫେରନ୍ତୁ ଗଣନା_2;
 }
 
 #define WHITESPACES " \n\t\r"
 
-static int is_key_char(char c)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା is_ଚାବି_char(ଅକ୍ଷର c)
 {
-    return (unsigned)((c | 32) - 'a') < 26 ||
+    ଫେରନ୍ତୁ (unsigned)((c | 32) - 'a') < 26 ||
            (unsigned)(c - '0') < 10 ||
            c == '-' || c == '_' || c == '/' || c == '.';
 }
@@ -1935,596 +1935,596 @@ static int is_key_char(char c)
  *
  * @return  0 for success (even with ellipsis), <0 for failure
  */
-static int get_key(const char **ropts, const char *delim, char **rkey)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା get_ଚାବି(ଅଚଳ ଅକ୍ଷର **ropts, ଅଚଳ ଅକ୍ଷର *delim, ଅକ୍ଷର **rkey)
 {
-    const char *opts = *ropts;
-    const char *key_start, *key_end;
+    ଅଚଳ ଅକ୍ଷର *opts = *ropts;
+    ଅଚଳ ଅକ୍ଷର *ଚାବି_start, *ଚାବି_end;
 
-    key_start = opts += strspn(opts, WHITESPACES);
-    while (is_key_char(*opts))
+    ଚାବି_start = opts += strspn(opts, WHITESPACES);
+    ଯେତେବେଳେ (is_ଚାବି_char(*opts))
         opts++;
-    key_end = opts;
+    ଚାବି_end = opts;
     opts += strspn(opts, WHITESPACES);
-    if (!*opts || !strchr(delim, *opts))
-        return AVERROR(EINVAL);
+    ଯଦି (!*opts || !strchr(delim, *opts))
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     opts++;
-    if (!(*rkey = av_malloc(key_end - key_start + 1)))
-        return AVERROR(ENOMEM);
-    memcpy(*rkey, key_start, key_end - key_start);
-    (*rkey)[key_end - key_start] = 0;
+    ଯଦି (!(*rkey = av_malloc(ଚାବି_end - ଚାବି_start + 1)))
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
+    memcpy(*rkey, ଚାବି_start, ଚାବି_end - ଚାବି_start);
+    (*rkey)[ଚାବି_end - ଚାବି_start] = 0;
     *ropts = opts;
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_get_key_value(const char **ropts,
-                         const char *key_val_sep, const char *pairs_sep,
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_ଚାବି_ମୂଲ୍ୟ(ଅଚଳ ଅକ୍ଷର **ropts,
+                         ଅଚଳ ଅକ୍ଷର *ଚାବି_val_sep, ଅଚଳ ଅକ୍ଷର *pairs_sep,
                          unsigned flags,
-                         char **rkey, char **rval)
+                         ଅକ୍ଷର **rkey, ଅକ୍ଷର **rval)
 {
-    int ret;
-    char *key = NULL, *val;
-    const char *opts = *ropts;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
+    ଅକ୍ଷର *ଚାବି = ଖାଲି, *val;
+    ଅଚଳ ଅକ୍ଷର *opts = *ropts;
 
-    if ((ret = get_key(&opts, key_val_sep, &key)) < 0 &&
-        !(flags & AV_OPT_FLAG_IMPLICIT_KEY))
-        return AVERROR(EINVAL);
-    if (!(val = av_get_token(&opts, pairs_sep))) {
-        av_free(key);
-        return AVERROR(ENOMEM);
+    ଯଦି ((ret = get_ଚାବି(&opts, ଚାବି_val_sep, &ଚାବି)) < 0 &&
+        !(flags & AV_OPT_FLAG_IMPLICIT_ଚାବି))
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
+    ଯଦି (!(val = av_get_token(&opts, pairs_sep))) {
+        av_free(ଚାବି);
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
     }
     *ropts = opts;
-    *rkey  = key;
+    *rkey  = ଚାବି;
     *rval  = val;
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_set_from_string(void *ctx, const char *opts,
-                           const char *const *shorthand,
-                           const char *key_val_sep, const char *pairs_sep)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_from_string(ଶୂନ୍ୟ *ctx, ଅଚଳ ଅକ୍ଷର *opts,
+                           ଅଚଳ ଅକ୍ଷର *ଅଚଳ *shorthand,
+                           ଅଚଳ ଅକ୍ଷର *ଚାବି_val_sep, ଅଚଳ ଅକ୍ଷର *pairs_sep)
 {
-    int ret, count = 0;
-    const char *dummy_shorthand = NULL;
-    const char *key;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret, ଗଣନା_2 = 0;
+    ଅଚଳ ଅକ୍ଷର *dummy_shorthand = ଖାଲି;
+    ଅଚଳ ଅକ୍ଷର *ଚାବି;
 
-    if (!opts)
-        return 0;
-    if (!shorthand)
+    ଯଦି (!opts)
+        ଫେରନ୍ତୁ 0;
+    ଯଦି (!shorthand)
         shorthand = &dummy_shorthand;
 
-    while (*opts) {
-        char *parsed_key, *value;
-        ret = av_opt_get_key_value(&opts, key_val_sep, pairs_sep,
-                                   *shorthand ? AV_OPT_FLAG_IMPLICIT_KEY : 0,
-                                   &parsed_key, &value);
-        if (ret < 0) {
-            if (ret == AVERROR(EINVAL))
+    ଯେତେବେଳେ (*opts) {
+        ଅକ୍ଷର *parsed_ଚାବି, *ମୂଲ୍ୟ;
+        ret = av_opt_get_ଚାବି_ମୂଲ୍ୟ(&opts, ଚାବି_val_sep, pairs_sep,
+                                   *shorthand ? AV_OPT_FLAG_IMPLICIT_ଚାବି : 0,
+                                   &parsed_ଚାବି, &ମୂଲ୍ୟ);
+        ଯଦି (ret < 0) {
+            ଯଦି (ret == AVERROR(EINVAL))
                 av_log(ctx, AV_LOG_ERROR, "No option name near '%s'\n", opts);
-            else
+            ଅନ୍ୟଥା
                 av_log(ctx, AV_LOG_ERROR, "Unable to parse '%s': %s\n", opts,
                        av_err2str(ret));
-            return ret;
+            ଫେରନ୍ତୁ ret;
         }
-        if (*opts)
+        ଯଦି (*opts)
             opts++;
-        if (parsed_key) {
-            key = parsed_key;
-            while (*shorthand) /* discard all remaining shorthand */
+        ଯଦି (parsed_ଚାବି) {
+            ଚାବି = parsed_ଚାବି;
+            ଯେତେବେଳେ (*shorthand) /* discard all remaining shorthand */
                 shorthand++;
-        } else {
-            key = *(shorthand++);
+        } ଅନ୍ୟଥା {
+            ଚାବି = *(shorthand++);
         }
 
-        av_log(ctx, AV_LOG_DEBUG, "Setting '%s' to value '%s'\n", key, value);
-        if ((ret = av_opt_set(ctx, key, value, 0)) < 0) {
-            if (ret == AVERROR_OPTION_NOT_FOUND)
-                av_log(ctx, AV_LOG_ERROR, "Option '%s' not found\n", key);
-            av_free(value);
-            av_free(parsed_key);
-            return ret;
+        av_log(ctx, AV_LOG_DEBUG, "Setting '%s' to value '%s'\n", ଚାବି, ମୂଲ୍ୟ);
+        ଯଦି ((ret = av_opt_set(ctx, ଚାବି, ମୂଲ୍ୟ, 0)) < 0) {
+            ଯଦି (ret == AVERROR_OPTION_NOT_FOUND)
+                av_log(ctx, AV_LOG_ERROR, "Option '%s' not found\n", ଚାବି);
+            av_free(ମୂଲ୍ୟ);
+            av_free(parsed_ଚାବି);
+            ଫେରନ୍ତୁ ret;
         }
 
-        av_free(value);
-        av_free(parsed_key);
-        count++;
+        av_free(ମୂଲ୍ୟ);
+        av_free(parsed_ଚାବି);
+        ଗଣନା_2++;
     }
-    return count;
+    ଫେରନ୍ତୁ ଗଣନା_2;
 }
 
-void av_opt_free(void *obj)
+ଶୂନ୍ୟ av_opt_free(ଶୂନ୍ୟ *obj)
 {
-    const AVOption *o = NULL;
-    while ((o = av_opt_next(obj, o))) {
-        void *pitem = (uint8_t *)obj + o->offset;
+    ଅଚଳ AVOption *o = ଖାଲି;
+    ଯେତେବେଳେ ((o = av_opt_next(obj, o))) {
+        ଶୂନ୍ୟ *pitem = (uint8_t *)obj + o->offset;
 
-        if (o->type & AV_OPT_TYPE_FLAG_ARRAY)
+        ଯଦି (o->type & AV_OPT_TYPE_FLAG_ARRAY)
             opt_free_array(o, pitem, opt_array_pcount(pitem));
-        else
+        ଅନ୍ୟଥା
             opt_free_elem(o->type, pitem);
     }
 }
 
-int av_opt_set_dict2(void *obj, AVDictionary **options, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_dict2(ଶୂନ୍ୟ *obj, AVDictionary **options, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    const AVDictionaryEntry *t = NULL;
-    AVDictionary    *tmp = NULL;
-    int ret;
+    ଅଚଳ AVDictionaryEntry *t = ଖାଲି;
+    AVDictionary    *tmp = ଖାଲି;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    if (!options)
-        return 0;
+    ଯଦି (!options)
+        ଫେରନ୍ତୁ 0;
 
-    while ((t = av_dict_iterate(*options, t))) {
-        ret = av_opt_set(obj, t->key, t->value, search_flags);
-        if (ret == AVERROR_OPTION_NOT_FOUND)
-            ret = av_dict_set(&tmp, t->key, t->value, AV_DICT_MULTIKEY);
-        if (ret < 0) {
-            av_log(obj, AV_LOG_ERROR, "Error setting option %s to value %s.\n", t->key, t->value);
+    ଯେତେବେଳେ ((t = av_dict_iterate(*options, t))) {
+        ret = av_opt_set(obj, t->ଚାବି, t->ମୂଲ୍ୟ, ସନ୍ଧାନ_flags);
+        ଯଦି (ret == AVERROR_OPTION_NOT_FOUND)
+            ret = av_dict_set(&tmp, t->ଚାବି, t->ମୂଲ୍ୟ, AV_DICT_MULTIKEY);
+        ଯଦି (ret < 0) {
+            av_log(obj, AV_LOG_ERROR, "Error setting option %s to value %s.\n", t->ଚାବି, t->ମୂଲ୍ୟ);
             av_dict_free(&tmp);
-            return ret;
+            ଫେରନ୍ତୁ ret;
         }
     }
     av_dict_free(options);
     *options = tmp;
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_set_dict(void *obj, AVDictionary **options)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_dict(ଶୂନ୍ୟ *obj, AVDictionary **options)
 {
-    return av_opt_set_dict2(obj, options, 0);
+    ଫେରନ୍ତୁ av_opt_set_dict2(obj, options, 0);
 }
 
-const AVOption *av_opt_find(void *obj, const char *name, const char *unit,
-                            int opt_flags, int search_flags)
+ଅଚଳ AVOption *av_opt_find(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଅଚଳ ଅକ୍ଷର *unit,
+                            ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_flags, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    return av_opt_find2(obj, name, unit, opt_flags, search_flags, NULL);
+    ଫେରନ୍ତୁ av_opt_find2(obj, name, unit, opt_flags, ସନ୍ଧାନ_flags, ଖାଲି);
 }
 
-const AVOption *av_opt_find2(void *obj, const char *name, const char *unit,
-                             int opt_flags, int search_flags, void **target_obj)
+ଅଚଳ AVOption *av_opt_find2(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ଅଚଳ ଅକ୍ଷର *unit,
+                             ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_flags, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags, ଶୂନ୍ୟ **target_obj)
 {
-    const AVClass  *c;
-    const AVOption *o = NULL;
+    ଅଚଳ AVClass  *c;
+    ଅଚଳ AVOption *o = ଖାଲି;
 
-    if(!obj)
-        return NULL;
+    ଯଦି(!obj)
+        ଫେରନ୍ତୁ ଖାଲି;
 
     c= *(AVClass**)obj;
 
-    if (!c)
-        return NULL;
+    ଯଦି (!c)
+        ଫେରନ୍ତୁ ଖାଲି;
 
-    if (search_flags & AV_OPT_SEARCH_CHILDREN) {
-        if (search_flags & AV_OPT_SEARCH_FAKE_OBJ) {
-            void *iter = NULL;
-            const AVClass *child;
-            while (child = av_opt_child_class_iterate(c, &iter))
-                if (o = av_opt_find2(&child, name, unit, opt_flags, search_flags, NULL))
-                    return o;
-        } else {
-            void *child = NULL;
-            while (child = av_opt_child_next(obj, child))
-                if (o = av_opt_find2(child, name, unit, opt_flags, search_flags, target_obj))
-                    return o;
+    ଯଦି (ସନ୍ଧାନ_flags & AV_OPT_ସନ୍ଧାନ_CHILDREN) {
+        ଯଦି (ସନ୍ଧାନ_flags & AV_OPT_ସନ୍ଧାନ_FAKE_OBJ) {
+            ଶୂନ୍ୟ *iter = ଖାଲି;
+            ଅଚଳ AVClass *child;
+            ଯେତେବେଳେ (child = av_opt_child_class_iterate(c, &iter))
+                ଯଦି (o = av_opt_find2(&child, name, unit, opt_flags, ସନ୍ଧାନ_flags, ଖାଲି))
+                    ଫେରନ୍ତୁ o;
+        } ଅନ୍ୟଥା {
+            ଶୂନ୍ୟ *child = ଖାଲି;
+            ଯେତେବେଳେ (child = av_opt_child_next(obj, child))
+                ଯଦି (o = av_opt_find2(child, name, unit, opt_flags, ସନ୍ଧାନ_flags, target_obj))
+                    ଫେରନ୍ତୁ o;
         }
     }
 
-    while (o = av_opt_next(obj, o)) {
-        if (!strcmp(o->name, name) && (o->flags & opt_flags) == opt_flags &&
+    ଯେତେବେଳେ (o = av_opt_next(obj, o)) {
+        ଯଦି (!strcmp(o->name, name) && (o->flags & opt_flags) == opt_flags &&
             ((!unit && o->type != AV_OPT_TYPE_CONST) ||
              (unit  && o->type == AV_OPT_TYPE_CONST && o->unit && !strcmp(o->unit, unit)))) {
-            if (target_obj) {
-                if (!(search_flags & AV_OPT_SEARCH_FAKE_OBJ))
+            ଯଦି (target_obj) {
+                ଯଦି (!(ସନ୍ଧାନ_flags & AV_OPT_ସନ୍ଧାନ_FAKE_OBJ))
                     *target_obj = obj;
-                else
-                    *target_obj = NULL;
+                ଅନ୍ୟଥା
+                    *target_obj = ଖାଲି;
             }
-            return o;
+            ଫେରନ୍ତୁ o;
         }
     }
-    return NULL;
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
-void *av_opt_child_next(void *obj, void *prev)
+ଶୂନ୍ୟ *av_opt_child_next(ଶୂନ୍ୟ *obj, ଶୂନ୍ୟ *prev)
 {
-    const AVClass *c = *(AVClass **)obj;
-    if (c->child_next)
-        return c->child_next(obj, prev);
-    return NULL;
+    ଅଚଳ AVClass *c = *(AVClass **)obj;
+    ଯଦି (c->child_next)
+        ଫେରନ୍ତୁ c->child_next(obj, prev);
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
-const AVClass *av_opt_child_class_iterate(const AVClass *parent, void **iter)
+ଅଚଳ AVClass *av_opt_child_class_iterate(ଅଚଳ AVClass *parent, ଶୂନ୍ୟ **iter)
 {
-    if (parent->child_class_iterate)
-        return parent->child_class_iterate(iter);
-    return NULL;
+    ଯଦି (parent->child_class_iterate)
+        ଫେରନ୍ତୁ parent->child_class_iterate(iter);
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
-static int opt_copy_elem(void *logctx, enum AVOptionType type,
-                         void *dst, const void *src)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_copy_elem(ଶୂନ୍ୟ *logctx, ଗଣନା AVOptionType type,
+                         ଶୂନ୍ୟ *dst, ଅଚଳ ଶୂନ୍ୟ *src)
 {
-    if (type == AV_OPT_TYPE_STRING) {
-        const char *src_str = *(const char *const *)src;
-        char         **dstp =  (char **)dst;
-        if (*dstp != src_str)
+    ଯଦି (type == AV_OPT_TYPE_STRING) {
+        ଅଚଳ ଅକ୍ଷର *src_str = *(ଅଚଳ ଅକ୍ଷର *ଅଚଳ *)src;
+        ଅକ୍ଷର         **dstp =  (ଅକ୍ଷର **)dst;
+        ଯଦି (*dstp != src_str)
             av_freep(dstp);
-        if (src_str) {
+        ଯଦି (src_str) {
             *dstp = av_strdup(src_str);
-            if (!*dstp)
-                return AVERROR(ENOMEM);
+            ଯଦି (!*dstp)
+                ଫେରନ୍ତୁ AVERROR(ENOMEM);
         }
-    } else if (type == AV_OPT_TYPE_BINARY) {
-        const uint8_t *const *src8 = (const uint8_t *const *)src;
+    } ଅନ୍ୟଥା ଯଦି (type == AV_OPT_TYPE_ଦ୍ୱିମିକ) {
+        ଅଚଳ uint8_t *ଅଚଳ *src8 = (ଅଚଳ uint8_t *ଅଚଳ *)src;
         uint8_t             **dst8 = (uint8_t **)dst;
-        int len = *(const int *)(src8 + 1);
-        if (*dst8 != *src8)
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା len = *(ଅଚଳ ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)(src8 + 1);
+        ଯଦି (*dst8 != *src8)
             av_freep(dst8);
         *dst8 = av_memdup(*src8, len);
-        if (len && !*dst8) {
-            *(int *)(dst8 + 1) = 0;
-            return AVERROR(ENOMEM);
+        ଯଦି (len && !*dst8) {
+            *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)(dst8 + 1) = 0;
+            ଫେରନ୍ତୁ AVERROR(ENOMEM);
         }
-        *(int *)(dst8 + 1) = len;
-    } else if (type == AV_OPT_TYPE_CONST) {
+        *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)(dst8 + 1) = len;
+    } ଅନ୍ୟଥା ଯଦି (type == AV_OPT_TYPE_CONST) {
         // do nothing
-    } else if (type == AV_OPT_TYPE_DICT) {
-        const AVDictionary *sdict = *(const AVDictionary * const *)src;
+    } ଅନ୍ୟଥା ଯଦି (type == AV_OPT_TYPE_DICT) {
+        ଅଚଳ AVDictionary *sdict = *(ଅଚଳ AVDictionary * ଅଚଳ *)src;
         AVDictionary     **ddictp = (AVDictionary **)dst;
-        if (sdict != *ddictp)
+        ଯଦି (sdict != *ddictp)
             av_dict_free(ddictp);
-        *ddictp = NULL;
-        return av_dict_copy(ddictp, sdict, 0);
-    } else if (type == AV_OPT_TYPE_CHLAYOUT) {
-        const AVChannelLayout *slayout = (const AVChannelLayout *)src;
+        *ddictp = ଖାଲି;
+        ଫେରନ୍ତୁ av_dict_copy(ddictp, sdict, 0);
+    } ଅନ୍ୟଥା ଯଦି (type == AV_OPT_TYPE_CHLAYOUT) {
+        ଅଚଳ AVChannelLayout *slayout = (ଅଚଳ AVChannelLayout *)src;
         AVChannelLayout *dlayout = (AVChannelLayout *)dst;
-        if (dlayout != slayout) {
-            if (dlayout->order == AV_CHANNEL_ORDER_CUSTOM &&
+        ଯଦି (dlayout != slayout) {
+            ଯଦି (dlayout->order == AV_CHANNEL_ORDER_CUSTOM &&
                 slayout->order == AV_CHANNEL_ORDER_CUSTOM &&
                 dlayout->u.map == slayout->u.map)
-                dlayout->u.map = NULL;
-            return av_channel_layout_copy(dst, src);
+                dlayout->u.map = ଖାଲି;
+            ଫେରନ୍ତୁ av_channel_layout_copy(dst, src);
         }
-    } else if (opt_is_pod(type)) {
+    } ଅନ୍ୟଥା ଯଦି (opt_is_pod(type)) {
         size_t size = opt_type_desc[type].size;
         memcpy(dst, src, size);
-    } else {
+    } ଅନ୍ୟଥା {
         av_log(logctx, AV_LOG_ERROR, "Unhandled option type: %d\n", type);
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static int opt_copy_array(void *logctx, const AVOption *o,
-                          void **pdst, const void * const *psrc)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_copy_array(ଶୂନ୍ୟ *logctx, ଅଚଳ AVOption *o,
+                          ଶୂନ୍ୟ **pdst, ଅଚଳ ଶୂନ୍ୟ * ଅଚଳ *psrc)
 {
     unsigned nb_elems = *opt_array_pcount(psrc);
-    void         *dst = NULL;
-    int ret;
+    ଶୂନ୍ୟ         *dst = ଖାଲି;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    if (*pdst == *psrc) {
-        *pdst                   = NULL;
+    ଯଦି (*pdst == *psrc) {
+        *pdst                   = ଖାଲି;
         *opt_array_pcount(pdst) = 0;
     }
 
     opt_free_array(o, pdst, opt_array_pcount(pdst));
 
     dst = av_calloc(nb_elems, opt_type_desc[TYPE_BASE(o->type)].size);
-    if (!dst)
-        return AVERROR(ENOMEM);
+    ଯଦି (!dst)
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
 
-    for (unsigned i = 0; i < nb_elems; i++) {
+    ପାଇଁ (unsigned i = 0; i < nb_elems; i++) {
         ret = opt_copy_elem(logctx, TYPE_BASE(o->type),
                             opt_array_pelem(o, dst, i),
-                            opt_array_pelem(o, *(void**)psrc, i));
-        if (ret < 0) {
+                            opt_array_pelem(o, *(ଶୂନ୍ୟ**)psrc, i));
+        ଯଦି (ret < 0) {
             opt_free_array(o, &dst, &nb_elems);
-            return ret;
+            ଫେରନ୍ତୁ ret;
         }
     }
 
     *pdst                   = dst;
     *opt_array_pcount(pdst) = nb_elems;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_copy(void *dst, const void *src)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_copy(ଶୂନ୍ୟ *dst, ଅଚଳ ଶୂନ୍ୟ *src)
 {
-    const AVOption *o = NULL;
-    const AVClass *c;
-    int ret = 0;
+    ଅଚଳ AVOption *o = ଖାଲି;
+    ଅଚଳ AVClass *c;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret = 0;
 
-    if (!src)
-        return AVERROR(EINVAL);
+    ଯଦି (!src)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     c = *(AVClass **)src;
-    if (!c || c != *(AVClass **)dst)
-        return AVERROR(EINVAL);
+    ଯଦି (!c || c != *(AVClass **)dst)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
-    while ((o = av_opt_next(src, o))) {
-        void *field_dst = (uint8_t *)dst + o->offset;
-        void *field_src = (uint8_t *)src + o->offset;
+    ଯେତେବେଳେ ((o = av_opt_next(src, o))) {
+        ଶୂନ୍ୟ *field_dst = (uint8_t *)dst + o->offset;
+        ଶୂନ୍ୟ *field_src = (uint8_t *)src + o->offset;
 
-        int err = (o->type & AV_OPT_TYPE_FLAG_ARRAY)                 ?
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା err = (o->type & AV_OPT_TYPE_FLAG_ARRAY)                 ?
                   opt_copy_array(dst, o,       field_dst, field_src) :
                   opt_copy_elem (dst, o->type, field_dst, field_src);
-        if (err < 0)
+        ଯଦି (err < 0)
             ret = err;
     }
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int av_opt_get_array_size(void *obj, const char *name, int search_flags,
-                          unsigned int *out_val)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_array_size(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags,
+                          unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା *out_val)
 {
-    void *target_obj, *parray;
-    const AVOption *o;
+    ଶୂନ୍ୟ *target_obj, *parray;
+    ଅଚଳ AVOption *o;
 
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (!(o->type & AV_OPT_TYPE_FLAG_ARRAY))
-        return AVERROR(EINVAL);
+    o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &target_obj);
+    ଯଦି (!o || !target_obj)
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
+    ଯଦି (!(o->type & AV_OPT_TYPE_FLAG_ARRAY))
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     parray = (uint8_t *)target_obj + o->offset;
     *out_val = *opt_array_pcount(parray);
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_get_array(void *obj, const char *name, int search_flags,
-                     unsigned int start_elem, unsigned int nb_elems,
-                     enum AVOptionType out_type, void *out_val)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_get_array(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags,
+                     unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା start_elem, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା nb_elems,
+                     ଗଣନା AVOptionType out_type, ଶୂନ୍ୟ *out_val)
 {
-    const size_t elem_size_out = opt_type_desc[TYPE_BASE(out_type)].size;
+    ଅଚଳ size_t elem_size_out = opt_type_desc[TYPE_BASE(out_type)].size;
 
-    const AVOption *o;
-    void *target_obj;
+    ଅଚଳ AVOption *o;
+    ଶୂନ୍ୟ *target_obj;
 
-    const void *parray;
+    ଅଚଳ ଶୂନ୍ୟ *parray;
     unsigned array_size;
 
-    int ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &target_obj);
-    if (!o || !target_obj)
-        return AVERROR_OPTION_NOT_FOUND;
-    if (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
+    o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &target_obj);
+    ଯଦି (!o || !target_obj)
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
+    ଯଦି (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
         (out_type & AV_OPT_TYPE_FLAG_ARRAY))
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     parray     = (uint8_t *)target_obj + o->offset;
     array_size = *opt_array_pcount(parray);
 
-    if (start_elem >= array_size ||
+    ଯଦି (start_elem >= array_size ||
         array_size - start_elem < nb_elems)
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
-    for (unsigned i = 0; i < nb_elems; i++) {
-        const void *src = opt_array_pelem(o, *(void**)parray, start_elem + i);
-        void       *dst = (uint8_t*)out_val + i * elem_size_out;
+    ପାଇଁ (unsigned i = 0; i < nb_elems; i++) {
+        ଅଚଳ ଶୂନ୍ୟ *src = opt_array_pelem(o, *(ଶୂନ୍ୟ**)parray, start_elem + i);
+        ଶୂନ୍ୟ       *dst = (uint8_t*)out_val + i * elem_size_out;
 
-        if (out_type == TYPE_BASE(o->type)) {
+        ଯଦି (out_type == TYPE_BASE(o->type)) {
             ret = opt_copy_elem(obj, out_type, dst, src);
-            if (ret < 0)
-                goto fail;
-        } else if (out_type == AV_OPT_TYPE_STRING) {
+            ଯଦି (ret < 0)
+                ଯାଅ fail;
+        } ଅନ୍ୟଥା ଯଦି (out_type == AV_OPT_TYPE_STRING) {
             uint8_t buf[128], *out = buf;
 
-            ret = opt_get_elem(o, &out, sizeof(buf), src, search_flags);
-            if (ret < 0)
-                goto fail;
+            ret = opt_get_elem(o, &out, ଆକାର(buf), src, ସନ୍ଧାନ_flags);
+            ଯଦି (ret < 0)
+                ଯାଅ fail;
 
-            if (out == buf) {
+            ଯଦି (out == buf) {
                 out = av_strdup(buf);
-                if (!out) {
+                ଯଦି (!out) {
                     ret = AVERROR(ENOMEM);
-                    goto fail;
+                    ଯାଅ fail;
                 }
             }
 
             *(uint8_t**)dst = out;
-        } else if (out_type == AV_OPT_TYPE_INT64    ||
+        } ଅନ୍ୟଥା ଯଦି (out_type == AV_OPT_TYPE_INT64    ||
                    out_type == AV_OPT_TYPE_DOUBLE   ||
                    out_type == AV_OPT_TYPE_RATIONAL) {
-            double     num = 1.0;
-            int        den = 1;
+            ଦ୍ୱିଗୁଣ     ଅଙ୍କ = 1.0;
+            ପୂର୍ଣ୍ଣସଂଖ୍ୟା        den = 1;
             int64_t intnum = 1;
 
-            ret = read_number(o, src, &num, &den, &intnum);
-            if (ret < 0)
-                goto fail;
+            ret = read_ସଂଖ୍ୟା(o, src, &ଅଙ୍କ, &den, &intnum);
+            ଯଦି (ret < 0)
+                ଯାଅ fail;
 
-            switch (out_type) {
-            case AV_OPT_TYPE_INT64:
-                *(int64_t*)dst = (num == den) ?  intnum : num * intnum / den;
-                break;
-            case AV_OPT_TYPE_DOUBLE:
-                *(double*)dst = num * intnum / den;
-                break;
-            case AV_OPT_TYPE_RATIONAL:
-                *(AVRational*)dst = (num == 1.0 && (int)intnum == intnum) ?
+            ବାଛ (out_type) {
+            ସ୍ଥିତି AV_OPT_TYPE_INT64:
+                *(int64_t*)dst = (ଅଙ୍କ == den) ?  intnum : ଅଙ୍କ * intnum / den;
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+                *(ଦ୍ୱିଗୁଣ*)dst = ଅଙ୍କ * intnum / den;
+                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_RATIONAL:
+                *(AVRational*)dst = (ଅଙ୍କ == 1.0 && (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)intnum == intnum) ?
                                     (AVRational){ intnum, den }           :
-                                    double_to_rational(num * intnum / den);
-                break;
-            default: av_assert0(0);
+                                    double_to_rational(ଅଙ୍କ * intnum / den);
+                ଭାଙ୍ଗ;
+            ପୂର୍ବନିର୍ଦ୍ଧାରିତ: av_assert0(0);
             }
-        } else
-            return AVERROR(ENOSYS);
+        } ଅନ୍ୟଥା
+            ଫେରନ୍ତୁ AVERROR(ENOSYS);
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 fail:
-    for (unsigned i = 0; i < nb_elems; i++)
+    ପାଇଁ (unsigned i = 0; i < nb_elems; i++)
         opt_free_elem(out_type, (uint8_t*)out_val + i * elem_size_out);
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int av_opt_set_array(void *obj, const char *name, int search_flags,
-                     unsigned int start_elem, unsigned int nb_elems,
-                     enum AVOptionType val_type, const void *val)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_set_array(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags,
+                     unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା start_elem, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା nb_elems,
+                     ଗଣନା AVOptionType val_type, ଅଚଳ ଶୂନ୍ୟ *val)
 {
-    const size_t elem_size_val = opt_type_desc[TYPE_BASE(val_type)].size;
+    ଅଚଳ size_t elem_size_val = opt_type_desc[TYPE_BASE(val_type)].size;
 
-    const AVOption *o;
-    const AVOptionArrayDef *arr;
-    void *target_obj;
+    ଅଚଳ AVOption *o;
+    ଅଚଳ AVOptionArrayDef *arr;
+    ଶୂନ୍ୟ *target_obj;
 
-    void *parray;
-    void *new_elems;
+    ଶୂନ୍ୟ *parray;
+    ଶୂନ୍ୟ *new_elems;
     unsigned *array_size, new_size;
     size_t elem_size;
 
-    int ret = 0;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret = 0;
 
-    ret = opt_set_init(obj, name, search_flags, 0, &target_obj, &o, &parray);
-    if (ret < 0)
-        return ret;
+    ret = opt_set_init(obj, name, ସନ୍ଧାନ_flags, 0, &target_obj, &o, &parray);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
 
-    if (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
+    ଯଦି (!(o->type & AV_OPT_TYPE_FLAG_ARRAY) ||
         (val_type & AV_OPT_TYPE_FLAG_ARRAY))
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     arr        = o->default_val.arr;
     array_size = opt_array_pcount(parray);
     elem_size  = opt_type_desc[TYPE_BASE(o->type)].size;
 
-    if (start_elem > *array_size)
-        return AVERROR(EINVAL);
+    ଯଦି (start_elem > *array_size)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     // compute new array size
-    if (!val) {
-        if (*array_size - start_elem < nb_elems)
-            return AVERROR(EINVAL);
+    ଯଦି (!val) {
+        ଯଦି (*array_size - start_elem < nb_elems)
+            ଫେରନ୍ତୁ AVERROR(EINVAL);
 
         new_size = *array_size - nb_elems;
-    } else if (search_flags & AV_OPT_ARRAY_REPLACE) {
-        if (start_elem >= UINT_MAX - nb_elems)
-            return AVERROR(EINVAL);
+    } ଅନ୍ୟଥା ଯଦି (ସନ୍ଧାନ_flags & AV_OPT_ARRAY_REPLACE) {
+        ଯଦି (start_elem >= UINT_MAX - nb_elems)
+            ଫେରନ୍ତୁ AVERROR(EINVAL);
 
         new_size = FFMAX(*array_size, start_elem + nb_elems);
-    } else {
-        if (nb_elems >= UINT_MAX - *array_size)
-            return AVERROR(EINVAL);
+    } ଅନ୍ୟଥା {
+        ଯଦି (nb_elems >= UINT_MAX - *array_size)
+            ଫେରନ୍ତୁ AVERROR(EINVAL);
 
         new_size = *array_size + nb_elems;
     }
 
-    if (arr &&
+    ଯଦି (arr &&
         ((arr->size_max && new_size > arr->size_max) ||
          (arr->size_min && new_size < arr->size_min)))
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     // desired operation is shrinking the array
-    if (!val) {
-        void *array = *(void**)parray;
+    ଯଦି (!val) {
+        ଶୂନ୍ୟ *array = *(ଶୂନ୍ୟ**)parray;
 
-        for (unsigned i = 0; i < nb_elems; i++) {
+        ପାଇଁ (unsigned i = 0; i < nb_elems; i++) {
             opt_free_elem(o->type,
                           opt_array_pelem(o, array, start_elem + i));
         }
 
-        if (new_size > 0) {
+        ଯଦି (new_size > 0) {
             memmove(opt_array_pelem(o, array, start_elem),
                     opt_array_pelem(o, array, start_elem + nb_elems),
                     elem_size * (*array_size - start_elem - nb_elems));
 
             array = av_realloc_array(array, new_size, elem_size);
-            if (!array)
-                return AVERROR(ENOMEM);
+            ଯଦି (!array)
+                ଫେରନ୍ତୁ AVERROR(ENOMEM);
 
-            *(void**)parray = array;
-        } else
+            *(ଶୂନ୍ୟ**)parray = array;
+        } ଅନ୍ୟଥା
             av_freep(parray);
 
         *array_size = new_size;
 
-        return 0;
+        ଫେରନ୍ତୁ 0;
     }
 
     // otherwise, desired operation is insert/replace;
     // first, store new elements in a separate array to simplify
     // rollback on failure
     new_elems = av_calloc(nb_elems, elem_size);
-    if (!new_elems)
-        return AVERROR(ENOMEM);
+    ଯଦି (!new_elems)
+        ଫେରନ୍ତୁ AVERROR(ENOMEM);
 
     // convert/validate each new element
-    for (unsigned i = 0; i < nb_elems; i++) {
-        void       *dst = opt_array_pelem(o, new_elems, i);
-        const void *src = (uint8_t*)val + i * elem_size_val;
+    ପାଇଁ (unsigned i = 0; i < nb_elems; i++) {
+        ଶୂନ୍ୟ       *dst = opt_array_pelem(o, new_elems, i);
+        ଅଚଳ ଶୂନ୍ୟ *src = (uint8_t*)val + i * elem_size_val;
 
-        double     num = 1.0;
-        int        den = 1;
+        ଦ୍ୱିଗୁଣ     ଅଙ୍କ = 1.0;
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା        den = 1;
         int64_t intnum = 1;
 
-        if (val_type == TYPE_BASE(o->type)) {
-            int err;
+        ଯଦି (val_type == TYPE_BASE(o->type)) {
+            ପୂର୍ଣ୍ଣସଂଖ୍ୟା err;
 
             ret = opt_copy_elem(obj, val_type, dst, src);
-            if (ret < 0)
-                goto fail;
+            ଯଦି (ret < 0)
+                ଯାଅ fail;
 
             // validate the range for numeric options
-            err = read_number(o, dst, &num, &den, &intnum);
-            if (err >= 0 && TYPE_BASE(o->type) != AV_OPT_TYPE_FLAGS &&
-                (!den || o->max * den < num * intnum || o->min * den > num * intnum)) {
-                num = den ? num * intnum / den : (num && intnum ? INFINITY : NAN);
+            err = read_ସଂଖ୍ୟା(o, dst, &ଅଙ୍କ, &den, &intnum);
+            ଯଦି (err >= 0 && TYPE_BASE(o->type) != AV_OPT_TYPE_FLAGS &&
+                (!den || o->max * den < ଅଙ୍କ * intnum || o->min * den > ଅଙ୍କ * intnum)) {
+                ଅଙ୍କ = den ? ଅଙ୍କ * intnum / den : (ଅଙ୍କ && intnum ? INFINITY : NAN);
                 av_log(obj, AV_LOG_ERROR, "Cannot set array element %u for "
                        "parameter '%s': value %f out of range [%g - %g]\n",
-                       start_elem + i, o->name, num, o->min, o->max);
+                       start_elem + i, o->name, ଅଙ୍କ, o->min, o->max);
                 ret = AVERROR(ERANGE);
-                goto fail;
+                ଯାଅ fail;
             }
-        } else if (val_type == AV_OPT_TYPE_STRING) {
-            ret = opt_set_elem(obj, target_obj, o, *(const char **)src, dst);
-            if (ret < 0)
-                goto fail;
-        } else if (val_type == AV_OPT_TYPE_INT ||
+        } ଅନ୍ୟଥା ଯଦି (val_type == AV_OPT_TYPE_STRING) {
+            ret = opt_set_elem(obj, target_obj, o, *(ଅଚଳ ଅକ୍ଷର **)src, dst);
+            ଯଦି (ret < 0)
+                ଯାଅ fail;
+        } ଅନ୍ୟଥା ଯଦି (val_type == AV_OPT_TYPE_INT ||
               val_type == AV_OPT_TYPE_INT64    ||
               val_type == AV_OPT_TYPE_FLOAT    ||
               val_type == AV_OPT_TYPE_DOUBLE   ||
               val_type == AV_OPT_TYPE_RATIONAL) {
 
-            switch (val_type) {
-            case AV_OPT_TYPE_INT:       intnum = *(int*)src;                break;
-            case AV_OPT_TYPE_INT64:     intnum = *(int64_t*)src;            break;
-            case AV_OPT_TYPE_FLOAT:     num    = *(float*)src;              break;
-            case AV_OPT_TYPE_DOUBLE:    num    = *(double*)src;             break;
-            case AV_OPT_TYPE_RATIONAL:  intnum = ((AVRational*)src)->num;
-                                        den    = ((AVRational*)src)->den;   break;
-            default: av_assert0(0);
+            ବାଛ (val_type) {
+            ସ୍ଥିତି AV_OPT_TYPE_INT:       intnum = *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା*)src;                ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_INT64:     intnum = *(int64_t*)src;            ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_FLOAT:     ଅଙ୍କ    = *(ଦଶମିକ*)src;              ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:    ଅଙ୍କ    = *(ଦ୍ୱିଗୁଣ*)src;             ଭାଙ୍ଗ;
+            ସ୍ଥିତି AV_OPT_TYPE_RATIONAL:  intnum = ((AVRational*)src)->ଅଙ୍କ;
+                                        den    = ((AVRational*)src)->den;   ଭାଙ୍ଗ;
+            ପୂର୍ବନିର୍ଦ୍ଧାରିତ: av_assert0(0);
             }
 
-            ret = write_number(obj, o, dst, num, den, intnum, 0);
-            if (ret < 0)
-                goto fail;
-        } else {
+            ret = write_ସଂଖ୍ୟା(obj, o, dst, ଅଙ୍କ, den, intnum, 0);
+            ଯଦି (ret < 0)
+                ଯାଅ fail;
+        } ଅନ୍ୟଥା {
             ret = AVERROR(ENOSYS);
-            goto fail;
+            ଯାଅ fail;
         }
     }
 
     // commit new elements to the array
-    if (start_elem == 0 && nb_elems == new_size) {
+    ଯଦି (start_elem == 0 && nb_elems == new_size) {
         // replacing the existing array entirely
         opt_free_array(o, parray, array_size);
-        *(void**)parray = new_elems;
+        *(ଶୂନ୍ୟ**)parray = new_elems;
         *array_size     = nb_elems;
 
-        new_elems = NULL;
+        new_elems = ଖାଲି;
         nb_elems  = 0;
-    } else {
-        void *array = av_realloc_array(*(void**)parray, new_size, elem_size);
-        if (!array) {
+    } ଅନ୍ୟଥା {
+        ଶୂନ୍ୟ *array = av_realloc_array(*(ଶୂନ୍ୟ**)parray, new_size, elem_size);
+        ଯଦି (!array) {
             ret = AVERROR(ENOMEM);
-            goto fail;
+            ଯାଅ fail;
         }
 
-        if (search_flags & AV_OPT_ARRAY_REPLACE) {
+        ଯଦି (ସନ୍ଧାନ_flags & AV_OPT_ARRAY_REPLACE) {
             // free the elements being overwritten
-            for (unsigned i = start_elem; i < FFMIN(start_elem + nb_elems, *array_size); i++)
+            ପାଇଁ (unsigned i = start_elem; i < FFMIN(start_elem + nb_elems, *array_size); i++)
                 opt_free_elem(o->type, opt_array_pelem(o, array, i));
-        } else {
+        } ଅନ୍ୟଥା {
             // shift existing elements to the end
             memmove(opt_array_pelem(o, array, start_elem + nb_elems),
                     opt_array_pelem(o, array, start_elem),
@@ -2536,47 +2536,47 @@ int av_opt_set_array(void *obj, const char *name, int search_flags,
         av_freep(&new_elems);
         nb_elems = 0;
 
-        *(void**)parray = array;
+        *(ଶୂନ୍ୟ**)parray = array;
         *array_size     = new_size;
     }
 
 fail:
     opt_free_array(o, &new_elems, &nb_elems);
 
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int av_opt_query_ranges(AVOptionRanges **ranges_arg, void *obj, const char *key, int flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_query_ranges(AVOptionRanges **ranges_arg, ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *ଚାବି, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags)
 {
-    int ret;
-    const AVClass *c = *(AVClass**)obj;
-    int (*callback)(AVOptionRanges **, void *obj, const char *key, int flags) = c->query_ranges;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
+    ଅଚଳ AVClass *c = *(AVClass**)obj;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*callback)(AVOptionRanges **, ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *ଚାବି, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags) = c->query_ranges;
 
-    if (!callback)
+    ଯଦି (!callback)
         callback = av_opt_query_ranges_default;
 
-    ret = callback(ranges_arg, obj, key, flags);
-    if (ret >= 0) {
-        if (!(flags & AV_OPT_MULTI_COMPONENT_RANGE))
+    ret = callback(ranges_arg, obj, ଚାବି, flags);
+    ଯଦି (ret >= 0) {
+        ଯଦି (!(flags & AV_OPT_MULTI_COMPONENT_RANGE))
             ret = 1;
         (*ranges_arg)->nb_components = ret;
     }
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int av_opt_query_ranges_default(AVOptionRanges **ranges_arg, void *obj, const char *key, int flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_query_ranges_default(AVOptionRanges **ranges_arg, ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *ଚାବି, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags)
 {
-    AVOptionRanges *ranges = av_mallocz(sizeof(*ranges));
-    AVOptionRange **range_array = av_mallocz(sizeof(void*));
-    AVOptionRange *range = av_mallocz(sizeof(*range));
-    const AVOption *field = av_opt_find(obj, key, NULL, 0, flags);
-    int ret;
+    AVOptionRanges *ranges = av_mallocz(ଆକାର(*ranges));
+    AVOptionRange **range_array = av_mallocz(ଆକାର(ଶୂନ୍ୟ*));
+    AVOptionRange *range = av_mallocz(ଆକାର(*range));
+    ଅଚଳ AVOption *field = av_opt_find(obj, ଚାବି, ଖାଲି, 0, flags);
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    *ranges_arg = NULL;
+    *ranges_arg = ଖାଲି;
 
-    if (!ranges || !range || !range_array || !field) {
+    ଯଦି (!ranges || !range || !range_array || !field) {
         ret = AVERROR(ENOMEM);
-        goto fail;
+        ଯାଅ fail;
     }
 
     ranges->range = range_array;
@@ -2584,69 +2584,69 @@ int av_opt_query_ranges_default(AVOptionRanges **ranges_arg, void *obj, const ch
     ranges->nb_ranges = 1;
     ranges->nb_components = 1;
     range->is_range = 1;
-    range->value_min = field->min;
-    range->value_max = field->max;
+    range->ମୂଲ୍ୟ_min = field->min;
+    range->ମୂଲ୍ୟ_max = field->max;
 
-    switch (field->type) {
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
-    case AV_OPT_TYPE_PIXEL_FMT:
-    case AV_OPT_TYPE_SAMPLE_FMT:
-    case AV_OPT_TYPE_FLOAT:
-    case AV_OPT_TYPE_DOUBLE:
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_COLOR:
-        break;
-    case AV_OPT_TYPE_STRING:
+    ବାଛ (field->type) {
+    ସ୍ଥିତି AV_OPT_TYPE_BOOL:
+    ସ୍ଥିତି AV_OPT_TYPE_INT:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT:
+    ସ୍ଥିତି AV_OPT_TYPE_INT64:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT64:
+    ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:
+    ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT:
+    ସ୍ଥିତି AV_OPT_TYPE_FLOAT:
+    ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+    ସ୍ଥିତି AV_OPT_TYPE_DURATION:
+    ସ୍ଥିତି AV_OPT_TYPE_COLOR:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_STRING:
         range->component_min = 0;
         range->component_max = 0x10FFFF; // max unicode value
-        range->value_min = -1;
-        range->value_max = INT_MAX;
-        break;
-    case AV_OPT_TYPE_RATIONAL:
+        range->ମୂଲ୍ୟ_min = -1;
+        range->ମୂଲ୍ୟ_max = INT_MAX;
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_RATIONAL:
         range->component_min = INT_MIN;
         range->component_max = INT_MAX;
-        break;
-    case AV_OPT_TYPE_IMAGE_SIZE:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_IMAGE_SIZE:
         range->component_min = 0;
         range->component_max = INT_MAX/128/8;
-        range->value_min = 0;
-        range->value_max = INT_MAX/8;
-        break;
-    case AV_OPT_TYPE_VIDEO_RATE:
+        range->ମୂଲ୍ୟ_min = 0;
+        range->ମୂଲ୍ୟ_max = INT_MAX/8;
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_OPT_TYPE_VIDEO_RATE:
         range->component_min = 1;
         range->component_max = INT_MAX;
-        range->value_min = 1;
-        range->value_max = INT_MAX;
-        break;
-    default:
+        range->ମୂଲ୍ୟ_min = 1;
+        range->ମୂଲ୍ୟ_max = INT_MAX;
+        ଭାଙ୍ଗ;
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
         ret = AVERROR(ENOSYS);
-        goto fail;
+        ଯାଅ fail;
     }
 
     *ranges_arg = ranges;
-    return 1;
+    ଫେରନ୍ତୁ 1;
 fail:
     av_free(ranges);
     av_free(range);
     av_free(range_array);
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-void av_opt_freep_ranges(AVOptionRanges **rangesp)
+ଶୂନ୍ୟ av_opt_freep_ranges(AVOptionRanges **rangesp)
 {
-    int i;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
     AVOptionRanges *ranges = *rangesp;
 
-    if (!ranges)
-        return;
+    ଯଦି (!ranges)
+        ଫେରନ୍ତୁ;
 
-    for (i = 0; i < ranges->nb_ranges * ranges->nb_components; i++) {
+    ପାଇଁ (i = 0; i < ranges->nb_ranges * ranges->nb_components; i++) {
         AVOptionRange *range = ranges->range[i];
-        if (range) {
+        ଯଦି (range) {
             av_freep(&range->str);
             av_freep(&ranges->range[i]);
         }
@@ -2655,234 +2655,234 @@ void av_opt_freep_ranges(AVOptionRanges **rangesp)
     av_freep(rangesp);
 }
 
-int av_opt_is_set_to_default(void *obj, const AVOption *o)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_is_set_to_default(ଶୂନ୍ୟ *obj, ଅଚଳ AVOption *o)
 {
     int64_t i64;
-    double d;
+    ଦ୍ୱିଗୁଣ d;
     AVRational q;
-    int ret, w, h;
-    char *str;
-    void *dst;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret, w, h;
+    ଅକ୍ଷର *str;
+    ଶୂନ୍ୟ *dst;
 
-    if (!o || !obj)
-        return AVERROR(EINVAL);
+    ଯଦି (!o || !obj)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
     dst = ((uint8_t*)obj) + o->offset;
 
-    if (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
-        const char *def = o->default_val.arr ? o->default_val.arr->def : NULL;
+    ଯଦି (o->type & AV_OPT_TYPE_FLAG_ARRAY) {
+        ଅଚଳ ଅକ୍ଷର *def = o->default_val.arr ? o->default_val.arr->def : ଖାଲି;
         uint8_t *val;
 
         ret = opt_get_array(o, dst, &val);
-        if (ret < 0)
-            return ret;
+        ଯଦି (ret < 0)
+            ଫେରନ୍ତୁ ret;
 
-        if (!!val != !!def)
+        ଯଦି (!!val != !!def)
             ret = 0;
-        else if (val)
+        ଅନ୍ୟଥା ଯଦି (val)
             ret = !strcmp(val, def);
-        else
+        ଅନ୍ୟଥା
             ret = 1;
 
         av_freep(&val);
 
-        return ret;
+        ଫେରନ୍ତୁ ret;
     }
 
-    switch (o->type) {
-    case AV_OPT_TYPE_CONST:
-        return 1;
-    case AV_OPT_TYPE_BOOL:
-    case AV_OPT_TYPE_FLAGS:
-    case AV_OPT_TYPE_PIXEL_FMT:
-    case AV_OPT_TYPE_SAMPLE_FMT:
-    case AV_OPT_TYPE_INT:
-    case AV_OPT_TYPE_UINT:
-    case AV_OPT_TYPE_DURATION:
-    case AV_OPT_TYPE_INT64:
-    case AV_OPT_TYPE_UINT64:
-        read_number(o, dst, NULL, NULL, &i64);
-        return o->default_val.i64 == i64;
-    case AV_OPT_TYPE_CHLAYOUT: {
+    ବାଛ (o->type) {
+    ସ୍ଥିତି AV_OPT_TYPE_CONST:
+        ଫେରନ୍ତୁ 1;
+    ସ୍ଥିତି AV_OPT_TYPE_BOOL:
+    ସ୍ଥିତି AV_OPT_TYPE_FLAGS:
+    ସ୍ଥିତି AV_OPT_TYPE_PIXEL_FMT:
+    ସ୍ଥିତି AV_OPT_TYPE_SAMPLE_FMT:
+    ସ୍ଥିତି AV_OPT_TYPE_INT:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT:
+    ସ୍ଥିତି AV_OPT_TYPE_DURATION:
+    ସ୍ଥିତି AV_OPT_TYPE_INT64:
+    ସ୍ଥିତି AV_OPT_TYPE_UINT64:
+        read_ସଂଖ୍ୟା(o, dst, ଖାଲି, ଖାଲି, &i64);
+        ଫେରନ୍ତୁ o->default_val.i64 == i64;
+    ସ୍ଥିତି AV_OPT_TYPE_CHLAYOUT: {
         AVChannelLayout ch_layout = { 0 };
-        if (o->default_val.str) {
-            if ((ret = av_channel_layout_from_string(&ch_layout, o->default_val.str)) < 0)
-                return ret;
+        ଯଦି (o->default_val.str) {
+            ଯଦି ((ret = av_channel_layout_from_string(&ch_layout, o->default_val.str)) < 0)
+                ଫେରନ୍ତୁ ret;
         }
         ret = !av_channel_layout_compare((AVChannelLayout *)dst, &ch_layout);
         av_channel_layout_uninit(&ch_layout);
-        return ret;
+        ଫେରନ୍ତୁ ret;
     }
-    case AV_OPT_TYPE_STRING:
-        str = *(char **)dst;
-        if (str == o->default_val.str) //2 NULLs
-            return 1;
-        if (!str || !o->default_val.str) //1 NULL
-            return 0;
-        return !strcmp(str, o->default_val.str);
-    case AV_OPT_TYPE_DOUBLE:
-        d = *(double *)dst;
-        return o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
-    case AV_OPT_TYPE_FLOAT:
-        d = *(float *)dst;
-        return (float)o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
-    case AV_OPT_TYPE_RATIONAL: {
+    ସ୍ଥିତି AV_OPT_TYPE_STRING:
+        str = *(ଅକ୍ଷର **)dst;
+        ଯଦି (str == o->default_val.str) //2 NULLs
+            ଫେରନ୍ତୁ 1;
+        ଯଦି (!str || !o->default_val.str) //1 NULL
+            ଫେରନ୍ତୁ 0;
+        ଫେରନ୍ତୁ !strcmp(str, o->default_val.str);
+    ସ୍ଥିତି AV_OPT_TYPE_DOUBLE:
+        d = *(ଦ୍ୱିଗୁଣ *)dst;
+        ଫେରନ୍ତୁ o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
+    ସ୍ଥିତି AV_OPT_TYPE_FLOAT:
+        d = *(ଦଶମିକ *)dst;
+        ଫେରନ୍ତୁ (ଦଶମିକ)o->default_val.dbl == d || isnan(d) && isnan(o->default_val.dbl);
+    ସ୍ଥିତି AV_OPT_TYPE_RATIONAL: {
         AVRational v = *(AVRational *) dst;
         q = av_d2q(o->default_val.dbl, INT_MAX);
-        return !av_cmp_q(v, q) || (!q.den && !v.den);
+        ଫେରନ୍ତୁ !av_cmp_q(v, q) || (!q.den && !v.den);
     }
-    case AV_OPT_TYPE_BINARY: {
-        struct {
+    ସ୍ଥିତି AV_OPT_TYPE_ଦ୍ୱିମିକ: {
+        ସଂରଚନା {
             uint8_t *data;
-            int size;
+            ପୂର୍ଣ୍ଣସଂଖ୍ୟା size;
         } tmp = {0};
-        int opt_size = *(int *)((void **)dst + 1);
-        void *opt_ptr = *(void **)dst;
-        if (!opt_size && (!o->default_val.str || !strlen(o->default_val.str)))
-            return 1;
-        if (!opt_size ||  !o->default_val.str || !strlen(o->default_val.str ))
-            return 0;
-        if (opt_size != strlen(o->default_val.str) / 2)
-            return 0;
-        ret = set_string_binary(NULL, NULL, o->default_val.str, &tmp.data);
-        if (!ret)
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_size = *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)((ଶୂନ୍ୟ **)dst + 1);
+        ଶୂନ୍ୟ *opt_ptr = *(ଶୂନ୍ୟ **)dst;
+        ଯଦି (!opt_size && (!o->default_val.str || !strlen(o->default_val.str)))
+            ଫେରନ୍ତୁ 1;
+        ଯଦି (!opt_size ||  !o->default_val.str || !strlen(o->default_val.str ))
+            ଫେରନ୍ତୁ 0;
+        ଯଦି (opt_size != strlen(o->default_val.str) / 2)
+            ଫେରନ୍ତୁ 0;
+        ret = set_string_ଦ୍ୱିମିକ(ଖାଲି, ଖାଲି, o->default_val.str, &tmp.data);
+        ଯଦି (!ret)
             ret = !memcmp(opt_ptr, tmp.data, tmp.size);
         av_free(tmp.data);
-        return ret;
+        ଫେରନ୍ତୁ ret;
     }
-    case AV_OPT_TYPE_DICT: {
-        AVDictionary *dict1 = NULL;
+    ସ୍ଥିତି AV_OPT_TYPE_DICT: {
+        AVDictionary *dict1 = ଖାଲି;
         AVDictionary *dict2 = *(AVDictionary **)dst;
-        const AVDictionaryEntry *en1 = NULL;
-        const AVDictionaryEntry *en2 = NULL;
+        ଅଚଳ AVDictionaryEntry *en1 = ଖାଲି;
+        ଅଚଳ AVDictionaryEntry *en2 = ଖାଲି;
         ret = av_dict_parse_string(&dict1, o->default_val.str, "=", ":", 0);
-        if (ret < 0) {
+        ଯଦି (ret < 0) {
             av_dict_free(&dict1);
-            return ret;
+            ଫେରନ୍ତୁ ret;
         }
-        do {
+        କର {
             en1 = av_dict_iterate(dict1, en1);
             en2 = av_dict_iterate(dict2, en2);
-        } while (en1 && en2 && !strcmp(en1->key, en2->key) && !strcmp(en1->value, en2->value));
+        } ଯେତେବେଳେ (en1 && en2 && !strcmp(en1->ଚାବି, en2->ଚାବି) && !strcmp(en1->ମୂଲ୍ୟ, en2->ମୂଲ୍ୟ));
         av_dict_free(&dict1);
-        return (!en1 && !en2);
+        ଫେରନ୍ତୁ (!en1 && !en2);
     }
-    case AV_OPT_TYPE_IMAGE_SIZE:
-        if (!o->default_val.str || !strcmp(o->default_val.str, "none"))
+    ସ୍ଥିତି AV_OPT_TYPE_IMAGE_SIZE:
+        ଯଦି (!o->default_val.str || !strcmp(o->default_val.str, "none"))
             w = h = 0;
-        else if ((ret = av_parse_video_size(&w, &h, o->default_val.str)) < 0)
-            return ret;
-        return (w == *(int *)dst) && (h == *((int *)dst+1));
-    case AV_OPT_TYPE_VIDEO_RATE:
+        ଅନ୍ୟଥା ଯଦି ((ret = av_parse_video_size(&w, &h, o->default_val.str)) < 0)
+            ଫେରନ୍ତୁ ret;
+        ଫେରନ୍ତୁ (w == *(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst) && (h == *((ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)dst+1));
+    ସ୍ଥିତି AV_OPT_TYPE_VIDEO_RATE:
         q = (AVRational){0, 0};
-        if (o->default_val.str) {
-            if ((ret = av_parse_video_rate(&q, o->default_val.str)) < 0)
-                return ret;
+        ଯଦି (o->default_val.str) {
+            ଯଦି ((ret = av_parse_video_rate(&q, o->default_val.str)) < 0)
+                ଫେରନ୍ତୁ ret;
         }
-        return !av_cmp_q(*(AVRational*)dst, q);
-    case AV_OPT_TYPE_COLOR: {
+        ଫେରନ୍ତୁ !av_cmp_q(*(AVRational*)dst, q);
+    ସ୍ଥିତି AV_OPT_TYPE_COLOR: {
         uint8_t color[4] = {0, 0, 0, 0};
-        if (o->default_val.str) {
-            if ((ret = av_parse_color(color, o->default_val.str, -1, NULL)) < 0)
-                return ret;
+        ଯଦି (o->default_val.str) {
+            ଯଦି ((ret = av_parse_color(color, o->default_val.str, -1, ଖାଲି)) < 0)
+                ଫେରନ୍ତୁ ret;
         }
-        return !memcmp(color, dst, sizeof(color));
+        ଫେରନ୍ତୁ !memcmp(color, dst, ଆକାର(color));
     }
-    default:
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
         av_log(obj, AV_LOG_WARNING, "Not supported option type: %d, option name: %s\n", o->type, o->name);
-        break;
+        ଭାଙ୍ଗ;
     }
-    return AVERROR_PATCHWELCOME;
+    ଫେରନ୍ତୁ AVERROR_PATCHWELCOME;
 }
 
-int av_opt_is_set_to_default_by_name(void *obj, const char *name, int search_flags)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_is_set_to_default_by_name(ଶୂନ୍ୟ *obj, ଅଚଳ ଅକ୍ଷର *name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ସନ୍ଧାନ_flags)
 {
-    const AVOption *o;
-    void *target;
-    if (!obj)
-        return AVERROR(EINVAL);
-    o = av_opt_find2(obj, name, NULL, 0, search_flags, &target);
-    if (!o)
-        return AVERROR_OPTION_NOT_FOUND;
-    return av_opt_is_set_to_default(target, o);
+    ଅଚଳ AVOption *o;
+    ଶୂନ୍ୟ *target;
+    ଯଦି (!obj)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
+    o = av_opt_find2(obj, name, ଖାଲି, 0, ସନ୍ଧାନ_flags, &target);
+    ଯଦି (!o)
+        ଫେରନ୍ତୁ AVERROR_OPTION_NOT_FOUND;
+    ଫେରନ୍ତୁ av_opt_is_set_to_default(target, o);
 }
 
-static int opt_serialize(void *obj, int opt_flags, int flags, int *cnt,
-                         AVBPrint *bprint, const char key_val_sep, const char pairs_sep)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_serialize(ଶୂନ୍ୟ *obj, ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_flags, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *cnt,
+                         AVBPrint *bprint, ଅଚଳ ଅକ୍ଷର ଚାବି_val_sep, ଅଚଳ ଅକ୍ଷର pairs_sep)
 {
-    const AVOption *o = NULL;
-    void *child = NULL;
+    ଅଚଳ AVOption *o = ଖାଲି;
+    ଶୂନ୍ୟ *child = ଖାଲି;
     uint8_t *buf;
-    int ret;
-    const char special_chars[] = {pairs_sep, key_val_sep, '\0'};
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
+    ଅଚଳ ଅକ୍ଷର special_chars[] = {pairs_sep, ଚାବି_val_sep, '\0'};
 
-    if (flags & AV_OPT_SERIALIZE_SEARCH_CHILDREN)
-        while (child = av_opt_child_next(obj, child)) {
+    ଯଦି (flags & AV_OPT_SERIALIZE_ସନ୍ଧାନ_CHILDREN)
+        ଯେତେବେଳେ (child = av_opt_child_next(obj, child)) {
             ret = opt_serialize(child, opt_flags, flags, cnt, bprint,
-                                key_val_sep, pairs_sep);
-            if (ret < 0)
-                return ret;
+                                ଚାବି_val_sep, pairs_sep);
+            ଯଦି (ret < 0)
+                ଫେରନ୍ତୁ ret;
         }
 
-    while (o = av_opt_next(obj, o)) {
-        if (o->type == AV_OPT_TYPE_CONST)
-            continue;
-        if ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE)) {
-            if ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT)) {
-                if (o->flags == opt_flags)
-                    continue;
-            } else if ((o->flags & opt_flags) == opt_flags)
-                continue;
-        } else {
-            if ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT) && o->flags != opt_flags)
-                continue;
-            else if (((o->flags & opt_flags) != opt_flags))
-                continue;
+    ଯେତେବେଳେ (o = av_opt_next(obj, o)) {
+        ଯଦି (o->type == AV_OPT_TYPE_CONST)
+            ଜାରି;
+        ଯଦି ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXCLUDE)) {
+            ଯଦି ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT)) {
+                ଯଦି (o->flags == opt_flags)
+                    ଜାରି;
+            } ଅନ୍ୟଥା ଯଦି ((o->flags & opt_flags) == opt_flags)
+                ଜାରି;
+        } ଅନ୍ୟଥା {
+            ଯଦି ((flags & AV_OPT_SERIALIZE_OPT_FLAGS_EXACT) && o->flags != opt_flags)
+                ଜାରି;
+            ଅନ୍ୟଥା ଯଦି (((o->flags & opt_flags) != opt_flags))
+                ଜାରି;
         }
-        if (flags & AV_OPT_SERIALIZE_SKIP_DEFAULTS && av_opt_is_set_to_default(obj, o) > 0)
-            continue;
-        if ((ret = av_opt_get(obj, o->name, 0, &buf)) < 0) {
-            av_bprint_finalize(bprint, NULL);
-            return ret;
+        ଯଦି (flags & AV_OPT_SERIALIZE_SKIP_DEFAULTS && av_opt_is_set_to_default(obj, o) > 0)
+            ଜାରି;
+        ଯଦି ((ret = av_opt_get(obj, o->name, 0, &buf)) < 0) {
+            av_bprint_finalize(bprint, ଖାଲି);
+            ଫେରନ୍ତୁ ret;
         }
-        if (buf) {
-            if ((*cnt)++)
+        ଯଦି (buf) {
+            ଯଦି ((*cnt)++)
                 av_bprint_append_data(bprint, &pairs_sep, 1);
             av_bprint_escape(bprint, o->name, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
-            av_bprint_append_data(bprint, &key_val_sep, 1);
+            av_bprint_append_data(bprint, &ଚାବି_val_sep, 1);
             av_bprint_escape(bprint, buf, special_chars, AV_ESCAPE_MODE_BACKSLASH, 0);
             av_freep(&buf);
         }
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-int av_opt_serialize(void *obj, int opt_flags, int flags, char **buffer,
-                     const char key_val_sep, const char pairs_sep)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_opt_serialize(ଶୂନ୍ୟ *obj, ପୂର୍ଣ୍ଣସଂଖ୍ୟା opt_flags, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags, ଅକ୍ଷର **buffer,
+                     ଅଚଳ ଅକ୍ଷର ଚାବି_val_sep, ଅଚଳ ଅକ୍ଷର pairs_sep)
 {
     AVBPrint bprint;
-    int ret, cnt = 0;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret, cnt = 0;
 
-    if (pairs_sep == '\0' || key_val_sep == '\0' || pairs_sep == key_val_sep ||
-        pairs_sep == '\\' || key_val_sep == '\\') {
+    ଯଦି (pairs_sep == '\0' || ଚାବି_val_sep == '\0' || pairs_sep == ଚାବି_val_sep ||
+        pairs_sep == '\\' || ଚାବି_val_sep == '\\') {
         av_log(obj, AV_LOG_ERROR, "Invalid separator(s) found.");
-        return AVERROR(EINVAL);
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     }
 
-    if (!obj || !buffer)
-        return AVERROR(EINVAL);
+    ଯଦି (!obj || !buffer)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
-    *buffer = NULL;
+    *buffer = ଖାଲି;
     av_bprint_init(&bprint, 64, AV_BPRINT_SIZE_UNLIMITED);
 
     ret = opt_serialize(obj, opt_flags, flags, &cnt, &bprint,
-                        key_val_sep, pairs_sep);
-    if (ret < 0)
-        return ret;
+                        ଚାବି_val_sep, pairs_sep);
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
 
     ret = av_bprint_finalize(&bprint, buffer);
-    if (ret < 0)
-        return ret;
-    return 0;
+    ଯଦି (ret < 0)
+        ଫେରନ୍ତୁ ret;
+    ଫେରନ୍ତୁ 0;
 }

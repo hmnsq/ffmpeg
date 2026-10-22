@@ -19,49 +19,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ଅନ୍ତର୍ଭାଵ <string.h>
 
-#include "aes_ctr.h"
-#include "aes.h"
-#include "aes_internal.h"
-#include "intreadwrite.h"
-#include "macros.h"
-#include "mem.h"
-#include "random_seed.h"
+#ଅନ୍ତର୍ଭାଵ "aes_ctr.h"
+#ଅନ୍ତର୍ଭାଵ "aes.h"
+#ଅନ୍ତର୍ଭାଵ "aes_internal.h"
+#ଅନ୍ତର୍ଭାଵ "intreadwrite.h"
+#ଅନ୍ତର୍ଭାଵ "macros.h"
+#ଅନ୍ତର୍ଭାଵ "mem.h"
+#ଅନ୍ତର୍ଭାଵ "random_seed.h"
 
 #define AES_BLOCK_SIZE (16)
 
-typedef struct AVAESCTR {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVAESCTR {
     DECLARE_ALIGNED(8, uint8_t, counter)[AES_BLOCK_SIZE];
     DECLARE_ALIGNED(8, uint8_t, encrypted_counter)[AES_BLOCK_SIZE];
-    int block_offset;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା block_offset;
     AVAES aes;
 } AVAESCTR;
 
-struct AVAESCTR *av_aes_ctr_alloc(void)
+ସଂରଚନା AVAESCTR *av_aes_ctr_alloc(ଶୂନ୍ୟ)
 {
-    return av_mallocz(sizeof(struct AVAESCTR));
+    ଫେରନ୍ତୁ av_mallocz(ଆକାର(ସଂରଚନା AVAESCTR));
 }
 
-void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv)
+ଶୂନ୍ୟ av_aes_ctr_set_iv(ସଂରଚନା AVAESCTR *a, ଅଚଳ uint8_t* iv)
 {
     memcpy(a->counter, iv, AES_CTR_IV_SIZE);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
+    memset(a->counter + AES_CTR_IV_SIZE, 0, ଆକାର(a->counter) - AES_CTR_IV_SIZE);
     a->block_offset = 0;
 }
 
-void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv)
+ଶୂନ୍ୟ av_aes_ctr_set_full_iv(ସଂରଚନା AVAESCTR *a, ଅଚଳ uint8_t* iv)
 {
-    memcpy(a->counter, iv, sizeof(a->counter));
+    memcpy(a->counter, iv, ଆକାର(a->counter));
     a->block_offset = 0;
 }
 
-const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a)
+ଅଚଳ uint8_t* av_aes_ctr_get_iv(ସଂରଚନା AVAESCTR *a)
 {
-    return a->counter;
+    ଫେରନ୍ତୁ a->counter;
 }
 
-void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
+ଶୂନ୍ୟ av_aes_ctr_set_random_iv(ସଂରଚନା AVAESCTR *a)
 {
     uint32_t iv[2];
 
@@ -71,65 +71,65 @@ void av_aes_ctr_set_random_iv(struct AVAESCTR *a)
     av_aes_ctr_set_iv(a, (uint8_t*)iv);
 }
 
-int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_aes_ctr_init(ସଂରଚନା AVAESCTR *a, ଅଚଳ uint8_t *ଚାବି)
 {
-    av_aes_init(&a->aes, key, 128, 0);
+    av_aes_init(&a->aes, ଚାବି, 128, 0);
 
-    memset(a->counter, 0, sizeof(a->counter));
+    memset(a->counter, 0, ଆକାର(a->counter));
     a->block_offset = 0;
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-void av_aes_ctr_free(struct AVAESCTR *a)
+ଶୂନ୍ୟ av_aes_ctr_free(ସଂରଚନା AVAESCTR *a)
 {
     av_free(a);
 }
 
-static inline void av_aes_ctr_increment_be64(uint8_t* counter)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଶୂନ୍ୟ av_aes_ctr_increment_be64(uint8_t* counter)
 {
     uint64_t c = AV_RB64A(counter) + 1;
     AV_WB64A(counter, c);
 }
 
-void av_aes_ctr_increment_iv(struct AVAESCTR *a)
+ଶୂନ୍ୟ av_aes_ctr_increment_iv(ସଂରଚନା AVAESCTR *a)
 {
     av_aes_ctr_increment_be64(a->counter);
-    memset(a->counter + AES_CTR_IV_SIZE, 0, sizeof(a->counter) - AES_CTR_IV_SIZE);
+    memset(a->counter + AES_CTR_IV_SIZE, 0, ଆକାର(a->counter) - AES_CTR_IV_SIZE);
     a->block_offset = 0;
 }
 
-void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int count)
+ଶୂନ୍ୟ av_aes_ctr_crypt(ସଂରଚନା AVAESCTR *a, uint8_t *dst, ଅଚଳ uint8_t *src, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2)
 {
-    if (a->block_offset && count > 0) {
-        int left = FFMIN(count, AES_BLOCK_SIZE - a->block_offset);
-        for (int len = 0; len < left; len++)
+    ଯଦି (a->block_offset && ଗଣନା_2 > 0) {
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା ବାମ = FFMIN(ଗଣନା_2, AES_BLOCK_SIZE - a->block_offset);
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା len = 0; len < ବାମ; len++)
             dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
         a->block_offset &= AES_BLOCK_SIZE - 1;
-        dst += left;
-        src += left;
-        count -= left;
+        dst += ବାମ;
+        src += ବାମ;
+        ଗଣନା_2 -= ବାମ;
     }
 
-    while (count >= AES_BLOCK_SIZE) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
+    ଯେତେବେଳେ (ଗଣନା_2 >= AES_BLOCK_SIZE) {
+        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, ଖାଲି, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
-#if HAVE_FAST_64BIT
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 8)
+#ଯଦି HAVE_FAST_64BIT
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା len = 0; len < AES_BLOCK_SIZE; len += 8)
             AV_WN64(&dst[len], AV_RN64(&src[len]) ^ AV_RN64A(&a->encrypted_counter[len]));
-#else
-        for (int len = 0; len < AES_BLOCK_SIZE; len += 4)
+#ଅନ୍ୟଥା
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା len = 0; len < AES_BLOCK_SIZE; len += 4)
             AV_WN32(&dst[len], AV_RN32(&src[len]) ^ AV_RN32A(&a->encrypted_counter[len]));
 #endif
         dst += AES_BLOCK_SIZE;
         src += AES_BLOCK_SIZE;
-        count -= AES_BLOCK_SIZE;
+        ଗଣନା_2 -= AES_BLOCK_SIZE;
     }
 
-    if (count > 0) {
-        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, NULL, 0);
+    ଯଦି (ଗଣନା_2 > 0) {
+        av_aes_crypt(&a->aes, a->encrypted_counter, a->counter, 1, ଖାଲି, 0);
         av_aes_ctr_increment_be64(a->counter + 8);
-        for (int len = 0; len < count; len++)
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା len = 0; len < ଗଣନା_2; len++)
             dst[len] = src[len] ^ a->encrypted_counter[a->block_offset++];
     }
 }

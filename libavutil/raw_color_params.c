@@ -18,30 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "raw_color_params.h"
-#include "mem.h"
+#ଅନ୍ତର୍ଭାଵ "raw_color_params.h"
+#ଅନ୍ତର୍ଭାଵ "mem.h"
 
 AVRawColorParams *av_raw_color_params_alloc(size_t *size)
 {
-    AVRawColorParams *p = av_mallocz(sizeof(AVRawColorParams));
-    if (!p)
-        return NULL;
+    AVRawColorParams *p = av_mallocz(ଆକାର(AVRawColorParams));
+    ଯଦି (!p)
+        ଫେରନ୍ତୁ ଖାଲି;
 
-    if (size)
-        *size = sizeof(*p);
+    ଯଦି (size)
+        *size = ଆକାର(*p);
 
-    return p;
+    ଫେରନ୍ତୁ p;
 }
 
 AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame)
 {
     AVFrameSideData *side_data =
         av_frame_new_side_data(frame, AV_FRAME_DATA_RAW_COLOR_PARAMS,
-                               sizeof(AVRawColorParams));
-    if (!side_data)
-        return NULL;
+                               ଆକାର(AVRawColorParams));
+    ଯଦି (!side_data)
+        ଫେରନ୍ତୁ ଖାଲି;
 
     memset(side_data->data, 0, side_data->size);
 
-    return (AVRawColorParams *)side_data->data;
+    ଫେରନ୍ତୁ (AVRawColorParams *)side_data->data;
 }

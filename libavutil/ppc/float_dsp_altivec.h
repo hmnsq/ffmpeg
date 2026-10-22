@@ -21,18 +21,18 @@
 #ifndef AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
 #define AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H
 
-void ff_vector_fmul_altivec(float *dst, const float *src0,
-                            const float *src1, int len);
+ଶୂନ୍ୟ ff_vector_fmul_altivec(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src0,
+                            ଅଚଳ ଦଶମିକ *src1, ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_vector_fmul_window_altivec(float *dst, const float *src0,
-                                   const float *src1, const float *win,
-                                   int len);
+ଶୂନ୍ୟ ff_vector_fmul_window_altivec(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src0,
+                                   ଅଚଳ ଦଶମିକ *src1, ଅଚଳ ଦଶମିକ *win,
+                                   ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_vector_fmul_add_altivec(float *dst, const float *src0,
-                                const float *src1, const float *src2,
-                                int len);
+ଶୂନ୍ୟ ff_vector_fmul_add_altivec(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src0,
+                                ଅଚଳ ଦଶମିକ *src1, ଅଚଳ ଦଶମିକ *src2,
+                                ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
-void ff_vector_fmul_reverse_altivec(float *dst, const float *src0,
-                                    const float *src1, int len);
+ଶୂନ୍ୟ ff_vector_fmul_reverse_altivec(ଦଶମିକ *dst, ଅଚଳ ଦଶମିକ *src0,
+                                    ଅଚଳ ଦଶମିକ *src1, ପୂର୍ଣ୍ଣସଂଖ୍ୟା len);
 
 #endif /* AVUTIL_PPC_FLOAT_DSP_ALTIVEC_H */

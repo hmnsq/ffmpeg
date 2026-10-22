@@ -19,37 +19,37 @@
 #ifndef AVUTIL_FLOAT2HALF_H
 #define AVUTIL_FLOAT2HALF_H
 
-#include <stdint.h>
-#include "intfloat.h"
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ "intfloat.h"
 
-#include "config.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
 
-typedef struct Float2HalfTables {
-#if HAVE_FAST_FLOAT16
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା Float2HalfTables {
+#ଯଦି HAVE_FAST_FLOAT16
     uint8_t dummy;
-#else
+#ଅନ୍ୟଥା
     uint16_t basetable[512];
     uint8_t shifttable[512];
 #endif
 } Float2HalfTables;
 
-void ff_init_float2half_tables(Float2HalfTables *t);
+ଶୂନ୍ୟ ff_init_float2half_tables(Float2HalfTables *t);
 
-static inline uint16_t float2half(uint32_t f, const Float2HalfTables *t)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ uint16_t float2half(uint32_t f, ଅଚଳ Float2HalfTables *t)
 {
-#if HAVE_FAST_FLOAT16
-    union {
+#ଯଦି HAVE_FAST_FLOAT16
+    ସଂଘ {
         _Float16 f;
         uint16_t i;
     } u;
     u.f = av_int2float(f);
-    return u.i;
-#else
+    ଫେରନ୍ତୁ u.i;
+#ଅନ୍ୟଥା
     uint16_t h;
 
     h = t->basetable[(f >> 23) & 0x1ff] + ((f & 0x007fffff) >> t->shifttable[(f >> 23) & 0x1ff]);
 
-    return h;
+    ଫେରନ୍ତୁ h;
 #endif
 }
 

@@ -16,31 +16,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "avassert.h"
-#include "macos_kperf.h"
-#include "thread.h"
+#ଅନ୍ତର୍ଭାଵ "avassert.h"
+#ଅନ୍ତର୍ଭାଵ "macos_kperf.h"
+#ଅନ୍ତର୍ଭାଵ "thread.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <dlfcn.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <stdlib.h>
+#ଅନ୍ତର୍ଭାଵ <dlfcn.h>
 
 #define KPERF_LIST                                             \
-    F(int, kpc_get_counting, void)                             \
-    F(int, kpc_force_all_ctrs_set, int)                        \
-    F(int, kpc_set_counting, uint32_t)                         \
-    F(int, kpc_set_thread_counting, uint32_t)                  \
-    F(int, kpc_set_config, uint32_t, void *)                   \
-    F(int, kpc_get_config, uint32_t, void *)                   \
-    F(int, kpc_set_period, uint32_t, void *)                   \
-    F(int, kpc_get_period, uint32_t, void *)                   \
-    F(uint32_t, kpc_get_counter_count, uint32_t)               \
-    F(uint32_t, kpc_get_config_count, uint32_t)                \
-    F(int, kperf_sample_get, int *)                            \
-    F(int, kpc_get_thread_counters, int, unsigned int, void *)
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kpc_get_counting, ଶୂନ୍ୟ)                             \
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kpc_force_all_ctrs_set, ପୂର୍ଣ୍ଣସଂଖ୍ୟା)                        \
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kpc_set_counting, uint32_t)                         \
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kpc_set_thread_counting, uint32_t)                  \
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kpc_set_config, uint32_t, ଶୂନ୍ୟ *)                   \
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kpc_get_config, uint32_t, ଶୂନ୍ୟ *)                   \
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kpc_set_period, uint32_t, ଶୂନ୍ୟ *)                   \
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kpc_get_period, uint32_t, ଶୂନ୍ୟ *)                   \
+    F(uint32_t, kpc_get_counter_ଗଣନା, uint32_t)               \
+    F(uint32_t, kpc_get_config_ଗଣନା, uint32_t)                \
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kperf_sample_get, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *)                            \
+    F(ପୂର୍ଣ୍ଣସଂଖ୍ୟା, kpc_get_thread_counters, ପୂର୍ଣ୍ଣସଂଖ୍ୟା, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା, ଶୂନ୍ୟ *)
 
 #define F(ret, name, ...)                                      \
-    typedef ret name##proc(__VA_ARGS__);                       \
-    static name##proc *name = NULL;
+    ପ୍ରକାରବ୍ୟାଖ୍ୟା ret name##proc(__VA_ARGS__);                       \
+    ସ୍ଥିର name##proc *name = ଖାଲି;
 KPERF_LIST
 #undef F
 
@@ -68,13 +68,13 @@ KPERF_LIST
 #define KPC_CLASS_RAWPMU_MASK       (1 << 3)
 
 #define KPC_MAX_COUNTERS 32
-#define CONFIG_COUNT 8
+#define CONFIG_ଗଣନା 8
 #define KPC_MASK (KPC_CLASS_CONFIGURABLE_MASK | KPC_CLASS_FIXED_MASK)
 
-static void kperf_init(void)
+ସ୍ଥିର ଶୂନ୍ୟ kperf_init(ଶୂନ୍ୟ)
 {
-    uint64_t config[CONFIG_COUNT] = {0};
-    void *kperf = NULL;
+    uint64_t config[CONFIG_ଗଣନା] = {0};
+    ଶୂନ୍ୟ *kperf = ଖାଲି;
     uint32_t n;
 
     av_assert0(kperf = dlopen("/System/Library/PrivateFrameworks/kperf.framework/Versions/A/kperf", RTLD_LAZY));
@@ -83,10 +83,10 @@ static void kperf_init(void)
     KPERF_LIST
 #undef F
 
-    n = kpc_get_counter_count(KPC_MASK);
+    n = kpc_get_counter_ଗଣନା(KPC_MASK);
     av_assert0(n <= KPC_MAX_COUNTERS);
-    n = kpc_get_config_count(KPC_MASK);
-    av_assert0(n <= CONFIG_COUNT);
+    n = kpc_get_config_ଗଣନା(KPC_MASK);
+    av_assert0(n <= CONFIG_ଗଣନା);
 
     config[0] = CPMU_CORE_CYCLE | CFGWORD_EL0A64EN_MASK;
     // config[3] = CPMU_INST_BRANCH | CFGWORD_EL0A64EN_MASK;
@@ -99,19 +99,19 @@ static void kperf_init(void)
     av_assert0(kpc_set_thread_counting(KPC_MASK) == 0);
 }
 
-void ff_kperf_init(void)
+ଶୂନ୍ୟ ff_kperf_init(ଶୂନ୍ୟ)
 {
-    static AVOnce init_static_once = AV_ONCE_INIT;
+    ସ୍ଥିର AVOnce init_static_once = AV_ONCE_INIT;
     ff_thread_once(&init_static_once, kperf_init);
 }
 
-uint64_t ff_kperf_cycles(void)
+uint64_t ff_kperf_cycles(ଶୂନ୍ୟ)
 {
     uint64_t counters[KPC_MAX_COUNTERS];
 
-    if (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
-        return -1;
+    ଯଦି (kpc_get_thread_counters(0, KPC_MAX_COUNTERS, counters)) {
+        ଫେରନ୍ତୁ -1;
     }
 
-    return counters[0];
+    ଫେରନ୍ତୁ counters[0];
 }

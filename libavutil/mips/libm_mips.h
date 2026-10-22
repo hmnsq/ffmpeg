@@ -53,21 +53,21 @@
 #ifndef AVUTIL_MIPS_LIBM_MIPS_H
 #define AVUTIL_MIPS_LIBM_MIPS_H
 
-#include <math.h>
+#ଅନ୍ତର୍ଭାଵ <math.h>
 
-#include "libavutil/attributes.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/attributes.h"
 
-static av_always_inline av_const long int lrintf_mips(float x)
+ସ୍ଥିର av_always_inline av_const long ପୂର୍ଣ୍ଣସଂଖ୍ୟା lrintf_mips(ଦଶମିକ x)
 {
-    register int ret_int;
+    ପଞ୍ଜିକରଣ ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret_int;
 
-    __asm__ volatile (
+    __asm__ ଅସ୍ଥିର (
         "cvt.w.s    %[x],       %[x]    \n\t"
         "mfc1       %[ret_int], %[x]    \n\t"
 
         :[x]"+f"(x), [ret_int]"=r"(ret_int)
     );
-    return ret_int;
+    ଫେରନ୍ତୁ ret_int;
 }
 
 #undef lrintf

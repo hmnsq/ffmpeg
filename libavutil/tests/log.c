@@ -19,54 +19,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/log.c"
+#ଅନ୍ତର୍ଭାଵ "libavutil/log.c"
 
-#include <string.h>
+#ଅନ୍ତର୍ଭାଵ <string.h>
 
-static int call_log_format_line2(const char *fmt, char *buffer, int buffer_size, ...)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା call_log_format_line2(ଅଚଳ ଅକ୍ଷର *fmt, ଅକ୍ଷର *buffer, ପୂର୍ଣ୍ଣସଂଖ୍ୟା buffer_size, ...)
 {
     va_list args;
-    int ret;
-    int print_prefix=1;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା print_prefix=1;
     va_start(args, buffer_size);
-    ret = av_log_format_line2(NULL, AV_LOG_INFO, fmt, args, buffer, buffer_size, &print_prefix);
+    ret = av_log_format_line2(ଖାଲି, AV_LOG_INFO, fmt, args, buffer, buffer_size, &print_prefix);
     va_end(args);
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int main(int argc, char **argv)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର **argv)
 {
-    int i;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
     av_log_set_level(AV_LOG_DEBUG);
     check_color_terminal();
-    for (use_color=0; use_color<=256; use_color = 255*use_color+1) {
-        av_log(NULL, AV_LOG_FATAL, "use_color: %d\n", use_color);
-        for (i = AV_LOG_DEBUG; i>=AV_LOG_QUIET; i-=8) {
-            av_log(NULL, i, " %d", i);
-            av_log(NULL, AV_LOG_INFO, "e ");
-            av_log(NULL, i + 256*123, "C%d", i);
-            av_log(NULL, AV_LOG_INFO, "e");
+    ପାଇଁ (use_color=0; use_color<=256; use_color = 255*use_color+1) {
+        av_log(ଖାଲି, AV_LOG_FATAL, "use_color: %d\n", use_color);
+        ପାଇଁ (i = AV_LOG_DEBUG; i>=AV_LOG_QUIET; i-=8) {
+            av_log(ଖାଲି, i, " %d", i);
+            av_log(ଖାଲି, AV_LOG_INFO, "e ");
+            av_log(ଖାଲି, i + 256*123, "C%d", i);
+            av_log(ଖାଲି, AV_LOG_INFO, "e");
         }
-        av_log(NULL, AV_LOG_PANIC, "\n");
+        av_log(ଖାଲି, AV_LOG_PANIC, "\n");
     }
     {
-        int result;
-        char buffer[4];
-        result = call_log_format_line2("foo", NULL, 0);
-        if(result != 3) {
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା result;
+        ଅକ୍ଷର buffer[4];
+        result = call_log_format_line2("foo", ଖାଲି, 0);
+        ଯଦି(result != 3) {
             printf("Test NULL buffer failed.\n");
-            return 1;
+            ଫେରନ୍ତୁ 1;
         }
         result = call_log_format_line2("foo", buffer, 2);
-        if(result != 3 || strncmp(buffer, "f", 2)) {
+        ଯଦି(result != 3 || strncmp(buffer, "f", 2)) {
             printf("Test buffer too small failed.\n");
-            return 1;
+            ଫେରନ୍ତୁ 1;
         }
         result = call_log_format_line2("foo", buffer, 4);
-        if(result != 3 || strncmp(buffer, "foo", 4)) {
+        ଯଦି(result != 3 || strncmp(buffer, "foo", 4)) {
             printf("Test buffer sufficiently big failed.\n");
-            return 1;
+            ଫେରନ୍ତୁ 1;
         }
     }
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }

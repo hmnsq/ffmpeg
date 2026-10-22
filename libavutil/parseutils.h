@@ -19,9 +19,9 @@
 #ifndef AVUTIL_PARSEUTILS_H
 #define AVUTIL_PARSEUTILS_H
 
-#include <time.h>
+#ଅନ୍ତର୍ଭାଵ <time.h>
 
-#include "rational.h"
+#ଅନ୍ତର୍ଭାଵ "rational.h"
 
 /**
  * @file
@@ -46,11 +46,11 @@
  * @param[in] log_ctx parent logging context
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_ratio(AVRational *q, const char *str, int max,
-                   int log_offset, void *log_ctx);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_parse_ratio(AVRational *q, ଅଚଳ ଅକ୍ଷର *str, ପୂର୍ଣ୍ଣସଂଖ୍ୟା max,
+                   ପୂର୍ଣ୍ଣସଂଖ୍ୟା log_offset, ଶୂନ୍ୟ *log_ctx);
 
 #define av_parse_ratio_quiet(rate, str, max) \
-    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, NULL)
+    av_parse_ratio(rate, str, max, AV_LOG_MAX_OFFSET, ଖାଲି)
 
 /**
  * Parse str and put in width_ptr and height_ptr the detected values.
@@ -63,7 +63,7 @@ int av_parse_ratio(AVRational *q, const char *str, int max,
  * width x height or a valid video size abbreviation.
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_parse_video_size(ପୂର୍ଣ୍ଣସଂଖ୍ୟା *width_ptr, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *height_ptr, ଅଚଳ ଅକ୍ଷର *str);
 
 /**
  * Parse str and store the detected values in *rate.
@@ -74,7 +74,7 @@ int av_parse_video_size(int *width_ptr, int *height_ptr, const char *str);
  * rate_num / rate_den, a float number or a valid video rate abbreviation
  * @return >= 0 on success, a negative error code otherwise
  */
-int av_parse_video_rate(AVRational *rate, const char *str);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_parse_video_rate(AVRational *rate, ଅଚଳ ଅକ୍ଷର *str);
 
 /**
  * Put the RGBA values that correspond to color_string in rgba_color.
@@ -99,8 +99,8 @@ int av_parse_video_rate(AVRational *rate, const char *str);
  * @return >= 0 in case of success, a negative value in case of
  * failure (for example if color_string cannot be parsed).
  */
-int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
-                   void *log_ctx);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_parse_color(uint8_t *rgba_color, ଅଚଳ ଅକ୍ଷର *color_string, ପୂର୍ଣ୍ଣସଂଖ୍ୟା slen,
+                   ଶୂନ୍ୟ *log_ctx);
 
 /**
  * Get the name of a color from the internal table of hard-coded named
@@ -113,7 +113,7 @@ int av_parse_color(uint8_t *rgba_color, const char *color_string, int slen,
  * @param rgb      if not NULL, will point to a 3-elements array with the color value in RGB
  * @return the color name string or NULL if color_idx is not in the array
  */
-const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
+ଅଚଳ ଅକ୍ଷର *av_get_known_color_name(ପୂର୍ଣ୍ଣସଂଖ୍ୟା color_idx, ଅଚଳ uint8_t **rgb);
 
 /**
  * Parse timestr and return in *time a corresponding number of
@@ -147,7 +147,7 @@ const char *av_get_known_color_name(int color_idx, const uint8_t **rgb);
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_parse_time(int64_t *timeval, const char *timestr, int duration);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_parse_time(int64_t *timeval, ଅଚଳ ଅକ୍ଷର *timestr, ପୂର୍ଣ୍ଣସଂଖ୍ୟା duration);
 
 /**
  * Attempt to find a specific tag in a URL.
@@ -155,7 +155,7 @@ int av_parse_time(int64_t *timeval, const char *timestr, int duration);
  * syntax: '?tag1=val1&tag2=val2...'. Little URL decoding is done.
  * Return 1 if found.
  */
-int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_find_info_tag(ଅକ୍ଷର *arg, ପୂର୍ଣ୍ଣସଂଖ୍ୟା arg_size, ଅଚଳ ଅକ୍ଷର *tag1, ଅଚଳ ଅକ୍ଷର *info);
 
 /**
  * Simplified version of strptime
@@ -187,11 +187,11 @@ int av_find_info_tag(char *arg, int arg_size, const char *tag1, const char *info
  *         is consumed the return value points to the null byte at the end of
  *         the string. On failure NULL is returned.
  */
-char *av_small_strptime(const char *p, const char *fmt, struct tm *dt);
+ଅକ୍ଷର *av_small_strptime(ଅଚଳ ଅକ୍ଷର *p, ଅଚଳ ଅକ୍ଷର *fmt, ସଂରଚନା tm *dt);
 
 /**
  * Convert the decomposed UTC time in tm to a time_t value.
  */
-time_t av_timegm(struct tm *tm);
+time_t av_timegm(ସଂରଚନା tm *tm);
 
 #endif /* AVUTIL_PARSEUTILS_H */

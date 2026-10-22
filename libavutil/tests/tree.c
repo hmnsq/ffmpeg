@@ -16,94 +16,94 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/tree.c"
+#ଅନ୍ତର୍ଭାଵ "libavutil/tree.c"
 
-#include <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
 
-#include "libavutil/common.h"
-#include "libavutil/lfg.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/common.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/lfg.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/log.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/mem.h"
 
-static int check(AVTreeNode *t)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା check(AVTree_ଗଣ୍ଠି *t)
 {
-    if (t) {
-        int left  = check(t->child[0]);
-        int right = check(t->child[1]);
+    ଯଦି (t) {
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା ବାମ  = check(t->child[0]);
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଡାହାଣ = check(t->child[1]);
 
-        if (left > 999 || right > 999)
-            return 1000;
-        if (right - left != t->state)
-            return 1000;
-        if (t->state > 1 || t->state < -1)
-            return 1000;
-        return FFMAX(left, right) + 1;
+        ଯଦି (ବାମ > 999 || ଡାହାଣ > 999)
+            ଫେରନ୍ତୁ 1000;
+        ଯଦି (ଡାହାଣ - ବାମ != t->state)
+            ଫେରନ୍ତୁ 1000;
+        ଯଦି (t->state > 1 || t->state < -1)
+            ଫେରନ୍ତୁ 1000;
+        ଫେରନ୍ତୁ FFMAX(ବାମ, ଡାହାଣ) + 1;
     }
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static void print(AVTreeNode *t, int depth)
+ସ୍ଥିର ଶୂନ୍ୟ print(AVTree_ଗଣ୍ଠି *t, ପୂର୍ଣ୍ଣସଂଖ୍ୟା depth)
 {
-    int i;
-    for (i = 0; i < depth * 4; i++)
-        av_log(NULL, AV_LOG_ERROR, " ");
-    if (t) {
-        av_log(NULL, AV_LOG_ERROR, "Node %p %2d %p\n", t, t->state, t->elem);
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
+    ପାଇଁ (i = 0; i < depth * 4; i++)
+        av_log(ଖାଲି, AV_LOG_ERROR, " ");
+    ଯଦି (t) {
+        av_log(ଖାଲି, AV_LOG_ERROR, "Node %p %2d %p\n", t, t->state, t->elem);
         print(t->child[0], depth + 1);
         print(t->child[1], depth + 1);
-    } else
-        av_log(NULL, AV_LOG_ERROR, "NULL\n");
+    } ଅନ୍ୟଥା
+        av_log(ଖାଲି, AV_LOG_ERROR, "NULL\n");
 }
 
-static int cmp(const void *a, const void *b)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା cmp(ଅଚଳ ଶୂନ୍ୟ *a, ଅଚଳ ଶୂନ୍ୟ *b)
 {
-    return (const uint8_t *) a - (const uint8_t *) b;
+    ଫେରନ୍ତୁ (ଅଚଳ uint8_t *) a - (ଅଚଳ uint8_t *) b;
 }
 
-int main(int argc, char **argv)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର **argv)
 {
-    int i;
-    void *k;
-    AVTreeNode *root = NULL, *node = NULL;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
+    ଶୂନ୍ୟ *k;
+    AVTree_ଗଣ୍ଠି *ମୂଳ = ଖାଲି, *ଗଣ୍ଠି = ଖାଲି;
     AVLFG prng;
-    int log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା log_level = argc <= 1 ? AV_LOG_INFO : atoi(argv[1]);
 
     av_log_set_level(log_level);
 
     av_lfg_init(&prng, 1);
 
-    for (i = 0; i < 10000; i++) {
+    ପାଇଁ (i = 0; i < 10000; i++) {
         intptr_t j = av_lfg_get(&prng) % 86294;
 
-        if (check(root) > 999) {
-            av_log(NULL, AV_LOG_ERROR, "FATAL error %d\n", i);
-            print(root, 0);
-            return 1;
+        ଯଦି (check(ମୂଳ) > 999) {
+            av_log(ଖାଲି, AV_LOG_ERROR, "FATAL error %d\n", i);
+            print(ମୂଳ, 0);
+            ଫେରନ୍ତୁ 1;
         }
-        av_log(NULL, AV_LOG_DEBUG, "inserting %4d\n", (int)j);
+        av_log(ଖାଲି, AV_LOG_DEBUG, "inserting %4d\n", (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)j);
 
-        if (!node)
-            node = av_tree_node_alloc();
-        if (!node) {
-            av_log(NULL, AV_LOG_ERROR, "Memory allocation failure.\n");
-            return 1;
+        ଯଦି (!ଗଣ୍ଠି)
+            ଗଣ୍ଠି = av_ବୃକ୍ଷ_ଗଣ୍ଠି_alloc();
+        ଯଦି (!ଗଣ୍ଠି) {
+            av_log(ଖାଲି, AV_LOG_ERROR, "Memory allocation failure.\n");
+            ଫେରନ୍ତୁ 1;
         }
-        av_tree_insert(&root, (void *)(j + 1), cmp, &node);
+        av_ବୃକ୍ଷ_ଭର୍ତ୍ତି(&ମୂଳ, (ଶୂନ୍ୟ *)(j + 1), cmp, &ଗଣ୍ଠି);
 
         j = av_lfg_get(&prng) % 86294;
         {
-            AVTreeNode *node2 = NULL;
-            av_log(NULL, AV_LOG_DEBUG, "removing %4d\n", (int)j);
-            av_tree_insert(&root, (void *)(j + 1), cmp, &node2);
-            k = av_tree_find(root, (void *)(j + 1), cmp, NULL);
-            if (k)
-                av_log(NULL, AV_LOG_ERROR, "removal failure %d\n", i);
+            AVTree_ଗଣ୍ଠି *node2 = ଖାଲି;
+            av_log(ଖାଲି, AV_LOG_DEBUG, "removing %4d\n", (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)j);
+            av_ବୃକ୍ଷ_ଭର୍ତ୍ତି(&ମୂଳ, (ଶୂନ୍ୟ *)(j + 1), cmp, &node2);
+            k = av_ବୃକ୍ଷ_find(ମୂଳ, (ଶୂନ୍ୟ *)(j + 1), cmp, ଖାଲି);
+            ଯଦି (k)
+                av_log(ଖାଲି, AV_LOG_ERROR, "removal failure %d\n", i);
             av_free(node2);
         }
     }
-    av_free(node);
+    av_free(ଗଣ୍ଠି);
 
-    av_tree_destroy(root);
+    av_ବୃକ୍ଷ_destroy(ମୂଳ);
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }

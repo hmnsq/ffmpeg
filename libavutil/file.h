@@ -19,10 +19,10 @@
 #ifndef AVUTIL_FILE_H
 #define AVUTIL_FILE_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
 
-#include "attributes.h"
+#ଅନ୍ତର୍ଭାଵ "attributes.h"
 
 /**
  * @file
@@ -47,8 +47,8 @@
  * corresponding to an AVERROR error code in case of failure
  */
 av_warn_unused_result
-int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
-                int log_offset, void *log_ctx);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_file_map(ଅଚଳ ଅକ୍ଷର *filename, uint8_t **bufptr, size_t *size,
+                ପୂର୍ଣ୍ଣସଂଖ୍ୟା log_offset, ଶୂନ୍ୟ *log_ctx);
 
 /**
  * Unmap or free the buffer bufptr created by av_file_map().
@@ -57,7 +57,7 @@ int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
  * @param size size in bytes of bufptr, must be the same as returned
  * by av_file_map()
  */
-void av_file_unmap(uint8_t *bufptr, size_t size);
+ଶୂନ୍ୟ av_file_unmap(uint8_t *bufptr, size_t size);
 
 /**
  * Map the beginning of an open file into memory for shared read and write
@@ -77,7 +77,7 @@ void av_file_unmap(uint8_t *bufptr, size_t size);
  * has no shared file mappings
  */
 av_warn_unused_result
-int av_file_map_shared(int fd, size_t size, void **bufptr);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_file_map_shared(ପୂର୍ଣ୍ଣସଂଖ୍ୟା fd, size_t size, ଶୂନ୍ୟ **bufptr);
 
 /**
  * Unmap the memory mapped by av_file_map_shared().
@@ -86,6 +86,6 @@ int av_file_map_shared(int fd, size_t size, void **bufptr);
  * @param size size in bytes of the mapping, must be the same as passed
  * to av_file_map_shared()
  */
-void av_file_unmap_shared(void *bufptr, size_t size);
+ଶୂନ୍ୟ av_file_unmap_shared(ଶୂନ୍ୟ *bufptr, size_t size);
 
 #endif /* AVUTIL_FILE_H */

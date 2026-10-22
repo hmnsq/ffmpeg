@@ -26,9 +26,9 @@
 #ifndef AVUTIL_XGA_FONT_DATA_H
 #define AVUTIL_XGA_FONT_DATA_H
 
-#include <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
 
-const uint8_t *avpriv_cga_font_get(void);
-const uint8_t *avpriv_vga16_font_get(void);
+ଅଚଳ uint8_t *avpriv_cga_font_get(ଶୂନ୍ୟ);
+ଅଚଳ uint8_t *avpriv_vga16_font_get(ଶୂନ୍ୟ);
 
 #endif /* AVUTIL_XGA_FONT_DATA_H */

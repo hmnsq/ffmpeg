@@ -28,30 +28,30 @@
 #ifndef AVUTIL_INT128_H
 #define AVUTIL_INT128_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include <limits.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
+#ଅନ୍ତର୍ଭାଵ <limits.h>
 
-#include "config.h"
-#include "integer.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
+#ଅନ୍ତର୍ଭାଵ "integer.h"
 
-#if HAVE_INT128
+#ଯଦି HAVE_INT128
 #define AV_INT128_NATIVE 1
-typedef unsigned __int128 av_uint128;
-typedef          __int128 av_int128;
-#elif defined(BITINT_MAXWIDTH) && BITINT_MAXWIDTH >= 128
+ପ୍ରକାରବ୍ୟାଖ୍ୟା unsigned __int128 av_uint128;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା          __int128 av_int128;
+#ନଚେତଯଦି defined(BITINT_MAXWIDTH) && BITINT_MAXWIDTH >= 128
 #define AV_INT128_NATIVE 1
-typedef unsigned _BitInt(128) av_uint128;
-typedef          _BitInt(128) av_int128;
-#elif AV_INTEGER_SIZE >= 8
+ପ୍ରକାରବ୍ୟାଖ୍ୟା unsigned _BitInt(128) av_uint128;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା          _BitInt(128) av_int128;
+#ନଚେତଯଦି AV_INTEGER_SIZE >= 8
 #define AV_INT128_NATIVE 0
-typedef AVInteger av_uint128;
-typedef AVInteger av_int128;
-#else
+ପ୍ରକାରବ୍ୟାଖ୍ୟା AVInteger av_uint128;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା AVInteger av_int128;
+#ଅନ୍ୟଥା
 #error "128-bit integer type not available"
 #endif
 
-#if AV_INT128_NATIVE
+#ଯଦି AV_INT128_NATIVE
 #  define av_add128(a, b)   ((a) + (b))
 #  define av_sub128(a, b)   ((a) - (b))
 #  define av_mul128(a, b)   ((a) * (b))
@@ -67,7 +67,7 @@ typedef AVInteger av_int128;
 #  define av_from128i(a)    ((int64_t) (a))
 #  define av_from128u(a)    ((uint64_t) (a))
 #  define av_test128(a)     (!!(a))
-#else
+#ଅନ୍ୟଥା
 #  define av_add128(a, b)   av_add_i(a, b)
 #  define av_sub128(a, b)   av_sub_i(a, b)
 #  define av_mul128(a, b)   av_mul_i(a, b)
@@ -76,16 +76,16 @@ typedef AVInteger av_int128;
 #  define av_min128(a, b)   (av_cmp_i(a, b) > 0 ? (b) : (a))
 #  define av_max128(a, b)   (av_cmp_i(a, b) > 0 ? (a) : (b))
 #  define av_eq128(a, b)    (av_cmp_i(a, b) == 0)
-#  define av_mod128(a, b)   av_mod_i(NULL, a, b)
+#  define av_mod128(a, b)   av_mod_i(ଖାଲି, a, b)
 #  define av_shr128(a, b)   av_shr_i(a, b)
 #  define av_to128i(a)      av_int2i(a)
 #  define av_from128i(a)    av_i2int(a)
 #  define av_from128u(a)    ((uint64_t) av_i2int(a))
 #  define av_test128(a)     (!av_eq128(a, av_to128u(0)))
 
-static av_always_inline av_uint128 av_to128u(uint64_t a)
+ସ୍ଥିର av_always_inline av_uint128 av_to128u(uint64_t a)
 {
-    return (AVInteger) {{ a, a >> 16, a >> 32, a >> 48 }};
+    ଫେରନ୍ତୁ (AVInteger) {{ a, a >> 16, a >> 32, a >> 48 }};
 }
 #endif
 

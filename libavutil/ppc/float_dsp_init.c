@@ -18,29 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/float_dsp.h"
-#include "libavutil/ppc/cpu.h"
-#include "float_dsp_altivec.h"
-#include "float_dsp_vsx.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/attributes.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/float_dsp.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/ppc/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "float_dsp_altivec.h"
+#ଅନ୍ତର୍ଭାଵ "float_dsp_vsx.h"
 
-av_cold void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, int bit_exact)
+av_cold ଶୂନ୍ୟ ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, ପୂର୍ଣ୍ଣସଂଖ୍ୟା bit_exact)
 {
-    if (PPC_ALTIVEC(av_get_cpu_flags())) {
+    ଯଦି (PPC_ALTIVEC(av_get_cpu_flags())) {
         fdsp->vector_fmul = ff_vector_fmul_altivec;
         fdsp->vector_fmul_add = ff_vector_fmul_add_altivec;
         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_altivec;
 
-        if (!bit_exact) {
+        ଯଦି (!bit_exact) {
             fdsp->vector_fmul_window = ff_vector_fmul_window_altivec;
         }
     }
 
     // The disabled function below are near identical to altivec and have
     // been disabled to reduce code duplication
-    if (PPC_VSX(av_get_cpu_flags())) {
+    ଯଦି (PPC_VSX(av_get_cpu_flags())) {
 //         fdsp->vector_fmul = ff_vector_fmul_vsx;
         fdsp->vector_fmul_add = ff_vector_fmul_add_vsx;
 //         fdsp->vector_fmul_reverse = ff_vector_fmul_reverse_vsx;

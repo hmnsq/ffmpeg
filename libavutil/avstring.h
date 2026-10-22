@@ -21,9 +21,9 @@
 #ifndef AVUTIL_AVSTRING_H
 #define AVUTIL_AVSTRING_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include "attributes.h"
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ "attributes.h"
 
 /**
  * @addtogroup lavu_string
@@ -39,7 +39,7 @@
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_strstart(const char *str, const char *pfx, const char **ptr);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_strstart(ଅଚଳ ଅକ୍ଷର *str, ଅଚଳ ଅକ୍ଷର *pfx, ଅଚଳ ଅକ୍ଷର **ptr);
 
 /**
  * Return non-zero if pfx is a prefix of str independent of case. If
@@ -51,7 +51,7 @@ int av_strstart(const char *str, const char *pfx, const char **ptr);
  * @param ptr updated if the prefix is matched inside str
  * @return non-zero if the prefix matches, zero otherwise
  */
-int av_stristart(const char *str, const char *pfx, const char **ptr);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_stristart(ଅଚଳ ଅକ୍ଷର *str, ଅଚଳ ଅକ୍ଷର *pfx, ଅଚଳ ଅକ୍ଷର **ptr);
 
 /**
  * Locate the first case-independent occurrence in the string haystack
@@ -65,7 +65,7 @@ int av_stristart(const char *str, const char *pfx, const char **ptr);
  * @return         pointer to the located match within haystack
  *                 or a null pointer if no match
  */
-char *av_stristr(const char *haystack, const char *needle);
+ଅକ୍ଷର *av_stristr(ଅଚଳ ଅକ୍ଷର *haystack, ଅଚଳ ଅକ୍ଷର *needle);
 
 /**
  * Locate the first occurrence of the string needle in the string haystack
@@ -80,7 +80,7 @@ char *av_stristr(const char *haystack, const char *needle);
  * @return           pointer to the located match within haystack
  *                   or a null pointer if no match
  */
-char *av_strnstr(const char *haystack, const char *needle, size_t hay_length);
+ଅକ୍ଷର *av_strnstr(ଅଚଳ ଅକ୍ଷର *haystack, ଅଚଳ ଅକ୍ଷର *needle, size_t hay_length);
 
 /**
  * Copy the string src to dst, but no more than size - 1 bytes, and
@@ -97,7 +97,7 @@ char *av_strnstr(const char *haystack, const char *needle, size_t hay_length);
  * _must_ be a properly 0-terminated string, otherwise this will read beyond
  * the end of the buffer and possibly crash.
  */
-size_t av_strlcpy(char *dst, const char *src, size_t size);
+size_t av_strlcpy(ଅକ୍ଷର *dst, ଅଚଳ ଅକ୍ଷର *src, size_t size);
 
 /**
  * Append the string src to the string dst, but to a total length of
@@ -115,7 +115,7 @@ size_t av_strlcpy(char *dst, const char *src, size_t size);
  * absolutely _must_ be a properly 0-terminated strings, otherwise this
  * will read beyond the end of the buffer and possibly crash.
  */
-size_t av_strlcat(char *dst, const char *src, size_t size);
+size_t av_strlcat(ଅକ୍ଷର *dst, ଅଚଳ ଅକ୍ଷର *src, size_t size);
 
 /**
  * Append output to a string, according to a format. Never write out of
@@ -129,7 +129,7 @@ size_t av_strlcat(char *dst, const char *src, size_t size);
  * @return the length of the string that would have been generated
  *  if enough space had been available
  */
-size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...) av_printf_format(3, 4);
+size_t av_strlcatf(ଅକ୍ଷର *dst, size_t size, ଅଚଳ ଅକ୍ଷର *fmt, ...) av_printf_format(3, 4);
 
 /**
  * Get the count of continuous non zero chars starting from the beginning.
@@ -138,12 +138,12 @@ size_t av_strlcatf(char *dst, size_t size, const char *fmt, ...) av_printf_forma
  * @param len maximum number of characters to check in the string, that
  *            is the maximum value which is returned by the function
  */
-static inline size_t av_strnlen(const char *s, size_t len)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ size_t av_strnlen(ଅଚଳ ଅକ୍ଷର *s, size_t len)
 {
     size_t i;
-    for (i = 0; i < len && s[i]; i++)
+    ପାଇଁ (i = 0; i < len && s[i]; i++)
         ;
-    return i;
+    ଫେରନ୍ତୁ i;
 }
 
 /**
@@ -154,7 +154,7 @@ static inline size_t av_strnlen(const char *s, size_t len)
  * @return the allocated string
  * @note You have to free the string yourself with av_free().
  */
-char *av_asprintf(const char *fmt, ...) av_printf_format(1, 2);
+ଅକ୍ଷର *av_asprintf(ଅଚଳ ଅକ୍ଷର *fmt, ...) av_printf_format(1, 2);
 
 /**
  * Unescape the given string until a non escaped terminating char,
@@ -170,7 +170,7 @@ char *av_asprintf(const char *fmt, ...) av_printf_format(1, 2);
  * @return the malloced unescaped string, which must be av_freed by
  * the user, NULL in case of allocation failure
  */
-char *av_get_token(const char **buf, const char *term);
+ଅକ୍ଷର *av_get_token(ଅଚଳ ଅକ୍ଷର **buf, ଅଚଳ ଅକ୍ଷର *term);
 
 /**
  * Split the string into several tokens which can be accessed by
@@ -194,79 +194,79 @@ char *av_get_token(const char **buf, const char *term);
  * first delimiter found, or to NULL if the string was terminated
  * @return the found token, or NULL when no token is found
  */
-char *av_strtok(char *s, const char *delim, char **saveptr);
+ଅକ୍ଷର *av_strtok(ଅକ୍ଷର *s, ଅଚଳ ଅକ୍ଷର *delim, ଅକ୍ଷର **saveptr);
 
 /**
  * Locale-independent conversion of ASCII isdigit.
  */
-static inline av_const int av_isdigit(int c)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ av_const ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_isdigit(ପୂର୍ଣ୍ଣସଂଖ୍ୟା c)
 {
-    return c >= '0' && c <= '9';
+    ଫେରନ୍ତୁ c >= '0' && c <= '9';
 }
 
 /**
  * Locale-independent conversion of ASCII isgraph.
  */
-static inline av_const int av_isgraph(int c)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ av_const ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_isgraph(ପୂର୍ଣ୍ଣସଂଖ୍ୟା c)
 {
-    return c > 32 && c < 127;
+    ଫେରନ୍ତୁ c > 32 && c < 127;
 }
 
 /**
  * Locale-independent conversion of ASCII isspace.
  */
-static inline av_const int av_isspace(int c)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ av_const ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_isspace(ପୂର୍ଣ୍ଣସଂଖ୍ୟା c)
 {
-    return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
+    ଫେରନ୍ତୁ c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' ||
            c == '\v';
 }
 
 /**
  * Locale-independent conversion of ASCII characters to uppercase.
  */
-static inline av_const int av_toupper(int c)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ av_const ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_toupper(ପୂର୍ଣ୍ଣସଂଖ୍ୟା c)
 {
-    if (c >= 'a' && c <= 'z')
+    ଯଦି (c >= 'a' && c <= 'z')
         c ^= 0x20;
-    return c;
+    ଫେରନ୍ତୁ c;
 }
 
 /**
  * Locale-independent conversion of ASCII characters to lowercase.
  */
-static inline av_const int av_tolower(int c)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ av_const ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_tolower(ପୂର୍ଣ୍ଣସଂଖ୍ୟା c)
 {
-    if (c >= 'A' && c <= 'Z')
+    ଯଦି (c >= 'A' && c <= 'Z')
         c ^= 0x20;
-    return c;
+    ଫେରନ୍ତୁ c;
 }
 
 /**
  * Locale-independent conversion of ASCII isxdigit.
  */
-static inline av_const int av_isxdigit(int c)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ av_const ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_isxdigit(ପୂର୍ଣ୍ଣସଂଖ୍ୟା c)
 {
     c = av_tolower(c);
-    return av_isdigit(c) || (c >= 'a' && c <= 'f');
+    ଫେରନ୍ତୁ av_isdigit(c) || (c >= 'a' && c <= 'f');
 }
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strcasecmp(const char *a, const char *b);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_strcasecmp(ଅଚଳ ଅକ୍ଷର *a, ଅଚଳ ଅକ୍ଷର *b);
 
 /**
  * Locale-independent case-insensitive compare.
  * @note This means only ASCII-range characters are case-insensitive
  */
-int av_strncasecmp(const char *a, const char *b, size_t n);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_strncasecmp(ଅଚଳ ଅକ୍ଷର *a, ଅଚଳ ଅକ୍ଷର *b, size_t n);
 
 /**
  * Locale-independent strings replace.
  * @note This means only ASCII-range characters are replaced.
  */
-char *av_strireplace(const char *str, const char *from, const char *to);
+ଅକ୍ଷର *av_strireplace(ଅଚଳ ଅକ୍ଷର *str, ଅଚଳ ଅକ୍ଷର *from, ଅଚଳ ଅକ୍ଷର *to);
 
 /**
  * Thread safe basename.
@@ -276,7 +276,7 @@ char *av_strireplace(const char *str, const char *from, const char *to);
  * If path is a NULL pointer or points to an empty string, a pointer
  * to a string "." is returned.
  */
-const char *av_basename(const char *path);
+ଅଚଳ ଅକ୍ଷର *av_basename(ଅଚଳ ଅକ୍ଷର *path);
 
 /**
  * Thread safe dirname.
@@ -286,7 +286,7 @@ const char *av_basename(const char *path);
  * to a string "." is returned.
  * @note the function may modify the contents of the path, so copies should be passed.
  */
-const char *av_dirname(char *path);
+ଅଚଳ ଅକ୍ଷର *av_dirname(ଅକ୍ଷର *path);
 
 /**
  * Match instances of a name in a comma-separated list of names.
@@ -299,7 +299,7 @@ const char *av_dirname(char *path);
  * @param names List of names.
  * @return 1 on match, 0 otherwise.
  */
-int av_match_name(const char *name, const char *names);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_match_name(ଅଚଳ ଅକ୍ଷର *name, ଅଚଳ ଅକ୍ଷର *names);
 
 /**
  * Append path component to the existing path.
@@ -309,9 +309,9 @@ int av_match_name(const char *name, const char *names);
  * @param component component to be appended
  * @return new path or NULL on error.
  */
-char *av_append_path_component(const char *path, const char *component);
+ଅକ୍ଷର *av_append_path_component(ଅଚଳ ଅକ୍ଷର *path, ଅଚଳ ଅକ୍ଷର *component);
 
-enum AVEscapeMode {
+ଗଣନା AVEscapeMode {
     AV_ESCAPE_MODE_AUTO,      ///< Use auto-selected escaping mode.
     AV_ESCAPE_MODE_BACKSLASH, ///< Use backslash escaping.
     AV_ESCAPE_MODE_QUOTE,     ///< Use single-quote escaping.
@@ -365,8 +365,8 @@ enum AVEscapeMode {
  * @see av_bprint_escape()
  */
 av_warn_unused_result
-int av_escape(char **dst, const char *src, const char *special_chars,
-              enum AVEscapeMode mode, int flags);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_escape(ଅକ୍ଷର **dst, ଅଚଳ ଅକ୍ଷର *src, ଅଚଳ ଅକ୍ଷର *special_chars,
+              ଗଣନା AVEscapeMode mode, ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags);
 
 #define AV_UTF8_FLAG_ACCEPT_INVALID_BIG_CODES          1 ///< accept codepoints over 0x10FFFF
 #define AV_UTF8_FLAG_ACCEPT_NON_CHARACTERS             2 ///< accept non-characters - 0xFFFE and 0xFFFF
@@ -405,21 +405,21 @@ int av_escape(char **dst, const char *src, const char *special_chars,
  * value in case of invalid sequence
  */
 av_warn_unused_result
-int av_utf8_decode(int32_t *codep, const uint8_t **bufp, const uint8_t *buf_end,
-                   unsigned int flags);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_utf8_decode(int32_t *codep, ଅଚଳ uint8_t **bufp, ଅଚଳ uint8_t *buf_end,
+                   unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags);
 
 /**
  * Check if a name is in a list.
  * @returns 0 if not found, or the 1 based index where it has been found in the
  *            list.
  */
-int av_match_list(const char *name, const char *list, char separator);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_match_list(ଅଚଳ ଅକ୍ଷର *name, ଅଚଳ ଅକ୍ଷର *list, ଅକ୍ଷର separator);
 
 /**
  * See libc sscanf manual for more information.
  * Locale-independent sscanf implementation.
  */
-int av_sscanf(const char *string, const char *format, ...) av_scanf_format(2, 3);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_sscanf(ଅଚଳ ଅକ୍ଷର *string, ଅଚଳ ଅକ୍ଷର *format, ...) av_scanf_format(2, 3);
 
 /**
  * @}

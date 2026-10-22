@@ -18,74 +18,74 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "error.h"
-#include "log.h"
-#include "mem.h"
-#include "tree.h"
+#ଅନ୍ତର୍ଭାଵ "error.h"
+#ଅନ୍ତର୍ଭାଵ "log.h"
+#ଅନ୍ତର୍ଭାଵ "mem.h"
+#ଅନ୍ତର୍ଭାଵ "tree.h"
 
-typedef struct AVTreeNode {
-    struct AVTreeNode *child[2];
-    void *elem;
-    int state;
-} AVTreeNode;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVTree_ଗଣ୍ଠି {
+    ସଂରଚନା AVTree_ଗଣ୍ଠି *child[2];
+    ଶୂନ୍ୟ *elem;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା state;
+} AVTree_ଗଣ୍ଠି;
 
-const int av_tree_node_size = sizeof(AVTreeNode);
+ଅଚଳ ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_ବୃକ୍ଷ_ଗଣ୍ଠି_size = ଆକାର(AVTree_ଗଣ୍ଠି);
 
-struct AVTreeNode *av_tree_node_alloc(void)
+ସଂରଚନା AVTree_ଗଣ୍ଠି *av_ବୃକ୍ଷ_ଗଣ୍ଠି_alloc(ଶୂନ୍ୟ)
 {
-    return av_mallocz(sizeof(struct AVTreeNode));
+    ଫେରନ୍ତୁ av_mallocz(ଆକାର(ସଂରଚନା AVTree_ଗଣ୍ଠି));
 }
 
-void *av_tree_find(const AVTreeNode *t, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2])
+ଶୂନ୍ୟ *av_ବୃକ୍ଷ_find(ଅଚଳ AVTree_ଗଣ୍ଠି *t, ଶୂନ୍ୟ *ଚାବି,
+                   ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*cmp)(ଅଚଳ ଶୂନ୍ୟ *ଚାବି, ଅଚଳ ଶୂନ୍ୟ *b), ଶୂନ୍ୟ *next[2])
 {
-    if (t) {
-        unsigned int v = cmp(key, t->elem);
-        if (v) {
-            if (next)
+    ଯଦି (t) {
+        unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା v = cmp(ଚାବି, t->elem);
+        ଯଦି (v) {
+            ଯଦି (next)
                 next[v >> 31] = t->elem;
-            return av_tree_find(t->child[(v >> 31) ^ 1], key, cmp, next);
-        } else {
-            if (next) {
-                av_tree_find(t->child[0], key, cmp, next);
-                av_tree_find(t->child[1], key, cmp, next);
+            ଫେରନ୍ତୁ av_ବୃକ୍ଷ_find(t->child[(v >> 31) ^ 1], ଚାବି, cmp, next);
+        } ଅନ୍ୟଥା {
+            ଯଦି (next) {
+                av_ବୃକ୍ଷ_find(t->child[0], ଚାବି, cmp, next);
+                av_ବୃକ୍ଷ_find(t->child[1], ଚାବି, cmp, next);
             }
-            return t->elem;
+            ଫେରନ୍ତୁ t->elem;
         }
     }
-    return NULL;
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
-void *av_tree_insert(AVTreeNode **tp, void *key,
-                     int (*cmp)(const void *key, const void *b), AVTreeNode **next)
+ଶୂନ୍ୟ *av_ବୃକ୍ଷ_ଭର୍ତ୍ତି(AVTree_ଗଣ୍ଠି **tp, ଶୂନ୍ୟ *ଚାବି,
+                     ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*cmp)(ଅଚଳ ଶୂନ୍ୟ *ଚାବି, ଅଚଳ ଶୂନ୍ୟ *b), AVTree_ଗଣ୍ଠି **next)
 {
-    AVTreeNode *t = *tp;
-    if (t) {
-        unsigned int v = cmp(t->elem, key);
-        void *ret;
-        if (!v) {
-            if (*next)
-                return t->elem;
-            else if (t->child[0] || t->child[1]) {
-                int i = !t->child[0];
-                void *next_elem[2];
-                av_tree_find(t->child[i], key, cmp, next_elem);
-                key = t->elem = next_elem[i];
+    AVTree_ଗଣ୍ଠି *t = *tp;
+    ଯଦି (t) {
+        unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା v = cmp(t->elem, ଚାବି);
+        ଶୂନ୍ୟ *ret;
+        ଯଦି (!v) {
+            ଯଦି (*next)
+                ଫେରନ୍ତୁ t->elem;
+            ଅନ୍ୟଥା ଯଦି (t->child[0] || t->child[1]) {
+                ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = !t->child[0];
+                ଶୂନ୍ୟ *next_elem[2];
+                av_ବୃକ୍ଷ_find(t->child[i], ଚାବି, cmp, next_elem);
+                ଚାବି = t->elem = next_elem[i];
                 v   = -i;
-            } else {
+            } ଅନ୍ୟଥା {
                 *next = t;
-                *tp   = NULL;
-                return NULL;
+                *tp   = ଖାଲି;
+                ଫେରନ୍ତୁ ଖାଲି;
             }
         }
-        ret = av_tree_insert(&t->child[v >> 31], key, cmp, next);
-        if (!ret) {
-            int i              = (v >> 31) ^ !!*next;
-            AVTreeNode **child = &t->child[i];
+        ret = av_ବୃକ୍ଷ_ଭର୍ତ୍ତି(&t->child[v >> 31], ଚାବି, cmp, next);
+        ଯଦି (!ret) {
+            ପୂର୍ଣ୍ଣସଂଖ୍ୟା i              = (v >> 31) ^ !!*next;
+            AVTree_ଗଣ୍ଠି **child = &t->child[i];
             t->state += 2 * i - 1;
 
-            if (!(t->state & 1)) {
-                if (t->state) {
+            ଯଦି (!(t->state & 1)) {
+                ଯଦି (t->state) {
                     /* The following code is equivalent to
                      * if ((*child)->state * 2 == -t->state)
                      *     rotate(child, i ^ 1);
@@ -106,7 +106,7 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                      * }
                      * but such a rotate function is both bigger and slower
                      */
-                    if ((*child)->state * 2 == -t->state) {
+                    ଯଦି ((*child)->state * 2 == -t->state) {
                         *tp                    = (*child)->child[i ^ 1];
                         (*child)->child[i ^ 1] = (*tp)->child[i];
                         (*tp)->child[i]        = *child;
@@ -116,53 +116,53 @@ void *av_tree_insert(AVTreeNode **tp, void *key,
                         (*tp)->child[0]->state = -((*tp)->state > 0);
                         (*tp)->child[1]->state = (*tp)->state < 0;
                         (*tp)->state           = 0;
-                    } else {
+                    } ଅନ୍ୟଥା {
                         *tp                 = *child;
                         *child              = (*child)->child[i ^ 1];
                         (*tp)->child[i ^ 1] = t;
-                        if ((*tp)->state)
+                        ଯଦି ((*tp)->state)
                             t->state = 0;
-                        else
+                        ଅନ୍ୟଥା
                             t->state >>= 1;
                         (*tp)->state = -t->state;
                     }
                 }
             }
-            if (!(*tp)->state ^ !!*next)
-                return key;
+            ଯଦି (!(*tp)->state ^ !!*next)
+                ଫେରନ୍ତୁ ଚାବି;
         }
-        return ret;
-    } else {
+        ଫେରନ୍ତୁ ret;
+    } ଅନ୍ୟଥା {
         *tp   = *next;
-        *next = NULL;
-        if (*tp) {
-            (*tp)->elem = key;
-            return NULL;
-        } else
-            return key;
+        *next = ଖାଲି;
+        ଯଦି (*tp) {
+            (*tp)->elem = ଚାବି;
+            ଫେରନ୍ତୁ ଖାଲି;
+        } ଅନ୍ୟଥା
+            ଫେରନ୍ତୁ ଚାବି;
     }
 }
 
-void av_tree_destroy(AVTreeNode *t)
+ଶୂନ୍ୟ av_ବୃକ୍ଷ_destroy(AVTree_ଗଣ୍ଠି *t)
 {
-    if (t) {
-        av_tree_destroy(t->child[0]);
-        av_tree_destroy(t->child[1]);
+    ଯଦି (t) {
+        av_ବୃକ୍ଷ_destroy(t->child[0]);
+        av_ବୃକ୍ଷ_destroy(t->child[1]);
         av_free(t);
     }
 }
 
-void av_tree_enumerate(AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem))
+ଶୂନ୍ୟ av_ବୃକ୍ଷ_enumerate(AVTree_ଗଣ୍ଠି *t, ଶୂନ୍ୟ *opaque,
+                       ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*cmp)(ଶୂନ୍ୟ *opaque, ଶୂନ୍ୟ *elem),
+                       ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*enu)(ଶୂନ୍ୟ *opaque, ଶୂନ୍ୟ *elem))
 {
-    if (t) {
-        int v = cmp ? cmp(opaque, t->elem) : 0;
-        if (v >= 0)
-            av_tree_enumerate(t->child[0], opaque, cmp, enu);
-        if (v == 0)
+    ଯଦି (t) {
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା v = cmp ? cmp(opaque, t->elem) : 0;
+        ଯଦି (v >= 0)
+            av_ବୃକ୍ଷ_enumerate(t->child[0], opaque, cmp, enu);
+        ଯଦି (v == 0)
             enu(opaque, t->elem);
-        if (v <= 0)
-            av_tree_enumerate(t->child[1], opaque, cmp, enu);
+        ଯଦି (v <= 0)
+            av_ବୃକ୍ଷ_enumerate(t->child[1], opaque, cmp, enu);
     }
 }

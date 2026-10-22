@@ -26,7 +26,7 @@
 #ifndef AVUTIL_EVAL_H
 #define AVUTIL_EVAL_H
 
-typedef struct AVExpr AVExpr;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVExpr AVExpr;
 
 /**
  * Parse and evaluate an expression.
@@ -47,11 +47,11 @@ typedef struct AVExpr AVExpr;
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse_and_eval(double *res, const char *s,
-                           const char * const *const_names, const double *const_values,
-                           const char * const *func1_names, double (* const *funcs1)(void *, double),
-                           const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                           void *opaque, int log_offset, void *log_ctx);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_ପଦସମଷ୍ଟି_parse_and_eval(ଦ୍ୱିଗୁଣ *res, ଅଚଳ ଅକ୍ଷର *s,
+                           ଅଚଳ ଅକ୍ଷର * ଅଚଳ *const_names, ଅଚଳ ଦ୍ୱିଗୁଣ *const_ମୂଲ୍ୟଗୁଡ଼ିକ,
+                           ଅଚଳ ଅକ୍ଷର * ଅଚଳ *func1_names, ଦ୍ୱିଗୁଣ (* ଅଚଳ *funcs1)(ଶୂନ୍ୟ *, ଦ୍ୱିଗୁଣ),
+                           ଅଚଳ ଅକ୍ଷର * ଅଚଳ *func2_names, ଦ୍ୱିଗୁଣ (* ଅଚଳ *funcs2)(ଶୂନ୍ୟ *, ଦ୍ୱିଗୁଣ, ଦ୍ୱିଗୁଣ),
+                           ଶୂନ୍ୟ *opaque, ପୂର୍ଣ୍ଣସଂଖ୍ୟା log_offset, ଶୂନ୍ୟ *log_ctx);
 
 /**
  * Parse an expression.
@@ -71,11 +71,11 @@ int av_expr_parse_and_eval(double *res, const char *s,
  * @return >= 0 in case of success, a negative value corresponding to an
  * AVERROR code otherwise
  */
-int av_expr_parse(AVExpr **expr, const char *s,
-                  const char * const *const_names,
-                  const char * const *func1_names, double (* const *funcs1)(void *, double),
-                  const char * const *func2_names, double (* const *funcs2)(void *, double, double),
-                  int log_offset, void *log_ctx);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_ପଦସମଷ୍ଟି_parse(AVExpr **ପଦସମଷ୍ଟି, ଅଚଳ ଅକ୍ଷର *s,
+                  ଅଚଳ ଅକ୍ଷର * ଅଚଳ *const_names,
+                  ଅଚଳ ଅକ୍ଷର * ଅଚଳ *func1_names, ଦ୍ୱିଗୁଣ (* ଅଚଳ *funcs1)(ଶୂନ୍ୟ *, ଦ୍ୱିଗୁଣ),
+                  ଅଚଳ ଅକ୍ଷର * ଅଚଳ *func2_names, ଦ୍ୱିଗୁଣ (* ଅଚଳ *funcs2)(ଶୂନ୍ୟ *, ଦ୍ୱିଗୁଣ, ଦ୍ୱିଗୁଣ),
+                  ପୂର୍ଣ୍ଣସଂଖ୍ୟା log_offset, ଶୂନ୍ୟ *log_ctx);
 
 /**
  * Evaluate a previously parsed expression.
@@ -85,7 +85,7 @@ int av_expr_parse(AVExpr **expr, const char *s,
  * @param opaque a pointer which will be passed to all functions from funcs1 and funcs2
  * @return the value of the expression
  */
-double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
+ଦ୍ୱିଗୁଣ av_ପଦସମଷ୍ଟି_eval(AVExpr *e, ଅଚଳ ଦ୍ୱିଗୁଣ *const_ମୂଲ୍ୟଗୁଡ଼ିକ, ଶୂନ୍ୟ *opaque);
 
 /**
  * Track the presence of variables and their number of occurrences in a parsed expression
@@ -96,7 +96,7 @@ double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_ପଦସମଷ୍ଟି_ଗଣନା_vars(AVExpr *e, unsigned *counter, ପୂର୍ଣ୍ଣସଂଖ୍ୟା size);
 
 /**
  * Track the presence of user provided functions and their number of occurrences
@@ -111,12 +111,12 @@ int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
  * @return 0 on success, a negative value indicates that no expression or array was passed
  * or size was zero
  */
-int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_ପଦସମଷ୍ଟି_ଗଣନା_func(AVExpr *e, unsigned *counter, ପୂର୍ଣ୍ଣସଂଖ୍ୟା size, ପୂର୍ଣ୍ଣସଂଖ୍ୟା arg);
 
 /**
  * Free a parsed expression previously created with av_expr_parse().
  */
-void av_expr_free(AVExpr *e);
+ଶୂନ୍ୟ av_ପଦସମଷ୍ଟି_free(AVExpr *e);
 
 /**
  * Parse the string in numstr and return its value as a double. If
@@ -135,6 +135,6 @@ void av_expr_free(AVExpr *e);
  * @param tail if non-NULL puts here the pointer to the char next
  * after the last parsed character
  */
-double av_strtod(const char *numstr, char **tail);
+ଦ୍ୱିଗୁଣ av_strtod(ଅଚଳ ଅକ୍ଷର *numstr, ଅକ୍ଷର **tail);
 
 #endif /* AVUTIL_EVAL_H */

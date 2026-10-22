@@ -16,33 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/timer.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/timer.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#ଅନ୍ତର୍ଭାଵ <math.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <string.h>
 
-#include "libavutil/mathematics.h"
-#include "libavutil/eval.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/mathematics.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/eval.h"
 
-static const double const_values[] = {
+ସ୍ଥିର ଅଚଳ ଦ୍ୱିଗୁଣ const_ମୂଲ୍ୟଗୁଡ଼ିକ[] = {
     M_PI,
     M_E,
     0
 };
 
-static const char *const const_names[] = {
+ସ୍ଥିର ଅଚଳ ଅକ୍ଷର *ଅଚଳ const_names[] = {
     "PI",
     "E",
     0
 };
 
-int main(int argc, char **argv)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର **argv)
 {
-    int i;
-    double d;
-    const char *const *expr;
-    static const char *const exprs[] = {
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
+    ଦ୍ୱିଗୁଣ d;
+    ଅଚଳ ଅକ୍ଷର *ଅଚଳ *ପଦସମଷ୍ଟି;
+    ସ୍ଥିର ଅଚଳ ଅକ୍ଷର *ଅଚଳ exprs[] = {
         "",
         "1;2",
         "-20",
@@ -143,47 +143,47 @@ int main(int argc, char **argv)
         "clip(0, 2, 1)",
         "clip(0/0, 1, 2)",
         "clip(0, 0/0, 1)",
-        NULL
+        ଖାଲି
     };
-    int ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ret;
 
-    for (expr = exprs; *expr; expr++) {
-        printf("Evaluating '%s'\n", *expr);
-        ret = av_expr_parse_and_eval(&d, *expr,
-                               const_names, const_values,
-                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
-        if (isnan(d))
-            printf("'%s' -> nan\n\n", *expr);
-        else
-            printf("'%s' -> %f\n\n", *expr, d);
-        if (ret < 0)
+    ପାଇଁ (ପଦସମଷ୍ଟି = exprs; *ପଦସମଷ୍ଟି; ପଦସମଷ୍ଟି++) {
+        printf("Evaluating '%s'\n", *ପଦସମଷ୍ଟି);
+        ret = av_ପଦସମଷ୍ଟି_parse_and_eval(&d, *ପଦସମଷ୍ଟି,
+                               const_names, const_ମୂଲ୍ୟଗୁଡ଼ିକ,
+                               ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, 0, ଖାଲି);
+        ଯଦି (isnan(d))
+            printf("'%s' -> nan\n\n", *ପଦସମଷ୍ଟି);
+        ଅନ୍ୟଥା
+            printf("'%s' -> %f\n\n", *ପଦସମଷ୍ଟି, d);
+        ଯଦି (ret < 0)
             printf("av_expr_parse_and_eval failed\n");
     }
 
-    ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_ପଦସମଷ୍ଟି_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_ମୂଲ୍ୟଗୁଡ଼ିକ,
+                           ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, 0, ଖାଲି);
     printf("%f == 12.7\n", d);
-    if (ret < 0)
+    ଯଦି (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
-    ret = av_expr_parse_and_eval(&d, "80G/80Gi",
-                           const_names, const_values,
-                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    ret = av_ପଦସମଷ୍ଟି_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_ମୂଲ୍ୟଗୁଡ଼ିକ,
+                           ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, 0, ଖାଲି);
     printf("%f == 0.931322575\n", d);
-    if (ret < 0)
+    ଯଦି (ret < 0)
         printf("av_expr_parse_and_eval failed\n");
 
-    if (argc > 1 && !strcmp(argv[1], "-t")) {
-        for (i = 0; i < 1050; i++) {
+    ଯଦି (argc > 1 && !strcmp(argv[1], "-t")) {
+        ପାଇଁ (i = 0; i < 1050; i++) {
             START_TIMER;
-            ret = av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
-                                   const_names, const_values,
-                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
-            if (ret < 0)
+            ret = av_ପଦସମଷ୍ଟି_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_ମୂଲ୍ୟଗୁଡ଼ିକ,
+                                   ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, ଖାଲି, 0, ଖାଲି);
+            ଯଦି (ret < 0)
                 printf("av_expr_parse_and_eval failed\n");
             STOP_TIMER("av_expr_parse_and_eval");
         }
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }

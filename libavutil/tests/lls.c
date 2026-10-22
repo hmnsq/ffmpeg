@@ -16,41 +16,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <limits.h>
-#include <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <limits.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
 
-#include "libavutil/internal.h"
-#include "libavutil/lfg.h"
-#include "libavutil/lls.h"
-#include "libavutil/mem_internal.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/internal.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/lfg.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/lls.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/mem_internal.h"
 
 /* Values below the printed precision are rounding noise whose sign varies
  * between platforms, so print them as zero. */
-static double clean(double v)
+ସ୍ଥିର ଦ୍ୱିଗୁଣ clean(ଦ୍ୱିଗୁଣ v)
 {
-    return fabs(v) < 1e-9 ? 0.0 : v;
+    ଫେରନ୍ତୁ fabs(v) < 1e-9 ? 0.0 : v;
 }
 
-int main(void)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ଶୂନ୍ୟ)
 {
     LLSModel m;
-    int i, order;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i, order;
     AVLFG lfg;
 
     av_lfg_init(&lfg, 1);
     avpriv_init_lls(&m, 3);
 
-    for (i = 0; i < 100; i++) {
-        LOCAL_ALIGNED(32, double, var, [4]);
-        double eval;
+    ପାଇଁ (i = 0; i < 100; i++) {
+        LOCAL_ALIGNED(32, ଦ୍ୱିଗୁଣ, var, [4]);
+        ଦ୍ୱିଗୁଣ eval;
 
-        var[0] =         (av_lfg_get(&lfg) / (double) UINT_MAX - 0.5) * 2;
-        var[1] = var[0] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[2] = var[1] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
-        var[3] = var[2] + av_lfg_get(&lfg) / (double) UINT_MAX - 0.5;
+        var[0] =         (av_lfg_get(&lfg) / (ଦ୍ୱିଗୁଣ) UINT_MAX - 0.5) * 2;
+        var[1] = var[0] + av_lfg_get(&lfg) / (ଦ୍ୱିଗୁଣ) UINT_MAX - 0.5;
+        var[2] = var[1] + av_lfg_get(&lfg) / (ଦ୍ୱିଗୁଣ) UINT_MAX - 0.5;
+        var[3] = var[2] + av_lfg_get(&lfg) / (ଦ୍ୱିଗୁଣ) UINT_MAX - 0.5;
         m.update_lls(&m, var);
         avpriv_solve_lls(&m, 0.001, 0);
-        for (order = 0; order < 3; order++) {
+        ପାଇଁ (order = 0; order < 3; order++) {
             eval = m.evaluate_lls(&m, var + 1, order);
             printf("real:%9f order:%d pred:%9f var:%f coeffs:%f %9f %9f\n",
                    var[0], order, eval,
@@ -59,5 +59,5 @@ int main(void)
                    clean(m.coeff[order][2]));
         }
     }
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }

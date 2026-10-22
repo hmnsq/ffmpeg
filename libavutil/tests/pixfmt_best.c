@@ -16,9 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/pixdesc.c"
+#ଅନ୍ତର୍ଭାଵ "libavutil/pixdesc.c"
 
-static const enum AVPixelFormat pixfmt_list[] = {
+ସ୍ଥିର ଅଚଳ ଗଣନା AVPixelFormat pixfmt_list[] = {
     AV_PIX_FMT_MONOWHITE,
     AV_PIX_FMT_GRAY8,
     AV_PIX_FMT_GRAY10,
@@ -39,7 +39,7 @@ static const enum AVPixelFormat pixfmt_list[] = {
     AV_PIX_FMT_VAAPI,
 };
 
-static const enum AVPixelFormat semiplanar_list[] = {
+ସ୍ଥିର ଅଚଳ ଗଣନା AVPixelFormat semiplanar_list[] = {
     AV_PIX_FMT_P016,
     AV_PIX_FMT_P012,
     AV_PIX_FMT_P010,
@@ -52,7 +52,7 @@ static const enum AVPixelFormat semiplanar_list[] = {
     AV_PIX_FMT_NV12,
 };
 
-static const enum AVPixelFormat packed_list[] = {
+ସ୍ଥିର ଅଚଳ ଗଣନା AVPixelFormat packed_list[] = {
     AV_PIX_FMT_XV48,
     AV_PIX_FMT_XV36,
     AV_PIX_FMT_XV30,
@@ -63,30 +63,30 @@ static const enum AVPixelFormat packed_list[] = {
     AV_PIX_FMT_YUYV422,
 };
 
-static const enum AVPixelFormat subsampled_list[] = {
+ସ୍ଥିର ଅଚଳ ଗଣନା AVPixelFormat subsampled_list[] = {
     AV_PIX_FMT_YUV411P,
     AV_PIX_FMT_YUV420P,
     AV_PIX_FMT_YUV422P,
     AV_PIX_FMT_YUV444P,
 };
 
-static const enum AVPixelFormat depthchroma_list[] = {
+ସ୍ଥିର ଅଚଳ ଗଣନା AVPixelFormat depthchroma_list[] = {
     AV_PIX_FMT_YUV420P14,
     AV_PIX_FMT_YUV422P14,
     AV_PIX_FMT_YUV444P16,
 };
 
-typedef enum AVPixelFormat (*find_best_t)(enum AVPixelFormat pixfmt);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଗଣନା AVPixelFormat (*find_best_t)(ଗଣନା AVPixelFormat pixfmt);
 
 #define find_best_wrapper(name, list) \
-static enum AVPixelFormat find_best_ ## name (enum AVPixelFormat pixfmt)    \
+ସ୍ଥିର ଗଣନା AVPixelFormat find_best_ ## name (ଗଣନା AVPixelFormat pixfmt)    \
 {                                                                           \
-    enum AVPixelFormat best = AV_PIX_FMT_NONE;                              \
-    int i;                                                                  \
-    for (i = 0; i < FF_ARRAY_ELEMS(list); i++)                              \
+    ଗଣନା AVPixelFormat best = AV_PIX_FMT_NONE;                              \
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;                                                                  \
+    ପାଇଁ (i = 0; i < FF_ARRAY_ELEMS(list); i++)                              \
         best = av_find_best_pix_fmt_of_2(best, list[i],                     \
-                                         pixfmt, 0, NULL);                  \
-    return best;                                                            \
+                                         pixfmt, 0, ଖାଲି);                  \
+    ଫେରନ୍ତୁ best;                                                            \
 }
 
 find_best_wrapper(base, pixfmt_list)
@@ -95,29 +95,29 @@ find_best_wrapper(packed, packed_list)
 find_best_wrapper(subsampled, subsampled_list)
 find_best_wrapper(depthchroma, depthchroma_list)
 
-static void test(enum AVPixelFormat input, enum AVPixelFormat expected,
-                 int *pass, int *fail, find_best_t find_best_fn)
+ସ୍ଥିର ଶୂନ୍ୟ test(ଗଣନା AVPixelFormat ନିବେଶ, ଗଣନା AVPixelFormat expected,
+                 ପୂର୍ଣ୍ଣସଂଖ୍ୟା *pass, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *fail, find_best_t find_best_fn)
 {
-        enum AVPixelFormat output = find_best_fn(input);
-        if (output != expected) {
+        ଗଣନା AVPixelFormat output = find_best_fn(ନିବେଶ);
+        ଯଦି (output != expected) {
             printf("Matching %s: got %s, expected %s\n",
-                   av_get_pix_fmt_name(input),
+                   av_get_pix_fmt_name(ନିବେଶ),
                    av_get_pix_fmt_name(output),
                    av_get_pix_fmt_name(expected));
             ++(*fail);
-        } else
+        } ଅନ୍ୟଥା
             ++(*pass);
 }
 
-int main(void)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ଶୂନ୍ୟ)
 {
-    int i, pass = 0, fail = 0;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i, pass = 0, fail = 0;
 
-#define TEST(input, expected) \
-    test(input, expected, &pass, &fail, find_best_base)
+#define TEST(ନିବେଶ, expected) \
+    test(ନିବେଶ, expected, &pass, &fail, find_best_base)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(pixfmt_list); i++)
+    ପାଇଁ (i = 0; i < FF_ARRAY_ELEMS(pixfmt_list); i++)
         TEST(pixfmt_list[i], pixfmt_list[i]);
 
     // Formats containing the same data in different layouts.
@@ -198,11 +198,11 @@ int main(void)
     // Opaque formats are least unlike each other.
     TEST(AV_PIX_FMT_DXVA2_VLD, AV_PIX_FMT_VDPAU);
 
-#define TEST_SEMIPLANAR(input, expected) \
-    test(input, expected, &pass, &fail, find_best_seminplanar)
+#define TEST_SEMIPLANAR(ନିବେଶ, expected) \
+    test(ନିବେଶ, expected, &pass, &fail, find_best_seminplanar)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(semiplanar_list); i++)
+    ପାଇଁ (i = 0; i < FF_ARRAY_ELEMS(semiplanar_list); i++)
         TEST_SEMIPLANAR(semiplanar_list[i], semiplanar_list[i]);
 
     // Formats containing the same data in different layouts.
@@ -220,11 +220,11 @@ int main(void)
     TEST_SEMIPLANAR(AV_PIX_FMT_YUV444P12, AV_PIX_FMT_P416);
     TEST_SEMIPLANAR(AV_PIX_FMT_YUV444P16, AV_PIX_FMT_P416);
 
-#define TEST_PACKED(input, expected) \
-    test(input, expected, &pass, &fail, find_best_packed)
+#define TEST_PACKED(ନିବେଶ, expected) \
+    test(ନିବେଶ, expected, &pass, &fail, find_best_packed)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(packed_list); i++)
+    ପାଇଁ (i = 0; i < FF_ARRAY_ELEMS(packed_list); i++)
         TEST_PACKED(packed_list[i], packed_list[i]);
 
     // Formats containing the same data in different layouts.
@@ -237,20 +237,20 @@ int main(void)
     TEST_PACKED(AV_PIX_FMT_YUV422P12, AV_PIX_FMT_Y212);
     TEST_PACKED(AV_PIX_FMT_YUV422P16, AV_PIX_FMT_Y216);
 
-#define TEST_SUBSAMPLED(input, expected) \
-    test(input, expected, &pass, &fail, find_best_subsampled)
+#define TEST_SUBSAMPLED(ନିବେଶ, expected) \
+    test(ନିବେଶ, expected, &pass, &fail, find_best_subsampled)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(subsampled_list); i++)
+    ପାଇଁ (i = 0; i < FF_ARRAY_ELEMS(subsampled_list); i++)
         TEST_SUBSAMPLED(subsampled_list[i], subsampled_list[i]);
 
     TEST_SUBSAMPLED(AV_PIX_FMT_YUV410P, AV_PIX_FMT_YUV420P);
 
-#define TEST_DEPTH_CHROMA(input, expected) \
-    test(input, expected, &pass, &fail, find_best_depthchroma)
+#define TEST_DEPTH_CHROMA(ନିବେଶ, expected) \
+    test(ନିବେଶ, expected, &pass, &fail, find_best_depthchroma)
 
     // Same formats.
-    for (i = 0; i < FF_ARRAY_ELEMS(depthchroma_list); i++)
+    ପାଇଁ (i = 0; i < FF_ARRAY_ELEMS(depthchroma_list); i++)
         TEST_DEPTH_CHROMA(depthchroma_list[i], depthchroma_list[i]);
 
     TEST_DEPTH_CHROMA(AV_PIX_FMT_YUV420P16, AV_PIX_FMT_YUV444P16);
@@ -258,5 +258,5 @@ int main(void)
 
 
     printf("%d tests passed, %d tests failed.\n", pass, fail);
-    return !!fail;
+    ଫେରନ୍ତୁ !!fail;
 }

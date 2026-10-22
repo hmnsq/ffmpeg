@@ -18,22 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
-#include "libavutil/display.c"
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
+#ଅନ୍ତର୍ଭାଵ "libavutil/display.c"
 
-static void print_matrix(int32_t matrix[9])
+ସ୍ଥିର ଶୂନ୍ୟ print_matrix(int32_t matrix[9])
 {
-    int i, j;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i, j;
 
-    for (i = 0; i < 3; ++i) {
-        for (j = 0; j < 3 - 1; ++j)
+    ପାଇଁ (i = 0; i < 3; ++i) {
+        ପାଇଁ (j = 0; j < 3 - 1; ++j)
             printf("%d ", matrix[i*3 + j]);
 
         printf("%d\n", matrix[i*3 + j]);
     }
 }
 
-int main(void)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ଶୂନ୍ୟ)
 {
     int32_t matrix[9];
 
@@ -57,6 +57,6 @@ int main(void)
     print_matrix(matrix);
     printf("degrees: %f\n", av_display_rotation_get(matrix));
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 
 }

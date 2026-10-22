@@ -18,53 +18,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <string.h>
 
-#include "attributes.h"
-#include "error.h"
-#include "hmac.h"
-#include "md5.h"
-#include "sha.h"
-#include "sha512.h"
-#include "mem.h"
+#ଅନ୍ତର୍ଭାଵ "attributes.h"
+#ଅନ୍ତର୍ଭାଵ "error.h"
+#ଅନ୍ତର୍ଭାଵ "hmac.h"
+#ଅନ୍ତର୍ଭାଵ "md5.h"
+#ଅନ୍ତର୍ଭାଵ "sha.h"
+#ଅନ୍ତର୍ଭାଵ "sha512.h"
+#ଅନ୍ତର୍ଭାଵ "mem.h"
 
 #define MAX_HASHLEN 64
 #define MAX_BLOCKLEN 128
 
-typedef void (*hmac_final)(void *ctx, uint8_t *dst);
-typedef void (*hmac_update)(void *ctx, const uint8_t *src, size_t len);
-typedef void (*hmac_init)(void *ctx);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ (*hmac_final)(ଶୂନ୍ୟ *ctx, uint8_t *dst);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ (*hmac_update)(ଶୂନ୍ୟ *ctx, ଅଚଳ uint8_t *src, size_t len);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ (*hmac_init)(ଶୂନ୍ୟ *ctx);
 
-struct AVHMAC {
-    void *hash;
-    int blocklen, hashlen;
+ସଂରଚନା AVHMAC {
+    ଶୂନ୍ୟ *hash;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା blocklen, hashlen;
     hmac_final  final;
     hmac_update update;
     hmac_init   init;
-    uint8_t key[MAX_BLOCKLEN];
-    int keylen;
+    uint8_t ଚାବି[MAX_BLOCKLEN];
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା keylen;
 };
 
 #define DEFINE_ALGO_BITS_INIT(prefix, bits)        \
-static av_cold void prefix##bits##_init(void *ctx) \
+ସ୍ଥିର av_cold ଶୂନ୍ୟ prefix##bits##_init(ଶୂନ୍ୟ *ctx) \
 {                                                  \
     av_##prefix##_init(ctx, bits);                 \
 }
 
 #define DEFINE_ALGO_INIT(prefix)             \
-static av_cold void prefix##_init(void *ctx) \
+ସ୍ଥିର av_cold ଶୂନ୍ୟ prefix##_init(ଶୂନ୍ୟ *ctx) \
 {                                            \
     av_##prefix##_init(ctx);                 \
 }
 
 #define DEFINE_ALGO(prefix)                                            \
-static void prefix##_update(void *ctx, const uint8_t *src, size_t len) \
+ସ୍ଥିର ଶୂନ୍ୟ prefix##_update(ଶୂନ୍ୟ *ctx, ଅଚଳ uint8_t *src, size_t len) \
 {                                                                      \
     av_##prefix##_update(ctx, src, len);                               \
 }                                                                      \
-static void prefix##_final(void *ctx, uint8_t *dst)                    \
+ସ୍ଥିର ଶୂନ୍ୟ prefix##_final(ଶୂନ୍ୟ *ctx, uint8_t *dst)                    \
 {                                                                      \
     av_##prefix##_final(ctx, dst);                                     \
 }
@@ -79,128 +79,128 @@ DEFINE_ALGO(md5)
 DEFINE_ALGO(sha)
 DEFINE_ALGO(sha512)
 
-AVHMAC *av_hmac_alloc(enum AVHMACType type)
+AVHMAC *av_hmac_alloc(ଗଣନା AVHMACType type)
 {
-    AVHMAC *c = av_mallocz(sizeof(*c));
-    if (!c)
-        return NULL;
-    switch (type) {
-    case AV_HMAC_MD5:
+    AVHMAC *c = av_mallocz(ଆକାର(*c));
+    ଯଦି (!c)
+        ଫେରନ୍ତୁ ଖାଲି;
+    ବାଛ (type) {
+    ସ୍ଥିତି AV_HMAC_MD5:
         c->blocklen = 64;
         c->hashlen  = 16;
         c->init     = md5_init;
         c->update   = md5_update;
         c->final    = md5_final;
         c->hash     = av_md5_alloc();
-        break;
-    case AV_HMAC_SHA1:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_HMAC_SHA1:
         c->blocklen = 64;
         c->hashlen  = 20;
         c->init     = sha160_init;
         c->update   = sha_update;
         c->final    = sha_final;
         c->hash     = av_sha_alloc();
-        break;
-    case AV_HMAC_SHA224:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_HMAC_SHA224:
         c->blocklen = 64;
         c->hashlen  = 28;
         c->init     = sha224_init;
         c->update   = sha_update;
         c->final    = sha_final;
         c->hash     = av_sha_alloc();
-        break;
-    case AV_HMAC_SHA256:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_HMAC_SHA256:
         c->blocklen = 64;
         c->hashlen  = 32;
         c->init     = sha256_init;
         c->update   = sha_update;
         c->final    = sha_final;
         c->hash     = av_sha_alloc();
-        break;
-    case AV_HMAC_SHA384:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_HMAC_SHA384:
         c->blocklen = 128;
         c->hashlen  = 48;
         c->init     = sha512384_init;
         c->update   = sha512_update;
         c->final    = sha512_final;
         c->hash     = av_sha512_alloc();
-        break;
-    case AV_HMAC_SHA512:
+        ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_HMAC_SHA512:
         c->blocklen = 128;
         c->hashlen  = 64;
         c->init     = sha512512_init;
         c->update   = sha512_update;
         c->final    = sha512_final;
         c->hash     = av_sha512_alloc();
-        break;
-    default:
+        ଭାଙ୍ଗ;
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
         av_free(c);
-        return NULL;
+        ଫେରନ୍ତୁ ଖାଲି;
     }
-    if (!c->hash) {
+    ଯଦି (!c->hash) {
         av_free(c);
-        return NULL;
+        ଫେରନ୍ତୁ ଖାଲି;
     }
-    return c;
+    ଫେରନ୍ତୁ c;
 }
 
-void av_hmac_free(AVHMAC *c)
+ଶୂନ୍ୟ av_hmac_free(AVHMAC *c)
 {
-    if (!c)
-        return;
+    ଯଦି (!c)
+        ଫେରନ୍ତୁ;
     av_freep(&c->hash);
     av_free(c);
 }
 
-void av_hmac_init(AVHMAC *c, const uint8_t *key, unsigned int keylen)
+ଶୂନ୍ୟ av_hmac_init(AVHMAC *c, ଅଚଳ uint8_t *ଚାବି, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା keylen)
 {
-    int i;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
     uint8_t block[MAX_BLOCKLEN];
-    if (keylen > c->blocklen) {
+    ଯଦି (keylen > c->blocklen) {
         c->init(c->hash);
-        c->update(c->hash, key, keylen);
-        c->final(c->hash, c->key);
+        c->update(c->hash, ଚାବି, keylen);
+        c->final(c->hash, c->ଚାବି);
         c->keylen = c->hashlen;
-    } else {
-        memcpy(c->key, key, keylen);
+    } ଅନ୍ୟଥା {
+        memcpy(c->ଚାବି, ଚାବି, keylen);
         c->keylen = keylen;
     }
     c->init(c->hash);
-    for (i = 0; i < c->keylen; i++)
-        block[i] = c->key[i] ^ 0x36;
-    for (i = c->keylen; i < c->blocklen; i++)
+    ପାଇଁ (i = 0; i < c->keylen; i++)
+        block[i] = c->ଚାବି[i] ^ 0x36;
+    ପାଇଁ (i = c->keylen; i < c->blocklen; i++)
         block[i] = 0x36;
     c->update(c->hash, block, c->blocklen);
 }
 
-void av_hmac_update(AVHMAC *c, const uint8_t *data, unsigned int len)
+ଶୂନ୍ୟ av_hmac_update(AVHMAC *c, ଅଚଳ uint8_t *data, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା len)
 {
     c->update(c->hash, data, len);
 }
 
-int av_hmac_final(AVHMAC *c, uint8_t *out, unsigned int outlen)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_hmac_final(AVHMAC *c, uint8_t *out, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା outlen)
 {
     uint8_t block[MAX_BLOCKLEN];
-    int i;
-    if (outlen < c->hashlen)
-        return AVERROR(EINVAL);
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
+    ଯଦି (outlen < c->hashlen)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
     c->final(c->hash, out);
     c->init(c->hash);
-    for (i = 0; i < c->keylen; i++)
-        block[i] = c->key[i] ^ 0x5C;
-    for (i = c->keylen; i < c->blocklen; i++)
+    ପାଇଁ (i = 0; i < c->keylen; i++)
+        block[i] = c->ଚାବି[i] ^ 0x5C;
+    ପାଇଁ (i = c->keylen; i < c->blocklen; i++)
         block[i] = 0x5C;
     c->update(c->hash, block, c->blocklen);
     c->update(c->hash, out, c->hashlen);
     c->final(c->hash, out);
-    return c->hashlen;
+    ଫେରନ୍ତୁ c->hashlen;
 }
 
-int av_hmac_calc(AVHMAC *c, const uint8_t *data, unsigned int len,
-                 const uint8_t *key, unsigned int keylen,
-                 uint8_t *out, unsigned int outlen)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_hmac_calc(AVHMAC *c, ଅଚଳ uint8_t *data, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା len,
+                 ଅଚଳ uint8_t *ଚାବି, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା keylen,
+                 uint8_t *out, unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା outlen)
 {
-    av_hmac_init(c, key, keylen);
+    av_hmac_init(c, ଚାବି, keylen);
     av_hmac_update(c, data, len);
-    return av_hmac_final(c, out, outlen);
+    ଫେରନ୍ତୁ av_hmac_final(c, out, outlen);
 }

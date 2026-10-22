@@ -22,7 +22,7 @@
 #ifndef AVUTIL_DES_H
 #define AVUTIL_DES_H
 
-#include <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
 
 /**
  * @defgroup lavu_des DES
@@ -30,15 +30,15 @@
  * @{
  */
 
-typedef struct AVDES {
-    uint64_t round_keys[3][16];
-    int triple_des;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVDES {
+    uint64_t round_ଚାବିଗୁଡ଼ିକ[3][16];
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା triple_des;
 } AVDES;
 
 /**
  * Allocate an AVDES context.
  */
-AVDES *av_des_alloc(void);
+AVDES *av_des_alloc(ଶୂନ୍ୟ);
 
 /**
  * @brief Initializes an AVDES context.
@@ -49,7 +49,7 @@ AVDES *av_des_alloc(void);
  * @param decrypt 0 for encryption/CBC-MAC, 1 for decryption
  * @return zero on success, negative value otherwise
  */
-int av_des_init(struct AVDES *d, const uint8_t *key, int key_bits, int decrypt);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_des_init(ସଂରଚନା AVDES *d, ଅଚଳ uint8_t *ଚାବି, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଚାବି_bits, ପୂର୍ଣ୍ଣସଂଖ୍ୟା decrypt);
 
 /**
  * @brief Encrypts / decrypts using the DES algorithm.
@@ -62,7 +62,7 @@ int av_des_init(struct AVDES *d, const uint8_t *key, int key_bits, int decrypt);
  *           must be 8-byte aligned
  * @param decrypt 0 for encryption, 1 for decryption
  */
-void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
+ଶୂନ୍ୟ av_des_crypt(ସଂରଚନା AVDES *d, uint8_t *dst, ଅଚଳ uint8_t *src, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2, uint8_t *iv, ପୂର୍ଣ୍ଣସଂଖ୍ୟା decrypt);
 
 /**
  * @brief Calculates CBC-MAC using the DES algorithm.
@@ -72,7 +72,7 @@ void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count, 
  * @param src source array, can be equal to dst, must be 8-byte aligned, may be NULL
  * @param count number of 8 byte blocks
  */
-void av_des_mac(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count);
+ଶୂନ୍ୟ av_des_mac(ସଂରଚନା AVDES *d, uint8_t *dst, ଅଚଳ uint8_t *src, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2);
 
 /**
  * @}

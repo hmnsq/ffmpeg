@@ -19,43 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdint.h>
-#include "cpu.h"
-#include <sys/auxv.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ "cpu.h"
+#ଅନ୍ତର୍ଭାଵ <sys/auxv.h>
 
 #define LA_HWCAP_LSX    (1<<4)
 #define LA_HWCAP_LASX   (1<<5)
-static int cpu_flags_getauxval(void)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା cpu_flags_getauxval(ଶୂନ୍ୟ)
 {
-    int flags = 0;
-    int flag  = (int)ff_getauxval(AT_HWCAP);
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags = 0;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା flag  = (ପୂର୍ଣ୍ଣସଂଖ୍ୟା)ff_getauxval(AT_HWCAP);
 
-    if (flag & LA_HWCAP_LSX)
+    ଯଦି (flag & LA_HWCAP_LSX)
         flags |= AV_CPU_FLAG_LSX;
-    if (flag & LA_HWCAP_LASX)
+    ଯଦି (flag & LA_HWCAP_LASX)
         flags |= AV_CPU_FLAG_LASX;
 
-    return flags;
+    ଫେରନ୍ତୁ flags;
 }
 
-int ff_get_cpu_flags_loongarch(void)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ff_get_cpu_flags_loongarch(ଶୂନ୍ୟ)
 {
-#if defined __linux__
-    return cpu_flags_getauxval();
-#else
+#ଯଦି defined __linux__
+    ଫେରନ୍ତୁ cpu_flags_getauxval();
+#ଅନ୍ୟଥା
     /* Assume no SIMD ASE supported */
-    return 0;
+    ଫେରନ୍ତୁ 0;
 #endif
 }
 
-size_t ff_get_cpu_max_align_loongarch(void)
+size_t ff_get_cpu_max_align_loongarch(ଶୂନ୍ୟ)
 {
-    int flags = av_get_cpu_flags();
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_LASX)
-        return 32;
-    if (flags & AV_CPU_FLAG_LSX)
-        return 16;
+    ଯଦି (flags & AV_CPU_FLAG_LASX)
+        ଫେରନ୍ତୁ 32;
+    ଯଦି (flags & AV_CPU_FLAG_LSX)
+        ଫେରନ୍ତୁ 16;
 
-    return 8;
+    ଫେରନ୍ତୁ 8;
 }

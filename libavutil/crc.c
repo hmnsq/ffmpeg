@@ -18,21 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
 
-#include "thread.h"
-#include "avassert.h"
-#include "bswap.h"
-#include "crc.h"
-#include "error.h"
-#if ARCH_AARCH64
-#include "libavutil/aarch64/crc.h"
-#elif ARCH_X86
-#include "libavutil/x86/crc.h"
+#ଅନ୍ତର୍ଭାଵ "thread.h"
+#ଅନ୍ତର୍ଭାଵ "avassert.h"
+#ଅନ୍ତର୍ଭାଵ "bswap.h"
+#ଅନ୍ତର୍ଭାଵ "crc.h"
+#ଅନ୍ତର୍ଭାଵ "error.h"
+#ଯଦି ARCH_AARCH64
+#ଅନ୍ତର୍ଭାଵ "libavutil/aarch64/crc.h"
+#ନଚେତଯଦି ARCH_X86
+#ଅନ୍ତର୍ଭାଵ "libavutil/x86/crc.h"
 #endif
 
-#if CONFIG_HARDCODED_TABLES
-static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
+#ଯଦି CONFIG_HARDCODED_TABLES
+ସ୍ଥିର ଅଚଳ AVCRC av_crc_table[AV_CRC_MAX][257] = {
     [AV_CRC_8_ATM] = {
         0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15, 0x38, 0x3F, 0x36, 0x31,
         0x24, 0x23, 0x2A, 0x2D, 0x70, 0x77, 0x7E, 0x79, 0x6C, 0x6B, 0x62, 0x65,
@@ -316,19 +316,19 @@ static const AVCRC av_crc_table[AV_CRC_MAX][257] = {
         0x0001
     },
 };
-#else
-#if CONFIG_SMALL
+#ଅନ୍ୟଥା
+#ଯଦି CONFIG_SMALL
 #define CRC_TABLE_SIZE 257
-#else
+#ଅନ୍ୟଥା
 #define CRC_TABLE_SIZE 1024
 #endif
-static AVCRC av_crc_table[AV_CRC_MAX][CRC_TABLE_SIZE];
+ସ୍ଥିର AVCRC av_crc_table[AV_CRC_MAX][CRC_TABLE_SIZE];
 
 #define DECLARE_CRC_INIT_TABLE_ONCE(id, le, bits, poly)                                       \
-static AVOnce id ## _once_control = AV_ONCE_INIT;                                             \
-static void id ## _init_table_once(void)                                                      \
+ସ୍ଥିର AVOnce id ## _once_control = AV_ONCE_INIT;                                             \
+ସ୍ଥିର ଶୂନ୍ୟ id ## _init_table_once(ଶୂନ୍ୟ)                                                      \
 {                                                                                             \
-    av_assert0(av_crc_init(av_crc_table[id], le, bits, poly, sizeof(av_crc_table[id])) >= 0); \
+    av_assert0(av_crc_init(av_crc_table[id], le, bits, poly, ଆକାର(av_crc_table[id])) >= 0); \
 }
 
 #define CRC_INIT_TABLE_ONCE(id) ff_thread_once(&id ## _once_control, id ## _init_table_once)
@@ -343,102 +343,102 @@ DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE_LE, 1, 32, 0xEDB88320)
 DECLARE_CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI_LE, 1, 16,     0xA001)
 #endif
 
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_crc_init(AVCRC *ctx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା le, ପୂର୍ଣ୍ଣସଂଖ୍ୟା bits, uint32_t poly, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ctx_size)
 {
     unsigned i, j;
     uint32_t c;
 
-    if (bits < 8 || bits > 32 || poly >= (1LL << bits))
-        return AVERROR(EINVAL);
-    if (ctx_size != sizeof(AVCRC) * 257 && ctx_size != sizeof(AVCRC) * 1024)
-        return AVERROR(EINVAL);
+    ଯଦି (bits < 8 || bits > 32 || poly >= (1LL << bits))
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
+    ଯଦି (ctx_size != ଆକାର(AVCRC) * 257 && ctx_size != ଆକାର(AVCRC) * 1024)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
-#if ARCH_X86
-    int done = ff_crc_init_x86(ctx, le, bits, poly, ctx_size);
-    if (done)
-        return 0;
-#elif ARCH_AARCH64
-    int done = ff_crc_init_aarch64(ctx, le, bits, poly, ctx_size);
-    if (done)
-        return 0;
+#ଯଦି ARCH_X86
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା done = ff_crc_init_x86(ctx, le, bits, poly, ctx_size);
+    ଯଦି (done)
+        ଫେରନ୍ତୁ 0;
+#ନଚେତଯଦି ARCH_AARCH64
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା done = ff_crc_init_aarch64(ctx, le, bits, poly, ctx_size);
+    ଯଦି (done)
+        ଫେରନ୍ତୁ 0;
 #endif
 
-    for (i = 0; i < 256; i++) {
-        if (le) {
-            for (c = i, j = 0; j < 8; j++)
+    ପାଇଁ (i = 0; i < 256; i++) {
+        ଯଦି (le) {
+            ପାଇଁ (c = i, j = 0; j < 8; j++)
                 c = (c >> 1) ^ (poly & (-(c & 1)));
             ctx[i] = c;
-        } else {
-            for (c = i << 24, j = 0; j < 8; j++)
+        } ଅନ୍ୟଥା {
+            ପାଇଁ (c = i << 24, j = 0; j < 8; j++)
                 c = (c << 1) ^ ((poly << (32 - bits)) & (((int32_t) c) >> 31));
             ctx[i] = av_bswap32(c);
         }
     }
     ctx[256] = 1;
-#if !CONFIG_SMALL
-    if (ctx_size >= sizeof(AVCRC) * 1024)
-        for (i = 0; i < 256; i++)
-            for (j = 0; j < 3; j++)
+#ଯଦି !CONFIG_SMALL
+    ଯଦି (ctx_size >= ଆକାର(AVCRC) * 1024)
+        ପାଇଁ (i = 0; i < 256; i++)
+            ପାଇଁ (j = 0; j < 3; j++)
                 ctx[256 * (j + 1) + i] =
                     (ctx[256 * j + i] >> 8) ^ ctx[ctx[256 * j + i] & 0xFF];
 #endif
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-const AVCRC *av_crc_get_table(AVCRCId crc_id)
+ଅଚଳ AVCRC *av_crc_get_table(AVCRCId crc_id)
 {
-    if ((unsigned)crc_id >= AV_CRC_MAX)
-        return NULL;
+    ଯଦି ((unsigned)crc_id >= AV_CRC_MAX)
+        ଫେରନ୍ତୁ ଖାଲି;
 // Check for arch-specific extensions first to avoid initializing
 // ordinary CRC tables unnecessarily.
-#if ARCH_AARCH64
-    const AVCRC *table = ff_crc_get_table_aarch64(crc_id);
-    if (table)
-        return table;
-#elif ARCH_X86
-    const AVCRC *table = ff_crc_get_table_x86(crc_id);
-    if (table)
-        return table;
+#ଯଦି ARCH_AARCH64
+    ଅଚଳ AVCRC *table = ff_crc_get_table_aarch64(crc_id);
+    ଯଦି (table)
+        ଫେରନ୍ତୁ table;
+#ନଚେତଯଦି ARCH_X86
+    ଅଚଳ AVCRC *table = ff_crc_get_table_x86(crc_id);
+    ଯଦି (table)
+        ଫେରନ୍ତୁ table;
 #endif
 
-#if !CONFIG_HARDCODED_TABLES
-    switch (crc_id) {
-    case AV_CRC_8_ATM:      CRC_INIT_TABLE_ONCE(AV_CRC_8_ATM); break;
-    case AV_CRC_8_EBU:      CRC_INIT_TABLE_ONCE(AV_CRC_8_EBU); break;
-    case AV_CRC_16_ANSI:    CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI); break;
-    case AV_CRC_16_CCITT:   CRC_INIT_TABLE_ONCE(AV_CRC_16_CCITT); break;
-    case AV_CRC_24_IEEE:    CRC_INIT_TABLE_ONCE(AV_CRC_24_IEEE); break;
-    case AV_CRC_32_IEEE:    CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE); break;
-    case AV_CRC_32_IEEE_LE: CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE_LE); break;
-    case AV_CRC_16_ANSI_LE: CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI_LE); break;
-    default: av_unreachable("already checked");
+#ଯଦି !CONFIG_HARDCODED_TABLES
+    ବାଛ (crc_id) {
+    ସ୍ଥିତି AV_CRC_8_ATM:      CRC_INIT_TABLE_ONCE(AV_CRC_8_ATM); ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_CRC_8_EBU:      CRC_INIT_TABLE_ONCE(AV_CRC_8_EBU); ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_CRC_16_ANSI:    CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI); ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_CRC_16_CCITT:   CRC_INIT_TABLE_ONCE(AV_CRC_16_CCITT); ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_CRC_24_IEEE:    CRC_INIT_TABLE_ONCE(AV_CRC_24_IEEE); ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_CRC_32_IEEE:    CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE); ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_CRC_32_IEEE_LE: CRC_INIT_TABLE_ONCE(AV_CRC_32_IEEE_LE); ଭାଙ୍ଗ;
+    ସ୍ଥିତି AV_CRC_16_ANSI_LE: CRC_INIT_TABLE_ONCE(AV_CRC_16_ANSI_LE); ଭାଙ୍ଗ;
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ: av_unreachable("already checked");
     }
 #endif
-    return av_crc_table[crc_id];
+    ଫେରନ୍ତୁ av_crc_table[crc_id];
 }
 
-uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
-                const uint8_t *buffer, size_t length)
+uint32_t av_crc(ଅଚଳ AVCRC *ctx, uint32_t crc,
+                ଅଚଳ uint8_t *buffer, size_t length)
 {
-    if (ctx[0]) {
-#if ARCH_AARCH64
-        return ff_crc_aarch64(ctx, crc, buffer, length);
-#elif ARCH_X86
-        return ff_crc_x86(ctx, crc, buffer, length);
+    ଯଦି (ctx[0]) {
+#ଯଦି ARCH_AARCH64
+        ଫେରନ୍ତୁ ff_crc_aarch64(ctx, crc, buffer, length);
+#ନଚେତଯଦି ARCH_X86
+        ଫେରନ୍ତୁ ff_crc_x86(ctx, crc, buffer, length);
 #endif
     }
     av_assert2(ctx[0] == 0);
 
-    const uint8_t *end = buffer + length;
+    ଅଚଳ uint8_t *end = buffer + length;
 
-#if !CONFIG_SMALL
-    if (!ctx[256]) {
-        while (((intptr_t) buffer & 3) && buffer < end)
+#ଯଦି !CONFIG_SMALL
+    ଯଦି (!ctx[256]) {
+        ଯେତେବେଳେ (((intptr_t) buffer & 3) && buffer < end)
             crc = ctx[((uint8_t) crc) ^ *buffer++] ^ (crc >> 8);
 
-        while (buffer < end - 3) {
-            crc ^= av_le2ne32(*(const uint32_t *) buffer); buffer += 4;
+        ଯେତେବେଳେ (buffer < end - 3) {
+            crc ^= av_le2ne32(*(ଅଚଳ uint32_t *) buffer); buffer += 4;
             crc = ctx[3 * 256 + ( crc        & 0xFF)] ^
                   ctx[2 * 256 + ((crc >> 8 ) & 0xFF)] ^
                   ctx[1 * 256 + ((crc >> 16) & 0xFF)] ^
@@ -446,8 +446,8 @@ uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
         }
     }
 #endif
-    while (buffer < end)
+    ଯେତେବେଳେ (buffer < end)
         crc = ctx[((uint8_t) crc) ^ *buffer++] ^ (crc >> 8);
 
-    return crc;
+    ଫେରନ୍ତୁ crc;
 }

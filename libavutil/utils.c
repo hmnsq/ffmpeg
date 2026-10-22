@@ -16,73 +16,73 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "config.h"
-#include "avutil.h"
-#include "avassert.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
+#ଅନ୍ତର୍ଭାଵ "avutil.h"
+#ଅନ୍ତର୍ଭାଵ "avassert.h"
 
 /**
  * @file
  * various utility functions
  */
 
-const char *av_get_media_type_string(enum AVMediaType media_type)
+ଅଚଳ ଅକ୍ଷର *av_get_media_type_string(ଗଣନା AVMediaType media_type)
 {
-    switch (media_type) {
-    case AVMEDIA_TYPE_VIDEO:      return "video";
-    case AVMEDIA_TYPE_AUDIO:      return "audio";
-    case AVMEDIA_TYPE_DATA:       return "data";
-    case AVMEDIA_TYPE_SUBTITLE:   return "subtitle";
-    case AVMEDIA_TYPE_ATTACHMENT: return "attachment";
-    default:                      return NULL;
+    ବାଛ (media_type) {
+    ସ୍ଥିତି AVMEDIA_TYPE_VIDEO:      ଫେରନ୍ତୁ "video";
+    ସ୍ଥିତି AVMEDIA_TYPE_AUDIO:      ଫେରନ୍ତୁ "audio";
+    ସ୍ଥିତି AVMEDIA_TYPE_DATA:       ଫେରନ୍ତୁ "data";
+    ସ୍ଥିତି AVMEDIA_TYPE_SUBTITLE:   ଫେରନ୍ତୁ "subtitle";
+    ସ୍ଥିତି AVMEDIA_TYPE_ATTACHMENT: ଫେରନ୍ତୁ "attachment";
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ:                      ଫେରନ୍ତୁ ଖାଲି;
     }
 }
 
-char av_get_picture_type_char(enum AVPictureType pict_type)
+ଅକ୍ଷର av_get_picture_type_char(ଗଣନା AVPictureType pict_type)
 {
-    switch (pict_type) {
-    case AV_PICTURE_TYPE_I:  return 'I';
-    case AV_PICTURE_TYPE_P:  return 'P';
-    case AV_PICTURE_TYPE_B:  return 'B';
-    case AV_PICTURE_TYPE_S:  return 'S';
-    case AV_PICTURE_TYPE_SI: return 'i';
-    case AV_PICTURE_TYPE_SP: return 'p';
-    case AV_PICTURE_TYPE_BI: return 'b';
-    default:                 return '?';
+    ବାଛ (pict_type) {
+    ସ୍ଥିତି AV_PICTURE_TYPE_I:  ଫେରନ୍ତୁ 'I';
+    ସ୍ଥିତି AV_PICTURE_TYPE_P:  ଫେରନ୍ତୁ 'P';
+    ସ୍ଥିତି AV_PICTURE_TYPE_B:  ଫେରନ୍ତୁ 'B';
+    ସ୍ଥିତି AV_PICTURE_TYPE_S:  ଫେରନ୍ତୁ 'S';
+    ସ୍ଥିତି AV_PICTURE_TYPE_SI: ଫେରନ୍ତୁ 'i';
+    ସ୍ଥିତି AV_PICTURE_TYPE_SP: ଫେରନ୍ତୁ 'p';
+    ସ୍ଥିତି AV_PICTURE_TYPE_BI: ଫେରନ୍ତୁ 'b';
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ:                 ଫେରନ୍ତୁ '?';
     }
 }
 
-char *av_fourcc_make_string(char *buf, uint32_t fourcc)
+ଅକ୍ଷର *av_fourcc_make_string(ଅକ୍ଷର *buf, uint32_t fourcc)
 {
-    int i;
-    char *orig_buf = buf;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
+    ଅକ୍ଷର *orig_buf = buf;
     size_t buf_size = AV_FOURCC_MAX_STRING_SIZE;
 
-    for (i = 0; i < 4; i++) {
-        const int c = fourcc & 0xff;
-        const int print_chr = (c >= '0' && c <= '9') ||
+    ପାଇଁ (i = 0; i < 4; i++) {
+        ଅଚଳ ପୂର୍ଣ୍ଣସଂଖ୍ୟା c = fourcc & 0xff;
+        ଅଚଳ ପୂର୍ଣ୍ଣସଂଖ୍ୟା print_chr = (c >= '0' && c <= '9') ||
                               (c >= 'a' && c <= 'z') ||
                               (c >= 'A' && c <= 'Z') ||
                               (c && strchr(". -_", c));
-        const int len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
-        if (len < 0)
-            break;
+        ଅଚଳ ପୂର୍ଣ୍ଣସଂଖ୍ୟା len = snprintf(buf, buf_size, print_chr ? "%c" : "[%d]", c);
+        ଯଦି (len < 0)
+            ଭାଙ୍ଗ;
         buf += len;
         buf_size = buf_size > len ? buf_size - len : 0;
         fourcc >>= 8;
     }
 
-    return orig_buf;
+    ଫେରନ୍ତୁ orig_buf;
 }
 
-AVRational av_get_time_base_q(void)
+AVRational av_get_time_base_q(ଶୂନ୍ୟ)
 {
-    return (AVRational){1, AV_TIME_BASE};
+    ଫେରନ୍ତୁ (AVRational){1, AV_TIME_BASE};
 }
-#if FF_API_ASSERT_FPU
-void av_assert0_fpu(void) {
-#if HAVE_MMX_INLINE
+#ଯଦି FF_API_ASSERT_FPU
+ଶୂନ୍ୟ av_assert0_fpu(ଶୂନ୍ୟ) {
+#ଯଦି HAVE_MMX_INLINE
     uint16_t state[14];
-     __asm__ volatile (
+     __asm__ ଅସ୍ଥିର (
         "fstenv %0 \n\t"
         : "+m" (state)
         :

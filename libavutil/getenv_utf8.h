@@ -19,66 +19,66 @@
 #ifndef AVUTIL_GETENV_UTF8_H
 #define AVUTIL_GETENV_UTF8_H
 
-#include <stdlib.h>
+#ଅନ୍ତର୍ଭାଵ <stdlib.h>
 
-#include "config.h"
-#include "mem.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
+#ଅନ୍ତର୍ଭାଵ "mem.h"
 
-#if HAVE_GETENV && defined(_WIN32)
+#ଯଦି HAVE_GETENV && defined(_WIN32)
 
-#include "libavutil/wchar_filename.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/wchar_filename.h"
 
-static inline char *getenv_utf8(const char *varname)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଅକ୍ଷର *getenv_utf8(ଅଚଳ ଅକ୍ଷର *varname)
 {
     wchar_t *varname_w, *var_w;
-    char *var;
+    ଅକ୍ଷର *var;
 
-    if (utf8towchar(varname, &varname_w))
-        return NULL;
-    if (!varname_w)
-        return NULL;
+    ଯଦି (utf8towchar(varname, &varname_w))
+        ଫେରନ୍ତୁ ଖାଲି;
+    ଯଦି (!varname_w)
+        ଫେରନ୍ତୁ ଖାଲି;
 
     var_w = _wgetenv(varname_w);
     av_free(varname_w);
 
-    if (!var_w)
-        return NULL;
-    if (wchartoutf8(var_w, &var))
-        return NULL;
+    ଯଦି (!var_w)
+        ଫେରନ୍ତୁ ଖାଲି;
+    ଯଦି (wchartoutf8(var_w, &var))
+        ଫେରନ୍ତୁ ଖାଲି;
 
-    return var;
+    ଫେରନ୍ତୁ var;
 
     // No CP_ACP fallback compared to other *_utf8() functions:
     // non UTF-8 strings must not be returned.
 }
 
-static inline void freeenv_utf8(char *var)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଶୂନ୍ୟ freeenv_utf8(ଅକ୍ଷର *var)
 {
     av_free(var);
 }
 
-static inline char *getenv_dup(const char *varname)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଅକ୍ଷର *getenv_dup(ଅଚଳ ଅକ୍ଷର *varname)
 {
-    return getenv_utf8(varname);
+    ଫେରନ୍ତୁ getenv_utf8(varname);
 }
 
-#else
+#ଅନ୍ୟଥା
 
-static inline char *getenv_utf8(const char *varname)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଅକ୍ଷର *getenv_utf8(ଅଚଳ ଅକ୍ଷର *varname)
 {
-    return getenv(varname);
+    ଫେରନ୍ତୁ getenv(varname);
 }
 
-static inline void freeenv_utf8(char *var)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଶୂନ୍ୟ freeenv_utf8(ଅକ୍ଷର *var)
 {
 }
 
-static inline char *getenv_dup(const char *varname)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଅକ୍ଷର *getenv_dup(ଅଚଳ ଅକ୍ଷର *varname)
 {
-    char *var = getenv(varname);
-    if (!var)
-        return NULL;
-    return av_strdup(var);
+    ଅକ୍ଷର *var = getenv(varname);
+    ଯଦି (!var)
+        ଫେରନ୍ତୁ ଖାଲି;
+    ଫେରନ୍ତୁ av_strdup(var);
 }
 
 #endif // HAVE_GETENV && defined(_WIN32)

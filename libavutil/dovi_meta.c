@@ -18,23 +18,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <string.h>
+#ଅନ୍ତର୍ଭାଵ <string.h>
 
-#include "dovi_meta.h"
-#include "mem.h"
+#ଅନ୍ତର୍ଭାଵ "dovi_meta.h"
+#ଅନ୍ତର୍ଭାଵ "mem.h"
 
 AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size)
 {
     AVDOVIDecoderConfigurationRecord *dovi =
-        av_mallocz(sizeof(AVDOVIDecoderConfigurationRecord));
+        av_mallocz(ଆକାର(AVDOVIDecoderConfigurationRecord));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    ଯଦି (size)
+        *size = dovi ? ଆକାର(*dovi) : 0;
 
-    return dovi;
+    ଫେରନ୍ତୁ dovi;
 }
 
-typedef struct AVDOVIMetadataInternal {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVDOVIMetadataInternal {
     AVDOVIMetadata metadata;
     AVDOVIRpuDataHeader header;
     AVDOVIDataMapping mapping;
@@ -44,32 +44,32 @@ typedef struct AVDOVIMetadataInternal {
 
 AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size)
 {
-    AVDOVIMetadataInternal *dovi = av_mallocz(sizeof(AVDOVIMetadataInternal));
+    AVDOVIMetadataInternal *dovi = av_mallocz(ଆକାର(AVDOVIMetadataInternal));
 
-    if (size)
-        *size = dovi ? sizeof(*dovi) : 0;
+    ଯଦି (size)
+        *size = dovi ? ଆକାର(*dovi) : 0;
 
-    if (!dovi)
-        return NULL;
+    ଯଦି (!dovi)
+        ଫେରନ୍ତୁ ଖାଲି;
 
-    dovi->metadata = (struct AVDOVIMetadata) {
+    dovi->metadata = (ସଂରଚନା AVDOVIMetadata) {
         .header_offset      = offsetof(AVDOVIMetadataInternal, header),
         .mapping_offset     = offsetof(AVDOVIMetadataInternal, mapping),
         .color_offset       = offsetof(AVDOVIMetadataInternal, color),
         .ext_block_offset   = offsetof(AVDOVIMetadataInternal, ext_blocks),
-        .ext_block_size     = sizeof(AVDOVIDmData),
+        .ext_block_size     = ଆକାର(AVDOVIDmData),
     };
 
-    return &dovi->metadata;
+    ଫେରନ୍ତୁ &dovi->metadata;
 }
 
-AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level)
+AVDOVIDmData *av_dovi_find_level(ଅଚଳ AVDOVIMetadata *data, uint8_t level)
 {
-    for (int i = 0; i < data->num_ext_blocks; i++) {
+    ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < data->ଅଙ୍କ_ext_blocks; i++) {
         AVDOVIDmData *ext = av_dovi_get_ext(data, i);
-        if (ext->level == level)
-            return ext;
+        ଯଦି (ext->level == level)
+            ଫେରନ୍ତୁ ext;
     }
 
-    return NULL;
+    ଫେରନ୍ତୁ ଖାଲି;
 }

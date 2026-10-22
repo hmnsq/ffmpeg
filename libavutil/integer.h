@@ -28,12 +28,12 @@
 #ifndef AVUTIL_INTEGER_H
 #define AVUTIL_INTEGER_H
 
-#include <stdint.h>
-#include "attributes.h"
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ "attributes.h"
 
 #define AV_INTEGER_SIZE 8
 
-typedef struct AVInteger{
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା AVInteger{
     uint16_t v[AV_INTEGER_SIZE];
 } AVInteger;
 
@@ -45,20 +45,20 @@ AVInteger av_sub_i(AVInteger a, AVInteger b) av_const;
  * AVInteger. This is simply the index of the most significant bit
  * which is 1, or 0 if all bits are 0.
  */
-int av_log2_i(AVInteger a) av_const;
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_log2_i(AVInteger a) av_const;
 AVInteger av_mul_i(AVInteger a, AVInteger b) av_const;
 
 /**
  * Return 0 if a==b, 1 if a>b and -1 if a<b.
  */
-int av_cmp_i(AVInteger a, AVInteger b) av_const;
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_cmp_i(AVInteger a, AVInteger b) av_const;
 
 /**
  * bitwise shift
  * @param s the number of bits by which the value should be shifted right,
             may be negative for shifting left
  */
-AVInteger av_shr_i(AVInteger a, int s) av_const;
+AVInteger av_shr_i(AVInteger a, ପୂର୍ଣ୍ଣସଂଖ୍ୟା s) av_const;
 
 /**
  * Return a % b.

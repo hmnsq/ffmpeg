@@ -21,24 +21,24 @@
 #ifndef AVUTIL_MIPS_INTREADWRITE_H
 #define AVUTIL_MIPS_INTREADWRITE_H
 
-#include <stdint.h>
-#include "config.h"
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ "config.h"
 
-#if ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
+#ଯଦି ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6
 
 #define AV_RN32 AV_RN32
-static av_always_inline uint32_t AV_RN32(const void *p)
+ସ୍ଥିର av_always_inline uint32_t AV_RN32(ଅଚଳ ଶୂନ୍ୟ *p)
 {
-    struct __attribute__((packed)) u32 { uint32_t v; };
-    const uint8_t *q = p;
-    const struct u32 *pl = (const struct u32 *)(q + 3 * !HAVE_BIGENDIAN);
-    const struct u32 *pr = (const struct u32 *)(q + 3 *  HAVE_BIGENDIAN);
+    ସଂରଚନା __attribute__((packed)) u32 { uint32_t v; };
+    ଅଚଳ uint8_t *q = p;
+    ଅଚଳ ସଂରଚନା u32 *pl = (ଅଚଳ ସଂରଚନା u32 *)(q + 3 * !HAVE_BIGENDIAN);
+    ଅଚଳ ସଂରଚନା u32 *pr = (ଅଚଳ ସଂରଚନା u32 *)(q + 3 *  HAVE_BIGENDIAN);
     uint32_t v;
     __asm__ ("lwl %0, %1  \n\t"
              "lwr %0, %2  \n\t"
              : "=&r"(v)
              : "m"(*pl), "m"(*pr));
-    return v;
+    ଫେରନ୍ତୁ v;
 }
 
 #endif /* ARCH_MIPS64 && HAVE_INLINE_ASM && !HAVE_MIPS64R6 */

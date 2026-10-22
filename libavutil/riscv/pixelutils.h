@@ -19,27 +19,27 @@
 #ifndef AVUTIL_RISCV_PIXELUTILS_H
 #define AVUTIL_RISCV_PIXELUTILS_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
 
-#include "config.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
 
-#include "cpu.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/pixelutils.h"
+#ଅନ୍ତର୍ଭାଵ "cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/attributes.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/pixelutils.h"
 
-int ff_pixelutils_sad16_rvv(const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
-int ff_pixelutils_sad8_rvv (const uint8_t *src1, ptrdiff_t stride1,
-                            const uint8_t *src2, ptrdiff_t stride2);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ff_pixelutils_sad16_rvv(ଅଚଳ uint8_t *src1, ptrdiff_t stride1,
+                            ଅଚଳ uint8_t *src2, ptrdiff_t stride2);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ff_pixelutils_sad8_rvv (ଅଚଳ uint8_t *src1, ptrdiff_t stride1,
+                            ଅଚଳ uint8_t *src2, ptrdiff_t stride2);
 
-static inline av_cold void ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, int aligned)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ av_cold ଶୂନ୍ୟ ff_pixelutils_init_riscv(av_pixelutils_sad_fn *sad, ପୂର୍ଣ୍ଣସଂଖ୍ୟା aligned)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ଯଦି HAVE_RVV
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags = av_get_cpu_flags();
 
-    if (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
+    ଯଦି (flags & AV_CPU_FLAG_RVV_I32 && ff_rv_vlen_least(128)) {
         sad[3] = ff_pixelutils_sad16_rvv;
         sad[2] = ff_pixelutils_sad8_rvv;
     }

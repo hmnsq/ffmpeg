@@ -16,34 +16,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
 
-#include "libavutil/avassert.h"
-#include "libavutil/internal.h"
-#include "libavutil/log.h"
-#include "libavutil/mem.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixelutils.c"
-#include "libavutil/pixfmt.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/avassert.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/internal.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/log.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/mem.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/pixdesc.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/pixelutils.c"
+#ଅନ୍ତର୍ଭାଵ "libavutil/pixfmt.h"
 
 #define W1 320
 #define H1 240
 #define W2 640
 #define H2 480
 
-static void check_pixfmt_descriptors(void)
+ସ୍ଥିର ଶୂନ୍ୟ check_pixfmt_descriptors(ଶୂନ୍ୟ)
 {
-    const AVPixFmtDescriptor *d, *last = NULL;
-    int i;
+    ଅଚଳ AVPixFmtDescriptor *d, *last = ଖାଲି;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
 
-    for (i = AV_PIX_FMT_NONE, d = NULL; i++, d = av_pix_fmt_desc_next(d);) {
+    ପାଇଁ (i = AV_PIX_FMT_NONE, d = ଖାଲି; i++, d = av_pix_fmt_desc_next(d);) {
         uint8_t fill[4][8 + 6 + 3] = {{ 0 }};
         uint8_t *data[4] = { fill[0], fill[1], fill[2], fill[3] };
-        int linesize[4] = { 0, 0, 0, 0 };
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା linesize[4] = { 0, 0, 0, 0 };
         uint16_t tmp[2];
 
         av_assert0(d->name && d->name[0]);
-        av_log(NULL, AV_LOG_INFO, "Checking: %s\n", d->name);
+        av_log(ଖାଲି, AV_LOG_INFO, "Checking: %s\n", d->name);
         av_assert0(d->log2_chroma_w <= 3);
         av_assert0(d->log2_chroma_h <= 3);
         av_assert0(d->nb_components <= 4);
@@ -56,41 +56,41 @@ static void check_pixfmt_descriptors(void)
         av_assert0(i == av_pix_fmt_desc_get_id(d));
         av_assert0(!last || last + 1 == d);
 
-        for (int j = 0; j < FF_ARRAY_ELEMS(d->comp); j++) {
-            const AVComponentDescriptor *c = &d->comp[j];
-            if (!c->depth) {
-                continue;
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା j = 0; j < FF_ARRAY_ELEMS(d->comp); j++) {
+            ଅଚଳ AVComponentDescriptor *c = &d->comp[j];
+            ଯଦି (!c->depth) {
+                ଜାରି;
             }
-            if (d->flags & AV_PIX_FMT_FLAG_BITSTREAM) {
+            ଯଦି (d->flags & AV_PIX_FMT_FLAG_BITSTREAM) {
                 av_assert0(c->step >= c->depth);
-            } else {
+            } ଅନ୍ୟଥା {
                 av_assert0(8*c->step >= c->depth);
             }
-            if (d->flags & AV_PIX_FMT_FLAG_BAYER)
-                continue;
-            av_read_image_line(tmp, (void*)data, linesize, d, 0, 0, j, 2, 0);
+            ଯଦି (d->flags & AV_PIX_FMT_FLAG_BAYER)
+                ଜାରି;
+            av_read_image_ଧାଡ଼ି(tmp, (ଶୂନ୍ୟ*)data, linesize, d, 0, 0, j, 2, 0);
             av_assert0(tmp[0] == 0 && tmp[1] == 0);
             tmp[0] = tmp[1] = (1ULL << c->depth) - 1;
-            av_write_image_line(tmp, data, linesize, d, 0, 0, j, 2);
+            av_write_image_ଧାଡ଼ି(tmp, data, linesize, d, 0, 0, j, 2);
         }
         last = d;
     }
     av_assert0(i == AV_PIX_FMT_NB);
 }
 
-static int run_single_test(const char *test,
-                           const uint8_t *block1, ptrdiff_t stride1,
-                           const uint8_t *block2, ptrdiff_t stride2,
-                           int align, int n)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା run_single_test(ଅଚଳ ଅକ୍ଷର *test,
+                           ଅଚଳ uint8_t *block1, ptrdiff_t stride1,
+                           ଅଚଳ uint8_t *block2, ptrdiff_t stride2,
+                           ପୂର୍ଣ୍ଣସଂଖ୍ୟା align, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n)
 {
-    int out, ref;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା out, ref;
     av_pixelutils_sad_fn f_ref = sad_c[n - 1];
-    av_pixelutils_sad_fn f_out = av_pixelutils_get_sad_fn(n, n, align, NULL);
+    av_pixelutils_sad_fn f_out = av_pixelutils_get_sad_fn(n, n, align, ଖାଲି);
 
-    switch (align) {
-    case 0: block1++; block2++; break;
-    case 1:           block2++; break;
-    case 2:                     break;
+    ବାଛ (align) {
+    ସ୍ଥିତି 0: block1++; block2++; ଭାଙ୍ଗ;
+    ସ୍ଥିତି 1:           block2++; ଭାଙ୍ଗ;
+    ସ୍ଥିତି 2:                     ଭାଙ୍ଗ;
     }
 
     out = f_out(block1, stride1, block2, stride2);
@@ -99,101 +99,101 @@ static int run_single_test(const char *test,
            out == ref ? "OK" : "FAIL",
            align ? 'A' : 'U', align == 2 ? 'A' : 'U',
            test, 1<<n, 1<<n, out, ref);
-    return out != ref;
+    ଫେରନ୍ତୁ out != ref;
 }
 
-static int run_test(const char *test,
-                    const uint8_t *b1, const uint8_t *b2)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା run_test(ଅଚଳ ଅକ୍ଷର *test,
+                    ଅଚଳ uint8_t *b1, ଅଚଳ uint8_t *b2)
 {
-    int i, a, ret = 0;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i, a, ret = 0;
 
-    for (a = 0; a < 3; a++) {
-        for (i = 1; i <= FF_ARRAY_ELEMS(sad_c); i++) {
-            int r = run_single_test(test, b1, W1, b2, W2, a, i);
-            if (r)
+    ପାଇଁ (a = 0; a < 3; a++) {
+        ପାଇଁ (i = 1; i <= FF_ARRAY_ELEMS(sad_c); i++) {
+            ପୂର୍ଣ୍ଣସଂଖ୍ୟା r = run_single_test(test, b1, W1, b2, W2, a, i);
+            ଯଦି (r)
                 ret = r;
         }
     }
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }
 
-int main(void)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ଶୂନ୍ୟ)
 {
-    int i, align, ret;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i, align, ret;
     uint8_t *buf1 = av_malloc(W1*H1);
     uint8_t *buf2 = av_malloc(W2*H2);
     uint32_t state = 0;
 
-    if (!buf1 || !buf2) {
+    ଯଦି (!buf1 || !buf2) {
         fprintf(stderr, "malloc failure\n");
         ret = 1;
-        goto end;
+        ଯାଅ end;
     }
 
     check_pixfmt_descriptors();
 
-#define RANDOM_INIT(buf, size) do {             \
-    int k;                                      \
-    for (k = 0; k < size; k++) {                \
+#define RANDOM_INIT(buf, size) କର {             \
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା k;                                      \
+    ପାଇଁ (k = 0; k < size; k++) {                \
         state = state * 1664525 + 1013904223;   \
         buf[k] = state>>24;                     \
     }                                           \
-} while (0)
+} ଯେତେବେଳେ (0)
 
     /* Normal test with different strides */
     RANDOM_INIT(buf1, W1*H1);
     RANDOM_INIT(buf2, W2*H2);
     ret = run_test("random", buf1, buf2);
-    if (ret < 0)
-        goto end;
+    ଯଦି (ret < 0)
+        ଯାଅ end;
 
     /* Check for maximum SAD */
     memset(buf1, 0xff, W1*H1);
     memset(buf2, 0x00, W2*H2);
     ret = run_test("max", buf1, buf2);
-    if (ret < 0)
-        goto end;
+    ଯଦି (ret < 0)
+        ଯାଅ end;
 
     /* Check for minimum SAD */
     memset(buf1, 0x90, W1*H1);
     memset(buf2, 0x90, W2*H2);
     ret = run_test("min", buf1, buf2);
-    if (ret < 0)
-        goto end;
+    ଯଦି (ret < 0)
+        ଯାଅ end;
 
     /* Exact buffer sizes, to check for overreads */
-    for (i = 1; i <= 5; i++) {
-        for (align = 0; align < 3; align++) {
-            int size1, size2;
+    ପାଇଁ (i = 1; i <= 5; i++) {
+        ପାଇଁ (align = 0; align < 3; align++) {
+            ପୂର୍ଣ୍ଣସଂଖ୍ୟା size1, size2;
 
             av_freep(&buf1);
             av_freep(&buf2);
 
             size1 = size2 = 1 << (i << 1);
 
-            switch (align) {
-            case 0: size1++; size2++; break;
-            case 1:          size2++; break;
-            case 2:                   break;
+            ବାଛ (align) {
+            ସ୍ଥିତି 0: size1++; size2++; ଭାଙ୍ଗ;
+            ସ୍ଥିତି 1:          size2++; ଭାଙ୍ଗ;
+            ସ୍ଥିତି 2:                   ଭାଙ୍ଗ;
             }
 
             buf1 = av_malloc(size1);
             buf2 = av_malloc(size2);
-            if (!buf1 || !buf2) {
+            ଯଦି (!buf1 || !buf2) {
                 fprintf(stderr, "malloc failure\n");
                 ret = 1;
-                goto end;
+                ଯାଅ end;
             }
             RANDOM_INIT(buf1, size1);
             RANDOM_INIT(buf2, size2);
             ret = run_single_test("small", buf1, 1<<i, buf2, 1<<i, align, i);
-            if (ret < 0)
-                goto end;
+            ଯଦି (ret < 0)
+                ଯାଅ end;
         }
     }
 
 end:
     av_free(buf1);
     av_free(buf2);
-    return ret;
+    ଫେରନ୍ତୁ ret;
 }

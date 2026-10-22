@@ -18,37 +18,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <assert.h>
-#include <stdint.h>
+#ଅନ୍ତର୍ଭାଵ <assert.h>
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/cpu.h"
-#include "libavutil/riscv/cpu.h"
-#include "libavutil/lls.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/attributes.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/riscv/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/lls.h"
 
-void ff_lls_update_covariance_rvv(double covar[][36], const double *var,
-                                  int count);
-double ff_scalarproduct_double_rvv(const double *, const double *, size_t);
+ଶୂନ୍ୟ ff_lls_update_covariance_rvv(ଦ୍ୱିଗୁଣ covar[][36], ଅଚଳ ଦ୍ୱିଗୁଣ *var,
+                                  ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2);
+ଦ୍ୱିଗୁଣ ff_scalarproduct_double_rvv(ଅଚଳ ଦ୍ୱିଗୁଣ *, ଅଚଳ ଦ୍ୱିଗୁଣ *, size_t);
 
-static void ff_lls_update_rvv(struct LLSModel *m, const double *var)
+ସ୍ଥିର ଶୂନ୍ୟ ff_lls_update_rvv(ସଂରଚନା LLSModel *m, ଅଚଳ ଦ୍ୱିଗୁଣ *var)
 {
-    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_count + 1);
+    ff_lls_update_covariance_rvv(m->covariance, var, m->indep_ଗଣନା + 1);
 }
 
-static double ff_lls_evaluate_rvv(struct LLSModel *m, const double *var,
-                                  int order)
+ସ୍ଥିର ଦ୍ୱିଗୁଣ ff_lls_evaluate_rvv(ସଂରଚନା LLSModel *m, ଅଚଳ ଦ୍ୱିଗୁଣ *var,
+                                  ପୂର୍ଣ୍ଣସଂଖ୍ୟା order)
 {
-    return ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
+    ଫେରନ୍ତୁ ff_scalarproduct_double_rvv(m->coeff[order], var, order + 1);
 }
 
-av_cold void ff_init_lls_riscv(LLSModel *m)
+av_cold ଶୂନ୍ୟ ff_init_lls_riscv(LLSModel *m)
 {
-#if HAVE_RVV
-    int flags = av_get_cpu_flags();
+#ଯଦି HAVE_RVV
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags = av_get_cpu_flags();
 
-    if ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
-        if (ff_get_rv_vlenb() > m->indep_count)
+    ଯଦି ((flags & AV_CPU_FLAG_RVB) && (flags & AV_CPU_FLAG_RVV_F64)) {
+        ଯଦି (ff_get_rv_vlenb() > m->indep_ଗଣନା)
             m->update_lls = ff_lls_update_rvv;
         m->evaluate_lls = ff_lls_evaluate_rvv;
     }

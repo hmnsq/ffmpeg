@@ -21,10 +21,10 @@
 #ifndef AVUTIL_CPU_H
 #define AVUTIL_CPU_H
 
-#include <stddef.h>
-#include "version.h"
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
+#ଅନ୍ତର୍ଭାଵ "version.h"
 
-#if FF_API_CPU_FLAG_FORCE
+#ଯଦି FF_API_CPU_FLAG_FORCE
 #define AV_CPU_FLAG_FORCE    0x80000000 /* @deprecated, should not be used */
 #endif
 
@@ -113,31 +113,31 @@
  * before. So av_get_cpu_flags() can easily be used in an application to
  * detect the enabled cpu flags.
  */
-int av_get_cpu_flags(void);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_get_cpu_flags(ଶୂନ୍ୟ);
 
 /**
  * Disables cpu detection and forces the specified flags.
  * -1 is a special case that disables forcing of specific flags.
  */
-void av_force_cpu_flags(int flags);
+ଶୂନ୍ୟ av_force_cpu_flags(ପୂର୍ଣ୍ଣସଂଖ୍ୟା flags);
 
 /**
  * Parse CPU caps from a string and update the given AV_CPU_* flags based on that.
  *
  * @return negative on error.
  */
-int av_parse_cpu_caps(unsigned *flags, const char *s);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_parse_cpu_caps(unsigned *flags, ଅଚଳ ଅକ୍ଷର *s);
 
 /**
  * @return the number of logical CPU cores present.
  */
-int av_cpu_count(void);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_cpu_ଗଣନା(ଶୂନ୍ୟ);
 
 /**
  * Overrides cpu count detection and forces the specified count.
  * Count < 1 disables forcing of specific count.
  */
-void av_cpu_force_count(int count);
+ଶୂନ୍ୟ av_cpu_force_ଗଣନା(ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2);
 
 /**
  * Get the maximum data alignment that may be required by FFmpeg.
@@ -148,6 +148,6 @@ void av_cpu_force_count(int count);
  *  av_set_cpu_flags_mask(), then this function will behave as if AVX is not
  *  present.
  */
-size_t av_cpu_max_align(void);
+size_t av_cpu_max_align(ଶୂନ୍ୟ);
 
 #endif /* AVUTIL_CPU_H */

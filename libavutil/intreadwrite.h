@@ -19,28 +19,28 @@
 #ifndef AVUTIL_INTREADWRITE_H
 #define AVUTIL_INTREADWRITE_H
 
-#include <stdint.h>
-#include "libavutil/avconfig.h"
-#include "attributes.h"
-#include "bswap.h"
+#ଅନ୍ତର୍ଭାଵ <stdint.h>
+#ଅନ୍ତର୍ଭାଵ "libavutil/avconfig.h"
+#ଅନ୍ତର୍ଭାଵ "attributes.h"
+#ଅନ୍ତର୍ଭାଵ "bswap.h"
 
-typedef union {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂଘ {
     uint64_t u64;
     uint32_t u32[2];
     uint16_t u16[4];
     uint8_t  u8 [8];
-    double   f64;
-    float    f32[2];
+    ଦ୍ୱିଗୁଣ   f64;
+    ଦଶମିକ    f32[2];
 } av_alias av_alias64;
 
-typedef union {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂଘ {
     uint32_t u32;
     uint16_t u16[2];
     uint8_t  u8 [4];
-    float    f32;
+    ଦଶମିକ    f32;
 } av_alias av_alias32;
 
-typedef union {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂଘ {
     uint16_t u16;
     uint8_t  u8 [2];
 } av_alias av_alias16;
@@ -62,15 +62,15 @@ typedef union {
 
 #ifdef HAVE_AV_CONFIG_H
 
-#include "config.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
 
-#if ARCH_AARCH64
+#ଯଦି ARCH_AARCH64
 #   include "aarch64/intreadwrite.h"
-#elif ARCH_MIPS
+#ନଚେତଯଦି ARCH_MIPS
 #   include "mips/intreadwrite.h"
-#elif ARCH_PPC
+#ନଚେତଯଦି ARCH_PPC
 #   include "ppc/intreadwrite.h"
-#elif ARCH_X86
+#ନଚେତଯଦି ARCH_X86
 #   include "x86/intreadwrite.h"
 #endif
 
@@ -80,125 +80,125 @@ typedef union {
  * Map AV_RNXX <-> AV_R[BL]XX for all variants provided by per-arch headers.
  */
 
-#if AV_HAVE_BIGENDIAN
+#ଯଦି AV_HAVE_BIGENDIAN
 
-#   if    defined(AV_RN16) && !defined(AV_RB16)
+#   ଯଦି    defined(AV_RN16) && !defined(AV_RB16)
 #       define AV_RB16(p) AV_RN16(p)
 #   elif !defined(AV_RN16) &&  defined(AV_RB16)
 #       define AV_RN16(p) AV_RB16(p)
 #   endif
 
-#   if    defined(AV_WN16) && !defined(AV_WB16)
+#   ଯଦି    defined(AV_WN16) && !defined(AV_WB16)
 #       define AV_WB16(p, v) AV_WN16(p, v)
 #   elif !defined(AV_WN16) &&  defined(AV_WB16)
 #       define AV_WN16(p, v) AV_WB16(p, v)
 #   endif
 
-#   if    defined(AV_RN24) && !defined(AV_RB24)
+#   ଯଦି    defined(AV_RN24) && !defined(AV_RB24)
 #       define AV_RB24(p) AV_RN24(p)
 #   elif !defined(AV_RN24) &&  defined(AV_RB24)
 #       define AV_RN24(p) AV_RB24(p)
 #   endif
 
-#   if    defined(AV_WN24) && !defined(AV_WB24)
+#   ଯଦି    defined(AV_WN24) && !defined(AV_WB24)
 #       define AV_WB24(p, v) AV_WN24(p, v)
 #   elif !defined(AV_WN24) &&  defined(AV_WB24)
 #       define AV_WN24(p, v) AV_WB24(p, v)
 #   endif
 
-#   if    defined(AV_RN32) && !defined(AV_RB32)
+#   ଯଦି    defined(AV_RN32) && !defined(AV_RB32)
 #       define AV_RB32(p) AV_RN32(p)
 #   elif !defined(AV_RN32) &&  defined(AV_RB32)
 #       define AV_RN32(p) AV_RB32(p)
 #   endif
 
-#   if    defined(AV_WN32) && !defined(AV_WB32)
+#   ଯଦି    defined(AV_WN32) && !defined(AV_WB32)
 #       define AV_WB32(p, v) AV_WN32(p, v)
 #   elif !defined(AV_WN32) &&  defined(AV_WB32)
 #       define AV_WN32(p, v) AV_WB32(p, v)
 #   endif
 
-#   if    defined(AV_RN48) && !defined(AV_RB48)
+#   ଯଦି    defined(AV_RN48) && !defined(AV_RB48)
 #       define AV_RB48(p) AV_RN48(p)
 #   elif !defined(AV_RN48) &&  defined(AV_RB48)
 #       define AV_RN48(p) AV_RB48(p)
 #   endif
 
-#   if    defined(AV_WN48) && !defined(AV_WB48)
+#   ଯଦି    defined(AV_WN48) && !defined(AV_WB48)
 #       define AV_WB48(p, v) AV_WN48(p, v)
 #   elif !defined(AV_WN48) &&  defined(AV_WB48)
 #       define AV_WN48(p, v) AV_WB48(p, v)
 #   endif
 
-#   if    defined(AV_RN64) && !defined(AV_RB64)
+#   ଯଦି    defined(AV_RN64) && !defined(AV_RB64)
 #       define AV_RB64(p) AV_RN64(p)
 #   elif !defined(AV_RN64) &&  defined(AV_RB64)
 #       define AV_RN64(p) AV_RB64(p)
 #   endif
 
-#   if    defined(AV_WN64) && !defined(AV_WB64)
+#   ଯଦି    defined(AV_WN64) && !defined(AV_WB64)
 #       define AV_WB64(p, v) AV_WN64(p, v)
 #   elif !defined(AV_WN64) &&  defined(AV_WB64)
 #       define AV_WN64(p, v) AV_WB64(p, v)
 #   endif
 
-#else /* AV_HAVE_BIGENDIAN */
+#ଅନ୍ୟଥା /* AV_HAVE_BIGENDIAN */
 
-#   if    defined(AV_RN16) && !defined(AV_RL16)
+#   ଯଦି    defined(AV_RN16) && !defined(AV_RL16)
 #       define AV_RL16(p) AV_RN16(p)
 #   elif !defined(AV_RN16) &&  defined(AV_RL16)
 #       define AV_RN16(p) AV_RL16(p)
 #   endif
 
-#   if    defined(AV_WN16) && !defined(AV_WL16)
+#   ଯଦି    defined(AV_WN16) && !defined(AV_WL16)
 #       define AV_WL16(p, v) AV_WN16(p, v)
 #   elif !defined(AV_WN16) &&  defined(AV_WL16)
 #       define AV_WN16(p, v) AV_WL16(p, v)
 #   endif
 
-#   if    defined(AV_RN24) && !defined(AV_RL24)
+#   ଯଦି    defined(AV_RN24) && !defined(AV_RL24)
 #       define AV_RL24(p) AV_RN24(p)
 #   elif !defined(AV_RN24) &&  defined(AV_RL24)
 #       define AV_RN24(p) AV_RL24(p)
 #   endif
 
-#   if    defined(AV_WN24) && !defined(AV_WL24)
+#   ଯଦି    defined(AV_WN24) && !defined(AV_WL24)
 #       define AV_WL24(p, v) AV_WN24(p, v)
 #   elif !defined(AV_WN24) &&  defined(AV_WL24)
 #       define AV_WN24(p, v) AV_WL24(p, v)
 #   endif
 
-#   if    defined(AV_RN32) && !defined(AV_RL32)
+#   ଯଦି    defined(AV_RN32) && !defined(AV_RL32)
 #       define AV_RL32(p) AV_RN32(p)
 #   elif !defined(AV_RN32) &&  defined(AV_RL32)
 #       define AV_RN32(p) AV_RL32(p)
 #   endif
 
-#   if    defined(AV_WN32) && !defined(AV_WL32)
+#   ଯଦି    defined(AV_WN32) && !defined(AV_WL32)
 #       define AV_WL32(p, v) AV_WN32(p, v)
 #   elif !defined(AV_WN32) &&  defined(AV_WL32)
 #       define AV_WN32(p, v) AV_WL32(p, v)
 #   endif
 
-#   if    defined(AV_RN48) && !defined(AV_RL48)
+#   ଯଦି    defined(AV_RN48) && !defined(AV_RL48)
 #       define AV_RL48(p) AV_RN48(p)
 #   elif !defined(AV_RN48) &&  defined(AV_RL48)
 #       define AV_RN48(p) AV_RL48(p)
 #   endif
 
-#   if    defined(AV_WN48) && !defined(AV_WL48)
+#   ଯଦି    defined(AV_WN48) && !defined(AV_WL48)
 #       define AV_WL48(p, v) AV_WN48(p, v)
 #   elif !defined(AV_WN48) &&  defined(AV_WL48)
 #       define AV_WN48(p, v) AV_WL48(p, v)
 #   endif
 
-#   if    defined(AV_RN64) && !defined(AV_RL64)
+#   ଯଦି    defined(AV_RN64) && !defined(AV_RL64)
 #       define AV_RL64(p) AV_RN64(p)
 #   elif !defined(AV_RN64) &&  defined(AV_RL64)
 #       define AV_RN64(p) AV_RL64(p)
 #   endif
 
-#   if    defined(AV_WN64) && !defined(AV_WL64)
+#   ଯଦି    defined(AV_WN64) && !defined(AV_WL64)
 #       define AV_WL64(p, v) AV_WN64(p, v)
 #   elif !defined(AV_WN64) &&  defined(AV_WL64)
 #       define AV_WN64(p, v) AV_WL64(p, v)
@@ -211,100 +211,100 @@ typedef union {
  * by per-arch headers.
  */
 
-#if defined(__GNUC__) || defined(__clang__)
+#ଯଦି defined(__GNUC__) || defined(__clang__)
 
-union unaligned_64 { uint64_t l; } __attribute__((packed)) av_alias;
-union unaligned_32 { uint32_t l; } __attribute__((packed)) av_alias;
-union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
+ସଂଘ unaligned_64 { uint64_t l; } __attribute__((packed)) av_alias;
+ସଂଘ unaligned_32 { uint32_t l; } __attribute__((packed)) av_alias;
+ସଂଘ unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 
-#   define AV_RN(s, p) (((const union unaligned_##s *) (p))->l)
-#   define AV_WN(s, p, v) ((((union unaligned_##s *) (p))->l) = (v))
+#   define AV_RN(s, p) (((ଅଚଳ ସଂଘ unaligned_##s *) (p))->l)
+#   define AV_WN(s, p, v) ((((ସଂଘ unaligned_##s *) (p))->l) = (v))
 
-#elif defined(_MSC_VER) && (defined(_M_ARM) || defined(_M_X64) || defined(_M_ARM64)) && AV_HAVE_FAST_UNALIGNED
+#ନଚେତଯଦି defined(_MSC_VER) && (defined(_M_ARM) || defined(_M_X64) || defined(_M_ARM64)) && AV_HAVE_FAST_UNALIGNED
 
-#   define AV_RN(s, p) (*((const __unaligned uint##s##_t*)(p)))
+#   define AV_RN(s, p) (*((ଅଚଳ __unaligned uint##s##_t*)(p)))
 #   define AV_WN(s, p, v) (*((__unaligned uint##s##_t*)(p)) = (v))
 
-#elif AV_HAVE_FAST_UNALIGNED
+#ନଚେତଯଦି AV_HAVE_FAST_UNALIGNED
 
-#   define AV_RN(s, p) (((const av_alias##s*)(p))->u##s)
+#   define AV_RN(s, p) (((ଅଚଳ av_alias##s*)(p))->u##s)
 #   define AV_WN(s, p, v) (((av_alias##s*)(p))->u##s = (v))
 
-#else
+#ଅନ୍ୟଥା
 
 #ifndef AV_RB16
 #   define AV_RB16(x)                           \
-    ((((const uint8_t*)(x))[0] << 8) |          \
-      ((const uint8_t*)(x))[1])
+    ((((ଅଚଳ uint8_t*)(x))[0] << 8) |          \
+      ((ଅଚଳ uint8_t*)(x))[1])
 #endif
 #ifndef AV_WB16
-#   define AV_WB16(p, val) do {                 \
+#   define AV_WB16(p, val) କର {                 \
         uint16_t d = (val);                     \
         ((uint8_t*)(p))[1] = (d);               \
         ((uint8_t*)(p))[0] = (d)>>8;            \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
 #ifndef AV_RL16
 #   define AV_RL16(x)                           \
-    ((((const uint8_t*)(x))[1] << 8) |          \
-      ((const uint8_t*)(x))[0])
+    ((((ଅଚଳ uint8_t*)(x))[1] << 8) |          \
+      ((ଅଚଳ uint8_t*)(x))[0])
 #endif
 #ifndef AV_WL16
-#   define AV_WL16(p, val) do {                 \
+#   define AV_WL16(p, val) କର {                 \
         uint16_t d = (val);                     \
         ((uint8_t*)(p))[0] = (d);               \
         ((uint8_t*)(p))[1] = (d)>>8;            \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
 #ifndef AV_RB32
 #   define AV_RB32(x)                                \
-    (((uint32_t)((const uint8_t*)(x))[0] << 24) |    \
-               (((const uint8_t*)(x))[1] << 16) |    \
-               (((const uint8_t*)(x))[2] <<  8) |    \
-                ((const uint8_t*)(x))[3])
+    (((uint32_t)((ଅଚଳ uint8_t*)(x))[0] << 24) |    \
+               (((ଅଚଳ uint8_t*)(x))[1] << 16) |    \
+               (((ଅଚଳ uint8_t*)(x))[2] <<  8) |    \
+                ((ଅଚଳ uint8_t*)(x))[3])
 #endif
 #ifndef AV_WB32
-#   define AV_WB32(p, val) do {                 \
+#   define AV_WB32(p, val) କର {                 \
         uint32_t d = (val);                     \
         ((uint8_t*)(p))[3] = (d);               \
         ((uint8_t*)(p))[2] = (d)>>8;            \
         ((uint8_t*)(p))[1] = (d)>>16;           \
         ((uint8_t*)(p))[0] = (d)>>24;           \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
 #ifndef AV_RL32
 #   define AV_RL32(x)                                \
-    (((uint32_t)((const uint8_t*)(x))[3] << 24) |    \
-               (((const uint8_t*)(x))[2] << 16) |    \
-               (((const uint8_t*)(x))[1] <<  8) |    \
-                ((const uint8_t*)(x))[0])
+    (((uint32_t)((ଅଚଳ uint8_t*)(x))[3] << 24) |    \
+               (((ଅଚଳ uint8_t*)(x))[2] << 16) |    \
+               (((ଅଚଳ uint8_t*)(x))[1] <<  8) |    \
+                ((ଅଚଳ uint8_t*)(x))[0])
 #endif
 #ifndef AV_WL32
-#   define AV_WL32(p, val) do {                 \
+#   define AV_WL32(p, val) କର {                 \
         uint32_t d = (val);                     \
         ((uint8_t*)(p))[0] = (d);               \
         ((uint8_t*)(p))[1] = (d)>>8;            \
         ((uint8_t*)(p))[2] = (d)>>16;           \
         ((uint8_t*)(p))[3] = (d)>>24;           \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
 #ifndef AV_RB64
 #   define AV_RB64(x)                                   \
-    (((uint64_t)((const uint8_t*)(x))[0] << 56) |       \
-     ((uint64_t)((const uint8_t*)(x))[1] << 48) |       \
-     ((uint64_t)((const uint8_t*)(x))[2] << 40) |       \
-     ((uint64_t)((const uint8_t*)(x))[3] << 32) |       \
-     ((uint64_t)((const uint8_t*)(x))[4] << 24) |       \
-     ((uint64_t)((const uint8_t*)(x))[5] << 16) |       \
-     ((uint64_t)((const uint8_t*)(x))[6] <<  8) |       \
-      (uint64_t)((const uint8_t*)(x))[7])
+    (((uint64_t)((ଅଚଳ uint8_t*)(x))[0] << 56) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[1] << 48) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[2] << 40) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[3] << 32) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[4] << 24) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[5] << 16) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[6] <<  8) |       \
+      (uint64_t)((ଅଚଳ uint8_t*)(x))[7])
 #endif
 #ifndef AV_WB64
-#   define AV_WB64(p, val) do {                 \
+#   define AV_WB64(p, val) କର {                 \
         uint64_t d = (val);                     \
         ((uint8_t*)(p))[7] = (d);               \
         ((uint8_t*)(p))[6] = (d)>>8;            \
@@ -314,22 +314,22 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[2] = (d)>>40;           \
         ((uint8_t*)(p))[1] = (d)>>48;           \
         ((uint8_t*)(p))[0] = (d)>>56;           \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
 #ifndef AV_RL64
 #   define AV_RL64(x)                                   \
-    (((uint64_t)((const uint8_t*)(x))[7] << 56) |       \
-     ((uint64_t)((const uint8_t*)(x))[6] << 48) |       \
-     ((uint64_t)((const uint8_t*)(x))[5] << 40) |       \
-     ((uint64_t)((const uint8_t*)(x))[4] << 32) |       \
-     ((uint64_t)((const uint8_t*)(x))[3] << 24) |       \
-     ((uint64_t)((const uint8_t*)(x))[2] << 16) |       \
-     ((uint64_t)((const uint8_t*)(x))[1] <<  8) |       \
-      (uint64_t)((const uint8_t*)(x))[0])
+    (((uint64_t)((ଅଚଳ uint8_t*)(x))[7] << 56) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[6] << 48) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[5] << 40) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[4] << 32) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[3] << 24) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[2] << 16) |       \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[1] <<  8) |       \
+      (uint64_t)((ଅଚଳ uint8_t*)(x))[0])
 #endif
 #ifndef AV_WL64
-#   define AV_WL64(p, val) do {                 \
+#   define AV_WL64(p, val) କର {                 \
         uint64_t d = (val);                     \
         ((uint8_t*)(p))[0] = (d);               \
         ((uint8_t*)(p))[1] = (d)>>8;            \
@@ -339,13 +339,13 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[5] = (d)>>40;           \
         ((uint8_t*)(p))[6] = (d)>>48;           \
         ((uint8_t*)(p))[7] = (d)>>56;           \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
-#if AV_HAVE_BIGENDIAN
+#ଯଦି AV_HAVE_BIGENDIAN
 #   define AV_RN(s, p)    AV_RB##s(p)
 #   define AV_WN(s, p, v) AV_WB##s(p, v)
-#else
+#ଅନ୍ୟଥା
 #   define AV_RN(s, p)    AV_RL##s(p)
 #   define AV_WN(s, p, v) AV_WL##s(p, v)
 #endif
@@ -376,20 +376,20 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 #   define AV_WN64(p, v) AV_WN(64, p, v)
 #endif
 
-#if AV_HAVE_BIGENDIAN
+#ଯଦି AV_HAVE_BIGENDIAN
 #   define AV_RB(s, p)    AV_RN##s(p)
 #   define AV_WB(s, p, v) AV_WN##s(p, v)
 #   define AV_RL(s, p)    av_bswap##s(AV_RN##s(p))
 #   define AV_WL(s, p, v) AV_WN##s(p, av_bswap##s(v))
-#else
+#ଅନ୍ୟଥା
 #   define AV_RB(s, p)    av_bswap##s(AV_RN##s(p))
 #   define AV_WB(s, p, v) AV_WN##s(p, av_bswap##s(v))
 #   define AV_RL(s, p)    AV_RN##s(p)
 #   define AV_WL(s, p, v) AV_WN##s(p, v)
 #endif
 
-#define AV_RB8(x)     (((const uint8_t*)(x))[0])
-#define AV_WB8(p, d)  do { ((uint8_t*)(p))[0] = (d); } while(0)
+#define AV_RB8(x)     (((ଅଚଳ uint8_t*)(x))[0])
+#define AV_WB8(p, d)  କର { ((uint8_t*)(p))[0] = (d); } ଯେତେବେଳେ(0)
 
 #define AV_RL8(x)     AV_RB8(x)
 #define AV_WL8(p, d)  AV_WB8(p, d)
@@ -438,43 +438,43 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 
 #ifndef AV_RB24
 #   define AV_RB24(x)                           \
-    ((((const uint8_t*)(x))[0] << 16) |         \
-     (((const uint8_t*)(x))[1] <<  8) |         \
-      ((const uint8_t*)(x))[2])
+    ((((ଅଚଳ uint8_t*)(x))[0] << 16) |         \
+     (((ଅଚଳ uint8_t*)(x))[1] <<  8) |         \
+      ((ଅଚଳ uint8_t*)(x))[2])
 #endif
 #ifndef AV_WB24
-#   define AV_WB24(p, d) do {                   \
+#   define AV_WB24(p, d) କର {                   \
         ((uint8_t*)(p))[2] = (d);               \
         ((uint8_t*)(p))[1] = (d)>>8;            \
         ((uint8_t*)(p))[0] = (d)>>16;           \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
 #ifndef AV_RL24
 #   define AV_RL24(x)                           \
-    ((((const uint8_t*)(x))[2] << 16) |         \
-     (((const uint8_t*)(x))[1] <<  8) |         \
-      ((const uint8_t*)(x))[0])
+    ((((ଅଚଳ uint8_t*)(x))[2] << 16) |         \
+     (((ଅଚଳ uint8_t*)(x))[1] <<  8) |         \
+      ((ଅଚଳ uint8_t*)(x))[0])
 #endif
 #ifndef AV_WL24
-#   define AV_WL24(p, d) do {                   \
+#   define AV_WL24(p, d) କର {                   \
         ((uint8_t*)(p))[0] = (d);               \
         ((uint8_t*)(p))[1] = (d)>>8;            \
         ((uint8_t*)(p))[2] = (d)>>16;           \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
 #ifndef AV_RB48
 #   define AV_RB48(x)                                     \
-    (((uint64_t)((const uint8_t*)(x))[0] << 40) |         \
-     ((uint64_t)((const uint8_t*)(x))[1] << 32) |         \
-     ((uint64_t)((const uint8_t*)(x))[2] << 24) |         \
-     ((uint64_t)((const uint8_t*)(x))[3] << 16) |         \
-     ((uint64_t)((const uint8_t*)(x))[4] <<  8) |         \
-      (uint64_t)((const uint8_t*)(x))[5])
+    (((uint64_t)((ଅଚଳ uint8_t*)(x))[0] << 40) |         \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[1] << 32) |         \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[2] << 24) |         \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[3] << 16) |         \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[4] <<  8) |         \
+      (uint64_t)((ଅଚଳ uint8_t*)(x))[5])
 #endif
 #ifndef AV_WB48
-#   define AV_WB48(p, darg) do {                \
+#   define AV_WB48(p, darg) କର {                \
         uint64_t d = (darg);                    \
         ((uint8_t*)(p))[5] = (d);               \
         ((uint8_t*)(p))[4] = (d)>>8;            \
@@ -482,20 +482,20 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[2] = (d)>>24;           \
         ((uint8_t*)(p))[1] = (d)>>32;           \
         ((uint8_t*)(p))[0] = (d)>>40;           \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
 #ifndef AV_RL48
 #   define AV_RL48(x)                                     \
-    (((uint64_t)((const uint8_t*)(x))[5] << 40) |         \
-     ((uint64_t)((const uint8_t*)(x))[4] << 32) |         \
-     ((uint64_t)((const uint8_t*)(x))[3] << 24) |         \
-     ((uint64_t)((const uint8_t*)(x))[2] << 16) |         \
-     ((uint64_t)((const uint8_t*)(x))[1] <<  8) |         \
-      (uint64_t)((const uint8_t*)(x))[0])
+    (((uint64_t)((ଅଚଳ uint8_t*)(x))[5] << 40) |         \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[4] << 32) |         \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[3] << 24) |         \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[2] << 16) |         \
+     ((uint64_t)((ଅଚଳ uint8_t*)(x))[1] <<  8) |         \
+      (uint64_t)((ଅଚଳ uint8_t*)(x))[0])
 #endif
 #ifndef AV_WL48
-#   define AV_WL48(p, darg) do {                \
+#   define AV_WL48(p, darg) କର {                \
         uint64_t d = (darg);                    \
         ((uint8_t*)(p))[0] = (d);               \
         ((uint8_t*)(p))[1] = (d)>>8;            \
@@ -503,7 +503,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
         ((uint8_t*)(p))[3] = (d)>>24;           \
         ((uint8_t*)(p))[4] = (d)>>32;           \
         ((uint8_t*)(p))[5] = (d)>>40;           \
-    } while(0)
+    } ଯେତେବେଳେ(0)
 #endif
 
 /*
@@ -511,7 +511,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
  * in a type-safe way.
  */
 
-#define AV_RNA(s, p)    (((const av_alias##s*)(p))->u##s)
+#define AV_RNA(s, p)    (((ଅଚଳ av_alias##s*)(p))->u##s)
 #define AV_WNA(s, p, v) (((av_alias##s*)(p))->u##s = (v))
 
 #ifndef AV_RN16A
@@ -538,12 +538,12 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 #   define AV_WN64A(p, v) AV_WNA(64, p, v)
 #endif
 
-#if AV_HAVE_BIGENDIAN
+#ଯଦି AV_HAVE_BIGENDIAN
 #   define AV_RLA(s, p)    av_bswap##s(AV_RN##s##A(p))
 #   define AV_WLA(s, p, v) AV_WN##s##A(p, av_bswap##s(v))
 #   define AV_RBA(s, p)    AV_RN##s##A(p)
 #   define AV_WBA(s, p, v) AV_WN##s##A(p, v)
-#else
+#ଅନ୍ୟଥା
 #   define AV_RLA(s, p)    AV_RN##s##A(p)
 #   define AV_WLA(s, p, v) AV_WN##s##A(p, v)
 #   define AV_RBA(s, p)    av_bswap##s(AV_RN##s##A(p))
@@ -613,10 +613,10 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 
 #ifndef AV_COPY128U
 #   define AV_COPY128U(d, s)                                    \
-    do {                                                        \
+    କର {                                                        \
         AV_COPY64U(d, s);                                       \
-        AV_COPY64U((char *)(d) + 8, (const char *)(s) + 8);     \
-    } while(0)
+        AV_COPY64U((ଅକ୍ଷର *)(d) + 8, (ଅଚଳ ଅକ୍ଷର *)(s) + 8);     \
+    } ଯେତେବେଳେ(0)
 #endif
 
 /* Parameters for AV_COPY*, AV_SWAP*, AV_ZERO* must be
@@ -624,7 +624,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
  */
 
 #define AV_COPY(n, d, s) \
-    (((av_alias##n*)(d))->u##n = ((const av_alias##n*)(s))->u##n)
+    (((av_alias##n*)(d))->u##n = ((ଅଚଳ av_alias##n*)(s))->u##n)
 
 #ifndef AV_COPY16
 #   define AV_COPY16(d, s) AV_COPY(16, d, s)
@@ -640,10 +640,10 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 
 #ifndef AV_COPY128
 #   define AV_COPY128(d, s)                    \
-    do {                                       \
+    କର {                                       \
         AV_COPY64(d, s);                       \
-        AV_COPY64((char*)(d)+8, (char*)(s)+8); \
-    } while(0)
+        AV_COPY64((ଅକ୍ଷର*)(d)+8, (ଅକ୍ଷର*)(s)+8); \
+    } ଯେତେବେଳେ(0)
 #endif
 
 #define AV_SWAP(n, a, b) FFSWAP(av_alias##n, *(av_alias##n*)(a), *(av_alias##n*)(b))
@@ -668,10 +668,10 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 
 #ifndef AV_ZERO128
 #   define AV_ZERO128(d)         \
-    do {                         \
+    କର {                         \
         AV_ZERO64(d);            \
-        AV_ZERO64((char*)(d)+8); \
-    } while(0)
+        AV_ZERO64((ଅକ୍ଷର*)(d)+8); \
+    } ଯେତେବେଳେ(0)
 #endif
 
 #endif /* AVUTIL_INTREADWRITE_H */

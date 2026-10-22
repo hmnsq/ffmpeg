@@ -24,10 +24,10 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef AVUTIL_TREE_H
-#define AVUTIL_TREE_H
+#ifndef AVUTIL_ବୃକ୍ଷ_H
+#define AVUTIL_ବୃକ୍ଷ_H
 
-#include "attributes.h"
+#ଅନ୍ତର୍ଭାଵ "attributes.h"
 
 /**
  * @addtogroup lavu_tree AVTree
@@ -41,13 +41,13 @@
  */
 
 
-struct AVTreeNode;
-extern const int av_tree_node_size;
+ସଂରଚନା AVTree_ଗଣ୍ଠି;
+ବାହ୍ୟ ଅଚଳ ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_ବୃକ୍ଷ_ଗଣ୍ଠି_size;
 
 /**
  * Allocate an AVTreeNode.
  */
-struct AVTreeNode *av_tree_node_alloc(void);
+ସଂରଚନା AVTree_ଗଣ୍ଠି *av_ବୃକ୍ଷ_ଗଣ୍ଠି_alloc(ଶୂନ୍ୟ);
 
 /**
  * Find an element.
@@ -63,8 +63,8 @@ struct AVTreeNode *av_tree_node_alloc(void);
  * @return An element with cmp(key, elem) == 0 or NULL if no such element
  *         exists in the tree.
  */
-void *av_tree_find(const struct AVTreeNode *root, void *key,
-                   int (*cmp)(const void *key, const void *b), void *next[2]);
+ଶୂନ୍ୟ *av_ବୃକ୍ଷ_find(ଅଚଳ ସଂରଚନା AVTree_ଗଣ୍ଠି *ମୂଳ, ଶୂନ୍ୟ *ଚାବି,
+                   ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*cmp)(ଅଚଳ ଶୂନ୍ୟ *ଚାବି, ଅଚଳ ଶୂନ୍ୟ *b), ଶୂନ୍ୟ *next[2]);
 
 /**
  * Insert or remove an element.
@@ -110,11 +110,11 @@ void *av_tree_find(const struct AVTreeNode *root, void *key,
  *         Which one it is depends on the tree state and the implementation. You
  *         should make no assumptions that it's one or the other in the code.
  */
-void *av_tree_insert(struct AVTreeNode **rootp, void *key,
-                     int (*cmp)(const void *key, const void *b),
-                     struct AVTreeNode **next);
+ଶୂନ୍ୟ *av_ବୃକ୍ଷ_ଭର୍ତ୍ତି(ସଂରଚନା AVTree_ଗଣ୍ଠି **rootp, ଶୂନ୍ୟ *ଚାବି,
+                     ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*cmp)(ଅଚଳ ଶୂନ୍ୟ *ଚାବି, ଅଚଳ ଶୂନ୍ୟ *b),
+                     ସଂରଚନା AVTree_ଗଣ୍ଠି **next);
 
-void av_tree_destroy(struct AVTreeNode *t);
+ଶୂନ୍ୟ av_ବୃକ୍ଷ_destroy(ସଂରଚନା AVTree_ଗଣ୍ଠି *t);
 
 /**
  * Apply enu(opaque, &elem) to all the elements in the tree in a given range.
@@ -126,9 +126,9 @@ void av_tree_destroy(struct AVTreeNode *t);
  * @note The cmp function should use the same ordering used to construct the
  *       tree.
  */
-void av_tree_enumerate(struct AVTreeNode *t, void *opaque,
-                       int (*cmp)(void *opaque, void *elem),
-                       int (*enu)(void *opaque, void *elem));
+ଶୂନ୍ୟ av_ବୃକ୍ଷ_enumerate(ସଂରଚନା AVTree_ଗଣ୍ଠି *t, ଶୂନ୍ୟ *opaque,
+                       ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*cmp)(ଶୂନ୍ୟ *opaque, ଶୂନ୍ୟ *elem),
+                       ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*enu)(ଶୂନ୍ୟ *opaque, ଶୂନ୍ୟ *elem));
 
 /**
  * @}

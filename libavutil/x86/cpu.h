@@ -19,8 +19,8 @@
 #ifndef AVUTIL_X86_CPU_H
 #define AVUTIL_X86_CPU_H
 
-#include "libavutil/cpu.h"
-#include "libavutil/cpu_internal.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu_internal.h"
 
 #define X86_MMX(flags)              CPUEXT(flags, MMX)
 #define X86_MMXEXT(flags)           CPUEXT(flags, MMXEXT)
@@ -100,8 +100,8 @@
 #define INLINE_AVX2(flags)          CPUEXT_SUFFIX(flags, _INLINE, AVX2)
 #define INLINE_AESNI(flags)         CPUEXT_SUFFIX(flags, _INLINE, AESNI)
 
-void ff_cpu_cpuid(int index, int *eax, int *ebx, int *ecx, int *edx);
-void ff_cpu_xgetbv(int op, int *eax, int *edx);
-int  ff_cpu_cpuid_test(void);
+ଶୂନ୍ୟ ff_cpu_cpuid(ପୂର୍ଣ୍ଣସଂଖ୍ୟା index, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *eax, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *ebx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *ecx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *edx);
+ଶୂନ୍ୟ ff_cpu_xgetbv(ପୂର୍ଣ୍ଣସଂଖ୍ୟା op, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *eax, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *edx);
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା  ff_cpu_cpuid_test(ଶୂନ୍ୟ);
 
 #endif /* AVUTIL_X86_CPU_H */

@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <stddef.h>
-#include "libavutil/aes_internal.h"
-#include "libavutil/aarch64/cpu.h"
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
+#ଅନ୍ତର୍ଭାଵ "libavutil/aes_internal.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/aarch64/cpu.h"
 
-void ff_aes_decrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_decrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_10_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_12_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
-void ff_aes_encrypt_14_neon(AVAES *a, uint8_t *dst, const uint8_t *src,
-                            int count, uint8_t *iv, int rounds);
+ଶୂନ୍ୟ ff_aes_decrypt_10_neon(AVAES *a, uint8_t *dst, ଅଚଳ uint8_t *src,
+                            ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2, uint8_t *iv, ପୂର୍ଣ୍ଣସଂଖ୍ୟା rounds);
+ଶୂନ୍ୟ ff_aes_decrypt_12_neon(AVAES *a, uint8_t *dst, ଅଚଳ uint8_t *src,
+                            ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2, uint8_t *iv, ପୂର୍ଣ୍ଣସଂଖ୍ୟା rounds);
+ଶୂନ୍ୟ ff_aes_decrypt_14_neon(AVAES *a, uint8_t *dst, ଅଚଳ uint8_t *src,
+                            ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2, uint8_t *iv, ପୂର୍ଣ୍ଣସଂଖ୍ୟା rounds);
+ଶୂନ୍ୟ ff_aes_encrypt_10_neon(AVAES *a, uint8_t *dst, ଅଚଳ uint8_t *src,
+                            ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2, uint8_t *iv, ପୂର୍ଣ୍ଣସଂଖ୍ୟା rounds);
+ଶୂନ୍ୟ ff_aes_encrypt_12_neon(AVAES *a, uint8_t *dst, ଅଚଳ uint8_t *src,
+                            ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2, uint8_t *iv, ପୂର୍ଣ୍ଣସଂଖ୍ୟା rounds);
+ଶୂନ୍ୟ ff_aes_encrypt_14_neon(AVAES *a, uint8_t *dst, ଅଚଳ uint8_t *src,
+                            ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2, uint8_t *iv, ପୂର୍ଣ୍ଣସଂଖ୍ୟା rounds);
 
-void ff_init_aes_aarch64(AVAES *a, int decrypt)
+ଶୂନ୍ୟ ff_init_aes_aarch64(AVAES *a, ପୂର୍ଣ୍ଣସଂଖ୍ୟା decrypt)
 {
-    int cpu_flags = av_get_cpu_flags();
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା cpu_flags = av_get_cpu_flags();
 
-    if (have_arm_aes(cpu_flags)) {
-        if (a->rounds == 10)
+    ଯଦି (have_arm_aes(cpu_flags)) {
+        ଯଦି (a->rounds == 10)
             a->crypt = decrypt ? ff_aes_decrypt_10_neon : ff_aes_encrypt_10_neon;
-        else if (a->rounds == 12)
+        ଅନ୍ୟଥା ଯଦି (a->rounds == 12)
             a->crypt = decrypt ? ff_aes_decrypt_12_neon : ff_aes_encrypt_12_neon;
-        else if (a->rounds == 14)
+        ଅନ୍ୟଥା ଯଦି (a->rounds == 14)
             a->crypt = decrypt ? ff_aes_decrypt_14_neon : ff_aes_encrypt_14_neon;
     }
 }

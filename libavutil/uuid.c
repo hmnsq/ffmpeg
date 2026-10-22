@@ -60,69 +60,69 @@
  * @author Zane van Iperen <zane@zanevaniperen.com>
  */
 
-#include "attributes_internal.h"
-#include "uuid.h"
-#include "error.h"
-#include "avstring.h"
+#ଅନ୍ତର୍ଭାଵ "attributes_internal.h"
+#ଅନ୍ତର୍ଭାଵ "uuid.h"
+#ଅନ୍ତର୍ଭାଵ "error.h"
+#ଅନ୍ତର୍ଭାଵ "avstring.h"
 
-int av_uuid_parse(const char *in, AVUUID uu)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_uuid_parse(ଅଚଳ ଅକ୍ଷର *in, AVUUID uu)
 {
-    if (strlen(in) != 36)
-        return AVERROR(EINVAL);
+    ଯଦି (strlen(in) != 36)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
-    return av_uuid_parse_range(in, in + 36, uu);
+    ଫେରନ୍ତୁ av_uuid_parse_range(in, in + 36, uu);
 }
 
-static int xdigit_to_int(char c)
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା xdigit_to_int(ଅକ୍ଷର c)
 {
     c = av_tolower(c);
 
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
+    ଯଦି (c >= 'a' && c <= 'f')
+        ଫେରନ୍ତୁ c - 'a' + 10;
 
-    if (c >= '0' && c <= '9')
-        return c - '0';
+    ଯଦି (c >= '0' && c <= '9')
+        ଫେରନ୍ତୁ c - '0';
 
-    return -1;
+    ଫେରନ୍ତୁ -1;
 }
 
-int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_uuid_parse_range(ଅଚଳ ଅକ୍ଷର *in_start, ଅଚଳ ଅକ୍ଷର *in_end, AVUUID uu)
 {
-    int i;
-    const char *cp;
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
+    ଅଚଳ ଅକ୍ଷର *cp;
 
-    if ((in_end - in_start) != 36)
-        return AVERROR(EINVAL);
+    ଯଦି ((in_end - in_start) != 36)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
-    for (i = 0, cp = in_start; i < 16; i++) {
-        int hi;
-        int lo;
+    ପାଇଁ (i = 0, cp = in_start; i < 16; i++) {
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା hi;
+        ପୂର୍ଣ୍ଣସଂଖ୍ୟା lo;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        ଯଦି (i == 4 || i == 6 || i == 8 || i == 10)
             cp++;
 
         hi = xdigit_to_int(*cp++);
         lo = xdigit_to_int(*cp++);
 
-        if (hi == -1 || lo == -1)
-            return AVERROR(EINVAL);
+        ଯଦି (hi == -1 || lo == -1)
+            ଫେରନ୍ତୁ AVERROR(EINVAL);
 
         uu[i] = (hi << 4) + lo;
     }
 
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static attribute_nonstring const char hexdigits_lower[16] = "0123456789abcdef";
+ସ୍ଥିର attribute_nonstring ଅଚଳ ଅକ୍ଷର hexdigits_lower[16] = "0123456789abcdef";
 
-void av_uuid_unparse(const AVUUID uuid, char *out)
+ଶୂନ୍ୟ av_uuid_unparse(ଅଚଳ AVUUID uuid, ଅକ୍ଷର *out)
 {
-    char *p = out;
+    ଅକ୍ଷର *p = out;
 
-    for (int i = 0; i < 16; i++) {
+    ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < 16; i++) {
         uint8_t tmp;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        ଯଦି (i == 4 || i == 6 || i == 8 || i == 10)
             *p++ = '-';
 
         tmp = uuid[i];
@@ -133,10 +133,10 @@ void av_uuid_unparse(const AVUUID uuid, char *out)
     *p = '\0';
 }
 
-int av_uuid_urn_parse(const char *in, AVUUID uu)
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା av_uuid_urn_parse(ଅଚଳ ଅକ୍ଷର *in, AVUUID uu)
 {
-    if (av_stristr(in, "urn:uuid:") != in)
-        return AVERROR(EINVAL);
+    ଯଦି (av_stristr(in, "urn:uuid:") != in)
+        ଫେରନ୍ତୁ AVERROR(EINVAL);
 
-    return av_uuid_parse(in + 9, uu);
+    ଫେରନ୍ତୁ av_uuid_parse(in + 9, uu);
 }

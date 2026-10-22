@@ -18,84 +18,84 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#ଅନ୍ତର୍ଭାଵ <math.h>
+#ଅନ୍ତର୍ଭାଵ <stdio.h>
+#ଅନ୍ତର୍ଭାଵ <string.h>
 
-#include "libavutil/csp.h"
-#include "libavutil/macros.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/pixfmt.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/csp.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/macros.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/pixdesc.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/pixfmt.h"
 
-static inline int fuzzy_equal(double a, double b)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ପୂର୍ଣ୍ଣସଂଖ୍ୟା fuzzy_equal(ଦ୍ୱିଗୁଣ a, ଦ୍ୱିଗୁଣ b)
 {
-    const double epsilon = fmax(fmax(fabs(a), fabs(b)), 1.0) * 1e-7;
-    return fabs(a - b) <= epsilon;
+    ଅଚଳ ଦ୍ୱିଗୁଣ epsilon = fmax(fmax(fabs(a), fabs(b)), 1.0) * 1e-7;
+    ଫେରନ୍ତୁ fabs(a - b) <= epsilon;
 }
 
-#define TEST_EOTF(func, input, ref) do                              \
+#define TEST_EOTF(func, ନିବେଶ, ref) କର                              \
 {                                                                   \
-    const double _b[3] = { (ref)[0], (ref)[1], (ref)[2] };          \
-    double _a[3] = { (input)[0], (input)[1], (input)[2] };          \
+    ଅଚଳ ଦ୍ୱିଗୁଣ _b[3] = { (ref)[0], (ref)[1], (ref)[2] };          \
+    ଦ୍ୱିଗୁଣ _a[3] = { (ନିବେଶ)[0], (ନିବେଶ)[1], (ନିବେଶ)[2] };          \
     func(Lw, Lb, _a);                                               \
-    for (int _i = 0; _i < 3; _i++) {                                \
-        if (!fuzzy_equal(_a[_i], _b[_i])) {                         \
+    ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା _i = 0; _i < 3; _i++) {                                \
+        ଯଦି (!fuzzy_equal(_a[_i], _b[_i])) {                         \
             printf("FAIL: trc=%s %s(%g, %g, %s) != %s\n"            \
                    "  expected {%g, %g, %g}, got {%g, %g, %g}\n",   \
                     trc_name, #func, Lw, Lb, #input, #ref,          \
                     _b[0], _b[1], _b[2], _a[0], _a[1], _a[2]);      \
-            return 1;                                               \
+            ଫେରନ୍ତୁ 1;                                               \
         }                                                           \
     }                                                               \
-} while (0)
+} ଯେତେବେଳେ (0)
 
-int main(int argc, char *argv[])
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା ମୁଖ୍ୟ(ପୂର୍ଣ୍ଣସଂଖ୍ୟା argc, ଅକ୍ଷର *argv[])
 {
-    static const double test_data[] = {
+    ସ୍ଥିର ଅଚଳ ଦ୍ୱିଗୁଣ test_data[] = {
         -0.1, -0.018053968510807, -0.01, -0.00449, 0.0, 0.00316227760, 0.005,
         0.009, 0.015, 0.1, 1.0, 52.37, 125.098765, 1999.11123, 6945.443,
         15123.4567, 19845.88923, 98678.4231, 99999.899998
     };
 
-    for (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
-        if (trc == AVCOL_TRC_NB)
+    ପାଇଁ (ଗଣନା AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
+        ଯଦି (trc == AVCOL_TRC_NB)
             trc = AVCOL_TRC_EXT_BASE;
 
         av_csp_trc_function func = av_csp_trc_func_from_id(trc);
         av_csp_trc_function func_inv = av_csp_trc_func_inv_from_id(trc);
-        const char *name = av_color_transfer_name(trc);
-        if (!func)
-            continue;
+        ଅଚଳ ଅକ୍ଷର *name = av_color_transfer_name(trc);
+        ଯଦି (!func)
+            ଜାରି;
 
-        for (int i = 0; i < FF_ARRAY_ELEMS(test_data); i++) {
-            double result = func(test_data[i]);
-            double roundtrip = func_inv(result);
+        ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < FF_ARRAY_ELEMS(test_data); i++) {
+            ଦ୍ୱିଗୁଣ result = func(test_data[i]);
+            ଦ୍ୱିଗୁଣ roundtrip = func_inv(result);
             printf("trc=%s calling func(%f) expected=%f roundtrip=%f\n",
                     name, test_data[i], result, roundtrip);
 
-            if (result > 0.0 && fabs(roundtrip - test_data[i]) > 1e-7) {
+            ଯଦି (result > 0.0 && fabs(roundtrip - test_data[i]) > 1e-7) {
                 printf("  FAIL\n");
-                return 1;
+                ଫେରନ୍ତୁ 1;
             }
         }
     }
 
-    for (enum AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
-        if (trc == AVCOL_TRC_NB)
+    ପାଇଁ (ଗଣନା AVColorTransferCharacteristic trc = 0; trc < AVCOL_TRC_EXT_NB; trc++) {
+        ଯଦି (trc == AVCOL_TRC_NB)
             trc = AVCOL_TRC_EXT_BASE;
 
         av_csp_eotf_function eotf = av_csp_itu_eotf(trc);
         av_csp_eotf_function eotf_inv = av_csp_itu_eotf_inv(trc);
-        const char *trc_name = av_color_transfer_name(trc);
-        if (!eotf)
-            continue;
+        ଅଚଳ ଅକ୍ଷର *trc_name = av_color_transfer_name(trc);
+        ଯଦି (!eotf)
+            ଜାରି;
 
-        if (trc == AVCOL_TRC_SMPTE2084) {
+        ଯଦି (trc == AVCOL_TRC_SMPTE2084) {
             /* This one is equivalent to the TRC already tested above */
-            continue;
-        } else if (trc == AVCOL_TRC_SMPTE428) {
+            ଜାରି;
+        } ଅନ୍ୟଥା ଯଦି (trc == AVCOL_TRC_SMPTE428) {
             /* Test vectors from SMPTE RP-431-2 */
-            const struct { double E_xyz[3]; double luma; } tests[] = {
+            ଅଚଳ ସଂରଚନା { ଦ୍ୱିଗୁଣ E_xyz[3]; ଦ୍ୱିଗୁଣ luma; } tests[] = {
             #define XYZ(X, Y, Z) { X / 4095.0, Y / 4095.0, Z / 4095.0 }
                 { XYZ( 379,  396,  389),  0.14 },
                 { XYZ( 759,  792,  778),  0.75 },
@@ -109,40 +109,40 @@ int main(int argc, char *argv[])
                 { XYZ(3794, 3960, 3890), 48.02 },
             };
             /* DCI reference display */
-            const double luminance = 48.00;
-            const double contrast = 2000;
+            ଅଚଳ ଦ୍ୱିଗୁଣ luminance = 48.00;
+            ଅଚଳ ଦ୍ୱିଗୁଣ contrast = 2000;
             /* Solve for Lw - Lb = luminance, Lw / Lb = contrast */
-            const double Lb = luminance / (contrast - 1);
-            const double Lw = Lb + luminance;
+            ଅଚଳ ଦ୍ୱିଗୁଣ Lb = luminance / (contrast - 1);
+            ଅଚଳ ଦ୍ୱିଗୁଣ Lw = Lb + luminance;
 
-            for (int i = 0; i < FF_ARRAY_ELEMS(tests); i++) {
-                double L_xyz[3];
-                memcpy(L_xyz, tests[i].E_xyz, sizeof(L_xyz));
+            ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < FF_ARRAY_ELEMS(tests); i++) {
+                ଦ୍ୱିଗୁଣ L_xyz[3];
+                memcpy(L_xyz, tests[i].E_xyz, ଆକାର(L_xyz));
                 eotf(Lw, Lb, L_xyz);
                 printf("trc=%s EOTF(%g, %g, {%g, %g, %g}) = {%g, %g %g}, expected Y=%f\n",
                        trc_name, Lw, Lb,
                        tests[i].E_xyz[0], tests[i].E_xyz[1], tests[i].E_xyz[2],
                        L_xyz[0], L_xyz[1], L_xyz[2], tests[i].luma);
 
-                if (fabs(L_xyz[1] - tests[i].luma) > 0.01) {
+                ଯଦି (fabs(L_xyz[1] - tests[i].luma) > 0.01) {
                     printf("  FAIL\n");
-                    return 1;
+                    ଫେରନ୍ତୁ 1;
                 }
             }
-        } else {
+        } ଅନ୍ୟଥା {
             /* Normal, display-relative RGB curve */
-            static const double black_points[] = { 0.0, 1e-6, 0.1, 1.5 };
-            static const double white_points[] = { 50.0, 100.0, 203.0, 1000.0, 10000.0 };
+            ସ୍ଥିର ଅଚଳ ଦ୍ୱିଗୁଣ black_points[] = { 0.0, 1e-6, 0.1, 1.5 };
+            ସ୍ଥିର ଅଚଳ ଦ୍ୱିଗୁଣ white_points[] = { 50.0, 100.0, 203.0, 1000.0, 10000.0 };
 
-            for (int i = 0; i < FF_ARRAY_ELEMS(black_points); i++) {
-                for (int j = 0; j < FF_ARRAY_ELEMS(white_points); j++) {
-                    const double Lb = black_points[i];
-                    const double Lw = white_points[j];
-                    const double all0[3] = { 0.0, 0.0, 0.0 };
-                    const double all1[3] = { 1.0, 1.0, 1.0 };
-                    const double black[3] = { Lb, Lb, Lb };
-                    const double white[3] = { Lw, Lw, Lw };
-                    double L_prev;
+            ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା i = 0; i < FF_ARRAY_ELEMS(black_points); i++) {
+                ପାଇଁ (ପୂର୍ଣ୍ଣସଂଖ୍ୟା j = 0; j < FF_ARRAY_ELEMS(white_points); j++) {
+                    ଅଚଳ ଦ୍ୱିଗୁଣ Lb = black_points[i];
+                    ଅଚଳ ଦ୍ୱିଗୁଣ Lw = white_points[j];
+                    ଅଚଳ ଦ୍ୱିଗୁଣ all0[3] = { 0.0, 0.0, 0.0 };
+                    ଅଚଳ ଦ୍ୱିଗୁଣ all1[3] = { 1.0, 1.0, 1.0 };
+                    ଅଚଳ ଦ୍ୱିଗୁଣ black[3] = { Lb, Lb, Lb };
+                    ଅଚଳ ଦ୍ୱିଗୁଣ white[3] = { Lw, Lw, Lw };
+                    ଦ୍ୱିଗୁଣ L_prev;
 
                     TEST_EOTF(eotf, all0, black);
                     TEST_EOTF(eotf, all1, white);
@@ -150,18 +150,18 @@ int main(int argc, char *argv[])
                     TEST_EOTF(eotf_inv, white, all1);
 
                     /* Test round-trip on grayscale ramp */
-                    for (double x = 0.0; x < 1.0; x += 0.1) {
-                        const double E[3] = { x, x, x };
-                        double L[3] = { x, x, x };
+                    ପାଇଁ (ଦ୍ୱିଗୁଣ x = 0.0; x < 1.0; x += 0.1) {
+                        ଅଚଳ ଦ୍ୱିଗୁଣ E[3] = { x, x, x };
+                        ଦ୍ୱିଗୁଣ L[3] = { x, x, x };
                         eotf(Lw, Lb, L);
 
                         printf("trc=%s EOTF(%g, %g, {%g}) = {%g}\n",
                                trc_name, Lw, Lb, E[1], L[1]);
                         TEST_EOTF(eotf_inv, L, E);
 
-                        if (x > 0.0 && L[1] <= L_prev) {
+                        ଯଦି (x > 0.0 && L[1] <= L_prev) {
                             printf("  FAIL: non-monotonic!\n");
-                            return 1;
+                            ଫେରନ୍ତୁ 1;
                         }
                         L_prev = L[1];
                     }

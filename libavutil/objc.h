@@ -19,11 +19,11 @@
 #ifndef AVUTIL_OBJC_H
 #define AVUTIL_OBJC_H
 
-#include <Foundation/Foundation.h>
+#ଅନ୍ତର୍ଭାଵ <Foundation/Foundation.h>
 
-static inline void ff_objc_release(NSObject **obj)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଶୂନ୍ୟ ff_objc_release(NSObject **obj)
 {
-    if (*obj) {
+    ଯଦି (*obj) {
         [*obj release];
         *obj = nil;
     }

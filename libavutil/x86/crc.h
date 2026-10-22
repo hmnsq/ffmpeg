@@ -21,32 +21,32 @@
 #ifndef AVUTIL_X86_CRC_H
 #define AVUTIL_X86_CRC_H
 
-#include "config.h"
-#include "libavutil/attributes.h"
-#include "libavutil/attributes_internal.h"
-#include "libavutil/avassert.h"
-#include "libavutil/cpu.h"
-#include "libavutil/crc.h"
-#include "libavutil/intreadwrite.h"
-#include "libavutil/x86/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "config.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/attributes.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/attributes_internal.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/avassert.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/cpu.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/crc.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/intreadwrite.h"
+#ଅନ୍ତର୍ଭାଵ "libavutil/x86/cpu.h"
 
-#if HAVE_CLMUL_EXTERNAL
-#include "libavutil/crc_internal.h"
+#ଯଦି HAVE_CLMUL_EXTERNAL
+#ଅନ୍ତର୍ଭାଵ "libavutil/crc_internal.h"
 
-FF_VISIBILITY_PUSH_HIDDEN
-uint32_t ff_crc_clmul(const AVCRC *ctx, uint32_t crc,
-                      const uint8_t *buffer, size_t length);
-uint32_t ff_crc_le_clmul(const AVCRC *ctx, uint32_t crc,
-                         const uint8_t *buffer, size_t length);
-FF_VISIBILITY_POP_HIDDEN
+FF_VISIBILITY_ଠେଲ_HIDDEN
+uint32_t ff_crc_clmul(ଅଚଳ AVCRC *ctx, uint32_t crc,
+                      ଅଚଳ uint8_t *buffer, size_t length);
+uint32_t ff_crc_le_clmul(ଅଚଳ AVCRC *ctx, uint32_t crc,
+                         ଅଚଳ uint8_t *buffer, size_t length);
+FF_VISIBILITY_କାଢ଼_HIDDEN
 
-enum {
+ଗଣନା {
     CRC_C    = 0,
     CLMUL_BE,
     CLMUL_LE,
 };
 
-static const AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
+ସ୍ଥିର ଅଚଳ AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
     [AV_CRC_8_ATM] = {
         CLMUL_BE,
         0x32000000, 0x0, 0xbc000000, 0x0,
@@ -105,10 +105,10 @@ static const AVCRC crc_table_clmul[AV_CRC_MAX][17] = {
     },
 };
 
-static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଶୂନ୍ୟ crc_init_x86(AVCRC *ctx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା le, ପୂର୍ଣ୍ଣସଂଖ୍ୟା bits, uint32_t poly, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ctx_size)
 {
     uint64_t poly_;
-    if (le) {
+    ଯଦି (le) {
         // convert the reversed representation to regular form
         poly = reverse(poly, bits) >> 1;
     }
@@ -117,7 +117,7 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
 
     uint64_t div;
     uint8_t *dst = (uint8_t*)(ctx + 1);
-    if (le) {
+    ଯଦି (le) {
         ctx[0] = CLMUL_LE;
         AV_WN64(dst,      xnmodp(4 * 128 - 32, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128 + 32, poly_, 32, &div, le));
@@ -128,7 +128,7 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
         AV_WN64(dst + 40, xnmodp(64, poly_, 32, &div, le));
         AV_WN64(dst + 48, div);
         AV_WN64(dst + 56, reverse(poly_ | (1ULL << 32), 32));
-    } else {
+    } ଅନ୍ୟଥା {
         ctx[0] = CLMUL_BE;
         AV_WN64(dst,      xnmodp(4 * 128 + 64, poly_, 32, &div, le));
         AV_WN64(dst +  8, xnmodp(4 * 128, poly_, 32, &div, le));
@@ -142,42 +142,42 @@ static inline void crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int
 }
 #endif
 
-static inline const AVCRC *ff_crc_get_table_x86(AVCRCId crc_id)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ ଅଚଳ AVCRC *ff_crc_get_table_x86(AVCRCId crc_id)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#ଯଦି HAVE_CLMUL_EXTERNAL
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
-        return crc_table_clmul[crc_id];
+    ଯଦି (EXTERNAL_CLMUL(cpu_flags)) {
+        ଫେରନ୍ତୁ crc_table_clmul[crc_id];
     }
 #endif
-    return NULL;
+    ଫେରନ୍ତୁ ଖାଲି;
 }
 
-static inline av_cold int ff_crc_init_x86(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ av_cold ପୂର୍ଣ୍ଣସଂଖ୍ୟା ff_crc_init_x86(AVCRC *ctx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା le, ପୂର୍ଣ୍ଣସଂଖ୍ୟା bits, uint32_t poly, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ctx_size)
 {
-#if HAVE_CLMUL_EXTERNAL
-    int cpu_flags = av_get_cpu_flags();
+#ଯଦି HAVE_CLMUL_EXTERNAL
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା cpu_flags = av_get_cpu_flags();
 
-    if (EXTERNAL_CLMUL(cpu_flags)) {
+    ଯଦି (EXTERNAL_CLMUL(cpu_flags)) {
         crc_init_x86(ctx, le, bits, poly, ctx_size);
-        return 1;
+        ଫେରନ୍ତୁ 1;
     }
 #endif
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
-static inline uint32_t ff_crc_x86(const AVCRC *ctx, uint32_t crc,
-                                  const uint8_t *buffer, size_t length)
+ସ୍ଥିର ଧାଡ଼ିଭିତରେ uint32_t ff_crc_x86(ଅଚଳ AVCRC *ctx, uint32_t crc,
+                                  ଅଚଳ uint8_t *buffer, size_t length)
 {
-    switch (ctx[0]) {
-#if HAVE_CLMUL_EXTERNAL
-    case CLMUL_BE: return ff_crc_clmul(ctx, crc, buffer, length);
-    case CLMUL_LE: return ff_crc_le_clmul(ctx, crc, buffer, length);
+    ବାଛ (ctx[0]) {
+#ଯଦି HAVE_CLMUL_EXTERNAL
+    ସ୍ଥିତି CLMUL_BE: ଫେରନ୍ତୁ ff_crc_clmul(ctx, crc, buffer, length);
+    ସ୍ଥିତି CLMUL_LE: ଫେରନ୍ତୁ ff_crc_le_clmul(ctx, crc, buffer, length);
 #endif
-    default: av_unreachable("x86 CRC only uses CLMUL_BE and CLMUL_LE");
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ: av_unreachable("x86 CRC only uses CLMUL_BE and CLMUL_LE");
     }
-    return 0;
+    ଫେରନ୍ତୁ 0;
 }
 
 #endif /* AVUTIL_X86_CRC_H */
